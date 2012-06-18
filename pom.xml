@@ -409,12 +409,11 @@
 
   <modules>
     <module>dom</module>
-    <module>services</module>
     <module>exploration</module>
     <module>fixture</module>
     <module>objstore-dflt</module>
-    <module>quickrun</module>
-    <module>webapp</module>
+    <module>services</module>
     <module>tests-junit</module>
+    <module>webapp</module>
   </modules>
 </project>
