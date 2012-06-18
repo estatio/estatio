@@ -28,6 +28,13 @@
 
     <artifactId>app-exploration</artifactId>
     <name>App Exploration</name>
+    
+    <!--
+    can run the dnd using either:
+    mvn antrun:run
+    or
+    mvn test -P dnd
+    -->
 
     <build>
         <plugins>
@@ -55,26 +62,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <exec executable="java" failonerror="true">
-                                    <arg value="-jar"/>
-                                    <arg value="${project.build.directory}/${project.build.finalName}.jar"/>
-                                    <arg value="-type"/>
-                                    <arg value="exploration"/>
-                                    <arg value="-viewer"/>
-                                    <arg value="dnd"/>
-                                </exec>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <tasks>
+                        <exec executable="java" failonerror="true">
+                            <arg value="-jar"/>
+                            <arg value="${project.build.directory}/${project.build.finalName}.jar"/>
+                            <arg value="-type"/>
+                            <arg value="exploration"/>
+                            <arg value="-viewer"/>
+                            <arg value="dnd"/>
+                        </exec>
+                    </tasks>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -135,5 +134,27 @@
         </dependency>
 
     </dependencies>
+    
+    <profiles>
+    	<profile>
+    		<id>dnd</id>
+			<build>
+				<plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+		                    <execution>
+		                        <phase>test</phase>
+		                        <goals>
+		                            <goal>run</goal>
+		                        </goals>
+							</execution>
+                        </executions>
+		            </plugin>
+				</plugins>
+			</build>    		
+    	</profile>
+    </profiles>
 
 </project>
