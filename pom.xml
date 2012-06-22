@@ -126,6 +126,13 @@
 				</plugin>
 
 				<plugin>
+				   <groupId>org.codehaus.mojo</groupId>
+				   <artifactId>findbugs-maven-plugin</artifactId>
+				   <version>2.5</version>
+					<inherited>true</inherited>
+				</plugin>
+
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>1.6</version>
@@ -784,6 +791,74 @@
                             </execution>
                         </executions>
                     </plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+						<configuration>
+							<configLocation>${checkstyle.configLocation}</configLocation>
+						</configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+					</plugin>
+
+					<plugin>
+					   <groupId>org.codehaus.mojo</groupId>
+					   <artifactId>findbugs-maven-plugin</artifactId>
+					   <inherited>true</inherited>
+					   <configuration>
+					      <findbugsXmlOutput>true</findbugsXmlOutput>
+					      <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+					      <xmlOutput>true</xmlOutput>
+					      <failOnError>false</failOnError>
+					   </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-pmd-plugin</artifactId>
+						<version>2.5</version>
+						<configuration>
+							<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+							<minimumTokens>100</minimumTokens>
+							<linkXref>true</linkXref>
+							<targetJdk>${compileTarget}</targetJdk>
+							<rulesets>
+								<ruleset>${pmd.ruleset}</ruleset>
+							</rulesets>
+							<excludeRoots>
+								<excludeRoot>
+									${project.build.directory}/generated-sources/modello
+								</excludeRoot>
+								<excludeRoot>
+									${project.build.directory}/generated-sources/plugin
+								</excludeRoot>
+							</excludeRoots>
+						</configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pmd</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+					</plugin>
+					
                 </plugins>
             </build>
         </profile>
