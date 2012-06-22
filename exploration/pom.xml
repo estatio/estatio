@@ -28,7 +28,7 @@
 
     <artifactId>app-exploration</artifactId>
     <name>App Exploration</name>
-    
+
     <!--
     can run the dnd using either:
     mvn antrun:run
@@ -36,6 +36,10 @@
     mvn test -P dnd
     -->
 
+	<properties>
+        <siteBaseDir>..</siteBaseDir>
+	</properties>
+    
     <build>
         <plugins>
             <!-- mvn package -->

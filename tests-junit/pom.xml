@@ -28,6 +28,10 @@
 	<artifactId>app-tests-junit</artifactId>
 	<name>Estatio JUnit Tests</name>
 
+	<properties>
+        <siteBaseDir>..</siteBaseDir>
+	</properties>
+    
 	<dependencies>
 
         <!-- this project's dependencies -->

@@ -28,6 +28,10 @@
 	<artifactId>app-services</artifactId>
 	<name>Estatio DOM</name>
 
+	<properties>
+        <siteBaseDir>..</siteBaseDir>
+	</properties>
+    
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.isis</groupId>

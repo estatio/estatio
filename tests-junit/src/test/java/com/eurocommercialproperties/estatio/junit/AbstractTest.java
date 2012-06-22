@@ -1,10 +1,6 @@
 package com.eurocommercialproperties.estatio.junit;
 
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.progmodel.wrapper.applib.WrapperFactory;
 import org.apache.isis.progmodel.wrapper.applib.WrapperObject;
@@ -12,6 +8,9 @@ import org.apache.isis.viewer.junit.ConfigDir;
 import org.apache.isis.viewer.junit.IsisTestRunner;
 import org.apache.isis.viewer.junit.Service;
 import org.apache.isis.viewer.junit.Services;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import com.eurocommercialproperties.estatio.dom.todo.ToDoItems;
 import com.eurocommercialproperties.estatio.objstore.dflt.todo.ToDoItemsDefault;

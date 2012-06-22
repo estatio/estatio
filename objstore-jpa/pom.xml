@@ -19,24 +19,32 @@
 --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
+    <parent>
     	<groupId>com.eurocommercialproperties.estatio</groupId>
-    	<artifactId>app</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+        <artifactId>app</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+	<artifactId>app-objstore-jpa</artifactId>
+	<name>Repositories (JPA)</name>
 
 	<properties>
         <siteBaseDir>..</siteBaseDir>
 	</properties>
-
-	<artifactId>app-dom</artifactId>
-	<name>Estatio DOM</name>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.isis</groupId>
-			<artifactId>applib</artifactId>
-		</dependency>
-    </dependencies>
     
+	<dependencies>
+	
+		<!-- other modules in this project -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>app-dom</artifactId>
+		</dependency>
+		
+        <dependency>
+            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
+            <artifactId>dflt</artifactId>
+        </dependency>
+		
+	</dependencies>
+
 </project>

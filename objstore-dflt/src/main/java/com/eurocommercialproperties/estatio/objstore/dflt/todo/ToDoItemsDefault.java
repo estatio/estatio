@@ -2,13 +2,12 @@ package com.eurocommercialproperties.estatio.objstore.dflt.todo;
 
 import java.util.List;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.filter.Filter;
+
 import com.eurocommercialproperties.estatio.dom.todo.ToDoItem;
 import com.eurocommercialproperties.estatio.dom.todo.ToDoItems;
 import com.google.common.base.Objects;
-
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.filter.Filter;
 
 public class ToDoItemsDefault extends AbstractFactoryAndRepository implements ToDoItems {
 

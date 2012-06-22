@@ -26,8 +26,12 @@
     </parent>
 
 	<artifactId>app-objstore-dflt</artifactId>
-	<name>Estatio Repositories (for ObjectStore Default)</name>
+	<name>Repositories (Dflt)</name>
 
+	<properties>
+        <siteBaseDir>..</siteBaseDir>
+	</properties>
+    
 	<dependencies>
 	
 		<!-- other modules in this project -->

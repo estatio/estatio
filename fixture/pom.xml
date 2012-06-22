@@ -28,6 +28,10 @@
 	<artifactId>app-fixture</artifactId>
 	<name>Estatio Fixtures</name>
 
+	<properties>
+        <siteBaseDir>..</siteBaseDir>
+	</properties>
+    
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
