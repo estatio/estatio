@@ -6,6 +6,7 @@ import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.filter.Filter;
 
+import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.UnitType;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
@@ -44,8 +45,11 @@ public class UnitsDefault extends AbstractFactoryAndRepository implements Units 
     }
     // }}
 
-	/* (non-Javadoc)
-	 * @see com.eurocommercialproperties.estatio.dom.asset.Units#newUnit(java.lang.String, java.lang.String, com.eurocommercialproperties.estatio.dom.asset.UnitType)
-	 */
+    // {{ AllInstances
+    @Override
+    public List<Unit> allInstances() {
+    	return allInstances(Unit.class);
+    }
+    // }}
 
 }

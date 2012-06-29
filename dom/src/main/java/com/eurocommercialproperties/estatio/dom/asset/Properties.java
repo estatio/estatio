@@ -23,4 +23,6 @@ public interface Properties {
             String name, 
             PropertyType propertyType);
 
+	List<Property> allInstances();
+
 }

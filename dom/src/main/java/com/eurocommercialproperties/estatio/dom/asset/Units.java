@@ -7,7 +7,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.QueryOnly;
 
-@Named("Units")
+
+
+// @NotInServiceMenu ??? TODO: why doesn't this get picked up???
 public interface Units {
 
     @QueryOnly
@@ -22,5 +24,10 @@ public interface Units {
             String code, 
             String name, 
             UnitType type);
+
+	/**
+	 * @return
+	 */
+	List<Unit> allInstances();
 
 }

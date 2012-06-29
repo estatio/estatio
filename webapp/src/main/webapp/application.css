@@ -17,11 +17,13 @@
  *  under the License.
  */
 #header {
-    background: url('images/app-banner.png') no-repeat scroll left center transparent;
+    background: none no-repeat scroll left center;
+    height: 20px;
 }
 body {
 	background-color: #00477F;
 }
+
 div.entitySummary > label.entityTitle {
 	color: maroon;
 	font-size: xx-large;
@@ -31,3 +33,5 @@ div.entitySummary > label.entityTitle {
   color: maroon;
   font-weight: bolder;
 }
+
+

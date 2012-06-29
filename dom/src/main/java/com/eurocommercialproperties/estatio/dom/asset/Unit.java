@@ -19,7 +19,9 @@ package com.eurocommercialproperties.estatio.dom.asset;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
 
 /**
  * 
@@ -28,9 +30,26 @@ import org.apache.isis.applib.annotation.MemberOrder;
  */
 public class Unit {
 
+	
+	// {{ Property (property)
+	private Property property;
+
+	@Disabled
+	@MemberOrder(sequence = "1")
+	public Property getProperty() {
+		return property;
+	}
+
+	public void setProperty(final Property property) {
+		this.property = property;
+	}
+	// }}
+
+
 	// {{ Code (property)
 	private String code;
 
+	@Title(sequence="1", append=",")
 	@MemberOrder(sequence = "1")
 	public String getCode() {
 		return code;
@@ -45,6 +64,8 @@ public class Unit {
 	// {{ Name (property)
 	private String name;
 
+	@Disabled
+	@Title(sequence="2")
 	@MemberOrder(sequence = "1")
 	public String getName() {
 		return name;
@@ -59,6 +80,7 @@ public class Unit {
 	// {{ Type (property)
 	private UnitType type;
 
+	@Disabled
 	@MemberOrder(sequence = "1")
 	public UnitType getType() {
 		return type;
@@ -72,7 +94,6 @@ public class Unit {
 	}
 	
 	// }}
-
 
 	// {{ Area (property)
 	private Double area;

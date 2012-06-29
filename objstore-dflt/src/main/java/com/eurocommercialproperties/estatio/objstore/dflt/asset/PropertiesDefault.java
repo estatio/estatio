@@ -33,13 +33,20 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
 
     // {{ NewProperty  (hidden)
     @Override
-    public Property newProperty(final String code, String description, PropertyType type) {
+    public Property newProperty(final String code, String name, PropertyType type) {
         final Property property = newTransientInstance(Property.class);
         property.setCode(code);
-        property.setDescription(description);
+        property.setName(name);
         property.setType(type);
         persist(property);
         return property;
+    }
+    // }}
+
+    // {{ AllInstances
+    @Override
+    public List<Property> allInstances() {
+    	return allInstances(Property.class);
     }
     // }}
 
