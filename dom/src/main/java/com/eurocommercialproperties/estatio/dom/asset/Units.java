@@ -16,12 +16,12 @@ public interface Units {
 
     @MemberOrder(sequence = "1")
     public Unit newUnit(
-    		@Named("Code") String code,
+    		@Named("Reference") String reference,
             @Named("Name") String name);
 
     @Hidden // for use by fixtures
     public Unit newUnit(
-            String code, 
+            String reference, 
             String name, 
             UnitType type);
 

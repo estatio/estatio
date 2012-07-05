@@ -22,7 +22,7 @@ public class OwnersDefault extends AbstractFactoryAndRepository implements Owner
 
      // {{ NewOwner (action)
     @Override
-    public Owner newOwner(String name) {
+    public Owner newOwner(String reference, String name) {
         final Owner owner = newTransientInstance(Owner.class);
         owner.setName(name);
         persist(owner);

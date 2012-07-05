@@ -1,6 +1,8 @@
 package com.eurocommercialproperties.estatio.junit.todo;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.apache.isis.viewer.junit.Fixture;
@@ -19,7 +21,7 @@ public class PropertiesDefaultTest extends AbstractTest {
         final Property property = properties.newProperty("CODE-1", "Some name");
         
         assertThat(property, is(not(nullValue())));
-        assertThat(property.getCode(), is("CODE-1"));
+        assertThat(property.getReference(), is("CODE-1"));
         assertThat(property.getName(), is("Some name"));
         assertThat(getDomainObjectContainer().isPersistent(property), is(true));
     }

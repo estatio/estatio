@@ -2,36 +2,34 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Date;
-import org.apache.isis.applib.value.DateTime;
 
+import com.eurocommercialproperties.estatio.dom.contactmechanism.ContactMechanism;
+import com.eurocommercialproperties.estatio.dom.contactmechanism.ContactMechanismType;
+import com.eurocommercialproperties.estatio.dom.contactmechanism.ContactMechanismTypes;
 import com.eurocommercialproperties.estatio.dom.party.Owner;
 
 public class Property extends AbstractDomainObject {
 
 	// {{ Code (property)
-	private String code;
+	private String reference;
 
 	@Disabled
 	@MemberOrder(sequence = "1")
-	public String getCode() {
-		return code;
+	public String getReference() {
+		return reference;
 	}
 
-	public void setCode(final String code) {
-		this.code = code;
+	public void setReference(final String code) {
+		this.reference = code;
 	}
 
 	// }}
@@ -71,6 +69,20 @@ public class Property extends AbstractDomainObject {
 
 	// }}
 
+	// {{ OpeningDate (property)
+	private Date openingDate;
+
+	@MemberOrder(sequence = "1")
+	public Date getOpeningDate() {
+		return openingDate;
+	}
+
+	public void setOpeningDate(final Date openingDate) {
+		this.openingDate = openingDate;
+	}
+
+	// }}
+
 	// {{ AcquireDate (property)
 	private Date acquireDate;
 
@@ -100,7 +112,6 @@ public class Property extends AbstractDomainObject {
 
 	// }}
 
-
 	// {{ Area (property)
 	private Double area;
 
@@ -125,7 +136,30 @@ public class Property extends AbstractDomainObject {
 		}
 		return area;
 	}
+
 	// }}
+
+	// {{ ContactMechanisms (Collection)
+	private List<ContactMechanism> contactMechanisms = new ArrayList<ContactMechanism>();
+
+	@MemberOrder(sequence = "8")
+	public List<ContactMechanism> getContactMechanisms() {
+		return contactMechanisms;
+	}
+
+	public void setContactMechanisms(
+			final List<ContactMechanism> contactMechanisms) {
+		this.contactMechanisms = contactMechanisms;
+	}
+
+	public ContactMechanism newContactMechanism(final ContactMechanismType contactMechanismType){
+		ContactMechanism contactMechanism = contactMechanismType.create();
+		contactMechanisms.add(contactMechanism);
+		return contactMechanism;
+	}
+	
+	// }}
+	
 
 	// {{ Units (Collection)
 	private List<Unit> units = new ArrayList<Unit>();
@@ -139,6 +173,7 @@ public class Property extends AbstractDomainObject {
 	public void setUnits(final List<Unit> units) {
 		this.units = units;
 	}
+
 	// }}
 
 	// {{ Owners (Collection)
@@ -153,51 +188,53 @@ public class Property extends AbstractDomainObject {
 	public void setOwners(final List<Owner> collectionName) {
 		this.collectionName = collectionName;
 	}
+
 	// }}
 
-
 	// {{ newUnit (action)
-	@MemberOrder(name="Units", sequence = "1")
-	public Unit newUnit(
-			@Named("Code") final String code, 
+	@MemberOrder(name = "Units", sequence = "1")
+	public Unit newUnit(@Named("Code") final String code,
 			@Named("Name") final String name) {
 		Unit unit = unitsRepo.newUnit(code, name);
 		getUnits().add(unit);
 		unit.setProperty(this);
 		return unit;
 	}
+
 	// }}
 
 	// {{ addOwner (action)
-	@MemberOrder(name="Owners", sequence = "1")
+	@MemberOrder(name = "Owners", sequence = "1")
 	public void addOwner(final Owner owner) {
 		getOwners().add(owner);
 	}
+
 	public String validateAddOwner(final Owner owner) {
-		return getOwners().contains(owner)?"Already an owner":null;
+		return getOwners().contains(owner) ? "Already an owner" : null;
 	}
-	
+
 	// }}
 
 	// {{ removeOwner (action)
-	@MemberOrder(name="Owners", sequence = "2")
+	@MemberOrder(name = "Owners", sequence = "2")
 	public void removeOwner(final Owner owner) {
 		getOwners().remove(owner);
 	}
+
 	public String validateRemoveOwner(final Owner owner) {
-		return getOwners().contains(owner)?null:"Not an owner";
+		return getOwners().contains(owner) ? null : "Not an owner";
 	}
+
 	public List<Owner> choices0RemoveOwner() {
 		return getOwners();
 	}
+
 	public Owner default0RemoveOwner() {
-		return getOwners().size() >= 1? getOwners().get(0): null;
+		return getOwners().size() >= 1 ? getOwners().get(0) : null;
 	}
-	
+
 	// }}
 
-
-	
 	// {{ injected: Units
 	private Units unitsRepo;
 
@@ -205,6 +242,7 @@ public class Property extends AbstractDomainObject {
 		this.unitsRepo = unitsRepo;
 	}
 	// }}
-
-
+	
+	
+	
 }

@@ -24,7 +24,7 @@ public class PropertyTest extends AbstractTest {
 
     @Test(expected=DisabledException.class)
     public void cannotChangeCode() throws Exception {
-        wrappedProperty.setCode("OTHER-1");
+        wrappedProperty.setReference("OTHER-1");
     }
 	
     @Test

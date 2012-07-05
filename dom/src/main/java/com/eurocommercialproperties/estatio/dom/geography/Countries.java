@@ -1,4 +1,4 @@
-package com.eurocommercialproperties.estatio.dom.party;
+package com.eurocommercialproperties.estatio.dom.geography;
 
 import java.util.List;
 
@@ -6,16 +6,15 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.QueryOnly;
 
-@Named("Owners")
-public interface Owners {
+public interface Countries {
 
     @QueryOnly
+
     @MemberOrder(sequence = "1")
-    public Owner newOwner(
-    		String reference,
+    public Country newCountry(
+    		@Named("Reference") String reference,
             @Named("Name") String name);
 
-    // @Exploration // TODO: would be nice to associate with Wicket's DEVELOPMENT mode
-	List<Owner> allInstances();
+	List<Country> allInstances();
 
 }

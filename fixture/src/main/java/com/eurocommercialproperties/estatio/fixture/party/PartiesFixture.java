@@ -10,12 +10,12 @@ public class PartiesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-    	createOwner("ACME Holdings");
-    	createOwner("Hello World Properties");
+    	createOwner("ACME", "ACME Holdings");
+    	createOwner("HELLOWORLD", "Hello World Properties");
     }
 
-    private Owner createOwner(String name) {
-        return owners.newOwner(name);
+    private Owner createOwner(String reference, String name) {
+        return owners.newOwner(reference, name);
     }
 
     private Owners owners;
