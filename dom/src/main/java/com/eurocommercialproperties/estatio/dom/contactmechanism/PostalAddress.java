@@ -26,7 +26,7 @@ import com.eurocommercialproperties.estatio.dom.geography.State;
  * 
  * @version $Rev$ $Date$
  */
-public class PostalAddress extends ContactMechanism {
+public class PostalAddress extends CommunicationChannel {
 
 	// {{ Address1 (property)
 	private String address1;

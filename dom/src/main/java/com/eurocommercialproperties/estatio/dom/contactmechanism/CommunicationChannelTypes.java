@@ -5,13 +5,13 @@ import java.util.List;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.QueryOnly;
 
-public interface ContactMechanismTypes {
+public interface CommunicationChannelTypes {
 
 	@QueryOnly
 	@MemberOrder(sequence = "1")
-	public ContactMechanismType newContactMechanismType(
+	public CommunicationChannelType newCommunicationChannelType(
 			String fullyQualifiedClassName);
 
-	List<ContactMechanismType> allInstances();
+	List<CommunicationChannel> allInstances();
 
 }

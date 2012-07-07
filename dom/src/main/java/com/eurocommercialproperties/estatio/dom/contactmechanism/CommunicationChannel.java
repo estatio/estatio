@@ -23,17 +23,17 @@ import org.apache.isis.applib.annotation.Disabled;
  *
  * @version $Rev$ $Date$
  */
-public abstract class ContactMechanism {
+public abstract class CommunicationChannel {
 	
 	// {{ Type (property)
-	private ContactMechanismType type;
+	private CommunicationChannelType type;
 
 	@Disabled
-	public ContactMechanismType getType() {
+	public CommunicationChannelType getType() {
 		return type;
 	}
 
-	public void setType(final ContactMechanismType type) {
+	public void setType(final CommunicationChannelType type) {
 		this.type = type;
 	}
 	// }}

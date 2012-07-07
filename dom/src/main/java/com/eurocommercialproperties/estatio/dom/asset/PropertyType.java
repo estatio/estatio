@@ -16,22 +16,27 @@
  */
 package com.eurocommercialproperties.estatio.dom.asset;
 
+import org.apache.isis.applib.annotation.Bounded;
+
 /**
  * 
- *
+ * 
  * @version $Rev$ $Date$
  */
+@Bounded
 public enum PropertyType {
-	
-	COMMERCIAL ("Commercial"),
-	STORAGE ("Storage"),
-	MIXED ("A bit of everything");
-	
-	private final String description;
-	
-	    PropertyType(String description) {
-	        this.description = description;
-	    }
-	    public String description()   { return description; }
 
+	COMMERCIAL("Commercial"), STORAGE("Storage"), MIXED("A bit of everything");
+
+	private final String description;
+
+	PropertyType(String description) {
+		this.description = description;
 	}
+
+	public String description() {
+		return description;
+	}
+	
+
+}

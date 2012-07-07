@@ -2,6 +2,7 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -12,18 +13,18 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Date;
 
-import com.eurocommercialproperties.estatio.dom.contactmechanism.ContactMechanism;
-import com.eurocommercialproperties.estatio.dom.contactmechanism.ContactMechanismType;
-import com.eurocommercialproperties.estatio.dom.contactmechanism.ContactMechanismTypes;
+import com.eurocommercialproperties.estatio.dom.contactmechanism.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.contactmechanism.CommunicationChannelType;
 import com.eurocommercialproperties.estatio.dom.party.Owner;
 
 public class Property extends AbstractDomainObject {
+
 
 	// {{ Code (property)
 	private String reference;
 
 	@Disabled
-	@MemberOrder(sequence = "1")
+	@MemberOrder(sequence = "1.1")
 	public String getReference() {
 		return reference;
 	}
@@ -39,7 +40,7 @@ public class Property extends AbstractDomainObject {
 
 	@Disabled
 	@Title
-	@MemberOrder(sequence = "2")
+	@MemberOrder(sequence = "1.2")
 	public String getName() {
 		return name;
 	}
@@ -53,8 +54,7 @@ public class Property extends AbstractDomainObject {
 	// {{ Type (property)
 	private PropertyType type;
 
-	@Disabled
-	@MemberOrder(sequence = "3")
+	@MemberOrder(sequence = "1.3")
 	public PropertyType getType() {
 		return type;
 	}
@@ -63,16 +63,18 @@ public class Property extends AbstractDomainObject {
 		this.type = type;
 	}
 
+	/*
 	public List<PropertyType> choicesType() {
 		return Arrays.asList(PropertyType.values());
 	}
+	*/
 
 	// }}
 
 	// {{ OpeningDate (property)
 	private Date openingDate;
 
-	@MemberOrder(sequence = "1")
+	@MemberOrder(sequence = "1.4")
 	public Date getOpeningDate() {
 		return openingDate;
 	}
@@ -86,7 +88,7 @@ public class Property extends AbstractDomainObject {
 	// {{ AcquireDate (property)
 	private Date acquireDate;
 
-	@MemberOrder(sequence = "4")
+	@MemberOrder(sequence = "1.5")
 	public Date getAcquireDate() {
 		return acquireDate;
 	}
@@ -100,7 +102,7 @@ public class Property extends AbstractDomainObject {
 	// {{ Disposal Date (property)
 	private Date disposalDate;
 
-	@MemberOrder(sequence = "5")
+	@MemberOrder(sequence = "1.6")
 	@Optional
 	public Date getDisposalDate() {
 		return disposalDate;
@@ -115,7 +117,7 @@ public class Property extends AbstractDomainObject {
 	// {{ Area (property)
 	private Double area;
 
-	@MemberOrder(sequence = "6")
+	@MemberOrder(sequence = "1.7")
 	public Double getArea() {
 		return area;
 	}
@@ -128,7 +130,7 @@ public class Property extends AbstractDomainObject {
 
 	// {{ AreaOfUnits (property)
 
-	@MemberOrder(sequence = "7")
+	@MemberOrder(sequence = "1.8")
 	public Double getAreaOfUnits() {
 		double area = 0;
 		for (Unit unit : getUnits()) {
@@ -140,22 +142,22 @@ public class Property extends AbstractDomainObject {
 	// }}
 
 	// {{ ContactMechanisms (Collection)
-	private List<ContactMechanism> contactMechanisms = new ArrayList<ContactMechanism>();
+	private List<CommunicationChannel> contactMechanisms = new ArrayList<CommunicationChannel>();
 
-	@MemberOrder(sequence = "8")
-	public List<ContactMechanism> getContactMechanisms() {
+	@MemberOrder(sequence = "2.1")
+	public List<CommunicationChannel> getContactMechanisms() {
 		return contactMechanisms;
 	}
 
 	public void setContactMechanisms(
-			final List<ContactMechanism> contactMechanisms) {
+			final List<CommunicationChannel> contactMechanisms) {
 		this.contactMechanisms = contactMechanisms;
 	}
 
-	public ContactMechanism newContactMechanism(final ContactMechanismType contactMechanismType){
-		ContactMechanism contactMechanism = contactMechanismType.create();
-		contactMechanisms.add(contactMechanism);
-		return contactMechanism;
+	public CommunicationChannel newContactMechanism(final CommunicationChannelType communicationChannelType){
+		CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
+		contactMechanisms.add(communicationChannel);
+		return communicationChannel;
 	}
 	
 	// }}
@@ -165,7 +167,7 @@ public class Property extends AbstractDomainObject {
 	private List<Unit> units = new ArrayList<Unit>();
 
 	@Disabled
-	@MemberOrder(sequence = "10")
+	@MemberOrder(sequence = "2.2")
 	public List<Unit> getUnits() {
 		return units;
 	}
@@ -180,7 +182,7 @@ public class Property extends AbstractDomainObject {
 	private List<Owner> collectionName = new ArrayList<Owner>();
 
 	@Disabled
-	@MemberOrder(sequence = "1")
+	@MemberOrder(sequence = "2.3")
 	public List<Owner> getOwners() {
 		return collectionName;
 	}
@@ -244,5 +246,7 @@ public class Property extends AbstractDomainObject {
 	// }}
 	
 	
+	
+
 	
 }

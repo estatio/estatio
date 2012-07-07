@@ -24,7 +24,8 @@
 	<properties>
         <!-- override in each module (used by locate global resources) -->
         <siteBaseDir>.</siteBaseDir>
-        
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <trunkBaseDir>${project.build.directory}/${siteBaseDir}/..</trunkBaseDir>
         
         <distMgmtSiteUrl>file:///tmp/m2-sites/estatio</distMgmtSiteUrl>

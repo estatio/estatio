@@ -16,49 +16,31 @@
  */
 package com.eurocommercialproperties.estatio.dom.contactmechanism;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.DomainObjectContainer;
 
 /**
  * 
  * 
  * @version $Rev$ $Date$
  */
-public class ContactMechanismType extends AbstractDomainObject {
+public enum CommunicationChannelType {
 
-	// {{ FullyQualifiedClassName (property)
-	private String fullyQualifiedClassName;
+	POSTAL_ADDRESS(PostalAddress.class);
+	
+	private Class<? extends CommunicationChannel> cls;
 
-	@MemberOrder(sequence = "1")
-	public String getFullyQualifiedClassName() {
-		return fullyQualifiedClassName;
+	private CommunicationChannelType(Class<? extends CommunicationChannel> cls) {
+		this.cls = cls;
 	}
-
-	public void setFullyQualifiedClassName(final String fullyQualifiedClassName) {
-		this.fullyQualifiedClassName = fullyQualifiedClassName;
-	}
-	// }}
-
-	@Hidden
-	public ContactMechanism create() {
+	
+	public CommunicationChannel create(DomainObjectContainer container) {
 		try {
-			ContactMechanism contactMechanism = newTransientInstance(contactMechanismSubclass());
+			CommunicationChannel contactMechanism = container.newTransientInstance(cls);
 			contactMechanism.setType(this);
 			return contactMechanism;
 		} catch (Exception ex) {
 			throw new ApplicationException(ex);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Class<? extends ContactMechanism> contactMechanismSubclass() {
-		try {
-			return (Class<? extends ContactMechanism>) Class
-					.forName(getFullyQualifiedClassName());
-		} catch (ClassNotFoundException e) {
-			throw new ApplicationException("No such contact mechanism");
 		}
 	}
 
