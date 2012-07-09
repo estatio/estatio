@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.eurocommercialproperties.estatio.dom.contactmechanism;
+package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
@@ -26,22 +26,22 @@ import org.apache.isis.applib.DomainObjectContainer;
  */
 public enum CommunicationChannelType {
 
-	POSTAL_ADDRESS(PostalAddress.class);
-	
-	private Class<? extends CommunicationChannel> cls;
+    POSTAL_ADDRESS(PostalAddress.class), EMAIL_ADDRESS(EmailAddress.class), PHONE_NUMBER(PhoneNumber.class), FAX_NUMBER(FaxNumber.class);
 
-	private CommunicationChannelType(Class<? extends CommunicationChannel> cls) {
-		this.cls = cls;
-	}
-	
-	public CommunicationChannel create(DomainObjectContainer container) {
-		try {
-			CommunicationChannel contactMechanism = container.newTransientInstance(cls);
-			contactMechanism.setType(this);
-			return contactMechanism;
-		} catch (Exception ex) {
-			throw new ApplicationException(ex);
-		}
-	}
+    private Class<? extends CommunicationChannel> cls;
+
+    private CommunicationChannelType(Class<? extends CommunicationChannel> cls) {
+        this.cls = cls;
+    }
+
+    public CommunicationChannel create(DomainObjectContainer container) {
+        try {
+            CommunicationChannel contactMechanism = container.newTransientInstance(cls);
+            contactMechanism.setType(this);
+            return contactMechanism;
+        } catch (Exception ex) {
+            throw new ApplicationException(ex);
+        }
+    }
 
 }

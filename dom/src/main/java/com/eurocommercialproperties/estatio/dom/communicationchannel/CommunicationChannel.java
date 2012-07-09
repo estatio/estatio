@@ -14,31 +14,29 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.eurocommercialproperties.estatio.dom.contactmechanism;
+package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
-import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 
 /**
  * 
- *
+ * 
  * @version $Rev$ $Date$
  */
-public abstract class CommunicationChannel {
-	
-	// {{ Type (property)
-	private CommunicationChannelType type;
+public abstract class CommunicationChannel extends AbstractDomainObject {
 
-	@Disabled
-	public CommunicationChannelType getType() {
-		return type;
-	}
+    // {{ Type (property)
+    private CommunicationChannelType type;
 
-	public void setType(final CommunicationChannelType type) {
-		this.type = type;
-	}
-	// }}
+    @Hidden
+    public CommunicationChannelType getType() {
+        return type;
+    }
 
-
-	
+    public void setType(final CommunicationChannelType type) {
+        this.type = type;
+    }
+    // }}
 
 }

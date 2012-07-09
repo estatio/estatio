@@ -11,18 +11,13 @@ import org.apache.isis.applib.annotation.QueryOnly;
 public interface Properties {
 
     @QueryOnly
-
     @MemberOrder(sequence = "1")
-    public Property newProperty(
-    		@Named("Code") String code,
-            @Named("Name") String name);
+    public Property newProperty(@Named("Code") String code, @Named("Name") String name);
 
-    @Hidden // for use by fixtures
-    public Property newProperty(
-            String code, 
-            String name, 
-            PropertyType propertyType);
+    @Hidden
+    // for use by fixtures
+    public Property newProperty(String code, String name, PropertyType propertyType);
 
-	List<Property> allInstances();
+    List<Property> allInstances();
 
 }

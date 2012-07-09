@@ -1,4 +1,4 @@
-package com.eurocommercialproperties.estatio.dom.contactmechanism;
+package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
 import java.util.List;
 
@@ -14,22 +14,14 @@ import com.eurocommercialproperties.estatio.dom.geography.State;
 public interface PostalAddresses {
 
     @QueryOnly
-
     @MemberOrder(sequence = "1")
-    public PostalAddress newPostalAddress(
-    		String address1,
-            String address2,
-            String city);
+    public PostalAddress newPostalAddress(String address1, String address2, String city);
 
-    @Hidden // for use by fixtures
+    @Hidden
+    // for use by fixtures
     @MemberOrder(sequence = "1")
-    public PostalAddress newPostalAddress(
-    		String address1,
-            String address2,
-            String city,
-            Country country,
-            State state);
+    public PostalAddress newPostalAddress(String address1, String address2, String city, Country country, State state);
 
-	List<PostalAddress> allInstances();
+    List<PostalAddress> allInstances();
 
 }

@@ -16,40 +16,43 @@
  */
 package com.eurocommercialproperties.estatio.dom.geography;
 
+import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
 
 /**
  * 
  * 
  * @version $Rev$ $Date$
  */
-public class Geography {
+public class Geography extends AbstractDomainObject{
 
-	// {{ Reference (property)
-	private String reference;
+    // {{ Reference (property)
+    private String reference;
 
-	@MemberOrder(sequence = "1")
-	public String getReference() {
-		return reference;
-	}
+    @MemberOrder(sequence = "1")
+    public String getReference() {
+        return reference;
+    }
 
-	public void setReference(final String reference) {
-		this.reference = reference;
-	}
+    public void setReference(final String reference) {
+        this.reference = reference;
+    }
 
-	// }}
+    // }}
 
-	// {{ Name (property)
-	private String name;
+    // {{ Name (property)
+    private String name;
 
-	@MemberOrder(sequence = "2")
-	public String getName() {
-		return name;
-	}
+    @Title
+    @MemberOrder(sequence = "2")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
-	// }}
+    public void setName(final String name) {
+        this.name = name;
+    }
+    // }}
 
 }

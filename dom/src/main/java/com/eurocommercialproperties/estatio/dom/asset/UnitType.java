@@ -18,16 +18,21 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 /**
  * 
- *
+ * 
  * @version $Rev$ $Date$
  */
 public enum UnitType {
 
-	BOUTIQUE ,
-	MEDIUM ,
-	HYPERMARKET,
-	EXTERNAL,
-	OFFICE,
-	PARKING;
+    BOUTIQUE("Boutique"), MEDIUM("Medium"), HYPERMARKET("Hypermarket"), EXTERNAL("External"), OFFICE("Office"), PARKING("Parking");
+
+    private final String title;
+
+    UnitType(String title) {
+        this.title = title;
+    }
+
+    public String title() {
+        return title;
+    }
 
 }

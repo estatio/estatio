@@ -30,82 +30,83 @@ import org.apache.isis.applib.annotation.Title;
  */
 public class Unit {
 
-	
-	// {{ Property (property)
-	private Property property;
-
-	@Disabled
-	@MemberOrder(sequence = "1")
-	public Property getProperty() {
-		return property;
-	}
-
-	public void setProperty(final Property property) {
-		this.property = property;
-	}
-	// }}
 
 
-	// {{ Code (property)
-	private String reference;
+    // {{ Code (property)
+    private String reference;
 
-	@Title(sequence="1", append=",")
-	@MemberOrder(sequence = "1")
-	public String getReference() {
-		return reference;
-	}
+    @Title(sequence = "1", append = ", ")
+    @MemberOrder(sequence = "1")
+    public String getReference() {
+        return reference;
+    }
 
-	public void setReference(final String code) {
-		this.reference = code;
-	}
+    public void setReference(final String code) {
+        this.reference = code;
+    }
 
-	// }}
+    // }}
 
-	// {{ Name (property)
-	private String name;
+    // {{ Name (property)
+    private String name;
 
-	@Disabled
-	@Title(sequence="2")
-	@MemberOrder(sequence = "1")
-	public String getName() {
-		return name;
-	}
+    @Disabled
+    @Title(sequence = "2")
+    @MemberOrder(sequence = "2")
+    public String getName() {
+        return name;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	// }}
-	
-	// {{ Type (property)
-	private UnitType type;
+    // }}
 
-	@Disabled
-	@MemberOrder(sequence = "1")
-	public UnitType getType() {
-		return type;
-	}
+    // {{ Type (property)
+    private UnitType type;
 
-	public void setType(final UnitType type) {
-		this.type = type;
-	}
-	public List<UnitType> choicesType() {
-		return Arrays.asList(UnitType.values());
-	}
-	
-	// }}
+    @MemberOrder(sequence = "3")
+    public UnitType getType() {
+        return type;
+    }
 
-	// {{ Area (property)
-	private Double area;
+    public void setType(final UnitType type) {
+        this.type = type;
+    }
 
-	@MemberOrder(sequence = "1")
-	public Double getArea() {
-		return area;
-	}
+    public List<UnitType> choicesType() {
+        return Arrays.asList(UnitType.values());
+    }
 
-	public void setArea(final Double area) {
-		this.area = area;
-	}
-	// }}
+    // }}
+
+    // {{ Area (property)
+    private Double area;
+
+    @MemberOrder(sequence = "4")
+    public Double getArea() {
+        return area;
+    }
+
+    public void setArea(final Double area) {
+        this.area = area;
+    }
+    // }}
+    
+    // {{ Property (property)
+    private Property property;
+
+    @Disabled
+    @MemberOrder(sequence = "5")
+    public Property getProperty() {
+        return property;
+    }
+
+    public void setProperty(final Property property) {
+        this.property = property;
+    }
+
+    // }}
 
 }

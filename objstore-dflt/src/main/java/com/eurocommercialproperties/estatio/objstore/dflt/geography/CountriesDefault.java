@@ -3,6 +3,8 @@ package com.eurocommercialproperties.estatio.objstore.dflt.geography;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.filter.Filter;
 
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
@@ -32,6 +34,24 @@ public class CountriesDefault extends AbstractFactoryAndRepository implements Co
     }
     // }}
 
+    // {{ findByReference
+    /**
+     * Returns the Country with given reference
+     */
+    @Override
+    public Country findByReference(@Named("Reference") final String reference) {
+        return firstMatch(Country.class, new Filter<Country>() {
+            @Override
+            public boolean accept(final Country country) {
+                return reference.equals(country.getReference());
+            }
+        });
+    }
+
+    // }}
+
+    
+    
     // {{ AllInstances
     @Override
     public List<Country> allInstances() {

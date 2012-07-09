@@ -16,26 +16,28 @@
  */
 package com.eurocommercialproperties.estatio.dom.geography;
 
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.MemberOrder;
-
 
 /**
  * 
  * 
  * @version $Rev$ $Date$
  */
+
+@Bounded
 public class State extends Geography {
-	// {{ Country (property)
-	private Country country;
+    // {{ Country (property)
+    private Country country;
 
-	@MemberOrder(sequence = "10")
-	public Country getCountry() {
-		return country;
-	}
+    @MemberOrder(sequence = "10")
+    public Country getCountry() {
+        return country;
+    }
 
-	public void setCountry(final Country country) {
-		this.country = country;
-	}
-	// }}
+    public void setCountry(final Country country) {
+        this.country = country;
+    }
+    // }}
 
 }

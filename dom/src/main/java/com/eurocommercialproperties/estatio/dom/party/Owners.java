@@ -11,11 +11,15 @@ public interface Owners {
 
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public Owner newOwner(
-    		String reference,
-            @Named("Name") String name);
-
-    // @Exploration // TODO: would be nice to associate with Wicket's DEVELOPMENT mode
-	List<Owner> allInstances();
+    public Owner newOwner(String reference, @Named("Name") String name);
+    
+    @QueryOnly
+    @MemberOrder(sequence = "2")
+    public Owner findByReference(String reference);
+    
+    // @Exploration // TODO: would be nice to associate with Wicket's
+    // DEVELOPMENT mode
+    @MemberOrder(sequence = "3")
+    List<Owner> allInstances();
 
 }

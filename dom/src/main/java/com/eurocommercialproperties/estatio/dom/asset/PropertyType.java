@@ -26,17 +26,16 @@ import org.apache.isis.applib.annotation.Bounded;
 @Bounded
 public enum PropertyType {
 
-	COMMERCIAL("Commercial"), STORAGE("Storage"), MIXED("A bit of everything");
+    COMMERCIAL("Commercial"), STORAGE("Storage"), MIXED("A bit of everything");
 
-	private final String description;
+    private final String title;
 
-	PropertyType(String description) {
-		this.description = description;
-	}
+    PropertyType(String title) {
+        this.title = title;
+    }
 
-	public String description() {
-		return description;
-	}
-	
+    public String title() {
+        return title;
+    }
 
 }

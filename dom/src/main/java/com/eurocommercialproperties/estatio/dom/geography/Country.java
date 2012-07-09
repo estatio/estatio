@@ -16,12 +16,17 @@
  */
 package com.eurocommercialproperties.estatio.dom.geography;
 
+import org.apache.isis.applib.annotation.Bounded;
 
 /**
  * 
- *
+ * 
  * @version $Rev$ $Date$
  */
+
+@Bounded
 public class Country extends Geography {
 
+    
+    
 }

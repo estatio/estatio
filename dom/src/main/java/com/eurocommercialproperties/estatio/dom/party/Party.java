@@ -10,54 +10,49 @@ import org.apache.isis.applib.annotation.Title;
 
 public abstract class Party extends AbstractDomainObject {
 
-	// {{ Reference (property)
-	private String reference;
+    // {{ Reference (property)
+    private String reference;
 
-	@Disabled
-	@Title
-	@MemberOrder(sequence = "1")
-	public String getReference() {
-		return reference;
-	}
+    @Disabled
+    @Title
+    @MemberOrder(sequence = "1")
+    public String getReference() {
+        return reference;
+    }
 
-	public void setReference(final String reference) {
-		this.reference = reference;
-	}
-	// }}
+    public void setReference(final String reference) {
+        this.reference = reference;
+    }
 
-	
-	// {{ Name (property)
-	private String name;
+    // }}
 
-	@Disabled
-	@Title
-	@MemberOrder(sequence = "2")
-	public String getName() {
-		return name;
-	}
+    // {{ Name (property)
+    private String name;
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    @Disabled
+    @Title
+    @MemberOrder(sequence = "2")
+    public String getName() {
+        return name;
+    }
 
-	// }}
-	
-	
-	// {{ Roles (Collection)
-	private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	@MemberOrder(sequence = "1")
-	public Set<PartyRole> getRoles() {
-		return roles;
-	}
+    // }}
 
-	public void setRoles(final Set<PartyRole> roles) {
-		this.roles = roles;
-	}
-	// }}
+    // {{ Roles (Collection)
+    private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();
 
+    @MemberOrder(sequence = "1")
+    public Set<PartyRole> getRoles() {
+        return roles;
+    }
 
-
-
+    public void setRoles(final Set<PartyRole> roles) {
+        this.roles = roles;
+    }
+    // }}
 
 }
