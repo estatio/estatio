@@ -2,12 +2,12 @@ package com.eurocommercialproperties.estatio.objstore.dflt.geography;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.filter.Filter;
-
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.filter.Filter;
 
 public class StatesDefault extends AbstractFactoryAndRepository implements States {
 
@@ -18,12 +18,12 @@ public class StatesDefault extends AbstractFactoryAndRepository implements State
     }
 
     public String iconName() {
-        return "States";
+        return "State";
     }
 
     // }}
 
-    // {{ NewState  (hidden)
+    // {{ NewState (hidden)
     @Override
     public State newState(final String reference, String name, Country country) {
         final State state = newTransientInstance(State.class);
@@ -33,6 +33,7 @@ public class StatesDefault extends AbstractFactoryAndRepository implements State
         persist(state);
         return state;
     }
+
     // }}
 
     // {{ findByReference
@@ -61,12 +62,10 @@ public class StatesDefault extends AbstractFactoryAndRepository implements State
 
     // }}
 
-    
-    
     // {{ AllInstances
     @Override
     public List<State> allInstances() {
-    	return allInstances(State.class);
+        return allInstances(State.class);
     }
     // }}
 

@@ -3,6 +3,11 @@ package com.eurocommercialproperties.estatio.dom.asset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Owner;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -11,10 +16,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Date;
-
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.party.Owner;
 
 public class Property extends AbstractDomainObject {
 
@@ -138,6 +139,25 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
+    // }}
+
+    // {{ City (property)
+
+    @MemberOrder(sequence = "1.9")
+    public String getCity() {
+        // TODO: Ugly peace of code
+        String city = "";
+        for (CommunicationChannel communicationChannel : getCommunicationChannels()) {
+            if (communicationChannel instanceof PostalAddress) {
+                city = ((PostalAddress) communicationChannel).getCity();
+                break;
+            }
+        }
+        return city;
+    }
+
+    // }}
+
     // {{ CommunicationChannels (Collection)
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
@@ -161,7 +181,6 @@ public class Property extends AbstractDomainObject {
         communicationChannels.add(communicationChannel);
     }
 
-    
     // }}
 
     // {{ Units (Collection)
