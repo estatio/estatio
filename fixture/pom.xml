@@ -34,8 +34,11 @@
 
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>sqljdbc4</artifactId>
+			<artifactId>sqljdbc</artifactId>
 			<version>4.0</version>
+			<scope>system</scope>
+			<optional>true</optional>
+			<systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
 		</dependency>
 
 	</dependencies>
