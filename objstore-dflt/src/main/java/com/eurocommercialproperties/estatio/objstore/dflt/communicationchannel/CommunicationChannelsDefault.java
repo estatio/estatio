@@ -2,10 +2,6 @@ package com.eurocommercialproperties.estatio.objstore.dflt.communicationchannel;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.QueryOnly;
-
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.EmailAddress;
@@ -14,6 +10,10 @@ import com.eurocommercialproperties.estatio.dom.communicationchannel.PhoneNumber
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.QueryOnly;
 
 public class CommunicationChannelsDefault extends AbstractFactoryAndRepository implements CommunicationChannels {
 
@@ -38,9 +38,17 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     // }}
 
     @Override
+    public List<PostalAddress> allPostalAddresses() {
+        return allInstances(PostalAddress.class);
+    }
+
+    // }}
+
+    @Override
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public PostalAddress newPostalAddress(String address1, String address2, String postalCode, String city, State state, Country country) {
+    public PostalAddress newPostalAddress(String address1, String address2, String postalCode, String city,
+                    State state, Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
         pa.setAddress1(address1);
         pa.setAddress2(address2);
@@ -48,6 +56,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
         pa.setPostalCode(postalCode);
         pa.setState(state);
         pa.setCountry(country);
+        persist(pa);
         return pa;
     }
 
@@ -56,6 +65,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     public EmailAddress newEmailAddress(String address) {
         final EmailAddress ea = newTransientInstance(EmailAddress.class);
         ea.setAddress(address);
+        persist(ea);
         return ea;
     }
 
@@ -64,6 +74,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     public PhoneNumber newPhoneNumber(String number) {
         final PhoneNumber pn = newTransientInstance(PhoneNumber.class);
         pn.setNumber(number);
+        persist(pn);
         return pn;
     }
 
@@ -72,6 +83,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     public FaxNumber newFaxNumber(String number) {
         final FaxNumber fn = newTransientInstance(FaxNumber.class);
         fn.setNumber(number);
+        persist(fn);
         return fn;
     }
 

@@ -16,7 +16,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Malls", PropertyType.COMMERCIAL, 3, new Date(1999,
+        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.COMMERCIAL, 3, new Date(1999,
                         1, 1), new Date(2008, 6, 1), owners.findByReference("HELLOWORLD"));
         prop1.addCommunicationChannel(communicationChannels.newPostalAddress("1 Market Street", null, "OX1 3HL",
                         "Oxford", states.findByReference("GB-OXF"), countries.findByReference("GBR")));

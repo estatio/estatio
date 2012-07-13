@@ -14,10 +14,20 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.applib.value.Date;
 
 public class Property extends AbstractDomainObject {
+
+    // {{ Title
+
+    public String title() {
+        TitleBuffer tb = new TitleBuffer(getReference());
+        tb.append(", ", getName());
+        return tb.toString();
+    }
+
+    // }}
 
     // {{ Code (property)
     private String reference;
@@ -38,7 +48,6 @@ public class Property extends AbstractDomainObject {
     private String name;
 
     @Disabled
-    @Title
     @MemberOrder(sequence = "1.2")
     public String getName() {
         return name;

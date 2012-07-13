@@ -2,11 +2,11 @@ package com.eurocommercialproperties.estatio.objstore.dflt.asset;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
 
 public class PropertiesDefault extends AbstractFactoryAndRepository implements Properties {
 
@@ -22,14 +22,15 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
 
     // }}
 
-     // {{ NewProperty  (action)
+    // {{ NewProperty (action)
     @Override
     public Property newProperty(final String reference, String name) {
         return newProperty(reference, name, PropertyType.MIXED);
     }
+
     // }}
 
-    // {{ NewProperty  (hidden)
+    // {{ NewProperty (hidden)
     @Override
     public Property newProperty(final String reference, String name, PropertyType type) {
         final Property property = newTransientInstance(Property.class);
@@ -39,12 +40,13 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
         persist(property);
         return property;
     }
+
     // }}
 
     // {{ AllInstances
     @Override
     public List<Property> allInstances() {
-    	return allInstances(Property.class);
+        return allInstances(Property.class);
     }
     // }}
 

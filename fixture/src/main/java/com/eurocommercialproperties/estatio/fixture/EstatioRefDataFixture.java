@@ -12,6 +12,7 @@ public class EstatioRefDataFixture extends AbstractFixture {
         addFixture(new GeographyFixture());
         addFixture(new PartiesFixture());
         addFixture(new PropertiesAndUnitsFixture());
+        addFixture(new JDBCFixture());
     }
 
 }

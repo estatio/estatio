@@ -1,12 +1,17 @@
 package com.eurocommercialproperties.estatio.dom.party;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Title;
 
 public abstract class Party extends AbstractDomainObject {
 
@@ -14,7 +19,6 @@ public abstract class Party extends AbstractDomainObject {
     private String reference;
 
     @Disabled
-    @Title
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
@@ -26,33 +30,43 @@ public abstract class Party extends AbstractDomainObject {
 
     // }}
 
-    // {{ Name (property)
-    private String name;
+    // {{ Roles (Collection)
+    private Set<PartyRoleType> roles = new LinkedHashSet<PartyRoleType>();
 
-    @Disabled
-    @Title
-    @MemberOrder(sequence = "2")
-    public String getName() {
-        return name;
+    @MemberOrder(sequence = "1")
+    public Set<PartyRoleType> getRoles() {
+        return roles;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setRoles(final Set<PartyRoleType> roles) {
+        this.roles = roles;
     }
 
     // }}
 
-    // {{ Roles (Collection)
-    private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();
+    // {{ CommunicationChannels (Collection)
+    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
-    @MemberOrder(sequence = "1")
-    public Set<PartyRole> getRoles() {
-        return roles;
+    @MemberOrder(sequence = "2.1")
+    public List<CommunicationChannel> getCommunicationChannels() {
+        return communicationChannels;
     }
 
-    public void setRoles(final Set<PartyRole> roles) {
-        this.roles = roles;
+    public void setCommunicationChannels(final List<CommunicationChannel> communicationChannels) {
+        this.communicationChannels = communicationChannels;
     }
+
+    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
+        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
+        communicationChannels.add(communicationChannel);
+        return communicationChannel;
+    }
+
+    @Hidden
+    public void addCommunicationChannel(CommunicationChannel communicationChannel) {
+        communicationChannels.add(communicationChannel);
+    }
+
     // }}
 
 }
