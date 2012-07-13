@@ -739,6 +739,7 @@
 		<module>services</module>
 		<module>tests-junit</module>
 		<module>webapp</module>
+		<module>webrest</module>
 	</modules>
 
 
