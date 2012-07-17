@@ -117,6 +117,11 @@
             <artifactId>dflt</artifactId>
         </dependency>
         
+        <dependency>
+            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
+            <artifactId>xml</artifactId>
+        </dependency>
+        
         <!-- isis progmodel -->
         <dependency>
             <groupId>org.apache.isis.progmodels</groupId>
