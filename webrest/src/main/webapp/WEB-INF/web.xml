@@ -24,6 +24,13 @@
     <display-name>Estatio REST API</display-name>
 
 
+
+    <context-param>
+        <param-name>deploymentType</param-name>
+        <param-value>SERVER</param-value>
+    </context-param>
+
+
 	<filter>
 		<filter-name>ResourceCachingFilter</filter-name>
 		<filter-class>org.apache.isis.core.webapp.content.ResourceCachingFilter</filter-class>
@@ -78,6 +85,13 @@
 
 
 
+    <!--
+    -
+    -
+    - config common to all viewer(s)
+    -
+    -
+    -->
 
 	<listener>
 		<listener-class>org.apache.isis.runtimes.dflt.webapp.IsisWebAppBootstrapper</listener-class>
@@ -85,50 +99,156 @@
 
 	<context-param>
 		<param-name>isis.viewers</param-name>
-		<param-value>restfulobjects</param-value>
+		<param-value>restfulobjects,html</param-value>
 	</context-param>
 
-	<filter>
-		<filter-name>IsisSessionFilter</filter-name>
-		<filter-class>org.apache.isis.runtimes.dflt.webapp.IsisSessionFilter</filter-class>
-		<init-param>
+
+
+
+    <!--
+    -
+    -
+    - config specific to the html-viewer
+    -
+    -
+    -->
+    <!-- determine the format of the paths of the links etc that it generates -->
+    <context-param>
+        <param-name>viewer-html.suffix</param-name>
+        <param-value>htmlviewer</param-value>
+    </context-param>
+
+    <!-- redirect requests to 'htmlviewer' to the HTML viewer's start page -->
+    <filter>
+        <filter-name>RedirectFilterForHtml</filter-name>
+        <filter-class>org.apache.isis.core.webapp.routing.RedirectFilter</filter-class>
+        <init-param>
+            <param-name>redirectTo</param-name>
+            <param-value>/start.htmlviewer</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>RedirectFilterForHtml</filter-name>
+        <url-pattern>/htmlviewer</url-pattern>
+    </filter-mapping>
+
+    <!-- authenticate user, and set up an Isis Session -->
+    <filter>
+        <filter-name>IsisSessionFilterForHtml</filter-name>
+        <filter-class>org.apache.isis.runtimes.dflt.webapp.IsisSessionFilter</filter-class>
+        <init-param>
+            <!-- lookup from cache, or if a logon filter was provided -->
+            <param-name>authenticationSessionStrategy</param-name>
+            <param-value>org.apache.isis.runtimes.dflt.webapp.auth.AuthenticationSessionStrategyDefault</param-value>
+        </init-param>
+        <init-param>
+            <!-- what to do if no session was found; we indicate access only to a restricted list of paths -->
+            <param-name>whenNoSession</param-name>
+            <param-value>restricted</param-value>
+        </init-param>
+        <init-param>
+            <!-- the list of paths that are accessible if no session was found -->
+            <param-name>restricted</param-name>
+            <param-value>/logon.htmlviewer,/register.htmlviewer</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>IsisSessionFilterForHtml</filter-name>
+        <servlet-name>HtmlLogin</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>IsisSessionFilterForHtml</filter-name>
+        <servlet-name>HtmlDispatcher</servlet-name>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>HtmlLogon</servlet-name>
+        <servlet-class>org.apache.isis.viewer.html.servlet.LogonServlet</servlet-class>
+        <init-param>
+            <param-name>authenticationSessionStrategy</param-name>
+            <param-value>org.apache.isis.runtimes.dflt.webapp.auth.AuthenticationSessionStrategyDefault</param-value>
+        </init-param>
+        <init-param>
+            <param-name>startPage</param-name>
+            <param-value>start.htmlviewer</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HtmlLogon</servlet-name>
+        <url-pattern>/logon.htmlviewer</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>HtmlDispatcher</servlet-name>
+        <servlet-class>org.apache.isis.viewer.html.servlet.ControllerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HtmlDispatcher</servlet-name>
+        <url-pattern>*.htmlviewer</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+
+    <!--
+    -
+    -
+    - config specific to the restfulobjects-viewer
+    -
+    -
+    -->
+    
+    <!-- bootstrap the RestEasy framework -->
+    <listener>
+        <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+    </listener>
+
+    <!-- used by RestEasy to determine the JAX-RS resources and other related configuration -->
+    <context-param>
+        <param-name>javax.ws.rs.Application</param-name>
+        <param-value>org.apache.isis.viewer.restfulobjects.viewer.RestfulObjectsApplication</param-value>
+    </context-param>
+
+    <!-- authenticate user, set up an Isis session -->
+    <filter>
+        <filter-name>IsisSessionFilterForRestfulObjects</filter-name>
+        <filter-class>org.apache.isis.runtimes.dflt.webapp.IsisSessionFilter</filter-class>
+        <!-- authentication required for REST -->
+        <init-param>
 			<!-- trusted client, so no authentication required -->
 			<param-name>authenticationSessionStrategy</param-name>
 			<param-value>org.apache.isis.viewer.restfulobjects.viewer.authentication.AuthenticationSessionStrategyTrusted</param-value>
-		</init-param>
-		<init-param>
-            <!-- what to do if no session was found; we indicate to issue a 401 basic authentication challenge -->
+			<!-- 
+            <param-value>org.apache.isis.viewer.restfulobjects.viewer.authentication.AuthenticationSessionStrategyBasicAuth</param-value>
+			-->
+        </init-param>
+        <init-param>
+            <!-- what to do if no session was found -->
             <param-name>whenNoSession</param-name>
             <param-value>continue</param-value>
+            <!--
+            a 401 basic auth challenge 
+            <param-value>basicAuthChallenge</param-value>
+            -->
         </init-param>
-	</filter>
+    </filter>
+    <filter-mapping>
+        <!-- this is mapped to the entire app; however the IsisSessionFilter will "notice" if the session filter has already been
+             executed for the request pipeline, and if so will do nothing -->
+        <filter-name>IsisSessionFilterForRestfulObjects</filter-name>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+    </filter-mapping>
 
-	<filter-mapping>
-		<filter-name>IsisSessionFilter</filter-name>
-		<url-pattern>*</url-pattern>
-	</filter-mapping>
 
-
-
-
-	<listener>
-		<listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-	</listener>
-
-	<context-param>
-		<param-name>javax.ws.rs.Application</param-name>
-		<param-value>org.apache.isis.viewer.restfulobjects.viewer.RestfulObjectsApplication</param-value>
-	</context-param>
-
-	<servlet>
-		<servlet-name>RestEasy</servlet-name>
-		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>RestEasy</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-
+    <servlet>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 	
 </web-app>

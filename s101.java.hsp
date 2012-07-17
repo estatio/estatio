@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-project language="java" version="3.5.1527" flavor="j2se">
+  <property name="hide-externals" value="true" />
+  <property name="show-needs-to-compile" value="false" />
+  <property name="detail-mode" value="false" />
+  <property name="project-type" value="classpath" />
+  <property name="hide-deprecated" value="false" />
+  <classpath>
+    <classpathentry kind="lib" path="D:\ESTATIO\app\dom\target-ide\classes" />
+  </classpath>
+  <restructuring>
+    <set version="1" name="Sandbox 1" hiview="Codemap" active="true" todo="false" />
+    <set version="1" name="Flattened to classes" hiview="Codemap" active="false" todo="false">
+      <action type="flatten" active="true" description="Flatten root">
+        <params flattenLeafFolders="true">
+          <container-fqn fqn="root" type="root" path="" isroot="true" />
+        </params>
+        <composite-set />
+      </action>
+    </set>
+    <set version="1" name="Flattened to leaf packages" hiview="Codemap" active="false" todo="false">
+      <action type="flatten" active="true" description="Flatten root">
+        <params flattenLeafFolders="false">
+          <container-fqn fqn="root" type="root" path="" isroot="true" />
+        </params>
+        <composite-set />
+      </action>
+    </set>
+  </restructuring>
+  <grid-set sep="." version="3.5.1527">
+    <grid name="Diagram 1" enforce="true" strict="false">
+      <row>
+        <cell name="Properties" pattern="com.eurocommercialproperties.estatio.dom.asset.Properties" vexpanded="false" visibility="public" />
+      </row>
+      <row>
+        <cell name="Property" pattern="com.eurocommercialproperties.estatio.dom.asset.Property" vexpanded="false" visibility="public" />
+      </row>
+      <row>
+        <cell name="Units" pattern="com.eurocommercialproperties.estatio.dom.asset.Units" vexpanded="false" visibility="public" />
+      </row>
+      <row>
+        <cell name="Unit" pattern="com.eurocommercialproperties.estatio.dom.asset.Unit" vexpanded="false" visibility="public" />
+      </row>
+      <row>
+        <cell name="PropertyType" pattern="com.eurocommercialproperties.estatio.dom.asset.PropertyType" vexpanded="false" visibility="public" />
+        <cell name="UnitType" pattern="com.eurocommercialproperties.estatio.dom.asset.UnitType" vexpanded="false" visibility="public" />
+      </row>
+    </grid>
+    <grid name="Diagram 2" enforce="true" strict="false">
+      <row>
+        <cell name="asset" pattern="com.eurocommercialproperties.estatio.dom.asset.?" vexpanded="false" visibility="public">
+          <grid>
+            <row>
+              <cell name="Properties" pattern="com.eurocommercialproperties.estatio.dom.asset.Properties" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Units" pattern="com.eurocommercialproperties.estatio.dom.asset.Units" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Unit" pattern="com.eurocommercialproperties.estatio.dom.asset.Unit" vexpanded="false" visibility="public" />
+              <cell name="Property" pattern="com.eurocommercialproperties.estatio.dom.asset.Property" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="PropertyType" pattern="com.eurocommercialproperties.estatio.dom.asset.PropertyType" vexpanded="false" visibility="public" />
+              <cell name="UnitType" pattern="com.eurocommercialproperties.estatio.dom.asset.UnitType" vexpanded="false" visibility="public" />
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <row>
+        <cell name="party" pattern="com.eurocommercialproperties.estatio.dom.party.?" vexpanded="false" visibility="public">
+          <grid>
+            <row>
+              <cell name="Owners" pattern="com.eurocommercialproperties.estatio.dom.party.Owners" vexpanded="false" visibility="public" />
+              <cell name="Parties" pattern="com.eurocommercialproperties.estatio.dom.party.Parties" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Organisation" pattern="com.eurocommercialproperties.estatio.dom.party.Organisation" vexpanded="false" visibility="public" />
+              <cell name="Owner" pattern="com.eurocommercialproperties.estatio.dom.party.Owner" vexpanded="false" visibility="public" />
+              <cell name="PartyRole" pattern="com.eurocommercialproperties.estatio.dom.party.PartyRole" vexpanded="false" visibility="public" />
+              <cell name="Person" pattern="com.eurocommercialproperties.estatio.dom.party.Person" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Party" pattern="com.eurocommercialproperties.estatio.dom.party.Party" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="PartyRoleType" pattern="com.eurocommercialproperties.estatio.dom.party.PartyRoleType" vexpanded="false" visibility="public" />
+              <cell name="PersonGenderType" pattern="com.eurocommercialproperties.estatio.dom.party.PersonGenderType" vexpanded="false" visibility="public" />
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <row>
+        <cell name="communicationchannel" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public">
+          <grid>
+            <row>
+              <cell name="CommunicationChannels" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels" vexpanded="false" visibility="public" />
+              <cell name="PostalAddresses" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddresses" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="CommunicationChannelType" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="EmailAddress" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.EmailAddress" vexpanded="false" visibility="public" />
+              <cell name="FaxNumber" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.FaxNumber" vexpanded="false" visibility="public" />
+              <cell name="PhoneNumber" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.PhoneNumber" vexpanded="false" visibility="public" />
+              <cell name="PostalAddress" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="CommunicationChannel" pattern="com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel" vexpanded="false" visibility="public" />
+            </row>
+          </grid>
+        </cell>
+      </row>
+      <row>
+        <cell name="geography" pattern="com.eurocommercialproperties.estatio.dom.geography.?" vexpanded="false" visibility="public">
+          <grid>
+            <row>
+              <cell name="States" pattern="com.eurocommercialproperties.estatio.dom.geography.States" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Countries" pattern="com.eurocommercialproperties.estatio.dom.geography.Countries" vexpanded="false" visibility="public" />
+              <cell name="State" pattern="com.eurocommercialproperties.estatio.dom.geography.State" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Country" pattern="com.eurocommercialproperties.estatio.dom.geography.Country" vexpanded="false" visibility="public" />
+            </row>
+            <row>
+              <cell name="Geography" pattern="com.eurocommercialproperties.estatio.dom.geography.Geography" vexpanded="false" visibility="public" />
+            </row>
+          </grid>
+        </cell>
+      </row>
+    </grid>
+  </grid-set>
+</local-project>
+

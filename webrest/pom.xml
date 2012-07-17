@@ -100,11 +100,15 @@
         
 
         <!-- isis viewer -->
-	<dependency>
-		<groupId>org.apache.isis.viewer</groupId>
-		<artifactId>restfulobjects-viewer</artifactId>
-	</dependency>
-
+		<dependency>
+			<groupId>org.apache.isis.viewer</groupId>
+			<artifactId>restfulobjects-viewer</artifactId>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.apache.isis.viewer</groupId>
+			<artifactId>html</artifactId>
+		</dependency>
 
         <!-- isis runtime -->
         <dependency>
