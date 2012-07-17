@@ -25,8 +25,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-	<artifactId>app-objstore-jpa</artifactId>
-	<name>Repositories (JPA)</name>
+	<artifactId>app-objstore-jdo</artifactId>
+	<name>Repositories (JDO)</name>
 
 	<properties>
         <siteBaseDir>..</siteBaseDir>

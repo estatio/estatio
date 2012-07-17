@@ -15,13 +15,23 @@ import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.party.Owners;
 import com.eurocommercialproperties.estatio.objstore.dflt.asset.PropertiesDefault;
 import com.eurocommercialproperties.estatio.objstore.dflt.asset.UnitsDefault;
+import com.eurocommercialproperties.estatio.objstore.dflt.communicationchannel.CommunicationChannelsDefault;
+import com.eurocommercialproperties.estatio.objstore.dflt.geography.CountriesDefault;
+import com.eurocommercialproperties.estatio.objstore.dflt.geography.StatesDefault;
 import com.eurocommercialproperties.estatio.objstore.dflt.party.OwnersDefault;
 
 
 
 @RunWith(IsisTestRunner.class)
 @ConfigDir("../webapp/src/main/webapp/WEB-INF") // acts as default, but can be overridden by annotations
-@Services({ @Service(OwnersDefault.class), @Service(PropertiesDefault.class), @Service(UnitsDefault.class) })
+@Services({ 
+	@Service(OwnersDefault.class), 
+	@Service(PropertiesDefault.class), 
+	@Service(UnitsDefault.class), 
+	@Service(CountriesDefault.class), 
+	@Service(StatesDefault.class),
+	@Service(CommunicationChannelsDefault.class)
+})
 public abstract class AbstractTest {
 
     private DomainObjectContainer domainObjectContainer;
