@@ -12,12 +12,21 @@ public interface Properties {
 
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public Property newProperty(@Named("Code") String code, @Named("Name") String name);
+    public Property newProperty(@Named("Reference") String code, @Named("Name") String name);
+
+    @QueryOnly
+    @MemberOrder(sequence = "2")
+    public Property findByReference(@Named("Reference") String reference);
 
     @Hidden
     // for use by fixtures
-    public Property newProperty(String code, String name, PropertyType propertyType);
+    public Property newProperty(String reference, String name, PropertyType propertyType);
 
     List<Property> allInstances();
+
+    /**
+     * @param reference
+     * @return
+     */
 
 }

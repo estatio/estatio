@@ -96,6 +96,7 @@ public class Property extends AbstractDomainObject {
     private Date acquireDate;
 
     @MemberOrder(sequence = "1.5")
+    @Optional
     public Date getAcquireDate() {
         return acquireDate;
     }

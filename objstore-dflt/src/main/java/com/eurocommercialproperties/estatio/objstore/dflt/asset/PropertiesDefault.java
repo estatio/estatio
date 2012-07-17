@@ -7,6 +7,7 @@ import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.filter.Filter;
 
 public class PropertiesDefault extends AbstractFactoryAndRepository implements Properties {
 
@@ -39,6 +40,19 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
         property.setType(type);
         persist(property);
         return property;
+    }
+
+    // }}
+
+    // {{ NewProperty (hidden)
+    @Override
+    public Property findByReference(final String reference) {
+        return firstMatch(Property.class, new Filter<Property>() {
+            @Override
+            public boolean accept(final Property property) {
+                return reference.equals(property.getReference());
+            }
+        });
     }
 
     // }}
