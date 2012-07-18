@@ -16,20 +16,23 @@
  */
 package com.eurocommercialproperties.estatio.dom.party;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.value.Date;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
+@javax.jdo.annotations.PersistenceCapable(schema="party", identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
+@ObjectType("PROL")
 public class PartyRole extends AbstractDomainObject {
 
     // {{ Party (property)
     private Party party;
 
+    @javax.jdo.annotations.Column(name="PARTY_ID")
     @MemberOrder(sequence = "1")
     public Party getParty() {
         return party;

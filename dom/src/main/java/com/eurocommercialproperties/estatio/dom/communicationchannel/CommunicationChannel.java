@@ -6,11 +6,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.ObjectType;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(schema="comms", identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
-@javax.jdo.annotations.Discriminator("CCHN")
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("CCHN") // required since subtypes are rolling-up
+@ObjectType("CCHN")
 public abstract class CommunicationChannel extends AbstractDomainObject {
 
     // {{ Type (attribute)

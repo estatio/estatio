@@ -3,14 +3,18 @@ package com.eurocommercialproperties.estatio.dom.asset;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.Order;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Date;
@@ -20,9 +24,9 @@ import com.eurocommercialproperties.estatio.dom.communicationchannel.Communicati
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.party.Owner;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(schema="asset", identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
-@javax.jdo.annotations.Discriminator("PROP")
+@ObjectType("PROP")
 public class Property extends AbstractDomainObject {
 
     // {{ Reference (attribute, title)
@@ -158,7 +162,9 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @javax.jdo.annotations.Join // to avoid FK in CommunicationChannel back to Property
+    @javax.jdo.annotations.Join(column="PROPERTY_ID") // to avoid FK back to Property
+    @javax.jdo.annotations.Element(column="COMMUNICATIONCHANNEL_ID")
+    @javax.jdo.annotations.Order(column="IDX")
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "2.1")
@@ -185,6 +191,7 @@ public class Property extends AbstractDomainObject {
 
     // {{ Units (list, bidir)
     @javax.jdo.annotations.Persistent(mappedBy="property") 
+    @javax.jdo.annotations.Order(column="PROPERTY_UNITS_IDX")
     private List<Unit> units = new ArrayList<Unit>();
 
     @Disabled
@@ -199,8 +206,10 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ Owners (list, unidir)
-    // REVIEW: this is unidir relationship, and will cause a FK to propogate.  If should be bidir, use @javax.jdo.annotations.Persistent(mappedBy="xxx"); if unidir but no FK desired, use @javax.jdo.annotation.Join 
+    // {{ Owners (list, unidir using join)
+    @javax.jdo.annotations.Join(column="PROPERTY_ID") // to avoid FK back to Property
+    @javax.jdo.annotations.Element(column="OWNER_ID")
+    @javax.jdo.annotations.Order(column="IDX")
     private List<Owner> owners = new ArrayList<Owner>();
 
     @Disabled

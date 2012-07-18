@@ -5,6 +5,7 @@ import java.util.List;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
@@ -12,9 +13,10 @@ import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Discriminator("POST")
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE) // roll-up
+@javax.jdo.annotations.PersistenceCapable(schema="comms")
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("PSTA")
+@ObjectType("PSTA")
 public class PostalAddress extends CommunicationChannel {
 
     // {{ Address1 (attribute, title)
@@ -79,6 +81,7 @@ public class PostalAddress extends CommunicationChannel {
     // {{ Country (attribute)
     private Country country;
 
+    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     @Optional
     @MemberOrder(sequence = "5")
     public Country getCountry() {
@@ -97,6 +100,7 @@ public class PostalAddress extends CommunicationChannel {
     // {{ State (attribute)
     private State state;
 
+    @javax.jdo.annotations.Column(name="STATE_ID")
     @Optional
     @MemberOrder(sequence = "6")
     public State getState() {
@@ -112,7 +116,6 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     // }}
-    
 
     // {{ injected dependencies
     private States states;

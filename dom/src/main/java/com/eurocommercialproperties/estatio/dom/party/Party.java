@@ -16,10 +16,12 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(schema="party", identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@ObjectType("PRTY")
 public abstract class Party extends AbstractDomainObject {
 
     // {{ Reference (attribute)
@@ -50,10 +52,11 @@ public abstract class Party extends AbstractDomainObject {
         this.roles = roles;
     }
     // }}
-
     
     // {{ CommunicationChannels (list, unidir)
-    @javax.jdo.annotations.Join // to avoid FK in CommunicationChannel back to Party
+    @javax.jdo.annotations.Join(column="PARTY_ID") // to avoid FK back to Property
+    @javax.jdo.annotations.Element(column="COMMUNICATIONCHANNEL_ID")
+    @javax.jdo.annotations.Order(column="IDX")
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "2.1")

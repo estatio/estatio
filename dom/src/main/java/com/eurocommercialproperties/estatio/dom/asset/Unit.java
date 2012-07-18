@@ -8,11 +8,12 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(schema="asset", identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
-@javax.jdo.annotations.Discriminator("UNIT")
+@ObjectType("UNIT")
 public class Unit {
 
     // {{ Reference (attribute)
@@ -81,6 +82,7 @@ public class Unit {
     // {{ Property (attribute)
     private Property property;
 
+    @javax.jdo.annotations.Column(name="PROPERTY_ID")
     @Disabled
     @MemberOrder(sequence = "5")
     public Property getProperty() {

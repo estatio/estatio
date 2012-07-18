@@ -4,11 +4,12 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(schema="geography")
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE) // table-per-type
-@javax.jdo.annotations.Discriminator("CTRY")
+@ObjectType("CTRY")
 @Bounded
 public class Country extends Geography {
 

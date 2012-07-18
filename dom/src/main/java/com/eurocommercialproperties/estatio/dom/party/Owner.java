@@ -4,21 +4,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE) // roll-up
-@javax.jdo.annotations.Discriminator("OWNR")
+@javax.jdo.annotations.PersistenceCapable(schema="party")
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@ObjectType("OWNR")
 public class Owner extends Party {
-
-	
-//    // {{ Title
-//    public String title() {
-//        TitleBuffer tb = new TitleBuffer(getReference()).append("-", getName());
-//        return tb.toString();
-//    }
-//
-//    // }}
 
 	
     // {{ Reference (attribute, overridden for annotations)

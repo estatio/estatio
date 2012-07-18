@@ -19,20 +19,14 @@ package com.eurocommercialproperties.estatio.dom.party;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE) // roll-up
-@javax.jdo.annotations.Discriminator("PERS")
+@javax.jdo.annotations.PersistenceCapable(schema="party")
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@ObjectType("PERS")
 public class Person extends Party {
-
-	// REVIEW: replaced with @Title
-//    public String title() {
-//        TitleBuffer tb = new TitleBuffer(getLastName());
-//        tb.append(", ", getFirstName()).append(" - ", getInitials());
-//        return tb.toString();
-//    }
 
     // {{ Initials (attribute, title)
     private String initials;
