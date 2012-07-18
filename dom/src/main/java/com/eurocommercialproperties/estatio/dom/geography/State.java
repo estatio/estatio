@@ -16,18 +16,19 @@
  */
 package com.eurocommercialproperties.estatio.dom.geography;
 
+import javax.jdo.annotations.InheritanceStrategy;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
 
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE) // table-per-type
+@javax.jdo.annotations.Discriminator("STTE")
 @Bounded
 public class State extends Geography {
-    // {{ Country (property)
+	
+    // {{ Country (attribute)
     private Country country;
 
     @MemberOrder(sequence = "10")

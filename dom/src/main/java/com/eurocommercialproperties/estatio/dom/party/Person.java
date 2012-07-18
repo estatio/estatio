@@ -16,27 +16,29 @@
  */
 package com.eurocommercialproperties.estatio.dom.party;
 
+import javax.jdo.annotations.InheritanceStrategy;
+
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.applib.annotation.Title;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE) // roll-up
+@javax.jdo.annotations.Discriminator("PERS")
 public class Person extends Party {
 
-    public String title() {
-        TitleBuffer tb = new TitleBuffer(getLastName());
-        tb.append(", ", getFirstName()).append(" - ", getInitials());
-        return tb.toString();
-    }
+	// REVIEW: replaced with @Title
+//    public String title() {
+//        TitleBuffer tb = new TitleBuffer(getLastName());
+//        tb.append(", ", getFirstName()).append(" - ", getInitials());
+//        return tb.toString();
+//    }
 
-    // {{ initials (property)
+    // {{ Initials (attribute, title)
     private String initials;
 
-    @MemberOrder(sequence = "1")
+    @Title(prepend=" - ", sequence="3")
+    @MemberOrder(sequence = "3")
     @Optional
     public String getInitials() {
         return initials;
@@ -48,9 +50,10 @@ public class Person extends Party {
 
     // }}
 
-    // {{ FirstName (property)
+    // {{ FirstName (attribute, title)
     private String firstName;
 
+    @Title(prepend=", ", sequence="2")
     @MemberOrder(sequence = "1")
     @Optional
     public String getFirstName() {
@@ -60,13 +63,13 @@ public class Person extends Party {
     public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
-
     // }}
 
-    // {{ LastName (property)
+    // {{ LastName (attribute, title)
     private String lastName;
 
-    @MemberOrder(sequence = "1")
+    @Title(sequence="1")
+    @MemberOrder(sequence = "2")
     public String getLastName() {
         return lastName;
     }
@@ -74,13 +77,12 @@ public class Person extends Party {
     public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
-
     // }}
 
-    // {{ Gender (property)
+    // {{ Gender (attribute)
     private PersonGenderType gender;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "4")
     public PersonGenderType getGender() {
         return gender;
     }
@@ -88,17 +90,12 @@ public class Person extends Party {
     public void setGender(final PersonGenderType gender) {
         this.gender = gender;
     }
-
     // }}
 
+    // {{ validate
     public String validate() {
-
-        if (getFirstName().isEmpty() || getLastName().isEmpty()) {
-            return "At least the first name or initials have to be filled in";
-        } else {
-            return null;
-        }
-
+        return getFirstName().isEmpty() || getLastName().isEmpty() ? "At least the first name or initials have to be filled in" : null;
     }
+    // }}
 
 }

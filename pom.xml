@@ -46,7 +46,13 @@
 			<snapshots>
 			</snapshots>
 		</repository>
+		
+		<repository>
+			<id>gettext-commons-site</id>
+			<url>http://gettext-commons.googlecode.com/svn/maven-repository/</url>
+		</repository>
 	</repositories>
+
 
 	<build>
 		<pluginManagement>
@@ -558,6 +564,44 @@
 				<version>${isis.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.xnap.commons</groupId>
+				<artifactId>gettext-commons</artifactId>
+				<version>0.9.6</version>
+			</dependency>
+
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jmock</groupId>
+                <artifactId>jmock</artifactId>
+                <version>2.5.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jmock</groupId>
+                <artifactId>jmock-junit4</artifactId>
+                <version>2.5.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit-dep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
+            <dependency>
+                <groupId>org.jmock</groupId>
+                <artifactId>jmock-legacy</artifactId>
+                <version>2.5.1</version>
+            </dependency>
+            
 		</dependencies>
 	</dependencyManagement>
 	<reporting>

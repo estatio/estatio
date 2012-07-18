@@ -5,6 +5,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 
@@ -13,9 +17,12 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 public abstract class Party extends AbstractDomainObject {
 
-    // {{ Reference (property)
+    // {{ Reference (attribute)
     private String reference;
 
     @Disabled
@@ -27,24 +34,26 @@ public abstract class Party extends AbstractDomainObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
-
     // }}
 
-    // {{ Roles (Collection)
-    private Set<PartyRoleType> roles = new LinkedHashSet<PartyRoleType>();
+    // {{ Roles (set, bidir)
+    // REVIEW: changed this from set of PartyRoleType, which I suspect was wrong (in any case can't have sets of enums)
+    @javax.jdo.annotations.Persistent(mappedBy="party")
+    private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();
 
     @MemberOrder(sequence = "1")
-    public Set<PartyRoleType> getRoles() {
+    public Set<PartyRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(final Set<PartyRoleType> roles) {
+    public void setRoles(final Set<PartyRole> roles) {
         this.roles = roles;
     }
-
     // }}
 
-    // {{ CommunicationChannels (Collection)
+    
+    // {{ CommunicationChannels (list, unidir)
+    @javax.jdo.annotations.Join // to avoid FK in CommunicationChannel back to Party
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "2.1")

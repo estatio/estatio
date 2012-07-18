@@ -1,22 +1,8 @@
-/**
- *  Licensed to the Apache Software Foundation (ASF) under one or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
 import java.util.List;
+
+import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
@@ -26,14 +12,12 @@ import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Discriminator("POST")
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE) // roll-up
 public class PostalAddress extends CommunicationChannel {
 
-    // {{ Address1 (property)
+    // {{ Address1 (attribute, title)
     private String address1;
 
     @Title(sequence = "1")
@@ -48,7 +32,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // }}
 
-    // {{ Address2 (property)
+    // {{ Address2 (attribute)
     private String address2;
 
     @Optional
@@ -63,7 +47,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // }}
 
-    // {{ PostalCode (property)
+    // {{ PostalCode (attribute)
     private String postalCode;
 
     @MemberOrder(sequence = "3")
@@ -77,7 +61,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // }}
 
-    // {{ City (property)
+    // {{ City (attribute, title)
     private String city;
 
     @Title(sequence = "2", prepend = ", ")
@@ -92,7 +76,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // }}
 
-    // {{ Country (property)
+    // {{ Country (attribute)
     private Country country;
 
     @Optional
@@ -110,7 +94,7 @@ public class PostalAddress extends CommunicationChannel {
 
     // }}
 
-    // {{ State (property)
+    // {{ State (attribute)
     private State state;
 
     @Optional
@@ -130,10 +114,12 @@ public class PostalAddress extends CommunicationChannel {
     // }}
     
 
+    // {{ injected dependencies
     private States states;
-
-    public void setStateRepository(final States states) {
-        this.states = states;
+    
+    public void setStates(final States states) {
+    	this.states = states;
     }
+	// }}
 
 }

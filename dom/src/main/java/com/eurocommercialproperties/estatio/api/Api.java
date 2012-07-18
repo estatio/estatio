@@ -20,11 +20,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.value.Date;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
 public interface Api {
 
     public void country(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name);

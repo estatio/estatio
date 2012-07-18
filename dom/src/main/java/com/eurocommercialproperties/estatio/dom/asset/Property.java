@@ -3,10 +3,8 @@ package com.eurocommercialproperties.estatio.dom.asset;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-import com.eurocommercialproperties.estatio.dom.party.Owner;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
@@ -14,24 +12,23 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.util.TitleBuffer;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Date;
 
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Owner;
+
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
+@javax.jdo.annotations.Discriminator("PROP")
 public class Property extends AbstractDomainObject {
 
-    // {{ Title
-
-    public String title() {
-        TitleBuffer tb = new TitleBuffer(getReference());
-        tb.append(", ", getName());
-        return tb.toString();
-    }
-
-    // }}
-
-    // {{ Code (property)
+    // {{ Reference (attribute, title)
     private String reference;
 
+    @Title(sequence="1", append=", ")
     @Disabled
     @MemberOrder(sequence = "1.1")
     public String getReference() {
@@ -41,12 +38,12 @@ public class Property extends AbstractDomainObject {
     public void setReference(final String code) {
         this.reference = code;
     }
-
     // }}
 
-    // {{ Name (property)
+    // {{ Name (attribute, title)
     private String name;
 
+    @Title(sequence="2")
     @Disabled
     @MemberOrder(sequence = "1.2")
     public String getName() {
@@ -59,7 +56,7 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ Type (property)
+    // {{ Type (attribute)
     private PropertyType type;
 
     @MemberOrder(sequence = "1.3")
@@ -70,17 +67,12 @@ public class Property extends AbstractDomainObject {
     public void setType(final PropertyType type) {
         this.type = type;
     }
-
-    /*
-     * public List<PropertyType> choicesType() { return
-     * Arrays.asList(PropertyType.values()); }
-     */
-
     // }}
 
-    // {{ OpeningDate (property)
+    // {{ OpeningDate (attribute)
     private Date openingDate;
 
+    @javax.jdo.annotations.Persistent // required for applib.Date
     @MemberOrder(sequence = "1.4")
     public Date getOpeningDate() {
         return openingDate;
@@ -92,9 +84,10 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ AcquireDate (property)
+    // {{ AcquireDate (attribute)
     private Date acquireDate;
 
+    @javax.jdo.annotations.Persistent // required for applib.Date
     @MemberOrder(sequence = "1.5")
     @Optional
     public Date getAcquireDate() {
@@ -107,9 +100,10 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ Disposal Date (property)
+    // {{ Disposal Date (attribute)
     private Date disposalDate;
 
+    @javax.jdo.annotations.Persistent // required for applib.Date
     @MemberOrder(sequence = "1.6")
     @Optional
     public Date getDisposalDate() {
@@ -122,7 +116,8 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ Area (property)
+    // {{ Area (attribute)
+    // REVIEW: should a BigDecimal be used instead?
     private Double area;
 
     @MemberOrder(sequence = "1.7")
@@ -136,8 +131,7 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ AreaOfUnits (property)
-
+    // {{ AreaOfUnits (attribute)
     @MemberOrder(sequence = "1.8")
     public Double getAreaOfUnits() {
         double area = 0;
@@ -149,26 +143,22 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // }}
-
-    // {{ City (property)
-
+    // {{ City (derived attribute)
     @MemberOrder(sequence = "1.9")
     public String getCity() {
-        // TODO: Ugly peace of code
-        String city = "";
+        // TODO: Ugly piece of code
         for (CommunicationChannel communicationChannel : getCommunicationChannels()) {
             if (communicationChannel instanceof PostalAddress) {
-                city = ((PostalAddress) communicationChannel).getCity();
-                break;
+                return ((PostalAddress) communicationChannel).getCity();
             }
         }
-        return city;
+        return "";
     }
 
     // }}
 
-    // {{ CommunicationChannels (Collection)
+    // {{ CommunicationChannels (list, unidir)
+    @javax.jdo.annotations.Join // to avoid FK in CommunicationChannel back to Property
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "2.1")
@@ -193,7 +183,8 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ Units (Collection)
+    // {{ Units (list, bidir)
+    @javax.jdo.annotations.Persistent(mappedBy="property") 
     private List<Unit> units = new ArrayList<Unit>();
 
     @Disabled
@@ -208,7 +199,8 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ Owners (Collection)
+    // {{ Owners (list, unidir)
+    // REVIEW: this is unidir relationship, and will cause a FK to propogate.  If should be bidir, use @javax.jdo.annotations.Persistent(mappedBy="xxx"); if unidir but no FK desired, use @javax.jdo.annotation.Join 
     private List<Owner> owners = new ArrayList<Owner>();
 
     @Disabled

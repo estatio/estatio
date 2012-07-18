@@ -16,17 +16,18 @@
  */
 package com.eurocommercialproperties.estatio.dom.party;
 
+import javax.jdo.annotations.InheritanceStrategy;
+
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
+
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE) // roll-up
+@javax.jdo.annotations.Discriminator("ORGN")
 public class Organisation extends Party {
 
-    // {{ Name (property)
+    // {{ Name (attribute, title)
     private String name;
 
     @Title

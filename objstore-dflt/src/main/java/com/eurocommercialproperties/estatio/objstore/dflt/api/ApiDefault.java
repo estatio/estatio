@@ -34,6 +34,8 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     // setCountry) is ignored and createOrUpdate (as in
     // createOrUpdatePropertyPostalAddress) creates long method names.
     // Suggestions will be rewarded with a beer.
+    //
+    // SUGGESTION: how about putCountry?  (cf HTTP PUT, it's an idempotent action).  Or maybe uploadCountry() ?
 
     @Override
     public void country(String code, String alpha2Code, String name) {

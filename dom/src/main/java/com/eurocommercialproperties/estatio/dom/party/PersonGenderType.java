@@ -1,22 +1,13 @@
 package com.eurocommercialproperties.estatio.dom.party;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
+import com.eurocommercialproperties.estatio.dom.utils.StringUtils;
+
 public enum PersonGenderType {
 
-    MALE("Male"), FEMALE("Female"), UNKONWN("Uknown");
-
-    private final String title;
-
-    PersonGenderType(String title) {
-        this.title = title;
-    }
+    MALE, FEMALE, UNKNOWN;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(name());
     }
 
 }
