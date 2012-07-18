@@ -45,6 +45,20 @@
             <artifactId>dflt</artifactId>
         </dependency>
 		
+        <dependency>
+            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
+            <artifactId>xml</artifactId>
+        </dependency>
+
+		<!-- 
+		TODO: this is for convenience, to use the naive implementations against RDBMS.
+		later, we should replace with JDO-specific implementations
+		-->
+        <dependency>
+            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
+            <artifactId>jdo-datanucleus</artifactId>
+        </dependency>
+
 	</dependencies>
 
 </project>

@@ -42,7 +42,7 @@
 		
         <dependency>
             <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
-            <artifactId>dflt</artifactId>
+            <artifactId>jdo-datanucleus</artifactId>
         </dependency>
 		
 	</dependencies>

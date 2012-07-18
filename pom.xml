@@ -479,6 +479,13 @@
 				<version>${isis.version}</version>
 			</dependency>
 
+			<!-- isis: runtimes-dflt: objectstores: xml -->
+	        <dependency>
+	            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
+	            <artifactId>jdo-datanucleus</artifactId>
+				<version>${isis.version}</version>
+	        </dependency>
+
 			<!-- isis: runtimes-dflt: profilestores: dflt -->
 			<dependency>
 				<groupId>org.apache.isis.runtimes.dflt.profilestores</groupId>

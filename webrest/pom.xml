@@ -97,7 +97,6 @@
             <artifactId>app-objstore-dflt</artifactId>
         </dependency>
         
-        
 
         <!-- isis viewer -->
 		<dependency>
@@ -120,11 +119,7 @@
             <groupId>org.apache.isis.runtimes.dflt.profilestores</groupId>
             <artifactId>dflt</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
-            <artifactId>xml</artifactId>
-        </dependency>
+
         
         <!-- isis progmodel -->
         <dependency>
@@ -155,6 +150,15 @@
             <artifactId>geronimo-servlet_2.5_spec</artifactId>
             <version>1.2</version>
         </dependency>
+
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>jdbc</artifactId>
+			<version>4.0</version>
+			<scope>system</scope>
+			<optional>true</optional>
+			<systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
+		</dependency>
 
 	</dependencies>
 
