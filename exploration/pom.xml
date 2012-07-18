@@ -137,6 +137,15 @@
             <artifactId>dnd</artifactId>
         </dependency>
 
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>jdbc</artifactId>
+			<version>4.0</version>
+			<scope>system</scope>
+			<optional>true</optional>
+			<systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
+		</dependency>
+
     </dependencies>
     
     <profiles>
