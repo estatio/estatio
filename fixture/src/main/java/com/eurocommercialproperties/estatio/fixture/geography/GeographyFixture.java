@@ -15,6 +15,8 @@ public class GeographyFixture extends AbstractFixture {
         Country countryNED = createCountry("NLD", "Netherlands");
         createState("NL-NH", "Noord-Holland", countryNED);
         createState("GB-OXF", "Oxfordshire", countryGBR);
+        
+        countryNED.setAlpha2Code("NL");
     }
 
     private Country createCountry(final String reference, String name) {

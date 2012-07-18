@@ -79,9 +79,12 @@ public class PostalAddress extends CommunicationChannel {
     // }}
 
     // {{ Country (attribute)
+    // annotation must be here rather than on the getter, 
+    // because the additional business logic in the setter causes DN to dirty the object 
+    // outside of xactn, breaking the fixture installation
+    @javax.jdo.annotations.Column(name="COUNTRY_ID") 
     private Country country;
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     @Optional
     @MemberOrder(sequence = "5")
     public Country getCountry() {
@@ -94,7 +97,6 @@ public class PostalAddress extends CommunicationChannel {
             setState(null);
         }
     }
-
     // }}
 
     // {{ State (attribute)

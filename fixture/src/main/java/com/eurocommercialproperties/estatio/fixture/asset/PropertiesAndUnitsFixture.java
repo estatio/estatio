@@ -4,7 +4,10 @@ import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
+import com.eurocommercialproperties.estatio.dom.geography.Country;
+import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 import com.eurocommercialproperties.estatio.dom.party.Owner;
 import com.eurocommercialproperties.estatio.dom.party.Owners;
@@ -18,8 +21,11 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
     public void install() {
         Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.COMMERCIAL, 3, new Date(1999,
                         1, 1), new Date(2008, 6, 1), owners.findByReference("HELLOWORLD"));
-        prop1.addCommunicationChannel(communicationChannels.newPostalAddress("1 Market Street", null, "OX1 3HL",
-                        "Oxford", states.findByReference("GB-OXF"), countries.findByReference("GBR")));
+        State state = states.findByReference("GB-OXF");
+		Country country = countries.findByReference("GBR");
+		PostalAddress newPostalAddress = communicationChannels.newPostalAddress("1 Market Street", null, "OX1 3HL",
+                        "Oxford", state, country);
+		prop1.addCommunicationChannel(newPostalAddress);
         prop1.addCommunicationChannel(communicationChannels.newPhoneNumber("+44 123 456789"));
         prop1.addCommunicationChannel(communicationChannels.newFaxNumber("+44 987 654321"));
         prop1.addCommunicationChannel(communicationChannels.newEmailAddress("info@oxford.example.com"));
