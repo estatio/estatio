@@ -1,0 +1,16 @@
+{
+  "customer":
+	  [
+	    {
+	      "id": 1,
+	      "first_name": "John",
+	      "initial": "K",
+	      "last_name": "Smith"
+	    },
+	    {
+	      "id": 2,
+	      "first_name": "Mary",
+	      "last_name": "Bloggs"
+	    }
+	  ]
+}

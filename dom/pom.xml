@@ -141,11 +141,18 @@
 
 		<!-- testing -->
 				
+		<dependency>
+			<groupId>com.danhaywood</groupId>
+			<artifactId>testsupport</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
 
         <dependency>
             <groupId>org.jmock</groupId>

@@ -299,6 +299,14 @@
 	<dependencyManagement>
 		<dependencies>
 
+			<!-- the testsupport module -->
+			<dependency>
+				<groupId>com.danhaywood</groupId>
+				<artifactId>testsupport</artifactId>
+				<version>0.1.0-SNAPSHOT</version>
+				<scope>test</scope>
+			</dependency>
+
 			<!-- this project's own modules -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
@@ -782,6 +790,7 @@
 	</reporting>
 
 	<modules>
+		<module>testsupport</module>
 		<module>dom</module>
 		<module>exploration</module>
 		<module>fixture</module>

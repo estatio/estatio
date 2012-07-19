@@ -5,7 +5,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
-public final class StringUtils {
+public class StringUtils {
 	
 	private StringUtils() {}
 	

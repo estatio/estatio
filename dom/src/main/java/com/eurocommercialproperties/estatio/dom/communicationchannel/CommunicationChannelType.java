@@ -19,11 +19,6 @@ package com.eurocommercialproperties.estatio.dom.communicationchannel;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
 public enum CommunicationChannelType {
 
     POSTAL_ADDRESS(PostalAddress.class), EMAIL_ADDRESS(EmailAddress.class), PHONE_NUMBER(PhoneNumber.class), FAX_NUMBER(FaxNumber.class);
