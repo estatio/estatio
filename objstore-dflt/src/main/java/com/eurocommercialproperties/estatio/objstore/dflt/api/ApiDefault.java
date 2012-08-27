@@ -1,20 +1,31 @@
 package com.eurocommercialproperties.estatio.objstore.dflt.api;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.eurocommercialproperties.estatio.api.Api;
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
+import com.eurocommercialproperties.estatio.dom.asset.PropertyActor;
+import com.eurocommercialproperties.estatio.dom.asset.PropertyActorType;
+import com.eurocommercialproperties.estatio.dom.asset.PropertyActors;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
+import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
+import com.eurocommercialproperties.estatio.dom.asset.UnitType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
-import com.eurocommercialproperties.estatio.dom.party.Owner;
-import com.eurocommercialproperties.estatio.dom.party.Owners;
+import com.eurocommercialproperties.estatio.dom.party.Organisation;
+import com.eurocommercialproperties.estatio.dom.party.Parties;
+import com.eurocommercialproperties.estatio.dom.party.Party;
+import com.eurocommercialproperties.estatio.dom.party.Person;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.value.Date;
 
 public class ApiDefault extends AbstractFactoryAndRepository implements Api {
 
@@ -30,15 +41,8 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
 
     // }}
 
-    // TODO: would like to add a meaningful prefix to the methods but set (as in
-    // setCountry) is ignored and createOrUpdate (as in
-    // createOrUpdatePropertyPostalAddress) creates long method names.
-    // Suggestions will be rewarded with a beer.
-    //
-    // SUGGESTION: how about putCountry?  (cf HTTP PUT, it's an idempotent action).  Or maybe uploadCountry() ?
-
     @Override
-    public void country(String code, String alpha2Code, String name) {
+    public void putCountry(String code, String alpha2Code, String name) {
         Country country = countries.findByReference(code);
         if (country == null) {
             country = countries.newCountry(code, name);
@@ -48,7 +52,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     }
 
     @Override
-    public void state(String code, String name, String countryCode) {
+    public void putState(String code, String name, String countryCode) {
         Country country = countries.findByReference(countryCode);
         if (country == null) {
             throw new ApplicationException(String.format("Country with code %1$s not found", countryCode));
@@ -62,29 +66,66 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     }
 
     @Override
-    public void owner(String reference, String name) {
-        Owner owner = owners.findByReference(reference);
-        if (owner == null) {
-            owner = owners.newOwner(reference, name);
+    public void putOrganisation(String reference, String name) {
+        Organisation org = parties.findOrganisationByReference(reference);
+        if (org == null) {
+            org = parties.newOrganisation(name);
+            org.setReference(reference);
         }
-        owner.setName(name);
+        org.setName(name);
     }
 
     @Override
-    public void propertyPostalAddress(String propertyReference, String address1, String address2, String postalCode,
-                    String stateCode, String countryCode) {
+    public void putPerson(String reference, String initials, String firstName, String lastName) {
+        // TODO Add check for return type
+        Person person = (Person) parties.findPartyByReference(reference);
+        if (person == null) {
+            person = parties.newPerson(initials, firstName, lastName);
+            person.setReference(reference);
+        }
+        person.setFirstName(firstName);
+        person.setLastName(lastName);
+    }
+
+    @Override
+    public void putPropertyPostalAddress(String propertyReference, String address1, String address2, String city, String postalCode, String stateCode, String countryCode) {
+        Property property = properties.findByReference(propertyReference);
+        if (property == null) {
+            throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
+        }
+        //TODO: Find if communication channel exists
+        CommunicationChannel comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+        property.addCommunicationChannel(comm);
+        
+    }
+
+    @Override
+    public void putPropertyOwner(String reference, String ownerReference) {
         // TODO Auto-generated method stub
     }
-
+    
+    
     @Override
-    public void propertyOwner(String reference, String ownerReference) {
-        // TODO Auto-generated method stub
+    public void putPropertyActor(String propertyReference, String partyReference, String type, Date from, Date thru){
+        Property property = properties.findByReference(propertyReference);
+        Party party = parties.findPartyByReference(partyReference);
+        if (party == null) {
+            throw new ApplicationException(String.format("Party with reference %s not found.", partyReference));
+        }
+        if (property == null) {
+            throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
+        }
+        PropertyActor actor = propertyActors.findPropertyActor(property, party, PropertyActorType.valueOf(type), from, thru);
+        if (actor == null) {
+            actor = propertyActors.newPropertyActor(property, party, PropertyActorType.valueOf(type), from, thru);
+        }
+
     }
+    
 
     @Override
-    public void property(String reference, String name, String type, Date acquireDate, Date disposalDate,
-                    Date openingDate, String ownerReference) {
-        Owner owner = owners.findByReference(ownerReference);
+    public void putProperty(String reference, String name, String type, Date acquireDate, Date disposalDate, Date openingDate, String ownerReference) {
+        Party owner = parties.findOrganisationByReference(ownerReference);
         if (owner == null) {
             throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
         }
@@ -97,8 +138,48 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);
-        property.addOwner(owner);
+        property.addActor(owner, PropertyActorType.PROPERTY_OWNER, null, null);
     }
+    
+    @Override
+    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, Date from, Date thru,   
+            BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, 
+            String address1, String city, String postalCode, String stateCode, String countryCode)
+ {
+        Party owner = parties.findOrganisationByReference(ownerReference);
+        if (owner == null) {
+            throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
+        }
+        Property property = properties.findByReference(propertyReference);
+        if (property == null) {
+            throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
+        }
+        Unit unit = units.findByReference(reference);
+        if (unit == null) {
+            unit = property.newUnit(reference, name);
+        }
+        // set attributes
+        unit.setName(name);
+        unit.setType(UnitType.valueOf(type));
+        unit.setArea(area);
+        unit.setSalesArea(salesArea);
+        unit.setStorageArea(storageArea);
+        unit.setMezzanineArea(mezzanineArea);
+        unit.setTerraceArea(terraceArea);
+        //TODO: set communicationchannel
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     private Countries countries;
 
@@ -124,10 +205,25 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         this.properties = properties;
     }
 
-    private Owners owners;
+    private Parties parties;
 
-    public void setOwnerRepository(final Owners owners) {
-        this.owners = owners;
+    public void setPartyRepository(final Parties parties) {
+        this.parties = parties;
     }
 
+    private PropertyActors propertyActors;
+    
+    public void setPropertyActorRepository(final PropertyActors propertyActors){
+        this.propertyActors = propertyActors;
+    }
+
+    private CommunicationChannels communicationChannels;
+    
+    public void setCommunicationChannelRepository(final CommunicationChannels communicationChannels){
+        this.communicationChannels = communicationChannels;
+    }
+    
+  
+    
+    
 }

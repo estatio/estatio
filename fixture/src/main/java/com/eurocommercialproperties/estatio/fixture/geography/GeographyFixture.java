@@ -1,26 +1,25 @@
 package com.eurocommercialproperties.estatio.fixture.geography;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
+import org.apache.isis.applib.fixtures.AbstractFixture;
+
 public class GeographyFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        Country countryGBR = createCountry("GBR", "United Kingdom");
-        Country countryNED = createCountry("NLD", "Netherlands");
+        Country countryGBR = createCountry("GBR", "GB", "United Kingdom");
+        Country countryNED = createCountry("NLD", "NL", "Netherlands");
         createState("NL-NH", "Noord-Holland", countryNED);
         createState("GB-OXF", "Oxfordshire", countryGBR);
-        
-        countryNED.setAlpha2Code("NL");
     }
 
-    private Country createCountry(final String reference, String name) {
+    private Country createCountry(final String reference, String alpha2Code, String name) {
         Country country = countries.newCountry(reference, name);
+        country.setAlpha2Code(alpha2Code);
         return country;
     }
 

@@ -3,7 +3,12 @@ package com.eurocommercialproperties.estatio.objstore.dflt.asset;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.QueryOnly;
+import org.apache.isis.applib.filter.Filter;
 
+import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.UnitType;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
@@ -31,9 +36,9 @@ public class UnitsDefault extends AbstractFactoryAndRepository implements Units 
 
     // {{ NewUnit  (hidden)
     @Override
-    public Unit newUnit(final String code, String name, UnitType type) {
+    public Unit newUnit(final String reference, String name, UnitType type) {
         final Unit unit = newTransientInstance(Unit.class);
-        unit.setReference(code);
+        unit.setReference(reference);
         unit.setName(name);
         unit.setType(type);
         persist(unit);
@@ -47,5 +52,18 @@ public class UnitsDefault extends AbstractFactoryAndRepository implements Units 
     	return allInstances(Unit.class);
     }
     // }}
+
+    // {{ findByReference
+    @Override
+    @QueryOnly
+    @MemberOrder(sequence = "2")
+    public Unit findByReference(@Named("Reference") final String reference) {
+        return firstMatch(Unit.class, new Filter<Unit>() {
+            @Override
+            public boolean accept(final Unit unit) {
+                return reference.equals(unit.getReference());
+            }
+        });
+    }
 
 }

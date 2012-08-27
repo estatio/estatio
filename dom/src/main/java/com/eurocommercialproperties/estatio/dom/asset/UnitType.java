@@ -4,7 +4,15 @@ import com.eurocommercialproperties.estatio.dom.utils.StringUtils;
 
 public enum UnitType {
 
-    BOUTIQUE, MEDIUM, HYPERMARKET, EXTERNAL, OFFICE, PARKING;
+    BOUTIQUE,      
+    STORAGE,        
+    MEDIUM,         
+    HYPERMARKET,    
+    EXTERNAL,       
+    DEHOR,          
+    CINEMA,         
+    SERVICES,       
+    VIRTUAL;        
 
     public String title() {
         return StringUtils.enumTitle(name());

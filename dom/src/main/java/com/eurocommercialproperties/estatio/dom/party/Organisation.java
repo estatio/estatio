@@ -22,9 +22,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Title;
 
-
-@javax.jdo.annotations.PersistenceCapable(schema="party")
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.PersistenceCapable(schema = "party")
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @ObjectType("ORGN")
 public class Organisation extends Party {
 

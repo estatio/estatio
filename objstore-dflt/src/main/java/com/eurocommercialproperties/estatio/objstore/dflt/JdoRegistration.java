@@ -18,11 +18,6 @@ package com.eurocommercialproperties.estatio.objstore.dflt;
 
 import javax.jdo.annotations.PersistenceCapable;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.value.Date;
-
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
@@ -31,74 +26,74 @@ import com.eurocommercialproperties.estatio.dom.communicationchannel.FaxNumber;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PhoneNumber;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
-import com.eurocommercialproperties.estatio.dom.geography.Geography;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.party.Organisation;
-import com.eurocommercialproperties.estatio.dom.party.Owner;
 import com.eurocommercialproperties.estatio.dom.party.Party;
 import com.eurocommercialproperties.estatio.dom.party.PartyRole;
 import com.eurocommercialproperties.estatio.dom.party.Person;
 
+import org.apache.isis.applib.annotation.Hidden;
+
 /**
- * This is a temporary measure just to ensure that all the {@link PersistenceCapable} entities
- * are registered. 
+ * This is a temporary measure just to ensure that all the
+ * {@link PersistenceCapable} entities are registered.
  * 
  * <p>
- * Once we have all the repos that reference these types, we can get rid of this service.
+ * Once we have all the repos that reference these types, we can get rid of this
+ * service.
  */
 @Hidden
 public class JdoRegistration {
 
-	@Hidden
-	public void registerToJdo(Property obj) {}
+    @Hidden
+    public void registerToJdo(Property obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(Unit obj) {}
+    @Hidden
+    public void registerToJdo(Unit obj) {
+    }
 
-	
-	
-	@Hidden
-	public void registerToJdo(CommunicationChannel obj) {}
+    @Hidden
+    public void registerToJdo(CommunicationChannel obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(EmailAddress obj) {}
+    @Hidden
+    public void registerToJdo(EmailAddress obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(FaxNumber obj) {}
+    @Hidden
+    public void registerToJdo(FaxNumber obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(PostalAddress obj) {}
+    @Hidden
+    public void registerToJdo(PostalAddress obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(PhoneNumber obj) {}
+    @Hidden
+    public void registerToJdo(PhoneNumber obj) {
+    }
 
-	
-	
-	@Hidden
-	public void registerToJdo(Geography obj) {}
+    @Hidden
+    public void registerToJdo(State obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(State obj) {}
+    @Hidden
+    public void registerToJdo(Country obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(Country obj) {}
-	
-	
-	
-	@Hidden
-	public void registerToJdo(Organisation obj) {}
+    @Hidden
+    public void registerToJdo(Organisation obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(Owner obj) {}
+    @Hidden
+    public void registerToJdo(Person obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(Person obj) {}
+    @Hidden
+    public void registerToJdo(Party obj) {
+    }
 
-	@Hidden
-	public void registerToJdo(Party obj) {}
-
-	@Hidden
-	public void registerToJdo(PartyRole obj) {}
-	
-	
+    @Hidden
+    public void registerToJdo(PartyRole obj) {
+    }
 }

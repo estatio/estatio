@@ -1,26 +1,27 @@
 package com.eurocommercialproperties.estatio.fixture.party;
 
+import com.eurocommercialproperties.estatio.dom.party.Parties;
+import com.eurocommercialproperties.estatio.dom.party.Party;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
-
-import com.eurocommercialproperties.estatio.dom.party.Owner;
-import com.eurocommercialproperties.estatio.dom.party.Owners;
 
 public class PartiesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-    	createOwner("ACME", "ACME Holdings");
-    	createOwner("HELLOWORLD", "Hello World Properties");
+        createOrganisation("ACME", "ACME Holdings");
+        createOrganisation("HELLOWORLD", "Hello World Properties");
     }
 
-    private Owner createOwner(String reference, String name) {
-        return owners.newOwner(reference, name);
+    private Party createOrganisation(String reference, String name) {
+        Party p = parties.newOrganisation(name);
+        p.setReference(reference);
+        return p;
     }
 
-    private Owners owners;
+    private Parties parties;
 
-    public void setOwners(final Owners owners) {
-        this.owners = owners;
+    public void setParties(final Parties parties) {
+        this.parties = parties;
     }
 }

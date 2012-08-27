@@ -6,6 +6,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
 @javax.jdo.annotations.PersistenceCapable(schema="comms", identityType=IdentityType.DATASTORE)
@@ -27,5 +28,21 @@ public abstract class CommunicationChannel extends AbstractDomainObject {
         this.type = type;
     }
     // }}
+    
+    
+    // {{ Reference (property)
+    private String reference;
+
+    @Hidden // For import purposes
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(final String referencen) {
+        this.reference = referencen;
+    }
+    // }}
+        
+
 
 }

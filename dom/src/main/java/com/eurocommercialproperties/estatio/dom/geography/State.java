@@ -25,14 +25,14 @@ import org.apache.isis.applib.annotation.ObjectType;
 
 @javax.jdo.annotations.PersistenceCapable(schema="geography")
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE) // table-per-type
-@ObjectType("STTE")
+//@ObjectType("STTE")
 @Bounded
 public class State extends Geography {
 	
     // {{ Country (attribute)
     private Country country;
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID")
+    //@javax.jdo.annotations.Column(name="COUNTRY_ID")
     @MemberOrder(sequence = "10")
     public Country getCountry() {
         return country;

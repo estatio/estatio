@@ -16,29 +16,44 @@
  */
 package com.eurocommercialproperties.estatio.api;
 
+import org.apache.isis.applib.annotation.Idempotent;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.value.Date;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 public interface Api {
 
-    public void country(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name);
+    @Idempotent
+    public void putCountry(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name);
 
-    public void state(@Named("code") String state, @Named("name") String name, @Named("countryCode") String countryCode);
+    @Idempotent
+    public void putState(@Named("code") String state, @Named("name") String name, @Named("countryCode") String countryCode);
 
-    public void owner(@Named("reference") String reference, @Named("name") String name);
+    @Idempotent
+    public void putPerson(@Named("reference") String reference, @Named("initials") @Optional String initials, @Named("firstName") String name, @Named("lastName") String lastName);
 
-    public void property(@Named("reference") String reference, @Named("name") String name, @Named("type") String type,
-                    @Named("acquireDate") @Optional Date acquireDate,
-                    @Named("disposalDate") @Optional Date disposalDate,
-                    @Named("openingDate") @Optional Date openingDate,
-                    @Named("ownerReference") @Optional String ownerReference);
+    @Idempotent
+    public void putOrganisation(@Named("reference") String reference, @Named("name") String name);
 
-    public void propertyPostalAddress(@Named("propertyReference") String propertyReference,
-                    @Named("address1") String address1, @Named("address2") String address2,
-                    @Named("postalCode") String postalCode, @Named("stateCode") String stateCode,
-                    @Named("countryCode") String countryCode);
+    @Idempotent
+    public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional Date acquireDate, @Named("disposalDate") @Optional Date disposalDate, @Named("openingDate") @Optional Date openingDate,
+            @Named("ownerReference") @Optional String ownerReference);
 
-    public void propertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference);
+    @Idempotent
+    public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode);
+
+    @Idempotent
+    public void putPropertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference);
+
+    @Idempotent
+    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("from") @Optional Date from, @Named("thru") @Optional Date thru);
+
+    @Idempotent
+    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") String ownerReference, @Named("name") String name, @Named("type") String type, @Named("from") @Optional Date from, @Named("thru") @Optional Date thru,
+            @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea, @Named("terraceArea") @Optional BigDecimal terraceArea,
+            @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode);
 
 }

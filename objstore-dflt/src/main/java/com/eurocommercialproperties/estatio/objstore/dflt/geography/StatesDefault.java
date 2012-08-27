@@ -39,6 +39,7 @@ public class StatesDefault extends AbstractFactoryAndRepository implements State
     // {{ findByReference
     @Override
     public State findByReference(final String reference) {
+        if (reference == null) return null;
         return firstMatch(State.class, new Filter<State>() {
             @Override
             public boolean accept(final State state) {
@@ -52,6 +53,7 @@ public class StatesDefault extends AbstractFactoryAndRepository implements State
     // {{ findByCountry
     @Override
     public List<State> findByCountry(final Country country) {
+        if (country == null) return null;
         return allMatches(State.class, new Filter<State>() {
             @Override
             public boolean accept(final State state) {

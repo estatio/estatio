@@ -18,15 +18,15 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
-@javax.jdo.annotations.PersistenceCapable(schema="party", identityType=IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.PersistenceCapable(schema = "party", identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @ObjectType("PRTY")
 public abstract class Party extends AbstractDomainObject {
 
     // {{ Reference (attribute)
     private String reference;
-
+    
     @Disabled
     @MemberOrder(sequence = "1")
     public String getReference() {
@@ -36,14 +36,16 @@ public abstract class Party extends AbstractDomainObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
+
     // }}
 
     // {{ Roles (set, bidir)
-    // REVIEW: changed this from set of PartyRoleType, which I suspect was wrong (in any case can't have sets of enums)
-    @javax.jdo.annotations.Persistent(mappedBy="party")
+    // REVIEW: changed this from set of PartyRoleType, which I suspect was wrong
+    // (in any case can't have sets of enums)
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
     private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "20")
     public Set<PartyRole> getRoles() {
         return roles;
     }
@@ -51,15 +53,32 @@ public abstract class Party extends AbstractDomainObject {
     public void setRoles(final Set<PartyRole> roles) {
         this.roles = roles;
     }
+
     // }}
-    
+
+    // {{ Registrations (set, bidir)
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
+    private Set<PartyRegistration> registrations = new LinkedHashSet<PartyRegistration>();
+
+    @MemberOrder(sequence = "21")
+    public Set<PartyRegistration> getRegistrations() {
+        return registrations;
+    }
+
+    public void setRegistrations(final Set<PartyRegistration> registrations) {
+        this.registrations = registrations;
+    }
+
+    // }}
+
     // {{ CommunicationChannels (list, unidir)
-    @javax.jdo.annotations.Join(column="PARTY_ID") // to avoid FK back to Property
-    @javax.jdo.annotations.Element(column="COMMUNICATIONCHANNEL_ID")
-    @javax.jdo.annotations.Order(column="IDX")
+    @javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey= "false")
+    // to avoid FK back to Property
+    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    @javax.jdo.annotations.Order(column = "IDX")
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
-    @MemberOrder(sequence = "2.1")
+    @MemberOrder(sequence = "10")
     public List<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }

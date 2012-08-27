@@ -77,6 +77,7 @@ public class Person extends Party {
     private PersonGenderType gender;
 
     @MemberOrder(sequence = "4")
+    //@Optional
     public PersonGenderType getGender() {
         return gender;
     }
@@ -84,6 +85,10 @@ public class Person extends Party {
     public void setGender(final PersonGenderType gender) {
         this.gender = gender;
     }
+    
+//    public PersonGenderType defaultGender() {
+//        return PersonGenderType.UNKNOWN;
+//    }
     // }}
 
     // {{ validate

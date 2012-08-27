@@ -22,6 +22,7 @@ public interface Properties {
     // for use by fixtures
     public Property newProperty(String reference, String name, PropertyType propertyType);
 
+    @QueryOnly
     List<Property> allInstances();
 
     /**
