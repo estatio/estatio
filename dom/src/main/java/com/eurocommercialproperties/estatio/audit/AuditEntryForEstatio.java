@@ -2,17 +2,17 @@ package com.eurocommercialproperties.estatio.audit;
 
 import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.DateTime;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.AuditEntry;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE, table="AUDITENTRY")
 @javax.jdo.annotations.DatastoreIdentity(strategy=javax.jdo.annotations.IdGeneratorStrategy.IDENTITY)
 @Immutable
-public class AuditEntryForEstatio extends AuditEntry {
+public class AuditEntryForEstatio {
 
     // {{ TimestampUtc (property)
     private Long timestampEpoch;

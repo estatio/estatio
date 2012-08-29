@@ -171,10 +171,7 @@ public class Property extends AbstractDomainObject {
 
     // {{ CommunicationChannels (list, unidir)
     @javax.jdo.annotations.Join(column = "PROPERTY_ID")
-    // , generateForeignKey = "false")
-    // to avoid FK back to Property
     @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID")
-    // , generateForeignKey = "false")
     @javax.jdo.annotations.Order(column = "IDX")
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
@@ -230,10 +227,7 @@ public class Property extends AbstractDomainObject {
 
     // {{ PropertyActors (list, unidir)
     @javax.jdo.annotations.Join(column = "PROPERTY_ID")
-    // , generateForeignKey = "false")
-    // to avoid FK back to Property
     @javax.jdo.annotations.Element(column = "PROPERTYACTOR_ID")
-    // , generateForeignKey = "false")
     @javax.jdo.annotations.Order(column = "IDX")
     private List<PropertyActor> actors = new ArrayList<PropertyActor>();
 

@@ -1,4 +1,4 @@
-package com.eurocommercialproperties.estatio.dom.asset;
+package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.util.Date;
 
@@ -13,24 +13,25 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 
-@javax.jdo.annotations.PersistenceCapable(schema = "asset", identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(schema = "lease", identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@ObjectType("PRAC")
-public class PropertyActor extends AbstractDomainObject {
+@javax.jdo.annotations.Discriminator("LEAC")
+// required since subtypes are rolling-up
+@ObjectType("LEAC")
+public class LeaseActor extends AbstractDomainObject {
 
-    // {{ Property (property)
-    private Property property;
+    // {{ Lease (property)
+    private Lease lease;
 
     @MemberOrder(sequence = "1")
-    public Property getProperty() {
-        return property;
+    public Lease getLease() {
+        return lease;
     }
 
-    public void setProperty(final Property property) {
-        this.property = property;
+    public void setLease(final Lease lease) {
+        this.lease = lease;
     }
-
     // }}
 
     // {{ Party (property)
@@ -48,14 +49,14 @@ public class PropertyActor extends AbstractDomainObject {
     // }}
 
     // {{ Type (property)
-    private PropertyActorType type;
+    private LeaseActorType type;
 
     @MemberOrder(sequence = "3")
-    public PropertyActorType getType() {
+    public LeaseActorType getType() {
         return type;
     }
 
-    public void setType(final PropertyActorType type) {
+    public void setType(final LeaseActorType type) {
         this.type = type;
     }
 
@@ -75,7 +76,7 @@ public class PropertyActor extends AbstractDomainObject {
     }
 
     // }}
-
+    
     // {{ Thru (property)
     private Date thru;
 

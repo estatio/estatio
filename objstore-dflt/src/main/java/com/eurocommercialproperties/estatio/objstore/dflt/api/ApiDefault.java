@@ -23,6 +23,9 @@ import com.eurocommercialproperties.estatio.dom.party.Organisation;
 import com.eurocommercialproperties.estatio.dom.party.Parties;
 import com.eurocommercialproperties.estatio.dom.party.Party;
 import com.eurocommercialproperties.estatio.dom.party.Person;
+import com.eurocommercialproperties.estatio.dom.lease.Lease;
+import com.eurocommercialproperties.estatio.dom.lease.Leases;
+
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
@@ -146,10 +149,10 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
             BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, 
             String address1, String city, String postalCode, String stateCode, String countryCode)
  {
-        Party owner = parties.findOrganisationByReference(ownerReference);
-        if (owner == null) {
-            throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
-        }
+//        Party owner = parties.findOrganisationByReference(ownerReference);
+//        if (owner == null) {
+//            throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
+//        }
         Property property = properties.findByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
@@ -168,17 +171,38 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         unit.setTerraceArea(terraceArea);
         //TODO: set communicationchannel
     }
-
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public void putLease( 
+        String leaseReference,
+        String propertyReference, 
+        String unitReference, 
+        String leaseName, 
+        String tenantReference, 
+        String leaseType, 
+        Date startDate, 
+        Date endDate, 
+        Date terminationDate, 
+        String brand, 
+        String sector, 
+        String activity, 
+        String reportTurnover, 
+        String reportRent, 
+        String reportOCR, 
+        BigDecimal indexationLevelingPercentage, 
+        BigDecimal turnoverRentPercentage, 
+        String paymentMethod, 
+        String parentLeaseCode){
+        Party tenant = parties.findOrganisationByReference(tenantReference);
+        if (tenant == null) {
+            throw new ApplicationException(String.format("Tenant with reference %s not found.", tenantReference));
+        }
+        Lease lease = leases.findByReference(leaseReference);
+        if (lease == null){
+            leases.newLease(leaseReference, leaseName);
+        }
+        
+        
+    }
     
 
     private Countries countries;
@@ -223,7 +247,9 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         this.communicationChannels = communicationChannels;
     }
     
-  
+    private Leases leases;
     
-    
+    public void setLeaseRepository(final Leases leases){
+        this.leases = leases;
+    }
 }

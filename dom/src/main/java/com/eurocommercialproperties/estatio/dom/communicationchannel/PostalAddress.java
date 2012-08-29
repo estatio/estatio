@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
@@ -19,10 +20,18 @@ import com.eurocommercialproperties.estatio.dom.geography.States;
 @ObjectType("PSTA")
 public class PostalAddress extends CommunicationChannel {
 
+    public String title(){
+        TitleBuffer tb = new TitleBuffer(getAddress1());
+        tb.append(", ", getPostalCode());
+        tb.append(" ", getCity());
+        tb.append(", ", getCountry().getName());
+        return tb.toString();
+    }
+    
+    
     // {{ Address1 (attribute, title)
     private String address1;
 
-    @Title(sequence = "1")
     @MemberOrder(sequence = "1")
     public String getAddress1() {
         return address1;

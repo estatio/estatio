@@ -2,13 +2,9 @@ package com.eurocommercialproperties.estatio.audit;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.AuditEntry;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.AuditService;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.AuditServiceAbstract;
 
 public class AuditServiceForEstatio extends AbstractFactoryAndRepository implements AuditService {
 
@@ -16,16 +12,16 @@ public class AuditServiceForEstatio extends AbstractFactoryAndRepository impleme
         return allInstances(AuditEntryForEstatio.class);
     }
 
+    @Override
     @Hidden
-    public AuditEntry audit(String user, long currentTimestampEpoch, String objectType, String identifier, String preValue, String postValue) {
-        AuditEntry auditEntry = newTransientInstance(AuditEntryForEstatio.class);
+    public void audit(String user, long currentTimestampEpoch, String objectType, String identifier, String preValue, String postValue) {
+        AuditEntryForEstatio auditEntry = newTransientInstance(AuditEntryForEstatio.class);
         auditEntry.setTimestampEpoch(currentTimestampEpoch);
         auditEntry.setUser(user);
         auditEntry.setObjectType(objectType);
         auditEntry.setIdentifier(identifier);
         auditEntry.setPreValue(preValue);
         auditEntry.setPostValue(postValue);
-        return persist(auditEntry);
+        persist(auditEntry);
     }
-    
 }

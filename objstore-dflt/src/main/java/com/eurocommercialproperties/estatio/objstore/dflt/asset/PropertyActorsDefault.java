@@ -60,6 +60,7 @@ public class PropertyActorsDefault extends AbstractFactoryAndRepository implemen
             @Override
             public boolean accept(final PropertyActor propertyActor) {
                 return propertyActor.getProperty().equals(property) & propertyActor.getParty().equals(party) 
+                        //TODO handle optional condition fields as they can contain null
                         // propertyActor.getFrom().equals(from) & propertyActor.getThru().equals(thru)
                         ;
             }
