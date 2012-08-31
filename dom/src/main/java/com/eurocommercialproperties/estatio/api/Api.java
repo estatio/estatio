@@ -21,7 +21,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 public interface Api {
 
@@ -38,7 +38,7 @@ public interface Api {
     public void putOrganisation(@Named("reference") String reference, @Named("name") String name);
 
     @Idempotent
-    public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional Date acquireDate, @Named("disposalDate") @Optional Date disposalDate, @Named("openingDate") @Optional Date openingDate,
+    public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional LocalDate acquireDate, @Named("disposalDate") @Optional LocalDate disposalDate, @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference);
 
     @Idempotent
@@ -49,10 +49,10 @@ public interface Api {
     public void putPropertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference);
 
     @Idempotent
-    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("from") @Optional Date from, @Named("thru") @Optional Date thru);
+    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("from") @Optional LocalDate from, @Named("thru") @Optional LocalDate thru);
 
     @Idempotent
-    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") String ownerReference, @Named("name") String name, @Named("type") String type, @Named("from") @Optional Date from, @Named("thru") @Optional Date thru,
+    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") String ownerReference, @Named("name") String name, @Named("type") String type, @Named("from") @Optional LocalDate from, @Named("thru") @Optional LocalDate thru,
             @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea, @Named("terraceArea") @Optional BigDecimal terraceArea,
             @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode);
 

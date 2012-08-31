@@ -1,6 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -52,43 +52,43 @@ public class Lease extends AbstractDomainObject {
     // }}
 
     // {{ StartDate (property)
-    private Date startDate;
+    private LocalDate startDate;
 
     @MemberOrder(sequence = "3")
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(final Date startDate) {
+    public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
 
     // }}
 
     // {{ EndDate (property)
-    private Date endDate;
+    private LocalDate endDate;
 
     @MemberOrder(sequence = "4")
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(final Date endDate) {
+    public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     // }}
 
     // {{ TerminationDate (property)
-    private Date terminationDate;
+    private LocalDate terminationDate;
 
     @MemberOrder(sequence = "5")
     @Optional
-    public Date getTerminationDate() {
+    public LocalDate getTerminationDate() {
         return terminationDate;
     }
 
-    public void setTerminationDate(final Date terminationDate) {
+    public void setTerminationDate(final LocalDate terminationDate) {
         this.terminationDate = terminationDate;
     }
     // }}

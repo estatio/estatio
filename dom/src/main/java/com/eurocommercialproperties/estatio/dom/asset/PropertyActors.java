@@ -1,6 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.asset;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 import java.util.List;
 
 import com.eurocommercialproperties.estatio.dom.party.Party;
@@ -14,11 +14,11 @@ public interface PropertyActors {
 
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public PropertyActor newPropertyActor(Property property, Party party, PropertyActorType type, Date from, Date thru);
+    public PropertyActor newPropertyActor(Property property, Party party, PropertyActorType type, LocalDate from, LocalDate thru);
 
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public PropertyActor findPropertyActor(Property property, Party party, PropertyActorType type, Date from, Date thru);
+    public PropertyActor findPropertyActor(Property property, Party party, PropertyActorType type, LocalDate from, LocalDate thru);
 
     @QueryOnly
     List<PropertyActor> allInstances();

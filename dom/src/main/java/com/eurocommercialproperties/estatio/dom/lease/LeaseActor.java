@@ -1,6 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -63,30 +63,30 @@ public class LeaseActor extends AbstractDomainObject {
     // }}
 
     // {{ From (property)
-    private Date from;
+    private LocalDate from;
 
     @MemberOrder(sequence = "4")
     @Optional
-    public Date getFrom() {
+    public LocalDate getFrom() {
         return from;
     }
 
-    public void setFrom(final Date from) {
+    public void setFrom(final LocalDate from) {
         this.from = from;
     }
 
     // }}
     
     // {{ Thru (property)
-    private Date thru;
+    private LocalDate thru;
 
     @MemberOrder(sequence = "5")
     @Optional
-    public Date getThru() {
+    public LocalDate getThru() {
         return thru;
     }
 
-    public void setThru(final Date thru) {
+    public void setThru(final LocalDate thru) {
         this.thru = thru;
     }
     // }}

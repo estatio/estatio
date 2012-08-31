@@ -19,6 +19,8 @@ package com.eurocommercialproperties.estatio.dom.party;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -59,28 +61,28 @@ public class PartyRegistration extends AbstractDomainObject {
     // }}
 
     // {{ FromDate (property)
-    private Date fromDate;
+    private LocalDate fromDate;
 
     @MemberOrder(sequence = "1")
-    public Date getFromDate() {
+    public LocalDate getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(final Date fromDate) {
+    public void setFromDate(final LocalDate fromDate) {
         this.fromDate = fromDate;
     }
 
     // }}
 
     // {{ ThruDate (property)
-    private Date thruDate;
+    private LocalDate thruDate;
 
     @MemberOrder(sequence = "1")
-    public Date getThruDate() {
+    public LocalDate getThruDate() {
         return thruDate;
     }
 
-    public void setThruDate(final Date thruDate) {
+    public void setThruDate(final LocalDate thruDate) {
         this.thruDate = thruDate;
     }
     // }}

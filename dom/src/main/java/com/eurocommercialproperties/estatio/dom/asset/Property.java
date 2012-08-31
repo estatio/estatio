@@ -9,6 +9,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.joda.time.LocalDate;
+
 
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -79,50 +81,50 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ OpeningDate (attribute)
-    private Date openingDate;
+    private LocalDate openingDate;
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
     @MemberOrder(sequence = "1.4")
-    public Date getOpeningDate() {
+    public LocalDate getOpeningDate() {
         return openingDate;
     }
 
-    public void setOpeningDate(final Date openingDate) {
+    public void setOpeningDate(final LocalDate openingDate) {
         this.openingDate = openingDate;
     }
 
     // }}
 
     // {{ AcquireDate (attribute)
-    private Date acquireDate;
+    private LocalDate acquireDate;
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
     @MemberOrder(sequence = "1.5")
     @Optional
-    public Date getAcquireDate() {
+    public LocalDate getAcquireDate() {
         return acquireDate;
     }
 
-    public void setAcquireDate(final Date acquireDate) {
+    public void setAcquireDate(final LocalDate acquireDate) {
         this.acquireDate = acquireDate;
     }
 
     // }}
 
-    // {{ Disposal Date (attribute)
-    private Date disposalDate;
+    // {{ Disposal LocalDate (attribute)
+    private LocalDate disposalDate;
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
     @MemberOrder(sequence = "1.6")
     @Optional
-    public Date getDisposalDate() {
+    public LocalDate getDisposalDate() {
         return disposalDate;
     }
 
-    public void setDisposalDate(final Date disposalDate) {
+    public void setDisposalDate(final LocalDate disposalDate) {
         this.disposalDate = disposalDate;
     }
 
@@ -244,7 +246,7 @@ public class Property extends AbstractDomainObject {
 
     // {{ newActor (action)
     @MemberOrder(sequence = "1")
-    public PropertyActor addActor(@Named ("party") Party party, @Named ("type") PropertyActorType type, @Named ("from") @Optional Date from, @Named ("thru") @Optional Date thru) {
+    public PropertyActor addActor(@Named ("party") Party party, @Named ("type") PropertyActorType type, @Named ("from") @Optional LocalDate from, @Named ("thru") @Optional LocalDate thru) {
         PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, from, thru);
         actors.add(propertyActor);
         return propertyActor;
