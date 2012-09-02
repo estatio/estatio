@@ -205,7 +205,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ Units (list, bidir)
-    @javax.jdo.annotations.Persistent(mappedBy = "property")
+    @javax.jdo.annotations.Persistent(mappedBy = "property", defaultFetchGroup="false")
     @javax.jdo.annotations.Order(column = "PROPERTY_UNITS_IDX")
     private List<Unit> units = new ArrayList<Unit>();
 

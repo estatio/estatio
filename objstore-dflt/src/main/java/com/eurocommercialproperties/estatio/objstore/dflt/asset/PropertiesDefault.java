@@ -45,7 +45,7 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
 
     // }}
 
-    // {{ NewProperty (hidden)
+    // {{ FindByReference
     @Override
     public Property findByReference(final String reference) {
         return firstMatch(Property.class, new Filter<Property>() {
