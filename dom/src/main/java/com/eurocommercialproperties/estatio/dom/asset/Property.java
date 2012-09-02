@@ -2,7 +2,6 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -34,6 +33,12 @@ import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditab
 @Auditable
 public class Property extends AbstractDomainObject {
 
+    
+    public Property() {
+        int i=0;
+        i=2;
+    }
+    
     // {{ Reference (attribute, title)
     private String reference;
 
@@ -220,10 +225,11 @@ public class Property extends AbstractDomainObject {
     @MemberOrder(name = "Units", sequence = "1")
     public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
         Unit unit = unitsRepo.newUnit(code, name);
-        getUnits().add(unit);
         unit.setProperty(this);
+        getUnits().add(unit);
         return unit;
     }
+    
 
     // }}
 

@@ -38,6 +38,7 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
         property.setReference(reference);
         property.setName(name);
         property.setType(type);
+        getContainer().flush();
         persist(property);
         return property;
     }

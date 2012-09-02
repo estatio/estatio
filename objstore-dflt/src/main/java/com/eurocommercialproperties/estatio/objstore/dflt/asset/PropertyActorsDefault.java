@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.QueryOnly;
 import org.apache.isis.applib.filter.Filter;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 public class PropertyActorsDefault extends AbstractFactoryAndRepository implements PropertyActors {
 
@@ -33,7 +33,7 @@ public class PropertyActorsDefault extends AbstractFactoryAndRepository implemen
     @Override
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public PropertyActor newPropertyActor(Property property, Party party, PropertyActorType type, Date from, Date thru) {
+    public PropertyActor newPropertyActor(Property property, Party party, PropertyActorType type, LocalDate from, LocalDate thru) {
         final PropertyActor propertyActor = newTransientInstance(PropertyActor.class);
         propertyActor.setParty(party);
         propertyActor.setProperty(property);
@@ -54,7 +54,7 @@ public class PropertyActorsDefault extends AbstractFactoryAndRepository implemen
     // }}
 
     @Override
-    public PropertyActor findPropertyActor(final Property property, final Party party, PropertyActorType type, final Date from, final Date thru) {
+    public PropertyActor findPropertyActor(final Property property, final Party party, PropertyActorType type, final LocalDate from, final LocalDate thru) {
         
         return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
             @Override

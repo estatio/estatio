@@ -41,6 +41,7 @@ public class UnitsDefault extends AbstractFactoryAndRepository implements Units 
         unit.setReference(reference);
         unit.setName(name);
         unit.setType(type);
+        //getContainer().flush();
         persist(unit);
         return unit;
     }

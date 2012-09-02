@@ -1,7 +1,7 @@
 package com.eurocommercialproperties.estatio.objstore.dflt.api;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.api.Api;
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
@@ -109,7 +109,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     
     
     @Override
-    public void putPropertyActor(String propertyReference, String partyReference, String type, Date from, Date thru){
+    public void putPropertyActor(String propertyReference, String partyReference, String type, LocalDate from, LocalDate thru){
         Property property = properties.findByReference(propertyReference);
         Party party = parties.findPartyByReference(partyReference);
         if (party == null) {
@@ -127,7 +127,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     
 
     @Override
-    public void putProperty(String reference, String name, String type, Date acquireDate, Date disposalDate, Date openingDate, String ownerReference) {
+    public void putProperty(String reference, String name, String type, LocalDate acquireDate, LocalDate disposalDate, LocalDate openingDate, String ownerReference) {
         Party owner = parties.findOrganisationByReference(ownerReference);
         if (owner == null) {
             throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
@@ -145,7 +145,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     }
     
     @Override
-    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, Date from, Date thru,   
+    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, LocalDate from, LocalDate thru,   
             BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, 
             String address1, String city, String postalCode, String stateCode, String countryCode)
  {
@@ -179,9 +179,9 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         String leaseName, 
         String tenantReference, 
         String leaseType, 
-        Date startDate, 
-        Date endDate, 
-        Date terminationDate, 
+        LocalDate startDate, 
+        LocalDate endDate, 
+        LocalDate terminationDate, 
         String brand, 
         String sector, 
         String activity, 
