@@ -7,15 +7,17 @@ import java.util.List;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
 @Auditable
 public class Unit {
 
-    // {{ Reference (attribute)
+    // {{ Reference (attribute, title)
     private String reference;
 
     @Title(sequence = "1", append = ", ")
@@ -30,7 +32,7 @@ public class Unit {
 
     // }}
 
-    // {{ Name (attribute)
+    // {{ Name (attribute, title)
     private String name;
 
     @Disabled
@@ -81,7 +83,8 @@ public class Unit {
     // {{ StorageArea (property)
     private BigDecimal storageArea;
 
-    @MemberOrder(sequence = "1")
+    @Hidden(where=Where.PARENTED_TABLE)
+    @MemberOrder(sequence = "5")
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -95,7 +98,8 @@ public class Unit {
     // {{ SalesArea (property)
     private BigDecimal salesArea;
 
-    @MemberOrder(sequence = "1")
+    @Hidden(where=Where.PARENTED_TABLE)
+    @MemberOrder(sequence = "6")
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -109,7 +113,8 @@ public class Unit {
     // {{ MezzanineArea (property)
     private BigDecimal mezzanineArea;
 
-    @MemberOrder(sequence = "1")
+    @Hidden(where=Where.PARENTED_TABLE)
+    @MemberOrder(sequence = "7")
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -123,7 +128,8 @@ public class Unit {
     // {{ TerraceArea (property)
     private BigDecimal terraceArea;
 
-    @MemberOrder(sequence = "1")
+    @Hidden(where=Where.PARENTED_TABLE)
+    @MemberOrder(sequence = "8")
     public BigDecimal getTerraceArea() {
         return terraceArea;
     }
@@ -138,8 +144,9 @@ public class Unit {
     private Property property;
 
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
+    @Hidden(where=Where.PARENTED_TABLE)
     @Disabled
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "9")
     public Property getProperty() {
         return property;
     }

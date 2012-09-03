@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
@@ -192,6 +193,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ Units (list, bidir)
+    @Persistent(mappedBy = "property", defaultFetchGroup="false")
     private List<Unit> units = new ArrayList<Unit>();
 
     @MemberOrder(sequence = "2.2")
