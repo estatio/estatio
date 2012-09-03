@@ -4,40 +4,28 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-
-import org.joda.time.LocalDate;
-
-
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-import com.eurocommercialproperties.estatio.dom.party.Party;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
+import org.joda.time.LocalDate;
 
-@javax.jdo.annotations.PersistenceCapable(schema = "asset", identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@ObjectType("PROP")
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Party;
+
+@PersistenceCapable
 @Auditable
 public class Property extends AbstractDomainObject {
-
     
-    public Property() {
-        int i=0;
-        i=2;
-    }
     
     // {{ Reference (attribute, title)
     private String reference;
@@ -160,6 +148,7 @@ public class Property extends AbstractDomainObject {
         return area;
     }
 
+    
     // }}
 
     // {{ City (derived attribute)
@@ -177,10 +166,8 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @javax.jdo.annotations.Join(column = "PROPERTY_ID")
-    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID")
-    @javax.jdo.annotations.Order(column = "IDX")
-    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+    @Join
+    private List<CommunicationChannel> communicationChannels; // = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "2.1")
     public List<CommunicationChannel> getCommunicationChannels() {
@@ -205,11 +192,8 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ Units (list, bidir)
-    @javax.jdo.annotations.Persistent(mappedBy = "property")
-    @javax.jdo.annotations.Order(column = "PROPERTY_UNITS_IDX")
     private List<Unit> units = new ArrayList<Unit>();
 
-    @Disabled
     @MemberOrder(sequence = "2.2")
     public List<Unit> getUnits() {
         return units;
@@ -234,9 +218,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ PropertyActors (list, unidir)
-    @javax.jdo.annotations.Join(column = "PROPERTY_ID")
-    @javax.jdo.annotations.Element(column = "PROPERTYACTOR_ID")
-    @javax.jdo.annotations.Order(column = "IDX")
+    @Join
     private List<PropertyActor> actors = new ArrayList<PropertyActor>();
 
     @MemberOrder(sequence = "1")

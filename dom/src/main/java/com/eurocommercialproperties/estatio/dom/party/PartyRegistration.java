@@ -26,15 +26,16 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.value.Date;
 
-@javax.jdo.annotations.PersistenceCapable(schema = "party", identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
-@ObjectType("PREG")
+//@javax.jdo.annotations.PersistenceCapable(schema = "party", identityType = IdentityType.DATASTORE)
+//@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
+//@ObjectType("PREG")
+@javax.jdo.annotations.PersistenceCapable
 public class PartyRegistration extends AbstractDomainObject {
 
     // {{ Party (property)
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID")
+    //@javax.jdo.annotations.Column(name = "PARTY_ID")
     @MemberOrder(sequence = "1")
     public Party getParty() {
         return party;

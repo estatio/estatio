@@ -18,10 +18,11 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
-@javax.jdo.annotations.PersistenceCapable(schema = "party", identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@ObjectType("PRTY")
+//@javax.jdo.annotations.PersistenceCapable(schema = "party", identityType = IdentityType.DATASTORE)
+//@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
+//@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+//@ObjectType("PRTY")
+@javax.jdo.annotations.PersistenceCapable
 public abstract class Party extends AbstractDomainObject {
 
     // {{ Reference (attribute)
@@ -57,8 +58,8 @@ public abstract class Party extends AbstractDomainObject {
     // }}
 
     // {{ Registrations (set, bidir)
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private Set<PartyRegistration> registrations = new LinkedHashSet<PartyRegistration>();
+    //@javax.jdo.annotations.Persistent(mappedBy = "party")
+    private Set<PartyRegistration> registrations; // = new LinkedHashSet<PartyRegistration>();
 
     @MemberOrder(sequence = "21")
     public Set<PartyRegistration> getRegistrations() {
@@ -72,10 +73,10 @@ public abstract class Party extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey= "false")
+    //@javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey= "false")
     // to avoid FK back to Property
-    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    @javax.jdo.annotations.Order(column = "IDX")
+    //@javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    //@javax.jdo.annotations.Order(column = "IDX")
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "10")

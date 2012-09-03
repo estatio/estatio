@@ -2,10 +2,9 @@ package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
 import java.util.List;
 
-import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.util.TitleBuffer;
@@ -14,10 +13,7 @@ import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
-@javax.jdo.annotations.PersistenceCapable(schema="comms")
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator("PSTA")
-@ObjectType("PSTA")
+@PersistenceCapable
 public class PostalAddress extends CommunicationChannel {
 
     public String title(){
