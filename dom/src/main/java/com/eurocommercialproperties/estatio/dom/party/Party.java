@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Join;
 
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -77,6 +78,7 @@ public abstract class Party extends AbstractDomainObject {
     // to avoid FK back to Property
     //@javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     //@javax.jdo.annotations.Order(column = "IDX")
+    @Join
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "10")

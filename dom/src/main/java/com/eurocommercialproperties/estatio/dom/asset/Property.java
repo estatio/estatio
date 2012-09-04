@@ -8,6 +8,7 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -31,7 +32,7 @@ public class Property extends AbstractDomainObject {
     // {{ Reference (attribute, title)
     private String reference;
 
-    @Title(sequence = "1", append = ", ")
+    @Title(sequence = "1", prepend = "[", append = "] ")
     @Disabled
     @MemberOrder(sequence = "1.1")
     public String getReference() {
@@ -77,6 +78,7 @@ public class Property extends AbstractDomainObject {
     // {{ OpeningDate (attribute)
     private LocalDate openingDate;
 
+    //TODO: Q:Why aren't LocalDate attributes persistent by default? Or is there a way to set that?
     @javax.jdo.annotations.Persistent
     // required for applib.Date
     @MemberOrder(sequence = "1.4")
@@ -144,7 +146,7 @@ public class Property extends AbstractDomainObject {
     public BigDecimal getAreaOfUnits() {
         BigDecimal area = BigDecimal.ZERO ;
         for (Unit unit : getUnits()) {
-            area.add(unit.getArea());
+            area.add(unit.getArea() !=null ? unit.getArea() : BigDecimal.ZERO);
         }
         return area;
     }
@@ -167,6 +169,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
+    //@Persistent(mappedBy = "property", defaultFetchGroup="false")
     @Join
     private List<CommunicationChannel> communicationChannels; // = new ArrayList<CommunicationChannel>();
 
@@ -191,9 +194,17 @@ public class Property extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ PostalAddress
+    @Hidden
+    public PostalAddress getPostalAddrress() {
+        // TODO: Return the first or primary postal address. Q: should this implemented on the repository?
+        throw new NotImplementedException();
+    }
 
     // {{ Units (list, bidir)
     @Persistent(mappedBy = "property", defaultFetchGroup="false")
+    //TODO: What's the reason for having lists and not sets? Probably none. A property cannot have a duplicate unit.
     private List<Unit> units = new ArrayList<Unit>();
 
     @MemberOrder(sequence = "2.2")
@@ -216,11 +227,10 @@ public class Property extends AbstractDomainObject {
         return unit;
     }
     
-
     // }}
 
     // {{ PropertyActors (list, unidir)
-    @Join
+    @Persistent(mappedBy="property")
     private List<PropertyActor> actors = new ArrayList<PropertyActor>();
 
     @MemberOrder(sequence = "1")

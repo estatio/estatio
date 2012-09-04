@@ -3,7 +3,6 @@ package com.eurocommercialproperties.estatio.objstore.dflt.geography;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.filter.Filter;
 
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
@@ -23,7 +22,7 @@ public class CountriesDefault extends AbstractFactoryAndRepository implements Co
 
     // }}
 
-    // {{ NewCountry  (hidden)
+    // {{ NewCountry (hidden)
     @Override
     public Country newCountry(final String reference, String name) {
         final Country country = newTransientInstance(Country.class);
@@ -32,6 +31,7 @@ public class CountriesDefault extends AbstractFactoryAndRepository implements Co
         persist(country);
         return country;
     }
+
     // }}
 
     // {{ findByReference
@@ -39,7 +39,7 @@ public class CountriesDefault extends AbstractFactoryAndRepository implements Co
      * Returns the Country with given reference
      */
     @Override
-    public Country findByReference(@Named("Reference") final String reference) {
+    public Country findByReference(final String reference) {
         return firstMatch(Country.class, new Filter<Country>() {
             @Override
             public boolean accept(final Country country) {
@@ -50,12 +50,10 @@ public class CountriesDefault extends AbstractFactoryAndRepository implements Co
 
     // }}
 
-    
-    
     // {{ AllInstances
     @Override
     public List<Country> allInstances() {
-    	return allInstances(Country.class);
+        return allInstances(Country.class);
     }
     // }}
 

@@ -35,7 +35,7 @@ public interface Parties {
     @MemberOrder(sequence = "6")
     public Party findPartyByReference(@Named("reference") String reference);
     
-    @Exploration
+    //@Exploration
     @QueryOnly
     @MemberOrder(sequence = "7")
     List<Party> allInstances();

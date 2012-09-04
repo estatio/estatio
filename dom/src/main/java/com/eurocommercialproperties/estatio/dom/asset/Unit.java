@@ -1,11 +1,17 @@
 package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
+import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -13,9 +19,13 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseUnit;
+
 @PersistenceCapable
 @Auditable
-public class Unit {
+public class Unit extends AbstractDomainObject {
 
     // {{ Reference (attribute, title)
     private String reference;
@@ -83,7 +93,7 @@ public class Unit {
     // {{ StorageArea (property)
     private BigDecimal storageArea;
 
-    @Hidden(where=Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLE)
     @MemberOrder(sequence = "5")
     public BigDecimal getStorageArea() {
         return storageArea;
@@ -98,7 +108,7 @@ public class Unit {
     // {{ SalesArea (property)
     private BigDecimal salesArea;
 
-    @Hidden(where=Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLE)
     @MemberOrder(sequence = "6")
     public BigDecimal getSalesArea() {
         return salesArea;
@@ -113,7 +123,7 @@ public class Unit {
     // {{ MezzanineArea (property)
     private BigDecimal mezzanineArea;
 
-    @Hidden(where=Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLE)
     @MemberOrder(sequence = "7")
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
@@ -128,7 +138,7 @@ public class Unit {
     // {{ TerraceArea (property)
     private BigDecimal terraceArea;
 
-    @Hidden(where=Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLE)
     @MemberOrder(sequence = "8")
     public BigDecimal getTerraceArea() {
         return terraceArea;
@@ -143,8 +153,9 @@ public class Unit {
     // {{ Property (attribute)
     private Property property;
 
+    //TODO: IMHO the @Column is redundant 
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
-    @Hidden(where=Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLE)
     @Disabled
     @MemberOrder(sequence = "9")
     public Property getProperty() {
@@ -156,5 +167,45 @@ public class Unit {
     }
 
     // }}
+
+    // {{ Leases (Collection)
+    @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
+    private Set<LeaseUnit> leases = new LinkedHashSet<LeaseUnit>();
+
+    @MemberOrder(sequence = "1")
+    public Set<LeaseUnit> getLeases() {
+        return leases;
+    }
+
+    public void setLeases(final Set<LeaseUnit> leases) {
+        this.leases = leases;
+    }
+
+    // }}
+
+    // {{ CommunicationChannels (list, unidir)
+    // @Persistent(mappedBy = "property", defaultFetchGroup="false")
+    @Join
+    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+
+    @MemberOrder(sequence = "2.1")
+    public List<CommunicationChannel> getCommunicationChannels() {
+        return communicationChannels;
+    }
+
+    public void setCommunicationChannels(final List<CommunicationChannel> communicationChannels) {
+        this.communicationChannels = communicationChannels;
+    }
+
+    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
+        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
+        communicationChannels.add(communicationChannel);
+        return communicationChannel;
+    }
+
+    @Hidden
+    public void addCommunicationChannel(CommunicationChannel communicationChannel) {
+        communicationChannels.add(communicationChannel);
+    }
 
 }

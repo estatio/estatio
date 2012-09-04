@@ -1,11 +1,19 @@
 package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.ObjectType;
 
 @PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@Discriminator("CCHN") // required since subtypes are rolling-up
+@ObjectType("CCHN")
+
 public abstract class CommunicationChannel extends AbstractDomainObject {
 
     // {{ Type (attribute)
@@ -34,7 +42,4 @@ public abstract class CommunicationChannel extends AbstractDomainObject {
         this.reference = referencen;
     }
     // }}
-        
-
-
 }

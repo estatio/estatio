@@ -1,6 +1,9 @@
 package com.eurocommercialproperties.estatio.objstore.dflt.api;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.api.Api;
@@ -14,7 +17,9 @@ import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.asset.UnitType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
@@ -25,10 +30,15 @@ import com.eurocommercialproperties.estatio.dom.party.Party;
 import com.eurocommercialproperties.estatio.dom.party.Person;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.Leases;
-
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Title;
 
 public class ApiDefault extends AbstractFactoryAndRepository implements Api {
 
@@ -96,20 +106,19 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
-        //TODO: Find if communication channel exists
+        // TODO: Find if communication channel exists
         CommunicationChannel comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
         property.addCommunicationChannel(comm);
-        
+
     }
 
     @Override
     public void putPropertyOwner(String reference, String ownerReference) {
         // TODO Auto-generated method stub
     }
-    
-    
+
     @Override
-    public void putPropertyActor(String propertyReference, String partyReference, String type, LocalDate from, LocalDate thru){
+    public void putPropertyActor(String propertyReference, String partyReference, String type, LocalDate from, LocalDate thru) {
         Property property = properties.findByReference(propertyReference);
         Party party = parties.findPartyByReference(partyReference);
         if (party == null) {
@@ -124,7 +133,6 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         }
 
     }
-    
 
     @Override
     public void putProperty(String reference, String name, String type, LocalDate acquireDate, LocalDate disposalDate, LocalDate openingDate, String ownerReference) {
@@ -143,16 +151,10 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         property.setOpeningDate(openingDate);
         property.addActor(owner, PropertyActorType.PROPERTY_OWNER, null, null);
     }
-    
+
     @Override
-    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, LocalDate from, LocalDate thru,   
-            BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, 
-            String address1, String city, String postalCode, String stateCode, String countryCode)
- {
-//        Party owner = parties.findOrganisationByReference(ownerReference);
-//        if (owner == null) {
-//            throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
-//        }
+    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, LocalDate from, LocalDate thru, BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, String address1, String city,
+            String postalCode, String stateCode, String countryCode) {
         Property property = properties.findByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
@@ -169,41 +171,34 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         unit.setStorageArea(storageArea);
         unit.setMezzanineArea(mezzanineArea);
         unit.setTerraceArea(terraceArea);
-        //TODO: set communicationchannel
+
+        // CommunicationChannel
+        CommunicationChannel cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+        unit.addCommunicationChannel(cc);
     }
-    
-    public void putLease( 
-        String leaseReference,
-        String propertyReference, 
-        String unitReference, 
-        String leaseName, 
-        String tenantReference, 
-        String leaseType, 
-        LocalDate startDate, 
-        LocalDate endDate, 
-        LocalDate terminationDate, 
-        String brand, 
-        String sector, 
-        String activity, 
-        String reportTurnover, 
-        String reportRent, 
-        String reportOCR, 
-        BigDecimal indexationLevelingPercentage, 
-        BigDecimal turnoverRentPercentage, 
-        String paymentMethod, 
-        String parentLeaseCode){
-        Party tenant = parties.findOrganisationByReference(tenantReference);
+
+    @Override
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("startDate") LocalDate startDate, @Named("endDate") LocalDate endDate,
+            @Named("terminationDate") LocalDate terminationDate) {
+        Party tenant = parties.findPartyByReference(tenantReference);
         if (tenant == null) {
             throw new ApplicationException(String.format("Tenant with reference %s not found.", tenantReference));
         }
-        Lease lease = leases.findByReference(leaseReference);
-        if (lease == null){
-            leases.newLease(leaseReference, leaseName);
+        Party landlord = parties.findPartyByReference(landlordReference);
+        if (landlord == null) {
+            throw new ApplicationException(String.format("Landlord with reference %s not found.", landlordReference));
         }
-        
+        Lease lease = leases.findByReference(reference);
+        if (lease == null) {
+            leases.newLease(reference, name);
+        }
+        lease.setName(name);        
+        lease.setStartDate(startDate);
+        lease.setEndDate(endDate);
+        lease.setTerminationDate(terminationDate);
         
     }
-    
 
     private Countries countries;
 
@@ -236,20 +231,21 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     }
 
     private PropertyActors propertyActors;
-    
-    public void setPropertyActorRepository(final PropertyActors propertyActors){
+
+    public void setPropertyActorRepository(final PropertyActors propertyActors) {
         this.propertyActors = propertyActors;
     }
 
     private CommunicationChannels communicationChannels;
-    
-    public void setCommunicationChannelRepository(final CommunicationChannels communicationChannels){
+
+    public void setCommunicationChannelRepository(final CommunicationChannels communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
-    
+
     private Leases leases;
-    
-    public void setLeaseRepository(final Leases leases){
+
+    public void setLeaseRepository(final Leases leases) {
         this.leases = leases;
     }
+
 }

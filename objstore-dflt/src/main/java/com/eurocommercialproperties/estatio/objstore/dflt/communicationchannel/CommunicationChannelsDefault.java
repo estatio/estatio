@@ -73,7 +73,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     @MemberOrder(sequence = "3")
     public PhoneNumber newPhoneNumber(String number) {
         final PhoneNumber pn = newTransientInstance(PhoneNumber.class);
-        pn.setNumber(number);
+        pn.setPhoneNumber(number);
         persist(pn);
         return pn;
     }
@@ -82,7 +82,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     @MemberOrder(sequence = "4")
     public FaxNumber newFaxNumber(String number) {
         final FaxNumber fn = newTransientInstance(FaxNumber.class);
-        fn.setNumber(number);
+        fn.setFaxNumber(number);
         persist(fn);
         return fn;
     }

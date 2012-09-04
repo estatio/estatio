@@ -2,32 +2,31 @@ package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
 import java.util.List;
 
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.TitleBuffer;
 
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
 @PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator("POST") // required since subtypes are rolling-up
+@ObjectType("POST")
 public class PostalAddress extends CommunicationChannel {
-
-    public String title(){
-        TitleBuffer tb = new TitleBuffer(getAddress1());
-        tb.append(", ", getPostalCode());
-        tb.append(" ", getCity());
-        tb.append(", ", getCountry().getName());
-        return tb.toString();
-    }
-    
     
     // {{ Address1 (attribute, title)
     private String address1;
 
+    //TODO: Title throws error in ui interface
+    @Title(sequence="1", append = ", ")
     @MemberOrder(sequence = "1")
     public String getAddress1() {
         return address1;
@@ -57,6 +56,7 @@ public class PostalAddress extends CommunicationChannel {
     // {{ PostalCode (attribute)
     private String postalCode;
 
+    @Title(sequence="2", append = ", ")
     @MemberOrder(sequence = "3")
     public String getPostalCode() {
         return postalCode;
@@ -71,7 +71,7 @@ public class PostalAddress extends CommunicationChannel {
     // {{ City (attribute, title)
     private String city;
 
-    @Title(sequence = "2", prepend = ", ")
+    @Title(sequence = "3")
     @MemberOrder(sequence = "4")
     public String getCity() {
         return city;

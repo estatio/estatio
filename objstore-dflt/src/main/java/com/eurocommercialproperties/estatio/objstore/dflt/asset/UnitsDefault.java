@@ -3,6 +3,8 @@ package com.eurocommercialproperties.estatio.objstore.dflt.asset;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.QueryOnly;
@@ -49,6 +51,7 @@ public class UnitsDefault extends AbstractFactoryAndRepository implements Units 
 
     // {{ AllInstances
     @Override
+    @ActionSemantics(Of.SAFE)
     public List<Unit> allInstances() {
     	return allInstances(Unit.class);
     }
@@ -56,7 +59,7 @@ public class UnitsDefault extends AbstractFactoryAndRepository implements Units 
 
     // {{ findByReference
     @Override
-    @QueryOnly
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Unit findByReference(@Named("Reference") final String reference) {
         return firstMatch(Unit.class, new Filter<Unit>() {

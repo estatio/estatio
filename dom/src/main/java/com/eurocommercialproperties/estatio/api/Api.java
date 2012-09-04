@@ -16,44 +16,49 @@
  */
 package com.eurocommercialproperties.estatio.api;
 
-import org.apache.isis.applib.annotation.Idempotent;
+import java.math.BigDecimal;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-
-import java.math.BigDecimal;
 import org.joda.time.LocalDate;
 
 public interface Api {
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putCountry(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putState(@Named("code") String state, @Named("name") String name, @Named("countryCode") String countryCode);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putPerson(@Named("reference") String reference, @Named("initials") @Optional String initials, @Named("firstName") String name, @Named("lastName") String lastName);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putOrganisation(@Named("reference") String reference, @Named("name") String name);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional LocalDate acquireDate, @Named("disposalDate") @Optional LocalDate disposalDate, @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
             @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference);
 
-    @Idempotent
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("from") @Optional LocalDate from, @Named("thru") @Optional LocalDate thru);
 
-    @Idempotent
-    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") String ownerReference, @Named("name") String name, @Named("type") String type, @Named("from") @Optional LocalDate from, @Named("thru") @Optional LocalDate thru,
-            @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea, @Named("terraceArea") @Optional BigDecimal terraceArea,
-            @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode);
-
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") String ownerReference, @Named("name") String name, @Named("type") String type, @Named("from") @Optional LocalDate from,
+            @Named("thru") @Optional LocalDate thru, @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
+            @Named("terraceArea") @Optional BigDecimal terraceArea, @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode);
+    
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("startDate") LocalDate startDate, @Named("endDate") LocalDate endDate, @Named("terminationDate") LocalDate terminationDate);
+    
 }
+ 
