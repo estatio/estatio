@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 import org.joda.time.LocalDate;
@@ -78,7 +79,6 @@ public class Property extends AbstractDomainObject {
     // {{ OpeningDate (attribute)
     private LocalDate openingDate;
 
-    //TODO: Q:Why aren't LocalDate attributes persistent by default? Or is there a way to set that?
     @javax.jdo.annotations.Persistent
     // required for applib.Date
     @MemberOrder(sequence = "1.4")
@@ -171,7 +171,7 @@ public class Property extends AbstractDomainObject {
     // {{ CommunicationChannels (list, unidir)
     //@Persistent(mappedBy = "property", defaultFetchGroup="false")
     @Join
-    private List<CommunicationChannel> communicationChannels; // = new ArrayList<CommunicationChannel>();
+    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
     @MemberOrder(sequence = "2.1")
     public List<CommunicationChannel> getCommunicationChannels() {
@@ -197,9 +197,11 @@ public class Property extends AbstractDomainObject {
     
     // {{ PostalAddress
     @Hidden
-    public PostalAddress getPostalAddrress() {
+    @Programmatic //
+    public PostalAddress getPostalAddress() {
         // TODO: Return the first or primary postal address. Q: should this implemented on the repository?
-        throw new NotImplementedException();
+        // 
+        return null;
     }
 
     // {{ Units (list, bidir)
@@ -246,8 +248,8 @@ public class Property extends AbstractDomainObject {
 
     // {{ newActor (action)
     @MemberOrder(sequence = "1")
-    public PropertyActor addActor(@Named ("party") Party party, @Named ("type") PropertyActorType type, @Named ("from") @Optional LocalDate from, @Named ("thru") @Optional LocalDate thru) {
-        PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, from, thru);
+    public PropertyActor addActor(@Named ("party") Party party, @Named ("type") PropertyActorType type, @Named ("startDate") @Optional LocalDate startDate, @Named ("endDate") @Optional LocalDate endDate) {
+        PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
         actors.add(propertyActor);
         return propertyActor;
     }

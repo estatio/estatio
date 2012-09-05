@@ -7,6 +7,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.QueryOnly;
 
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+
 @Named("Properties")
 public interface Properties {
 
@@ -22,6 +24,9 @@ public interface Properties {
     // for use by fixtures
     public Property newProperty(String reference, String name, PropertyType propertyType);
 
+    @Hidden
+    public PostalAddress getPostalAddress(Property prop);
+    
     @QueryOnly
     List<Property> allInstances();
 

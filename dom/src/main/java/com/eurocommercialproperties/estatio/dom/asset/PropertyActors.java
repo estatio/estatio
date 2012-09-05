@@ -16,11 +16,11 @@ public interface PropertyActors {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public PropertyActor newPropertyActor(Property property, Party party, PropertyActorType type, LocalDate from, LocalDate thru);
+    public PropertyActor newPropertyActor(Property property, Party party, PropertyActorType type, LocalDate startDate, LocalDate endDate);
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public PropertyActor findPropertyActor(Property property, Party party, PropertyActorType type, LocalDate from, LocalDate thru);
+    public PropertyActor findPropertyActor(Property property, Party party, PropertyActorType type, LocalDate startDate, LocalDate endDate);
 
     @ActionSemantics(Of.SAFE)
     List<PropertyActor> allInstances();

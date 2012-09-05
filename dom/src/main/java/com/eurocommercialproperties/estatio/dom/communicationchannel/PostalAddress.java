@@ -17,16 +17,17 @@ import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator("POST") // required since subtypes are rolling-up
+@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator("POST")
+// required since subtypes are rolling-up
 @ObjectType("POST")
 public class PostalAddress extends CommunicationChannel {
-    
+
     // {{ Address1 (attribute, title)
     private String address1;
 
-    //TODO: Title throws error in ui interface
-    @Title(sequence="1", append = ", ")
+    // TODO: Title throws error in ui interface
+    @Title(sequence = "1", append = ", ")
     @MemberOrder(sequence = "1")
     public String getAddress1() {
         return address1;
@@ -56,7 +57,7 @@ public class PostalAddress extends CommunicationChannel {
     // {{ PostalCode (attribute)
     private String postalCode;
 
-    @Title(sequence="2", append = ", ")
+    @Title(sequence = "2", append = ", ")
     @MemberOrder(sequence = "3")
     public String getPostalCode() {
         return postalCode;
@@ -84,14 +85,17 @@ public class PostalAddress extends CommunicationChannel {
     // }}
 
     // {{ Country (attribute)
-    // annotation must be here rather than on the getter, 
-    // because the additional business logic in the setter causes DN to dirty the object 
+    // annotation must be here rather than on the getter,
+    // because the additional business logic in the setter causes DN to dirty
+    // the object
     // outside of xactn, breaking the fixture installation
-    @javax.jdo.annotations.Column(name="COUNTRY_ID") 
+    // TODO: Country does not render as dropdown
+    // TODO: When no country has been selected, the UI renders "no objects returned" and an ok button. After that it's impossible to to a searh again.
     private Country country;
 
     @Optional
     @MemberOrder(sequence = "5")
+    @javax.jdo.annotations.Column(name = "COUNTRY_ID")
     public Country getCountry() {
         return country;
     }
@@ -102,12 +106,13 @@ public class PostalAddress extends CommunicationChannel {
             setState(null);
         }
     }
+
     // }}
 
     // {{ State (attribute)
     private State state;
 
-    @javax.jdo.annotations.Column(name="STATE_ID")
+    @javax.jdo.annotations.Column(name = "STATE_ID")
     @Optional
     @MemberOrder(sequence = "6")
     public State getState() {
@@ -118,6 +123,7 @@ public class PostalAddress extends CommunicationChannel {
         this.state = state;
     }
 
+    // TODO
     public List<State> choicesState() {
         return states.findByCountry(country);
     }
@@ -126,10 +132,10 @@ public class PostalAddress extends CommunicationChannel {
 
     // {{ injected dependencies
     private States states;
-    
+
     public void setStates(final States states) {
-    	this.states = states;
+        this.states = states;
     }
-	// }}
+    // }}
 
 }

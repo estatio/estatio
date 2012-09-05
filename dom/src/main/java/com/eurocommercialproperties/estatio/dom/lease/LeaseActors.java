@@ -16,11 +16,11 @@ public interface LeaseActors {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public LeaseActor newLeaseActor(Lease Lease, Party party, LeaseActorType type, LocalDate from, LocalDate thru);
+    public LeaseActor newLeaseActor(Lease Lease, Party party, LeaseActorType type, LocalDate startDate, LocalDate endDate);
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public LeaseActor findLeaseActor(Lease Lease, Party party, LeaseActorType type, LocalDate from, LocalDate thru);
+    public LeaseActor findLeaseActor(Lease Lease, Party party, LeaseActorType type, LocalDate startDate, LocalDate endDate);
 
     @ActionSemantics(Of.SAFE)
     List<LeaseActor> allInstances();

@@ -54,32 +54,32 @@ public class LeaseActor extends AbstractDomainObject {
 
     // }}
 
-    // {{ From (property)
-    private LocalDate from;
+    // {{ StartDate (property)
+    private LocalDate startDate;
 
     @MemberOrder(sequence = "4")
     @Optional
-    public LocalDate getFrom() {
-        return from;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setFrom(final LocalDate from) {
-        this.from = from;
+    public void setStartDate(final LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     // }}
 
-    // {{ Thru (property)
-    private LocalDate thru;
+    // {{ EndDate (property)
+    private LocalDate endDate;
 
     @MemberOrder(sequence = "5")
     @Optional
-    public LocalDate getThru() {
-        return thru;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setThru(final LocalDate thru) {
-        this.thru = thru;
+    public void setEndDate(final LocalDate endDate) {
+        this.endDate = endDate;
     }
     // }}
 

@@ -32,12 +32,12 @@ public class LeaseActorsDefault extends AbstractFactoryAndRepository implements 
     @Override
     @QueryOnly
     @MemberOrder(sequence = "1")
-    public LeaseActor newLeaseActor(Lease lease, Party party, LeaseActorType type, LocalDate from, LocalDate thru) {
+    public LeaseActor newLeaseActor(Lease lease, Party party, LeaseActorType type, LocalDate startDate, LocalDate endDate) {
         final LeaseActor leaseActor = newTransientInstance(LeaseActor.class);
         leaseActor.setParty(party);
         leaseActor.setLease(lease);
-        leaseActor.setFrom(from);
-        leaseActor.setThru(thru);
+        leaseActor.setStartDate(startDate);
+        leaseActor.setEndDate(endDate);
         leaseActor.setType(type);
         persist(leaseActor);
         return leaseActor;
@@ -53,14 +53,14 @@ public class LeaseActorsDefault extends AbstractFactoryAndRepository implements 
     // }}
 
     @Override
-    public LeaseActor findLeaseActor(final Lease lease, final Party party, LeaseActorType type, final LocalDate from, final LocalDate thru) {
+    public LeaseActor findLeaseActor(final Lease lease, final Party party, LeaseActorType type, final LocalDate startDate, final LocalDate endDate) {
         
         return firstMatch(LeaseActor.class, new Filter<LeaseActor>() {
             @Override
             public boolean accept(final LeaseActor leaseActor) {
                 return leaseActor.getLease().equals(lease) & leaseActor.getParty().equals(party) 
                         //TODO handle optional condition fields as they can contain null
-                        // leaseActor.getFrom().equals(from) & leaseActor.getThru().equals(thru)
+                        // leaseActor.getStartDate().equals(startDate) & leaseActor.getEndDate().equals(endDate)
                         ;
             }
         });

@@ -61,30 +61,30 @@ public class PartyRole extends AbstractDomainObject {
 
     // }}
 
-    // {{ FromDate (property)
-    private LocalDate fromDate;
+    // {{ StartDateDate (property)
+    private LocalDate startDateDate;
 
     @MemberOrder(sequence = "1")
-    public LocalDate getFromDate() {
-        return fromDate;
+    public LocalDate getStartDateDate() {
+        return startDateDate;
     }
 
-    public void setFromDate(final LocalDate fromDate) {
-        this.fromDate = fromDate;
+    public void setStartDateDate(final LocalDate startDateDate) {
+        this.startDateDate = startDateDate;
     }
 
     // }}
 
-    // {{ ThruDate (property)
-    private LocalDate thruDate;
+    // {{ EndDateDate (property)
+    private LocalDate endDateDate;
 
     @MemberOrder(sequence = "1")
-    public LocalDate getThruDate() {
-        return thruDate;
+    public LocalDate getEndDateDate() {
+        return endDateDate;
     }
 
-    public void setThruDate(final LocalDate thruDate) {
-        this.thruDate = thruDate;
+    public void setEndDateDate(final LocalDate endDateDate) {
+        this.endDateDate = endDateDate;
     }
     // }}
 

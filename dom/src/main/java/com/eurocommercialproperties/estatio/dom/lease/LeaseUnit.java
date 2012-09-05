@@ -60,6 +60,7 @@ public class LeaseUnit extends AbstractDomainObject {
     // }}
 
     // {{ EndDate (property)
+    //TODO: startDate vs startDate and endDate vs endDate have the same meaning, all meant to bound an item to a period. 
     private LocalDate endDate;
 
     @Persistent

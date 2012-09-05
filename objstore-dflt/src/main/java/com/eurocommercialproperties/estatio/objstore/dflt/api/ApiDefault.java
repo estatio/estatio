@@ -118,7 +118,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     }
 
     @Override
-    public void putPropertyActor(String propertyReference, String partyReference, String type, LocalDate from, LocalDate thru) {
+    public void putPropertyActor(String propertyReference, String partyReference, String type, LocalDate startDate, LocalDate endDate) {
         Property property = properties.findByReference(propertyReference);
         Party party = parties.findPartyByReference(partyReference);
         if (party == null) {
@@ -127,9 +127,9 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
-        PropertyActor actor = propertyActors.findPropertyActor(property, party, PropertyActorType.valueOf(type), from, thru);
+        PropertyActor actor = propertyActors.findPropertyActor(property, party, PropertyActorType.valueOf(type), startDate, endDate);
         if (actor == null) {
-            actor = propertyActors.newPropertyActor(property, party, PropertyActorType.valueOf(type), from, thru);
+            actor = propertyActors.newPropertyActor(property, party, PropertyActorType.valueOf(type), startDate, endDate);
         }
 
     }
@@ -153,7 +153,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     }
 
     @Override
-    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, LocalDate from, LocalDate thru, BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, String address1, String city,
+    public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, LocalDate startDate, LocalDate endDate, BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, String address1, String city,
             String postalCode, String stateCode, String countryCode) {
         Property property = properties.findByReference(propertyReference);
         if (property == null) {

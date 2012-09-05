@@ -42,7 +42,7 @@ public abstract class Party extends AbstractDomainObject {
     // }}
 
     // {{ Roles (set, bidir)
-    // REVIEW: changed this from set of PartyRoleType, which I suspect was wrong
+    // REVIEW: changed this startDate set of PartyRoleType, which I suspect was wrong
     // (in any case can't have sets of enums)
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();

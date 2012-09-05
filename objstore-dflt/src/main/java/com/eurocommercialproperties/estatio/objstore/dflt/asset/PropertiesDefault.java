@@ -5,8 +5,10 @@ import java.util.List;
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.filter.Filter;
 
 public class PropertiesDefault extends AbstractFactoryAndRepository implements Properties {
@@ -64,5 +66,12 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
         return allInstances(Property.class);
     }
     // }}
+
+    @Override
+    @Hidden
+    public PostalAddress getPostalAddress(Property prop) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

@@ -97,6 +97,7 @@ public class Lease extends AbstractDomainObject {
     // }}
 
     // {{ Actors (Collection)
+    //TODO: experiment with Set & List 
     private Set<LeaseActor> actors = new LinkedHashSet<LeaseActor>();
 
     @MemberOrder(sequence = "1")
@@ -112,8 +113,9 @@ public class Lease extends AbstractDomainObject {
 
     // {{ newActor (action)
     @MemberOrder(sequence = "1")
-    public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("from") @Optional LocalDate from, @Named("thru") @Optional LocalDate thru) {
-        LeaseActor LeaseActor = leaseActorsRepo.newLeaseActor(this, party, type, from, thru);
+    //TODO: @Named redundant
+    public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
+        LeaseActor LeaseActor = leaseActorsRepo.newLeaseActor(this, party, type, startDate, endDate);
         actors.add(LeaseActor);
         return LeaseActor;
     }
