@@ -28,8 +28,7 @@ import com.eurocommercialproperties.estatio.dom.party.Party;
 @PersistenceCapable
 @Auditable
 public class Property extends AbstractDomainObject {
-    
-    
+
     // {{ Reference (attribute, title)
     private String reference;
 
@@ -144,14 +143,13 @@ public class Property extends AbstractDomainObject {
     // {{ AreaOfUnits (attribute)
     @MemberOrder(sequence = "1.8")
     public BigDecimal getAreaOfUnits() {
-        BigDecimal area = BigDecimal.ZERO ;
+        BigDecimal area = BigDecimal.ZERO;
         for (Unit unit : getUnits()) {
-            area.add(unit.getArea() !=null ? unit.getArea() : BigDecimal.ZERO);
+            area.add(unit.getArea() != null ? unit.getArea() : BigDecimal.ZERO);
         }
         return area;
     }
 
-    
     // }}
 
     // {{ City (derived attribute)
@@ -169,7 +167,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    //@Persistent(mappedBy = "property", defaultFetchGroup="false")
+    // @Persistent(mappedBy = "property", defaultFetchGroup="false")
     @Join
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
@@ -194,19 +192,29 @@ public class Property extends AbstractDomainObject {
     }
 
     // }}
-    
+
     // {{ PostalAddress
     @Hidden
-    @Programmatic //
+    @Programmatic
+    //
     public PostalAddress getPostalAddress() {
-        // TODO: Return the first or primary postal address. Q: should this implemented on the repository?
-        // 
+        // TODO: Return the first or primary postal address. Q: should this
+        // implemented on the repository?
+        //
         return null;
     }
 
+    // }}
+
+    public Property mergeWith(@Named("property") final Property property){
+        //TODO: why doesn't the viewer presents a dialog?
+        return property;
+    }
+    
     // {{ Units (list, bidir)
-    @Persistent(mappedBy = "property", defaultFetchGroup="false")
-    //TODO: What's the reason for having lists and not sets? Probably none. A property cannot have a duplicate unit.
+    @Persistent(mappedBy = "property")
+    // @Persistent(mappedBy = "property", defaultFetchGroup="false")
+    // TODO: Why a default fetch group?
     private List<Unit> units = new ArrayList<Unit>();
 
     @MemberOrder(sequence = "2.2")
@@ -220,7 +228,7 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ newUnit (action)
+    // {{ NewUnit (action)
     @MemberOrder(name = "Units", sequence = "1")
     public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
         Unit unit = unitsRepo.newUnit(code, name);
@@ -228,14 +236,14 @@ public class Property extends AbstractDomainObject {
         getUnits().add(unit);
         return unit;
     }
-    
+
     // }}
 
-    // {{ PropertyActors (list, unidir)
-    @Persistent(mappedBy="property")
+    // {{ Actors (list, unidir)
+    @Persistent(mappedBy = "property")
     private List<PropertyActor> actors = new ArrayList<PropertyActor>();
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2.3")
     public List<PropertyActor> getActors() {
         return actors;
     }
@@ -244,11 +252,39 @@ public class Property extends AbstractDomainObject {
         this.actors = actors;
     }
 
+    public void addToActors(final PropertyActor actor) {
+        // check for no-op
+        if (actor == null || getActors().contains(actor)) {
+            return;
+        }
+        // associate new
+        getActors().add(actor);
+        // additional business logic
+        onAddToActors(actor);
+    }
+
+    public void removeFromActors(final PropertyActor actor) {
+        // check for no-op
+        if (actor == null || !getActors().contains(actor)) {
+            return;
+        }
+        // dissociate existing
+        getActors().remove(actor);
+        // additional business logic
+        onRemoveFromActors(actor);
+    }
+
+    protected void onAddToActors(final PropertyActor actor) {
+    }
+
+    protected void onRemoveFromActors(final PropertyActor actor) {
+    }
+    
     // }}
 
-    // {{ newActor (action)
+    // {{ addActor (action)
     @MemberOrder(sequence = "1")
-    public PropertyActor addActor(@Named ("party") Party party, @Named ("type") PropertyActorType type, @Named ("startDate") @Optional LocalDate startDate, @Named ("endDate") @Optional LocalDate endDate) {
+    public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
         actors.add(propertyActor);
         return propertyActor;

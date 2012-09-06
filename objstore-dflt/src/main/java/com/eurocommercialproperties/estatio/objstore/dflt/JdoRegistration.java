@@ -18,6 +18,8 @@ package com.eurocommercialproperties.estatio.objstore.dflt;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.apache.isis.applib.annotation.Hidden;
+
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
@@ -27,12 +29,13 @@ import com.eurocommercialproperties.estatio.dom.communicationchannel.PhoneNumber
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
+import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.index.IndexValue;
+import com.eurocommercialproperties.estatio.dom.lease.Lease;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
 import com.eurocommercialproperties.estatio.dom.party.Organisation;
 import com.eurocommercialproperties.estatio.dom.party.Party;
-import com.eurocommercialproperties.estatio.dom.party.PartyRole;
 import com.eurocommercialproperties.estatio.dom.party.Person;
-
-import org.apache.isis.applib.annotation.Hidden;
 
 /**
  * This is a temporary measure just to ensure that all the
@@ -94,6 +97,19 @@ public class JdoRegistration {
     }
 
     @Hidden
-    public void registerToJdo(PartyRole obj) {
+    public void registerToJdo(Lease obj) {
     }
+
+    @Hidden
+    public void registerToJdo(LeaseItem obj) {
+    }
+    @Hidden
+    public void registerToJdo(Index obj) {
+    }
+    @Hidden
+    public void registerToJdo(IndexValue obj) {
+    }
+
+
+
 }

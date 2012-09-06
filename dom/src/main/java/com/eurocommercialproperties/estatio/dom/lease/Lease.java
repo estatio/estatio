@@ -97,7 +97,7 @@ public class Lease extends AbstractDomainObject {
     // }}
 
     // {{ Actors (Collection)
-    //TODO: experiment with Set & List 
+    // TODO: experiment with Set & List
     private Set<LeaseActor> actors = new LinkedHashSet<LeaseActor>();
 
     @MemberOrder(sequence = "1")
@@ -109,16 +109,50 @@ public class Lease extends AbstractDomainObject {
         this.actors = actors;
     }
 
+    public void addToActors(final LeaseActor leaseActor) {
+        // check for no-op
+        if (leaseActor == null || getActors().contains(leaseActor)) {
+            return;
+        }
+        // associate new
+        getActors().add(leaseActor);
+        // additional business logic
+        onAddToActors(leaseActor);
+    }
+
+    public void removeFromActors(final LeaseActor leaseActor) {
+        // check for no-op
+        if (leaseActor == null || !getActors().contains(leaseActor)) {
+            return;
+        }
+        // dissociate existing
+        getActors().remove(leaseActor);
+        // additional business logic
+        onRemoveFromActors(leaseActor);
+    }
+
+    protected void onAddToActors(final LeaseActor elementName) {
+    }
+
+    protected void onRemoveFromActors(final LeaseActor elementName) {
+    }
+    
     // }}
 
-    // {{ newActor (action)
+    // {{ addActor (action)
     @MemberOrder(sequence = "1")
-    //TODO: @Named redundant
+    // TODO: @Named redundant
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         LeaseActor LeaseActor = leaseActorsRepo.newLeaseActor(this, party, type, startDate, endDate);
         actors.add(LeaseActor);
         return LeaseActor;
     }
+
+    // }}
+    
+
+    
+    
 
     // {{ injected: LeaseActors
     private LeaseActors leaseActorsRepo;

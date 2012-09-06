@@ -2,6 +2,11 @@ package com.eurocommercialproperties.estatio.objstore.dflt.communicationchannel;
 
 import java.util.List;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.QueryOnly;
+
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.EmailAddress;
@@ -10,10 +15,6 @@ import com.eurocommercialproperties.estatio.dom.communicationchannel.PhoneNumber
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.QueryOnly;
 
 public class CommunicationChannelsDefault extends AbstractFactoryAndRepository implements CommunicationChannels {
 
@@ -45,8 +46,7 @@ public class CommunicationChannelsDefault extends AbstractFactoryAndRepository i
     // }}
 
     @Override
-    @QueryOnly
-    @MemberOrder(sequence = "1")
+     @MemberOrder(sequence = "1")
     public PostalAddress newPostalAddress(String address1, String address2, String postalCode, String city,
                     State state, Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);

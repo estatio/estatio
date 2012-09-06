@@ -2,14 +2,14 @@ package com.eurocommercialproperties.estatio.objstore.dflt.lease;
 
 import java.util.List;
 
-import com.eurocommercialproperties.estatio.dom.lease.Lease;
-import com.eurocommercialproperties.estatio.dom.lease.Leases;
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.QueryOnly;
 import org.apache.isis.applib.filter.Filter;
+
+import com.eurocommercialproperties.estatio.dom.lease.Lease;
+import com.eurocommercialproperties.estatio.dom.lease.Leases;
 
 public class LeasesDefault extends AbstractFactoryAndRepository implements Leases {
 
