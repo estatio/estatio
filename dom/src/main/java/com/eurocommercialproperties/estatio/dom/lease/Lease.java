@@ -136,29 +136,16 @@ public class Lease extends AbstractDomainObject {
 
     protected void onRemoveFromActors(final LeaseActor elementName) {
     }
-    
+
     // }}
 
     // {{ addActor (action)
     @MemberOrder(sequence = "1")
     // TODO: @Named redundant
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        LeaseActor LeaseActor = leaseActorsRepo.newLeaseActor(this, party, type, startDate, endDate);
+        LeaseActor LeaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
         actors.add(LeaseActor);
         return LeaseActor;
-    }
-
-    // }}
-    
-
-    
-    
-
-    // {{ injected: LeaseActors
-    private LeaseActors leaseActorsRepo;
-
-    public void setLeaseActors(final LeaseActors leaseActors) {
-        this.leaseActorsRepo = leaseActors;
     }
 
     // }}
@@ -175,7 +162,45 @@ public class Lease extends AbstractDomainObject {
 
     public void setUnits(final Set<LeaseUnit> units) {
         this.units = units;
+
     }
+
+    public void addToUnits(final LeaseUnit leaseUnit) {
+        // check for no-op
+        if (leaseUnit == null || getUnits().contains(leaseUnit)) {
+            return;
+        }
+        // associate new
+        getUnits().add(leaseUnit);
+        // additional business logic
+        onAddToUnits(leaseUnit);
+    }
+
+    public void removeFromUnits(final LeaseUnit leaseUnit) {
+        // check for no-op
+        if (leaseUnit == null || !getUnits().contains(leaseUnit)) {
+            return;
+        }
+        // dissociate existing
+        getUnits().remove(leaseUnit);
+        // additional business logic
+        onRemoveFromUnits(leaseUnit);
+    }
+
+    protected void onAddToUnits(final LeaseUnit leaseUnit) {
+    }
+
+    protected void onRemoveFromUnits(final LeaseUnit leaseUnit) {
+    }
+
     // }}
 
+    // {{ injected: LeaseActors
+    private LeaseActors leaseActors;
+
+    public void setLeaseActors(final LeaseActors leaseActors) {
+        this.leaseActors = leaseActors;
+    }
+
+    // }}
 }

@@ -90,7 +90,9 @@ public class PostalAddress extends CommunicationChannel {
     // the object
     // outside of xactn, breaking the fixture installation
     // TODO: Country does not render as dropdown
-    // TODO: When no country has been selected, the UI renders "no objects returned" and an ok button. After that it's impossible to to a searh again.
+    // TODO: When no country has been selected, the UI renders
+    // "no objects returned" and an ok button. After that it's impossible to to
+    // a searh again.
     private Country country;
 
     @Optional
@@ -102,9 +104,10 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setCountry(final Country country) {
         this.country = country;
-        if (getState() != null && getState().getCountry() != country) {
-            setState(null);
-        }
+        // TODO
+//        if (getState() != null && getState().getCountry() != country) {
+//            setState(null);
+//        }
     }
 
     // }}

@@ -28,8 +28,12 @@ public class IndicesDefault extends AbstractFactoryAndRepository implements Indi
 
     // {{ NewIndex (action)
     @Override
-    public Index newIndex(final String code, String description) {
-        return newIndex(code, description);
+    public Index newIndex(final String reference, String name) {
+        final Index index = newTransientInstance(Index.class);
+        index.setReference(reference);
+        index.setName(name);
+        persist(index);
+        return index;
     }
 
     // }}
@@ -55,4 +59,6 @@ public class IndicesDefault extends AbstractFactoryAndRepository implements Indi
     }
     // }}
 
+    
+    
 }

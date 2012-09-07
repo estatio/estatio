@@ -153,7 +153,7 @@ public class Unit extends AbstractDomainObject {
     // {{ Property (attribute)
     private Property property;
 
-    //TODO: IMHO the @Column is redundant 
+    // TODO: IMHO the @Column is redundant
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
     @Hidden(where = Where.PARENTED_TABLE)
     @Disabled
@@ -208,4 +208,5 @@ public class Unit extends AbstractDomainObject {
         communicationChannels.add(communicationChannel);
     }
 
+    // }}
 }

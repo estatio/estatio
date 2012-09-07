@@ -11,6 +11,7 @@ public class PartiesFixture extends AbstractFixture {
     public void install() {
         createOrganisation("ACME", "ACME Holdings");
         createOrganisation("HELLOWORLD", "Hello World Properties");
+        createOrganisation("TOPMODEL", "Topmodel Fashion");
     }
 
     private Party createOrganisation(String reference, String name) {

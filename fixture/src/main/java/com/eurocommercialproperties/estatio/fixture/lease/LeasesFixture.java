@@ -23,13 +23,18 @@ public class LeasesFixture extends AbstractFixture {
         Party tenant = parties.findPartyByReference(tentantReference);
         Unit unit = units.findByReference(unitReference);
         Lease lease = leases.newLease(reference, name);
-
         lease.addActor(landlord, LeaseActorType.LANDLORD, null, null);
         lease.addActor(tenant, LeaseActorType.TENTANT, null, null);
-
+        lease.addToUnits(leases.newLeaseUnit(lease, unit));
         return lease;
     }
 
+    private Units units;
+    
+    public void setUnitRepository(final Units units) {
+        this.units = units;
+    }
+    
     private Leases leases;
 
     public void setLeaseRepository(final Leases leases) {
@@ -38,14 +43,8 @@ public class LeasesFixture extends AbstractFixture {
 
     private Parties parties;
 
-    public void setpartyRepository(final Parties parties) {
+    public void setPartyRepository(final Parties parties) {
         this.parties = parties;
-    }
-
-    private Units units;
-
-    public void SetUnitsRepository(final Units units) {
-        this.units = units;
     }
 
 }
