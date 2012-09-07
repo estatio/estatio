@@ -16,15 +16,9 @@
  */
 package com.eurocommercialproperties.estatio.dom.party;
 
-import javax.jdo.annotations.InheritanceStrategy;
-
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Title;
 
-//@javax.jdo.annotations.PersistenceCapable(schema = "party")
-//@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-//@ObjectType("ORGN")
 @javax.jdo.annotations.PersistenceCapable
 public class Organisation extends Party {
 
@@ -32,7 +26,7 @@ public class Organisation extends Party {
     private String name;
 
     @Title
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "10")
     public String getName() {
         return name;
     }

@@ -5,6 +5,8 @@ import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 import org.joda.time.LocalDate;
 
@@ -19,6 +21,8 @@ public class LeaseUnit extends AbstractDomainObject {
     // {{ Lease (property)
     private Lease lease;
 
+    // TODO: Fix title since this displays
+    @Title(sequence = "1")
     @MemberOrder(sequence = "1")
     public Lease getLease() {
         return lease;
@@ -33,7 +37,8 @@ public class LeaseUnit extends AbstractDomainObject {
     // {{ Unit (property)
     private Unit unit;
 
-    @MemberOrder(sequence = "1")
+    @Title(sequence = "1")
+    @MemberOrder(sequence = "2")
     public Unit getUnit() {
         return unit;
     }
@@ -48,7 +53,8 @@ public class LeaseUnit extends AbstractDomainObject {
     private LocalDate startDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
+    @Optional
+    @MemberOrder(sequence = "3")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -60,11 +66,13 @@ public class LeaseUnit extends AbstractDomainObject {
     // }}
 
     // {{ EndDate (property)
-    //TODO: startDate vs startDate and endDate vs endDate have the same meaning, all meant to bound an item to a period. 
+    // TODO: startDate vs startDate and endDate vs endDate have the same
+    // meaning, all meant to bound an item to a period.
     private LocalDate endDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
+    @Optional
+    @MemberOrder(sequence = "4")
     public LocalDate getEndDate() {
         return endDate;
     }

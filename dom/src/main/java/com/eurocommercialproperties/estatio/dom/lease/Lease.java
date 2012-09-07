@@ -1,6 +1,8 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -14,6 +16,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 import org.joda.time.LocalDate;
 
+import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @PersistenceCapable
@@ -98,6 +101,7 @@ public class Lease extends AbstractDomainObject {
 
     // {{ Actors (Collection)
     // TODO: experiment with Set & List
+    @Persistent(mappedBy = "lease")
     private Set<LeaseActor> actors = new LinkedHashSet<LeaseActor>();
 
     @MemberOrder(sequence = "1")
@@ -143,18 +147,19 @@ public class Lease extends AbstractDomainObject {
     @MemberOrder(sequence = "1")
     // TODO: @Named redundant
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        LeaseActor LeaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
-        actors.add(LeaseActor);
-        return LeaseActor;
+        LeaseActor leaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
+        actors.add(leaseActor);
+        return leaseActor;
     }
 
     // }}
 
     // {{ Units (Collection)
 
-    @Persistent(mappedBy = "lease", defaultFetchGroup = "false")
+    // {{ Units (Collection)
     private Set<LeaseUnit> units = new LinkedHashSet<LeaseUnit>();
 
+    @Persistent(mappedBy = "lease", defaultFetchGroup = "false")
     @MemberOrder(sequence = "1")
     public Set<LeaseUnit> getUnits() {
         return units;
@@ -162,8 +167,11 @@ public class Lease extends AbstractDomainObject {
 
     public void setUnits(final Set<LeaseUnit> units) {
         this.units = units;
-
     }
+
+    // }}
+
+    // }}
 
     public void addToUnits(final LeaseUnit leaseUnit) {
         // check for no-op
@@ -191,6 +199,35 @@ public class Lease extends AbstractDomainObject {
     }
 
     protected void onRemoveFromUnits(final LeaseUnit leaseUnit) {
+    }
+
+    // }}
+
+    // {{ addUnit (action)
+    @MemberOrder(sequence = "1")
+    public LeaseUnit addUnit(@Named("unit") Unit unit) {
+        LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
+        units.add(leaseUnit);
+        return leaseUnit;
+    }
+
+    // }}
+
+    // {{ injected: Leases
+    private Leases leases;
+
+    public void setLeases(final Leases leases) {
+        this.leases = leases;
+    }
+
+    // }}
+    // {{ injected: LeaseUnits
+
+    private LeaseUnits leaseUnits;
+
+    public void setLeaseUnits(final LeaseUnits leaseUnits) {
+        this.leaseUnits = leaseUnits;
+
     }
 
     // }}

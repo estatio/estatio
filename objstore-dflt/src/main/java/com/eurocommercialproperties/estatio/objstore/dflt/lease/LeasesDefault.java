@@ -58,16 +58,4 @@ public class LeasesDefault extends AbstractFactoryAndRepository implements Lease
     public List<Lease> allInstances() {
         return allInstances(Lease.class);
     }
-
-    @Override
-    @Hidden
-    @ActionSemantics(Of.SAFE)
-    public LeaseUnit newLeaseUnit(Lease lease, Unit unit) {
-        LeaseUnit leaseUnit = newTransientInstance(LeaseUnit.class);
-        leaseUnit.setLease(lease);
-        leaseUnit.setUnit(unit);
-        persist(leaseUnit);
-        return leaseUnit;
-    }
-
 }

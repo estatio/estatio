@@ -1,7 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -11,32 +10,18 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
-public class LeaseItem extends AbstractDomainObject {
+public class LeaseTerm extends AbstractDomainObject {
 
     // {{ Lease (property)
-    private Lease lease;
+    private LeaseItem leaseItem;
 
     @MemberOrder(sequence = "1")
-    public Lease getLease() {
-        return lease;
+    public LeaseItem getLeaseItem() {
+        return leaseItem;
     }
 
-    public void setLease(final Lease lease) {
-        this.lease = lease;
-    }
-
-    // }}
-
-    // {{ LeaseItemType (property)
-    private LeaseItemType type;
-
-    @MemberOrder(sequence = "2")
-    public LeaseItemType getLeaseItemType() {
-        return type;
-    }
-
-    public void setLeaseItemType(final LeaseItemType type) {
-        this.type = type;
+    public void setLeaseItem(final LeaseItem leaseItem) {
+        this.leaseItem = leaseItem;
     }
 
     // }}
@@ -45,7 +30,7 @@ public class LeaseItem extends AbstractDomainObject {
     private LocalDate startDate;
 
     @Persistent
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "1")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -60,7 +45,7 @@ public class LeaseItem extends AbstractDomainObject {
     private LocalDate endDate;
 
     @Persistent
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "1")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -68,21 +53,21 @@ public class LeaseItem extends AbstractDomainObject {
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-
     // }}
 
-    // {{ Terms (Collection)
-    private List<LeaseTerm> terms = new ArrayList<LeaseTerm>();
+    // {{ Value (property)
+    private BigDecimal value;
 
-    @Persistent(mappedBy="leaseItem")
-    @MemberOrder(sequence = "5")
-    public List<LeaseTerm> getTerms() {
-        return terms;
+    @MemberOrder(sequence = "1")
+    public BigDecimal getValue() {
+        return value;
     }
 
-    public void setTerms(final List<LeaseTerm> terms) {
-        this.terms = terms;
+    public void setValue(final BigDecimal value) {
+        this.value = value;
     }
     // }}
 
+
+    
 }

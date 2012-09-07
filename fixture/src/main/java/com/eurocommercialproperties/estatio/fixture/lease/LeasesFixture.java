@@ -7,6 +7,7 @@ import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseUnits;
 import com.eurocommercialproperties.estatio.dom.lease.Leases;
 import com.eurocommercialproperties.estatio.dom.party.Parties;
 import com.eurocommercialproperties.estatio.dom.party.Party;
@@ -25,7 +26,7 @@ public class LeasesFixture extends AbstractFixture {
         Lease lease = leases.newLease(reference, name);
         lease.addActor(landlord, LeaseActorType.LANDLORD, null, null);
         lease.addActor(tenant, LeaseActorType.TENTANT, null, null);
-        lease.addToUnits(leases.newLeaseUnit(lease, unit));
+        lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
         return lease;
     }
 
@@ -39,6 +40,11 @@ public class LeasesFixture extends AbstractFixture {
 
     public void setLeaseRepository(final Leases leases) {
         this.leases = leases;
+    }
+    private LeaseUnits leaseUnits;
+
+    public void setLeaseRepository(final LeaseUnits leaseUnits) {
+        this.leaseUnits = leaseUnits;
     }
 
     private Parties parties;
