@@ -3,8 +3,13 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 public enum PropertyType {
 
-    COMMERCIAL("Commercial"), STORAGE("Storage"), MIXED("A bit of everything");
-
+    SHOPPING_CENTER("Shopping Center"), 
+    WAREHOUSE("Warehouse"),
+    RESIDENTIAL("Residential"),
+    RETAIL_PARK("Retail Park"),
+    MIXED("Mixed"),
+    CINEMA("Cinema");
+    
     private final String title;
 
     private PropertyType(String title) {

@@ -47,6 +47,10 @@ public interface Api {
             @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode);
 
     @ActionSemantics(Of.IDEMPOTENT)
+    public void putPartyCommunicationChannels(@Named("partyReference") String partyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("phoneNumber") @Optional String phoneNumber, @Named("faxNumber") @Optional String faxNumber);
+    
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference);
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -58,7 +62,7 @@ public interface Api {
             @Named("terraceArea") @Optional BigDecimal terraceArea, @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode);
     
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("startDate") LocalDate startDate, @Named("endDate") LocalDate endDate, @Named("terminationDate") LocalDate terminationDate);
+    public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("type") String type, @Named("startDate") LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("terminationDate") @Optional LocalDate terminationDate, @Named("parentLeaseReference") @Optional String parentLeaseReference, @Named("propertyReference") @Optional String propertyReference);
     
 }
  

@@ -1,8 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -95,6 +93,20 @@ public class Lease extends AbstractDomainObject {
 
     public void setTerminationDate(final LocalDate terminationDate) {
         this.terminationDate = terminationDate;
+    }
+
+    // }}
+
+    // {{ Type (property)
+    private LeaseType type;
+
+    @MemberOrder(sequence = "6")
+    public LeaseType getType() {
+        return type;
+    }
+
+    public void setType(final LeaseType type) {
+        this.type = type;
     }
 
     // }}
@@ -211,16 +223,69 @@ public class Lease extends AbstractDomainObject {
         return leaseUnit;
     }
 
-    // }}
+    // {{ Items (Collection)
+    private Set<LeaseItem> items = new LinkedHashSet<LeaseItem>();
 
-    // {{ injected: Leases
-    private Leases leases;
+    @MemberOrder(sequence = "1")
+    public Set<LeaseItem> getItems() {
+        return items;
+    }
 
-    public void setLeases(final Leases leases) {
-        this.leases = leases;
+    public void setItems(final Set<LeaseItem> items) {
+        this.items = items;
+    }
+
+    public void addToItems(final LeaseItem leaseItem) {
+        // check for no-op
+        if (leaseItem == null || getItems().contains(leaseItem)) {
+            return;
+        }
+        // associate new
+        getItems().add(leaseItem);
+        // additional business logic
+        onAddToItems(leaseItem);
+    }
+
+    public void removeFromItems(final LeaseItem leaseItem) {
+        // check for no-op
+        if (leaseItem == null || !getItems().contains(leaseItem)) {
+            return;
+        }
+        // dissociate existing
+        getItems().remove(leaseItem);
+        // additional business logic
+        onRemoveFromItems(leaseItem);
+    }
+
+    protected void onAddToItems(final LeaseItem leaseItem) {
+    }
+
+    protected void onRemoveFromItems(final LeaseItem leaseItem) {
     }
 
     // }}
+
+    // {{ addUnit (action)
+    @MemberOrder(sequence = "1")
+    public LeaseItem addItem() {
+        LeaseItem leaseItem = leaseItems.newLeaseItem(this);
+        items.add(leaseItem);
+        return leaseItem;
+    }
+
+    // }}
+
+    // {{ injected: LeaseItems
+
+    private LeaseItems leaseItems;
+
+    public void setLeaseItems(final LeaseItems leaseItems) {
+        this.leaseItems = leaseItems;
+
+    }
+
+    // }}
+
     // {{ injected: LeaseUnits
 
     private LeaseUnits leaseUnits;

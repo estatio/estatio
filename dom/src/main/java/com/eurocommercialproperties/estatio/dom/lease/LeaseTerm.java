@@ -6,7 +6,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Where;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
@@ -14,7 +16,8 @@ public class LeaseTerm extends AbstractDomainObject {
 
     // {{ Lease (property)
     private LeaseItem leaseItem;
-
+    
+    @Hidden(where=Where.PARENTED_TABLE)
     @MemberOrder(sequence = "1")
     public LeaseItem getLeaseItem() {
         return leaseItem;
@@ -30,7 +33,7 @@ public class LeaseTerm extends AbstractDomainObject {
     private LocalDate startDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -45,7 +48,7 @@ public class LeaseTerm extends AbstractDomainObject {
     private LocalDate endDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "3")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -58,7 +61,7 @@ public class LeaseTerm extends AbstractDomainObject {
     // {{ Value (property)
     private BigDecimal value;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "4")
     public BigDecimal getValue() {
         return value;
     }

@@ -2,7 +2,20 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 public enum LeaseType {
 
-    UNIT_LEASE("Unit Lease"), BUSINESS_LEASE("Business Lease");
+    AA("Apparecchiature Automatic"),
+    AD("Affitto d'Azienda"),
+    CG("Comodato Gratuito"),
+    CO("Comodato"),
+    DH("Dehors"),
+    LO("Locazione"),
+    OA("Occup. Abusiva Affito"),
+    OL("Occup. Abusiva Locazione"),
+    PA("Progroga Affitto"),
+    PL("Progroga Locazione"),
+    PP("Pannelli Pubblicitari"),
+    PR("Precaria"),
+    SA("Scritt. Privata Affitto"),
+    SL("Scritt. Privata Locazione");
 
     private final String title;
 

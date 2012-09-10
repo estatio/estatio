@@ -37,7 +37,7 @@ public class LeaseUnit extends AbstractDomainObject {
     // {{ Unit (property)
     private Unit unit;
 
-    @Title(sequence = "1")
+    //@Title(sequence = "2")
     @MemberOrder(sequence = "2")
     public Unit getUnit() {
         return unit;

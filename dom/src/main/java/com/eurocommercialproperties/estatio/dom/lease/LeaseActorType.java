@@ -2,7 +2,7 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 public enum LeaseActorType {
 
-    TENTANT("Tenant"), 
+    TENANT("Tenant"), 
     LANDLORD("Landlord");
 
     private final String title;
