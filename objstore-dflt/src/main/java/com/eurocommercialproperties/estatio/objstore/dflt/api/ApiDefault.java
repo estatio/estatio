@@ -96,7 +96,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
 
     @Override
     public void putPropertyPostalAddress(String propertyReference, String address1, String address2, String city, String postalCode, String stateCode, String countryCode) {
-        Property property = properties.findByReference(propertyReference);
+        Property property = properties.lookupByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
@@ -134,7 +134,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
 
     @Override
     public void putPropertyActor(String propertyReference, String partyReference, String type, LocalDate startDate, LocalDate endDate) {
-        Property property = properties.findByReference(propertyReference);
+        Property property = properties.lookupByReference(propertyReference);
         Party party = parties.findPartyByReference(partyReference);
         if (party == null) {
             throw new ApplicationException(String.format("Party with reference %s not found.", partyReference));
@@ -155,7 +155,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
         if (owner == null) {
             throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
         }
-        Property property = properties.findByReference(reference);
+        Property property = properties.lookupByReference(reference);
         if (property == null) {
             property = properties.newProperty(reference, name);
         }
@@ -170,7 +170,7 @@ public class ApiDefault extends AbstractFactoryAndRepository implements Api {
     @Override
     public void putUnit(String reference, String propertyReference, String ownerReference, String name, String type, LocalDate startDate, LocalDate endDate, BigDecimal area, BigDecimal salesArea, BigDecimal storageArea, BigDecimal mezzanineArea, BigDecimal terraceArea, String address1, String city,
             String postalCode, String stateCode, String countryCode) {
-        Property property = properties.findByReference(propertyReference);
+        Property property = properties.lookupByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
         }

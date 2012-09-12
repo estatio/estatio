@@ -104,12 +104,18 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setCountry(final Country country) {
         this.country = country;
-        // TODO
-//        if (getState() != null && getState().getCountry() != country) {
-//            setState(null);
-//        }
+    }
+    public void modifyCountry(final Country country) {
+        setCountry(country);
+        if (getState() != null && getState().getCountry() != country) {
+            setState(null);
+        }
     }
 
+    public void clearCountry() {
+        setCountry(null);
+        setState(null);
+    }
     // }}
 
     // {{ State (attribute)
@@ -130,7 +136,6 @@ public class PostalAddress extends CommunicationChannel {
     public List<State> choicesState() {
         return states.findByCountry(country);
     }
-
     // }}
 
     // {{ injected dependencies

@@ -25,6 +25,9 @@ import com.eurocommercialproperties.estatio.dom.communicationchannel.Communicati
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.party.Party;
 
+@javax.jdo.annotations.Query(
+        name="prop_findByReference", language="JDOQL",  
+        value="SELECT FROM com.eurocommercialproperties.estatio.dom.asset.Property WHERE reference.matches(:r)")
 @PersistenceCapable
 @Auditable
 public class Property extends AbstractDomainObject {

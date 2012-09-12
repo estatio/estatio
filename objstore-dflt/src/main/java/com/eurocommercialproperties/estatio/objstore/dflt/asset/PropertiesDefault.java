@@ -1,15 +1,19 @@
 package com.eurocommercialproperties.estatio.objstore.dflt.asset;
 
 import java.util.List;
+import java.util.Map;
 
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.google.common.collect.ImmutableMap;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.query.QueryDefault;
 
 public class PropertiesDefault extends AbstractFactoryAndRepository implements Properties {
 
@@ -49,13 +53,23 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
 
     // {{ FindByReference
     @Override
-    public Property findByReference(final String reference) {
-        return firstMatch(Property.class, new Filter<Property>() {
-            @Override
-            public boolean accept(final Property property) {
-                return reference.equals(property.getReference());
-            }
-        });
+    @Hidden
+    public Property lookupByReference(final String reference) {
+        final Query<Property> query = new QueryDefault<Property>(Property.class, "prop_findByReference", "r", reference.toUpperCase()); 
+        return this.firstMatch(query);
+    }
+
+    // }}
+
+    // {{ FindAllByReference
+    @Override
+    public List<Property> findAllByReference(final String reference) {
+        final Query<Property> query = new QueryDefault<Property>(Property.class, "prop_findByReference", "r", containsArgFor(reference)); 
+        return this.allMatches(query);
+    }
+
+    private static String containsArgFor(final String reference) {
+        return ".*" + reference.toUpperCase() + ".*";
     }
 
     // }}
