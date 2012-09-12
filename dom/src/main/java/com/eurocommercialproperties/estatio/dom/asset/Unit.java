@@ -93,7 +93,7 @@ public class Unit extends AbstractDomainObject {
     // {{ StorageArea (property)
     private BigDecimal storageArea;
 
-    @Hidden(where = Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
     public BigDecimal getStorageArea() {
         return storageArea;
@@ -108,7 +108,7 @@ public class Unit extends AbstractDomainObject {
     // {{ SalesArea (property)
     private BigDecimal salesArea;
 
-    @Hidden(where = Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "6")
     public BigDecimal getSalesArea() {
         return salesArea;
@@ -123,7 +123,7 @@ public class Unit extends AbstractDomainObject {
     // {{ MezzanineArea (property)
     private BigDecimal mezzanineArea;
 
-    @Hidden(where = Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "7")
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
@@ -138,7 +138,7 @@ public class Unit extends AbstractDomainObject {
     // {{ TerraceArea (property)
     private BigDecimal terraceArea;
 
-    @Hidden(where = Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "8")
     public BigDecimal getTerraceArea() {
         return terraceArea;
@@ -155,7 +155,7 @@ public class Unit extends AbstractDomainObject {
 
     // TODO: IMHO the @Column is redundant
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
-    @Hidden(where = Where.PARENTED_TABLE)
+    @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     @MemberOrder(sequence = "9")
     public Property getProperty() {

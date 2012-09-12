@@ -20,10 +20,12 @@ import java.math.BigDecimal;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.joda.time.LocalDate;
 
+@Hidden
 public interface Api {
 
     @ActionSemantics(Of.IDEMPOTENT)

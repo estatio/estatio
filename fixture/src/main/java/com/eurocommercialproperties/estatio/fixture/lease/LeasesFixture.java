@@ -25,8 +25,8 @@ public class LeasesFixture extends AbstractFixture {
     public void install() {
         String[] prefixes = { "OXF", "KAL" };
         for (String prefix : prefixes) {
-            createLease(prefix + "-TOPMODEL-001", "Just a smaple lease", prefix + "-001", "ACME", "TOPMODEL", new LocalDate(2002, 6, 1), new LocalDate(2013, 5, 31));
-            createLease(prefix + "-MEDIAX-002", "Just a smaple lease", prefix + "-002", "ACME", "MEDIAX", new LocalDate(2001, 3, 1), new LocalDate(2012, 2, 29));
+            createLease(prefix + "-TOPMODEL-001", "Topmodel Lease", prefix + "-001", "ACME", "TOPMODEL", new LocalDate(2002, 6, 1), new LocalDate(2013, 5, 31));
+            createLease(prefix + "-MEDIAX-002", "Meadiax Lease", prefix + "-002", "ACME", "MEDIAX", new LocalDate(2001, 3, 1), new LocalDate(2012, 2, 29));
         }
     }
 

@@ -17,7 +17,7 @@ public class LeaseTerm extends AbstractDomainObject {
     // {{ Lease (property)
     private LeaseItem leaseItem;
     
-    @Hidden(where=Where.PARENTED_TABLE)
+    @Hidden(where=Where.PARENTED_TABLES)
     @MemberOrder(sequence = "1")
     public LeaseItem getLeaseItem() {
         return leaseItem;

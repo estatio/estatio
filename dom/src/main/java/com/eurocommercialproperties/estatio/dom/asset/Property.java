@@ -2,20 +2,20 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 import org.joda.time.LocalDate;
@@ -168,15 +168,16 @@ public class Property extends AbstractDomainObject {
 
     // {{ CommunicationChannels (list, unidir)
     // @Persistent(mappedBy = "property", defaultFetchGroup="false")
+    // TODO: Changed to set but still error in wicket
     @Join
-    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
 
-    @MemberOrder(sequence = "2.1")
-    public List<CommunicationChannel> getCommunicationChannels() {
+    @MemberOrder(sequence = "1")
+    public Set<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
 
-    public void setCommunicationChannels(final List<CommunicationChannel> communicationChannels) {
+    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 
@@ -194,23 +195,25 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ PostalAddress
-    @Hidden
-    @Programmatic
+//    @Hidden
+//    @Programmatic
     //
-    public PostalAddress getPostalAddress() {
+//    public PostalAddress getPostalAddress() {
         // TODO: Return the first or primary postal address. Q: should this
         // implemented on the repository?
         //
-        return null;
-    }
+//        return null;
+//    }
 
     // }}
 
-    public Property mergeWith(@Named("property") final Property property){
-        //TODO: why doesn't the viewer presents a dialog?
-        return property;
+    public Property mergeWith(@Named("property") Property property) { // final
+                                                                      // Property
+                                                                      // property){
+        // TODO: why doesn't the viewer presents a dialog?
+        return null;
     }
-    
+
     // {{ Units (list, bidir)
     @Persistent(mappedBy = "property")
     // @Persistent(mappedBy = "property", defaultFetchGroup="false")
@@ -279,7 +282,7 @@ public class Property extends AbstractDomainObject {
 
     protected void onRemoveFromActors(final PropertyActor actor) {
     }
-    
+
     // }}
 
     // {{ addActor (action)
