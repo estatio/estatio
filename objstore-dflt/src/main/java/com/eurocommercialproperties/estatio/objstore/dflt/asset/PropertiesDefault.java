@@ -1,17 +1,14 @@
 package com.eurocommercialproperties.estatio.objstore.dflt.asset;
 
 import java.util.List;
-import java.util.Map;
 
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-import com.google.common.collect.ImmutableMap;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.filter.Filter;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryDefault;
 
@@ -84,8 +81,29 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
     @Override
     @Hidden
     public PostalAddress getPostalAddress(Property prop) {
-        // TODO Auto-generated method stub
         return null;
     }
+
+    // {{ autoComplete
+    @Hidden
+    @Override
+    public List<Property> autoComplete(String search) {
+        
+        final List<Property> findAllByReference = this.findAllByReference(search);
+        return findAllByReference;
+//        Function<Property, Candidate> function = new Function<Property, Candidate>() {
+//
+//            @Override
+//            public AutoComplete.Candidate apply(Property input) {
+//                return new AutoComplete.Candidate(getContainer().titleOf(input), bookmarkFor(input));
+//            }
+//
+//            private Bookmark bookmarkFor(final Object domainObject) {
+//                return bookmarkService.bookmarkFor(domainObject);
+//            }
+//        };
+//        return Lists.transform(findAllByReference, function);
+    }
+    // }}
 
 }

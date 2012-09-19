@@ -1,10 +1,11 @@
 package com.eurocommercialproperties.estatio.viewer.wicket.app;
 
-import org.apache.isis.viewer.wicket.viewer.IsisWicketApplication;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
+
+import org.apache.isis.viewer.wicket.ui.app.registry.ComponentFactoryRegistrar;
+import org.apache.isis.viewer.wicket.viewer.IsisWicketApplication;
 
 
 public class EstatioApplication extends IsisWicketApplication {
@@ -13,13 +14,14 @@ public class EstatioApplication extends IsisWicketApplication {
 
     @Override
     protected Module newIsisWicketModule() {
-        return Modules.override(
-                super.newIsisWicketModule()).with(
-                    new AbstractModule() {
-                        @Override
-                        protected void configure() {
-                            //bindConstant().annotatedWith(ApplicationCssUrl.class).to("myapp.css");
-                        }
-                    });
+        final Module isisDefaults = super.newIsisWicketModule();
+        final Module estatioOverrides = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(ComponentFactoryRegistrar.class).to(ComponentFactoryRegistrarForEstatio.class);
+            }
+        };
+
+        return Modules.override(isisDefaults).with(estatioOverrides);
     }
 }

@@ -156,7 +156,7 @@ public class Unit extends AbstractDomainObject {
     // TODO: IMHO the @Column is redundant
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
     @Hidden(where = Where.PARENTED_TABLES)
-    @Disabled
+    //@Disabled
     @MemberOrder(sequence = "9")
     public Property getProperty() {
         return property;

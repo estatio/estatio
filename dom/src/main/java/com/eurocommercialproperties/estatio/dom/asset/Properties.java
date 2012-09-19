@@ -13,6 +13,9 @@ import org.apache.isis.applib.annotation.Named;
 @Named("Properties")
 public interface Properties {
 
+    @Hidden
+    List<Property> autoComplete(String search);
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public Property newProperty(@Named("Reference") String code, @Named("Name") String name);
@@ -34,10 +37,5 @@ public interface Properties {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     List<Property> findAllByReference(@Named("Reference") String reference);
-
-    /**
-     * @param reference
-     * @return
-     */
 
 }

@@ -340,6 +340,12 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>app-wicket-ui-extensions</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>app-webapp</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -790,6 +796,8 @@
 	</reporting>
 
 	<modules>
+		<module>wicket-select2-parent</module>
+		<module>wicket-ui-extensions</module>
 		<module>testsupport</module>
 		<module>dom</module>
 		<module>exploration</module>

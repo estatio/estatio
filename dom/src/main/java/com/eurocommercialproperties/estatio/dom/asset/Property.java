@@ -10,7 +10,16 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Party;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -18,23 +27,19 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @javax.jdo.annotations.Query(
         name="prop_findByReference", language="JDOQL",  
         value="SELECT FROM com.eurocommercialproperties.estatio.dom.asset.Property WHERE reference.matches(:r)")
 @PersistenceCapable
 @Auditable
+@AutoComplete(repository=Properties.class)
 public class Property extends AbstractDomainObject {
 
     // {{ Reference (attribute, title)
     private String reference;
 
+    @DescribedAs("Unique reference code for this property")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @Disabled
     @MemberOrder(sequence = "1.1")
