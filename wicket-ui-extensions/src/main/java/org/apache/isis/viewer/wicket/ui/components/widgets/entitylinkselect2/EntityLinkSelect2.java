@@ -17,7 +17,7 @@
  *  under the License.
  */
 
-package org.apache.isis.viewer.wicket.ui.components.widgets.entitylinkautocomplete;
+package org.apache.isis.viewer.wicket.ui.components.widgets.entitylinkselect2;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +28,9 @@ import com.vaynberg.wicket.select2.ChoiceProvider;
 import com.vaynberg.wicket.select2.Select2Choice;
 import com.vaynberg.wicket.select2.TextChoiceProvider;
 
+import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
+
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.bookmarks.Bookmark;
 import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
 import org.apache.isis.core.metamodel.adapter.oid.RootOid;
@@ -36,19 +39,23 @@ import org.apache.isis.core.metamodel.facets.object.autocomplete.AutoCompleteFac
 import org.apache.isis.core.metamodel.spec.ObjectSpecification;
 import org.apache.isis.viewer.wicket.model.models.EntityModel;
 import org.apache.isis.viewer.wicket.model.models.ModelAbstract;
+import org.apache.isis.viewer.wicket.model.models.EntityModel.RenderingHint;
+import org.apache.isis.viewer.wicket.ui.components.scalars.ScalarPanelAbstract;
+import org.apache.isis.viewer.wicket.ui.components.scalars.ScalarPanelAbstract.Rendering;
 import org.apache.isis.viewer.wicket.ui.components.widgets.entitylink.EntityLink;
 
-public class EntityLinkWithAutoComplete extends EntityLink {
+public class EntityLinkSelect2 extends EntityLink {
 
     private static final long serialVersionUID = 1L;
     private static final String ID_AUTO_COMPLETE = "autoComplete";
 
     private Select2Choice<ObjectAdapter> autoCompleteField;
 
-    public EntityLinkWithAutoComplete(String id, EntityModel entityModel) {
+    
+    
+    public EntityLinkSelect2(String id, EntityModel entityModel) {
         super(id, entityModel);
     }
-
 
     
     protected void doSyncWithInputWhenChoices() {
@@ -126,14 +133,13 @@ public class EntityLinkWithAutoComplete extends EntityLink {
             permanentlyHide(ID_ENTITY_TITLE_NULL);
             
             // hide links
-            permanentlyHide(ID_FIND_USING, ID_ENTITY_CLEAR_LINK, ID_ENTITY_DETAILS_LINK_LABEL);
-
+            permanentlyHide(ID_FIND_USING);
         } else {
             permanentlyHide(ID_AUTO_COMPLETE);
         }
-
     }
 
+    
     @Override
     protected void doSyncVisibilityAndUsability(boolean mutability) {
         if(autoCompleteField != null) {
@@ -141,7 +147,12 @@ public class EntityLinkWithAutoComplete extends EntityLink {
         }
 
         if(hasAutoComplete()) {
-            permanentlyHide(ID_ENTITY_ICON_AND_TITLE, ID_ENTITY_DETAILS_LINK);
+            permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
+            
+            if(getEntityModel().isEditMode()) {
+                // TODO: haven't figured out how to keep in sync..
+                permanentlyHide(ID_ENTITY_DETAILS_LINK);
+            }
         }
     }
     
@@ -154,6 +165,12 @@ public class EntityLinkWithAutoComplete extends EntityLink {
     }
     
     private boolean hasAutoComplete() {
+        
+        // doesn't apply in compact rendering contexts (ie tables)
+        if(getEntityModel().getRenderingHint() == RenderingHint.COMPACT) {
+            return false;
+        }
+        
         final ObjectSpecification typeOfSpecification = getEntityModel().getTypeOfSpecification();
         final AutoCompleteFacet autoCompleteFacet = 
                 (typeOfSpecification != null)? typeOfSpecification.getFacet(AutoCompleteFacet.class):null;

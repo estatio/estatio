@@ -28,7 +28,7 @@
 	</parent>
 
 	<properties>
-			<wicket-select2.version>wicket6-SNAPSHOT</wicket-select2.version>
+		<wicket-select2.version>wicket6-SNAPSHOT</wicket-select2.version>
 	</properties>
 	
 	<artifactId>app-wicket-ui-extensions</artifactId>
@@ -55,19 +55,8 @@
 
 	<dependencies>
 		<dependency>
-		    <groupId>org.apache.isis.core</groupId>
-		    <artifactId>progmodel</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>wicket-model</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.isis.viewer</groupId>
 			<artifactId>wicket-ui</artifactId>
-			<version>${isis.version}</version>
 		</dependency>
 
 		<dependency>
@@ -75,8 +64,5 @@
 		    <artifactId>wicket-select2</artifactId>
 		    <version>${wicket-select2.version}</version>
 		</dependency>
-
-
 	</dependencies>
-
 </project>
