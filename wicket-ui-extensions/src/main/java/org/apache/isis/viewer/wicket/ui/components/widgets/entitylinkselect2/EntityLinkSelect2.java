@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.vaynberg.wicket.select2.ChoiceProvider;
 import com.vaynberg.wicket.select2.Select2Choice;
 import com.vaynberg.wicket.select2.TextChoiceProvider;
@@ -33,13 +34,17 @@ import org.apache.wicket.markup.html.form.LabeledWebMarkupContainer;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.bookmarks.Bookmark;
 import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
+import org.apache.isis.core.metamodel.adapter.mgr.AdapterManager.ConcurrencyChecking;
+import org.apache.isis.core.metamodel.adapter.oid.OidMarshaller;
 import org.apache.isis.core.metamodel.adapter.oid.RootOid;
 import org.apache.isis.core.metamodel.adapter.oid.RootOidDefault;
 import org.apache.isis.core.metamodel.facets.object.autocomplete.AutoCompleteFacet;
 import org.apache.isis.core.metamodel.spec.ObjectSpecification;
+import org.apache.isis.viewer.wicket.model.mementos.ObjectAdapterMemento;
 import org.apache.isis.viewer.wicket.model.models.EntityModel;
 import org.apache.isis.viewer.wicket.model.models.ModelAbstract;
 import org.apache.isis.viewer.wicket.model.models.EntityModel.RenderingHint;
+import org.apache.isis.viewer.wicket.model.util.Mementos;
 import org.apache.isis.viewer.wicket.ui.components.scalars.ScalarPanelAbstract;
 import org.apache.isis.viewer.wicket.ui.components.scalars.ScalarPanelAbstract.Rendering;
 import org.apache.isis.viewer.wicket.ui.components.widgets.entitylink.EntityLink;
@@ -49,7 +54,7 @@ public class EntityLinkSelect2 extends EntityLink {
     private static final long serialVersionUID = 1L;
     private static final String ID_AUTO_COMPLETE = "autoComplete";
 
-    private Select2Choice<ObjectAdapter> autoCompleteField;
+    private Select2Choice<ObjectAdapterMemento> autoCompleteField;
 
     
     
@@ -69,60 +74,55 @@ public class EntityLinkSelect2 extends EntityLink {
             // serializable, referenced by the AutoCompletionChoicesProvider below  
             final EntityModel entityModel = getEntityModel();
             
-            ChoiceProvider<ObjectAdapter> provider = new TextChoiceProvider<ObjectAdapter>() {
+            ChoiceProvider<ObjectAdapterMemento> provider = new TextChoiceProvider<ObjectAdapterMemento>() {
 
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                protected String getDisplayText(ObjectAdapter choice) {
-                    return choice.titleString();
+                protected String getDisplayText(ObjectAdapterMemento choice) {
+                    return choice.getObjectAdapter(ConcurrencyChecking.NO_CHECK).titleString();
                 }
 
                 @Override
-                protected Object getId(ObjectAdapter choice) {
-                    final RootOid oid = (RootOid) choice.getOid();
-                    return oid.asBookmark().toString();
+                protected Object getId(ObjectAdapterMemento choice) {
+                    return choice.toString();
                 }
 
                 @Override
-                public void query(String term, int page, com.vaynberg.wicket.select2.Response<ObjectAdapter> response) {
+                public void query(String term, int page, com.vaynberg.wicket.select2.Response<ObjectAdapterMemento> response) {
                     final ObjectSpecification typeOfSpecification = entityModel.getTypeOfSpecification();
                     final AutoCompleteFacet autoCompleteFacet = typeOfSpecification.getFacet(AutoCompleteFacet.class);
                     final List<ObjectAdapter> results = autoCompleteFacet.execute(term);
-                    response.addAll(results);
+                    List<ObjectAdapterMemento> mementos = Lists.transform(results, Mementos.fromAdapter());
+                    response.addAll(mementos);
                 }
 
                 @Override
-                public Collection<ObjectAdapter> toChoices(Collection<String> ids) {
-                    Function<String, ObjectAdapter> function = new Function<String, ObjectAdapter>() {
+                public Collection<ObjectAdapterMemento> toChoices(Collection<String> ids) {
+                    Function<String, ObjectAdapterMemento> function = new Function<String, ObjectAdapterMemento>() {
 
                         @Override
-                        public ObjectAdapter apply(String input) {
-                            final Bookmark bookmark = new Bookmark(input);
-                            final RootOid oid = RootOidDefault.create(bookmark);
-
-                            final ObjectSpecification typeOfSpecification = entityModel.getTypeOfSpecification();
-                            final AutoCompleteFacet autoCompleteFacet = typeOfSpecification.getFacet(AutoCompleteFacet.class);
-
-                            // REVIEW: this is hacky, but need a serializable way of getting the AdapterManager...
-                            return autoCompleteFacet.lookup(oid);
+                        public ObjectAdapterMemento apply(String input) {
+                            
+                            final RootOid oid = RootOidDefault.deString(input, ObjectAdapterMemento.getOidMarshaller());
+                            return ObjectAdapterMemento.createPersistent(oid);
                         }
                     };
                     return Collections2.transform(ids, function);
                 }
 
             };
-            final ModelAbstract<ObjectAdapter> model = new ModelAbstract<ObjectAdapter>(){
+            final ModelAbstract<ObjectAdapterMemento> model = new ModelAbstract<ObjectAdapterMemento>(){
 
                 private static final long serialVersionUID = 1L;
                 
                 @Override
-                protected ObjectAdapter load() {
-                    return getPendingElseCurrentAdapter();
+                protected ObjectAdapterMemento load() {
+                    return ObjectAdapterMemento.createOrNull(getPendingElseCurrentAdapter());
                 }
                 
             };
-            autoCompleteField = new Select2Choice<ObjectAdapter>(ID_AUTO_COMPLETE, model, provider);
+            autoCompleteField = new Select2Choice<ObjectAdapterMemento>(ID_AUTO_COMPLETE, model, provider);
             addOrReplace(autoCompleteField);
             
             // no need for link, since can see in drop-down
@@ -160,7 +160,7 @@ public class EntityLinkSelect2 extends EntityLink {
     protected void doConvertInput() {
         if(getEntityModel().isEditMode() && hasAutoComplete()) {
             // flush changes to pending
-            onSelected(autoCompleteField.getConvertedInput());
+            onSelected(autoCompleteField.getConvertedInput().getObjectAdapter(ConcurrencyChecking.NO_CHECK));
         }
     }
     

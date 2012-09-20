@@ -165,6 +165,9 @@ public class Unit extends AbstractDomainObject {
     public void setProperty(final Property property) {
         this.property = property;
     }
+//    public List<Property> choicesProperty() {
+//        return properties.allInstances();
+//    }
 
     // }}
 
@@ -209,4 +212,14 @@ public class Unit extends AbstractDomainObject {
     }
 
     // }}
+
+    // {{ injected: Properties
+    private Properties properties;
+
+    public void setProperties(final Properties properties) {
+        this.properties = properties;
+    }
+    // }}
+
+
 }
