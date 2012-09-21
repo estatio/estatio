@@ -796,7 +796,6 @@
 	</reporting>
 
 	<modules>
-		<module>wicket-select2-parent</module>
 		<module>wicket-ui-extensions</module>
 		<module>testsupport</module>
 		<module>dom</module>

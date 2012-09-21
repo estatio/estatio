@@ -27,9 +27,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<properties>
-		<wicket-select2.version>wicket6-SNAPSHOT</wicket-select2.version>
-	</properties>
 	
 	<artifactId>app-wicket-ui-extensions</artifactId>
 	<name>App Wicket Viewer UI Extensions</name>
@@ -57,12 +54,6 @@
 		<dependency>
 			<groupId>org.apache.isis.viewer</groupId>
 			<artifactId>wicket-ui</artifactId>
-		</dependency>
-
-		<dependency>
-		    <groupId>com.vaynberg.wicket.select2</groupId>
-		    <artifactId>wicket-select2</artifactId>
-		    <version>${wicket-select2.version}</version>
 		</dependency>
 	</dependencies>
 </project>
