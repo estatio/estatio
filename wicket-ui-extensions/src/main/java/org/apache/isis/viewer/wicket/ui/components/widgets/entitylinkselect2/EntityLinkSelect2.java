@@ -57,14 +57,11 @@ import org.apache.isis.viewer.wicket.model.models.ScalarModel;
 import org.apache.isis.viewer.wicket.model.util.Mementos;
 import org.apache.isis.viewer.wicket.ui.ComponentFactory;
 import org.apache.isis.viewer.wicket.ui.ComponentType;
-import org.apache.isis.viewer.wicket.ui.components.actions.ActionInvokeHandler;
 import org.apache.isis.viewer.wicket.ui.components.actions.ActionPanel;
 import org.apache.isis.viewer.wicket.ui.components.widgets.cssmenu.CssMenuBuilder;
 import org.apache.isis.viewer.wicket.ui.components.widgets.cssmenu.CssMenuPanel;
 import org.apache.isis.viewer.wicket.ui.components.widgets.entitylink.EntityLinkAbstract;
 import org.apache.isis.viewer.wicket.ui.components.widgets.entitylink.FindUsingLinkFactory;
-import org.apache.isis.viewer.wicket.ui.components.widgets.formcomponent.CancelHintRequired;
-import org.apache.isis.viewer.wicket.ui.components.widgets.formcomponent.FormComponentPanelAbstract;
 import org.apache.isis.viewer.wicket.ui.panels.PanelAbstract;
 
 public class EntityLinkSelect2 extends EntityLinkAbstract {
@@ -275,47 +272,17 @@ public class EntityLinkSelect2 extends EntityLinkAbstract {
     private void syncWithInput() {
         final ObjectAdapter adapter = getPendingElseCurrentAdapter();
 
-//        final IModel<List<? extends ObjectAdapterMemento>> choicesMementos = getChoicesModel();
-//        if (choicesMementos != null) {
-//
-//            // choices drop-down
-//            final IModel<ObjectAdapterMemento> modelObject = pendingOid.getModel();
-//            final DropDownChoicesForObjectAdapterMementos dropDownChoices = new DropDownChoicesForObjectAdapterMementos(ID_CHOICES, modelObject, choicesMementos);
-//            addOrReplace(dropDownChoices);
-//            dropDownChoices.setEnabled(getEntityModel().isEditMode());
-//
-//            // no need for link, since can see in drop-down
-//            permanentlyHide(ID_ENTITY_ICON_AND_TITLE);
-//
-//            // no need for the 'null' title, since if there is no object yet
-//            // can represent this fact in the drop-down
-//            permanentlyHide(ID_ENTITY_TITLE_NULL);
-//            
-//            // hide links
-//            permanentlyHide(ID_FIND_USING, ID_ENTITY_CLEAR_LINK);
-//            permanentlyHide(ID_AUTO_COMPLETE);
-//        } else {
+        syncLinkWithInput(adapter);
 
-//            // choices drop-down
-//            permanentlyHide(ID_CHOICES);
+        // represent no object by a simple label displaying '(null)'
+        syncEntityTitleNullWithInput(adapter);
 
-            // show link if have value
-            syncLinkWithInput(adapter);
-
-            // represent no object by a simple label displaying '(null)'
-            syncEntityTitleNullWithInput(adapter);
-
-            // link
-            syncEntityClearLinksWithInput(adapter);
-            
-//        }
-
+        syncEntityClearLinksWithInput(adapter);
 
         doSyncWithInputIfAutoCompleteOrChoices();
         
         syncEntityDetailsLinksWithInput(adapter);
         syncEntityDetailsWithInput(adapter);
-
 
         syncVisibilityAndUsability();
     }
