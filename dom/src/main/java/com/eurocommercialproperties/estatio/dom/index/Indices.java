@@ -1,11 +1,14 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.joda.time.LocalDate;
 
 @Named("Indices")
 public interface Indices {
@@ -16,8 +19,22 @@ public interface Indices {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
+    public IndexBase newIndexBase(@Named("Index") Index index, @Named("Previous Base") IndexBase previousBase, @Named("Start Date") LocalDate startDate, double factor);
+    
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
+    public IndexValue newIndexValue(@Named("Index Base") IndexBase indexBase, @Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate, BigDecimal value);
+    
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "4")
     public Index findByReference(@Named("Reference") String reference);
-
+    
     List<Index> allInstances();
 
+    List<IndexBase> allIndexBases();
+    
+    List<IndexValue> allIndexValues();
+    
 }
+
+

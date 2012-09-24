@@ -7,21 +7,23 @@ import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
 public class IndexValue extends AbstractDomainObject {
 
-    // {{ Index (property)
-    private Index index;
+    // {{ IndexBase (property)
+    private IndexBase indexBase;
 
+    @Title(sequence = "1")
     @MemberOrder(sequence = "1")
-    public Index getIndex() {
-        return index;
+    public IndexBase getIndexBase() {
+        return indexBase;
     }
 
-    public void setIndex(final Index index) {
-        this.index = index;
+    public void setIndexBase(final IndexBase indexBase) {
+        this.indexBase = indexBase;
     }
 
     // }}
@@ -30,7 +32,7 @@ public class IndexValue extends AbstractDomainObject {
     private LocalDate startDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -45,7 +47,7 @@ public class IndexValue extends AbstractDomainObject {
     private LocalDate endDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "3")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -59,7 +61,7 @@ public class IndexValue extends AbstractDomainObject {
     // {{ Value (property)
     private BigDecimal value;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "4")
     public BigDecimal getValue() {
         return value;
     }

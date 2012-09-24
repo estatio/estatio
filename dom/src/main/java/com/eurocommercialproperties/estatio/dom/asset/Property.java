@@ -25,6 +25,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Resolve;
+import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 
@@ -180,6 +182,7 @@ public class Property extends AbstractDomainObject {
     @Join
     private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
 
+    @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "1")
     public Set<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
@@ -214,13 +217,6 @@ public class Property extends AbstractDomainObject {
 //    }
 
     // }}
-
-    public Property mergeWith(@Named("property") Property property) { // final
-                                                                      // Property
-                                                                      // property){
-        // TODO: why doesn't the viewer presents a dialog?
-        return null;
-    }
 
     // {{ Units (list, bidir)
     @Persistent(mappedBy = "property")
