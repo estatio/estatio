@@ -2,6 +2,7 @@ package com.eurocommercialproperties.estatio.viewer.wicket.app;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 
 import org.apache.isis.viewer.wicket.ui.app.registry.ComponentFactoryRegistrar;
@@ -19,6 +20,9 @@ public class EstatioApplication extends IsisWicketApplication {
             @Override
             protected void configure() {
                 bind(ComponentFactoryRegistrar.class).to(ComponentFactoryRegistrarForEstatio.class);
+                
+                bind(String.class).annotatedWith(Names.named("welcomeMessage")).toInstance("This is Estatio - an open source property management system implemented using Apache Isis.");
+                bind(String.class).annotatedWith(Names.named("aboutMessage")).toInstance("Estatio v0.1.0");
             }
         };
 

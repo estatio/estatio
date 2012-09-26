@@ -224,6 +224,7 @@ public class Property extends AbstractDomainObject {
     // TODO: Why a default fetch group?
     private List<Unit> units = new ArrayList<Unit>();
 
+    @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.2")
     public List<Unit> getUnits() {
         return units;
@@ -317,4 +318,11 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
+    
+    
+    public List<Unit> listUnits() {
+        return getUnits();
+    }
+
+    
 }
