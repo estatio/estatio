@@ -307,6 +307,19 @@
 				<scope>test</scope>
 			</dependency>
 
+			<!-- the wicket fullcalendar module -->
+			<dependency>
+				<groupId>net.ftlines.wicket-fullcalendar</groupId>
+				<artifactId>wicket-fullcalendar-parent</artifactId>
+				<version>6.0-SNAPSHOT</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>net.ftlines.wicket-fullcalendar</groupId>
+				<artifactId>wicket-fullcalendar-core</artifactId>
+				<version>6.0-SNAPSHOT</version>
+			</dependency>
+
 			<!-- this project's own modules -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
@@ -796,6 +809,7 @@
 	</reporting>
 
 	<modules>
+		<module>wicket-fullcalendar</module>
 		<module>wicket-ui-extensions</module>
 		<module>testsupport</module>
 		<module>dom</module>

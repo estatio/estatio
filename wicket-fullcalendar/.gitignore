@@ -1,0 +1,10 @@
+target
+.metadata
+.project
+.classpath
+.idea/workspace.xml
+*.~
+*~
+*.orig
+test-output
+*.log

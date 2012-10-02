@@ -51,9 +51,17 @@
 	</build>
 
 	<dependencies>
+	
+		
 		<dependency>
 			<groupId>org.apache.isis.viewer</groupId>
 			<artifactId>wicket-ui</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>net.ftlines.wicket-fullcalendar</groupId>
+			<artifactId>wicket-fullcalendar-core</artifactId>
+		</dependency>
+
 	</dependencies>
 </project>
