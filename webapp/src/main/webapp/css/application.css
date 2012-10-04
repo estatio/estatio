@@ -18,7 +18,7 @@
  */
 #header {
     height: 48px;
-    background-image: url("images/logo.png");
+    background-image: url("../images/logo.png");
 	background-repeat: no-repeat;
 }
 body {
@@ -31,4 +31,8 @@ h1,a {
 }
 .menuh a:link, .menuh a:visited, .menuh a:active, .menuh p {
 	/*color: #000;*/
+}
+
+.highlight {
+	background: yellow;
 }

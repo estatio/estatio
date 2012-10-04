@@ -21,6 +21,8 @@ public class EstatioApplication extends IsisWicketApplication {
             protected void configure() {
                 bind(ComponentFactoryRegistrar.class).to(ComponentFactoryRegistrarForEstatio.class);
                 
+                bind(String.class).annotatedWith(Names.named("applicationCss")).toInstance("css/application.css");
+                bind(String.class).annotatedWith(Names.named("applicationJs")).toInstance("scripts/application.js");
                 bind(String.class).annotatedWith(Names.named("welcomeMessage")).toInstance("This is Estatio - an open source property management system implemented using Apache Isis.");
                 bind(String.class).annotatedWith(Names.named("aboutMessage")).toInstance("Estatio v0.1.0");
             }
