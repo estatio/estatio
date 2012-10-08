@@ -17,6 +17,10 @@
  *  under the License.
  */
 
+.collectionContentsAsFullCalendar {
+	width: 99%
+}
+
 .collectionContentsAsFullCalendar .selector {
 	float: right;
 	margin-bottom: -25px;
@@ -30,3 +34,5 @@
 .collectionContentsAsFullCalendar div.fc-event-inner {
   cursor: pointer;
 }
+
+	

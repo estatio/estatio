@@ -1,4 +1,4 @@
-package com.eurocommercialproperties.estatio.dom.asset;
+    package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -36,6 +37,7 @@ import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditab
 @PersistenceCapable
 @Auditable
 @AutoComplete(repository=Properties.class)
+@MemberGroups({"General", "Dates"})
 public class Property extends AbstractDomainObject {
 
     // {{ Reference (attribute, title)
@@ -90,7 +92,7 @@ public class Property extends AbstractDomainObject {
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
-    @MemberOrder(sequence = "1.4")
+    @MemberOrder(name="Dates", sequence = "1.4")
     public LocalDate getOpeningDate() {
         return openingDate;
     }
@@ -106,7 +108,7 @@ public class Property extends AbstractDomainObject {
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
-    @MemberOrder(sequence = "1.5")
+    @MemberOrder(name="Dates",sequence = "1.5")
     @Optional
     public LocalDate getAcquireDate() {
         return acquireDate;
@@ -123,7 +125,7 @@ public class Property extends AbstractDomainObject {
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
-    @MemberOrder(sequence = "1.6")
+    @MemberOrder(name="Dates",sequence = "1.6")
     @Optional
     public LocalDate getDisposalDate() {
         return disposalDate;
@@ -192,6 +194,7 @@ public class Property extends AbstractDomainObject {
         this.communicationChannels = communicationChannels;
     }
 
+    @MemberOrder(sequence = "1")
     public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
         CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
         communicationChannels.add(communicationChannel);
@@ -202,7 +205,6 @@ public class Property extends AbstractDomainObject {
     public void addCommunicationChannel(CommunicationChannel communicationChannel) {
         communicationChannels.add(communicationChannel);
     }
-
     // }}
 
     // {{ PostalAddress
@@ -251,7 +253,7 @@ public class Property extends AbstractDomainObject {
     @Persistent(mappedBy = "property")
     private List<PropertyActor> actors = new ArrayList<PropertyActor>();
 
-    @MemberOrder(sequence = "2.3")
+    @MemberOrder(name="Actors", sequence = "2.3")
     public List<PropertyActor> getActors() {
         return actors;
     }
@@ -291,7 +293,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ addActor (action)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Actors", sequence = "1")
     public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
         actors.add(propertyActor);
@@ -318,11 +320,6 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    
-    
-    public List<Unit> listUnits() {
-        return getUnits();
-    }
 
     
 }

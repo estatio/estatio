@@ -28,7 +28,7 @@
 		<module>wicket-fullcalendar-examples</module>
 	</modules>
 	<properties>
-		<wicket.version>6.0.0</wicket.version>
+		<wicket.version>6.1.0</wicket.version>
 		<joda.version>1.6.2</joda.version>
 		<jackson.version>1.7.5</jackson.version>
 		<junit.version>4.8.1</junit.version>
