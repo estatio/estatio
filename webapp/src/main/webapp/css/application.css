@@ -21,6 +21,9 @@
     background-image: url("../images/logo.png");
 	background-repeat: no-repeat;
 }
+#header h1 {
+	display: none;
+}
 body {
 	background-color: #00477F;
 }
