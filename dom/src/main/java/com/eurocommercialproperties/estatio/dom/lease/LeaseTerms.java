@@ -17,6 +17,10 @@ public interface LeaseTerms {
     public LeaseTerm newLeaseTerm(LeaseItem leaseItem);
 
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "1")
+    public IndexableLeaseTerm newIndexableLeaseTerm(LeaseItem leaseItem);
+    
+    @ActionSemantics(Of.SAFE)
     List<LeaseTerm> allInstances();
 
 }

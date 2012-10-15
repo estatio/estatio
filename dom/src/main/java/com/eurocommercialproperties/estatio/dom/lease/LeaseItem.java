@@ -1,7 +1,9 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -9,8 +11,11 @@ import javax.jdo.annotations.Persistent;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.Resolve.Type;
 import org.joda.time.LocalDate;
+import com.eurocommercialproperties.estatio.dom.index.Index;
 
 @PersistenceCapable
 public class LeaseItem extends AbstractDomainObject {
@@ -18,7 +23,7 @@ public class LeaseItem extends AbstractDomainObject {
     // {{ Lease (property)
     private Lease lease;
 
-    @Hidden(where=Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "1")
     public Lease getLease() {
         return lease;
@@ -34,11 +39,11 @@ public class LeaseItem extends AbstractDomainObject {
     private LeaseItemType type;
 
     @MemberOrder(sequence = "2")
-    public LeaseItemType getLeaseItemType() {
+    public LeaseItemType getType() {
         return type;
     }
 
-    public void setLeaseItemType(final LeaseItemType type) {
+    public void setType(final LeaseItemType type) {
         this.type = type;
     }
 
@@ -74,16 +79,59 @@ public class LeaseItem extends AbstractDomainObject {
 
     // }}
 
-    // {{ Terms (Collection)
-    private List<LeaseTerm> terms = new ArrayList<LeaseTerm>();
+    // {{ Index (property)
+    private Index index;
 
+    @MemberOrder(sequence = "10")
+    public Index getIndex() {
+        return index;
+    }
+
+    public void setIndex(final Index index) {
+        this.index = index;
+    }
+
+    // }}
+
+    // {{ IndexationFrequency (property)
+    private IndexationFrequency indexationFrequency;
+
+    @MemberOrder(sequence = "11")
+    public IndexationFrequency getIndexationFrequency() {
+        return indexationFrequency;
+    }
+
+    public void setIndexationFrequency(final IndexationFrequency indexationFrequency) {
+        this.indexationFrequency = indexationFrequency;
+    }
+
+    // }}
+
+    // {{ InvoicingFrequency (property)
+    private InvoiceFrequency invoicingFrequency;
+
+    @MemberOrder(sequence = "12")
+    public InvoiceFrequency getInvoicingFrequency() {
+        return invoicingFrequency;
+    }
+
+    public void setInvoicingFrequency(final InvoiceFrequency invoicingFrequency) {
+        this.invoicingFrequency = invoicingFrequency;
+    }
+
+    // }}
+
+    // {{ Terms (Collection)
+    private Set<LeaseTerm> terms = new LinkedHashSet<LeaseTerm>();
+
+    @Resolve(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
-    @MemberOrder(sequence = "5")
-    public List<LeaseTerm> getTerms() {
+    @MemberOrder(sequence = "2")
+    public Set<LeaseTerm> getTerms() {
         return terms;
     }
 
-    public void setTerms(final List<LeaseTerm> terms) {
+    public void setTerms(final Set<LeaseTerm> terms) {
         this.terms = terms;
     }
 

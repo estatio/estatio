@@ -1,19 +1,24 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
+
 public enum LeaseItemType {
 
-    RENT("Rent"), DISCOUNT("Discount"), SERVICE_CHARGE("Service Charge"), OTHER("Other");
+    RENT("Rent", IndexableLeaseTerm.class), DISCOUNT("Discount", LeaseTerm.class), SERVICE_CHARGE("Service Charge", LeaseTerm.class), OTHER("Other", LeaseTerm.class);
 
     private final String title;
+    private final Class<?> clss;
 
-    private LeaseItemType(String title) {
+    private LeaseItemType(String title, Class<?> clss) {
         this.title = title;
+        this.clss = clss;
     }
 
     public String title() {
         return title;
     }
-    
-    //TODO: Handle localised titles. Maybe this should go into an entity when we need more attributes.
+        
+    public Class<?> getLeaseTermCLass() {
+        return clss;
+    }
     
 }

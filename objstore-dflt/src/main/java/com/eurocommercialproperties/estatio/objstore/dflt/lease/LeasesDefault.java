@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.QueryOnly;
 import org.apache.isis.applib.filter.Filter;
+import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
@@ -57,5 +58,15 @@ public class LeasesDefault extends AbstractFactoryAndRepository implements Lease
     @ActionSemantics(Of.SAFE)
     public List<Lease> allInstances() {
         return allInstances(Lease.class);
+    }
+
+    @Override
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
+    public void runIndexation(@Named("Until") LocalDate until) {
+        // TODO Auto-generated method stub
+        
+        
+        
     }
 }

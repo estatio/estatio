@@ -3,8 +3,11 @@ package com.eurocommercialproperties.estatio.dom.asset;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.party.Party;
@@ -15,7 +18,9 @@ public class PropertyActor extends AbstractDomainObject {
     // {{ Property (property)
     private Property property;
 
+    @Title(sequence="1")
     @MemberOrder(sequence = "1")
+    @Hidden(where=Where.PARENTED_TABLES)
     public Property getProperty() {
         return property;
     }
@@ -29,6 +34,7 @@ public class PropertyActor extends AbstractDomainObject {
     // {{ Party (property)
     private Party party;
 
+    @Title(sequence="2", prepend=", ")
     @MemberOrder(sequence = "2")
     public Party getParty() {
         return party;

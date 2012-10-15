@@ -196,6 +196,18 @@
 			<artifactId>jdo-applib</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>com.google.code</groupId>
+            <artifactId>rfc2445</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <optional>true</optional>
+            <systemPath>${basedir}/lib/rfc2445.jar</systemPath>
+        </dependency>
+
+
+
+
 	</dependencies>
 
 

@@ -92,33 +92,30 @@ public class Index extends AbstractDomainObject {
 
     // {{ GetValueForDate (action)
 
-    public BigDecimal GetIndexationFactor(@Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate) {
-        IndexValue startIndexValue = GetIndexValueForDate(startDate);
-        IndexValue endIndexValue = GetIndexValueForDate(endDate);
-        BigDecimal rebaseFactor = BigDecimal.ONE;
-        
-        rebaseFactor = endIndexValue.getIndexBase().getFactorForDate(startDate);
-        
-        return endIndexValue.getValue().divide(startIndexValue.getValue()).multiply(rebaseFactor);
-        
+    public BigDecimal getIndexationFactor(@Named("Base Date") LocalDate baseDate, @Named("Next Date") LocalDate nextDate) {
+        IndexValue startIndexValue = getIndices().findIndexValueForDate(baseDate, baseDate.dayOfMonth().withMaximumValue());
+        IndexValue endIndexValue = getIndices().findIndexValueForDate(nextDate, nextDate.dayOfMonth().withMaximumValue());
+        if (startIndexValue == null || endIndexValue == null) {
+            return BigDecimal.ZERO;
+        } else {
+            BigDecimal rebaseFactor = BigDecimal.ONE;
+            rebaseFactor = endIndexValue.getIndexBase().getFactorForDate(baseDate);
+            return endIndexValue.getValue().divide(startIndexValue.getValue()).multiply(rebaseFactor);
+        }
     }
 
     // }}
+    
+    // {{ injected: Indices
+    private Indices indices;
 
-    // {{ GetIndexValueForDate
-
-    @Hidden
-    public IndexValue GetIndexValueForDate(final LocalDate date) {
-        // TODO: what I'm doing here should be made more efficient, maybe move
-        // to the repository?
-        return firstMatch(IndexValue.class, new Filter<IndexValue>() {
-            @Override
-            public boolean accept(final IndexValue indexValue) {
-                return date.equals(indexValue.getStartDate()); // &&
-                                                               // this.equals(indexValue.getIndexBase().getIndex());
-            }
-        });
+    public Indices getIndices() {
+        return indices;
     }
-    // }}
 
-}
+    public void setIndices(Indices indices) {
+        this.indices = indices;
+    }
+        
+    // }}
+ }

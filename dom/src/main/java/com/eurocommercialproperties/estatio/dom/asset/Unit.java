@@ -15,6 +15,8 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Resolve;
+import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
@@ -172,7 +174,8 @@ public class Unit extends AbstractDomainObject {
     @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
     private Set<LeaseUnit> leases = new LinkedHashSet<LeaseUnit>();
 
-    @MemberOrder(sequence = "1")
+    @Resolve(Type.EAGERLY)
+    @MemberOrder(sequence = "2.2")
     public Set<LeaseUnit> getLeases() {
         return leases;
     }
@@ -188,6 +191,7 @@ public class Unit extends AbstractDomainObject {
     @Join
     private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
 
+    @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.1")
     public List<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
@@ -217,6 +221,5 @@ public class Unit extends AbstractDomainObject {
         this.properties = properties;
     }
     // }}
-
 
 }

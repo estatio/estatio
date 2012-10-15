@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.joda.time.LocalDate;
@@ -28,8 +27,12 @@ public interface Indices {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public Index findByReference(@Named("Reference") String reference);
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "5")
+    public IndexValue findIndexValueForDate(@Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate);
     
-    List<Index> allInstances();
+    List<Index> allIndices();
 
     List<IndexBase> allIndexBases();
     

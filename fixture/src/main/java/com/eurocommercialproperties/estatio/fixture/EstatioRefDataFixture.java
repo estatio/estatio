@@ -12,10 +12,10 @@ public class EstatioRefDataFixture extends AbstractFixture {
 
     public EstatioRefDataFixture() {
         addFixture(new GeographyFixture());
+        addFixture(new IndexFixture());
         addFixture(new PartiesFixture());
         addFixture(new PropertiesAndUnitsFixture());
         addFixture(new LeasesFixture());
-        addFixture(new IndexFixture());
     }
 
 }

@@ -6,15 +6,11 @@ import java.util.List;
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.filter.Filter;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.applib.query.QueryDefault;
 import org.joda.time.LocalDate;
 
-import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.index.Index;
 import com.eurocommercialproperties.estatio.dom.index.IndexBase;
 import com.eurocommercialproperties.estatio.dom.index.IndexValue;
@@ -90,14 +86,15 @@ public class IndicesDefault extends AbstractFactoryAndRepository implements Indi
     }
 
     // }}
-    
+
     // {{ AllInstances
     @Override
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
-    public List<Index> allInstances() {
+    public List<Index> allIndices() {
         return allInstances(Index.class);
     }
+
     // }}
 
     @Override
@@ -114,22 +111,22 @@ public class IndicesDefault extends AbstractFactoryAndRepository implements Indi
         return allInstances(IndexValue.class);
     }
 
-    
-//    // {{ findByReference
-//    @Override
-//    @ActionSemantics(Of.SAFE)
-//    @MemberOrder(sequence = "4")
-//    public Index findIndexValue(@Named("Reference") final String reference) {
-//        return firstMatch(Index.class, new Filter<Index>() {
-//            @Override
-//            public boolean accept(final Index index) {
-//                return reference.equals(index.getReference());
-//            }
-//        });
-//    }
+    // {{ findByReference
+    @Override
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "5")
+    public IndexValue findIndexValueForDate(@Named("Start Date") final LocalDate startDate, @Named("End Date") LocalDate endDate) {
+        return firstMatch(IndexValue.class, new Filter<IndexValue>() {
+            @Override
+            public boolean accept(final IndexValue indexValue) {
+                return startDate.equals(indexValue.getStartDate()); // &&
+                // this.equals(indexValue.getIndexBase().getIndex());
+                // TODO: Should match two dates
+
+            }
+        });
+    }
 
     // }}
-
-    
 
 }

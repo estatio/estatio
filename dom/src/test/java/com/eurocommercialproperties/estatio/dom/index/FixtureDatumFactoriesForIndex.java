@@ -1,8 +1,10 @@
-package com.eurocommercialproperties.estatio.dom.geography;
+package com.eurocommercialproperties.estatio.dom.index;
 
 import com.danhaywood.testsupport.coverage.PojoTester.FixtureDatumFactory;
+import com.eurocommercialproperties.estatio.dom.geography.Country;
+import com.eurocommercialproperties.estatio.dom.geography.State;
 
-public class FixtureDatumFactoriesForGeography {
+public class FixtureDatumFactoriesForIndex {
 
 	public static FixtureDatumFactory<Country> countries() {
 		Country nl = new Country();

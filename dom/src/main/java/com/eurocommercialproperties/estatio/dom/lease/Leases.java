@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.joda.time.LocalDate;
 
 @Named("Leases")
 public interface Leases {
@@ -19,6 +20,10 @@ public interface Leases {
     public Lease findByReference(@Named("Reference") String reference);
 
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
+    public void runIndexation(@Named("Until") LocalDate until);
+    
+    @ActionSemantics(Of.SAFE)
     List<Lease> allInstances();
-
+                
 }

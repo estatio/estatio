@@ -24,7 +24,7 @@ public class IndexFixture extends AbstractFixture {
     @Override
     public void install() {
 
-        Index index = createIndex("ITA-FOI", "ISTAT FOI");
+        Index index = createIndex("ISTAT-FOI", "ISTAT FOI");
 
         IndexBase base1989 = createIndexBase(index, null, 1990, 1.242);
         createIndexValues(base1989, 1990, new double[] { 103.3, 104, 104.4, 104.8, 105.1, 105.5, 105.9, 106.6, 107.2, 108.1, 108.8, 109.2 }, 106.1);
@@ -70,6 +70,7 @@ public class IndexFixture extends AbstractFixture {
         int i = 0;
         for (double value : values) {
             indices.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), new LocalDate(year, i + 1, 1).dayOfMonth().withMaximumValue(), new BigDecimal(value));
+            i++;
         }
     }
 }

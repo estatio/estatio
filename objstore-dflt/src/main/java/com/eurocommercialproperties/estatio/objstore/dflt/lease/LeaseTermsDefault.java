@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 
+import com.eurocommercialproperties.estatio.dom.lease.IndexableLeaseTerm;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerm;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerms;
@@ -30,6 +31,16 @@ public class LeaseTermsDefault extends AbstractFactoryAndRepository implements L
     @MemberOrder(sequence = "1")
     public LeaseTerm newLeaseTerm(@Named("LeaseItem") LeaseItem leaseItem) {
         LeaseTerm leaseTerm = newTransientInstance(LeaseTerm.class);
+        leaseTerm.setLeaseItem(leaseItem);
+        persist(leaseTerm);
+        return leaseTerm;
+    }
+
+    @Override
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public IndexableLeaseTerm newIndexableLeaseTerm(@Named("LeaseItem") LeaseItem leaseItem) {
+        IndexableLeaseTerm leaseTerm = newTransientInstance(IndexableLeaseTerm.class);
         leaseTerm.setLeaseItem(leaseItem);
         persist(leaseTerm);
         return leaseTerm;

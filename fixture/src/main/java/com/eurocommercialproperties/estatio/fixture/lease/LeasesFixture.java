@@ -7,6 +7,10 @@ import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
+import com.eurocommercialproperties.estatio.dom.index.Indices;
+import com.eurocommercialproperties.estatio.dom.lease.IndexableLeaseTerm;
+import com.eurocommercialproperties.estatio.dom.lease.IndexationFrequency;
+import com.eurocommercialproperties.estatio.dom.lease.InvoiceFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
@@ -24,9 +28,10 @@ public class LeasesFixture extends AbstractFixture {
     @Override
     public void install() {
         String[] prefixes = { "OXF", "KAL" };
+        LocalDate[] dates = { new LocalDate(2010, 7, 15), new LocalDate(2008, 1, 1) };
         for (String prefix : prefixes) {
-            createLease(prefix + "-TOPMODEL-001", "Topmodel Lease", prefix + "-001", "ACME", "TOPMODEL", new LocalDate(2002, 6, 1), new LocalDate(2013, 5, 31));
-            createLease(prefix + "-MEDIAX-002", "Meadiax Lease", prefix + "-002", "ACME", "MEDIAX", new LocalDate(2001, 3, 1), new LocalDate(2012, 2, 29));
+            createLease(prefix + "-TOPMODEL-001", "Topmodel Lease", prefix + "-001", "ACME", "TOPMODEL", dates[0], dates[0].plusYears(10).minusDays(1));
+            createLease(prefix + "-MEDIAX-002", "Meadiax Lease", prefix + "-002", "ACME", "MEDIAX", dates[1], dates[1].plusYears(10).minusDays(1));
         }
     }
 
@@ -41,24 +46,51 @@ public class LeasesFixture extends AbstractFixture {
         lease.addActor(tenant, LeaseActorType.TENANT, null, null);
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
         LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.RENT);
-        for (int i = 0; i < 10; i++) {
-            leaseItem.addToTerms(createLeaseTerm(leaseItem, startDate.plusYears(i), startDate.plusYears(i+1).minusDays(1), BigDecimal.valueOf(30000+(i*1000))));
-        }
-        lease.addToItems(leaseItem);
 
+        leaseItem.addToTerms(createIndexableLeaseTerm(leaseItem, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1)));
+
+        // for (int i = 0; i < 10; i++) {
+        // leaseItem.addToTerms(createLeaseTerm(leaseItem,
+        // startDate.plusYears(i), startDate.plusYears(i + 1).minusDays(1),
+        // BigDecimal.valueOf(30000 + (i * 1000))));
+        // }
+        lease.addToItems(leaseItem);
         return lease;
     }
 
     private LeaseItem createLeaseItem(Lease lease, LeaseItemType leaseItemType) {
-        return leaseItems.newLeaseItem(lease);
+        LeaseItem li = leaseItems.newLeaseItem(lease);
+        li.setInvoicingFrequency(InvoiceFrequency.QUARTERLY);
+        li.setIndexationFrequency(IndexationFrequency.YEARLY);
+        li.setIndex(indices.findByReference("ISTAT-FOI"));
+        return li;
     }
-    
+
     private LeaseTerm createLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value) {
         LeaseTerm leaseTerm = leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setValue(value);
         return leaseTerm;
+    }
+
+    private LeaseTerm createIndexableLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value, LocalDate baseIndexDate, LocalDate nextIndexDate, LocalDate indexationApplicationDate) {
+        IndexableLeaseTerm leaseTerm = leaseTerms.newIndexableLeaseTerm(leaseItem);
+        leaseTerm.setStartDate(startDate);
+        leaseTerm.setEndDate(endDate);
+        leaseTerm.setValue(value);
+        leaseTerm.setBaseIndexStartDate(baseIndexDate);
+        leaseTerm.setBaseIndexEndDate(baseIndexDate.dayOfMonth().withMaximumValue());
+        leaseTerm.setNextIndexStartDate(nextIndexDate);
+        leaseTerm.setNextIndexEndDate(nextIndexDate.dayOfMonth().withMaximumValue());
+        leaseTerm.setIndexationApplicationDate(indexationApplicationDate);
+        return leaseTerm;
+    }
+
+    private Indices indices;
+
+    public void setIndexRepository(final Indices indices) {
+        this.indices = indices;
     }
 
     private Units units;

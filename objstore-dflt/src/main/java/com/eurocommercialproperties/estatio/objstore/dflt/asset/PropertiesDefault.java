@@ -60,7 +60,7 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
 
     // {{ FindAllByReference
     @Override
-    public List<Property> findAllByReference(final String reference) {
+    public List<Property> findPropertiesByReference(final String reference) {
         final Query<Property> query = new QueryDefault<Property>(Property.class, "prop_findByReference", "r", containsArgFor(reference)); 
         return this.allMatches(query);
     }
@@ -73,7 +73,7 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
 
     // {{ AllInstances
     @Override
-    public List<Property> allInstances() {
+    public List<Property> allProperties() {
         return allInstances(Property.class);
     }
     // }}
@@ -89,7 +89,7 @@ public class PropertiesDefault extends AbstractFactoryAndRepository implements P
     @Override
     public List<Property> autoComplete(String search) {
         
-        final List<Property> findAllByReference = this.findAllByReference(search);
+        final List<Property> findAllByReference = this.findPropertiesByReference(search);
         return findAllByReference;
 //        Function<Property, Candidate> function = new Function<Property, Candidate>() {
 //

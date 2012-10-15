@@ -32,10 +32,10 @@ public interface Properties {
     public PostalAddress getPostalAddress(Property prop);
     
     @ActionSemantics(Of.SAFE)
-    List<Property> allInstances();
+    List<Property> allProperties();
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    List<Property> findAllByReference(@Named("Reference") String reference);
+    List<Property> findPropertiesByReference(@Named("Reference") String reference);
 
 }

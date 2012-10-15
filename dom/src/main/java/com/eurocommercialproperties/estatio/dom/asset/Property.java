@@ -1,4 +1,4 @@
-    package com.eurocommercialproperties.estatio.dom.asset;
+package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -31,13 +30,10 @@ import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 
-@javax.jdo.annotations.Query(
-        name="prop_findByReference", language="JDOQL",  
-        value="SELECT FROM com.eurocommercialproperties.estatio.dom.asset.Property WHERE reference.matches(:r)")
+@javax.jdo.annotations.Query(name = "prop_findByReference", language = "JDOQL", value = "SELECT FROM com.eurocommercialproperties.estatio.dom.asset.Property WHERE reference.matches(:r)")
 @PersistenceCapable
 @Auditable
-@AutoComplete(repository=Properties.class)
-@MemberGroups({"General", "Dates"})
+@AutoComplete(repository = Properties.class)
 public class Property extends AbstractDomainObject {
 
     // {{ Reference (attribute, title)
@@ -92,7 +88,7 @@ public class Property extends AbstractDomainObject {
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
-    @MemberOrder(name="Dates", sequence = "1.4")
+    @MemberOrder(sequence = "1.4")
     public LocalDate getOpeningDate() {
         return openingDate;
     }
@@ -108,7 +104,7 @@ public class Property extends AbstractDomainObject {
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
-    @MemberOrder(name="Dates",sequence = "1.5")
+    @MemberOrder(sequence = "1.5")
     @Optional
     public LocalDate getAcquireDate() {
         return acquireDate;
@@ -125,7 +121,7 @@ public class Property extends AbstractDomainObject {
 
     @javax.jdo.annotations.Persistent
     // required for applib.Date
-    @MemberOrder(name="Dates",sequence = "1.6")
+    @MemberOrder(sequence = "1.6")
     @Optional
     public LocalDate getDisposalDate() {
         return disposalDate;
@@ -178,82 +174,12 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
-    // {{ CommunicationChannels (list, unidir)
-    // @Persistent(mappedBy = "property", defaultFetchGroup="false")
-    // TODO: Changed to set but still error in wicket
-    @Join
-    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
-
-    @Resolve(Type.EAGERLY)
-    @MemberOrder(sequence = "1")
-    public Set<CommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
-
-    @MemberOrder(sequence = "1")
-    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
-        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
-        communicationChannels.add(communicationChannel);
-        return communicationChannel;
-    }
-
-    @Hidden
-    public void addCommunicationChannel(CommunicationChannel communicationChannel) {
-        communicationChannels.add(communicationChannel);
-    }
-    // }}
-
-    // {{ PostalAddress
-//    @Hidden
-//    @Programmatic
-    //
-//    public PostalAddress getPostalAddress() {
-        // TODO: Return the first or primary postal address. Q: should this
-        // implemented on the repository?
-        //
-//        return null;
-//    }
-
-    // }}
-
-    // {{ Units (list, bidir)
-    @Persistent(mappedBy = "property")
-    // @Persistent(mappedBy = "property", defaultFetchGroup="false")
-    // TODO: Why a default fetch group?
-    private List<Unit> units = new ArrayList<Unit>();
-
-    @Resolve(Type.EAGERLY)
-    @MemberOrder(sequence = "2.2")
-    public List<Unit> getUnits() {
-        return units;
-    }
-
-    public void setUnits(final List<Unit> units) {
-        this.units = units;
-    }
-
-    // }}
-
-    // {{ NewUnit (action)
-    @MemberOrder(name = "Units", sequence = "1")
-    public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
-        Unit unit = unitsRepo.newUnit(code, name);
-        unit.setProperty(this);
-        getUnits().add(unit);
-        return unit;
-    }
-
-    // }}
-
     // {{ Actors (list, unidir)
     @Persistent(mappedBy = "property")
     private List<PropertyActor> actors = new ArrayList<PropertyActor>();
 
-    @MemberOrder(name="Actors", sequence = "2.3")
+    @Resolve(Type.EAGERLY)
+    @MemberOrder(sequence = "2.1")
     public List<PropertyActor> getActors() {
         return actors;
     }
@@ -292,8 +218,62 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
+    // {{ CommunicationChannels (list, unidir)
+    @Join
+    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
+
+    @Resolve(Type.EAGERLY)
+    @MemberOrder(sequence = "1")
+    public Set<CommunicationChannel> getCommunicationChannels() {
+        return communicationChannels;
+    }
+
+    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
+        this.communicationChannels = communicationChannels;
+    }
+
+    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
+        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
+        communicationChannels.add(communicationChannel);
+        return communicationChannel;
+    }
+
+    @Hidden
+    public void addCommunicationChannel(CommunicationChannel communicationChannel) {
+        communicationChannels.add(communicationChannel);
+    }
+
+    // }}
+
+    // {{ Units (list, bidir)
+    @Persistent(mappedBy = "property")
+    private List<Unit> units = new ArrayList<Unit>();
+
+    @Resolve(Type.EAGERLY)
+    @MemberOrder(sequence = "2.2")
+    public List<Unit> getUnits() {
+        return units;
+    }
+
+    public void setUnits(final List<Unit> units) {
+        this.units = units;
+    }
+
+    // }}
+
+    // {{ NewUnit (action)
+    @MemberOrder(name = "Units", sequence = "1")
+    public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
+        Unit unit = unitsRepo.newUnit(code, name);
+        unit.setProperty(this);
+        getUnits().add(unit);
+        return unit;
+    }
+
+    // }}
+
     // {{ addActor (action)
-    @MemberOrder(name="Actors", sequence = "1")
+    @MemberOrder(sequence = "1")
     public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
         actors.add(propertyActor);
@@ -320,6 +300,8 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
+    public List<Unit> listUnits() {
+        return getUnits();
+    }
 
-    
 }
