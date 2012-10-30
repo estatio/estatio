@@ -95,10 +95,11 @@ public class IndexableLeaseTerm extends LeaseTerm {
 
     // {{
     public void verify() {
-        BigDecimal factor = getLeaseItem().getIndex().getIndexationFactor(getBaseIndexStartDate(), getBaseIndexStartDate());
+        BigDecimal factor = getLeaseItem().getIndex().getIndexationFactor(getBaseIndexStartDate(), getNextIndexStartDate());
         if (factor.compareTo(BigDecimal.ZERO) != 0) {
             // we have found a indexation factor
-            createNextLeaseTerm(this.getIndexationApplicationDate(), getValue().multiply(factor).round(new MathContext(2)));
+            BigDecimal newValue = getValue().multiply(factor);
+            createNextLeaseTerm(this.getIndexationApplicationDate(), newValue.round(new MathContext(0)));
         }
         return;
     }
@@ -109,17 +110,21 @@ public class IndexableLeaseTerm extends LeaseTerm {
     public IndexableLeaseTerm createNextLeaseTerm(@Named("Start Date") LocalDate startDate, BigDecimal value) {
 
         // create new term
-        IndexableLeaseTerm t = getLeaseTermsService().newIndexableLeaseTerm(this.getLeaseItem());
-        t.setStartDate(startDate);
+        IndexableLeaseTerm term = (IndexableLeaseTerm) getNextTerm();
+        if (getNextTerm() == null) {
+            term = getLeaseTermsService().newIndexableLeaseTerm(this.getLeaseItem());
+        }
+        term.setStartDate(startDate);
         // TODO: use indexation frequency
-        t.setBaseIndexStartDate(this.getNextIndexStartDate());
-        t.setBaseIndexEndDate(this.getNextIndexEndDate());
-        t.setNextIndexStartDate(this.getNextIndexStartDate().plusYears(1));
-        t.setNextIndexEndDate(this.getNextIndexEndDate().plusYears(1));
-        t.setIndexationApplicationDate(this.getIndexationApplicationDate().plusYears(1));
-        t.setValue(value);
+        term.setBaseIndexStartDate(this.getNextIndexStartDate());
+        term.setBaseIndexEndDate(this.getNextIndexEndDate());
+        term.setNextIndexStartDate(this.getNextIndexStartDate().plusYears(1));
+        term.setNextIndexEndDate(this.getNextIndexEndDate().plusYears(1));
+        term.setIndexationApplicationDate(this.getIndexationApplicationDate().plusYears(1));
+        term.setValue(value);
         // terminate current term
         this.setEndDate(startDate.minusDays(1));
+        this.setNextTerm(term);
         return null;
     }
 

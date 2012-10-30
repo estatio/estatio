@@ -1,8 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -12,9 +10,11 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Resolve;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Resolve.Type;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.joda.time.LocalDate;
+
 import com.eurocommercialproperties.estatio.dom.index.Index;
 
 @PersistenceCapable
@@ -38,6 +38,7 @@ public class LeaseItem extends AbstractDomainObject {
     // {{ LeaseItemType (property)
     private LeaseItemType type;
 
+    @Title
     @MemberOrder(sequence = "2")
     public LeaseItemType getType() {
         return type;
@@ -126,9 +127,10 @@ public class LeaseItem extends AbstractDomainObject {
 
     @Resolve(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "2")    
     public Set<LeaseTerm> getTerms() {
         return terms;
+        //TODO: Q: what's the best way to sort these terms? 
     }
 
     public void setTerms(final Set<LeaseTerm> terms) {

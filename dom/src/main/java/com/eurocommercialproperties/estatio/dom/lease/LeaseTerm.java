@@ -12,19 +12,20 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.joda.time.LocalDate;
 
 // TODO: error when choosing discriminator strategy = Classname. 
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator("LTRM")
 public class LeaseTerm extends AbstractDomainObject {
 
     // {{ Lease (property)
     private LeaseItem leaseItem;
-    
-    @Hidden(where=Where.PARENTED_TABLES)
+
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "1")
     public LeaseItem getLeaseItem() {
         return leaseItem;
@@ -41,6 +42,7 @@ public class LeaseTerm extends AbstractDomainObject {
 
     @Persistent
     @MemberOrder(sequence = "2")
+    @Title(sequence = "1")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -56,6 +58,7 @@ public class LeaseTerm extends AbstractDomainObject {
 
     @Persistent
     @MemberOrder(sequence = "3")
+    @Title(sequence = "2", prepend = "-")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -63,6 +66,7 @@ public class LeaseTerm extends AbstractDomainObject {
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
     // }}
 
     // {{ Value (property)
@@ -76,23 +80,23 @@ public class LeaseTerm extends AbstractDomainObject {
     public void setValue(final BigDecimal value) {
         this.value = value;
     }
-    // }}
-  
-//    // {{NextIndexMonth (property)
-//    private Interval nextIndexMonth;
-//
-//    @Persistent
-//    @MemberOrder(sequence = "1")
-//    public Interval getNextIndexMonth() {
-//        return nextIndexMonth;
-//    }
-//
-//    public void setNextIndexMonth(final Interval nextIndexMonth) {
-//        this.nextIndexMonth = nextIndexMonth;
-//    }
-//    // }}
 
-    
+    // }}
+
+    // // {{NextIndexMonth (property)
+    // private Interval nextIndexMonth;
+    //
+    // @Persistent
+    // @MemberOrder(sequence = "1")
+    // public Interval getNextIndexMonth() {
+    // return nextIndexMonth;
+    // }
+    //
+    // public void setNextIndexMonth(final Interval nextIndexMonth) {
+    // this.nextIndexMonth = nextIndexMonth;
+    // }
+    // // }}
+
     // {{ NextTerm (property)
     private LeaseTerm nextTerm;
 
@@ -106,13 +110,11 @@ public class LeaseTerm extends AbstractDomainObject {
     public void setNextTerm(final LeaseTerm nextTerm) {
         this.nextTerm = nextTerm;
     }
+
     // }}
 
-    
-    
     public void verify() {
         return;
     }
 
-    
 }
