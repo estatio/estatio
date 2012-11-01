@@ -5,14 +5,10 @@ import org.junit.runner.RunWith;
 
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
+import com.eurocommercialproperties.estatio.dom.geography.States;
 import com.eurocommercialproperties.estatio.dom.party.Parties;
-import com.eurocommercialproperties.estatio.objstore.dflt.asset.PropertiesDefault;
-import com.eurocommercialproperties.estatio.objstore.dflt.asset.UnitsDefault;
-import com.eurocommercialproperties.estatio.objstore.dflt.communicationchannel.CommunicationChannelsDefault;
-import com.eurocommercialproperties.estatio.objstore.dflt.geography.CountriesDefault;
-import com.eurocommercialproperties.estatio.objstore.dflt.geography.StatesDefault;
-import com.eurocommercialproperties.estatio.objstore.dflt.party.PartiesDefault;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.progmodel.wrapper.applib.WrapperFactory;
@@ -25,8 +21,8 @@ import org.apache.isis.viewer.junit.Services;
 @RunWith(IsisTestRunner.class)
 @ConfigDir("../webapp/src/main/webapp/WEB-INF")
 // acts as default, but can be overridden by annotations
-@Services({ @Service(PartiesDefault.class), @Service(PropertiesDefault.class), @Service(UnitsDefault.class), @Service(CountriesDefault.class),
-        @Service(StatesDefault.class), @Service(CommunicationChannelsDefault.class) })
+@Services({ @Service(Parties.class), @Service(Properties.class), @Service(Units.class), @Service(Countries.class),
+        @Service(States.class), @Service(CommunicationChannels.class) })
 public abstract class AbstractTest {
 
     private DomainObjectContainer domainObjectContainer;

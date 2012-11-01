@@ -4,14 +4,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.eurocommercialproperties.estatio.dom.geography.Country;
-import com.eurocommercialproperties.estatio.fixture.EstatioRefDataFixture;
+import com.eurocommercialproperties.estatio.fixture.EstatioFixture;
 import com.eurocommercialproperties.estatio.junit.AbstractTest;
 
 import org.apache.isis.progmodel.wrapper.applib.DisabledException;
 import org.apache.isis.viewer.junit.Fixture;
 import org.apache.isis.viewer.junit.Fixtures;
 
-@Fixtures({ @Fixture(EstatioRefDataFixture.class) })
+@Fixtures({ @Fixture(EstatioFixture.class) })
 public class GeographyTest extends AbstractTest {
 
     private Country wrappedCountry;

@@ -2,42 +2,120 @@ package com.eurocommercialproperties.estatio.dom.party;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.Exploration;
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.QueryOnly;
+import org.apache.isis.applib.filter.Filter;
+
 
 @Named("Parties")
-public interface Parties {
+public class Parties extends AbstractFactoryAndRepository {
 
-    @QueryOnly
+    // {{ Id, iconName
+    @Override
+    public String getId() {
+        return "parties";
+    }
+
+    public String iconName() {
+        return "Party";
+    }
+    // }}
+
+    // {{ newPerson
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Person newPerson(@Named("initials") @Optional String initials, @Named("firstName") @Optional String firstName, @Named("lastName") String lastName);
+    public Person newPerson(
+            final @Named("initials") @Optional String initials, 
+            final @Named("firstName") @Optional String firstName, 
+            final @Named("lastName") String lastName) {
+        final Person person = newTransientInstance(Person.class);
+        person.setInitials(initials);
+        person.setLastName(lastName);
+        person.setFirstName(firstName);
+        persist(person);
+        return person;
+    }
+    // }}
 
-    @QueryOnly
+    // {{ newOrganisation
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
-    public Organisation newOrganisation(@Named("name") String name);
+    public Organisation newOrganisation(
+            final @Named("name") String name) {
+        final Organisation org = newTransientInstance(Organisation.class);
+        org.setName(name);
+        persist(org);
+        return org;
+    }
+    // }}
 
-    @QueryOnly
-    @MemberOrder(sequence = "3")
-    public Person findPerson(@Named("firstName") @Optional String firstName, @Named("lastName") @Optional String lastName);
-
-    @QueryOnly
+    // {{ findOrganisationByReference
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public Organisation findOrganisationByReference(@Named("reference") String reference);
+    public Organisation findOrganisationByReference(
+            @Named("Reference") final String reference) {
+        return firstMatch(Organisation.class, new Filter<Organisation>() {
+            @Override
+            public boolean accept(final Organisation organisation) {
+                return organisation.getReference().contains(reference);
+            }
+        });
+    }
+    // }}
 
-    @QueryOnly
+    // {{ findOrganisationByName
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
-    public Organisation findOrganisationByName(@Named("name") String name);
+    public Organisation findOrganisationByName(
+            @Named("Name") final String name){
+        return firstMatch(Organisation.class, new Filter<Organisation>() {
+            @Override
+            public boolean accept(final Organisation organisation) {
+                return organisation.getName().contains(name);
+            }
+        });
+    }
+    // }}
 
-    @QueryOnly
+    // {{ findPerson
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
+    public Person findPerson(
+            final @Named("First Name") @Optional String firstName, 
+            final @Named("Last Name") @Optional String lastName) {
+        return firstMatch(Person.class, new Filter<Person>() {
+            @Override
+            public boolean accept(final Person person) {
+                return person.getLastName().contains(lastName) || person.getFirstName().contains(firstName);
+            }
+        });
+    }
+    // }}
+
+    // {{ findPartyByReference
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "6")
-    public Party findPartyByReference(@Named("reference") String reference);
-    
-    //@Exploration
-    @QueryOnly
-    @MemberOrder(sequence = "7")
-    List<Party> allInstances();
+    public Party findPartyByReference(
+            @Named("Reference") final String reference) {
+        return firstMatch(Party.class, new Filter<Party>() {
+            @Override
+            public boolean accept(final Party party) {
+                return reference.contains(party.getReference());
+            }
+        });
+    }
+    // }}
 
+    // {{ allParties
+    //@Exploration
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "7")
+    public List<Party> allParties() {
+        return allInstances(Party.class);
+    }
+    // }}
 }

@@ -88,10 +88,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>app-fixture</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>app-objstore-dflt</artifactId>
-        </dependency>
 
         <!-- isis core -->
         <dependency>

@@ -10,10 +10,10 @@ import org.apache.isis.viewer.junit.Fixtures;
 import org.junit.Test;
 
 import com.eurocommercialproperties.estatio.dom.asset.Property;
-import com.eurocommercialproperties.estatio.fixture.EstatioRefDataFixture;
+import com.eurocommercialproperties.estatio.fixture.EstatioFixture;
 import com.eurocommercialproperties.estatio.junit.AbstractTest;
 
-@Fixtures({ @Fixture(EstatioRefDataFixture.class) })
+@Fixtures({ @Fixture(EstatioFixture.class) })
 public class PropertiesDefaultTest extends AbstractTest {
 
     @Test

@@ -9,9 +9,9 @@ import com.eurocommercialproperties.estatio.fixture.lease.LeasesFixture;
 import com.eurocommercialproperties.estatio.fixture.party.PartiesFixture;
 import com.eurocommercialproperties.estatio.fixture.tax.TaxFixture;
 
-public class EstatioRefDataFixture extends AbstractFixture {
+public class EstatioFixture extends AbstractFixture {
 
-    public EstatioRefDataFixture() {
+    public EstatioFixture() {
         addFixture(new GeographyFixture());
         addFixture(new IndexFixture());
         addFixture(new PartiesFixture());

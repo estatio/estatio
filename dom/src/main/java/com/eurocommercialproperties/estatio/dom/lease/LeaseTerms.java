@@ -2,6 +2,7 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.util.List;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -10,17 +11,47 @@ import org.apache.isis.applib.annotation.Named;
 
 @Hidden
 @Named("Leases")
-public interface LeaseTerms {
+public class LeaseTerms extends AbstractFactoryAndRepository {
 
+    // {{ Id, iconName
+    @Override
+    public String getId() {
+        //TODO: Q: why does getId always returns the class name in lower case?
+        return "leaseterms";
+    }
+
+    public String iconName() {
+        return "LeaseTerm";
+    }
+    // }}
+
+    // {{ newLeaseTerm
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public LeaseTerm newLeaseTerm(LeaseItem leaseItem);
+    public LeaseTerm newLeaseTerm(
+            final LeaseItem leaseItem) {
+        LeaseTerm leaseTerm = newTransientInstance(LeaseTerm.class);
+        leaseTerm.setLeaseItem(leaseItem);
+        persist(leaseTerm);
+        return leaseTerm;
+    }
+    // }}
 
+    // {{ newIndexableLeaseTerm
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public IndexableLeaseTerm newIndexableLeaseTerm(LeaseItem leaseItem);
-    
-    @ActionSemantics(Of.SAFE)
-    List<LeaseTerm> allInstances();
+    public IndexableLeaseTerm newIndexableLeaseTerm(LeaseItem leaseItem) {
+        IndexableLeaseTerm leaseTerm = newTransientInstance(IndexableLeaseTerm.class);
+        leaseTerm.setLeaseItem(leaseItem);
+        persist(leaseTerm);
+        return leaseTerm;
+    }
+    // }}
 
+    // {{ allLeaseTerms
+    @ActionSemantics(Of.SAFE)
+    public List<LeaseTerm> allLeaseTerms() {
+        return allInstances(LeaseTerm.class);
+    }
+    // }}
 }

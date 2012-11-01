@@ -2,24 +2,40 @@ package com.eurocommercialproperties.estatio.dom.invoice;
 
 import java.util.List;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 
+
 @Named("Invoices")
-public interface Invoices {
+public class Invoices extends AbstractFactoryAndRepository {
 
-    @ActionSemantics(Of.SAFE)
+    // {{ newInvoice
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Invoice newInvoice();
+    public Invoice newInvoice() {
+        Invoice invoice = newTransientInstance(Invoice.class);
+        persist(invoice);
+        return invoice;
+    }
+    // }}
 
+    // {{ allInvoices
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public List<Invoice> allInvoices();
+    public List<Invoice> allInvoices() {
+        return allInstances(Invoice.class);
+    }
+    // }}
 
+    // {{ allInvoiceItems
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public List<InvoiceItem> allInvoiceItems();
+    public List<InvoiceItem> allInvoiceItems() {
+        return allInstances(InvoiceItem.class);
+    }
+    // }}
 
 }

@@ -2,8 +2,8 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 import org.joda.time.LocalDate;
 
-import com.google.ical.values.Frequency;
-import com.google.ical.values.RRule;
+//import com.google.ical.values.Frequency;
+//import com.google.ical.values.RRule;
 
 public enum IndexationFrequency {
 
@@ -11,10 +11,10 @@ public enum IndexationFrequency {
 
     public LocalDate getNextDate(LocalDate date) {
         //return date.plusYears(1);
-        RRule rule = new RRule();
+/*        RRule rule = new RRule();
                 
         rule.setFreq(Frequency.YEARLY);
-        //rule.set
+*/        //rule.set
         return null;
     }
 

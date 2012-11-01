@@ -3,41 +3,136 @@ package com.eurocommercialproperties.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.filter.Filter;
+
 import org.joda.time.LocalDate;
 
 @Named("Indices")
-public interface Indices {
+public class Indices extends AbstractFactoryAndRepository {
 
-    @ActionSemantics(Of.SAFE)
+    // {{ Id, iconName
+    @Override
+    public String getId() {
+        return "indices";
+    }
+
+    public String iconName() {
+        return "Index";
+    }
+    // }}
+
+    // {{ newIndex
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Index newIndex(@Named("Reference") String reference, @Named("Name") String name);
+    public Index newIndex(
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name) {
+        final Index index = newTransientInstance(Index.class);
+        index.setReference(reference);
+        index.setName(name);
+        persist(index);
+        return index;
+    }
+    // }}
 
-    @ActionSemantics(Of.SAFE)
+    // {{ newIndexBase
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
-    public IndexBase newIndexBase(@Named("Index") Index index, @Named("Previous Base") IndexBase previousBase, @Named("Start Date") LocalDate startDate, double factor);
-    
-    @ActionSemantics(Of.SAFE)
+    public IndexBase newIndexBase(
+            final @Named("Index") Index index, 
+            final @Named("Previous Base") IndexBase previousBase, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Factor") double factor) {
+        IndexBase indexBase = newTransientInstance(IndexBase.class);
+        indexBase.setIndex(index);
+        indexBase.setPreviousBase(previousBase);
+        indexBase.setStartDate(startDate);
+        indexBase.setFactor(BigDecimal.valueOf(factor));
+        persist(indexBase);
+        index.addToIndexBases(indexBase);
+        return indexBase;
+    }
+    // }}
+
+    // {{ newIndexValue
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "3")
-    public IndexValue newIndexValue(@Named("Index Base") IndexBase indexBase, @Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate, BigDecimal value);
-    
+    public IndexValue newIndexValue(
+            final @Named("Index Base") IndexBase indexBase, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate, 
+            final @Named("Value") BigDecimal value) {
+        IndexValue indexValue = newTransientInstance(IndexValue.class);
+        indexValue.setIndexBase(indexBase);
+        indexValue.setStartDate(startDate);
+        indexValue.setEndDate(endDate);
+        indexValue.setValue(value);
+        persist(indexValue);
+        indexBase.addToValues(indexValue);
+        return indexValue;
+    }
+    // }}
+
+    // {{ findByReference
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public Index findByReference(@Named("Reference") String reference);
+    public Index findByReference(
+            final @Named("Reference") String reference) {
+        return firstMatch(Index.class, new Filter<Index>() {
+            @Override
+            public boolean accept(final Index index) {
+                return reference.equals(index.getReference());
+            }
+        });
+    }
+    // }}
 
+    // {{ allIndices
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
-    public IndexValue findIndexValueForDate(Index index, @Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate);
-    
-    List<Index> allIndices();
+    public List<Index> allIndices() {
+        return allInstances(Index.class);
+    }
+    // }}
 
-    List<IndexBase> allIndexBases();
+    // {{ allIndexBases
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "6")
+    public List<IndexBase> allIndexBases() {
+        return allInstances(IndexBase.class);
+    }
+    // }}
     
-    List<IndexValue> allIndexValues();
-    
+    // {{ allIndexValues
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "7")
+    public List<IndexValue> allIndexValues() {
+        return allInstances(IndexValue.class);
+    }
+    // }}
+
+    // {{ findIndexValueForDate
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "8")
+    public IndexValue findIndexValueForDate(
+            final Index index, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        return firstMatch(IndexValue.class, new Filter<IndexValue>() {
+            @Override
+            public boolean accept(final IndexValue indexValue) {
+                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex())  ; // &&
+                // this.equals(indexValue.getIndexBase().getIndex());
+                // TODO: Should match two dates
+            }
+        });
+    }
+
+    // }}
+
 }
-
-

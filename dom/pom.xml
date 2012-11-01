@@ -108,18 +108,17 @@
 			<groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
 			<artifactId>jdo-applib</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
-            <artifactId>jdo-datanucleus</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
+			<artifactId>jdo-datanucleus</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.xnap.commons</groupId>
 			<artifactId>gettext-commons</artifactId>
 		</dependency>
 
-		<!-- 
- (horrid, but needed to run the enhancer) -->
+		<!-- (horrid, but needed to run the enhancer) -->
 		<dependency>
 			<groupId>javax.jdo</groupId>
 			<artifactId>jdo-api</artifactId>
@@ -196,17 +195,9 @@
 			<artifactId>jdo-applib</artifactId>
 		</dependency>
 
-        <dependency>
-            <groupId>com.google.code</groupId>
-            <artifactId>rfc2445</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <optional>true</optional>
-            <systemPath>${basedir}/lib/rfc2445.jar</systemPath>
-        </dependency>
-
-
-
+		<!-- <dependency> <groupId>com.google.code</groupId> <artifactId>rfc2445</artifactId> 
+			<version>1.0</version> <scope>system</scope> <optional>true</optional> <systemPath>${basedir}/lib/rfc2445.jar</systemPath> 
+			</dependency> -->
 
 	</dependencies>
 

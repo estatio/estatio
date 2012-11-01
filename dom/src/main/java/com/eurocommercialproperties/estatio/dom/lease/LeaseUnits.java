@@ -2,6 +2,7 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.util.List;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -10,13 +11,37 @@ import org.apache.isis.applib.annotation.Named;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 
 @Named("LeaseUnits")
-public interface LeaseUnits {
+public class LeaseUnits extends AbstractFactoryAndRepository {
 
+    // {{ Id, iconName
+    @Override
+    public String getId() {
+        return "leases";
+    }
+
+    public String iconName() {
+        return "Lease";
+    }
+    // }}
+
+    // {{ newLeaseUnit
     //@Hidden
-    @MemberOrder(sequence = "1")
-    public LeaseUnit newLeaseUnit(Lease lease, Unit unit);
-
     @ActionSemantics(Of.SAFE)
-    List<LeaseUnit> allInstances();
+    @MemberOrder(sequence = "1")
+    public LeaseUnit newLeaseUnit(@Named("Lease") Lease lease, @Named("Unit") Unit unit) {
+        LeaseUnit lu = newTransientInstance(LeaseUnit.class);
+        lu.setLease(lease);
+        lu.setUnit(unit);
+        persist(lu);
+        lease.addToUnits(lu);
+        return lu;
+    }
+    // }}
 
+    // {{ allLeaseUnits
+    @ActionSemantics(Of.SAFE)
+    public List<LeaseUnit> allLeaseUnits() {
+        return allInstances(LeaseUnit.class);
+    }
+    // }}
 }
