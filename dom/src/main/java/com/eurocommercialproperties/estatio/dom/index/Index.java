@@ -1,6 +1,7 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -8,11 +9,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.filter.Filter;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
@@ -93,19 +92,22 @@ public class Index extends AbstractDomainObject {
     // {{ GetValueForDate (action)
 
     public BigDecimal getIndexationFactor(@Named("Base Date") LocalDate baseDate, @Named("Next Date") LocalDate nextDate) {
-        IndexValue startIndexValue = getIndices().findIndexValueForDate(baseDate, baseDate.dayOfMonth().withMaximumValue());
-        IndexValue endIndexValue = getIndices().findIndexValueForDate(nextDate, nextDate.dayOfMonth().withMaximumValue());
+        IndexValue startIndexValue = getIndices().findIndexValueForDate(this, baseDate, baseDate.dayOfMonth().withMaximumValue());
+        IndexValue endIndexValue = getIndices().findIndexValueForDate(this, nextDate, nextDate.dayOfMonth().withMaximumValue());
         if (startIndexValue == null || endIndexValue == null) {
+            getContainer().warnUser("No index value found");
+            //TODO: specify further
             return BigDecimal.ZERO;
         } else {
             BigDecimal rebaseFactor = BigDecimal.ONE;
             rebaseFactor = endIndexValue.getIndexBase().getFactorForDate(baseDate);
-            return endIndexValue.getValue().divide(startIndexValue.getValue()).multiply(rebaseFactor);
+            BigDecimal indexationFactor = endIndexValue.getValue().divide(startIndexValue.getValue(), 5, RoundingMode.HALF_UP).multiply(rebaseFactor);
+            return indexationFactor;
         }
     }
 
     // }}
-    
+
     // {{ injected: Indices
     private Indices indices;
 
@@ -116,6 +118,6 @@ public class Index extends AbstractDomainObject {
     public void setIndices(Indices indices) {
         this.indices = indices;
     }
-        
+
     // }}
- }
+}

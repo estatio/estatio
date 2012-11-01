@@ -30,7 +30,7 @@ public interface Indices {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
-    public IndexValue findIndexValueForDate(@Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate);
+    public IndexValue findIndexValueForDate(Index index, @Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate);
     
     List<Index> allIndices();
 

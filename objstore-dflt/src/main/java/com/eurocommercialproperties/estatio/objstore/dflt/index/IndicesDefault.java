@@ -114,12 +114,12 @@ public class IndicesDefault extends AbstractFactoryAndRepository implements Indi
     // {{ findByReference
     @Override
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "5")
-    public IndexValue findIndexValueForDate(@Named("Start Date") final LocalDate startDate, @Named("End Date") LocalDate endDate) {
+    @MemberOrder(sequence = "8")
+    public IndexValue findIndexValueForDate(final Index index, @Named("Start Date") final LocalDate startDate, @Named("End Date") LocalDate endDate) {
         return firstMatch(IndexValue.class, new Filter<IndexValue>() {
             @Override
             public boolean accept(final IndexValue indexValue) {
-                return startDate.equals(indexValue.getStartDate()); // &&
+                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex())  ; // &&
                 // this.equals(indexValue.getIndexBase().getIndex());
                 // TODO: Should match two dates
 

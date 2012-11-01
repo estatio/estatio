@@ -1,70 +1,90 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
-
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
-
 public class IndexTest {
 
-    @Rule
-    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_ONLY);
+    private LocalDate baseDate;
+    private LocalDate nextDate;
+    private BigDecimal result;
 
+    private Index index;
+    private IndexBase ib1990;
+    private IndexBase ib2000;
+    private IndexBase ib2010;
+    private IndexValue iv1;
+    private IndexValue iv2;
 
     @Mock
-    private Indices mockIndices;
-    
-    @Test
-    public void test() {
-        
-        //122.2 / 110.1 * 1.345 * 1.234
-        
-        Index index = new Index();
-        index.setIndices(mockIndices);
-        IndexBase ib1 = new IndexBase();
-        ib1.setFactor(BigDecimal.valueOf(1.345));
-        
-        IndexBase ib2 = new IndexBase();
-        ib2.setPreviousBase(ib1);
-        ib2.setFactor(BigDecimal.valueOf(1.234));
-               
-        IndexValue iv1 = new IndexValue();
-        iv1.setIndexBase(ib1);
-        iv1.setStartDate(new LocalDate(2001,1,1));
-        
-        IndexValue iv2 = new IndexValue();
-        iv2.setIndexBase(ib2);
-        iv2.setStartDate(new LocalDate(2011,1,1));
+    Indices mockIndices;
 
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+
+    @Before
+    public void setup() {
+        baseDate = new LocalDate(2001, 1, 1);
+        nextDate = new LocalDate(2011, 1, 1);
+        index = new Index();
+        index.setIndices(mockIndices);
+
+        ib1990 = new IndexBase();
+        ib1990.setStartDate(new LocalDate(1990, 1, 1));
+
+        ib2000 = new IndexBase();
+        ib2000.setPreviousBase(ib1990);
+        ib2000.setFactor(BigDecimal.valueOf(1.345));
+        ib2000.setStartDate(new LocalDate(2000, 1, 1));
+
+        ib2010 = new IndexBase();
+        ib2010.setPreviousBase(ib2000);
+        ib2010.setFactor(BigDecimal.valueOf(1.234));
+        ib2010.setStartDate(new LocalDate(2010, 1, 1));
+
+        iv1 = new IndexValue();
+        iv1.setIndexBase(ib2000);
+        iv1.setStartDate(baseDate);
+        iv1.setEndDate(baseDate.dayOfMonth().withMaximumValue());
+        iv1.setValue(BigDecimal.valueOf(122.2));
+
+        iv2 = new IndexValue();
+        iv2.setIndexBase(ib2010);
+        iv2.setStartDate(nextDate);
+        iv2.setEndDate(nextDate.dayOfMonth().withMaximumValue());
+        iv2.setValue(BigDecimal.valueOf(111.1));
         
-        
-        LocalDate nextDate;
-        LocalDate baseDate;
-        //index.getIndexValueForDate(startDate, endDate)
-//        index.getIndexationFactor(baseDate, nextDate);
-       
-        
-        context.checking(new Expectations() {
-            {
-                allowing(mockIndices).findIndexValueForDate(
-                        with(equal(new LocalDate(2011,1,1))),
-                        with(equal(new LocalDate(2011,1,31)))
-                        );
-                will(returnValue(new IndexValue()));
-            }
-        });
-        
-        fail("Not yet implemented");
+        result = BigDecimal.valueOf(111.1).divide(BigDecimal.valueOf(122.2), 5, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(1.234));
     }
 
+    @Test
+    public void testFactorForDate() {
+        assertEquals(ib2010.getFactorForDate(baseDate), new BigDecimal("1.234"));
+        assertEquals(new BigDecimal("1.659730"), ib2010.getFactorForDate(new LocalDate(1999, 1, 1)));
+    }
+
+    @Test
+    public void testIndexationFactor() {
+        context.checking(new Expectations() {
+            {
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
+                will(returnValue(iv1));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
+                will(returnValue(iv2));
+            }
+        });
+        assertEquals(result, index.getIndexationFactor(baseDate, nextDate));
+    }
 }
