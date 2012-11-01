@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 
@@ -111,7 +112,7 @@ public class Parties extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allParties
-    //@Exploration
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "7")
     public List<Party> allParties() {

@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 
@@ -39,6 +40,7 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allLeaseUnits
+    @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseUnit> allLeaseUnits() {
         return allInstances(LeaseUnit.class);

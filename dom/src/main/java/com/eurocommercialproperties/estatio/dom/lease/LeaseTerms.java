@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 
 @Hidden
 @Named("Leases")
@@ -49,6 +50,7 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allLeaseTerms
+    @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances(LeaseTerm.class);

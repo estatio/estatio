@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 import org.joda.time.LocalDate;
@@ -93,6 +94,7 @@ public class Indices extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allIndices
+    // (not a prototype, bounded)
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
     public List<Index> allIndices() {
@@ -100,25 +102,10 @@ public class Indices extends AbstractFactoryAndRepository {
     }
     // }}
 
-    // {{ allIndexBases
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "6")
-    public List<IndexBase> allIndexBases() {
-        return allInstances(IndexBase.class);
-    }
-    // }}
-    
-    // {{ allIndexValues
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "7")
-    public List<IndexValue> allIndexValues() {
-        return allInstances(IndexValue.class);
-    }
-    // }}
 
     // {{ findIndexValueForDate
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "6")
     public IndexValue findIndexValueForDate(
             final Index index, 
             final @Named("Start Date") LocalDate startDate, 
@@ -134,5 +121,25 @@ public class Indices extends AbstractFactoryAndRepository {
     }
 
     // }}
+
+    
+    // {{ allIndexBases
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "7")
+    public List<IndexBase> allIndexBases() {
+        return allInstances(IndexBase.class);
+    }
+    // }}
+    
+    // {{ allIndexValues
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "8")
+    public List<IndexValue> allIndexValues() {
+        return allInstances(IndexValue.class);
+    }
+    // }}
+
 
 }

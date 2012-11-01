@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 @Named("Taxes")
@@ -81,14 +82,16 @@ public class Taxes extends AbstractFactoryAndRepository {
     // }}
     
     // {{ allTaxes
+    // (not a prototype, bounded)
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "5")
     public List<Tax> allTaxes() {
         return allInstances(Tax.class);
     }
     // }}
     
     // {{ allTaxRates
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "11")
     public List<TaxRate> allTaxRates() {

@@ -13,6 +13,9 @@ import org.joda.time.LocalDate;
 import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @PersistenceCapable
+@javax.jdo.annotations.Query(name = "propact_find", 
+    language = "JDOQL", 
+    value = "SELECT FROM com.eurocommercialproperties.estatio.dom.asset.Property WHERE reference.matches(:r)")
 public class PropertyActor extends AbstractDomainObject {
 
     // {{ Property (property)

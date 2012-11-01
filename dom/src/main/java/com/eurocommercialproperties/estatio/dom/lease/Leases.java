@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 import org.joda.time.LocalDate;
@@ -66,6 +67,7 @@ public class Leases extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allLeases
+    @Prototype
     @ActionSemantics(Of.SAFE)
     public List<Lease> allLeases() {
         return allInstances(Lease.class);

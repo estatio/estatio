@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 
 //TODO: Q: do we need separate repositories for each entity or can/should we cluster them?
 @Named("Leases")
@@ -25,9 +26,6 @@ public class LeaseItems extends AbstractFactoryAndRepository {
     }
 
     // {{ newLeaseItem
-    
-    // TODO: Q: Should these annotation live on both the interface and the
-    // implementation?
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public LeaseItem newLeaseItem(final Lease lease) {
@@ -39,6 +37,7 @@ public class LeaseItems extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allLeaseItems
+    @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseItem> allLeaseItems() {
         return allInstances(LeaseItem.class);

@@ -2,6 +2,8 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -10,6 +12,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryDefault;
 
@@ -59,21 +62,15 @@ public class Properties extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "2")
     public List<Property> findPropertiesByReference(
             final @Named("Reference") String reference) {
-        return allMatches(queryForFindByReference(reference));
+        throw new NotImplementedException();
     }
 
     @Hidden
     public Property findPropertyByReference(
             final String reference) {
-        return firstMatch(queryForFindByReference(reference));
+        throw new NotImplementedException();
     }
     
-    private static QueryDefault<Property> queryForFindByReference(String reference) {
-        return new QueryDefault<Property>(Property.class, "prop_findByReference", "r", matches(reference));
-    }
-    private static String matches(final String reference) {
-        return ".*" + reference.toUpperCase() + ".*";
-    }
 
     // }}
 
@@ -86,6 +83,7 @@ public class Properties extends AbstractFactoryAndRepository {
 
 
     // {{ allProperties
+    @Prototype
     @ActionSemantics(Of.SAFE)
     public List<Property> allProperties() {
         return allInstances(Property.class);

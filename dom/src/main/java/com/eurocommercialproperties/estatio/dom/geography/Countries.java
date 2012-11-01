@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 
@@ -59,6 +60,8 @@ public class Countries extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allCountries
+    @Prototype
+    @ActionSemantics(Of.SAFE)
     public List<Country> allCountries() {
         return allInstances(Country.class);
     }

@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 
 
 @Named("Invoices")
@@ -23,6 +24,7 @@ public class Invoices extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allInvoices
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Invoice> allInvoices() {
@@ -31,6 +33,7 @@ public class Invoices extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allInvoiceItems
+    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<InvoiceItem> allInvoiceItems() {

@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
 
-@javax.jdo.annotations.Query(name = "prop_findByReference", language = "JDOQL", value = "SELECT FROM com.eurocommercialproperties.estatio.dom.asset.Property WHERE reference.matches(:r)")
 @PersistenceCapable
 @Auditable
 @AutoComplete(repository = Properties.class)

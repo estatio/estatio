@@ -7,6 +7,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 
@@ -73,6 +74,8 @@ public class States extends AbstractFactoryAndRepository {
     // }}
 
     // {{ allStates
+    @ActionSemantics(Of.SAFE)
+    @Prototype
     public List<State> allStates() {
         return allInstances(State.class);
     }
