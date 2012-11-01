@@ -1,0 +1,11 @@
+<jdo>
+    <package name="com.eurocommercialproperties.estatio.dom.asset">
+        <class name="Property">
+            <query name="properties_findByReference" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM com.eurocommercialproperties.estatio.dom.asset.Property 
+             WHERE reference.matches(:r)
+            ]]></query>
+        </class>
+    </package>
+</jdo>
