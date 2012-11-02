@@ -19,7 +19,6 @@ import com.eurocommercialproperties.estatio.jdo.UnitsJdo;
 
 import org.apache.isis.applib.fixtures.InstallableFixture;
 import org.apache.isis.core.commons.config.IsisConfiguration;
-import org.apache.isis.core.commons.config.IsisConfigurationBuilderDefault;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
