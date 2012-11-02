@@ -810,21 +810,6 @@
 		</plugins>
 	</reporting>
 
-	<modules>
-		<module>wicket-fullcalendar</module>
-		<module>wicket-ui-extensions</module>
-		<module>testsupport</module>
-		<module>dom</module>
-		<module>exploration</module>
-		<module>fixture</module>
-		<module>objstore-jdo</module>
-		<module>services</module>
-		<module>tests-junit</module>
-		<module>webapp</module>
-		<module>webrest</module>
-	</modules>
-
-
     <distributionManagement>
         <site>
             <id>isis-site</id>
@@ -847,6 +832,46 @@
                 <directory>target-ide</directory>
             </build>
         </profile>
+
+	    <profile>
+	        <id>default-set-of-modules</id>
+	        <activation>
+	            <activeByDefault>true</activeByDefault>
+	        </activation>
+	        <modules>
+		        <module>wicket-fullcalendar</module>
+		        <module>wicket-ui-extensions</module>
+		        <module>testsupport</module>
+		        <module>dom</module>
+		        <module>exploration</module>
+		        <module>fixture</module>
+		        <module>objstore-jdo</module>
+		        <module>services</module>
+		        <module>tests-junit</module>
+		        <module>webapp</module>
+		        <module>webrest</module>
+		    </modules>
+	    </profile>
+    
+       <profile>
+           <id>modules-site</id>
+           <activation>
+               <!--  mvn site-deploy -D modules=site -->
+               <property>
+                   <name>modules</name>
+                   <value>site</value>
+               </property>
+           </activation>
+           <modules>
+                <module>dom</module>
+                <module>fixture</module>
+                <module>objstore-jdo</module>
+                <module>services</module>
+                <module>tests-junit</module>
+                <module>webapp</module>
+                <module>webrest</module>
+           </modules>
+       </profile>
 
 		<!-- only capture code coverage if running under jenkins -->
 		<profile>
