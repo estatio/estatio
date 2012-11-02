@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>app-objstore-dflt</artifactId>
+            <artifactId>app-objstore-jdo</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -81,6 +81,18 @@
             <groupId>org.apache.isis.viewer</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        
+        <!-- isis integration test support -->
+        <dependency>
+		    <groupId>org.apache.isis.runtimes.dflt</groupId>
+		    <artifactId>testsupport</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.2.8</version>
         </dependency>
 
 	</dependencies>

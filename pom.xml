@@ -549,7 +549,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.8.2</version>
+				<version>4.10</version>
 			</dependency>
 
 
@@ -591,6 +591,14 @@
 				<artifactId>wicket-viewer</artifactId>
 				<version>${isis.version}</version>
 			</dependency>
+
+
+            <!-- isis integ test support -->
+            <dependency>
+	            <groupId>org.apache.isis.runtimes.dflt</groupId>
+	            <artifactId>testsupport</artifactId>
+				<version>${isis.version}</version>
+            </dependency>
 
 			<dependency>
 				<groupId>org.xnap.commons</groupId>

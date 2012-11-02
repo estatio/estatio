@@ -21,8 +21,13 @@ import org.apache.isis.viewer.junit.Services;
 @RunWith(IsisTestRunner.class)
 @ConfigDir("../webapp/src/main/webapp/WEB-INF")
 // acts as default, but can be overridden by annotations
-@Services({ @Service(Parties.class), @Service(Properties.class), @Service(Units.class), @Service(Countries.class),
-        @Service(States.class), @Service(CommunicationChannels.class) })
+@Services({ 
+    @Service(Parties.class), 
+    @Service(Properties.class), 
+    @Service(Units.class), 
+    @Service(Countries.class),
+    @Service(States.class), 
+    @Service(CommunicationChannels.class) })
 public abstract class AbstractTest {
 
     private DomainObjectContainer domainObjectContainer;
