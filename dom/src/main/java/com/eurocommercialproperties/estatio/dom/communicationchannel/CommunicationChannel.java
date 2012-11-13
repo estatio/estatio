@@ -1,6 +1,8 @@
 package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,7 +15,7 @@ import org.apache.isis.applib.annotation.ObjectType;
 @Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 @Discriminator("CCHN") // required since subtypes are rolling-up
 @ObjectType("CCHN")
-
+@DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY, column="COMMUNICATIONCHANNEL_ID")
 public abstract class CommunicationChannel extends AbstractDomainObject {
 
     // {{ Type (attribute)

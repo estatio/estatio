@@ -6,16 +6,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.party.Party;
-
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -218,7 +219,8 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @Join
+    @Join(column="PROPERTY_ID", generateForeignKey = "false")
+    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
 
     @Resolve(Type.EAGERLY)
@@ -293,7 +295,7 @@ public class Property extends AbstractDomainObject {
     // {{ injected: PropertyActors
     private PropertyActors propertyActorsRepo;
 
-    public void setPropertyActors(final PropertyActors propertyActors) {
+    public void setPropertyActorsRepo(final PropertyActors propertyActors) {
         this.propertyActorsRepo = propertyActors;
     }
 

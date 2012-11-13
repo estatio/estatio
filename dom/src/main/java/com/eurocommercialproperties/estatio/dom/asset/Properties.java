@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -13,8 +11,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.applib.query.QueryDefault;
 
 @Named("Properties")
 public class Properties extends AbstractFactoryAndRepository {

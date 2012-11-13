@@ -38,44 +38,19 @@ public class Taxes extends AbstractFactoryAndRepository {
     }
     // }}
     
-    // {{ newTaxRate
-    @MemberOrder(sequence = "2")
-    public TaxRate newTaxRate(
-            final Tax tax,
-            final @Named("Start date") LocalDate startDate,
-            final @Named("Percentage") BigDecimal percentage) {
-        final TaxRate rate = newTransientInstance(TaxRate.class);
-        rate.setStartDate(startDate);
-        rate.setPercentage(percentage);
-        persist(rate);
-        tax.addToRates(rate);
-        return rate;
-    }
-    // }}
-    
-    // {{ newTaxRate
-    @MemberOrder(sequence = "3")
-    public TaxRate newTaxRate(
-            final @Named("Previous Rate") TaxRate previousRate,
-            final @Named("Start date") LocalDate startDate,
-            final @Named("Percentage") BigDecimal percentage) {
-            final TaxRate rate = newTaxRate(previousRate.getTax(), startDate, percentage);
-        previousRate.setEndDate(startDate.minusDays(1));
-        return rate;
-    }
-    // }}
-    
     // {{ findTaxRateForDate
     @MemberOrder(sequence = "4")
     public TaxRate findTaxRateForDate(
-        final Tax tax,
+        final @Named("Tax") Tax tax,
         final @Named("Date") LocalDate date) {
         return firstMatch(TaxRate.class, new Filter<TaxRate>() {
             @Override
             public boolean accept(
                 final TaxRate rate) {
-                return date.isAfter(rate.getStartDate()) && (rate.getEndDate().equals(null) || date.isBefore(rate.getEndDate())) && date.equals(rate.getStartDate()) && tax.equals(rate.getTax());
-
+                return 
+                    tax.equals(rate.getTax()) &&
+                    date.compareTo(rate.getStartDate()) >= 0 && 
+                    (rate.getEndDate() == null ||date.compareTo(rate.getEndDate()) <= 0);
             }
         });
     }
@@ -98,4 +73,10 @@ public class Taxes extends AbstractFactoryAndRepository {
         return allInstances(TaxRate.class);
     }
     // }}
+    
+    // {{ findCurrentTaxRate
+    
+    
+    //{{
+    
 }

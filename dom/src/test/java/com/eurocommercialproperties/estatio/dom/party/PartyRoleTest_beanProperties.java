@@ -4,14 +4,14 @@ import org.junit.Test;
 
 import com.danhaywood.testsupport.coverage.PojoTester;
 import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
-import com.eurocommercialproperties.estatio.dom.FixtureDatumFactoriesForApplib;
+import com.eurocommercialproperties.estatio.dom.FixtureDatumFactoriesForJoda;
 
 public class PartyRoleTest_beanProperties {
 
 	@Test
 	public void test() {
 		new PojoTester()
-			.withFixture(FixtureDatumFactoriesForApplib.dates())
+			.withFixture(FixtureDatumFactoriesForJoda.dates())
 			.withFixture(FixtureDatumFactoriesForParty.parties())
 			.exercise(new PartyRole(), FilterSet.excluding("container"));
 	}

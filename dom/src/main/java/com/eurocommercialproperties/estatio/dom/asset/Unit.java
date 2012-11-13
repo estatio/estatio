@@ -1,15 +1,19 @@
 package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseUnit;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
@@ -20,10 +24,6 @@ import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
-
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.lease.LeaseUnit;
 
 @PersistenceCapable
 @Auditable
@@ -155,7 +155,6 @@ public class Unit extends AbstractDomainObject {
     // {{ Property (attribute)
     private Property property;
 
-    // TODO: IMHO the @Column is redundant
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
@@ -187,17 +186,17 @@ public class Unit extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    // @Persistent(mappedBy = "property", defaultFetchGroup="false")
-    @Join
-    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+    @Join(column="UNIT_ID", generateForeignKey = "false")
+    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.1")
-    public List<CommunicationChannel> getCommunicationChannels() {
+    public Set<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
 
-    public void setCommunicationChannels(final List<CommunicationChannel> communicationChannels) {
+    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 
@@ -212,14 +211,6 @@ public class Unit extends AbstractDomainObject {
         communicationChannels.add(communicationChannel);
     }
 
-    // }}
-
-    // {{ injected: Properties
-    private Properties properties;
-
-    public void setProperties(final Properties properties) {
-        this.properties = properties;
-    }
     // }}
 
 }

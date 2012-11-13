@@ -16,10 +16,7 @@
  */
 package com.eurocommercialproperties.estatio.dom.party;
 
-import javax.jdo.annotations.InheritanceStrategy;
-
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 

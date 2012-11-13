@@ -18,8 +18,7 @@ import com.eurocommercialproperties.estatio.dom.geography.States;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator("POST")
-// required since subtypes are rolling-up
+@Discriminator("POST") // required since subtypes are rolling-up
 @ObjectType("POST")
 public class PostalAddress extends CommunicationChannel {
 

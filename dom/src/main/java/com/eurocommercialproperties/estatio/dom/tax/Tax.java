@@ -59,6 +59,7 @@ public class Tax extends AbstractDomainObject {
     }
 
     // }}
+    
 
     public void addToRates(final TaxRate taxRate) {
         // check for no-op
@@ -82,9 +83,24 @@ public class Tax extends AbstractDomainObject {
         // additional business logic
     }
 
-    public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
-        return taxRepo.newTaxRate(this, startDate, percentage);
+    // {{ NewRate (action)
+    public TaxRate newRate(
+                           @Named("Start Date") LocalDate startDate,
+                           @Named("Percentage") BigDecimal percentage) {
+        TaxRate rate = newTransientInstance(TaxRate.class);
+        rate.setStartDate(startDate);
+        rate.setPercentage(percentage);
+        persist(rate);
+        this.addToRates(rate);
+        return rate;
+        
+//        rates.getCurrentRate();
     }
+
+    // }}
+    
+   
+    
 
     public BigDecimal getPercentageForDate(LocalDate date) {
 

@@ -1,14 +1,11 @@
 package com.eurocommercialproperties.estatio.dom.party;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
 
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -17,13 +14,9 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
 
-//@javax.jdo.annotations.PersistenceCapable(schema = "party", identityType = IdentityType.DATASTORE)
-//@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY)
-//@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 //@ObjectType("PRTY")
-@javax.jdo.annotations.PersistenceCapable
+@PersistenceCapable
 public abstract class Party extends AbstractDomainObject {
 
     // {{ Reference (attribute)
@@ -74,19 +67,16 @@ public abstract class Party extends AbstractDomainObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    //@javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey= "false")
-    // to avoid FK back to Property
-    //@javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    //@javax.jdo.annotations.Order(column = "IDX")
-    @Join
-    private List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+    @Join(column = "PARTY_ID", generateForeignKey = "false")
+    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
 
     @MemberOrder(sequence = "10")
-    public List<CommunicationChannel> getCommunicationChannels() {
+    public Set<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
 
-    public void setCommunicationChannels(final List<CommunicationChannel> communicationChannels) {
+    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 

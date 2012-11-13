@@ -6,6 +6,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -73,15 +74,43 @@ public class TaxRate extends AbstractDomainObject {
     }
     // }}
     
-    private Taxes taxes;
     
-    public void setTaxes(final Taxes taxes){
-        this.taxes = taxes;
-    }
-    
-    public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
-        return taxes.newTaxRate(this, startDate, percentage);
-    }
-    
+    // {{ PreviousRate (property)
+    private TaxRate propertyName;
 
+    @Hidden
+    @MemberOrder(sequence = "1")
+    public TaxRate getPreviousRate() {
+        return propertyName;
+    }
+
+    public void setPreviousRate(
+                                final TaxRate propertyName) {
+        this.propertyName = propertyName;
+    }
+    // }}
+
+    // {{ NextRate (property)
+    private TaxRate nextRate;
+    
+    @Hidden
+    @MemberOrder(sequence = "1")
+    public TaxRate getNextRate() {
+        return nextRate;
+    }
+    
+    public void setNextRate(
+                                final TaxRate nextRate) {
+        this.nextRate = nextRate;
+    }
+    // }}
+    
+    // {{ NewRate (action)
+    public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
+        TaxRate rate = this.getTax().newRate(startDate, percentage);
+        setNextRate(rate);
+        rate.setPreviousRate(this);
+        return rate;
+    }
+    // }}
 }
