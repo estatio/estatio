@@ -160,6 +160,7 @@
             <version>2.2.8</version>
         </dependency>
         
+        <!-- 
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>jdbc</artifactId>
@@ -168,6 +169,7 @@
 			<optional>true</optional>
 			<systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
 		</dependency>
+         -->
 
 		<dependency>
 		    <groupId>postgresql</groupId>
@@ -185,6 +187,12 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
           <version>1.6.4</version>
+        </dependency>
+        
+        <dependency>
+			<groupId>com.danhaywood.ddd.domainservices</groupId>
+			<artifactId>scheduler</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
         </dependency>
 
 	</dependencies>
