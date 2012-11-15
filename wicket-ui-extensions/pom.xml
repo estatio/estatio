@@ -27,6 +27,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<siteBaseDir>..</siteBaseDir>
+	</properties>
 	
 	<artifactId>app-wicket-ui-extensions</artifactId>
 	<name>App Wicket Viewer UI Extensions</name>
