@@ -4,25 +4,22 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Maps;
-
 import net.ftlines.wicket.fullcalendar.Event;
 import net.ftlines.wicket.fullcalendar.EventNotFoundException;
 import net.ftlines.wicket.fullcalendar.EventProvider;
-
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 
 import org.apache.isis.core.metamodel.adapter.ObjectAdapter;
 import org.apache.isis.core.metamodel.spec.feature.ObjectAssociation;
 import org.apache.isis.core.progmodel.facets.value.date.DateValueFacet;
 import org.apache.isis.runtimes.dflt.runtime.system.context.IsisContext;
 import org.apache.isis.viewer.wicket.model.models.EntityCollectionModel;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Maps;
 
 public class DateAssociationEventsProvider implements EventProvider {
 
@@ -32,7 +29,7 @@ public class DateAssociationEventsProvider implements EventProvider {
 
     private final static Predicate<Event> NOT_NULL = new Predicate<Event>() {
         @Override
-        public boolean apply(@Nullable Event input) {
+        public boolean apply(Event input) {
             return input != null;
         }
     };
@@ -44,7 +41,7 @@ public class DateAssociationEventsProvider implements EventProvider {
         final Function<ObjectAdapter, Event> function = new Function<ObjectAdapter, Event>() {
 
             @Override
-            public Event apply(@Nullable ObjectAdapter input) {
+            public Event apply(ObjectAdapter input) {
                 Event event = new Event();
 
                 final String associationId = dateAssociation.getId();
@@ -90,7 +87,7 @@ public class DateAssociationEventsProvider implements EventProvider {
         final Interval interval = new Interval(start, end);
         final Predicate<Event> withinInterval = new Predicate<Event>() {
             @Override
-            public boolean apply(@Nullable Event input) {
+            public boolean apply(Event input) {
                 return interval.contains(input.getStart());
             }
         };
