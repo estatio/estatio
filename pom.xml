@@ -878,13 +878,25 @@
            </modules>
        </profile>
 
-		<!-- only capture code coverage if running under jenkins -->
+		<!-- stuff to perform only if running under jenkins -->
+		<!-- 
 		<profile>
             <id>jenkins</id>
             <activation>
                 <property>
                     <name>env.BUILD_NUMBER</name>
                 </property>
+            </activation>
+        </profile>
+		-->
+        
+        <profile>
+            <id>metrics-on</id>
+            <activation>
+               <property>
+                   <name>metrics</name>
+                   <value>on</value>
+               </property>
             </activation>
             <build>
                 <plugins>
@@ -972,7 +984,6 @@
                             </execution>
                         </executions>
 					</plugin>
-					
                 </plugins>
             </build>
         </profile>
