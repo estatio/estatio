@@ -6,10 +6,10 @@ import org.apache.isis.applib.DomainObjectContainer;
 
 public class DemoFixturesService {
 
-    public void installFixtures() {
+    public String installFixtures() {
         EstatioFixture fixtures = container.newTransientInstance(EstatioFixture.class);
         fixtures.install();
-        container.informUser("Demo fixtures installed successfully");
+        return "Demo fixtures successfully installed";
     }
     
     // {{ injected: Container

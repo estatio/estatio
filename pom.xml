@@ -306,8 +306,20 @@
 			<dependency>
 				<groupId>com.danhaywood</groupId>
 				<artifactId>testsupport</artifactId>
-				<version>0.1.0-SNAPSHOT</version>
+				<version>0.2.0-SNAPSHOT</version>
 				<scope>test</scope>
+			</dependency>
+
+			<!-- the domain services -->
+			<dependency>
+				<groupId>com.danhaywood.ddd.domainservices</groupId>
+				<artifactId>docx</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.danhaywood.ddd.domainservices</groupId>
+				<artifactId>scheduler</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
 			<!-- the wicket fullcalendar module -->
@@ -844,7 +856,6 @@
 	        <modules>
 		        <module>wicket-fullcalendar</module>
 		        <module>wicket-ui-extensions</module>
-		        <module>testsupport</module>
 		        <module>dom</module>
 		        <module>exploration</module>
 		        <module>fixture</module>
@@ -867,7 +878,6 @@
            </activation>
            <modules>
 		        <module>wicket-ui-extensions</module>
-		        <module>testsupport</module>
                 <module>dom</module>
                 <module>fixture</module>
                 <module>objstore-jdo</module>
