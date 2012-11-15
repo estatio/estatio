@@ -30,6 +30,9 @@
 
 	<properties>
         <siteBaseDir>..</siteBaseDir>
+
+		<!--  TODO: remove!!!!! -->        
+        <skipTests>true</skipTests>
 	</properties>
     
 	<dependencies>

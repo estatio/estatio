@@ -13,6 +13,7 @@ import org.jmock.api.Invocation;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -111,6 +112,7 @@ public class TaxTest {
         
     }
 
+    @Ignore
     @Test
     public void testTaxPercentageForDate() {
         final LocalDate d1;

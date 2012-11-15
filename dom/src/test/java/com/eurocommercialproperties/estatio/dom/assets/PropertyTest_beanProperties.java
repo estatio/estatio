@@ -13,9 +13,10 @@ public class PropertyTest_beanProperties {
 	public void test() {
 		new PojoTester()
 		    .withFixture(FixtureDatumFactoriesForAssets.properties())
+		    .withFixture(FixtureDatumFactoriesForAssets.units())
 		    .withFixture(FixtureDatumFactoriesForAssets.propertyActors())
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
-			.exercise(new Property(), FilterSet.excluding("container"));
+			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo"));
 	}
 
 }

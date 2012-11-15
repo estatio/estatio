@@ -8,6 +8,7 @@ import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.States;
+import com.eurocommercialproperties.estatio.dom.index.Indices;
 import com.eurocommercialproperties.estatio.dom.party.Parties;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -27,7 +28,9 @@ import org.apache.isis.viewer.junit.Services;
     @Service(Units.class), 
     @Service(Countries.class),
     @Service(States.class), 
-    @Service(CommunicationChannels.class) })
+    @Service(CommunicationChannels.class),
+    @Service(Indices.class),
+    })
 public abstract class AbstractTest {
 
     private DomainObjectContainer domainObjectContainer;
