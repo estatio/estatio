@@ -11,13 +11,6 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-import com.eurocommercialproperties.estatio.dom.party.Party;
-
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -30,6 +23,12 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @PersistenceCapable
 @Auditable
@@ -233,6 +232,7 @@ public class Property extends AbstractDomainObject {
         this.communicationChannels = communicationChannels;
     }
 
+    @MemberOrder(name="CommunicationChannels", sequence="1")
     public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
         CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
         communicationChannels.add(communicationChannel);
@@ -274,7 +274,7 @@ public class Property extends AbstractDomainObject {
     // }}
 
     // {{ addActor (action)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Actors", sequence = "1")
     public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
         actors.add(propertyActor);

@@ -78,6 +78,14 @@
 
 	<dependencies>
 	
+		<!-- force version, conflict between docx4j and isis/wicket -->
+        <dependency>
+		  <groupId>commons-codec</groupId>
+		  <artifactId>commons-codec</artifactId>
+		  <version>1.6</version>
+        </dependency>
+	
+	
         <!-- other modules in this project -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -87,6 +95,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>app-fixture</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>app-objstore-jdo</artifactId>
         </dependency>
 
 
