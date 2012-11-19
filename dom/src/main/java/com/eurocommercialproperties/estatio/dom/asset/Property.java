@@ -56,8 +56,8 @@ public class Property extends AbstractDomainObject {
     // {{ Name (attribute, title)
     private String name;
 
+    @DescribedAs("Unique reference code for this property")
     @Title(sequence = "2")
-    @Disabled
     @MemberOrder(sequence = "1.2")
     public String getName() {
         return name;

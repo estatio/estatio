@@ -18,18 +18,24 @@
  */
 
 
-/*
-#header {
-    height: 48px;
-    background-image: url("../images/logo.png");
-	background-repeat: no-repeat;
-}
-*/
+
 #header h1 {
 	display: none;
 }
-/*
-body {
-	background-color: #00477F;
+
+
+.headerContainer .links>span:first-child {
+	background: url("../images/icon_appuser.png") no-repeat scroll left
+		center transparent;
+	line-height: 30px;
+	padding: 5px 0 5px 20px;
+	margin-left: 10px;
 }
-*/
+
+.headerContainer .links {
+	font-size: 0.9em;
+}
+
+.headerContainer .links a {
+	margin-left: 10px;
+}
