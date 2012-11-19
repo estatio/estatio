@@ -115,12 +115,11 @@ public class IndexableLeaseTerm extends LeaseTerm {
             term = getLeaseTermsService().newIndexableLeaseTerm(this.getLeaseItem());
         }
         term.setStartDate(startDate);
-        // TODO: use indexation frequency
         term.setBaseIndexStartDate(this.getNextIndexStartDate());
         term.setBaseIndexEndDate(this.getNextIndexEndDate());
-        term.setNextIndexStartDate(this.getNextIndexStartDate().plusYears(1));
-        term.setNextIndexEndDate(this.getNextIndexEndDate().plusYears(1));
-        term.setIndexationApplicationDate(this.getIndexationApplicationDate().plusYears(1));
+        term.setNextIndexStartDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
+        term.setNextIndexEndDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexEndDate()));
+        term.setIndexationApplicationDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getIndexationApplicationDate()));
         term.setValue(value);
         // terminate current term
         this.setEndDate(startDate.minusDays(1));

@@ -109,14 +109,14 @@ public class LeaseItem extends AbstractDomainObject {
     // }}
 
     // {{ InvoicingFrequency (property)
-    private InvoiceFrequency invoicingFrequency;
+    private InvoicingFrequency invoicingFrequency;
 
     @MemberOrder(sequence = "12")
-    public InvoiceFrequency getInvoicingFrequency() {
+    public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
     }
 
-    public void setInvoicingFrequency(final InvoiceFrequency invoicingFrequency) {
+    public void setInvoicingFrequency(final InvoicingFrequency invoicingFrequency) {
         this.invoicingFrequency = invoicingFrequency;
     }
 

@@ -27,6 +27,7 @@ public class LeaseTerm extends AbstractDomainObject {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "1")
+    @Persistent
     public LeaseItem getLeaseItem() {
         return leaseItem;
     }

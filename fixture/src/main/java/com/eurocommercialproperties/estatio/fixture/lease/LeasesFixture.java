@@ -10,7 +10,7 @@ import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.index.Indices;
 import com.eurocommercialproperties.estatio.dom.lease.IndexableLeaseTerm;
 import com.eurocommercialproperties.estatio.dom.lease.IndexationFrequency;
-import com.eurocommercialproperties.estatio.dom.lease.InvoiceFrequency;
+import com.eurocommercialproperties.estatio.dom.lease.InvoicingFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
@@ -60,7 +60,7 @@ public class LeasesFixture extends AbstractFixture {
 
     private LeaseItem createLeaseItem(Lease lease, LeaseItemType leaseItemType) {
         LeaseItem li = leaseItems.newLeaseItem(lease);
-        li.setInvoicingFrequency(InvoiceFrequency.QUARTERLY);
+        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY);
         li.setIndexationFrequency(IndexationFrequency.YEARLY);
         li.setIndex(indices.findByReference("ISTAT-FOI"));
         return li;

@@ -7,36 +7,38 @@ import org.joda.time.LocalDate;
 
 import com.google.ical.compat.jodatime.LocalDateIterator;
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
-import com.google.ical.values.Frequency;
-import com.google.ical.values.RRule;
 
 public class CalenderUtils {
 
     private CalenderUtils() {
     }
 
-    public static Interval currentInterval(LocalDate date, String rrule) throws ParseException {
-        RRule rule = new RRule();
-        rule.setFreq(Frequency.MONTHLY);
-        rule.setInterval(3);
-
-        LocalDate startDate;
-        LocalDate endDate;
+    public static Interval currentInterval(LocalDate date, String rrule) {
+    return currentInterval(date, rrule, new LocalDate(2000, 1, 1));
+    }
+    
+    public static Interval currentInterval(LocalDate date, String rrule, LocalDate startDate){
         LocalDate nextDate;
 
-        
-
-        startDate = new LocalDate(2000, 1, 1);
-        LocalDateIterator iter = LocalDateIteratorFactory.createLocalDateIterator(rrule, startDate, true);
-
-        while (iter.hasNext()) {
-            nextDate = iter.next();
-            if (nextDate.compareTo(date) > 0) {
-                return new Interval(startDate.toInterval().getStartMillis(), nextDate.toInterval().getStartMillis());
+        LocalDateIterator iter;
+        try {
+            iter = LocalDateIteratorFactory.createLocalDateIterator(rrule, startDate, true);
+            while (iter.hasNext()) {
+                nextDate = iter.next();
+                if (nextDate.compareTo(date) > 0) {
+                    return new Interval(startDate.toInterval().getStartMillis(), nextDate.toInterval().getStartMillis());
+                }
+                startDate = nextDate;
             }
-            startDate = nextDate;
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }
 
+    public static LocalDate nextDate(LocalDate date, String rrule){
+        return currentInterval(date, rrule).getEnd().toLocalDate();
+    }
+    
 }

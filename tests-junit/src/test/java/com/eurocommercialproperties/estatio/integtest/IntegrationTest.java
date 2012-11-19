@@ -5,8 +5,10 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
+import junit.framework.Assert;
+
+import org.apache.isis.runtimes.dflt.testsupport.IsisSystemForTest;
+import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -14,8 +16,8 @@ import org.junit.rules.RuleChain;
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
-
-import org.apache.isis.runtimes.dflt.testsupport.IsisSystemForTest;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseTerm;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseTerms;
 
 public class IntegrationTest {
 
@@ -110,5 +112,14 @@ public class IntegrationTest {
         List<Unit> units = property.getUnits();
         assertThat(units.size(), is(40));
     }
+    
+    @Test
+    public void getIndexationFrequencyCannotBeNull() throws Exception {
+        LeaseTerms terms = isft.getService(LeaseTerms.class);
+        List<LeaseTerm> alLeaseTerms = terms.allLeaseTerms();
+        LeaseTerm term = alLeaseTerms.get(0);
+        Assert.assertNotNull(term.getLeaseItem().getIndexationFrequency().nextDate(new LocalDate(2012,1,1)));
+    }
+    
     
 }
