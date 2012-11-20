@@ -112,14 +112,21 @@ public class IntegrationTest {
         List<Unit> units = property.getUnits();
         assertThat(units.size(), is(40));
     }
-    
+
     @Test
     public void getIndexationFrequencyCannotBeNull() throws Exception {
         LeaseTerms terms = isft.getService(LeaseTerms.class);
         List<LeaseTerm> alLeaseTerms = terms.allLeaseTerms();
         LeaseTerm term = alLeaseTerms.get(0);
-        Assert.assertNotNull(term.getLeaseItem().getIndexationFrequency().nextDate(new LocalDate(2012,1,1)));
+        Assert.assertNotNull(term.getLeaseItem().getIndexationFrequency());
     }
     
+    @Test
+    public void nexDateCannotBeNull() throws Exception {
+        LeaseTerms terms = isft.getService(LeaseTerms.class);
+        List<LeaseTerm> alLeaseTerms = terms.allLeaseTerms();
+        LeaseTerm term = alLeaseTerms.get(0);
+        Assert.assertNotNull(term.getLeaseItem().getIndexationFrequency().nextDate(new LocalDate(2012,1,1)));
+    }
     
 }
