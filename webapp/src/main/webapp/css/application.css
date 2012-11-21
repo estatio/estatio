@@ -16,14 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+
+
+/*
 #header {
     height: 48px;
     background-image: url("../images/logo.png");
 	background-repeat: no-repeat;
 }
+*/
 #header h1 {
 	display: none;
 }
+/*
 body {
 	background-color: #00477F;
 }
+*/
