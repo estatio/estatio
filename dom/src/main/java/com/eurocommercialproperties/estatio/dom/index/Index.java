@@ -16,7 +16,7 @@ import org.joda.time.LocalDate;
 
 @PersistenceCapable
 public class Index extends AbstractDomainObject {
-
+    
     // {{ Reference (property)
     private String reference;
 

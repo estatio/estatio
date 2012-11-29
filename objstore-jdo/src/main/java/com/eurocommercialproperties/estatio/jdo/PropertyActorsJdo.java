@@ -1,38 +1,40 @@
 package com.eurocommercialproperties.estatio.jdo;
 
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.asset.Property;
+import com.eurocommercialproperties.estatio.dom.asset.PropertyActor;
+import com.eurocommercialproperties.estatio.dom.asset.PropertyActorType;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyActors;
+import com.eurocommercialproperties.estatio.dom.party.Party;
+
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.query.QueryDefault;
 
 public class PropertyActorsJdo extends PropertyActors {
 
-//    // {{ findPropertyActor
-//    public PropertyActor findPropertyActor(
-//            final Property property, 
-//            final Party party, 
-//            final PropertyActorType type, 
-//            final @Named("Start Date") LocalDate startDate, 
-//            final @Named("End Date") LocalDate endDate) {
-////        return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
-////            @Override
-////            public boolean accept(final PropertyActor propertyActor) {
-////                return propertyActor.getProperty().equals(property) & 
-////                        propertyActor.getParty().equals(party) 
-////                        //TODO handle optional condition fields as they can contain null
-////                        // propertyActor.getStartDate().equals(startDate) & propertyActor.getEndDate().equals(endDate)
-////                        ;
-////            }
-////        });
-//        
-//        return firstMatch(queryForFindByReference(reference))
-//    }
-//    // }}
-//
-//    
-//    
-//    private static QueryDefault<PropertyActor> queryForFindByReference(String reference) {
-//        return new QueryDefault<PropertyActor>(PropertyActor.class, "propact_find", "property", matches(reference));
-//    }
-//    private static String matches(final String reference) {
-//        return ".*" + reference.toUpperCase() + ".*";
-//    }
+    // {{ findPropertyActor
+    @Override
+    public PropertyActor findPropertyActor(
+            final Property property, 
+            final Party party, 
+            final PropertyActorType type, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        // TODO: need to also search by dates
+        return firstMatch(queryForFindByPropertyParty(property, party, type));
+    }
+
+    // }}
+
+    // {{ findPropertyActor
+    @Override
+    public PropertyActor findPropertyActor(final Property property, final Party party, final PropertyActorType type) {
+        return firstMatch(queryForFindByPropertyParty(property, party, type));
+    }
+    
+    private static QueryDefault<PropertyActor> queryForFindByPropertyParty(Property property, Party party, PropertyActorType type) {
+        return new QueryDefault<PropertyActor>(PropertyActor.class, "properyActor_findByPropertyParty", "property", property, "party", party, "type", type);
+    }
 
 }

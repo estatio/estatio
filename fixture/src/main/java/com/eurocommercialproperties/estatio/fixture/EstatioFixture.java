@@ -30,6 +30,7 @@ public class EstatioFixture extends AbstractFixture {
         
         for (AbstractFixture fixture : fixtures) {
             fixture.install();
+            getContainer().flush();
         }
         
     }

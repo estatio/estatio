@@ -32,7 +32,10 @@ public class StringUtils {
         return Joiner.on("_").join(Iterables.transform(Splitter.on(" ").split(string), UPPER_CASE));
     }
 
-	
+    public static String wildcardToRegex(String pattern)
+    {
+        return pattern.replace("*", ".*").replace("?", ".");
+    }    
 
     private static String capitalize(final String str) {
         if (str == null || str.length() == 0) {

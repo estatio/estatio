@@ -11,6 +11,13 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Party;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -23,12 +30,6 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
-import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
-import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @PersistenceCapable
 @Auditable
@@ -243,6 +244,16 @@ public class Property extends AbstractDomainObject {
     public void addCommunicationChannel(CommunicationChannel communicationChannel) {
         communicationChannels.add(communicationChannel);
     }
+    
+    @Hidden
+    public CommunicationChannel getCommunicationChannel(CommunicationChannelType type){
+        for (CommunicationChannel c : communicationChannels){
+            if (c.getType().equals(type)){
+                return c;
+            }
+        }
+        return null;
+    }
 
     // }}
 
@@ -300,9 +311,5 @@ public class Property extends AbstractDomainObject {
     }
 
     // }}
-
-    public List<Unit> listUnits() {
-        return getUnits();
-    }
 
 }

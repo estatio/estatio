@@ -6,7 +6,13 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.asset.Unit;
+import com.eurocommercialproperties.estatio.dom.party.Party;
+
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -14,10 +20,6 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.asset.Unit;
-import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @PersistenceCapable
 @Auditable
@@ -180,10 +182,6 @@ public class Lease extends AbstractDomainObject {
         this.units = units;
     }
 
-    // }}
-
-    // }}
-
     public void addToUnits(final LeaseUnit leaseUnit) {
         // check for no-op
         if (leaseUnit == null || getUnits().contains(leaseUnit)) {
@@ -221,6 +219,8 @@ public class Lease extends AbstractDomainObject {
         units.add(leaseUnit);
         return leaseUnit;
     }
+    
+    // }}
 
     // {{ Items (Collection)
     private Set<LeaseItem> items = new LinkedHashSet<LeaseItem>();
@@ -265,7 +265,7 @@ public class Lease extends AbstractDomainObject {
 
     // }}
 
-    // {{ addUnit (action)
+    // {{ addItem (action)
     @MemberOrder(sequence = "1")
     public LeaseItem addItem() {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this);
@@ -274,9 +274,22 @@ public class Lease extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ findItem (hidden)
+    @Hidden
+    public LeaseItem findItem(LeaseItemType type, LocalDate startDate) {
+        // TODO: better/faster filter options?
+        for (LeaseItem item : items) {
+            if (item.getType().equals(type) && item.getStartDate().equals(startDate)) {
+                return item;
+            }
+        }
+        return null;
+    }
+    
+    // }}
 
-    // {{ injected: LeaseItems
-
+    // {{ injected services
     private LeaseItems leaseItems;
 
     public void setLeaseItems(final LeaseItems leaseItems) {
@@ -284,20 +297,13 @@ public class Lease extends AbstractDomainObject {
 
     }
 
-    // }}
-
-    // {{ injected: LeaseUnits
-
     private LeaseUnits leaseUnits;
 
     public void setLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
 
     }
-
-    // }}
-
-    // {{ injected: LeaseActors
+    
     private LeaseActors leaseActors;
 
     public void setLeaseActors(final LeaseActors leaseActors) {

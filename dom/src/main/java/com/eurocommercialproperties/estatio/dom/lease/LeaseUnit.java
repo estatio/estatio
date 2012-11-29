@@ -16,8 +16,6 @@ import com.eurocommercialproperties.estatio.dom.asset.Unit;
 @Auditable
 public class LeaseUnit extends AbstractDomainObject {
 
-    // TODO: LeaseUnit is an ugly name. Some applications use the word Demise.
-    // Occupating/Occupation mayby?
     // {{ Lease (property)
     private Lease lease;
 
@@ -80,5 +78,79 @@ public class LeaseUnit extends AbstractDomainObject {
         this.endDate = endDate;
     }
     // }}
+    
+    // {{ TenancyStartDate (property)
+    private LocalDate tenancyStartDate;
+
+    @Optional
+    @MemberOrder(sequence = "4")
+    public LocalDate getTenancyStartDate() {
+        return tenancyStartDate;
+    }
+
+    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
+        this.tenancyStartDate = tenancyStartDate;
+    }
+    // }}
+    
+    // {{ TenancyEndDate (property)
+    private LocalDate tenancyEndDate;
+
+    @Optional
+    @MemberOrder(sequence = "5")
+    public LocalDate getTenancyEndDate() {
+        return tenancyEndDate;
+    }
+
+    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
+        this.tenancyEndDate = tenancyEndDate;
+    }
+    // }}
+
+    // {{ Brand (property)
+    private String brand;
+
+    @Optional
+    @MemberOrder(sequence = "6")
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(final String brand) {
+        this.brand = brand;
+    }
+    // }}
+    
+    // {{ Sector (property)
+    private String sector;
+
+    @Optional
+    @MemberOrder(sequence = "7")
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(final String sector) {
+        this.sector = sector;
+    }
+    // }}
+
+    // {{ Activity (property)
+    private String activity;
+
+    @Optional
+    @MemberOrder(sequence = "8")
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(final String activity) {
+        this.activity = activity;
+    }
+    // }}
+    
+    
+    
+    
 
 }

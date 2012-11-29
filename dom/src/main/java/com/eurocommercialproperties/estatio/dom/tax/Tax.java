@@ -98,10 +98,8 @@ public class Tax extends AbstractDomainObject {
     }
 
     // }}
-    
-   
-    
 
+    // {{ getPercentageForDate
     public BigDecimal getPercentageForDate(LocalDate date) {
 
         TaxRate rate = taxRepo.findTaxRateForDate(this, date);
@@ -110,6 +108,8 @@ public class Tax extends AbstractDomainObject {
         }
         return rate.getPercentage();
     }
+    
+    // {{
 
     // {{ Taxes (injected)
     private Taxes taxRepo;

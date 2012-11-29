@@ -43,8 +43,7 @@ public class Leases extends AbstractFactoryAndRepository {
     // {{ findByReference
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public Lease findByReference(
-            final @Named("Reference") String reference) {
+    public Lease findByReference(final @Named("Reference") String reference) {
         return firstMatch(Lease.class, new Filter<Lease>() {
             @Override
             public boolean accept(final Lease lease) {
@@ -61,8 +60,6 @@ public class Leases extends AbstractFactoryAndRepository {
             final @Named("Until") LocalDate until) {
 
         // TODO Auto-generated method stub
-        
-        
     }
     // }}
 

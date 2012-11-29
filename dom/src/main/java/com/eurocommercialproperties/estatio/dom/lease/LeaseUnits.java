@@ -2,14 +2,18 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.asset.Unit;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-
-import com.eurocommercialproperties.estatio.dom.asset.Unit;
+import org.apache.isis.applib.filter.Filter;
 
 @Named("LeaseUnits")
 public class LeaseUnits extends AbstractFactoryAndRepository {
@@ -17,17 +21,17 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
     // {{ Id, iconName
     @Override
     public String getId() {
-        return "leases";
+        return "leasesUnit";
     }
 
     public String iconName() {
-        return "Lease";
+        return "LeaseUnit";
     }
     // }}
 
     // {{ newLeaseUnit
     //@Hidden
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public LeaseUnit newLeaseUnit(@Named("Lease") Lease lease, @Named("Unit") Unit unit) {
         LeaseUnit lu = newTransientInstance(LeaseUnit.class);
@@ -39,6 +43,22 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
     }
     // }}
 
+    // {{ find
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    @Hidden
+    public LeaseUnit find(final Lease lease, final Unit unit, LocalDate startDate) {
+        return firstMatch(LeaseUnit.class, new Filter<LeaseUnit>() {
+            @Override
+            public boolean accept(final LeaseUnit leaseUnit) {
+                return leaseUnit.getLease().equals(lease) &&  leaseUnit.getUnit().equals(unit);
+            }
+        });
+    }
+    
+    // }}
+    
+    
     // {{ allLeaseUnits
     @Prototype
     @ActionSemantics(Of.SAFE)

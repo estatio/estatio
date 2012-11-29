@@ -2,16 +2,15 @@ package com.eurocommercialproperties.estatio.jdo;
 
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
+import com.eurocommercialproperties.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.query.QueryDefault;
 
 //@javax.jdo.annotations.Query(
@@ -36,10 +35,8 @@ public class PropertiesJdo extends Properties {
     }
     
     private static QueryDefault<Property> queryForFindByReference(String reference) {
-        return new QueryDefault<Property>(Property.class, "properties_findByReference", "r", matches(reference));
-    }
-    private static String matches(final String reference) {
-        return ".*" + reference.toUpperCase() + ".*";
+        final String regex = StringUtils.wildcardToRegex(reference);
+        return new QueryDefault<Property>(Property.class, "properties_findByReference", "r", regex);
     }
 
     // }}

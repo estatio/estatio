@@ -22,15 +22,19 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), parties.findOrganisationByReference("HELLOWORLD"));
+        Party owner1 = parties.findPartyByReference("HELLOWORLD");
+        Party owner2 = parties.findPartyByReference("ACME");
+        
+        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1);
         State state = states.findByReference("GB-OXF");
         Country country = countries.findByReference("GBR");
+        
         prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newPostalAddress("1 Market Street", null, "OX1 3HL", "Oxford", state, country));
         prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newPhoneNumber("+44 123 456789"));
         prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newFaxNumber("+44 987 654321"));
         prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newEmailAddress("info@oxford.example.com"));
 
-        Property prop2 = createPropertyAndUnits("KAL", "Winkelcentrum Kalvertoren", PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), parties.findOrganisationByReference("ACME"));
+        Property prop2 = createPropertyAndUnits("KAL", "Winkelcentrum Kalvertoren", PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), owner2);
         Country c2 = countries.findByReference("NLD");
         State s2 = states.findByReference("NL-NH");
         

@@ -14,6 +14,7 @@ import org.apache.isis.applib.filter.Filter;
 import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.party.Party;
+import com.google.common.base.Objects;
 
 @Hidden
 @Named("Property Actors")
@@ -34,12 +35,7 @@ public class PropertyActors extends AbstractFactoryAndRepository {
     // {{ NewProperty
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public PropertyActor newPropertyActor(
-            final Property property, 
-            final Party party, 
-            final PropertyActorType type, 
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate) {
+    public PropertyActor newPropertyActor(final Property property, final Party party, final PropertyActorType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         final PropertyActor propertyActor = newTransientInstance(PropertyActor.class);
         propertyActor.setParty(party);
         propertyActor.setProperty(property);
@@ -49,36 +45,46 @@ public class PropertyActors extends AbstractFactoryAndRepository {
         persist(propertyActor);
         return propertyActor;
     }
+
     // }}
 
     // {{ findPropertyActor
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public PropertyActor findPropertyActor(
-            final Property property, 
-            final Party party, 
-            final PropertyActorType type, 
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate) {
+    public PropertyActor findPropertyActor(final Property property, final Party party, final PropertyActorType type) {
         return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
             @Override
             public boolean accept(final PropertyActor propertyActor) {
-                return propertyActor.getProperty().equals(property) & propertyActor.getParty().equals(party) 
-                        //TODO handle optional condition fields as they can contain null
-                        // propertyActor.getStartDate().equals(startDate) & propertyActor.getEndDate().equals(endDate)
-                        ;
+                return Objects.equal(propertyActor.getProperty(), property) && Objects.equal(propertyActor.getParty(), party);
             }
         });
     }
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
+    public PropertyActor findPropertyActor(final Property property, final Party party, final PropertyActorType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
+        return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
+            @Override
+            public boolean accept(final PropertyActor propertyActor) {
+                return propertyActor.getProperty().equals(property) && propertyActor.getParty().equals(party)
+                // TODO handle optional condition fields as they can contain
+                // null
+                // propertyActor.getStartDate().equals(startDate) &
+                // propertyActor.getEndDate().equals(endDate)
+                ;
+            }
+        });
+    }
+
     // }}
 
     // {{ allPropertyActors
     @Prototype
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "4")
     public List<PropertyActor> allPropertyActors() {
         return allInstances(PropertyActor.class);
     }
     // }}
-
 
 }

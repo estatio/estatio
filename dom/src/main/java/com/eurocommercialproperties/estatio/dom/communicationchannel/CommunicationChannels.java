@@ -8,7 +8,6 @@ import com.eurocommercialproperties.estatio.dom.geography.State;
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Exploration;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
@@ -86,7 +85,6 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
         return fn;
     }
     // }}
-    
 
     // {{ AllCommunicationChannel
     @Prototype

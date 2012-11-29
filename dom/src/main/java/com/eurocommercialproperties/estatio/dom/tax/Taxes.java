@@ -1,11 +1,15 @@
 package com.eurocommercialproperties.estatio.dom.tax;
 
 import java.math.BigDecimal;
+import java.security.acl.NotOwnerException;
 import java.util.List;
 
 import org.joda.time.LocalDate;
 
+import com.eurocommercialproperties.estatio.dom.utils.StringUtils;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -37,6 +41,18 @@ public class Taxes extends AbstractFactoryAndRepository {
         return tax;
     }
     // }}
+    
+    @MemberOrder(sequence = "3")
+    public Tax findTaxByReference(final String reference) {
+        final String regex = StringUtils.wildcardToRegex(reference);
+        return firstMatch(Tax.class, new Filter<Tax>() {
+            @Override
+            public boolean accept(
+                final Tax tax) {
+                return (tax.getReference().matches(regex));
+            }
+        });
+    }
     
     // {{ findTaxRateForDate
     @MemberOrder(sequence = "4")
@@ -73,10 +89,5 @@ public class Taxes extends AbstractFactoryAndRepository {
         return allInstances(TaxRate.class);
     }
     // }}
-    
-    // {{ findCurrentTaxRate
-    
-    
-    //{{
-    
+        
 }

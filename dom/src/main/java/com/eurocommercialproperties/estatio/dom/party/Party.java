@@ -21,7 +21,7 @@ public abstract class Party extends AbstractDomainObject {
 
     // {{ Reference (attribute)
     private String reference;
-    
+        
     @Disabled
     @MemberOrder(sequence = "1")
     public String getReference() {

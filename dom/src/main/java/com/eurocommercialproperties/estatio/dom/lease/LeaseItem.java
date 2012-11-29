@@ -9,6 +9,7 @@ import javax.jdo.annotations.Persistent;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -76,6 +77,38 @@ public class LeaseItem extends AbstractDomainObject {
 
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    // }}
+    
+    // {{ TenancyStartDate (property)
+    private LocalDate tenancyStartDate;
+
+    @Persistent
+    @Optional
+    @MemberOrder(sequence = "5")
+    public LocalDate getTenancyStartDate() {
+        return tenancyStartDate;
+    }
+
+    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
+        this.tenancyStartDate = tenancyStartDate;
+    }
+
+    // }}
+
+    // {{ TenancyEndDate (property)
+    private LocalDate tenancyEndDate;
+
+    @Persistent
+    @Optional
+    @MemberOrder(sequence = "6")
+    public LocalDate getTenancyEndDate() {
+        return tenancyEndDate;
+    }
+
+    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
+        this.tenancyEndDate = tenancyEndDate;
     }
 
     // }}

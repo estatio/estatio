@@ -66,7 +66,6 @@ public class Properties extends AbstractFactoryAndRepository {
             final String reference) {
         throw new NotImplementedException();
     }
-    
 
     // }}
 
