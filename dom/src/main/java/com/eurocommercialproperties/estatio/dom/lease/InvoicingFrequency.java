@@ -5,7 +5,8 @@ public enum InvoicingFrequency {
     WEEKLY("Weekly","RRULE:FREQ=WEEKLY;INTERVAL=1"),
     MONTHLY("Weekly","RRULE:FREQ=MONTHLY;INTERVAL=1"), 
     QUARTERLY("Weekly","RRULE:FREQ=QUARTERLY;INTERVAL=3"), 
-    YEARLY("Weekly","RRULE:FREQ=YEARLY;INTERVAL=1");
+    SEMI_YEARLY("Semi-yearly","RRULE:FREQ=MONTHLY;INTERVAL=6"),
+    YEARLY("Yearly","RRULE:FREQ=YEARLY;INTERVAL=1");
     
     private String title;
     

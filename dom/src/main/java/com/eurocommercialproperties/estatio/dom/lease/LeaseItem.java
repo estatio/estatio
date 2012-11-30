@@ -6,6 +6,11 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.invoice.Charge;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -14,9 +19,6 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.index.Index;
 
 @PersistenceCapable
 public class LeaseItem extends AbstractDomainObject {
@@ -33,7 +35,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setLease(final Lease lease) {
         this.lease = lease;
     }
-
     // }}
 
     // {{ LeaseItemType (property)
@@ -48,7 +49,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setType(final LeaseItemType type) {
         this.type = type;
     }
-
     // }}
 
     // {{ StartDate (property)
@@ -63,7 +63,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-
     // }}
 
     // {{ EndDate (property)
@@ -78,7 +77,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-
     // }}
     
     // {{ TenancyStartDate (property)
@@ -94,7 +92,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setTenancyStartDate(final LocalDate tenancyStartDate) {
         this.tenancyStartDate = tenancyStartDate;
     }
-
     // }}
 
     // {{ TenancyEndDate (property)
@@ -110,7 +107,19 @@ public class LeaseItem extends AbstractDomainObject {
     public void setTenancyEndDate(final LocalDate tenancyEndDate) {
         this.tenancyEndDate = tenancyEndDate;
     }
+    // }}
+    
+    // {{ NextDueDate (property)
+    private LocalDate nextDueDate;
 
+    @MemberOrder(sequence = "7")
+    public LocalDate getNextDueDate() {
+        return nextDueDate;
+    }
+
+    public void setNextDueDate(final LocalDate nextDueDate) {
+        this.nextDueDate = nextDueDate;
+    }
     // }}
 
     // {{ Index (property)
@@ -124,7 +133,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setIndex(final Index index) {
         this.index = index;
     }
-
     // }}
 
     // {{ IndexationFrequency (property)
@@ -138,7 +146,6 @@ public class LeaseItem extends AbstractDomainObject {
     public void setIndexationFrequency(final IndexationFrequency indexationFrequency) {
         this.indexationFrequency = indexationFrequency;
     }
-
     // }}
 
     // {{ InvoicingFrequency (property)
@@ -152,8 +159,36 @@ public class LeaseItem extends AbstractDomainObject {
     public void setInvoicingFrequency(final InvoicingFrequency invoicingFrequency) {
         this.invoicingFrequency = invoicingFrequency;
     }
-
     // }}
+    
+    // {{ PayymentMethod (property)
+    private PaymentMethodType paymentMethod;
+
+    @MemberOrder(sequence = "13")
+    public PaymentMethodType getPayymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(final PaymentMethodType paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+    // }}
+    
+    // {{ Charge (property)
+    private Charge charge;
+
+    @MemberOrder(sequence = "1")
+    public Charge getCharge() {
+        return charge;
+    }
+
+    public void setCharge(final Charge charge) {
+        this.charge = charge;
+    }
+    // }}
+
+
+    
 
     // {{ Terms (Collection)
     private Set<LeaseTerm> terms = new LinkedHashSet<LeaseTerm>();

@@ -6,7 +6,7 @@ import com.eurocommercialproperties.estatio.dom.utils.CalenderUtils;
 
 public enum IndexationFrequency {
 
-    YEARLY("Weekly", "RRULE:FREQ=YEARLY;INTERVAL=1");
+    YEARLY("Yearly", "RRULE:FREQ=YEARLY;INTERVAL=1");
 
     private String title;
 

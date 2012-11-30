@@ -161,11 +161,14 @@ public class Lease extends AbstractDomainObject {
     // {{ addActor (action)
     @MemberOrder(sequence = "1")
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        LeaseActor leaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
-        actors.add(leaseActor);
+        LeaseActor leaseActor =  findActor(party, type, startDate);
+        if (leaseActor == null) {
+            leaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
+            actors.add(leaseActor);
+        }
+        leaseActor.setEndDate(endDate);
         return leaseActor;
     }
-
     // }}
 
     // {{ Units (Collection)
@@ -275,6 +278,18 @@ public class Lease extends AbstractDomainObject {
 
     // }}
     
+    // {{ findActor (hidden)
+    @Hidden
+    public LeaseActor findActor(Party party, LeaseActorType type, LocalDate startDate) {
+        // TODO: better/faster filter options?
+        for (LeaseActor actor : actors) {
+            if (actor.getParty().equals(party) && actor.getType().equals(type) && actor.getStartDate().equals(startDate)) {
+                return actor;
+            }
+        }
+        return null;
+    }
+
     // {{ findItem (hidden)
     @Hidden
     public LeaseItem findItem(LeaseItemType type, LocalDate startDate) {

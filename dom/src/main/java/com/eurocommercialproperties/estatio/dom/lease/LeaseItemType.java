@@ -3,7 +3,10 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 public enum LeaseItemType {
 
-    RENT("Rent", IndexableLeaseTerm.class), DISCOUNT("Discount", LeaseTerm.class), SERVICE_CHARGE("Service Charge", LeaseTerm.class), OTHER("Other", LeaseTerm.class);
+    RENT("Rent", IndexableLeaseTerm.class), 
+    DISCOUNT("Discount", LeaseTerm.class), 
+    SERVICE_CHARGE("Service Charge", LeaseTerm.class), 
+    OTHER("Other", LeaseTerm.class);
 
     private final String title;
     private final Class<?> clss;
