@@ -28,9 +28,8 @@ public class Tax extends AbstractDomainObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
-
     // }}
-
+    
     // {{ Name (property)
     private String name;
 
@@ -42,7 +41,6 @@ public class Tax extends AbstractDomainObject {
     public void setName(final String name) {
         this.name = name;
     }
-
     // }}
 
     // {{ Rates (Collection)

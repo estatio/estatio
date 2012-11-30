@@ -22,7 +22,6 @@ public class Country extends AbstractDomainObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
-
     // }}
 
     // {{ Name (attribute, title)
@@ -37,7 +36,6 @@ public class Country extends AbstractDomainObject {
     public void setName(final String name) {
         this.name = name;
     }
-
     // }}
 
     // {{ Alpha2Code (property)

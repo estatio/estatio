@@ -239,11 +239,6 @@ public class Property extends AbstractDomainObject {
         communicationChannels.add(communicationChannel);
         return communicationChannel;
     }
-
-    @Hidden
-    public void addCommunicationChannel(CommunicationChannel communicationChannel) {
-        communicationChannels.add(communicationChannel);
-    }
     
     @Hidden
     public CommunicationChannel getCommunicationChannel(CommunicationChannelType type){

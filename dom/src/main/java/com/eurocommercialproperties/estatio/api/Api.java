@@ -35,6 +35,7 @@ import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
+import com.eurocommercialproperties.estatio.dom.lease.InvoicingFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
@@ -43,6 +44,7 @@ import com.eurocommercialproperties.estatio.dom.lease.LeaseItems;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseUnit;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseUnits;
 import com.eurocommercialproperties.estatio.dom.lease.Leases;
+import com.eurocommercialproperties.estatio.dom.lease.PaymentMethodType;
 import com.eurocommercialproperties.estatio.dom.party.Organisation;
 import com.eurocommercialproperties.estatio.dom.party.Parties;
 import com.eurocommercialproperties.estatio.dom.party.Party;
@@ -172,7 +174,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         // TODO: Find if communication channel exists
         CommunicationChannel comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
-        property.addCommunicationChannel(comm);
+        property.getCommunicationChannels().add(comm);
 
     }
 
@@ -333,23 +335,21 @@ public class Api extends AbstractFactoryAndRepository {
         leaseUnit.setBrand(brand);
         leaseUnit.setSector(sector);
         leaseUnit.setActivity(activity);
-        
-       
-        
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseItem(@Named("leaseReference") String leaseReference, 
+    public void putLeaseItem(@Named("leaseReference") String leaseReference,
+                             @Named("tenantReference") String tenantReference,
                              @Named("unitReference") @Optional String unitReference,
-                             @Named("type") String name, 
                              @Named("type") @Optional String type, 
                              @Named("startDate") @Optional LocalDate startDate, 
                              @Named("endDate") @Optional LocalDate endDate,
                              @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate, 
                              @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate,
-                             @Named("brand") @Optional String brand,
-                             @Named("sector") @Optional String sector,
-                             @Named("activity") @Optional String activity) {
+                             @Named("chargeReference") @Optional String chargeReference,
+                             @Named("nextDueDate") @Optional LocalDate nextDueDate,
+                             @Named("invoicingFrequency") @Optional String invoicingFrequency,
+                             @Named("paymentMethod") @Optional String paymentMethod){
         Lease lease = leases.findByReference(leaseReference);
         if (lease == null) {
              throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
@@ -366,14 +366,13 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             item = lease.addItem();
         }
-        if (name != null) {
-            lease.setName(name);
-        }
         item.setStartDate(startDate);
         item.setEndDate(endDate);
         item.setTenancyStartDate(tenancyStartDate);
         item.setTenancyEndDate(tenancyEndDate);
         item.setType(itemType);
+        item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
+        item.setPaymentMethod(PaymentMethodType.valueOf(paymentMethod));
     }
 
     private Countries countries;

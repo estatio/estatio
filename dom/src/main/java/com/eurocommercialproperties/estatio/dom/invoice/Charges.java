@@ -19,9 +19,12 @@ public class Charges extends AbstractFactoryAndRepository {
     // {{ newCharge
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Charge newCharge() {
-        Charge charge = newTransientInstance(Charge.class);
-        persist(charge);
+    public Charge newCharge(String reference) {
+        Charge charge = findChargeByReference(reference);
+        if (charge == null) {
+            charge = newTransientInstance(Charge.class);
+            persist(charge);
+        }
         return charge;
     }
     // }}

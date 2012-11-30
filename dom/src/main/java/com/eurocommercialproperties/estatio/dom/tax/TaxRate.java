@@ -28,7 +28,6 @@ public class TaxRate extends AbstractDomainObject {
     public void setTax(final Tax tax) {
         this.tax = tax;
     }
-
     // }}
 
     // {{ StartDate (property)
@@ -43,7 +42,6 @@ public class TaxRate extends AbstractDomainObject {
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-
     // }}
 
     // {{ EndDate (property)
@@ -59,7 +57,6 @@ public class TaxRate extends AbstractDomainObject {
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-
     // {{ Percentage (property)
     private BigDecimal percentage;
 

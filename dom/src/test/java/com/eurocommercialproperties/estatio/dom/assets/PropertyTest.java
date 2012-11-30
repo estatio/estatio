@@ -30,7 +30,7 @@ public class PropertyTest {
         PostalAddress a = new PostalAddress();
         a.setType(CommunicationChannelType.POSTAL_ADDRESS);
         a.setCity("Amsterdam");
-        p.addCommunicationChannel(a);
+        p.getCommunicationChannels().add(a);
     }
 
     @Test
@@ -38,5 +38,6 @@ public class PropertyTest {
         PostalAddress a2 = (PostalAddress) p.getCommunicationChannel(CommunicationChannelType.POSTAL_ADDRESS);  
         Assert.assertTrue("Amsterdam", a2.getCity().equals("Amsterdam"));
     }
+    
 
 }
