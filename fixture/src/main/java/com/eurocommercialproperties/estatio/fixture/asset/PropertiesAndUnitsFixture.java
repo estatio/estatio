@@ -29,19 +29,19 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         State state = states.findByReference("GB-OXF");
         Country country = countries.findByReference("GBR");
         
-        prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newPostalAddress("1 Market Street", null, "OX1 3HL", "Oxford", state, country));
-        prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newPhoneNumber("+44 123 456789"));
-        prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newFaxNumber("+44 987 654321"));
-        prop1.addCommunicationChannel((CommunicationChannel) communicationChannels.newEmailAddress("info@oxford.example.com"));
+        prop1.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newPostalAddress("1 Market Street", null, "OX1 3HL", "Oxford", state, country));
+        prop1.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newPhoneNumber("+44 123 456789"));
+        prop1.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newFaxNumber("+44 987 654321"));
+        prop1.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newEmailAddress("info@oxford.example.com"));
 
         Property prop2 = createPropertyAndUnits("KAL", "Winkelcentrum Kalvertoren", PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), owner2);
         Country c2 = countries.findByReference("NLD");
         State s2 = states.findByReference("NL-NH");
         
-        prop2.addCommunicationChannel((CommunicationChannel) communicationChannels.newPostalAddress("Kalverstraat 12", null, "1017 AA", "Amsterdam", s2, c2));
-        prop2.addCommunicationChannel((CommunicationChannel) communicationChannels.newPhoneNumber("+31 123 456789"));
-        prop2.addCommunicationChannel((CommunicationChannel) communicationChannels.newFaxNumber("+31 987 654321"));
-        prop2.addCommunicationChannel((CommunicationChannel) communicationChannels.newEmailAddress("info@kalvertoren.example.com"));
+        prop2.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newPostalAddress("Kalverstraat 12", null, "1017 AA", "Amsterdam", s2, c2));
+        prop2.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newPhoneNumber("+31 123 456789"));
+        prop2.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newFaxNumber("+31 987 654321"));
+        prop2.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newEmailAddress("info@kalvertoren.example.com"));
     }
 
     private Property createPropertyAndUnits(final String reference, String name, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner) {

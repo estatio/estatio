@@ -8,10 +8,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
 
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
@@ -21,11 +20,16 @@ import com.eurocommercialproperties.estatio.dom.asset.PropertyActors;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
+import com.eurocommercialproperties.estatio.dom.invoice.Charge;
+import com.eurocommercialproperties.estatio.dom.invoice.Charges;
+import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerm;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerms;
 import com.eurocommercialproperties.estatio.dom.lease.Leases;
 import com.eurocommercialproperties.estatio.dom.party.Parties;
 import com.eurocommercialproperties.estatio.dom.party.Party;
+import com.eurocommercialproperties.estatio.fixture.EstatioFixture;
+import com.eurocommercialproperties.estatio.jdo.ChargesJdo;
 import com.eurocommercialproperties.estatio.jdo.PartiesJdo;
 import com.eurocommercialproperties.estatio.jdo.PropertiesJdo;
 import com.eurocommercialproperties.estatio.jdo.PropertyActorsJdo;
@@ -34,47 +38,36 @@ import org.apache.isis.runtimes.dflt.testsupport.IsisSystemForTest;
 
 public class IntegrationTest {
 
-//    static {
-//        PropertyConfigurator.configure("C:\\dev\\estatio\\app\\tests-junit\\logging.properties");
-//    }
-    
-    public TestTimer outer = new TestTimer("outer");
+    private static IsisSystemForTest isft;
 
-    public IsisSystemForTest isft = buildSystemOncePerTestClass();
-
-    public TestTimer inner = new TestTimer("inner");
-
-    private static IsisSystemForTest system;
-    private static IsisSystemForTest buildSystemOncePerTestClass() {
-        if(system == null) {
-            system = EstatioIntegTestBuilder.builder().build();
-        }
-        return system;
+    @BeforeClass
+    public static void setupSystem() throws Exception {
+        isft = EstatioIntegTestBuilder.builderWith(new EstatioFixture()).build().setUpSystem();
     }
-
-    @Rule
-    public RuleChain chain = RuleChain.outerRule(outer).around(isft).around(inner);
+    
+    @AfterClass
+    public static void tearDownSystem() throws Exception {
+        isft.tearDownSystem();
+    }
     
     @Test
     public void countryIsNL() throws Exception {
         Countries c = isft.getService(Countries.class);
         Assert.assertEquals("NLD", c.findByReference("NLD").getReference());
     }
-    
+
     @Test
     public void numberOfPropertiesIs2() throws Exception {
         Properties properties = isft.getService(Properties.class);
         assertThat(properties.allProperties().size(), is(2));
     }
     
-//    @Test
-//    public void propertyActorCannotBeNull() throws Exception {
-//        Properties properties = isft.getService(Properties.class);
-//        Parties parties = isft.getService(Parties.class);
-//        PropertyActors pa = isft.getService(PropertyActors.class);
-//        Assert.assertNotNull(pa.findPropertyActor(properties.findPropertyByReference("OXF"), parties.findPartyByReference("HELLOWORLD"), PropertyActorType.PROPERTY_OWNER));
-//    }
-
+    public void numberOfLeaseActorsIs2() throws Exception {
+        Leases leases = isft.getService(Leases.class);
+        Lease lease = leases.findByReference("OXF-HELLOWORLD-001"); 
+        assertThat(lease.getActors().size(), is(2));
+    }
+    
     @Test
     public void numberOfUnitsIs25() throws Exception {
         Properties properties = isft.getService(Properties.class);
@@ -83,6 +76,7 @@ public class IntegrationTest {
         List<Unit> units = property.getUnits();
         assertThat(units.size(), is(25));
     }
+
 
     @Test
     public void indexationFrequencyCannotBeNull() throws Exception {
@@ -106,6 +100,20 @@ public class IntegrationTest {
         Assert.assertNotNull(properties.findPropertyByReference("OXF"));
     }
 
+    @Test
+    public void numberOfChargesIsOne() throws Exception {
+        Charges charges = isft.getService(ChargesJdo.class);
+        assertThat(charges.allCharges().get(0).getReference(), is("RENT"));
+        assertThat(charges.allCharges().size(), is(1));
+    }
+    
+    @Test
+    public void chargeCanBeFound() throws Exception {
+        Charges charges = isft.getService(ChargesJdo.class);
+        Charge charge = charges.findChargeByReference("RENT");
+        Assert.assertEquals(charge.getReference(), "RENT");
+    }
+    
     @Test
     public void partyCanBeFound() throws Exception {
         Parties parties = isft.getService(PartiesJdo.class);

@@ -35,6 +35,8 @@ import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
+import com.eurocommercialproperties.estatio.dom.invoice.Charge;
+import com.eurocommercialproperties.estatio.dom.invoice.Charges;
 import com.eurocommercialproperties.estatio.dom.lease.InvoicingFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
@@ -85,6 +87,21 @@ public class Api extends AbstractFactoryAndRepository {
         }
         country.setName(name);
         country.setAlpha2Code(alpha2Code);
+    }
+    
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putCharge(@Named("code") String code, 
+                          @Named("reference") String reference,
+                          @Named("description") String description,
+                          @Named("taxReference") String taxReference) {
+        Tax tax = taxes.findTaxByReference(taxReference);
+        Charge charge = charges.findChargeByReference(reference);
+        if (charge == null) {
+            charge = charges.newCharge(reference);
+        }
+        charge.setDescription(description);
+        charge.setCode(code);
+        charge.setTax(tax);
     }
     
     @ActionSemantics(Of.IDEMPOTENT)
@@ -439,6 +456,13 @@ public class Api extends AbstractFactoryAndRepository {
     
     public void setTaxesRepsitory(final Taxes taxes){
         this.taxes = taxes;
+    }
+    
+    private Charges charges;
+    
+    
+    public void setChargesRepo(final Charges charges){
+        this.charges = charges;
     }
 
 }

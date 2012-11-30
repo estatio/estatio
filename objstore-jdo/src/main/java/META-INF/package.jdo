@@ -65,13 +65,20 @@
             ]]></query>
         </class>
     </package>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <package name="com.eurocommercialproperties.estatio.dom.invoice">
+        <class name="Charge">
+            <query name="charge_findChargeByReference" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM com.eurocommercialproperties.estatio.dom.invoice.Charge 
+            WHERE reference.matches(:r)
+            ]]></query>
+        </class>
+        <class name="ChargeGroup">
+            <query name="charge_findChargeGroupByReference" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM com.eurocommercialproperties.estatio.dom.invoice.ChargeGroup 
+            WHERE reference.mathes(:r)
+            ]]></query>
+        </class>
+    </package>
 </jdo>

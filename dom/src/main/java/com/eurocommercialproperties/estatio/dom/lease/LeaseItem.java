@@ -187,9 +187,6 @@ public class LeaseItem extends AbstractDomainObject {
     }
     // }}
 
-
-    
-
     // {{ Terms (Collection)
     private Set<LeaseTerm> terms = new LinkedHashSet<LeaseTerm>();
 

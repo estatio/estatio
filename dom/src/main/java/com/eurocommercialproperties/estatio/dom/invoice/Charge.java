@@ -2,6 +2,8 @@ package com.eurocommercialproperties.estatio.dom.invoice;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import com.eurocommercialproperties.estatio.dom.tax.Tax;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 
@@ -21,6 +23,32 @@ public class Charge extends AbstractDomainObject {
     }
     // }}
 
+    // {{ Code (property)
+    private String code;
+
+    @MemberOrder(sequence = "1")
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(final String code) {
+        this.code = code;
+    }
+    // }}
+
+    // {{ Tax (property)
+    private Tax tax;
+
+    @MemberOrder(sequence = "1")
+    public Tax getTax() {
+        return tax;
+    }
+
+    public void setTax(final Tax tax) {
+        this.tax = tax;
+    }
+    // }}
+    
     // {{ Description (property)
     private String description;
 

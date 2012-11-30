@@ -3,6 +3,7 @@ package com.eurocommercialproperties.estatio.integtest;
 import org.apache.log4j.Level;
 
 import com.eurocommercialproperties.estatio.fixture.EstatioFixture;
+import com.eurocommercialproperties.estatio.jdo.ChargesJdo;
 import com.eurocommercialproperties.estatio.jdo.CommunicationChannelsJdo;
 import com.eurocommercialproperties.estatio.jdo.CountriesJdo;
 import com.eurocommercialproperties.estatio.jdo.IndicesJdo;
@@ -57,7 +58,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new CountriesJdo(),
                 new StatesJdo(),
                 new IndicesJdo(),
-                new TaxesJdo()
+                new TaxesJdo(),
+                new ChargesJdo()
                 );
     }
 

@@ -23,6 +23,7 @@ public class Charges extends AbstractFactoryAndRepository {
         Charge charge = findChargeByReference(reference);
         if (charge == null) {
             charge = newTransientInstance(Charge.class);
+            charge.setReference(reference);
             persist(charge);
         }
         return charge;
