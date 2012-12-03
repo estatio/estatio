@@ -6,6 +6,7 @@ import com.eurocommercialproperties.estatio.dom.tax.Tax;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
 public class Charge extends AbstractDomainObject {
@@ -13,6 +14,7 @@ public class Charge extends AbstractDomainObject {
     // {{ Reference (property)
     private String reference;
 
+    @Title
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;

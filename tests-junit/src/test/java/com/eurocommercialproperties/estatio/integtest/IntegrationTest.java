@@ -62,10 +62,11 @@ public class IntegrationTest {
         assertThat(properties.allProperties().size(), is(2));
     }
     
-    public void numberOfLeaseActorsIs2() throws Exception {
+    @Test
+    public void numberOfLeaseActorsIs3() throws Exception {
         Leases leases = isft.getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-HELLOWORLD-001"); 
-        assertThat(lease.getActors().size(), is(2));
+        Lease lease = leases.findByReference("OXF-TOPMODEL-001"); 
+        assertThat(lease.getActors().size(), is(3));
     }
     
     @Test
@@ -76,7 +77,6 @@ public class IntegrationTest {
         List<Unit> units = property.getUnits();
         assertThat(units.size(), is(25));
     }
-
 
     @Test
     public void indexationFrequencyCannotBeNull() throws Exception {
@@ -130,6 +130,18 @@ public class IntegrationTest {
         PropertyActor propertyActor = actors.findPropertyActor(property, party, PropertyActorType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
+
+    @Test 
+    public void propertyActorWithoutStartDateCanBeFound() throws Exception {
+        PropertyActors actors = isft.getService(PropertyActorsJdo.class);
+        Parties parties = isft.getService(PartiesJdo.class);
+        Properties properties = isft.getService(PropertiesJdo.class);
+        Party party = parties.findPartyByReference("HELLOWORLD");
+        Property property = properties.findPropertyByReference("OXF");
+        PropertyActor propertyActor = actors.findPropertyActor(property, party, PropertyActorType.PROPERTY_OWNER);
+        Assert.assertNotNull(propertyActor);
+    }
+    
     
     @Test 
     public void leaseCanBeFound() throws Exception {

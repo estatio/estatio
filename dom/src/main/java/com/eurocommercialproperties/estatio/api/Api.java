@@ -383,6 +383,11 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             item = lease.addItem();
         }
+        Charge charge = charges.findChargeByReference(chargeReference);
+        if (charge == null){
+            throw new ApplicationException(String.format("Type with reference %s not found.", type));
+        }
+        
         item.setStartDate(startDate);
         item.setEndDate(endDate);
         item.setTenancyStartDate(tenancyStartDate);
@@ -390,6 +395,7 @@ public class Api extends AbstractFactoryAndRepository {
         item.setType(itemType);
         item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
         item.setPaymentMethod(PaymentMethodType.valueOf(paymentMethod));
+        item.setCharge(charge);
     }
 
     private Countries countries;

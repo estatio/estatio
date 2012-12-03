@@ -13,8 +13,17 @@ public class PartiesFixture extends AbstractFixture {
         createOrganisation("HELLOWORLD", "Hello World Properties");
         createOrganisation("TOPMODEL", "Topmodel Fashion");
         createOrganisation("MEDIAX", "Mediax Electronix");
+        createPerson("JDOE", "J", "John", "Doe");
+        createPerson("MMAGDALENA", "M", "Maria", "Magdalena");
     }
 
+    private Party createPerson(String reference, String initials, String firstName, String lastName){
+        Party p = parties.newPerson(initials, firstName, lastName);
+        p.setReference(reference);
+        return p;
+    }
+    
+    
     private Party createOrganisation(String reference, String name) {
         Party p = parties.newOrganisation(name);
         p.setReference(reference);

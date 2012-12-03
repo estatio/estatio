@@ -12,7 +12,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
-
 @Named("Charges")
 public class Charges extends AbstractFactoryAndRepository {
 

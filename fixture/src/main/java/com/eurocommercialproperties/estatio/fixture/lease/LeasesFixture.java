@@ -28,12 +28,16 @@ import org.apache.isis.applib.fixtures.AbstractFixture;
 
 public class LeasesFixture extends AbstractFixture {
 
+    private Party manager;
+    
     @Override
     public void install() {
         String[] prefixes = { "OXF", "KAL" };
         LocalDate[] dates = { new LocalDate(2010, 7, 15), new LocalDate(2008, 1, 1) };
         
         Charge charge = charges.newCharge("RENT");
+        
+        manager = parties.findPartyByReference("JDOE");
         
         for (String prefix : prefixes) {
             createLease(prefix + "-TOPMODEL-001", "Topmodel Lease", prefix + "-001", "ACME", "TOPMODEL", dates[0], dates[0].plusYears(10).minusDays(1), charge);
@@ -50,6 +54,8 @@ public class LeasesFixture extends AbstractFixture {
         lease.setEndDate(endDate);
         lease.addActor(landlord, LeaseActorType.LANDLORD, null, null);
         lease.addActor(tenant, LeaseActorType.TENANT, null, null);
+        lease.addActor(manager, LeaseActorType.MANAGER, null, null);
+        
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
         LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.RENT, charge);
 

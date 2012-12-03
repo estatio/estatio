@@ -10,6 +10,10 @@ import org.junit.Test;
 
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+import com.eurocommercialproperties.estatio.dom.lease.Lease;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseActor;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseActors;
 import com.eurocommercialproperties.estatio.dom.party.Organisation;
 
 public class LeaseTest {

@@ -14,7 +14,7 @@ public class Currency extends AbstractDomainObject {
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
-    }
+    }    
 
     public void setReference(final String reference) {
         this.reference = reference;

@@ -281,13 +281,12 @@ public class Lease extends AbstractDomainObject {
     // {{ findActor (hidden)
     @Hidden
     public LeaseActor findActor(Party party, LeaseActorType type, LocalDate startDate) {
-        // TODO: better/faster filter options?
-        for (LeaseActor actor : actors) {
-            if (actor.getParty().equals(party) && actor.getType().equals(type) && actor.getStartDate().equals(startDate)) {
-                return actor;
-            }
-        }
-        return null;
+        return leaseActors.findLeaseActor(this, party, type, startDate, startDate);
+//        for (LeaseActor actor : actors) {
+//            if (actor.getParty().equals(party) && actor.getType().equals(type) && actor.getStartDate().equals(startDate)) {
+//                return actor;
+//            }
+//        }
     }
 
     // {{ findItem (hidden)
