@@ -43,6 +43,7 @@ import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItemType;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItems;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseTerm;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseUnit;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseUnits;
 import com.eurocommercialproperties.estatio.dom.lease.Leases;
@@ -397,6 +398,59 @@ public class Api extends AbstractFactoryAndRepository {
         item.setPaymentMethod(PaymentMethodType.valueOf(paymentMethod));
         item.setCharge(charge);
     }
+    
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putIndexableLeaseTerm(
+                             @Named("leaseReference") String leaseReference,
+                             @Named("tenantReference") String tenantReference,
+                             @Named("unitReference") @Optional String unitReference,
+                             @Named("itemType") String itemType, 
+                             @Named("itemStartDate") LocalDate itemStartDate, 
+                             @Named("startDate") @Optional LocalDate startDate, 
+                             @Named("endDate") @Optional LocalDate endDate,
+                             @Named("reviewDate") @Optional LocalDate reviewDate,
+                             @Named("effectiveDate") @Optional LocalDate effectiveDate,
+                             @Named("value") @Optional BigDecimal value,
+                             @Named("baseValue") @Optional BigDecimal baseValue,
+                             @Named("levellingValue") @Optional BigDecimal levellingValue,
+                             @Named("levellingPercentage") @Optional BigDecimal levellingPercentage,
+                             @Named("indexationPercentage") @Optional BigDecimal indexationPercentage,
+                             @Named("baseIndexReference") @Optional String baseIndexReference,
+                             @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate,
+                             @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate,
+                             @Named("baseIndexValue") @Optional BigDecimal baseIndexValue,
+                             @Named("nextIndexReference") @Optional String nextIndexReference,
+                             @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
+                             @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
+                             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
+        Lease lease = leases.findByReference(leaseReference);
+        if (lease == null) {
+             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
+        }
+        Unit unit = units.findByReference(unitReference);
+        if (unitReference != null && unit == null){
+            throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
+        }
+        LeaseItemType leaseItemType = LeaseItemType.valueOf(itemType);
+        if (itemType == null){
+            throw new ApplicationException(String.format("Type with reference %s not found.", itemType));
+        }
+        LeaseItem item = lease.findItem(leaseItemType, startDate);
+        if (item == null) {
+            item = lease.addItem();
+        }
+
+        LeaseTerm term = item.findTerm(startDate);
+        if (term == null) {
+            term = item.addIndexableTerm();
+        }
+        
+    }
+    
+
+    
+    
+    
 
     private Countries countries;
 

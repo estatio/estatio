@@ -23,6 +23,8 @@ import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 import com.eurocommercialproperties.estatio.dom.invoice.Charges;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseItemType;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseItems;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerm;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerms;
 import com.eurocommercialproperties.estatio.dom.lease.Leases;
@@ -141,12 +143,27 @@ public class IntegrationTest {
         PropertyActor propertyActor = actors.findPropertyActor(property, party, PropertyActorType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
-    
-    
+
     @Test 
     public void leaseCanBeFound() throws Exception {
         Leases leases = isft.getService(Leases.class);
         Assert.assertEquals("OXF-TOPMODEL-001", leases.findByReference("OXF-TOPMODEL-001").getReference());
+    }
+
+    @Test 
+    public void leaseHasXItems() throws Exception {
+        Leases leases = isft.getService(Leases.class);
+        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
+        Assert.assertNotNull(lease.findItem(LeaseItemType.RENT, new LocalDate(2011, 7, 15)));
+    }
+
+    
+    
+    @Test 
+    public void leaseItemCanBeFound() throws Exception {
+        Leases leases = isft.getService(Leases.class);
+        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
+        Assert.assertNotNull(lease.findItem(LeaseItemType.RENT, new LocalDate(2011, 7, 15)));
     }
 
     @Test 

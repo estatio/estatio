@@ -78,17 +78,88 @@ public class IndexableLeaseTerm extends LeaseTerm {
 
     // }}
 
-    // {{ IndexationApplicationDate (property)
-    private LocalDate indexationApplicationDate;
+    // {{ ReviewDate (property)
+    private LocalDate reviewDate;
 
     @Persistent
-    @MemberOrder(sequence = "1")
-    public LocalDate getIndexationApplicationDate() {
-        return indexationApplicationDate;
+    @MemberOrder(sequence = "14")
+    public LocalDate getReviewDate() {
+        return reviewDate;
     }
 
-    public void setIndexationApplicationDate(final LocalDate indexationApplicationDate) {
-        this.indexationApplicationDate = indexationApplicationDate;
+    public void setReviewDate(final LocalDate reviewDate) {
+        this.reviewDate = reviewDate;
+    }
+
+    // }}
+
+    // {{ EffectiveDate (property)
+    private LocalDate effectiveDate;
+
+    @Persistent
+    @MemberOrder(sequence = "14")
+    public LocalDate getEffectiveDate() {
+        return effectiveDate;
+    }
+
+    public void setEffectiveDate(final LocalDate effectiveDate) {
+        this.effectiveDate = effectiveDate;
+    }
+
+    // }}
+
+    // {{ BaseValue (property)
+    private BigDecimal baseValue;
+
+    @MemberOrder(sequence = "15")
+    public BigDecimal getBaseValue() {
+        return baseValue;
+    }
+
+    public void setBaseValue(final BigDecimal baseValue) {
+        this.baseValue = baseValue;
+    }
+
+    // }}
+
+    // {{ IndexedValue (property)
+    private BigDecimal indexedValue;
+
+    @MemberOrder(sequence = "16")
+    public BigDecimal getIndexedValue() {
+        return indexedValue;
+    }
+
+    public void setIndexedValue(final BigDecimal indexedValue) {
+        this.indexedValue = indexedValue;
+    }
+
+    // }}
+
+    // {{ IndexationPercentage (property)
+    private BigDecimal indexationPercentage;
+
+    @MemberOrder(sequence = "17")
+    public BigDecimal getIndexationPercentage() {
+        return indexationPercentage;
+    }
+
+    public void setIndexationPercentage(final BigDecimal indexationPercentage) {
+        this.indexationPercentage = indexationPercentage;
+    }
+
+    // }}
+
+    // {{ LevellingPercentage (property)
+    private BigDecimal levellingPercentage;
+
+    @MemberOrder(sequence = "18")
+    public BigDecimal getLevellingPercentage() {
+        return levellingPercentage;
+    }
+
+    public void setLevellingPercentage(final BigDecimal levellingPercentage) {
+        this.levellingPercentage = levellingPercentage;
     }
 
     // }}
@@ -99,7 +170,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
         if (factor.compareTo(BigDecimal.ZERO) != 0) {
             // we have found a indexation factor
             BigDecimal newValue = getValue().multiply(factor);
-            createNextLeaseTerm(this.getIndexationApplicationDate(), newValue.round(new MathContext(0)));
+            createNextLeaseTerm(this.getEffectiveDate(), newValue.round(new MathContext(0)));
         }
         return;
     }
@@ -119,7 +190,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
         term.setBaseIndexEndDate(this.getNextIndexEndDate());
         term.setNextIndexStartDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
         term.setNextIndexEndDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexEndDate()));
-        term.setIndexationApplicationDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getIndexationApplicationDate()));
+        term.setEffectiveDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getEffectiveDate()));
         term.setValue(value);
         // terminate current term
         this.setEndDate(startDate.minusDays(1));

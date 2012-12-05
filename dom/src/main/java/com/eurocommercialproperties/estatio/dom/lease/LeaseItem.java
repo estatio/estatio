@@ -224,11 +224,33 @@ public class LeaseItem extends AbstractDomainObject {
         onRemoveFromTerms(terms);
     }
 
+    public LeaseTerm findTerm(LocalDate startDate) {
+        for (LeaseTerm term : terms)
+        {
+            if (term.getStartDate().equals(startDate)){
+                return term;
+            }
+        }
+        return null;
+    }
+    
     protected void onAddToTerms(final LeaseTerm terms) {
     }
 
     protected void onRemoveFromTerms(final LeaseTerm terms) {
     }
     // }}
+    
+    @Hidden
+    public LeaseTerm addIndexableTerm() {
+        LeaseTerm leaseTerm = leaseTerms.newIndexableLeaseTerm(this);
+        terms.add(leaseTerm);
+        return leaseTerm;
+     }
 
+    private LeaseTerms leaseTerms;
+    
+    public void setLeaseTerms(LeaseTerms leaseTerms) {
+        this.leaseTerms = leaseTerms;
+    }   
 }

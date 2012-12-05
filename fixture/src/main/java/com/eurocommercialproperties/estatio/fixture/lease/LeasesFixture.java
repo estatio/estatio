@@ -94,7 +94,7 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setBaseIndexEndDate(baseIndexDate.dayOfMonth().withMaximumValue());
         leaseTerm.setNextIndexStartDate(nextIndexDate);
         leaseTerm.setNextIndexEndDate(nextIndexDate.dayOfMonth().withMaximumValue());
-        leaseTerm.setIndexationApplicationDate(indexationApplicationDate);
+        leaseTerm.setEffectiveDate(indexationApplicationDate);
         return leaseTerm;
     }
 

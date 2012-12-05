@@ -16,7 +16,6 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.joda.time.LocalDate;
 
-// TODO: error when choosing discriminator strategy = Classname. 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator("LTRM")
@@ -83,20 +82,6 @@ public class LeaseTerm extends AbstractDomainObject {
     }
 
     // }}
-
-    // // {{NextIndexMonth (property)
-    // private Interval nextIndexMonth;
-    //
-    // @Persistent
-    // @MemberOrder(sequence = "1")
-    // public Interval getNextIndexMonth() {
-    // return nextIndexMonth;
-    // }
-    //
-    // public void setNextIndexMonth(final Interval nextIndexMonth) {
-    // this.nextIndexMonth = nextIndexMonth;
-    // }
-    // // }}
 
     // {{ NextTerm (property)
     private LeaseTerm nextTerm;
