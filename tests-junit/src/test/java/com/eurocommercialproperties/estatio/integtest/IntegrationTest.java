@@ -3,6 +3,7 @@ package com.eurocommercialproperties.estatio.integtest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -23,6 +24,7 @@ import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 import com.eurocommercialproperties.estatio.dom.invoice.Charges;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseItem;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItemType;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseItems;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseTerm;
@@ -154,18 +156,24 @@ public class IntegrationTest {
     public void leaseHasXItems() throws Exception {
         Leases leases = isft.getService(Leases.class);
         Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        Assert.assertNotNull(lease.findItem(LeaseItemType.RENT, new LocalDate(2011, 7, 15)));
+        assertThat(lease.getItems().size(), is(1));
     }
-
-    
     
     @Test 
     public void leaseItemCanBeFound() throws Exception {
         Leases leases = isft.getService(Leases.class);
         Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        Assert.assertNotNull(lease.findItem(LeaseItemType.RENT, new LocalDate(2011, 7, 15)));
+        Assert.assertNotNull(lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1)));
     }
 
+    @Test 
+    public void leaseTermCanBeFound() throws Exception {
+        Leases leases = isft.getService(Leases.class);
+        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
+        LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
+        Assert.assertNotNull(item.findTerm(new LocalDate(2011, 7, 15)));
+    }
+    
     @Test 
     public void unitCanBeFound() throws Exception {
         Units units = isft.getService(Units.class);
