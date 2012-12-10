@@ -9,7 +9,8 @@ import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.AuditService;
 
 
 @Named("Audit")
-public class AuditServiceForEstatio extends AbstractFactoryAndRepository implements AuditService {
+@Hidden
+public class EstatioAuditService extends AbstractFactoryAndRepository implements AuditService {
 
     public List<AuditEntryForEstatio> list() {
         return allInstances(AuditEntryForEstatio.class);

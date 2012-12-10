@@ -4,11 +4,13 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
 import com.danhaywood.ddd.domainservices.scheduler.SchedulerService;
 
+@Hidden
 public class EstatioSchedulerService extends SchedulerService {
 
     public EstatioSchedulerService() {
