@@ -107,46 +107,27 @@
         <!-- isis viewer -->
 		<dependency>
 			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>restfulobjects-viewer</artifactId>
+			<artifactId>isis-restfulobjects-viewer-impl</artifactId>
 		</dependency>
 	
-		<dependency>
-			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>html</artifactId>
-		</dependency>
-
-        <!-- isis runtime -->
         <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.bytecode</groupId>
-            <artifactId>dflt</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-inmemory-profilestore</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.profilestores</groupId>
-            <artifactId>dflt</artifactId>
-        </dependency>
-
-        
-        <!-- isis progmodel -->
-        <dependency>
-            <groupId>org.apache.isis.progmodels</groupId>
-            <artifactId>dflt</artifactId>
-        </dependency>
-
-        <!-- isis security implementations -->        
         <dependency>
             <groupId>org.apache.isis.security</groupId>
-            <artifactId>file</artifactId>
+            <artifactId>isis-file-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.security</groupId>
-            <artifactId>dflt</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-noop-security</artifactId>
         </dependency>
         
         <!-- to run using WebServer (optional) -->
         <dependency>
-            <groupId>org.apache.isis.runtimes.dflt</groupId>
-            <artifactId>webserver</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-webserver</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
@@ -154,13 +135,11 @@
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-servlet_2.5_spec</artifactId>
-            <version>1.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>2.2.8</version>
         </dependency>
 
 <!-- 

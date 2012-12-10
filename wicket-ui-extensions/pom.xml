@@ -55,10 +55,9 @@
 
 	<dependencies>
 	
-		
 		<dependency>
 			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>wicket-ui</artifactId>
+			<artifactId>isis-wicket-viewer-ui</artifactId>
 		</dependency>
 
 		<dependency>

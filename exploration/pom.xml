@@ -81,7 +81,7 @@
             </plugin>
         </plugins>
     </build>
-
+	
     <dependencies>
         <!-- other modules in this project -->
         <dependency>
@@ -92,45 +92,32 @@
         <!-- isis core -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>runtime</artifactId>
+            <artifactId>isis-runtime</artifactId>
+            <version>${isis.core.version}</version>
         </dependency>
+        
 
         <!-- isis default runtime -->
         <dependency>
-            <groupId>org.apache.isis.runtimes.dflt</groupId>
-            <artifactId>runtime</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-runtime</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.bytecode</groupId>
-            <artifactId>dflt</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-inmemory-objectstore</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
-            <artifactId>dflt</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-inmemory-profilestore</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.objectstores</groupId>
-            <artifactId>xml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.runtimes.dflt.profilestores</groupId>
-            <artifactId>dflt</artifactId>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-noop-security</artifactId>
         </dependency>
         
-        <!-- isis defaults (other) -->
-        <dependency>
-            <groupId>org.apache.isis.progmodels</groupId>
-            <artifactId>dflt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.security</groupId>
-            <artifactId>dflt</artifactId>
-        </dependency>
-        
-        <!-- isis viewers -->
         <dependency>
             <groupId>org.apache.isis.viewer</groupId>
-            <artifactId>dnd</artifactId>
+            <artifactId>isis-dnd-viewer-impl</artifactId>
         </dependency>
 
 <!-- 
