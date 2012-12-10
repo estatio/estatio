@@ -1,15 +1,11 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
+import java.math.BigInteger;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.asset.Unit;
-import com.eurocommercialproperties.estatio.dom.party.Party;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
@@ -20,6 +16,10 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.asset.Unit;
+import com.eurocommercialproperties.estatio.dom.party.Party;
 
 @PersistenceCapable
 @Auditable
@@ -291,10 +291,12 @@ public class Lease extends AbstractDomainObject {
 
     // {{ findItem (hidden)
     @Hidden
-    public LeaseItem findItem(LeaseItemType type, LocalDate startDate) {
+    public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
         // TODO: better/faster filter options?
-        for (LeaseItem item : items) {
-            if (item.getType().equals(type) && item.getStartDate().equals(startDate)) {
+        for (LeaseItem item : getItems()) {
+            LocalDate itemStartDate = item.getStartDate();
+            LeaseItemType itemType = item.getType();
+            if (itemType.equals(type) && itemStartDate.equals(startDate) && item.getSequence().equals(sequence)  ) {
                 return item;
             }
         }

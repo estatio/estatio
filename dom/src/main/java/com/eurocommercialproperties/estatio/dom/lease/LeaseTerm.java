@@ -98,6 +98,19 @@ public class LeaseTerm extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ Status (property)
+    private LeaseTermStatus status;
+
+    @MemberOrder(sequence = "1")
+    public LeaseTermStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(final LeaseTermStatus status) {
+        this.status = status;
+    }
+    // }}
 
     public void verify() {
         return;

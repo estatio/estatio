@@ -288,7 +288,14 @@ public class Property extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ injected: Units
+    private Properties propertiesRepo;
 
+    public void setProperties(final Properties propertiesRepo) {
+        this.propertiesRepo = propertiesRepo;
+    }
+    
     // {{ injected: Units
     private Units unitsRepo;
 

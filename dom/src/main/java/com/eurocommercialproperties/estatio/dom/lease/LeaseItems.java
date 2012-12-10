@@ -24,6 +24,7 @@ public class LeaseItems extends AbstractFactoryAndRepository {
     public String iconName() {
         return "LeaseItem";
     }
+    // }}
 
     // {{ newLeaseItem
     @ActionSemantics(Of.SAFE)

@@ -1,15 +1,11 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
+import java.math.BigInteger;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.index.Index;
-import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
@@ -19,6 +15,10 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 
 @PersistenceCapable
 public class LeaseItem extends AbstractDomainObject {
@@ -35,6 +35,21 @@ public class LeaseItem extends AbstractDomainObject {
     public void setLease(final Lease lease) {
         this.lease = lease;
     }
+
+    // }}
+
+    // {{ Sequence (property)
+    private BigInteger sequence;
+
+    @MemberOrder(sequence = "1")
+    public BigInteger getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(final BigInteger sequence) {
+        this.sequence = sequence;
+    }
+
     // }}
 
     // {{ LeaseItemType (property)
@@ -49,6 +64,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setType(final LeaseItemType type) {
         this.type = type;
     }
+
     // }}
 
     // {{ StartDate (property)
@@ -63,6 +79,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+
     // }}
 
     // {{ EndDate (property)
@@ -77,14 +94,16 @@ public class LeaseItem extends AbstractDomainObject {
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
     // }}
-    
+
     // {{ TenancyStartDate (property)
     private LocalDate tenancyStartDate;
 
     @Persistent
     @Optional
     @MemberOrder(sequence = "5")
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getTenancyStartDate() {
         return tenancyStartDate;
     }
@@ -92,6 +111,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setTenancyStartDate(final LocalDate tenancyStartDate) {
         this.tenancyStartDate = tenancyStartDate;
     }
+
     // }}
 
     // {{ TenancyEndDate (property)
@@ -100,6 +120,7 @@ public class LeaseItem extends AbstractDomainObject {
     @Persistent
     @Optional
     @MemberOrder(sequence = "6")
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getTenancyEndDate() {
         return tenancyEndDate;
     }
@@ -107,8 +128,9 @@ public class LeaseItem extends AbstractDomainObject {
     public void setTenancyEndDate(final LocalDate tenancyEndDate) {
         this.tenancyEndDate = tenancyEndDate;
     }
+
     // }}
-    
+
     // {{ NextDueDate (property)
     private LocalDate nextDueDate;
 
@@ -120,6 +142,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setNextDueDate(final LocalDate nextDueDate) {
         this.nextDueDate = nextDueDate;
     }
+
     // }}
 
     // {{ Index (property)
@@ -133,6 +156,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setIndex(final Index index) {
         this.index = index;
     }
+
     // }}
 
     // {{ IndexationFrequency (property)
@@ -146,6 +170,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setIndexationFrequency(final IndexationFrequency indexationFrequency) {
         this.indexationFrequency = indexationFrequency;
     }
+
     // }}
 
     // {{ InvoicingFrequency (property)
@@ -159,8 +184,9 @@ public class LeaseItem extends AbstractDomainObject {
     public void setInvoicingFrequency(final InvoicingFrequency invoicingFrequency) {
         this.invoicingFrequency = invoicingFrequency;
     }
+
     // }}
-    
+
     // {{ PayymentMethod (property)
     private PaymentMethodType paymentMethod;
 
@@ -172,8 +198,9 @@ public class LeaseItem extends AbstractDomainObject {
     public void setPaymentMethod(final PaymentMethodType paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
     // }}
-    
+
     // {{ Charge (property)
     private Charge charge;
 
@@ -185,6 +212,7 @@ public class LeaseItem extends AbstractDomainObject {
     public void setCharge(final Charge charge) {
         this.charge = charge;
     }
+
     // }}
 
     // {{ Terms (Collection)
@@ -192,10 +220,10 @@ public class LeaseItem extends AbstractDomainObject {
 
     @Resolve(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
-    @MemberOrder(sequence = "2")    
+    @MemberOrder(sequence = "2")
     public Set<LeaseTerm> getTerms() {
         return terms;
-        //TODO: Q: what's the best way to sort these terms? 
+        // TODO: Q: what's the best way to sort these terms?
     }
 
     public void setTerms(final Set<LeaseTerm> terms) {
@@ -225,32 +253,32 @@ public class LeaseItem extends AbstractDomainObject {
     }
 
     public LeaseTerm findTerm(LocalDate startDate) {
-        for (LeaseTerm term : terms)
-        {
-            if (term.getStartDate().equals(startDate)){
+        for (LeaseTerm term : getTerms()) {
+            if (term.getStartDate().equals(startDate)) {
                 return term;
             }
         }
         return null;
     }
-    
+
     protected void onAddToTerms(final LeaseTerm terms) {
     }
 
     protected void onRemoveFromTerms(final LeaseTerm terms) {
     }
+
     // }}
-    
+
     @Hidden
     public LeaseTerm addIndexableTerm() {
         LeaseTerm leaseTerm = leaseTerms.newIndexableLeaseTerm(this);
         terms.add(leaseTerm);
         return leaseTerm;
-     }
+    }
 
     private LeaseTerms leaseTerms;
-    
+
     public void setLeaseTerms(LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
-    }   
+    }
 }
