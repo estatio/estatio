@@ -17,12 +17,15 @@
  *  under the License.
  */
 
-
+#header {
+	width: 73%;
+	float: left;
+	height: 60px;
+	background: transparent url("../images/logo.png") left center no-repeat;
 
 #header h1 {
 	display: none;
 }
-
 
 .headerContainer .links>span:first-child {
 	background: url("../images/icon_appuser.png") no-repeat scroll left
