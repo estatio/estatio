@@ -106,7 +106,7 @@
         <!-- isis viewer -->
 		<dependency>
 			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>isis-restfulobjects-viewer-impl</artifactId>
+			<artifactId>isis-viewer-restfulobjects-impl</artifactId>
 		</dependency>
 
 		<!-- TODO: remove dependency on HTML viewer -->
@@ -118,22 +118,22 @@
 	
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-inmemory-profilestore</artifactId>
+            <artifactId>isis-core-profilestore</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.isis.security</groupId>
-            <artifactId>isis-file-security</artifactId>
+            <artifactId>isis-security-file</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-noop-security</artifactId>
+            <artifactId>isis-core-security</artifactId>
         </dependency>
         
         <!-- to run using WebServer (optional) -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-webserver</artifactId>
+            <artifactId>isis-core-webserver</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
