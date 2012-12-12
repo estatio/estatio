@@ -92,32 +92,31 @@
         <!-- isis core -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-runtime</artifactId>
-            <version>${isis.core.version}</version>
+            <artifactId>isis-core-runtime</artifactId>
         </dependency>
         
 
         <!-- isis default runtime -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-runtime</artifactId>
+            <artifactId>isis-core-runtime</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-inmemory-objectstore</artifactId>
+            <artifactId>isis-core-objectstore</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-inmemory-profilestore</artifactId>
+            <artifactId>isis-core-profilestore</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-noop-security</artifactId>
+            <artifactId>isis-core-security</artifactId>
         </dependency>
         
         <dependency>
             <groupId>org.apache.isis.viewer</groupId>
-            <artifactId>isis-dnd-viewer-impl</artifactId>
+            <artifactId>isis-viewer-dnd-impl</artifactId>
         </dependency>
 
 <!-- 

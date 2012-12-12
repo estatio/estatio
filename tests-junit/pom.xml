@@ -52,39 +52,39 @@
         <!-- isis -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-runtime</artifactId>
+            <artifactId>isis-core-runtime</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-inmemory-objectstore</artifactId>
+            <artifactId>isis-core-objectstore</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-inmemory-profilestore</artifactId>
+            <artifactId>isis-core-profilestore</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-noop-security</artifactId>
+            <artifactId>isis-core-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.security</groupId>
-            <artifactId>isis-file-security</artifactId>
+            <artifactId>isis-security-file</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.isis.viewer</groupId>
-            <artifactId>isis-junit-viewer-impl</artifactId>
+            <artifactId>isis-viewer-junit-impl</artifactId>
             <scope>test</scope>
         </dependency>
         
         <dependency>
 		    <groupId>org.apache.isis.core</groupId>
-		    <artifactId>isis-unittestsupport</artifactId>
+		    <artifactId>isis-core-unittestsupport</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-integtestsupport</artifactId>
+            <artifactId>isis-core-integtestsupport</artifactId>
         </dependency>
 
         <dependency>

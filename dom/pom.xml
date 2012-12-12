@@ -88,16 +88,16 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.isis.core</groupId>
-			<artifactId>isis-applib</artifactId>
+			<artifactId>isis-core-applib</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.isis.objectstore</groupId>
-			<artifactId>isis-jdo-objectstore-applib</artifactId>
+			<artifactId>isis-objectstore-jdo-applib</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.isis.objectstore</groupId>
-			<artifactId>isis-jdo-objectstore-datanucleus</artifactId>
+			<artifactId>isis-objectstore-jdo-datanucleus</artifactId>
 		</dependency>
 
 		<dependency>
@@ -170,7 +170,7 @@
 
 		<dependency>
 			<groupId>org.apache.isis.objectstore</groupId>
-			<artifactId>isis-jdo-objectstore-applib</artifactId>
+			<artifactId>isis-objectstore-jdo-applib</artifactId>
 		</dependency>
 
           <dependency>
