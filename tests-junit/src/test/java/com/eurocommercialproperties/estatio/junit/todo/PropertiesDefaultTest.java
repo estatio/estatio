@@ -17,7 +17,7 @@ import com.eurocommercialproperties.estatio.junit.AbstractTest;
 public class PropertiesDefaultTest extends AbstractTest {
 
     @Test
-    public void canCreateToDoItem() throws Exception {
+    public void canCreateProperty() throws Exception {
         final Property property = properties.newProperty("CODE-1", "Some name");
         
         assertThat(property, is(not(nullValue())));

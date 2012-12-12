@@ -210,6 +210,17 @@ public class Unit extends AbstractDomainObject {
     public void addCommunicationChannel(CommunicationChannel communicationChannel) {
         communicationChannels.add(communicationChannel);
     }
+    
+    @Hidden
+    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type){
+        for (CommunicationChannel c : communicationChannels){
+            if (c.getType().equals(type)){
+                return c;
+            }
+        }
+        return null;
+    }
+
 
     // }}
 

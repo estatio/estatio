@@ -217,10 +217,6 @@ public class IndexableLeaseTerm extends LeaseTerm {
     }
     // }}
 
-
-
-
-    
     
     // {{
     public void verify() {
@@ -241,7 +237,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
         // create new term
         IndexableLeaseTerm term = (IndexableLeaseTerm) getNextTerm();
         if (getNextTerm() == null) {
-            term = getLeaseTermsService().newIndexableLeaseTerm(this.getLeaseItem());
+            term = leaseTermsService.newIndexableLeaseTerm(this.getLeaseItem());
         }
         term.setStartDate(startDate);
         term.setBaseIndexStartDate(this.getNextIndexStartDate());
@@ -260,10 +256,6 @@ public class IndexableLeaseTerm extends LeaseTerm {
 
     // {{
     private LeaseTerms leaseTermsService;
-
-    public LeaseTerms getLeaseTermsService() {
-        return leaseTermsService;
-    }
 
     public void setLeaseTermsService(LeaseTerms leaseTerms) {
         this.leaseTermsService = leaseTerms;

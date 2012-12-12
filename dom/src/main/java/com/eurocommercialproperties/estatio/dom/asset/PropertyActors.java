@@ -66,12 +66,11 @@ public class PropertyActors extends AbstractFactoryAndRepository {
         return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
             @Override
             public boolean accept(final PropertyActor propertyActor) {
-                return propertyActor.getProperty().equals(property) && propertyActor.getParty().equals(party)
-                // TODO handle optional condition fields as they can contain
-                // null
-                // propertyActor.getStartDate().equals(startDate) &
-                // propertyActor.getEndDate().equals(endDate)
-                ;
+                return propertyActor.getProperty().equals(property) && 
+                       propertyActor.getParty().equals(party) && 
+                       propertyActor.getType().equals(type) && 
+                       propertyActor.getStartDate().equals(startDate) &&
+                       propertyActor.getEndDate().equals(endDate);
             }
         });
     }

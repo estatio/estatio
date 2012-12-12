@@ -1,9 +1,7 @@
 package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.Element;
@@ -11,12 +9,12 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.joda.time.LocalDate;
-
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
 import com.eurocommercialproperties.estatio.dom.party.Party;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -173,18 +171,18 @@ public class Property extends AbstractDomainObject {
     }
 
     // }}
-
+   
     // {{ Actors (list, unidir)
     @Persistent(mappedBy = "property")
-    private List<PropertyActor> actors = new ArrayList<PropertyActor>();
+    private Set<PropertyActor> actors = new LinkedHashSet<PropertyActor>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.1")
-    public List<PropertyActor> getActors() {
+    public Set<PropertyActor> getActors() {
         return actors;
     }
 
-    public void setActors(final List<PropertyActor> actors) {
+    public void setActors(final Set<PropertyActor> actors) {
         this.actors = actors;
     }
 
@@ -241,7 +239,7 @@ public class Property extends AbstractDomainObject {
     }
     
     @Hidden
-    public CommunicationChannel getCommunicationChannel(CommunicationChannelType type){
+    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type){
         for (CommunicationChannel c : communicationChannels){
             if (c.getType().equals(type)){
                 return c;
@@ -254,15 +252,15 @@ public class Property extends AbstractDomainObject {
 
     // {{ Units (list, bidir)
     @Persistent(mappedBy = "property")
-    private List<Unit> units = new ArrayList<Unit>();
+    private Set<Unit> units = new LinkedHashSet<Unit>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.2")
-    public List<Unit> getUnits() {
+    public Set<Unit> getUnits() {
         return units;
     }
 
-    public void setUnits(final List<Unit> units) {
+    public void setUnits(final Set<Unit> units) {
         this.units = units;
     }
 
@@ -281,20 +279,20 @@ public class Property extends AbstractDomainObject {
 
     // {{ addActor (action)
     @MemberOrder(name="Actors", sequence = "1")
-    public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        PropertyActor propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
-        actors.add(propertyActor);
+    public PropertyActor addActor(
+           @Named("party") Party party, 
+           @Named("type") PropertyActorType type, 
+           @Named("startDate") @Optional LocalDate startDate, 
+           @Named("endDate") @Optional LocalDate endDate) {
+        PropertyActor propertyActor = propertyActorsRepo.findPropertyActor(this, party, type, startDate, endDate);
+        if (propertyActor ==  null) { 
+            propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
+            actors.add(propertyActor);
+        }
         return propertyActor;
     }
 
     // }}
-    
-    // {{ injected: Units
-    private Properties propertiesRepo;
-
-    public void setProperties(final Properties propertiesRepo) {
-        this.propertiesRepo = propertiesRepo;
-    }
     
     // {{ injected: Units
     private Units unitsRepo;

@@ -1,6 +1,7 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -63,6 +64,7 @@ public class LeaseActor extends AbstractDomainObject {
 
     @MemberOrder(sequence = "4")
     @Optional
+    @Persistent
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -78,6 +80,7 @@ public class LeaseActor extends AbstractDomainObject {
 
     @MemberOrder(sequence = "5")
     @Optional
+    @Persistent
     public LocalDate getEndDate() {
         return endDate;
     }

@@ -5,6 +5,5 @@ public enum PaymentMethodType {
     DIRECT_DEBIT,
     BILLING_ACCOUNT,
     BANK_TRANSFER,
-    CASH,
-    OTHER;
+    CASH;
 }

@@ -19,15 +19,6 @@ package com.eurocommercialproperties.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.joda.time.LocalDate;
-
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyActor;
@@ -38,6 +29,7 @@ import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.UnitType;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
+import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannels;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
@@ -63,6 +55,16 @@ import com.eurocommercialproperties.estatio.dom.party.Party;
 import com.eurocommercialproperties.estatio.dom.party.Person;
 import com.eurocommercialproperties.estatio.dom.tax.Tax;
 import com.eurocommercialproperties.estatio.dom.tax.Taxes;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 
 @Hidden
 public class Api extends AbstractFactoryAndRepository {
@@ -157,7 +159,13 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional LocalDate acquireDate, @Named("disposalDate") @Optional LocalDate disposalDate, @Named("openingDate") @Optional LocalDate openingDate,
+    public void putProperty(
+            @Named("reference") String reference, 
+            @Named("name") String name, 
+            @Named("type") String type, 
+            @Named("acquireDate") @Optional LocalDate acquireDate, 
+            @Named("disposalDate") @Optional LocalDate disposalDate, 
+            @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference) {
         Party owner = parties.findOrganisationByReference(ownerReference);
         if (owner == null) {
@@ -176,16 +184,23 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
-            @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode) {
+    public void putPropertyPostalAddress(
+            @Named("propertyReference") String propertyReference, 
+            @Named("address1") @Optional String address1, 
+            @Named("address2") @Optional String address2, 
+            @Named("city") String city, 
+            @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode, 
+            @Named("countryCode") String countryCode) {
         Property property = properties.findPropertyByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
-        // TODO: Find if communication channel exists
-        CommunicationChannel comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+        CommunicationChannel comm = property.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
+        if (comm == null) {
+            comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+        }
         property.getCommunicationChannels().add(comm);
-
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -232,9 +247,23 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") @Optional String ownerReference, @Named("name") String name, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate,
-            @Named("endDate") @Optional LocalDate endDate, @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
-            @Named("terraceArea") @Optional BigDecimal terraceArea, @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode) {
+    public void putUnit(
+            @Named("reference") String reference, 
+            @Named("propertyReference") String propertyReference, 
+            @Named("ownerReference") @Optional String ownerReference, 
+            @Named("name") String name, @Named("type") String type, 
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate, 
+            @Named("area") @Optional BigDecimal area, 
+            @Named("salesArea") @Optional BigDecimal salesArea, 
+            @Named("storageArea") @Optional BigDecimal storageArea, 
+            @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
+            @Named("terraceArea") @Optional BigDecimal terraceArea, 
+            @Named("address1") @Optional String address1, 
+            @Named("city") @Optional String city, 
+            @Named("postalCode") @Optional String postalCode, 
+            @Named("stateCode") @Optional String stateCode, 
+            @Named("countryCode") @Optional String countryCode) {
         Property property = properties.findPropertyByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
@@ -251,10 +280,11 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setStorageArea(storageArea);
         unit.setMezzanineArea(mezzanineArea);
         unit.setTerraceArea(terraceArea);
-
-        // CommunicationChannel
-        CommunicationChannel cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
-        unit.addCommunicationChannel(cc);
+        CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
+        if (cc==null){
+            cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+            unit.addCommunicationChannel(cc);
+        }
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -268,11 +298,12 @@ public class Api extends AbstractFactoryAndRepository {
         if (landlord == null) {
             throw new ApplicationException(String.format("Landlord with reference %s not found.", landlordReference));
         }
-        Lease parentLease = leases.findByReference(parentLeaseReference);
-        if (parentLease == null) {
-            // throw new
-            // ApplicationException(String.format("Landlord with reference %s not found.",
-            // landlordReference));
+        Lease parentLease;
+        if (parentLeaseReference != null){
+            parentLease = leases.findByReference(parentLeaseReference);
+            if (parentLease == null) {
+                 throw new ApplicationException(String.format("Landlord with reference %s not found.", landlordReference));
+            }
         }
         Lease lease = leases.findByReference(reference);
         if (lease == null) {
@@ -314,9 +345,19 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseItem(@Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("type") @Optional String type, @Named("sequence") BigInteger sequence,
-            @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate, @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate, @Named("chargeReference") @Optional String chargeReference,
-            @Named("nextDueDate") @Optional LocalDate nextDueDate, @Named("invoicingFrequency") @Optional String invoicingFrequency, @Named("paymentMethod") @Optional String paymentMethod) {
+    public void putLeaseItem(@Named("leaseReference") String leaseReference, 
+            @Named("tenantReference") String tenantReference, 
+            @Named("unitReference") @Optional String unitReference, 
+            @Named("type") @Optional String type, 
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate, 
+            @Named("endDate") @Optional LocalDate endDate, 
+            @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate, 
+            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate, 
+            @Named("chargeReference") @Optional String chargeReference,
+            @Named("nextDueDate") @Optional LocalDate nextDueDate, 
+            @Named("invoicingFrequency") @Optional String invoicingFrequency, 
+            @Named("paymentMethod") @Optional String paymentMethod) {
         Lease lease = leases.findByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
@@ -340,27 +381,46 @@ public class Api extends AbstractFactoryAndRepository {
         if (charge == null) {
             throw new ApplicationException(String.format("Type with reference %s not found.", type));
         }
-
         item.setStartDate(startDate);
         item.setEndDate(endDate);
         item.setTenancyStartDate(tenancyStartDate);
         item.setTenancyEndDate(tenancyEndDate);
         item.setType(itemType);
+        item.setSequence(sequence);
         item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
         item.setPaymentMethod(PaymentMethodType.valueOf(paymentMethod));
         item.setCharge(charge);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseTerm(@Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("sequence") BigInteger sequence, @Named("itemType") String itemType,
-            @Named("itemStartDate") LocalDate itemStartDate, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("reviewDate") @Optional LocalDate reviewDate, @Named("effectiveDate") @Optional LocalDate effectiveDate,
-            @Named("value") @Optional BigDecimal value, @Named("baseValue") @Optional BigDecimal baseValue, @Named("indexationValue") @Optional BigDecimal indexationValue, @Named("levellingValue") @Optional BigDecimal levellingValue,
-            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, @Named("baseIndexReference") @Optional String baseIndexReference, @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate,
-            @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate, @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, @Named("nextIndexReference") @Optional String nextIndexReference, @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
-            @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate, @Named("nextIndexValue") @Optional BigDecimal nextIndexValue, @Named("status") @Optional String status) {
+    public void putLeaseTerm(@Named("leaseReference") String leaseReference, 
+                             @Named("tenantReference") String tenantReference, 
+                             @Named("unitReference") @Optional String unitReference, 
+                             @Named("itemSequence") BigInteger itemSequence, 
+                             @Named("itemType") String itemType,
+                             @Named("itemStartDate") LocalDate itemStartDate, 
+                             @Named("startDate") @Optional LocalDate startDate, 
+                             @Named("endDate") @Optional LocalDate endDate, 
+                             @Named("reviewDate") @Optional LocalDate reviewDate, 
+                             @Named("effectiveDate") @Optional LocalDate effectiveDate,
+                             @Named("value") @Optional BigDecimal value, 
+                             @Named("baseValue") @Optional BigDecimal baseValue, 
+                             @Named("indexationValue") @Optional BigDecimal indexationValue, 
+                             @Named("levellingValue") @Optional BigDecimal levellingValue,
+                             @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, 
+                             @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, 
+                             @Named("baseIndexReference") @Optional String baseIndexReference, 
+                             @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate,
+                             @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate, 
+                             @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, 
+                             @Named("nextIndexReference") @Optional String nextIndexReference, 
+                             @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
+                             @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate, 
+                             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue, 
+                             @Named("status") @Optional String status) {
         Lease lease = leases.findByReference(leaseReference);
         if (lease == null) {
-            throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
+            throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));
         }
         Unit unit;
         if (unitReference != null) {
@@ -373,11 +433,10 @@ public class Api extends AbstractFactoryAndRepository {
         if (itemType == null) {
             throw new ApplicationException(String.format("Type with reference %s not found.", itemType));
         }
-        LeaseItem item = lease.findItem(leaseItemType, startDate, sequence);
+        LeaseItem item = lease.findItem(leaseItemType, itemStartDate, itemSequence);
         if (item == null) {
-            item = lease.addItem();
+            throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));
         }
-
         IndexableLeaseTerm term = (IndexableLeaseTerm) item.findTerm(startDate);
         if (term == null) {
             term = (IndexableLeaseTerm) item.addIndexableTerm();
@@ -404,7 +463,6 @@ public class Api extends AbstractFactoryAndRepository {
         term.setLevellingPercentage(levellingPercentage);
 
         term.setStatus(LeaseTermStatus.valueOf(status));
-
     }
 
     private Countries countries;

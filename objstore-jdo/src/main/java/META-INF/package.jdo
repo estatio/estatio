@@ -52,7 +52,7 @@
             <query name="lease_findLeaseByReference" language="JDOQL"><![CDATA[
             SELECT 
               FROM com.eurocommercialproperties.estatio.dom.lease.Lease 
-             WHERE reference == :r
+             WHERE reference.matches(:r)
             ]]></query>
         </class>
         <class name="LeaseUnit">
@@ -64,6 +64,18 @@
                    startDate == :startDate
             ]]></query>
         </class>
+        <class name="LeaseActor">
+            <query name="leaseActor_find" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM com.eurocommercialproperties.estatio.dom.lease.LeaseActor 
+             WHERE lease == :lease &&
+                   party == :party &&
+                   type == :type &&
+                   startDate == :startDate &&
+                   endDate == :endDate 
+            ]]></query>
+        </class>
+        
     </package>
     <package name="com.eurocommercialproperties.estatio.dom.invoice">
         <class name="Charge">

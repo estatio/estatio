@@ -120,6 +120,7 @@ public class Lease extends AbstractDomainObject {
     private Set<LeaseActor> actors = new LinkedHashSet<LeaseActor>();
 
     @MemberOrder(sequence = "1")
+    @Resolve(Type.EAGERLY)
     public Set<LeaseActor> getActors() {
         return actors;
     }
@@ -310,14 +311,12 @@ public class Lease extends AbstractDomainObject {
 
     public void setLeaseItems(final LeaseItems leaseItems) {
         this.leaseItems = leaseItems;
-
     }
 
     private LeaseUnits leaseUnits;
 
     public void setLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
-
     }
     
     private LeaseActors leaseActors;

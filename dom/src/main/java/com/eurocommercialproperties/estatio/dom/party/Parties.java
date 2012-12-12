@@ -2,9 +2,12 @@ package com.eurocommercialproperties.estatio.dom.party;
 
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -97,7 +100,16 @@ public class Parties extends AbstractFactoryAndRepository {
     }
     // }}
 
+    // {{ findPartiesByReference
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "6")
+    public List<Party> findPartiesByReference(@Named("Reference") final String reference) {
+        throw new NotImplementedException();
+    }
+    // }}
+    
     // {{ findPartyByReference
+    @Hidden
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "6")
     public Party findPartyByReference(

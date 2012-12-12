@@ -271,14 +271,14 @@ public class LeaseItem extends AbstractDomainObject {
 
     @Hidden
     public LeaseTerm addIndexableTerm() {
-        LeaseTerm leaseTerm = leaseTerms.newIndexableLeaseTerm(this);
+        LeaseTerm leaseTerm = leaseTermsService.newIndexableLeaseTerm(this);
         terms.add(leaseTerm);
         return leaseTerm;
     }
 
-    private LeaseTerms leaseTerms;
+    private LeaseTerms leaseTermsService;
 
     public void setLeaseTerms(LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
+        this.leaseTermsService = leaseTerms;
     }
 }

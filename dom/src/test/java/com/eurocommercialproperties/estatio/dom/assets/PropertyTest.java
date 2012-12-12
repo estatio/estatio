@@ -35,7 +35,7 @@ public class PropertyTest {
 
     @Test
     public void testGetCommunicationChannel() {
-        PostalAddress a2 = (PostalAddress) p.getCommunicationChannel(CommunicationChannelType.POSTAL_ADDRESS);  
+        PostalAddress a2 = (PostalAddress) p.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);  
         Assert.assertTrue("Amsterdam", a2.getCity().equals("Amsterdam"));
     }
     
