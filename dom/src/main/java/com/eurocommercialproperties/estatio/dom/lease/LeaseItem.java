@@ -2,6 +2,7 @@ package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -18,7 +19,9 @@ import org.apache.isis.applib.annotation.Where;
 import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.index.Indices;
 import com.eurocommercialproperties.estatio.dom.invoice.Charge;
+import com.eurocommercialproperties.estatio.dom.invoice.Charges;
 
 @PersistenceCapable
 public class LeaseItem extends AbstractDomainObject {
@@ -156,6 +159,10 @@ public class LeaseItem extends AbstractDomainObject {
     public void setIndex(final Index index) {
         this.index = index;
     }
+    
+    public List<Index> choicesIndex() {
+        return indexService.allIndices();
+    }
 
     // }}
 
@@ -211,6 +218,10 @@ public class LeaseItem extends AbstractDomainObject {
 
     public void setCharge(final Charge charge) {
         this.charge = charge;
+    }
+    
+    public List<Charge> choicesCharge() {
+        return chargeService.allCharges();
     }
 
     // }}
@@ -281,4 +292,19 @@ public class LeaseItem extends AbstractDomainObject {
     public void setLeaseTerms(LeaseTerms leaseTerms) {
         this.leaseTermsService = leaseTerms;
     }
+    
+    private Indices indexService;
+    
+    public void setIndexService (Indices indexes){
+        this.indexService = indexes;
+    }
+    
+    private Charges chargeService;
+    
+    public void setChargeService(Charges charges){
+        this.chargeService = charges;
+    }
+
+    
+    
 }
