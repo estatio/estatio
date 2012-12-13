@@ -23,9 +23,9 @@ import com.eurocommercialproperties.estatio.jdo.UnitsJdo;
 import org.apache.isis.applib.fixtures.InstallableFixture;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.datanucleus.DataNucleusObjectStore;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
-import org.apache.isis.runtimes.dflt.testsupport.IsisSystemForTest;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
     

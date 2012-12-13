@@ -7,7 +7,7 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.annotations.Auditable;
+import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 import org.joda.time.LocalDate;
 
 import com.eurocommercialproperties.estatio.dom.asset.Unit;

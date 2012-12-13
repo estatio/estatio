@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.runtimes.dflt.objectstores.jdo.applib.AuditService;
+import org.apache.isis.objectstore.jdo.applib.AuditService;
 
 
 @Named("Audit")
