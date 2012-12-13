@@ -40,7 +40,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.apache.isis.runtimes.dflt.testsupport.IsisSystemForTest;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 public class IntegrationTest {
 
