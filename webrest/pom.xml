@@ -109,13 +109,6 @@
 			<artifactId>isis-viewer-restfulobjects-impl</artifactId>
 		</dependency>
 
-		<!-- TODO: remove dependency on HTML viewer -->
-		<dependency>
-			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>isis-html-viewer-impl</artifactId>
-			<version>0.3.1-SNAPSHOT</version>
-		</dependency>
-	
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-profilestore</artifactId>
@@ -146,6 +139,7 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
+            <scope>compile</scope>
         </dependency>
         
 
