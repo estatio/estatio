@@ -150,9 +150,10 @@
             <artifactId>geronimo-servlet_2.5_spec</artifactId>
         </dependency>
 
-      <dependency>
+        <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
+            <scope>compile</scope>
         </dependency>
         
         <!-- 
