@@ -16,12 +16,18 @@
  */
 package com.eurocommercialproperties.estatio.dom.communicationchannel;
 
+import com.eurocommercialproperties.estatio.dom.utils.StringUtils;
+
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
 public enum CommunicationChannelType {
-
-    POSTAL_ADDRESS(PostalAddress.class), EMAIL_ADDRESS(EmailAddress.class), PHONE_NUMBER(PhoneNumber.class), FAX_NUMBER(FaxNumber.class);
+    ACCOUNTING_POSTAL_ADDRESS(PostalAddress.class), 
+    LEGAL_POSTAL_ADDRESS(PostalAddress.class), 
+    ACCOUNTING_EMAIL_ADDRESS(EmailAddress.class), 
+    LEGAL_EMAIL_ADDRESS(EmailAddress.class), 
+    PHONE_NUMBER(PhoneNumber.class), 
+    FAX_NUMBER(FaxNumber.class);
 
     private Class<? extends CommunicationChannel> cls;
 
@@ -37,6 +43,10 @@ public enum CommunicationChannelType {
         } catch (Exception ex) {
             throw new ApplicationException(ex);
         }
+    }
+    
+    public String title() {
+        return StringUtils.enumTitle(this.toString());
     }
 
 }

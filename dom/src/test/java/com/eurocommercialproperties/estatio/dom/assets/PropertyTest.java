@@ -28,14 +28,14 @@ public class PropertyTest {
     public void setup() {
         p =  new Property();
         PostalAddress a = new PostalAddress();
-        a.setType(CommunicationChannelType.POSTAL_ADDRESS);
+        a.setType(CommunicationChannelType.LEGAL_POSTAL_ADDRESS);
         a.setCity("Amsterdam");
         p.getCommunicationChannels().add(a);
     }
 
     @Test
     public void testGetCommunicationChannel() {
-        PostalAddress a2 = (PostalAddress) p.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);  
+        PostalAddress a2 = (PostalAddress) p.findCommunicationChannelForType(CommunicationChannelType.LEGAL_POSTAL_ADDRESS);  
         Assert.assertTrue("Amsterdam", a2.getCity().equals("Amsterdam"));
     }
     

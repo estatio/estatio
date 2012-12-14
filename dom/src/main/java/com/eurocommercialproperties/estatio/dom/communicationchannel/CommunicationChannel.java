@@ -9,6 +9,7 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 
 @PersistenceCapable
@@ -44,4 +45,19 @@ public abstract class CommunicationChannel extends AbstractDomainObject {
         this.reference = referencen;
     }
     // }}
+    
+    
+    // {{ Description (property)
+    private String description;
+
+    @MemberOrder(sequence = "10")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+    // }}
+
 }

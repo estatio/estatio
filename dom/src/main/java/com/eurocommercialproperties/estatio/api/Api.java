@@ -196,7 +196,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
-        CommunicationChannel comm = property.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
+        CommunicationChannel comm = property.findCommunicationChannelForType(null);
         if (comm == null) {
             comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
         }
@@ -280,7 +280,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setStorageArea(storageArea);
         unit.setMezzanineArea(mezzanineArea);
         unit.setTerraceArea(terraceArea);
-        CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
+        CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.LEGAL_POSTAL_ADDRESS);
         if (cc==null){
             cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
             unit.addCommunicationChannel(cc);
