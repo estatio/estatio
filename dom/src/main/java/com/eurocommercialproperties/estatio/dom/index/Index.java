@@ -107,6 +107,20 @@ public class Index extends AbstractDomainObject {
     }
 
     // }}
+    
+    public BigDecimal[] getIndexationValues(LocalDate baseDate, LocalDate nextDate){
+        IndexValue baseIndexValue = getIndices().findIndexValueForDate(this, baseDate, baseDate.dayOfMonth().withMaximumValue());
+        IndexValue nextIndexValue = getIndices().findIndexValueForDate(this, nextDate, nextDate.dayOfMonth().withMaximumValue());
+        BigDecimal[] returnValues = new BigDecimal[3];
+        if (baseIndexValue != null && nextIndexValue != null) {
+            returnValues[0] = baseIndexValue.getValue();
+            returnValues[1] = nextIndexValue.getValue();
+            BigDecimal rebaseFactor = BigDecimal.ONE;
+            rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseDate);
+            returnValues[2] = nextIndexValue.getValue().divide(baseIndexValue.getValue(), 5, RoundingMode.HALF_UP).multiply(rebaseFactor);
+        }
+        return returnValues;
+    }
 
     // {{ injected: Indices
     private Indices indices;

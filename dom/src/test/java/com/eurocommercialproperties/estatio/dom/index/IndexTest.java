@@ -8,6 +8,7 @@ import java.math.RoundingMode;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,13 +71,13 @@ public class IndexTest {
     }
 
     @Test
-    public void testFactorForDate() {
+    public void testGetFactorForDate() {
         assertEquals(ib2010.getFactorForDate(baseDate), new BigDecimal("1.234"));
         assertEquals(new BigDecimal("1.659730"), ib2010.getFactorForDate(new LocalDate(1999, 1, 1)));
     }
 
     @Test
-    public void testIndexationFactor() {
+    public void testGetIndexationFactor() {
         context.checking(new Expectations() {
             {
                 one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
@@ -87,4 +88,33 @@ public class IndexTest {
         });
         assertEquals(result, index.getIndexationFactor(baseDate, nextDate));
     }
+
+    @Test
+    public void testGetIndexationValues() {
+        context.checking(new Expectations() {
+            {
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
+                will(returnValue(iv1));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
+                will(returnValue(iv2));
+            }
+        });
+        assertEquals(result, index.getIndexationValues(baseDate, nextDate)[2]);
+    }
+
+    @Test
+    public void testGetIndexationValuesWithNull() {
+        context.checking(new Expectations() {
+            {
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
+                will(returnValue(iv1));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
+                will(returnValue(null));
+            }
+        });
+        Assert.assertNull(index.getIndexationValues(baseDate, nextDate)[2]);
+    }
+
+    
+    
 }

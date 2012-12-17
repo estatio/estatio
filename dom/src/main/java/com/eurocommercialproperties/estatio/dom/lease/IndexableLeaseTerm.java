@@ -1,7 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.lease;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.Inheritance;
@@ -9,9 +8,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.index.IndexationCalculator;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -220,13 +223,18 @@ public class IndexableLeaseTerm extends LeaseTerm {
     
     // {{
     public void verify() {
-        BigDecimal factor = getLeaseItem().getIndex().getIndexationFactor(getBaseIndexStartDate(), getNextIndexStartDate());
-        if (factor.compareTo(BigDecimal.ZERO) != 0) {
-            // we have found a indexation factor
-            BigDecimal newValue = getValue().multiply(factor);
-            createNextLeaseTerm(this.getEffectiveDate(), newValue.round(new MathContext(0)));
+        IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getBaseIndexEndDate(), getNextIndexStartDate(), getNextIndexEndDate(), getBaseValue());
+        calculator.calculate();
+        
+        if (getIndexedValue().equals(calculator.getIndexedValue())){
+            // nothing has changed
+        } else
+        {
+            setIndexedValue(calculator.getIndexedValue());
+            setIndexationPercentage(calculator.getIndexationPercentage());
+            setBaseIndexValue(calculator.getBaseIndexValue());
+            setNextIndexValue(calculator.getNextIndexValue());
         }
-        return;
     }
 
     // }}
@@ -245,10 +253,11 @@ public class IndexableLeaseTerm extends LeaseTerm {
         term.setNextIndexStartDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
         term.setNextIndexEndDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexEndDate()));
         term.setEffectiveDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getEffectiveDate()));
+        term.setReviewDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getReviewDate()));
         term.setBaseValue(value);
         // terminate current term
         this.setEndDate(startDate.minusDays(1));
-        this.setNextTerm(term);
+//        this.setNextTerm(term);
         return null;
     }
 
@@ -262,4 +271,9 @@ public class IndexableLeaseTerm extends LeaseTerm {
     }
 
     // }}
+    @Hidden
+    public Index getIndex() {
+        return this.getLeaseItem().getIndex();
+    }
+    
 }
