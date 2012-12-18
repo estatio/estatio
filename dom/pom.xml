@@ -173,18 +173,16 @@
 			<artifactId>isis-objectstore-jdo-applib</artifactId>
 		</dependency>
 
-          <dependency>
-              <groupId>org.picocontainer</groupId>
-              <artifactId>picocontainer</artifactId>
-              <version>2.14.1</version>
-          </dependency>
+        <dependency>
+            <groupId>org.picocontainer</groupId>
+            <artifactId>picocontainer</artifactId>
+            <version>2.14.1</version>
+        </dependency>
 
 		<dependency> 
-			<groupId>com.google.code</groupId>
-			<artifactId>rfc2445</artifactId> 
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/rfc2445-4Mar2011.jar</systemPath> 
+			<groupId>com.google</groupId>
+			<artifactId>rfc-2445</artifactId> 
+			<version>0.0.20110304</version>
 		</dependency>
    	</dependencies>
    	
