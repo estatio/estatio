@@ -1,8 +1,9 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
-import static org.junit.Assert.assertEquals;
-
 import java.math.BigDecimal;
+
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -12,13 +13,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
-
 public class IndexCalculatorTest {
 
-    private IndexationCalculator c;
-    private BigDecimal[] values;
+    private IndexationCalculator indexCalculator;
 
     @Mock
     Index mockIndex;
@@ -28,19 +25,33 @@ public class IndexCalculatorTest {
 
     @Before
     public void setup() {
-        c = new IndexationCalculator(mockIndex, new LocalDate(2010, 1, 1), new LocalDate(2010, 1, 31), new LocalDate(2011, 1, 1), new LocalDate(2011, 1, 31), new BigDecimal(100000));
-        values = new BigDecimal[] { BigDecimal.valueOf(122.2), BigDecimal.valueOf(111.1), BigDecimal.valueOf(1.234) };
+        indexCalculator = new IndexationCalculator(mockIndex, new LocalDate(2010, 1, 1), new LocalDate(2010, 1, 31), new LocalDate(2011, 1, 1), new LocalDate(2011, 1, 31), new BigDecimal(250000));
+        indexCalculator.setBaseIndexValue(BigDecimal.valueOf(122.2));
+        indexCalculator.setNextIndexValue(BigDecimal.valueOf(111.1));
+        indexCalculator.setRebaseFactor(BigDecimal.valueOf(1.234));
     }
 
     @Test
-    public void test() {
+    public void testIndexationPercentage() {
         context.checking(new Expectations() {
             {
-                one(mockIndex).getIndexationValues(with(equal(new LocalDate(2010, 1, 1))), with(equal(new LocalDate(2011, 1, 1))));
-                will(returnValue(values));
+                one(mockIndex).initialize(with(equal(indexCalculator)), with(equal(new LocalDate(2010, 1, 1))), with(equal(new LocalDate(2011, 1, 1))));
             }
         });
-        c.calculate();
-        Assert.assertEquals(BigDecimal.valueOf(12), c.getIndexationPercentage());
+        indexCalculator.calculate();
+        Assert.assertEquals(BigDecimal.valueOf(12), indexCalculator.getIndexationPercentage());
     }
+    
+    @Test
+    public void testIndexedValue() {
+        context.checking(new Expectations() {
+            {
+                one(mockIndex).initialize(with(equal(indexCalculator)), with(equal(new LocalDate(2010, 1, 1))), with(equal(new LocalDate(2011, 1, 1))));
+            }
+        });
+        indexCalculator.calculate();
+        Assert.assertEquals(BigDecimal.valueOf(280000).setScale(2), indexCalculator.getIndexedValue());
+    }
+
+    
 }

@@ -8,15 +8,17 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
 public class Index extends AbstractDomainObject {
-    
+
     // {{ Reference (property)
     private String reference;
 
@@ -88,40 +90,35 @@ public class Index extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ Actions
 
-    // {{ GetValueForDate (action)
+    @Hidden
+    public BigDecimal getIndexValueForDate(LocalDate date) {
+        IndexValue indexValue = getIndices().findIndexValueForDate(this, date, date.dayOfMonth().withMaximumValue());
+        return indexValue == null ? null : indexValue.getValue();
+    }
 
-    public BigDecimal getIndexationFactor(@Named("Base Date") LocalDate baseDate, @Named("Next Date") LocalDate nextDate) {
-        IndexValue startIndexValue = getIndices().findIndexValueForDate(this, baseDate, baseDate.dayOfMonth().withMaximumValue());
-        IndexValue endIndexValue = getIndices().findIndexValueForDate(this, nextDate, nextDate.dayOfMonth().withMaximumValue());
-        if (startIndexValue == null || endIndexValue == null) {
-            getContainer().warnUser("No index value found");
-            //TODO: specify further
-            return BigDecimal.ZERO;
-        } else {
-            BigDecimal rebaseFactor = BigDecimal.ONE;
-            rebaseFactor = endIndexValue.getIndexBase().getFactorForDate(baseDate);
-            BigDecimal indexationFactor = endIndexValue.getValue().divide(startIndexValue.getValue(), 5, RoundingMode.HALF_UP).multiply(rebaseFactor);
-            return indexationFactor;
+    @Hidden
+    public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
+        IndexValue nextIndexValue = getIndices().findIndexValueForDate(this, nextIndexStartDate, nextIndexStartDate.dayOfMonth().withMaximumValue());
+        if (nextIndexValue != null) {
+            BigDecimal rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseIndexStartDate);
+            return rebaseFactor;
         }
+        return null;
+    }
+
+    @Hidden
+    public void initialize(IndexationCalculator indexationCalculator, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
+        indexationCalculator.setBaseIndexValue(getIndexValueForDate(baseIndexStartDate));
+        indexationCalculator.setNextIndexValue(getIndexValueForDate(nextIndexStartDate));
+        indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
+
     }
 
     // }}
     
-    public BigDecimal[] getIndexationValues(LocalDate baseDate, LocalDate nextDate){
-        IndexValue baseIndexValue = getIndices().findIndexValueForDate(this, baseDate, baseDate.dayOfMonth().withMaximumValue());
-        IndexValue nextIndexValue = getIndices().findIndexValueForDate(this, nextDate, nextDate.dayOfMonth().withMaximumValue());
-        BigDecimal[] returnValues = new BigDecimal[3];
-        if (baseIndexValue != null && nextIndexValue != null) {
-            returnValues[0] = baseIndexValue.getValue();
-            returnValues[1] = nextIndexValue.getValue();
-            BigDecimal rebaseFactor = BigDecimal.ONE;
-            rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseDate);
-            returnValues[2] = nextIndexValue.getValue().divide(baseIndexValue.getValue(), 5, RoundingMode.HALF_UP).multiply(rebaseFactor);
-        }
-        return returnValues;
-    }
-
     // {{ injected: Indices
     private Indices indices;
 
@@ -134,4 +131,5 @@ public class Index extends AbstractDomainObject {
     }
 
     // }}
+
 }

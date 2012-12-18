@@ -18,7 +18,7 @@ import org.apache.isis.applib.annotation.ObjectType;
 @ObjectType("CCHN")
 @DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY, column="COMMUNICATIONCHANNEL_ID")
 public abstract class CommunicationChannel extends AbstractDomainObject {
-
+    
     // {{ Type (attribute)
     private CommunicationChannelType type;
 

@@ -70,6 +70,7 @@ public class IndexBase extends AbstractDomainObject {
 
     @Optional
     @MemberOrder(sequence = "4")
+    @Persistent
     public BigDecimal getFactor() {
         return factor;
     }

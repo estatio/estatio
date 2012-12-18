@@ -1,7 +1,6 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 import org.joda.time.LocalDate;
@@ -53,16 +52,30 @@ public class IndexationCalculator {
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }
+    
+    public void calculate(Indexable input) {
+        this.calculate();
+        input.setBaseIndexValue(baseIndexValue);
+        input.setNextIndexValue(nextIndexValue);
+        input.setIndexationPercentage(indexationPercentage);
+    }        
 
     public void calculate() {
-        BigDecimal[] indexValues = index.getIndexationValues(baseIndexStartDate, nextIndexStartDate);
-        this.baseIndexValue = indexValues[0];
-        this.nextIndexValue = indexValues[1];
-        this.rebaseFactor = indexValues[2];
+        index.initialize(this, baseIndexStartDate, nextIndexStartDate);
         if (this.baseIndexValue != null && this.nextIndexValue !=null){
             indexationFactor = nextIndexValue.divide(baseIndexValue, 5, RoundingMode.HALF_UP).multiply(rebaseFactor).setScale(2, RoundingMode.HALF_UP);
             indexationPercentage = indexationFactor.subtract(BigDecimal.ONE).multiply(ONE_HUNDRED).setScale(0);
             indexedValue = baseValue.multiply(indexationFactor);
         }
     }
+    public void setBaseIndexValue(BigDecimal baseIndexValue) {
+        this.baseIndexValue = baseIndexValue;
+    }
+    public void setNextIndexValue(BigDecimal nextIndexValue) {
+        this.nextIndexValue = nextIndexValue;
+    }
+    public void setRebaseFactor(BigDecimal rebaseFactor) {
+        this.rebaseFactor = rebaseFactor;
+    }
+    
 }

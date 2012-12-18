@@ -77,7 +77,7 @@ public class IndexTest {
     }
 
     @Test
-    public void testGetIndexationFactor() {
+    public void testGetIndexValueForDate() {
         context.checking(new Expectations() {
             {
                 one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
@@ -86,35 +86,29 @@ public class IndexTest {
                 will(returnValue(iv2));
             }
         });
-        assertEquals(result, index.getIndexationFactor(baseDate, nextDate));
+        assertEquals(BigDecimal.valueOf(122.2), index.getIndexValueForDate(baseDate));
+        assertEquals(BigDecimal.valueOf(111.1), index.getIndexValueForDate(nextDate));
     }
 
     @Test
-    public void testGetIndexationValues() {
+    public void testGetRebaseFactor() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
-                will(returnValue(iv1));
                 one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
                 will(returnValue(iv2));
             }
         });
-        assertEquals(result, index.getIndexationValues(baseDate, nextDate)[2]);
+        assertEquals(BigDecimal.valueOf(1.234), index.getRebaseFactorForDates(baseDate, nextDate));
     }
-
+    
     @Test
-    public void testGetIndexationValuesWithNull() {
+    public void testGetRebaseFactorWithNull() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
-                will(returnValue(iv1));
                 one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
                 will(returnValue(null));
             }
         });
-        Assert.assertNull(index.getIndexationValues(baseDate, nextDate)[2]);
+        assertEquals(null, index.getRebaseFactorForDates(baseDate, nextDate));
     }
-
-    
-    
 }

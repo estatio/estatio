@@ -8,18 +8,21 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.index.Indexable;
+import com.eurocommercialproperties.estatio.dom.index.IndexationCalculator;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.joda.time.LocalDate;
-
-import com.eurocommercialproperties.estatio.dom.index.Index;
-import com.eurocommercialproperties.estatio.dom.index.IndexationCalculator;
+import org.apache.isis.applib.annotation.Optional;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator("LTRI")
-public class IndexableLeaseTerm extends LeaseTerm {
+public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
 
     // {{ BaseIndexStartDate (property)
     private LocalDate baseIndexStartDate;
@@ -55,6 +58,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     private BigDecimal baseIndexValue;
 
     @MemberOrder(sequence = "12")
+    @Optional
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
     }
@@ -99,6 +103,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     private BigDecimal nextIndexValue;
 
     @MemberOrder(sequence = "15")
+    @Optional
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
     }
@@ -156,6 +161,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     private BigDecimal indexedValue;
 
     @MemberOrder(sequence = "19")
+    @Optional
     public BigDecimal getIndexedValue() {
         return indexedValue;
     }
@@ -170,6 +176,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     private BigDecimal indexationPercentage;
 
     @MemberOrder(sequence = "20")
+    @Optional
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }
@@ -184,6 +191,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     private BigDecimal levellingPercentage;
 
     @MemberOrder(sequence = "21")
+    @Optional
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
     }
@@ -198,6 +206,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     private BigDecimal levellingValue;
 
     @MemberOrder(sequence = "21")
+    @Optional
     public BigDecimal getLevellingValue() {
         return levellingValue;
     }
@@ -210,7 +219,8 @@ public class IndexableLeaseTerm extends LeaseTerm {
     // {{ IndexationValue (property)
     private BigDecimal indexationValue;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "22")
+    @Optional
     public BigDecimal getIndexationValue() {
         return indexationValue;
     }
@@ -224,17 +234,7 @@ public class IndexableLeaseTerm extends LeaseTerm {
     // {{
     public void verify() {
         IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getBaseIndexEndDate(), getNextIndexStartDate(), getNextIndexEndDate(), getBaseValue());
-        calculator.calculate();
-        
-        if (getIndexedValue().equals(calculator.getIndexedValue())){
-            // nothing has changed
-        } else
-        {
-            setIndexedValue(calculator.getIndexedValue());
-            setIndexationPercentage(calculator.getIndexationPercentage());
-            setBaseIndexValue(calculator.getBaseIndexValue());
-            setNextIndexValue(calculator.getNextIndexValue());
-        }
+        calculator.calculate(this);
     }
 
     // }}

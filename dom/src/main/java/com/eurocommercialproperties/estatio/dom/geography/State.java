@@ -22,7 +22,7 @@ public class State extends AbstractDomainObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
-
+    
     // }}
 
     // {{ Name (attribute, title)
