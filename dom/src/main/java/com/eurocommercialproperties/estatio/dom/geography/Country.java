@@ -4,6 +4,7 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
@@ -14,6 +15,7 @@ public class Country extends AbstractDomainObject {
     // {{ Reference (attribute)
     private String reference;
 
+    @Disabled
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;

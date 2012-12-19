@@ -58,6 +58,7 @@ public class IndexationCalculator {
         input.setBaseIndexValue(baseIndexValue);
         input.setNextIndexValue(nextIndexValue);
         input.setIndexationPercentage(indexationPercentage);
+        input.setIndexedValue(indexedValue);
     }        
 
     public void calculate() {

@@ -38,7 +38,7 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
             final State state, 
             final Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
-        pa.setType(CommunicationChannelType.LEGAL_POSTAL_ADDRESS);
+        pa.setType(CommunicationChannelType.POSTAL_ADDRESS);
         pa.setAddress1(address1);
         pa.setAddress2(address2);
         pa.setCity(city);
@@ -55,7 +55,7 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
     public EmailAddress newEmailAddress(
             final @Named("Address") String address) {
         final EmailAddress ea = newTransientInstance(EmailAddress.class);
-        ea.setType(CommunicationChannelType.LEGAL_EMAIL_ADDRESS);
+        ea.setType(CommunicationChannelType.EMAIL_ADDRESS);
         ea.setAddress(address);
         persist(ea);
         return ea;

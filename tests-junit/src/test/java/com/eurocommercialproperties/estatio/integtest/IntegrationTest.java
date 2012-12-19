@@ -167,7 +167,7 @@ public class IntegrationTest {
     @Test 
     public void leasesCanBeFoundUsingWildcard() throws Exception {
         Leases leases = isft.getService(Leases.class);
-        assertThat(leases.findLeasesByReference("OXF*").size(), is(1));
+        assertThat(leases.findLeasesByReference("OXF*").size(), is(2));
     }
 
     @Test 
@@ -197,5 +197,14 @@ public class IntegrationTest {
         Units units = isft.getService(Units.class);
         Assert.assertEquals("OXF-001", units.findByReference("OXF-001").getReference());
     }
+    
+    @Test 
+    public void leaseTermVerifiedCorrectly() throws Exception {
+        Leases leases = isft.getService(Leases.class);
+        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
+        LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
+        Assert.assertNotNull(item.findTerm(new LocalDate(2010, 7, 15)));
+    }
 
+    
 }

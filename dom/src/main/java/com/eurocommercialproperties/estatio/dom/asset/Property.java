@@ -2,6 +2,7 @@ package com.eurocommercialproperties.estatio.dom.asset;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.Element;
@@ -12,6 +13,7 @@ import javax.jdo.annotations.Persistent;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannel;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.CommunicationChannelType;
 import com.eurocommercialproperties.estatio.dom.communicationchannel.PostalAddress;
+import com.eurocommercialproperties.estatio.dom.party.Parties;
 import com.eurocommercialproperties.estatio.dom.party.Party;
 
 import org.joda.time.LocalDate;
@@ -291,16 +293,27 @@ public class Property extends AbstractDomainObject {
         }
         return propertyActor;
     }
-
+    
+    public List<Party> choices0AddActor() {
+        return parties.allParties();
+    }
+    
     // }}
     
     // {{ injected: Units
+    
     private Units unitsRepo;
 
     public void setUnits(final Units unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
 
+    private Parties parties;
+
+    public void setParties(Parties parties) {
+        this.parties = parties;
+    }
+    
     // }}
 
     // {{ injected: PropertyActors

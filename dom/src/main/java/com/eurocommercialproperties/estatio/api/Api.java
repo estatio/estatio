@@ -280,7 +280,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setStorageArea(storageArea);
         unit.setMezzanineArea(mezzanineArea);
         unit.setTerraceArea(terraceArea);
-        CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.LEGAL_POSTAL_ADDRESS);
+        CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
         if (cc==null){
             cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
             unit.addCommunicationChannel(cc);

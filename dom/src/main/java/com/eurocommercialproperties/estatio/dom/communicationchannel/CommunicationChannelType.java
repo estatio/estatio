@@ -23,9 +23,9 @@ import org.apache.isis.applib.DomainObjectContainer;
 
 public enum CommunicationChannelType {
     ACCOUNTING_POSTAL_ADDRESS(PostalAddress.class), 
-    LEGAL_POSTAL_ADDRESS(PostalAddress.class), 
+    POSTAL_ADDRESS(PostalAddress.class), 
     ACCOUNTING_EMAIL_ADDRESS(EmailAddress.class), 
-    LEGAL_EMAIL_ADDRESS(EmailAddress.class), 
+    EMAIL_ADDRESS(EmailAddress.class), 
     PHONE_NUMBER(PhoneNumber.class), 
     FAX_NUMBER(FaxNumber.class);
 

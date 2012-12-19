@@ -7,13 +7,16 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
+@Bounded
 public class Tax extends AbstractDomainObject {
 
     // {{ Reference (property)
