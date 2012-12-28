@@ -27,6 +27,7 @@ public class IndexFixture extends AbstractFixture {
         Index index = createIndex("ISTAT-FOI", "ISTAT FOI");
 
         IndexBase base1989 = createIndexBase(index, null, 1990, 1.242);
+        
         createIndexValues(base1989, 1990, new double[] { 103.3, 104, 104.4, 104.8, 105.1, 105.5, 105.9, 106.6, 107.2, 108.1, 108.8, 109.2 }, 106.1);
         createIndexValues(base1989, 1991, new double[] { 110, 111, 111.3, 111.8, 112.2, 112.8, 113, 113.3, 113.8, 114.7, 115.5, 115.8 }, 112.9);
         createIndexValues(base1989, 1992, new double[] { 116.7, 116.9, 117.4, 117.9, 118.5, 118.9, 119.1, 119.2, 119.6, 120.3, 121, 121.2 }, 118.9);

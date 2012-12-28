@@ -26,10 +26,11 @@ public class EstatioFixture extends AbstractFixture {
         getContainer().newTransientInstance(PartiesFixture.class),
         getContainer().newTransientInstance(PropertiesAndUnitsFixture.class),
         getContainer().newTransientInstance(LeasesFixture.class),
-        getContainer().newTransientInstance(TaxFixture.class));
+        getContainer().newTransientInstance(TaxFixture.class)
+        );
         
         for (AbstractFixture fixture : fixtures) {
-            fixture.install();
+            fixture.install(); 
             getContainer().flush();
         }
         

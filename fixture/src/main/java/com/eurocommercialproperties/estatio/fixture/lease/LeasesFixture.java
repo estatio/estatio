@@ -63,7 +63,7 @@ public class LeasesFixture extends AbstractFixture {
     private LeaseItem createLeaseItem(Lease lease, LeaseItemType leaseItemType, Charge charge, LocalDate startDate) {
         LeaseItem li = leaseItems.newLeaseItem(lease);
         li.setType(leaseItemType);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY);
+        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setIndexationFrequency(IndexationFrequency.YEARLY);
         li.setIndex(indices.findByReference("ISTAT-FOI"));
         li.setCharge(charge);

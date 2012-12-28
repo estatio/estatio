@@ -1,10 +1,13 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.Order;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -13,7 +16,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
@@ -49,17 +51,34 @@ public class Index extends AbstractDomainObject {
     // }}
 
     // {{ IndexBases (Collection)
+    // @Persistent(mappedBy = "index")
+    // @Order(extensions = @Extension(vendorName = "datanucleus", key =
+    // "list-ordering", value = "startDate asc"))
+    // private Set<IndexBase> indexBases = new LinkedHashSet<IndexBase>();
+    //
+    // @MemberOrder(sequence = "3")
+    // public Set<IndexBase> getIndexBases() {
+    // return indexBases;
+    // }
+    //
+    // public void setIndexBases(final Set<IndexBase> indexBases) {
+    // this.indexBases = indexBases;
+    // }
+
+    // {{ IndexBases (Collection)
     @Persistent(mappedBy = "index")
-    private Set<IndexBase> indexBases = new LinkedHashSet<IndexBase>();
+    private List<IndexBase> indexBases = new ArrayList<IndexBase>();
 
     @MemberOrder(sequence = "3")
-    public Set<IndexBase> getIndexBases() {
+    public List<IndexBase> getIndexBases() {
         return indexBases;
     }
 
-    public void setIndexBases(final Set<IndexBase> indexBases) {
+    public void setIndexBases(final List<IndexBase> indexBases) {
         this.indexBases = indexBases;
     }
+
+    // }}
 
     public void addToIndexBases(final IndexBase indexBase) {
         // check for no-op
@@ -90,7 +109,7 @@ public class Index extends AbstractDomainObject {
     }
 
     // }}
-    
+
     // {{ Actions
 
     @Hidden
@@ -118,7 +137,7 @@ public class Index extends AbstractDomainObject {
     }
 
     // }}
-    
+
     // {{ injected: Indices
     private Indices indices;
 

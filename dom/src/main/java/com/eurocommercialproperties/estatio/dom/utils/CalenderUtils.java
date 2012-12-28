@@ -14,7 +14,7 @@ public class CalenderUtils {
     }
 
     public static Interval currentInterval(LocalDate date, String rrule) {
-    return currentInterval(date, rrule, new LocalDate(2000, 1, 1));
+        return currentInterval(date, rrule, new LocalDate(2000, 1, 1));
     }
     
     public static Interval currentInterval(LocalDate date, String rrule, LocalDate startDate){

@@ -1,7 +1,9 @@
 package com.eurocommercialproperties.estatio.dom.index;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -99,17 +101,32 @@ public class IndexBase extends AbstractDomainObject {
     // }}
 
     // {{ Values (Collection)
+    // @Persistent(mappedBy = "indexBase")
+    // private Set<IndexValue> values = new LinkedHashSet<IndexValue>();
+    //
+    // @MemberOrder(sequence = "6")
+    // public Set<IndexValue> getValues() {
+    // return values;
+    // }
+    //
+    // public void setValues(final Set<IndexValue> values) {
+    // this.values = values;
+    // }
+
+    // {{ Values (Collection)
     @Persistent(mappedBy = "indexBase")
-    private Set<IndexValue> values = new LinkedHashSet<IndexValue>();
+    private List<IndexValue> values = new ArrayList<IndexValue>();
 
     @MemberOrder(sequence = "6")
-    public Set<IndexValue> getValues() {
+    public List<IndexValue> getValues() {
         return values;
     }
 
-    public void setValues(final Set<IndexValue> values) {
+    public void setValues(final List<IndexValue> values) {
         this.values = values;
     }
+
+    // }}
 
     public void addToValues(final IndexValue indexValue) {
         // check for no-op

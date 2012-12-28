@@ -4,6 +4,7 @@ package com.eurocommercialproperties.estatio.dom.lease;
 public enum LeaseItemType {
 
     RENT("Rent", IndexableLeaseTerm.class), 
+    TURNOVER_RENT("Turnover Rent", LeaseTerm.class),
     DISCOUNT("Discount", LeaseTerm.class), 
     SERVICE_CHARGE("Service Charge", LeaseTerm.class), 
     OTHER("Other", LeaseTerm.class);

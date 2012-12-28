@@ -30,9 +30,6 @@
 
 	<properties>
         <siteBaseDir>..</siteBaseDir>
-
-		<!--  TODO: remove!!!!! -->        
-        <skipTests>true</skipTests>
 	</properties>
     
 	<dependencies>
@@ -90,6 +87,9 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
+            <!-- 
+            <version>1.8.0.10</version>
+             -->
         </dependency>
 
         <dependency>
