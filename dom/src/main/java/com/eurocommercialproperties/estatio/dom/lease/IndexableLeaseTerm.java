@@ -8,21 +8,20 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import com.eurocommercialproperties.estatio.dom.index.Index;
-import com.eurocommercialproperties.estatio.dom.index.Indexable;
-import com.eurocommercialproperties.estatio.dom.index.IndexationCalculator;
-
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.joda.time.LocalDate;
+
+import com.eurocommercialproperties.estatio.dom.index.Index;
+import com.eurocommercialproperties.estatio.dom.index.Indexable;
+import com.eurocommercialproperties.estatio.dom.index.IndexationCalculator;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator("LTRI")
-public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
+public class IndexableLeaseTerm extends LeaseTerm implements Indexable {
 
     // {{ BaseIndexStartDate (property)
     private LocalDate baseIndexStartDate;
@@ -111,8 +110,9 @@ public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
     public void setNextIndexValue(final BigDecimal nextIndexValue) {
         this.nextIndexValue = nextIndexValue;
     }
+
     // }}
-    
+
     // {{ ReviewDate (property)
     private LocalDate reviewDate;
 
@@ -121,7 +121,7 @@ public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
     public LocalDate getReviewDate() {
         return reviewDate;
     }
-    
+
     public void setReviewDate(final LocalDate reviewDate) {
         this.reviewDate = reviewDate;
     }
@@ -153,21 +153,6 @@ public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
 
     public void setBaseValue(final BigDecimal baseValue) {
         this.baseValue = baseValue;
-    }
-
-    // }}
-
-    // {{ IndexedValue (property)
-    private BigDecimal indexedValue;
-
-    @MemberOrder(sequence = "19")
-    @Optional
-    public BigDecimal getIndexedValue() {
-        return indexedValue;
-    }
-
-    public void setIndexedValue(final BigDecimal indexedValue) {
-        this.indexedValue = indexedValue;
     }
 
     // }}
@@ -214,23 +199,24 @@ public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
     public void setLevellingValue(final BigDecimal levellingValue) {
         this.levellingValue = levellingValue;
     }
+
     // }}
-    
-    // {{ IndexationValue (property)
-    private BigDecimal indexationValue;
+
+    // {{ IndexedValue (property)
+    private BigDecimal indexedValue;
 
     @MemberOrder(sequence = "22")
     @Optional
-    public BigDecimal getIndexationValue() {
-        return indexationValue;
+    public BigDecimal getIndexedValue() {
+        return indexedValue;
     }
 
-    public void setIndexationValue(final BigDecimal indexationValue) {
-        this.indexationValue = indexationValue;
+    public void setIndexedValue(final BigDecimal indexedValue) {
+        this.indexedValue = indexedValue;
     }
+
     // }}
 
-    
     // {{
     public void verify() {
         IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getBaseIndexEndDate(), getNextIndexStartDate(), getNextIndexEndDate(), getBaseValue());
@@ -257,7 +243,7 @@ public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
         term.setBaseValue(value);
         // terminate current term
         this.setEndDate(startDate.minusDays(1));
-//        this.setNextTerm(term);
+        // this.setNextTerm(term);
         return null;
     }
 
@@ -275,5 +261,5 @@ public class IndexableLeaseTerm extends LeaseTerm implements Indexable{
     public Index getIndex() {
         return this.getLeaseItem().getIndex();
     }
-    
+
 }

@@ -9,6 +9,12 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.joda.time.LocalDate;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import com.eurocommercialproperties.estatio.dom.asset.Properties;
 import com.eurocommercialproperties.estatio.dom.asset.Property;
 import com.eurocommercialproperties.estatio.dom.asset.PropertyActor;
@@ -17,6 +23,7 @@ import com.eurocommercialproperties.estatio.dom.asset.PropertyActors;
 import com.eurocommercialproperties.estatio.dom.asset.Unit;
 import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.geography.Countries;
+import com.eurocommercialproperties.estatio.dom.geography.States;
 import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 import com.eurocommercialproperties.estatio.dom.invoice.Charges;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
@@ -34,13 +41,6 @@ import com.eurocommercialproperties.estatio.jdo.ChargesJdo;
 import com.eurocommercialproperties.estatio.jdo.PartiesJdo;
 import com.eurocommercialproperties.estatio.jdo.PropertiesJdo;
 import com.eurocommercialproperties.estatio.jdo.PropertyActorsJdo;
-
-import org.joda.time.LocalDate;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 public class IntegrationTest {
 
@@ -62,6 +62,13 @@ public class IntegrationTest {
         Assert.assertEquals("NLD", c.findByReference("NLD").getReference());
     }
 
+    @Test
+    public void stateCanBeFound() throws Exception {
+        States states = isft.getService(States.class);
+        Countries countries = isft.getService(Countries.class);
+        assertThat(states.findByCountry(countries.findByReference("NLD")).size(), is(1));
+    }
+    
     @Test
     public void numberOfPropertiesIs2() throws Exception {
         Properties properties = isft.getService(Properties.class);

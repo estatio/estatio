@@ -66,7 +66,7 @@ public class States extends AbstractFactoryAndRepository {
         return allMatches(State.class, new Filter<State>() {
             @Override
             public boolean accept(final State state) {
-                return country.equals(state.getCountry());
+                return state.getCountry().equals(country);
             }
         });
     }

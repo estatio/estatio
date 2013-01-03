@@ -12,13 +12,15 @@ import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
+import com.eurocommercialproperties.estatio.dom.geography.Countries;
 import com.eurocommercialproperties.estatio.dom.geography.Country;
 import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator("POST") // required since subtypes are rolling-up
+@Discriminator("POST")
+// required since subtypes are rolling-up
 @ObjectType("POST")
 public class PostalAddress extends CommunicationChannel {
 
@@ -104,6 +106,7 @@ public class PostalAddress extends CommunicationChannel {
     public void setCountry(final Country country) {
         this.country = country;
     }
+
     public void modifyCountry(final Country country) {
         setCountry(country);
         if (getState() != null && getState().getCountry() != country) {
@@ -111,10 +114,15 @@ public class PostalAddress extends CommunicationChannel {
         }
     }
 
+    public List<Country> choicesCountry() {
+        return countries.allCountries();
+    }
+
     public void clearCountry() {
         setCountry(null);
         setState(null);
     }
+
     // }}
 
     // {{ State (attribute)
@@ -131,10 +139,10 @@ public class PostalAddress extends CommunicationChannel {
         this.state = state;
     }
 
-    // TODO
     public List<State> choicesState() {
         return states.findByCountry(country);
     }
+    
     // }}
 
     // {{ injected dependencies
@@ -143,6 +151,13 @@ public class PostalAddress extends CommunicationChannel {
     public void setStates(final States states) {
         this.states = states;
     }
+
     // }}
+
+    private Countries countries;
+
+    public void setCountries(Countries countries) {
+        this.countries = countries;
+    }
 
 }
