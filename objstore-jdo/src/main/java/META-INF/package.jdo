@@ -93,4 +93,13 @@
             ]]></query>
         </class>
     </package>
+    <package name="com.eurocommercialproperties.estatio.dom.geography">
+        <class name="State">
+            <query name="state_findStatesByCountry" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM com.eurocommercialproperties.estatio.dom.geography.State 
+            WHERE country == :country
+            ]]></query>
+        </class>
+    </package>
 </jdo>

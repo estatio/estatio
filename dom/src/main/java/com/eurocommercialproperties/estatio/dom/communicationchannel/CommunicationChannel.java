@@ -11,14 +11,16 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Optional;
 
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-@Discriminator("CCHN") // required since subtypes are rolling-up
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@Discriminator("CCHN")
+// required since subtypes are rolling-up
 @ObjectType("CCHN")
-@DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY, column="COMMUNICATIONCHANNEL_ID")
+@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
 public abstract class CommunicationChannel extends AbstractDomainObject {
-    
+
     // {{ Type (attribute)
     private CommunicationChannelType type;
 
@@ -30,13 +32,14 @@ public abstract class CommunicationChannel extends AbstractDomainObject {
     public void setType(final CommunicationChannelType type) {
         this.type = type;
     }
+
     // }}
-    
-    
+
     // {{ Reference (property)
     private String reference;
 
-    @Hidden // For import purposes
+    @Hidden
+    // For import purposes
     public String getReference() {
         return reference;
     }
@@ -44,12 +47,13 @@ public abstract class CommunicationChannel extends AbstractDomainObject {
     public void setReference(final String referencen) {
         this.reference = referencen;
     }
+
     // }}
-    
-    
+
     // {{ Description (property)
     private String description;
 
+    @Optional
     @MemberOrder(sequence = "10")
     public String getDescription() {
         return description;
