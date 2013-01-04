@@ -1,36 +1,36 @@
 <jdo>
-	<package name="com.eurocommercialproperties.estatio.dom.geography">
+	<package name="org.estatio.dom.geography">
 		<class name="Country">
 			<query name="countries_findCountryByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.geography.Country 
+              FROM org.estatio.dom.geography.Country 
              WHERE reference.matches(:r)
             ]]></query>
 		</class>
 	</package>
-	<package name="com.eurocommercialproperties.estatio.dom.asset">
+	<package name="org.estatio.dom.asset">
 		<class name="Property">
 			<query name="properties_findByReference" language="JDOQL"><![CDATA[
 	            SELECT 
-	            FROM com.eurocommercialproperties.estatio.dom.asset.Property 
+	            FROM org.estatio.dom.asset.Property 
 	            WHERE reference.matches(:r)
 	            ]]></query>
 		</class>
 		<class name="Unit">
 			<query name="units_findUnitByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.asset.Unit 
+              FROM org.estatio.dom.asset.Unit 
              WHERE reference.matches(:r)
             ]]></query>
 		</class>
 		<class name="PropertyActor">
 			<!-- <query name="properyActor_findByPropertyParty" language="JDOQL"><![CDATA[ 
-				SELECT FROM com.eurocommercialproperties.estatio.dom.asset.PropertyActor 
+				SELECT FROM org.estatio.dom.asset.PropertyActor 
 				WHERE property.equals(:property) AND party.equals(:party) AND type.equals(:type) 
 				]]></query> -->
 			<query name="properyActor_findByPropertyParty" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.asset.PropertyActor 
+              FROM org.estatio.dom.asset.PropertyActor 
              WHERE 
 	             property == :property 
 	             && party == :party
@@ -38,27 +38,27 @@
             ]]></query>
 		</class>
 	</package>
-	<package name="com.eurocommercialproperties.estatio.dom.party">
+	<package name="org.estatio.dom.party">
 		<class name="Party">
 			<query name="parties_findPartyByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.party.Party 
+              FROM org.estatio.dom.party.Party 
              WHERE reference.matches(:r)
             ]]></query>
 		</class>
 	</package>
-    <package name="com.eurocommercialproperties.estatio.dom.lease">
+    <package name="org.estatio.dom.lease">
         <class name="Lease">
             <query name="lease_findLeaseByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.lease.Lease 
+              FROM org.estatio.dom.lease.Lease 
              WHERE reference.matches(:r)
             ]]></query>
         </class>
         <class name="LeaseUnit">
             <query name="leaseUnit_find" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.lease.LeaseUnit 
+              FROM org.estatio.dom.lease.LeaseUnit 
              WHERE lease == :lease &&
                    unit == :unit &&
                    startDate == :startDate
@@ -67,7 +67,7 @@
         <class name="LeaseActor">
             <query name="leaseActor_find" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.lease.LeaseActor 
+              FROM org.estatio.dom.lease.LeaseActor 
              WHERE lease == :lease &&
                    party == :party &&
                    type == :type &&
@@ -77,27 +77,27 @@
         </class>
         
     </package>
-    <package name="com.eurocommercialproperties.estatio.dom.invoice">
+    <package name="org.estatio.dom.invoice">
         <class name="Charge">
             <query name="charge_findChargeByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.invoice.Charge 
+              FROM org.estatio.dom.invoice.Charge 
             WHERE reference.matches(:r)
             ]]></query>
         </class>
         <class name="ChargeGroup">
             <query name="charge_findChargeGroupByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.invoice.ChargeGroup 
+              FROM org.estatio.dom.invoice.ChargeGroup 
             WHERE reference.mathes(:r)
             ]]></query>
         </class>
     </package>
-    <package name="com.eurocommercialproperties.estatio.dom.geography">
+    <package name="org.estatio.dom.geography">
         <class name="State">
             <query name="state_findStatesByCountry" language="JDOQL"><![CDATA[
             SELECT 
-              FROM com.eurocommercialproperties.estatio.dom.geography.State 
+              FROM org.estatio.dom.geography.State 
             WHERE country == :country
             ]]></query>
         </class>
