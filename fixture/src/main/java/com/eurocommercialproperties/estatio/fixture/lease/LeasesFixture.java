@@ -10,7 +10,7 @@ import com.eurocommercialproperties.estatio.dom.asset.Units;
 import com.eurocommercialproperties.estatio.dom.index.Indices;
 import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 import com.eurocommercialproperties.estatio.dom.invoice.Charges;
-import com.eurocommercialproperties.estatio.dom.lease.IndexableLeaseTerm;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseTermForIndexableRent;
 import com.eurocommercialproperties.estatio.dom.lease.IndexationFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.InvoicingFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
@@ -81,7 +81,7 @@ public class LeasesFixture extends AbstractFixture {
     }
 
     private LeaseTerm createIndexableLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value, LocalDate baseIndexDate, LocalDate nextIndexDate, LocalDate indexationApplicationDate) {
-        IndexableLeaseTerm leaseTerm = leaseTerms.newIndexableLeaseTerm(leaseItem);
+        LeaseTermForIndexableRent leaseTerm = leaseTerms.newIndexableLeaseTerm(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBaseValue(value);

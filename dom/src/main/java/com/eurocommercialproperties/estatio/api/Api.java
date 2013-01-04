@@ -37,7 +37,7 @@ import com.eurocommercialproperties.estatio.dom.geography.State;
 import com.eurocommercialproperties.estatio.dom.geography.States;
 import com.eurocommercialproperties.estatio.dom.invoice.Charge;
 import com.eurocommercialproperties.estatio.dom.invoice.Charges;
-import com.eurocommercialproperties.estatio.dom.lease.IndexableLeaseTerm;
+import com.eurocommercialproperties.estatio.dom.lease.LeaseTermForIndexableRent;
 import com.eurocommercialproperties.estatio.dom.lease.InvoicingFrequency;
 import com.eurocommercialproperties.estatio.dom.lease.Lease;
 import com.eurocommercialproperties.estatio.dom.lease.LeaseActorType;
@@ -437,9 +437,9 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));
         }
-        IndexableLeaseTerm term = (IndexableLeaseTerm) item.findTerm(startDate);
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.findTerm(startDate);
         if (term == null) {
-            term = (IndexableLeaseTerm) item.addIndexableTerm();
+            term = (LeaseTermForIndexableRent) item.addIndexableTerm();
         }
 
         term.setStartDate(startDate);

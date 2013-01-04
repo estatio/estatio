@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class IndexableLeaseTermTest {
 
-    private IndexableLeaseTerm ilt ;
+    private LeaseTermForIndexableRent ilt ;
     private LeaseItem li;
     private Index i;
     
@@ -35,7 +35,7 @@ public class IndexableLeaseTermTest {
     public void setup() {
         li= new LeaseItem();
         
-        ilt = new IndexableLeaseTerm();
+        ilt = new LeaseTermForIndexableRent();
         ilt.setBaseIndexValue(BigDecimal.valueOf(122.2));
         ilt.setNextIndexValue(BigDecimal.valueOf(111.1));
         ilt.setBaseValue(BigDecimal.valueOf(250000));

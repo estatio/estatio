@@ -28,7 +28,6 @@ public class EstatioApplication extends IsisWicketApplication {
                 bind(String.class).annotatedWith(Names.named("aboutMessage")).toInstance("Estatio v0.1.0");
             }
         };
-
         return Modules.override(isisDefaults).with(estatioOverrides);
     }
 }
