@@ -24,8 +24,28 @@
     <display-name>Estatio</display-name>
 
 
+    <welcome-file-list>
+        <welcome-file>about/index.html</welcome-file>
+    </welcome-file-list>
 
-    
+
+    <!-- shiro security configuration -->
+
+    <listener>
+        <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>ShiroFilter</filter-name>
+        <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>ShiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
 	<!-- which configuration directory to read overloaded property files from -->
     <!-- 
     Normally configuration like this should be done from outside your web 
@@ -139,8 +159,83 @@
 
 	<filter-mapping>
 		<filter-name>wicket.estatio</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/wicket/*</url-pattern>
 	</filter-mapping>
+
+
+
+    <!--
+    -
+    - config specific to the restfulobjects-viewer
+    -
+    -->
+
+    <!--
+    THE FOLLOWING CONFIGURATION IS NOT REQUIRED IF THE WICKET VIEWER IS IN USE.
+    IF THE WICKET VIEWER CONFIGURATION IS REMOVED, THEN UNCOMMENT
+    
+    <listener>
+        <listener-class>org.apache.isis.core.webapp.IsisWebAppBootstrapper</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>deploymentType</param-name>
+        <param-value>SERVER_EXPLORATION</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>isis.viewers</param-name>
+        <param-value>restfulobjects</param-value>
+    </context-param>    
+    -->    
+    
+    <!-- bootstrap the RestEasy framework -->
+    <listener>
+        <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+    </listener>
+
+    <!-- used by RestEasy to determine the JAX-RS resources and other related configuration -->
+    <context-param>
+        <param-name>javax.ws.rs.Application</param-name>
+        <param-value>org.apache.isis.viewer.restfulobjects.viewer.RestfulObjectsApplication</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>resteasy.servlet.mapping.prefix</param-name>
+        <param-value>/restful/</param-value>
+    </context-param>
+    
+
+    <!-- authenticate user, set up an Isis session -->
+    <filter>
+        <filter-name>IsisSessionFilterForRestfulObjects</filter-name>
+        <filter-class>org.apache.isis.core.webapp.IsisSessionFilter</filter-class>
+        <!-- authentication required for REST -->
+        <init-param>
+            <param-name>authenticationSessionStrategy</param-name>
+            <param-value>org.apache.isis.viewer.restfulobjects.viewer.authentication.AuthenticationSessionStrategyBasicAuth</param-value>
+        </init-param>
+        <init-param>
+            <!-- what to do if no session was found; we indicate to issue a 401 basic authentication challenge -->
+            <param-name>whenNoSession</param-name>
+            <param-value>basicAuthChallenge</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <!-- this is mapped to the entire app; however the IsisSessionFilter will "notice" if the session filter has already been
+             executed for the request pipeline, and if so will do nothing -->
+        <filter-name>IsisSessionFilterForRestfulObjects</filter-name>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+        <servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+        <url-pattern>/restful/*</url-pattern>
+    </servlet-mapping>
 
 	
 </web-app>

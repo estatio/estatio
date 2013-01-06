@@ -22,6 +22,16 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<isis.version>1.0.1-SNAPSHOT</isis.version>
+		<isis-objectstore-jdo.version>1.0.1-SNAPSHOT</isis-objectstore-jdo.version>
+		<isis-viewer-wicket.version>1.0.1-SNAPSHOT</isis-viewer-wicket.version>
+		<isis-viewer-restfulobjects.version>1.0.1-SNAPSHOT</isis-viewer-restfulobjects.version>
+		<isis-security-file.version>1.0.1-SNAPSHOT</isis-security-file.version>
+        <isis-security-shiro.version>1.0.0-SNAPSHOT</isis-security-shiro.version>
+
+		<isis-viewer-dnd.version>1.0.0-SNAPSHOT</isis-viewer-dnd.version>
+		<isis-viewer-junit.version>1.0.0-SNAPSHOT</isis-viewer-junit.version>
+
         <!-- override in each module (used by locate global resources) -->
         <siteBaseDir>.</siteBaseDir>
 
@@ -302,7 +312,7 @@
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
 				<artifactId>isis</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>${isis.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -310,7 +320,7 @@
 			<dependency>
 				<groupId>org.apache.isis.objectstore</groupId>
 				<artifactId>isis-objectstore-jdo</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>${isis-objectstore-jdo.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -318,7 +328,7 @@
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-wicket</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>${isis-viewer-wicket.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -326,15 +336,31 @@
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-restfulobjects</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>${isis-viewer-restfulobjects.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 
+            <dependency>
+                <groupId>org.apache.isis.security</groupId>
+                <artifactId>isis-security-shiro</artifactId>
+                <version>${isis-security-shiro.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.isis.security</groupId>
+                <artifactId>isis-security-file</artifactId>
+                <version>${isis-security-file.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-dnd</artifactId>
-				<version>1.0.0-SNAPSHOT</version>
+				<version>${isis-viewer-dnd.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -342,7 +368,7 @@
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-junit</artifactId>
-				<version>1.0.0-SNAPSHOT</version>
+				<version>${isis-viewer-junit.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -350,7 +376,7 @@
 			<dependency>
 				<groupId>org.apache.isis.security</groupId>
 				<artifactId>isis-security-file</artifactId>
-				<version>1.0.1-SNAPSHOT</version>
+				<version>${isis-security-file.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
