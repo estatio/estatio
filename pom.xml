@@ -425,12 +425,6 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>app-exploration</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
 				<artifactId>app-fixture</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -701,7 +695,6 @@
 	        </activation>
 	        <modules>
 		        <module>dom</module>
-		        <module>exploration</module>
 		        <module>fixture</module>
 		        <module>objstore-jdo</module>
 		        <module>services</module>
