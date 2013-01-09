@@ -81,7 +81,7 @@ public class LeasesFixture extends AbstractFixture {
     }
 
     private LeaseTerm createIndexableLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value, LocalDate baseIndexDate, LocalDate nextIndexDate, LocalDate indexationApplicationDate) {
-        LeaseTermForIndexableRent leaseTerm = leaseTerms.newIndexableLeaseTerm(leaseItem);
+        LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBaseValue(value);

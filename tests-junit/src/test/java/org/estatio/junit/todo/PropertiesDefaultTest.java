@@ -10,12 +10,14 @@ import org.apache.isis.viewer.junit.Fixtures;
 import org.estatio.dom.asset.Property;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.junit.AbstractTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
 @Fixtures({ @Fixture(EstatioFixture.class) })
 public class PropertiesDefaultTest extends AbstractTest {
 
+    @Ignore
     @Test
     public void canCreateProperty() throws Exception {
         final Property property = properties.newProperty("CODE-1", "Some name");

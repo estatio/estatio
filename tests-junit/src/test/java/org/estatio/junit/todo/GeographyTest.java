@@ -1,6 +1,7 @@
 package org.estatio.junit.todo;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -21,6 +22,7 @@ public class GeographyTest extends AbstractTest {
         wrappedCountry = wrapped(countries.newCountry("NLD", "Netherlands"));
     }
 
+    @Ignore
     @Test(expected = DisabledException.class)
     public void cannotChangeCode() throws Exception {
         wrappedCountry.setReference("OTHER-1");

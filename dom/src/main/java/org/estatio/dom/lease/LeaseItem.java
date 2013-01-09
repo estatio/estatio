@@ -16,6 +16,8 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Charge;
@@ -223,7 +225,7 @@ public class LeaseItem extends AbstractDomainObject {
     public List<Charge> choicesCharge() {
         return chargeService.allCharges();
     }
-
+ 
     // }}
 
     // {{ Terms (Collection)
@@ -281,10 +283,16 @@ public class LeaseItem extends AbstractDomainObject {
     // }}
 
     @Hidden
-    public LeaseTerm addIndexableTerm() {
-        LeaseTerm leaseTerm = leaseTermsService.newIndexableLeaseTerm(this);
+    public LeaseTerm addTerm() {
+        LeaseTerm term = getType().createLeaseTerm(getContainer());
+        terms.add(term);
+        return term;
+        
+        /*       
+        LeaseTerm leaseTerm = leaseTermsService.newLeaseTerm(this);
         terms.add(leaseTerm);
         return leaseTerm;
+        */
     }
 
     private LeaseTerms leaseTermsService;

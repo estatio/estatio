@@ -1,6 +1,7 @@
 package org.estatio.junit.todo;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -21,6 +22,7 @@ public class PropertyTest extends AbstractTest {
         wrappedProperty = wrapped(properties.newProperty("CODE-1", "Some name"));
     }
 
+    @Ignore
     @Test(expected = DisabledException.class)
     public void cannotChangeCode() throws Exception {
         wrappedProperty.setReference("OTHER-1");

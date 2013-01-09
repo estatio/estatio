@@ -29,20 +29,8 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     // {{ newLeaseTerm
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public LeaseTerm newLeaseTerm(
-            final LeaseItem leaseItem) {
-        LeaseTerm leaseTerm = newTransientInstance(LeaseTerm.class);
-        leaseTerm.setLeaseItem(leaseItem);
-        persist(leaseTerm);
-        return leaseTerm;
-    }
-    // }}
-
-    // {{ newIndexableLeaseTerm
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
-    public LeaseTermForIndexableRent newIndexableLeaseTerm(LeaseItem leaseItem) {
-        LeaseTermForIndexableRent leaseTerm = newTransientInstance(LeaseTermForIndexableRent.class);
+    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
+        LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
         leaseTerm.setLeaseItem(leaseItem);
         persist(leaseTerm);
         return leaseTerm;
