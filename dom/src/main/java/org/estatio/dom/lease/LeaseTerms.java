@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 @Hidden
-@Named("Leases")
+@Named("Lease Terms")
 public class LeaseTerms extends AbstractFactoryAndRepository {
 
     // {{ Id, iconName
@@ -27,7 +27,7 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     // }}
 
     // {{ newLeaseTerm
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;

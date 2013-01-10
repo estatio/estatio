@@ -3,21 +3,20 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Discriminator;
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.ObjectType;
+import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 
 
 @PersistenceCapable
@@ -25,9 +24,12 @@ import org.apache.isis.applib.annotation.Optional;
 //@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Discriminator("LTRI")
 //required since subtypes are rolling-up
-//@ObjectType("LTRI")
+@ObjectType("LTRI")
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
+    @Hidden
+    void dummyAction1(LeaseTermForIndexableRent x) {}
+    
     // {{ BaseIndexStartDate (property)
     private LocalDate baseIndexStartDate;
 

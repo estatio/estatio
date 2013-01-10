@@ -3,6 +3,7 @@ package org.estatio.integtest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
@@ -196,7 +198,10 @@ public class IntegrationTest {
         Leases leases = isft.getService(Leases.class);
         Lease lease = leases.findByReference("OXF-TOPMODEL-001");
         LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
-        Assert.assertNotNull(item.findTerm(new LocalDate(2010, 7, 15)));
+        LeaseTermForIndexableRent findTerm = (LeaseTermForIndexableRent) item.findTerm(new LocalDate(2010, 7, 15));
+        Assert.assertNotNull(findTerm);
+        Assert.assertEquals(BigDecimal.valueOf(20000), findTerm.getBaseValue());        
+
     }
     
     @Test 

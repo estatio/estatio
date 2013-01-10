@@ -28,6 +28,13 @@ import org.joda.time.LocalDate;
 @PersistenceCapable
 public class LeaseItem extends AbstractDomainObject {
 
+    @Hidden
+    void dummyAction1(LeaseTermForIndexableRent x) {}
+
+    @Hidden
+    void dummyAction2(LeaseTermForTurnoverRent x) {}
+
+    
     // {{ Lease (property)
     private Lease lease;
 
