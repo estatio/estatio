@@ -34,7 +34,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate baseIndexStartDate;
 
     @Persistent
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "10", name = "Indexable Rent")
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
     }
@@ -49,7 +49,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate baseIndexEndDate;
 
     @Persistent
-    @MemberOrder(sequence = "11")
+    @MemberOrder(sequence = "11", name = "Indexable Rent")
     public LocalDate getBaseIndexEndDate() {
         return baseIndexEndDate;
     }
@@ -63,7 +63,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ BaseIndexValue (property)
     private BigDecimal baseIndexValue;
 
-    @MemberOrder(sequence = "12")
+    @MemberOrder(sequence = "12", name = "Indexable Rent")
     @Optional
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
@@ -79,7 +79,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate nextIndexStartDate;
 
     @Persistent
-    @MemberOrder(sequence = "13")
+    @MemberOrder(sequence = "13", name = "Indexable Rent")
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
     }
@@ -94,7 +94,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate nextIndexEndDate;
 
     @Persistent
-    @MemberOrder(sequence = "14")
+    @MemberOrder(sequence = "14", name = "Indexable Rent")
     public LocalDate getNextIndexEndDate() {
         return nextIndexEndDate;
     }
@@ -108,7 +108,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ NextIndexValue (property)
     private BigDecimal nextIndexValue;
 
-    @MemberOrder(sequence = "15")
+    @MemberOrder(sequence = "15", name = "Indexable Rent")
     @Optional
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
@@ -124,7 +124,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate reviewDate;
 
     @Persistent
-    @MemberOrder(sequence = "16")
+    @MemberOrder(sequence = "16", name = "Indexable Rent")
     public LocalDate getReviewDate() {
         return reviewDate;
     }
@@ -139,7 +139,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate effectiveDate;
 
     @Persistent
-    @MemberOrder(sequence = "17")
+    @MemberOrder(sequence = "17", name = "Indexable Rent")
     public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
@@ -153,7 +153,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ BaseValue (property)
     private BigDecimal baseValue;
 
-    @MemberOrder(sequence = "18")
+    @MemberOrder(sequence = "18", name = "Indexable Rent")
     public BigDecimal getBaseValue() {
         return baseValue;
     }
@@ -167,7 +167,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ IndexationPercentage (property)
     private BigDecimal indexationPercentage;
 
-    @MemberOrder(sequence = "20")
+    @MemberOrder(sequence = "20", name = "Indexable Rent")
     @Optional
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
@@ -182,7 +182,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ LevellingPercentage (property)
     private BigDecimal levellingPercentage;
 
-    @MemberOrder(sequence = "21")
+    @MemberOrder(sequence = "21", name = "Indexable Rent")
     @Optional
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
@@ -197,7 +197,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ LevellingValue (property)
     private BigDecimal levellingValue;
 
-    @MemberOrder(sequence = "21")
+    @MemberOrder(sequence = "21", name = "Indexable Rent")
     @Optional
     public BigDecimal getLevellingValue() {
         return levellingValue;
@@ -212,7 +212,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ IndexedValue (property)
     private BigDecimal indexedValue;
 
-    @MemberOrder(sequence = "22")
+    @MemberOrder(sequence = "22", name = "Indexable Rent")
     @Optional
     public BigDecimal getIndexedValue() {
         return indexedValue;
