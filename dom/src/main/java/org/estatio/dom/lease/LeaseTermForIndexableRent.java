@@ -3,28 +3,26 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-//@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@Discriminator("LTRI")
-//required since subtypes are rolling-up
-@ObjectType("LTRI")
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Hidden
@@ -150,24 +148,10 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // }}
 
-    // {{ BaseValue (property)
-    private BigDecimal baseValue;
-
-    @MemberOrder(sequence = "18", name = "Indexable Rent")
-    public BigDecimal getBaseValue() {
-        return baseValue;
-    }
-
-    public void setBaseValue(final BigDecimal baseValue) {
-        this.baseValue = baseValue;
-    }
-
-    // }}
-
     // {{ IndexationPercentage (property)
     private BigDecimal indexationPercentage;
 
-    @MemberOrder(sequence = "20", name = "Indexable Rent")
+    @MemberOrder(sequence = "19", name = "Indexable Rent")
     @Optional
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
@@ -182,7 +166,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ LevellingPercentage (property)
     private BigDecimal levellingPercentage;
 
-    @MemberOrder(sequence = "21", name = "Indexable Rent")
+    @MemberOrder(sequence = "20", name = "Indexable Rent")
     @Optional
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
@@ -208,11 +192,27 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     // }}
+    
+    
+    // {{ BaseValue (property)
+    private BigDecimal baseValue;
+
+    @MemberOrder(sequence = "30", name = "Values")
+    public BigDecimal getBaseValue() {
+        return baseValue;
+    }
+
+    public void setBaseValue(final BigDecimal baseValue) {
+        this.baseValue = baseValue;
+    }
+
+    // }}
+
 
     // {{ IndexedValue (property)
     private BigDecimal indexedValue;
 
-    @MemberOrder(sequence = "22", name = "Indexable Rent")
+    @MemberOrder(sequence = "31", name = "Values")
     @Optional
     public BigDecimal getIndexedValue() {
         return indexedValue;

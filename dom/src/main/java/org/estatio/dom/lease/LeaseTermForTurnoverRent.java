@@ -3,41 +3,74 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.ObjectType;
-import org.estatio.dom.index.Index;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-//@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@Discriminator("LTRT")
-//required since subtypes are rolling-up
-@ObjectType("LTRT")
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
-    // {{ BudetValue (property)
-    private BigDecimal budgetValue;
+    // {{ TurnoverRentPercentage (property)
+    private BigDecimal turnoverRentPercentage;
 
-    @MemberOrder(sequence = "11", name="Turnover Rent")
-    public BigDecimal getBudetValue() {
-        return budgetValue;
+    @MemberOrder(sequence = "10", name = "Turnover Rent")
+    public BigDecimal getTurnoverRentPercentage() {
+        return turnoverRentPercentage;
     }
 
-    public void setBudetValue(final BigDecimal budgetValue) {
-        this.budgetValue = budgetValue;
+    public void setTurnoverRentPercentage(final BigDecimal turnoverRentPercentage) {
+        this.turnoverRentPercentage = turnoverRentPercentage;
+    }
+    // }}
+
+    // {{ AuditedTurnover (property)
+    private BigDecimal auditedTurnover;
+
+    @MemberOrder(sequence = "11", name = "Turnover Rent")
+    public BigDecimal getAuditedTurnover() {
+        return auditedTurnover;
     }
 
+    public void setAuditedTurnover(final BigDecimal auditedTurnover) {
+        this.auditedTurnover = auditedTurnover;
+    }
+    // }}
+
+    // {{ BudgetedTurnover (property)
+    private BigDecimal budgetedTurnover;
+    
+    @MemberOrder(sequence = "12", name = "Turnover Rent")
+    public BigDecimal getBudgetedTurnover() {
+        return budgetedTurnover;
+    }
+    
+    public void setBudgetedTurnover(final BigDecimal budgetedTurnover) {
+        this.budgetedTurnover = budgetedTurnover;
+    }
+    // }}
+    
+    // {{ BudgetedValue (property)
+    private BigDecimal budgetedValue;
+    
+    @MemberOrder(sequence = "20", name = "Values")
+    public BigDecimal getBudgetedValue() {
+        return budgetedValue;
+    }
+    
+    public void setBudgetedValue(final BigDecimal budgetedValue) {
+        this.budgetedValue = budgetedValue;
+    }
     // }}
 
     // {{ AuditedValue (property)
     private BigDecimal auditedValue;
 
-    @MemberOrder(sequence = "12", name="Turnover Rent")
+    @MemberOrder(sequence = "21", name = "Values")
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

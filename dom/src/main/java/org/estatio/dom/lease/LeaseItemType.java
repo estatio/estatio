@@ -8,10 +8,10 @@ public enum LeaseItemType {
 
     RENT("Rent", LeaseTermForIndexableRent.class), 
     TURNOVER_RENT("Turnover Rent", LeaseTermForTurnoverRent.class),
-    DISCOUNT("Discount", LeaseTerm.class), 
-    SERVICE_CHARGE("Service Charge", LeaseTerm.class), 
-    OTHER("Other", LeaseTerm.class);
-
+    SERVICE_CHARGE("Service Charge", LeaseTermForServiceCharge.class);
+    
+    //DISCOUNT("Discount", LeaseTerm.class) 
+    
     private final String title;
     private final Class<? extends LeaseTerm> clss;
 

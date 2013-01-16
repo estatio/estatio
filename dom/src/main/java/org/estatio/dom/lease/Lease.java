@@ -7,7 +7,12 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -16,10 +21,6 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
 
 @PersistenceCapable
 @Auditable
@@ -115,6 +116,69 @@ public class Lease extends AbstractDomainObject {
 
     // }}
 
+    // {{ PreviousLease (property)
+    private Lease previousLease;
+
+    @Disabled
+    @MemberOrder(sequence = "7")
+    public Lease getPreviousLease() {
+        return previousLease;
+    }
+
+    public void setPreviousLease(final Lease previousLease) {
+        this.previousLease = previousLease;
+    }
+
+    public void modifyPreviousLease(final Lease previousLease) {
+        Lease currentPreviousLease = getPreviousLease();
+        // check for no-op
+        if (previousLease == null || previousLease.equals(currentPreviousLease)) {
+            return;
+        }
+        // associate new
+        setPreviousLease(previousLease);
+        // additional business logic
+        onModifyPreviousLease(currentPreviousLease, previousLease);
+    }
+
+    public void clearPreviousLease() {
+        Lease currentPreviousLease = getPreviousLease();
+        // check for no-op
+        if (currentPreviousLease == null) {
+            return;
+        }
+        // dissociate existing
+        setPreviousLease(null);
+        // additional business logic
+        onClearPreviousLease(currentPreviousLease);
+    }
+
+    protected void onModifyPreviousLease(final Lease oldPreviousLease, final Lease newPreviousLease) {
+        oldPreviousLease.setNextLease(null);
+        newPreviousLease.setNextLease(this);
+    }
+
+    protected void onClearPreviousLease(final Lease oldPreviousLease) {
+        oldPreviousLease.setNextLease(null);
+    }
+    
+    // }}
+
+    // {{ NextLease (property)
+    private Lease nextLease;
+
+    @Disabled
+    @MemberOrder(sequence = "8")
+    public Lease getNextLease() {
+        return nextLease;
+    }
+
+    public void setNextLease(final Lease nextLease) {
+        this.nextLease = nextLease;
+    }
+
+    // }}
+
     // {{ Actors (Collection)
     @Persistent(mappedBy = "lease")
     private Set<LeaseActor> actors = new LinkedHashSet<LeaseActor>();
@@ -162,7 +226,7 @@ public class Lease extends AbstractDomainObject {
     // {{ addActor (action)
     @MemberOrder(sequence = "1")
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        LeaseActor leaseActor =  findActor(party, type, startDate);
+        LeaseActor leaseActor = findActor(party, type, startDate);
         if (leaseActor == null) {
             leaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
             actors.add(leaseActor);
@@ -170,6 +234,7 @@ public class Lease extends AbstractDomainObject {
         leaseActor.setEndDate(endDate);
         return leaseActor;
     }
+
     // }}
 
     // {{ Units (Collection)
@@ -223,7 +288,7 @@ public class Lease extends AbstractDomainObject {
         units.add(leaseUnit);
         return leaseUnit;
     }
-    
+
     // }}
 
     // {{ Items (Collection)
@@ -278,16 +343,17 @@ public class Lease extends AbstractDomainObject {
     }
 
     // }}
-    
+
     // {{ findActor (hidden)
     @Hidden
     public LeaseActor findActor(Party party, LeaseActorType type, LocalDate startDate) {
         return leaseActors.findLeaseActor(this, party, type, startDate, startDate);
-//        for (LeaseActor actor : actors) {
-//            if (actor.getParty().equals(party) && actor.getType().equals(type) && actor.getStartDate().equals(startDate)) {
-//                return actor;
-//            }
-//        }
+        // for (LeaseActor actor : actors) {
+        // if (actor.getParty().equals(party) && actor.getType().equals(type) &&
+        // actor.getStartDate().equals(startDate)) {
+        // return actor;
+        // }
+        // }
     }
 
     // {{ findItem (hidden)
@@ -297,13 +363,13 @@ public class Lease extends AbstractDomainObject {
         for (LeaseItem item : getItems()) {
             LocalDate itemStartDate = item.getStartDate();
             LeaseItemType itemType = item.getType();
-            if (itemType.equals(type) && itemStartDate.equals(startDate) && item.getSequence().equals(sequence)  ) {
+            if (itemType.equals(type) && itemStartDate.equals(startDate) && item.getSequence().equals(sequence)) {
                 return item;
             }
         }
         return null;
     }
-    
+
     // }}
 
     // {{ injected services
@@ -318,7 +384,7 @@ public class Lease extends AbstractDomainObject {
     public void setLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
-    
+
     private LeaseActors leaseActors;
 
     public void setLeaseActors(final LeaseActors leaseActors) {

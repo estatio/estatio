@@ -272,9 +272,20 @@ public class LeaseItem extends AbstractDomainObject {
         onRemoveFromTerms(terms);
     }
 
+    @Hidden
     public LeaseTerm findTerm(LocalDate startDate) {
         for (LeaseTerm term : getTerms()) {
-            if (term.getStartDate().equals(startDate)) {
+            if (startDate.equals(term.getStartDate())) {
+                return term;
+            }
+        }
+        return null;
+    }
+    
+    @Hidden
+    public LeaseTerm findTermForSequence(BigInteger sequence) {
+        for (LeaseTerm term : getTerms()) {
+            if (sequence.equals(term.getSequence())) {
                 return term;
             }
         }

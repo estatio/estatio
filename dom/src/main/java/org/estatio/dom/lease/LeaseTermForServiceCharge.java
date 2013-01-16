@@ -1,38 +1,46 @@
 package org.estatio.dom.lease;
 
+import java.math.BigDecimal;
+
 import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
-
-import org.apache.isis.applib.annotation.Hidden;
-import org.estatio.dom.index.Index;
+import org.apache.isis.applib.annotation.MemberOrder;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator("LTRI")
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+//@Discriminator("LTRI")
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-    // {{
-    public void verify() {
-        //
+    // {{ BudgetedValue (property)
+    private BigDecimal budgetedValue;
 
+    @MemberOrder(sequence = "11", name = "Service Charges")
+    public BigDecimal getBudgetedValue() {
+        return budgetedValue;
+    }
+
+    public void setBudgetedValue(final BigDecimal budgetedValue) {
+        this.budgetedValue = budgetedValue;
     }
 
     // }}
 
-    // {{
-    private LeaseTerms leaseTermsService;
+    // {{ AuditedValue (property)
+    private BigDecimal auditedValue;
 
-    public void setLeaseTermsService(LeaseTerms leaseTerms) {
-        this.leaseTermsService = leaseTerms;
+    @MemberOrder(sequence = "12", name = "Service Charges")
+    public BigDecimal getAuditedValue() {
+        return auditedValue;
     }
 
+    public void setAuditedValue(final BigDecimal auditedValue) {
+        this.auditedValue = auditedValue;
+    }
     // }}
-    @Hidden
-    public Index getIndex() {
-        return this.getLeaseItem().getIndex();
-    }
 
 }
