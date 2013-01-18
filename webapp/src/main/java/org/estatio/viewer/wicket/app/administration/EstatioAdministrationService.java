@@ -15,7 +15,7 @@ public class EstatioAdministrationService {
         return "Demo fixtures successfully installed";
     }
     
-    public void intializeSchedulerJobs() {
+    public void initializeSchedulerJobs() {
         scheduler.initializeJobs();
     }
     
