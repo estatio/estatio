@@ -2,12 +2,8 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.Order;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -19,7 +15,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
-public class Index extends AbstractDomainObject {
+public class Index extends AbstractDomainObject implements Comparable<Index> {
 
     // {{ Reference (property)
     private String reference;
@@ -47,23 +43,6 @@ public class Index extends AbstractDomainObject {
     public void setName(final String name) {
         this.name = name;
     }
-
-    // }}
-
-    // {{ IndexBases (Collection)
-    // @Persistent(mappedBy = "index")
-    // @Order(extensions = @Extension(vendorName = "datanucleus", key =
-    // "list-ordering", value = "startDate asc"))
-    // private Set<IndexBase> indexBases = new LinkedHashSet<IndexBase>();
-    //
-    // @MemberOrder(sequence = "3")
-    // public Set<IndexBase> getIndexBases() {
-    // return indexBases;
-    // }
-    //
-    // public void setIndexBases(final Set<IndexBase> indexBases) {
-    // this.indexBases = indexBases;
-    // }
 
     // {{ IndexBases (Collection)
     @Persistent(mappedBy = "index")
@@ -111,7 +90,6 @@ public class Index extends AbstractDomainObject {
     // }}
 
     // {{ Actions
-
     @Hidden
     public BigDecimal getIndexValueForDate(LocalDate date) {
         IndexValue indexValue = getIndices().findIndexValueForDate(this, date, date.dayOfMonth().withMaximumValue());
@@ -150,5 +128,12 @@ public class Index extends AbstractDomainObject {
     }
 
     // }}
+    
+    @Override
+    @Hidden
+    public int compareTo(Index o) {
+        return o.getReference().compareTo(this.getReference());
+    }
+
 
 }

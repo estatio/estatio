@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.Where;
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
-public class LeaseTerm extends AbstractDomainObject {
+public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseTerm>{
     
     // {{ Lease (property)
     private LeaseItem leaseItem;
@@ -134,6 +134,13 @@ public class LeaseTerm extends AbstractDomainObject {
 
     public void verify() {
         return;
+    }
+
+    @Override
+    public int compareTo(LeaseTerm o) {
+        int i = this.getClass().getName().compareTo(o.getClass().getName());
+        if (i != 0) return i;
+        return this.getStartDate().compareTo(o.getStartDate());
     }
 
 }

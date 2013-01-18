@@ -3,16 +3,18 @@ package org.estatio.dom.lease;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
+
 
 @PersistenceCapable
-public class LeaseActor extends AbstractDomainObject {
+public class LeaseActor extends AbstractDomainObject implements Comparable<LeaseActor> {
 
     // {{ Lease (property)
     private Lease lease;
@@ -89,5 +91,11 @@ public class LeaseActor extends AbstractDomainObject {
         this.endDate = endDate;
     }
     // }}
+
+    @Override
+    @Hidden
+    public int compareTo(LeaseActor o) {
+        return this.getClass().getName().compareTo(o.getClass().getName());
+    }
 
 }

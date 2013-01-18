@@ -2,15 +2,18 @@ package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.lease.LeaseUnit;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
@@ -21,13 +24,10 @@ import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.lease.LeaseUnit;
 
 @PersistenceCapable
 @Auditable
-public class Unit extends AbstractDomainObject {
+public class Unit extends AbstractDomainObject implements Comparable<Unit> {
 
     // {{ Reference (attribute, title)
     private String reference;
@@ -171,15 +171,15 @@ public class Unit extends AbstractDomainObject {
 
     // {{ Leases (Collection)
     @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
-    private Set<LeaseUnit> leases = new LinkedHashSet<LeaseUnit>();
+    private SortedSet<LeaseUnit> leases = new TreeSet<LeaseUnit>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.2")
-    public Set<LeaseUnit> getLeases() {
+    public SortedSet<LeaseUnit> getLeases() {
         return leases;
     }
 
-    public void setLeases(final Set<LeaseUnit> leases) {
+    public void setLeases(final SortedSet<LeaseUnit> leases) {
         this.leases = leases;
     }
 
@@ -188,15 +188,15 @@ public class Unit extends AbstractDomainObject {
     // {{ CommunicationChannels (list, unidir)
     @Join(column="UNIT_ID", generateForeignKey = "false")
     @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
+    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.1")
-    public Set<CommunicationChannel> getCommunicationChannels() {
+    public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
 
-    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
+    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 
@@ -221,6 +221,11 @@ public class Unit extends AbstractDomainObject {
         return null;
     }
 
+    @Hidden
+    @Override
+    public int compareTo(Unit other) {
+        return this.getReference().compareTo(other.getReference());
+    }
 
     // }}
 

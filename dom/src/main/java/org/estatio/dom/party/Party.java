@@ -1,19 +1,19 @@
 package org.estatio.dom.party;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 //@ObjectType("PRTY")
 @PersistenceCapable
@@ -38,14 +38,14 @@ public abstract class Party extends AbstractDomainObject {
     // REVIEW: changed this startDate set of PartyRoleType, which I suspect was wrong
     // (in any case can't have sets of enums)
     @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private Set<PartyRole> roles = new LinkedHashSet<PartyRole>();
+    private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
 
     @MemberOrder(sequence = "20")
-    public Set<PartyRole> getRoles() {
+    public SortedSet<PartyRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(final Set<PartyRole> roles) {
+    public void setRoles(final SortedSet<PartyRole> roles) {
         this.roles = roles;
     }
 
@@ -53,14 +53,14 @@ public abstract class Party extends AbstractDomainObject {
 
     // {{ Registrations (set, bidir)
     //@javax.jdo.annotations.Persistent(mappedBy = "party")
-    private Set<PartyRegistration> registrations; // = new LinkedHashSet<PartyRegistration>();
+    private SortedSet<PartyRegistration> registrations; // = new TreeSet<PartyRegistration>();
 
     @MemberOrder(sequence = "21")
-    public Set<PartyRegistration> getRegistrations() {
+    public SortedSet<PartyRegistration> getRegistrations() {
         return registrations;
     }
 
-    public void setRegistrations(final Set<PartyRegistration> registrations) {
+    public void setRegistrations(final SortedSet<PartyRegistration> registrations) {
         this.registrations = registrations;
     }
 
@@ -69,14 +69,14 @@ public abstract class Party extends AbstractDomainObject {
     // {{ CommunicationChannels (list, unidir)
     @Join(column = "PARTY_ID", generateForeignKey = "false")
     @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
+    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @MemberOrder(sequence = "10")
-    public Set<CommunicationChannel> getCommunicationChannels() {
+    public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
 
-    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
+    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 

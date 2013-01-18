@@ -2,22 +2,21 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
-public class IndexBase extends AbstractDomainObject {
+public class IndexBase extends AbstractDomainObject implements Comparable<IndexBase> {
 
     // {{ Index (property)
     private Index index;
@@ -102,14 +101,14 @@ public class IndexBase extends AbstractDomainObject {
 
     // {{ Values (Collection)
     // @Persistent(mappedBy = "indexBase")
-    // private Set<IndexValue> values = new LinkedHashSet<IndexValue>();
+    // private SortedSet<IndexValue> values = new TreeSortedSet<IndexValue>();
     //
     // @MemberOrder(sequence = "6")
-    // public Set<IndexValue> getValues() {
+    // public SortedSet<IndexValue> getValues() {
     // return values;
     // }
     //
-    // public void setValues(final Set<IndexValue> values) {
+    // public void setValues(final SortedSet<IndexValue> values) {
     // this.values = values;
     // }
 
@@ -163,6 +162,11 @@ public class IndexBase extends AbstractDomainObject {
             return getFactor().multiply(getPreviousBase().getFactorForDate(date));
         }
         return BigDecimal.ONE;
+    }
+
+    @Override
+    public int compareTo(IndexBase o) {
+        return o.getStartDate().compareTo(this.getStartDate());
     }
 
 }

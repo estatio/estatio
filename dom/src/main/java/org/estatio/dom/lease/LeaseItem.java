@@ -1,12 +1,18 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.Charge;
+import org.estatio.dom.invoice.Charges;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
@@ -17,16 +23,9 @@ import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.invoice.Charge;
-import org.estatio.dom.invoice.Charges;
-import org.joda.time.LocalDate;
-
 
 @PersistenceCapable
-public class LeaseItem extends AbstractDomainObject {
+public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseItem>{
 
     @Hidden
     void dummyAction1(LeaseTermForIndexableRent x) {}
@@ -236,17 +235,17 @@ public class LeaseItem extends AbstractDomainObject {
     // }}
 
     // {{ Terms (Collection)
-    private Set<LeaseTerm> terms = new LinkedHashSet<LeaseTerm>();
+    private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
     @Resolve(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
     @MemberOrder(sequence = "2")
-    public Set<LeaseTerm> getTerms() {
+    public SortedSet<LeaseTerm> getTerms() {
         return terms;
         // TODO: Q: what's the best way to sort these terms?
     }
 
-    public void setTerms(final Set<LeaseTerm> terms) {
+    public void setTerms(final SortedSet<LeaseTerm> terms) {
         this.terms = terms;
     }
 
@@ -331,6 +330,10 @@ public class LeaseItem extends AbstractDomainObject {
         this.chargeService = charges;
     }
 
-    
-    
+    @Override
+    public int compareTo(LeaseItem o) {
+        int i = this.getType().compareTo(o.getType());
+        if (i != 0) return i;
+        return this.getStartDate().compareTo(o.getStartDate());
+    }
 }

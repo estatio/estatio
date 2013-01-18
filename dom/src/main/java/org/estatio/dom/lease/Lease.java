@@ -1,8 +1,8 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -24,7 +24,7 @@ import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
 @Auditable
-public class Lease extends AbstractDomainObject {
+public class Lease extends AbstractDomainObject implements Comparable<Lease> {
 
     // {{ Reference (property)
     private String reference;
@@ -181,15 +181,15 @@ public class Lease extends AbstractDomainObject {
 
     // {{ Actors (Collection)
     @Persistent(mappedBy = "lease")
-    private Set<LeaseActor> actors = new LinkedHashSet<LeaseActor>();
+    private SortedSet<LeaseActor> actors = new TreeSet<LeaseActor>();
 
     @MemberOrder(sequence = "1")
     @Resolve(Type.EAGERLY)
-    public Set<LeaseActor> getActors() {
+    public SortedSet<LeaseActor> getActors() {
         return actors;
     }
 
-    public void setActors(final Set<LeaseActor> actors) {
+    public void setActors(final SortedSet<LeaseActor> actors) {
         this.actors = actors;
     }
 
@@ -238,16 +238,16 @@ public class Lease extends AbstractDomainObject {
     // }}
 
     // {{ Units (Collection)
-    private Set<LeaseUnit> units = new LinkedHashSet<LeaseUnit>();
+    private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
     @Persistent(mappedBy = "lease", defaultFetchGroup = "false")
     @MemberOrder(sequence = "1")
     @Resolve(Type.EAGERLY)
-    public Set<LeaseUnit> getUnits() {
+    public SortedSet<LeaseUnit> getUnits() {
         return units;
     }
 
-    public void setUnits(final Set<LeaseUnit> units) {
+    public void setUnits(final SortedSet<LeaseUnit> units) {
         this.units = units;
     }
 
@@ -292,15 +292,15 @@ public class Lease extends AbstractDomainObject {
     // }}
 
     // {{ Items (Collection)
-    private Set<LeaseItem> items = new LinkedHashSet<LeaseItem>();
+    private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "1")
-    public Set<LeaseItem> getItems() {
+    public SortedSet<LeaseItem> getItems() {
         return items;
     }
 
-    public void setItems(final Set<LeaseItem> items) {
+    public void setItems(final SortedSet<LeaseItem> items) {
         this.items = items;
     }
 
@@ -372,6 +372,19 @@ public class Lease extends AbstractDomainObject {
 
     // }}
 
+    // {{ Action: verify
+    public void verify() {
+        //Do something fancy
+    }
+    
+    // }}
+    
+    @Override
+    public int compareTo(Lease other) {
+        return this.getReference().compareTo(other.getReference());
+    }
+
+    
     // {{ injected services
     private LeaseItems leaseItems;
 
@@ -390,6 +403,7 @@ public class Lease extends AbstractDomainObject {
     public void setLeaseActors(final LeaseActors leaseActors) {
         this.leaseActors = leaseActors;
     }
+
 
     // }}
 }

@@ -1,16 +1,20 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.PostalAddress;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -25,23 +29,17 @@ import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.PostalAddress;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
 
 @PersistenceCapable
 @Auditable
 @AutoComplete(repository = Properties.class)
-public class Property extends AbstractDomainObject {
+public class Property extends AbstractDomainObject implements Comparable<Property> {
 
     // {{ Reference (attribute, title)
     private String reference;
 
     @DescribedAs("Unique reference code for this property")
     @Title(sequence = "1", prepend = "[", append = "] ")
-    @Disabled
     @MemberOrder(sequence = "1.1")
     public String getReference() {
         return reference;
@@ -50,7 +48,6 @@ public class Property extends AbstractDomainObject {
     public void setReference(final String code) {
         this.reference = code;
     }
-
     // }}
 
     // {{ Name (attribute, title)
@@ -176,15 +173,15 @@ public class Property extends AbstractDomainObject {
    
     // {{ Actors (list, unidir)
     @Persistent(mappedBy = "property")
-    private Set<PropertyActor> actors = new LinkedHashSet<PropertyActor>();
+    private SortedSet<PropertyActor> actors = new TreeSet<PropertyActor>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.1")
-    public Set<PropertyActor> getActors() {
+    public SortedSet<PropertyActor> getActors() {
         return actors;
     }
 
-    public void setActors(final Set<PropertyActor> actors) {
+    public void setActors(final SortedSet<PropertyActor> actors) {
         this.actors = actors;
     }
 
@@ -221,15 +218,15 @@ public class Property extends AbstractDomainObject {
     // {{ CommunicationChannels (list, unidir)
     @Join(column="PROPERTY_ID", generateForeignKey = "false")
     @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private Set<CommunicationChannel> communicationChannels = new LinkedHashSet<CommunicationChannel>();
+    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "1")
-    public Set<CommunicationChannel> getCommunicationChannels() {
+    public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
 
-    public void setCommunicationChannels(final Set<CommunicationChannel> communicationChannels) {
+    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 
@@ -254,15 +251,14 @@ public class Property extends AbstractDomainObject {
 
     // {{ Units (list, bidir)
     @Persistent(mappedBy = "property")
-    private Set<Unit> units = new LinkedHashSet<Unit>();
-
+    private SortedSet<Unit> units = new TreeSet<Unit>();
     @Resolve(Type.EAGERLY)
     @MemberOrder(sequence = "2.2")
-    public Set<Unit> getUnits() {
+    public SortedSet<Unit> getUnits() {
         return units;
     }
 
-    public void setUnits(final Set<Unit> units) {
+    public void setUnits(final SortedSet<Unit> units) {
         this.units = units;
     }
 
@@ -304,7 +300,7 @@ public class Property extends AbstractDomainObject {
     
     private Units unitsRepo;
 
-    public void setUnits(final Units unitsRepo) {
+    public void setUnitsRepo(final Units unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
 
@@ -325,4 +321,10 @@ public class Property extends AbstractDomainObject {
 
     // }}
 
+    @Override
+    public int compareTo(Property other) {
+        return this.getName().compareTo(other.getName());
+    }
+
+    
 }

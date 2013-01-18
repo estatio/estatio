@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
-public class IndexValue extends AbstractDomainObject {
+public class IndexValue extends AbstractDomainObject implements Comparable<IndexValue> {
 
     // {{ IndexBase (property)
     private IndexBase indexBase;
@@ -70,5 +70,10 @@ public class IndexValue extends AbstractDomainObject {
         this.value = value;
     }
     // }}
+
+    @Override
+    public int compareTo(IndexValue o) {
+        return o.getStartDate().compareTo(this.getStartDate());
+    }
 
 }

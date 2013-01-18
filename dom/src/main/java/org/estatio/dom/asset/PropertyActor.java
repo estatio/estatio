@@ -2,21 +2,22 @@ package org.estatio.dom.asset;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 
 @PersistenceCapable
 @javax.jdo.annotations.Query(name = "propact_find", 
     language = "JDOQL", 
     value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
-public class PropertyActor extends AbstractDomainObject {
+public class PropertyActor extends AbstractDomainObject implements Comparable<PropertyActor> {
 
     // {{ Property (property)
     private Property property;
@@ -91,5 +92,11 @@ public class PropertyActor extends AbstractDomainObject {
         this.endDate = endDate;
     }
     // }}
+
+    @Hidden
+    @Override
+    public int compareTo(PropertyActor o) {
+        return this.getType().compareTo(o.getType());
+    }
 
 }

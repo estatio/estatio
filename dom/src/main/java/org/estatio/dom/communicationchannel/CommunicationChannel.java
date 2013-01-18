@@ -19,7 +19,7 @@ import org.apache.isis.applib.annotation.Optional;
 // required since subtypes are rolling-up
 @ObjectType("CCHN")
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
-public abstract class CommunicationChannel extends AbstractDomainObject {
+public abstract class CommunicationChannel extends AbstractDomainObject implements Comparable<CommunicationChannel> {
 
     // {{ Type (attribute)
     private CommunicationChannelType type;
@@ -62,6 +62,12 @@ public abstract class CommunicationChannel extends AbstractDomainObject {
     public void setDescription(final String description) {
         this.description = description;
     }
+
     // }}
+
+    @Hidden
+    public int compareTo(CommunicationChannel other) {
+        return this.getClass().getName().compareTo(other.getClass().getName());
+    }
 
 }

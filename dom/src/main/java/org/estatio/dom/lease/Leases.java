@@ -26,20 +26,20 @@ public class Leases extends AbstractFactoryAndRepository {
     public String iconName() {
         return "Lease";
     }
+
     // }}
 
     // {{ newLease
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public Lease newLease(
-            final @Named("Reference") String reference, 
-            final @Named("Name") String name) {
+    public Lease newLease(final @Named("Reference") String reference, final @Named("Name") String name) {
         Lease lease = newTransientInstance(Lease.class);
         lease.setReference(reference);
         lease.setName(name);
         persist(lease);
         return lease;
     }
+
     // }}
 
     // {{ findByReference
@@ -48,8 +48,9 @@ public class Leases extends AbstractFactoryAndRepository {
     public List<Lease> findLeasesByReference(final @Named("Reference") String reference) {
         throw new NotImplementedException();
     }
+
     // }}
-    
+
     // {{ findByReference
     @Hidden
     @ActionSemantics(Of.SAFE)
@@ -62,16 +63,17 @@ public class Leases extends AbstractFactoryAndRepository {
             }
         });
     }
+
     // }}
-    
+
     // {{ runIndexation
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public void runIndexation(
-            final @Named("Until") LocalDate until) {
+    public void runIndexation(final @Named("Until") LocalDate until) {
 
         // TODO Auto-generated method stub
     }
+
     // }}
 
     // {{ allLeases
@@ -80,7 +82,11 @@ public class Leases extends AbstractFactoryAndRepository {
     public List<Lease> allLeases() {
         return allInstances(Lease.class);
     }
-    // }}
-    
 
+    // }}
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    public void verifySelected(Lease lease) {
+        lease.verify();
+    }
 }
