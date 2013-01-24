@@ -21,6 +21,10 @@
 
 	<packaging>pom</packaging>
 
+	<scm>
+		<connection>scm:git:https://jcvanderwal@bitbucket.org/estatio/app.git</connection>
+	</scm>
+	
 	<properties>
 		<isis.version>1.0.1-SNAPSHOT</isis.version>
 		<isis-objectstore-jdo.version>1.0.1-SNAPSHOT</isis-objectstore-jdo.version>
@@ -63,6 +67,10 @@
 			<url>http://gettext-commons.googlecode.com/svn/maven-repository/</url>
 		</repository>
 	</repositories>
+
+
+
+
 
 
 	<build>
@@ -293,6 +301,17 @@
 					<artifactId>jetty-console-maven-plugin</artifactId>
 					<version>1.43</version>
 				</plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>1.2</version>
+                    <configuration>
+                        <shortRevisionLength>8</shortRevisionLength>
+                        <timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
+                    </configuration>
+                </plugin>
+
 			</plugins>
 		</pluginManagement>
 		<plugins>
