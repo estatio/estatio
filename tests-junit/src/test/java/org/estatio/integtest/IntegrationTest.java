@@ -8,6 +8,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.Indices;
+
 import junit.framework.Assert;
 
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
@@ -200,7 +202,8 @@ public class IntegrationTest {
         LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
         LeaseTermForIndexableRent findTerm = (LeaseTermForIndexableRent) item.findTerm(new LocalDate(2010, 7, 15));
         Assert.assertNotNull(findTerm);
-        Assert.assertEquals(BigDecimal.valueOf(20000), findTerm.getBaseValue());        
+        BigDecimal baseValue = findTerm.getBaseValue();
+        Assert.assertEquals(new BigDecimal("20000.0000"), baseValue);        
 
     }
     
@@ -217,6 +220,13 @@ public class IntegrationTest {
         LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
         Assert.assertNotNull(item.findTerm(new LocalDate(2010, 7, 15)));
     }
+    
+//    @Test
+//    public void indexRateIsADecimal() throws Exception {
+//        Indices indices = isft.getService(Indices.class); 
+//        indices.
+//        
+//    }
 
     
 }

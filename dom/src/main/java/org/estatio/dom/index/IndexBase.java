@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -72,6 +73,7 @@ public class IndexBase extends AbstractDomainObject implements Comparable<IndexB
     @Optional
     @MemberOrder(sequence = "4")
     @Persistent
+    @Column(scale=4)
     public BigDecimal getFactor() {
         return factor;
     }
@@ -170,3 +172,4 @@ public class IndexBase extends AbstractDomainObject implements Comparable<IndexB
     }
 
 }
+

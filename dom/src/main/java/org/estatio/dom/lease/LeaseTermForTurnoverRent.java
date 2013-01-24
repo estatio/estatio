@@ -2,6 +2,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
@@ -19,6 +20,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal turnoverRentPercentage;
 
     @MemberOrder(sequence = "10", name = "Turnover Rent")
+    @Column(scale=4)
     public BigDecimal getTurnoverRentPercentage() {
         return turnoverRentPercentage;
     }
@@ -32,6 +34,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal auditedTurnover;
 
     @MemberOrder(sequence = "11", name = "Turnover Rent")
+    @Column(scale=4)
     public BigDecimal getAuditedTurnover() {
         return auditedTurnover;
     }
@@ -45,6 +48,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal budgetedTurnover;
     
     @MemberOrder(sequence = "12", name = "Turnover Rent")
+    @Column(scale=4)
     public BigDecimal getBudgetedTurnover() {
         return budgetedTurnover;
     }
@@ -58,6 +62,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal budgetedValue;
     
     @MemberOrder(sequence = "20", name = "Values")
+    @Column(scale=4)
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
@@ -71,6 +76,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal auditedValue;
 
     @MemberOrder(sequence = "21", name = "Values")
+    @Column(scale=4)
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

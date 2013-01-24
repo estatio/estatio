@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -20,7 +21,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -131,15 +131,15 @@ public class Property extends AbstractDomainObject implements Comparable<Propert
     // }}
 
     // {{ Area (attribute)
-    // REVIEW: should a BigDecimal be used instead?
-    private Double area;
+    private BigDecimal area;
 
     @MemberOrder(sequence = "1.7")
-    public Double getArea() {
+    @Column(scale=4)
+    public BigDecimal getArea() {
         return area;
     }
 
-    public void setArea(final Double area) {
+    public void setArea(final BigDecimal area) {
         this.area = area;
     }
 

@@ -1,6 +1,8 @@
 package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -50,7 +52,7 @@ public class Tax extends AbstractDomainObject {
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
     @Persistent(mappedBy = "tax")
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "1")
     public SortedSet<TaxRate> getRates() {
         return rates;
     }
@@ -58,9 +60,7 @@ public class Tax extends AbstractDomainObject {
     public void setRates(final SortedSet<TaxRate> rates) {
         this.rates = rates;
     }
-
     // }}
-    
 
     public void addToRates(final TaxRate taxRate) {
         // check for no-op

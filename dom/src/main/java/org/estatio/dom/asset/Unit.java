@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -82,6 +83,7 @@ public class Unit extends AbstractDomainObject implements Comparable<Unit> {
     private BigDecimal area;
 
     @MemberOrder(sequence = "4")
+    @Column(scale=4)
     public BigDecimal getArea() {
         return area;
     }
@@ -97,6 +99,7 @@ public class Unit extends AbstractDomainObject implements Comparable<Unit> {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
+    @Column(scale=4)
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -112,6 +115,7 @@ public class Unit extends AbstractDomainObject implements Comparable<Unit> {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "6")
+    @Column(scale=4)
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -127,6 +131,7 @@ public class Unit extends AbstractDomainObject implements Comparable<Unit> {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "7")
+    @Column(scale=4)
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -142,6 +147,7 @@ public class Unit extends AbstractDomainObject implements Comparable<Unit> {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "8")
+    @Column(scale=4)
     public BigDecimal getTerraceArea() {
         return terraceArea;
     }

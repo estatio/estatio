@@ -2,6 +2,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
@@ -20,6 +21,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     private BigDecimal budgetedValue;
 
     @MemberOrder(sequence = "11", name = "Service Charges")
+    @Column(scale=4)
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
@@ -34,6 +36,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     private BigDecimal auditedValue;
 
     @MemberOrder(sequence = "12", name = "Service Charges")
+    @Column(scale=4)
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

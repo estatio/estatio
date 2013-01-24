@@ -2,6 +2,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Inheritance;
@@ -63,6 +64,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "12", name = "Indexable Rent")
     @Optional
+    @Column(scale=4)
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
     }
@@ -108,6 +110,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "15", name = "Indexable Rent")
     @Optional
+    @Column(scale=4)
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
     }
@@ -153,6 +156,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "19", name = "Indexable Rent")
     @Optional
+    @Column(scale=4)
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }
@@ -183,6 +187,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "21", name = "Indexable Rent")
     @Optional
+    @Column(scale=4)
     public BigDecimal getLevellingValue() {
         return levellingValue;
     }
@@ -198,6 +203,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private BigDecimal baseValue;
 
     @MemberOrder(sequence = "30", name = "Values")
+    @Column(scale=4)
     public BigDecimal getBaseValue() {
         return baseValue;
     }
@@ -214,6 +220,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "31", name = "Values")
     @Optional
+    @Column(scale=4)
     public BigDecimal getIndexedValue() {
         return indexedValue;
     }

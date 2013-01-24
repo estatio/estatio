@@ -2,6 +2,7 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -34,6 +35,7 @@ public class InvoiceItem extends AbstractDomainObject {
     private BigDecimal quantity;
 
     @MemberOrder(sequence = "1")
+    @Column(scale=4)
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -48,6 +50,7 @@ public class InvoiceItem extends AbstractDomainObject {
     private BigDecimal amount;
 
     @MemberOrder(sequence = "1")
+    @Column(scale=4)
     public BigDecimal getAmount() {
         return amount;
     }

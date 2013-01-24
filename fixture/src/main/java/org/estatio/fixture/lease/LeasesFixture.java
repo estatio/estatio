@@ -5,7 +5,6 @@ import java.math.BigInteger;
 
 import org.joda.time.LocalDate;
 
-
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
@@ -30,17 +29,13 @@ import org.estatio.dom.party.Party;
 public class LeasesFixture extends AbstractFixture {
 
     private Party manager;
-    
+
     @Override
     public void install() {
-        String[] prefixes = { "OXF", "KAL" };
-        LocalDate[] dates = { new LocalDate(2010, 7, 15), new LocalDate(2008, 1, 1) };
         Charge charge = charges.newCharge("RENT");
         manager = parties.findPartyByReference("JDOE");
-        for (String prefix : prefixes) {
-            createLease(prefix + "-TOPMODEL-001", "Topmodel Lease", prefix + "-001", "ACME", "TOPMODEL", dates[0], dates[0].plusYears(10).minusDays(1), charge);
-            createLease(prefix + "-MEDIAX-002", "Meadiax Lease", prefix + "-002", "ACME", "MEDIAX", dates[1], dates[1].plusYears(10).minusDays(1), charge);
-        }
+        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2010, 7, 15).plusYears(10).minusDays(1), charge);
+        createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2008, 1, 1).plusYears(10).minusDays(1), charge);
     }
 
     private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tentantReference, LocalDate startDate, LocalDate endDate, Charge charge) {
@@ -70,14 +65,6 @@ public class LeasesFixture extends AbstractFixture {
         li.setStartDate(startDate);
         li.setSequence(BigInteger.valueOf(1));
         return li;
-    }
-
-    private LeaseTerm createLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value) {
-        LeaseTerm leaseTerm = leaseTerms.newLeaseTerm(leaseItem);
-        leaseTerm.setStartDate(startDate);
-        leaseTerm.setEndDate(endDate);
-        leaseTerm.setValue(value);
-        return leaseTerm;
     }
 
     private LeaseTerm createIndexableLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value, LocalDate baseIndexDate, LocalDate nextIndexDate, LocalDate indexationApplicationDate) {
@@ -134,13 +121,11 @@ public class LeasesFixture extends AbstractFixture {
     public void setPartyRepository(final Parties parties) {
         this.parties = parties;
     }
-    
+
     private Charges charges;
-    
+
     public void setChargeRepository(final Charges charges) {
         this.charges = charges;
     }
-    
-    
 
 }

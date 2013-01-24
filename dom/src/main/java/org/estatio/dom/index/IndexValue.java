@@ -2,6 +2,7 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -62,6 +63,7 @@ public class IndexValue extends AbstractDomainObject implements Comparable<Index
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
+    @Column(scale=4)
     public BigDecimal getValue() {
         return value;
     }

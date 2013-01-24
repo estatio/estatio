@@ -3,6 +3,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -93,6 +94,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
+    @Column(scale=4)
     public BigDecimal getValue() {
         return value;
     }

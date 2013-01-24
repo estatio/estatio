@@ -2,6 +2,7 @@ package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -63,6 +64,7 @@ public class TaxRate extends AbstractDomainObject implements Comparable<TaxRate>
 
     @Title
     @MemberOrder(sequence = "4")
+    @Column(scale=4)
     public BigDecimal getPercentage() {
         return percentage;
     }

@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 import org.estatio.dom.party.Party;
@@ -35,6 +36,7 @@ public class PropertyActors extends AbstractFactoryAndRepository {
     // {{ NewProperty
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
+    @NotContributed
     public PropertyActor newPropertyActor(final Property property, final Party party, final PropertyActorType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         final PropertyActor propertyActor = newTransientInstance(PropertyActor.class);
         propertyActor.setParty(party);
@@ -51,6 +53,7 @@ public class PropertyActors extends AbstractFactoryAndRepository {
     // {{ findPropertyActor
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
+    @NotContributed
     public PropertyActor findPropertyActor(final Property property, final Party party, final PropertyActorType type) {
         return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
             @Override
@@ -62,6 +65,7 @@ public class PropertyActors extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
+    @NotContributed
     public PropertyActor findPropertyActor(final Property property, final Party party, final PropertyActorType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         return firstMatch(PropertyActor.class, new Filter<PropertyActor>() {
             @Override
