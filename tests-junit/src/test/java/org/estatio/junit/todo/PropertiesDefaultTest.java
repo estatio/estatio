@@ -17,7 +17,6 @@ import org.junit.Test;
 @Fixtures({ @Fixture(EstatioFixture.class) })
 public class PropertiesDefaultTest extends AbstractTest {
 
-    @Ignore
     @Test
     public void canCreateProperty() throws Exception {
         final Property property = properties.newProperty("CODE-1", "Some name");

@@ -53,7 +53,7 @@ public abstract class Party extends AbstractDomainObject {
 
     // {{ Registrations (set, bidir)
     //@javax.jdo.annotations.Persistent(mappedBy = "party")
-    private SortedSet<PartyRegistration> registrations; // = new TreeSet<PartyRegistration>();
+    private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
     @MemberOrder(sequence = "21")
     public SortedSet<PartyRegistration> getRegistrations() {

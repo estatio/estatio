@@ -1,8 +1,23 @@
 package org.estatio.junit;
 
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.PropertyActors;
+import org.estatio.dom.asset.Units;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.States;
+import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.LeaseActors;
+import org.estatio.dom.lease.LeaseItems;
+import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.tax.Taxes;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.progmodel.wrapper.applib.WrapperFactory;
@@ -11,13 +26,6 @@ import org.apache.isis.viewer.junit.ConfigDir;
 import org.apache.isis.viewer.junit.IsisTestRunner;
 import org.apache.isis.viewer.junit.Service;
 import org.apache.isis.viewer.junit.Services;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Units;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.States;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.party.Parties;
 
 @RunWith(IsisTestRunner.class)
 @ConfigDir("../webapp/src/main/webapp/WEB-INF")
@@ -30,6 +38,16 @@ import org.estatio.dom.party.Parties;
     @Service(States.class), 
     @Service(CommunicationChannels.class),
     @Service(Indices.class),
+    @Service(PropertyActors.class),
+    @Service(Leases.class),
+    @Service(LeaseItems.class),
+    @Service(LeaseTerms.class),
+    @Service(LeaseActors.class),
+    @Service(LeaseUnits.class),
+    @Service(Invoices.class),
+    @Service(Charges.class),
+    @Service(Indices.class),
+    @Service(Taxes.class),
     })
 public abstract class AbstractTest {
 
