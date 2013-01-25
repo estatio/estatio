@@ -8,10 +8,13 @@ import java.util.TreeSet;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import com.google.common.collect.Ordering;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Charge;
 import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -33,7 +36,6 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     @Hidden
     void dummyAction2(LeaseTermForTurnoverRent x) {}
 
-    
     // {{ Lease (property)
     private Lease lease;
 
@@ -239,10 +241,9 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     @Resolve(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name = "Terms", sequence = "10")
     public SortedSet<LeaseTerm> getTerms() {
         return terms;
-        // TODO: Q: what's the best way to sort these terms?
     }
 
     public void setTerms(final SortedSet<LeaseTerm> terms) {
@@ -300,40 +301,44 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // }}
 
     @Hidden
+    @MemberOrder(name="Terms", sequence = "11")
     public LeaseTerm addTerm() {
         LeaseTerm term = getType().createLeaseTerm(getContainer());
         terms.add(term);
         return term;
-        
-        /*       
-        LeaseTerm leaseTerm = leaseTermsService.newLeaseTerm(this);
-        terms.add(leaseTerm);
-        return leaseTerm;
-        */
     }
 
-    private LeaseTerms leaseTermsService;
+    // {{ Injected Services 
 
-    public void setLeaseTerms(LeaseTerms leaseTerms) {
-        this.leaseTermsService = leaseTerms;
-    }
-    
     private Indices indexService;
-    
+
     public void setIndexService (Indices indexes){
         this.indexService = indexes;
     }
-    
+
     private Charges chargeService;
-    
+
     public void setChargeService(Charges charges){
         this.chargeService = charges;
     }
 
+    // }}
+
     @Override
     public int compareTo(LeaseItem o) {
-        int i = this.getType().compareTo(o.getType());
-        if (i != 0) return i;
-        return this.getStartDate().compareTo(o.getStartDate());
+        return ORDERING_BY_TYPE.compound(ORDERING_BY_START_DATE).compare(this, o);
     }
+
+    public static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>(){
+        public int compare(LeaseItem p, LeaseItem q) {
+            return LeaseItemType.ORDERING_NATURAL.compare(p.getType(), q.getType());
+        }
+    };
+
+    public final static Ordering<LeaseItem> ORDERING_BY_START_DATE = new Ordering<LeaseItem>(){
+        public int compare(LeaseItem p, LeaseItem q) {
+            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+        }
+    };
+
 }

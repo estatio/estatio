@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 import org.estatio.dom.party.Party;
@@ -30,8 +31,9 @@ public class LeaseActors extends AbstractFactoryAndRepository {
     // }}
 
     // {{ newLeaseActor
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
+    @NotContributed
     public LeaseActor newLeaseActor(
             final Lease lease, 
             final Party party, 
@@ -52,6 +54,7 @@ public class LeaseActors extends AbstractFactoryAndRepository {
     // {{ findLeaseActor
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
+    @NotContributed
     public LeaseActor findLeaseActor(
             final Lease lease, 
             final Party party, 

@@ -13,6 +13,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import com.google.common.collect.Ordering;
+
+import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -140,9 +143,19 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     @Override
     public int compareTo(LeaseTerm o) {
-        int i = this.getClass().getName().compareTo(o.getClass().getName());
-        if (i != 0) return i;
-        return this.getStartDate().compareTo(o.getStartDate());
+        return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
     }
+
+    public static Ordering<LeaseTerm> ORDERING_BY_CLASS = new Ordering<LeaseTerm>(){
+        public int compare(LeaseTerm p, LeaseTerm q) {
+            return Ordering.<String>natural().compare(p.getClass().toString(), q.getClass().toString());
+        }
+    };
+
+    public final static Ordering<LeaseTerm> ORDERING_BY_START_DATE = new Ordering<LeaseTerm>(){
+        public int compare(LeaseTerm p, LeaseTerm q) {
+            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+        }
+    };
 
 }

@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 
 //TODO: Q: do we need separate repositories for each entity or can/should we cluster them?
@@ -27,8 +28,9 @@ public class LeaseItems extends AbstractFactoryAndRepository {
     // }}
 
     // {{ newLeaseItem
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
+    @NotContributed
     public LeaseItem newLeaseItem(final Lease lease) {
         LeaseItem leaseItem = newTransientInstance(LeaseItem.class);
         leaseItem.setLease(lease);

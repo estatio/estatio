@@ -154,14 +154,18 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     }
 
     protected void onModifyPreviousLease(final Lease oldPreviousLease, final Lease newPreviousLease) {
-        oldPreviousLease.setNextLease(null);
-        newPreviousLease.setNextLease(this);
+        if (oldPreviousLease != null) {
+            oldPreviousLease.setNextLease(null);
+        }
+        if (newPreviousLease != null) {
+            newPreviousLease.setNextLease(this);
+        }
     }
 
     protected void onClearPreviousLease(final Lease oldPreviousLease) {
         oldPreviousLease.setNextLease(null);
     }
-    
+
     // }}
 
     // {{ NextLease (property)
@@ -183,7 +187,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     @Persistent(mappedBy = "lease")
     private SortedSet<LeaseActor> actors = new TreeSet<LeaseActor>();
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Actors", sequence = "11")
     @Resolve(Type.EAGERLY)
     public SortedSet<LeaseActor> getActors() {
         return actors;
@@ -221,10 +225,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     protected void onRemoveFromActors(final LeaseActor elementName) {
     }
 
-    // }}
-
-    // {{ addActor (action)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Actors", sequence = "11")
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         LeaseActor leaseActor = findActor(party, type, startDate);
         if (leaseActor == null) {
@@ -241,7 +242,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
     @Persistent(mappedBy = "lease", defaultFetchGroup = "false")
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Units", sequence = "20")
     @Resolve(Type.EAGERLY)
     public SortedSet<LeaseUnit> getUnits() {
         return units;
@@ -279,10 +280,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     protected void onRemoveFromUnits(final LeaseUnit leaseUnit) {
     }
 
-    // }}
-
-    // {{ addUnit (action)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Units", sequence = "21")
     public LeaseUnit addUnit(@Named("unit") Unit unit) {
         LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
         units.add(leaseUnit);
@@ -295,7 +293,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Resolve(Type.EAGERLY)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Items",sequence = "30")
     public SortedSet<LeaseItem> getItems() {
         return items;
     }
@@ -332,31 +330,18 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     protected void onRemoveFromItems(final LeaseItem leaseItem) {
     }
 
-    // }}
-
-    // {{ addItem (action)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Items",sequence = "31")
     public LeaseItem addItem() {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this);
         items.add(leaseItem);
         return leaseItem;
     }
 
-    // }}
-
-    // {{ findActor (hidden)
     @Hidden
     public LeaseActor findActor(Party party, LeaseActorType type, LocalDate startDate) {
         return leaseActors.findLeaseActor(this, party, type, startDate, startDate);
-        // for (LeaseActor actor : actors) {
-        // if (actor.getParty().equals(party) && actor.getType().equals(type) &&
-        // actor.getStartDate().equals(startDate)) {
-        // return actor;
-        // }
-        // }
     }
 
-    // {{ findItem (hidden)
     @Hidden
     public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
         // TODO: better/faster filter options?
@@ -376,15 +361,15 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     public void verify() {
         //Do something fancy
     }
-    
+
     // }}
-    
+
     @Override
     public int compareTo(Lease other) {
         return this.getReference().compareTo(other.getReference());
     }
 
-    
+
     // {{ injected services
     private LeaseItems leaseItems;
 
@@ -403,7 +388,6 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     public void setLeaseActors(final LeaseActors leaseActors) {
         this.leaseActors = leaseActors;
     }
-
 
     // }}
 }
