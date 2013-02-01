@@ -26,12 +26,12 @@
 	</scm>
 	
 	<properties>
-		<isis.version>1.1.0-SNAPSHOT</isis.version>
+		<isis.version>1.1.1-SNAPSHOT</isis.version>
 		<isis-objectstore-jdo.version>1.0.1-SNAPSHOT</isis-objectstore-jdo.version>
-		<isis-viewer-wicket.version>1.1.0-SNAPSHOT</isis-viewer-wicket.version>
+		<isis-viewer-wicket.version>1.1.1-SNAPSHOT</isis-viewer-wicket.version>
         <isis-security-file.version>1.0.1-SNAPSHOT</isis-security-file.version>
 		<isis-viewer-restfulobjects.version>1.0.1-SNAPSHOT</isis-viewer-restfulobjects.version>
-        <isis-security-shiro.version>1.1.0-SNAPSHOT</isis-security-shiro.version>
+        <isis-security-shiro.version>1.1.1-SNAPSHOT</isis-security-shiro.version>
 
 		<isis-viewer-dnd.version>1.0.0-SNAPSHOT</isis-viewer-dnd.version>
 		<isis-viewer-junit.version>1.0.0-SNAPSHOT</isis-viewer-junit.version>
@@ -400,6 +400,11 @@
 				<scope>import</scope>
 			</dependency>
 
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.1</version>
+            </dependency>
 
 			<!-- the testsupport module -->
 			<dependency>
