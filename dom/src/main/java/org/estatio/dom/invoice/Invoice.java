@@ -1,12 +1,15 @@
 package org.estatio.dom.invoice;
 
+import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.currency.Currency;
 import org.joda.time.LocalDate;
-
 
 @PersistenceCapable
 public class Invoice extends AbstractDomainObject {
@@ -78,6 +81,79 @@ public class Invoice extends AbstractDomainObject {
     public void setCurrency(final Currency currency) {
         this.currency = currency;
     }
+
     // }}
+
+    // {{ Items (Collection)
+    private Set<InvoiceItem> items = new LinkedHashSet<InvoiceItem>();
+
+    @MemberOrder(sequence = "6")
+    public Set<InvoiceItem> getItems() {
+        return items;
+    }
+
+    public void setItems(final Set<InvoiceItem> items) {
+        this.items = items;
+    }
+
+    public void addToItems(final InvoiceItem item) {
+        // check for no-op
+        if (item == null || getItems().contains(item)) {
+            return;
+        }
+        // associate new
+        getItems().add(item);
+        // additional business logic
+        onAddToItems(item);
+    }
+
+    public void removeFromItems(final InvoiceItem item) {
+        // check for no-op
+        if (item == null || !getItems().contains(item)) {
+            return;
+        }
+        // dissociate existing
+        getItems().remove(item);
+        // additional business logic
+        onRemoveFromItems(item);
+    }
+
+    protected void onAddToItems(final InvoiceItem item) {
+    }
+
+    protected void onRemoveFromItems(final InvoiceItem item) {
+    }
+
+    // }}
+
+    @MemberOrder(sequence = "10")
+    public BigDecimal getNetAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (InvoiceItem item : getItems()) {
+            total = total.add(item.getNetAmount());
+        }
+        return total;
+    }
+
+    @MemberOrder(sequence = "11")
+    public BigDecimal getVatAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (InvoiceItem item : getItems()) {
+            total = total.add(item.getVatAmount());
+        }
+        return total;
+    }
+
+    @MemberOrder(sequence = "12")
+    public BigDecimal getGrossAmount() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (InvoiceItem item : getItems()) {
+            total = total.add(item.getGrossAmount());
+        }
+        return total;
+    }
+
+    // TODO: Add aggreated fields for NetAmount, VatAmount and GrossAmount
+    // amount
 
 }

@@ -12,7 +12,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
 
-
 @PersistenceCapable
 public class InvoiceItem extends AbstractDomainObject {
 
@@ -34,8 +33,8 @@ public class InvoiceItem extends AbstractDomainObject {
     // {{ Quantity (property)
     private BigDecimal quantity;
 
-    @MemberOrder(sequence = "1")
-    @Column(scale=4)
+    @MemberOrder(sequence = "2")
+    @Column(scale = 4)
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -46,17 +45,47 @@ public class InvoiceItem extends AbstractDomainObject {
 
     // }}
 
-    // {{ Amount (property)
-    private BigDecimal amount;
+    // {{ NetAmount (property)
+    private BigDecimal netAmount;
 
-    @MemberOrder(sequence = "1")
-    @Column(scale=4)
-    public BigDecimal getAmount() {
-        return amount;
+    @MemberOrder(sequence = "3")
+    @Column(scale = 4)
+    public BigDecimal getNetAmount() {
+        return netAmount;
     }
 
-    public void setAmount(final BigDecimal amount) {
-        this.amount = amount;
+    public void setNetAmount(final BigDecimal netAmount) {
+        this.netAmount = netAmount;
+    }
+
+    // }}
+
+    // {{ VatAmount (property)
+    private BigDecimal vatAmount;
+
+    @MemberOrder(sequence = "4")
+    @Column(scale = 4)
+    public BigDecimal getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(final BigDecimal vatAmount) {
+        this.vatAmount = vatAmount;
+    }
+
+    // }}
+
+    // {{ Amount (property)
+    private BigDecimal grossAmount;
+
+    @MemberOrder(sequence = "5")
+    @Column(scale = 4)
+    public BigDecimal getGrossAmount() {
+        return grossAmount;
+    }
+
+    public void setGrossAmount(final BigDecimal grossAmount) {
+        this.grossAmount = grossAmount;
     }
 
     // }}
@@ -64,7 +93,7 @@ public class InvoiceItem extends AbstractDomainObject {
     // {{ Tax (property)
     private Tax tax;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "6")
     public Tax getTax() {
         return tax;
     }
@@ -78,7 +107,7 @@ public class InvoiceItem extends AbstractDomainObject {
     // {{ Description (property)
     private String description;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "7")
     public String getDescription() {
         return description;
     }
@@ -94,7 +123,7 @@ public class InvoiceItem extends AbstractDomainObject {
 
     @Optional
     @Disabled
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "10")
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
     }
