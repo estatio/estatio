@@ -15,8 +15,11 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.Partial;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
@@ -29,8 +32,8 @@ import org.apache.isis.applib.annotation.Where;
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
-public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseTerm>{
-    
+public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseTerm> {
+
     // {{ Lease (property)
     private LeaseItem leaseItem;
 
@@ -46,7 +49,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     }
 
     // }}
-    
+
     // {{ Sequence (property)
     private BigInteger sequence;
 
@@ -59,6 +62,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     public void setSequence(final BigInteger sequence) {
         this.sequence = sequence;
     }
+
     // }}
 
     // {{ StartDate (property)
@@ -97,7 +101,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getValue() {
         return value;
     }
@@ -123,7 +127,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     }
 
     // }}
-    
+
     // {{ Status (property)
     private LeaseTermStatus status;
 
@@ -135,6 +139,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     public void setStatus(final LeaseTermStatus status) {
         this.status = status;
     }
+
     // }}
 
     public void verify() {
@@ -146,16 +151,35 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
         return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
     }
 
-    public static Ordering<LeaseTerm> ORDERING_BY_CLASS = new Ordering<LeaseTerm>(){
+    public static Ordering<LeaseTerm> ORDERING_BY_CLASS = new Ordering<LeaseTerm>() {
         public int compare(LeaseTerm p, LeaseTerm q) {
-            return Ordering.<String>natural().compare(p.getClass().toString(), q.getClass().toString());
+            return Ordering.<String> natural().compare(p.getClass().toString(), q.getClass().toString());
         }
     };
 
-    public final static Ordering<LeaseTerm> ORDERING_BY_START_DATE = new Ordering<LeaseTerm>(){
+    public final static Ordering<LeaseTerm> ORDERING_BY_START_DATE = new Ordering<LeaseTerm>() {
         public int compare(LeaseTerm p, LeaseTerm q) {
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
+
+    public BigDecimal calculate(LocalDate startDate, LocalDate endDate) {
+        InvoicingFrequency freq = this.getLeaseItem().getInvoicingFrequency();
+        Interval currentInterval = CalenderUtils.currentInterval(startDate, freq.rrule);
+        if (getValue() == null) {
+            return null;
+        }
+        if (endDate.compareTo(currentInterval.getEnd().toLocalDate().minusDays(1)) >= 0) {
+            // it's a full period
+            return getValue().divide(freq.numerator).multiply(freq.denominator);
+        } else {
+            
+            
+
+        }
+
+        return null;
+
+    }
 
 }

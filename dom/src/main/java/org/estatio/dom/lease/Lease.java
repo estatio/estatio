@@ -333,7 +333,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     @MemberOrder(name="Items",sequence = "31")
     public LeaseItem addItem() {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this);
-        items.add(leaseItem);
+        addToItems(leaseItem);
         return leaseItem;
     }
 

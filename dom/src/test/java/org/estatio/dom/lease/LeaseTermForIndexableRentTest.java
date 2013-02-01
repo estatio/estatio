@@ -17,32 +17,31 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class IndexableLeaseTermTest {
+public class LeaseTermForIndexableRentTest {
 
     private LeaseTermForIndexableRent ilt ;
     private LeaseItem li;
     private Index i;
-    
+
     @Mock
     LeaseItem mockLeaseItem;
-    
+
     @Mock
     Index mockIndex;
 
-    
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Before
     public void setup() {
         li= new LeaseItem();
-        
+
         ilt = new LeaseTermForIndexableRent();
         ilt.setBaseIndexValue(BigDecimal.valueOf(122.2));
         ilt.setNextIndexValue(BigDecimal.valueOf(111.1));
         ilt.setBaseValue(BigDecimal.valueOf(250000));
         ilt.setLeaseItem(li);
-        
+
     }
 
     @Ignore

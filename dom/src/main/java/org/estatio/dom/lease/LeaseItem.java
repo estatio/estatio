@@ -1,5 +1,6 @@
 package org.estatio.dom.lease;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.SortedSet;
@@ -14,7 +15,9 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Charge;
 import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -26,15 +29,16 @@ import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-
 @PersistenceCapable
-public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseItem>{
+public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseItem> {
 
     @Hidden
-    void dummyAction1(LeaseTermForIndexableRent x) {}
+    void dummyAction1(LeaseTermForIndexableRent x) {
+    }
 
     @Hidden
-    void dummyAction2(LeaseTermForTurnoverRent x) {}
+    void dummyAction2(LeaseTermForTurnoverRent x) {
+    }
 
     // {{ Lease (property)
     private Lease lease;
@@ -169,7 +173,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     public void setIndex(final Index index) {
         this.index = index;
     }
-    
+
     public List<Index> choicesIndex() {
         return indexService.allIndices();
     }
@@ -221,7 +225,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // {{ Charge (property)
     private Charge charge;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "14")
     public Charge getCharge() {
         return charge;
     }
@@ -229,19 +233,41 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     public void setCharge(final Charge charge) {
         this.charge = charge;
     }
-    
+
     public List<Charge> choicesCharge() {
         return chargeService.allCharges();
     }
- 
+
     // }}
 
+    // {{ CurrentValue
+    public BigDecimal getCurrentValue() {
+        for (LeaseTerm term : getTerms()) {
+            if (CalenderUtils.isBetween(LocalDate.now(), term.getStartDate(), term.getEndDate())) {
+                return term.getValue();
+            }
+        }
+        return null;
+    }
+
+    @Hidden
+    public BigDecimal getValueForDate(LocalDate date) {
+        for (LeaseTerm term : getTerms()) {
+            if (CalenderUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
+                return term.getValue();
+            }
+        }
+        return null;
+    }
+
+    // }}
+    
     // {{ Terms (Collection)
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
     @Resolve(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
-    @MemberOrder(name = "Terms", sequence = "10")
+    @MemberOrder(name = "Terms", sequence = "15")
     public SortedSet<LeaseTerm> getTerms() {
         return terms;
     }
@@ -281,7 +307,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         }
         return null;
     }
-    
+
     @Hidden
     public LeaseTerm findTermForSequence(BigInteger sequence) {
         for (LeaseTerm term : getTerms()) {
@@ -298,47 +324,51 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     protected void onRemoveFromTerms(final LeaseTerm terms) {
     }
 
-    // }}
-
     @Hidden
-    @MemberOrder(name="Terms", sequence = "11")
+    @MemberOrder(name = "Terms", sequence = "11")
     public LeaseTerm addTerm() {
         LeaseTerm term = getType().createLeaseTerm(getContainer());
         terms.add(term);
         return term;
     }
 
-    // {{ Injected Services 
+    // }}
+
+    // {{ Injected Services
 
     private Indices indexService;
 
-    public void setIndexService (Indices indexes){
+    public void setIndexService(Indices indexes) {
         this.indexService = indexes;
     }
 
     private Charges chargeService;
 
-    public void setChargeService(Charges charges){
+    public void setChargeService(Charges charges) {
         this.chargeService = charges;
     }
 
     // }}
+    
+    // {{ Comparable
 
     @Override
     public int compareTo(LeaseItem o) {
         return ORDERING_BY_TYPE.compound(ORDERING_BY_START_DATE).compare(this, o);
     }
 
-    public static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>(){
+    public static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
             return LeaseItemType.ORDERING_NATURAL.compare(p.getType(), q.getType());
         }
     };
 
-    public final static Ordering<LeaseItem> ORDERING_BY_START_DATE = new Ordering<LeaseItem>(){
+    public final static Ordering<LeaseItem> ORDERING_BY_START_DATE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
+
+    // }}
 
 }
