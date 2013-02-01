@@ -50,7 +50,7 @@ public class EstatioAdministrationService {
     
     private Indices indexRepo;
     
-    public void SetIndexRepo(Indices indices) {
+    public void setIndexRepo(Indices indices) {
         this.indexRepo = indices;
     }
     // }}
