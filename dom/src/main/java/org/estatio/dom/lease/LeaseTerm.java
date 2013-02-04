@@ -2,6 +2,8 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -16,10 +18,9 @@ import javax.jdo.annotations.Persistent;
 import com.google.common.collect.Ordering;
 
 import org.estatio.dom.utils.CalenderUtils;
+import org.estatio.dom.utils.DateRange;
 import org.estatio.dom.utils.Orderings;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.joda.time.Partial;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
@@ -146,6 +147,20 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
         return;
     }
 
+    public BigDecimal calculate(LocalDate startDate) {
+        InvoicingFrequency freq = this.getLeaseItem().getInvoicingFrequency();
+        DateRange parentRange = new DateRange(CalenderUtils.currentInterval(startDate, freq.rrule));
+        DateRange range = new DateRange(this.getStartDate(), this.getEndDate(), true);
+        range.setParentRange(parentRange);
+        BigDecimal parentRangeDays = new BigDecimal(parentRange.getDays());
+        BigDecimal rangeDays = new BigDecimal(range.getActualDays());
+        BigDecimal rangeFactor = rangeDays.divide(parentRangeDays, MathContext.DECIMAL64);
+        BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
+        return getValue().multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    // {{ CompareTo
+
     @Override
     public int compareTo(LeaseTerm o) {
         return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
@@ -163,23 +178,6 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
         }
     };
 
-    public BigDecimal calculate(LocalDate startDate, LocalDate endDate) {
-        InvoicingFrequency freq = this.getLeaseItem().getInvoicingFrequency();
-        Interval currentInterval = CalenderUtils.currentInterval(startDate, freq.rrule);
-        if (getValue() == null) {
-            return null;
-        }
-        if (endDate.compareTo(currentInterval.getEnd().toLocalDate().minusDays(1)) >= 0) {
-            // it's a full period
-            return getValue().divide(freq.numerator).multiply(freq.denominator);
-        } else {
-            
-            
-
-        }
-
-        return null;
-
-    }
+    // }}
 
 }

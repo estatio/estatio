@@ -16,7 +16,7 @@ public enum LeaseItemType {
     
     private final String title;
     private final Class<? extends LeaseTerm> clss;
-    public static final Ordering<LeaseItemType> ORDERING_NATURAL = Ordering.<LeaseItemType>natural();
+    public static final Ordering<LeaseItemType> ORDERING_NATURAL = Ordering.<LeaseItemType>natural().nullsFirst();
 
     private LeaseItemType(String title, Class<? extends LeaseTerm> clss) {
         this.title = title;
