@@ -131,6 +131,37 @@ public class InvoiceItem extends AbstractDomainObject {
     public void setLeaseTerm(final LeaseTerm leaseTerm) {
         this.leaseTerm = leaseTerm;
     }
+    
+    public void modifyLeaseTerm(final LeaseTerm leaseTerm) {
+        LeaseTerm currentLeaseTerm = getLeaseTerm();
+        // check for no-op
+        if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
+            return;
+        }
+        // delegate to parent to associate
+        leaseTerm.addToInvoiceItems(this);
+        // additional business logic
+        onModifyLeaseTerm(currentLeaseTerm, leaseTerm);
+    }
+
+    public void clearLeaseTerm() {
+        LeaseTerm currentLeaseTerm = getLeaseTerm();
+        // check for no-op
+        if (currentLeaseTerm == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentLeaseTerm.removeFromInvoiceItems(this);
+        // additional business logic
+        onClearLeaseTerm(currentLeaseTerm);
+    }
+
+    protected void onModifyLeaseTerm(final LeaseTerm oldLeaseTerm, final LeaseTerm newLeaseTerm) {
+    }
+
+    protected void onClearLeaseTerm(final LeaseTerm oldLeaseTerm) {
+    }
     // }}
 
+ 
 }

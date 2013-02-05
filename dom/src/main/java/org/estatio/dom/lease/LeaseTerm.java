@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
@@ -17,6 +19,7 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.DateRange;
 import org.estatio.dom.utils.Orderings;
@@ -142,6 +145,74 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     }
 
     // }}
+
+    // {{ InvoiceItems (Collection)
+    private Set<InvoiceItem> invoiceItems = new LinkedHashSet<InvoiceItem>();
+
+    @MemberOrder(sequence = "1")
+    public Set<InvoiceItem> getInvoiceItems() {
+        return invoiceItems;
+    }
+
+    public void setInvoiceItems(final Set<InvoiceItem> invoiceItems) {
+        this.invoiceItems = invoiceItems;
+    }
+
+    // }}
+
+    public void addToInvoiceItems(final InvoiceItem invoiceItem) {
+        // check for no-op
+        if (invoiceItem == null || getInvoiceItems().contains(invoiceItem)) {
+            return;
+        }
+        // dissociate arg from its current parent (if any).
+        invoiceItem.clearLeaseTerm();
+        // associate arg
+        invoiceItem.setLeaseTerm(this);
+        getInvoiceItems().add(invoiceItem);
+        // additional business logic
+        onAddToInvoiceItems(invoiceItem);
+    }
+
+    private void onAddToInvoiceItems(InvoiceItem invoiceItem) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void removeFromInvoiceItems(final InvoiceItem invoiceItem) {
+        // check for no-op
+        if (invoiceItem == null || !getInvoiceItems().contains(invoiceItem)) {
+            return;
+        }
+        // dissociate arg
+        invoiceItem.setLeaseTerm(null);
+        getInvoiceItems().remove(invoiceItem);
+        // additional business logic
+        onRemoveFromInvoiceItems(invoiceItem);
+    }
+
+    private void onRemoveFromInvoiceItems(InvoiceItem invoiceItem) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void removeUnapprovedInvoiceItems() {
+        for (InvoiceItem item : getInvoiceItems()) {
+            if (item.getInvoice() == null) {
+                // TODO remove the invoice item
+                // Select items within this period
+            }
+        }
+    }
+
+    public void createInvoiceItems(LocalDate date) {
+        BigDecimal newValue = this.calculate(date);
+        BigDecimal totalValue = BigDecimal.ZERO;
+        for (InvoiceItem item : getInvoiceItems()) {
+            // retrieve current value
+            totalValue.add(item.getNetAmount());
+        }
+    }
 
     public void verify() {
         return;
