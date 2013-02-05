@@ -10,7 +10,7 @@ public class PersonTest_beanProperties {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new Person(), FilterSet.excluding("container"));
+		new PojoTester().exercise(new Person(), FilterSet.excluding("container", "roles", "registrations", "communicationChannels"));
 	}
 
 }

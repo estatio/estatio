@@ -1,20 +1,12 @@
 package org.estatio.dom.lease;
 
-import static org.junit.Assert.fail;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import junit.framework.Assert;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.index.Index;
-import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 public class LeaseTermTest {

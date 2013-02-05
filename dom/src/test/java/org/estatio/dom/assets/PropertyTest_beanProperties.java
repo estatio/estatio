@@ -16,7 +16,7 @@ public class PropertyTest_beanProperties {
 		    .withFixture(FixtureDatumFactoriesForAssets.units())
 		    .withFixture(FixtureDatumFactoriesForAssets.propertyActors())
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
-			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo", "properties"));
+			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo", "properties", "unitsRepo", "actors", "parties", "communicationChannels" ));
 	}
 
 }
