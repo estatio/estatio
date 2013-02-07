@@ -48,12 +48,12 @@ public class Indices extends AbstractFactoryAndRepository {
             final @Named("Index") Index index, 
             final @Named("Previous Base") IndexBase previousBase, 
             final @Named("Start Date") LocalDate startDate, 
-            final @Named("Factor") double factor) {
+            final @Named("Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance(IndexBase.class);
         indexBase.setIndex(index);
         indexBase.setPreviousBase(previousBase);
         indexBase.setStartDate(startDate);
-        indexBase.setFactor(BigDecimal.valueOf(factor));
+        indexBase.setFactor(factor);
         persist(indexBase);
         index.addToIndexBases(indexBase);
         return indexBase;
