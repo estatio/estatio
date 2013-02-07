@@ -7,6 +7,7 @@ import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexationCalculator;
+import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -41,9 +42,9 @@ public class IndexCalculatorTest {
             }
         });
         indexCalculator.calculate();
-        Assert.assertEquals(BigDecimal.valueOf(12), indexCalculator.getIndexationPercentage());
+        Assert.assertEquals(BigDecimal.valueOf(12.2), indexCalculator.getIndexationPercentage());
     }
-    
+
     @Test
     public void testIndexedValue() {
         context.checking(new Expectations() {
@@ -52,8 +53,7 @@ public class IndexCalculatorTest {
             }
         });
         indexCalculator.calculate();
-        Assert.assertEquals(BigDecimal.valueOf(280000).setScale(2), indexCalculator.getIndexedValue());
+        Assert.assertEquals(BigDecimal.valueOf(280500).setScale(2), indexCalculator.getIndexedValue());
     }
 
-    
 }
