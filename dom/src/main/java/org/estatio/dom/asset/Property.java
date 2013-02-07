@@ -10,6 +10,7 @@ import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -39,6 +40,7 @@ public class Property extends AbstractDomainObject implements Comparable<Propert
     private String reference;
 
     @DescribedAs("Unique reference code for this property")
+    @Unique(name="REFERENCE_IDX")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @MemberOrder(sequence = "1.1")
     public String getReference() {
