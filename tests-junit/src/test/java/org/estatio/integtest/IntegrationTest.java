@@ -8,11 +8,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
-import javax.jdo.annotations.Indices;
-
 import junit.framework.Assert;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyActor;
@@ -44,6 +41,8 @@ import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 
 public class IntegrationTest {
@@ -218,7 +217,14 @@ public class IntegrationTest {
         Leases leases = isft.getService(Leases.class);
         Lease lease = leases.findByReference("OXF-TOPMODEL-001");
         LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
-        Assert.assertNotNull(item.findTerm(new LocalDate(2010, 7, 15)));
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().toArray()[0];
+
+        Assert.assertNotNull(term);
+        term.verify();
+        assertThat(term.getBaseIndexValue(), is(BigDecimal.valueOf(137.6).setScale(4)));
+        assertThat(term.getNextIndexValue(), is(BigDecimal.valueOf(101.2).setScale(4)));
+        assertThat(term.getIndexationPercentage(), is(BigDecimal.valueOf(1).setScale(4)));
+        assertThat(term.getIndexedValue(), is(BigDecimal.valueOf(20200).setScale(4)));
     }
     
 //    @Test
@@ -227,6 +233,7 @@ public class IntegrationTest {
 //        indices.
 //        
 //    }
+
 
     
 }
