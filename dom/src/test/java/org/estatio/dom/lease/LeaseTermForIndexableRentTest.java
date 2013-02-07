@@ -41,10 +41,11 @@ public class LeaseTermForIndexableRentTest {
         ilt.setNextIndexValue(BigDecimal.valueOf(111.1));
         ilt.setBaseValue(BigDecimal.valueOf(250000));
         ilt.setLeaseItem(li);
+        
+        
 
     }
 
-    @Ignore
     @Test
     public void verifyRunsWell() {
         context.checking(new Expectations() {

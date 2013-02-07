@@ -56,7 +56,7 @@ public class IndexFixture extends AbstractFixture {
 
         IndexBase base2000 = createIndexBase(index, base1995, 2011, 1.373);
         createIndexValues(base2000, 2011, new double[] { 101.2, 101.5, 101.9, 102.4, 102.5, 102.6, 102.9, 103.2, 103.2, 103.6, 103.7, 104 }, 102.7);
-        createIndexValues(base2000, 2012, new double[] { 104.4, 104.8, 105.2, 105.7, 105.6, 105.8, 105.9, 106.4 }, 0);
+        createIndexValues(base2000, 2012, new double[] { 104.4, 104.8, 105.2, 105.7, 105.6, 105.8, 105.9, 106.4, 106.4, 106.4, 106.2, 106.5 }, 0);
     }
 
     private Index createIndex(String reference, String name) {
@@ -64,13 +64,13 @@ public class IndexFixture extends AbstractFixture {
     }
 
     private IndexBase createIndexBase(Index index, IndexBase previousBase, int year, double factor) {
-        return indices.newIndexBase(index, previousBase, new LocalDate(year, 1, 1), factor);
+        return indices.newIndexBase(index, previousBase, new LocalDate(year, 1, 1), BigDecimal.valueOf(factor));
     }
 
     private void createIndexValues(IndexBase indexBase, int year, double[] values, double average) {
         int i = 0;
         for (double value : values) {
-            indices.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), new LocalDate(year, i + 1, 1).dayOfMonth().withMaximumValue(), new BigDecimal(value));
+            indices.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), new LocalDate(year, i + 1, 1).dayOfMonth().withMaximumValue(), BigDecimal.valueOf(value));
             i++;
         }
     }

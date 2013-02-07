@@ -38,7 +38,15 @@ public class LeasesFixture extends AbstractFixture {
         createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2008, 1, 1).plusYears(10).minusDays(1), charge);
     }
 
-    private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tentantReference, LocalDate startDate, LocalDate endDate, Charge charge) {
+    private Lease createLease(
+            String reference, 
+            String name, 
+            String unitReference, 
+            String landlordReference, 
+            String tentantReference, 
+            LocalDate startDate, 
+            LocalDate endDate, 
+            Charge charge) {
         Party landlord = parties.findPartyByReference(landlordReference);
         Party tenant = parties.findPartyByReference(tentantReference);
         Unit unit = units.findByReference(unitReference);
@@ -55,7 +63,12 @@ public class LeasesFixture extends AbstractFixture {
         return lease;
     }
 
-    private LeaseItem createLeaseItem(Lease lease, LeaseItemType leaseItemType, Charge charge, LocalDate startDate) {
+    private LeaseItem createLeaseItem(
+            Lease lease, 
+            LeaseItemType 
+            leaseItemType, 
+            Charge charge, 
+            LocalDate startDate) {
         LeaseItem li = leaseItems.newLeaseItem(lease);
         li.setType(leaseItemType);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
@@ -67,7 +80,14 @@ public class LeasesFixture extends AbstractFixture {
         return li;
     }
 
-    private LeaseTerm createIndexableLeaseTerm(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value, LocalDate baseIndexDate, LocalDate nextIndexDate, LocalDate indexationApplicationDate) {
+    private LeaseTerm createIndexableLeaseTerm(
+            LeaseItem leaseItem, 
+            LocalDate startDate, 
+            LocalDate endDate, 
+            BigDecimal value, 
+            LocalDate baseIndexDate, 
+            LocalDate nextIndexDate, 
+            LocalDate indexationApplicationDate) {
         LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
