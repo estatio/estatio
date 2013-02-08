@@ -182,7 +182,7 @@
             <artifactId>isis-core-security</artifactId>
         </dependency>
 
-        
+
         <!-- to run using WebServer (optional) -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
@@ -191,13 +191,15 @@
             <optional>true</optional>
         </dependency>
 
-
-        <!--  estatio extensions -->
-		<dependency>
-			<groupId>org.estatio</groupId>
-			<artifactId>app-wicket-ui-extensions</artifactId>
-		</dependency>
-
+        <!--  wicket extensions -->
+        <dependency>
+            <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+            <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        
+        
+        
 
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -208,7 +210,7 @@
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
         </dependency>
-
+<!-- 
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>jdbc</artifactId>
@@ -217,7 +219,7 @@
             <optional>true</optional>
             <systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
         </dependency>
-
+ -->
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
