@@ -30,7 +30,7 @@
 		<isis-objectstore-jdo.version>1.0.1-SNAPSHOT</isis-objectstore-jdo.version>
 		<isis-viewer-wicket.version>1.1.1-SNAPSHOT</isis-viewer-wicket.version>
         <isis-security-file.version>1.0.1-SNAPSHOT</isis-security-file.version>
-		<isis-viewer-restfulobjects.version>1.0.1-SNAPSHOT</isis-viewer-restfulobjects.version>
+		<isis-viewer-restfulobjects.version>2.0.0-SNAPSHOT</isis-viewer-restfulobjects.version>
         <isis-security-shiro.version>1.1.1-SNAPSHOT</isis-security-shiro.version>
 
 		<isis-viewer-dnd.version>1.0.0-SNAPSHOT</isis-viewer-dnd.version>
@@ -353,12 +353,20 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-restfulobjects</artifactId>
-				<version>${isis-viewer-restfulobjects.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
+                <groupId>org.apache.isis.viewer</groupId>
+                <artifactId>isis-viewer-restfulobjects</artifactId>
+                <version>${isis-viewer-restfulobjects.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
 			</dependency>
+
+            <dependency>
+                <groupId>org.apache.isis.viewer</groupId>
+                <artifactId>isis-viewer-junit</artifactId>
+                <version>${isis-viewer-junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.isis.security</groupId>
@@ -375,22 +383,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-dnd</artifactId>
-				<version>${isis-viewer-dnd.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-junit</artifactId>
-				<version>${isis-viewer-junit.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
 
 			<dependency>
 				<groupId>org.apache.isis.security</groupId>
@@ -421,10 +413,11 @@
 				<artifactId>docx</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
+
 			<dependency>
-				<groupId>com.danhaywood.ddd.domainservices</groupId>
-				<artifactId>scheduler</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+                <groupId>com.danhaywood.ddd.domainservices</groupId>
+                <artifactId>danhaywood-domainservice-scheduler</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
 			<!-- the wicket fullcalendar module -->

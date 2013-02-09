@@ -132,9 +132,9 @@
 		<!-- testing -->
 
 		<dependency>
-			<groupId>com.danhaywood</groupId>
-			<artifactId>testsupport</artifactId>
-			<scope>test</scope>
+            <groupId>com.danhaywood.java</groupId>
+            <artifactId>danhaywood-java-testsupport</artifactId>
+            <version>0.2.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

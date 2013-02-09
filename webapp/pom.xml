@@ -155,10 +155,12 @@
             <groupId>org.apache.isis.viewer</groupId>
             <artifactId>isis-viewer-wicket-impl</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.isis.viewer</groupId>
-            <artifactId>isis-viewer-restfulobjects-impl</artifactId>
+            <artifactId>isis-viewer-restfulobjects-server</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.isis.security</groupId>
             <artifactId>isis-security-shiro</artifactId>
@@ -243,9 +245,10 @@
 			<groupId>com.danhaywood.ddd.domainservices</groupId>
 			<artifactId>docx</artifactId>
 		</dependency>
+
 		<dependency>
-			<groupId>com.danhaywood.ddd.domainservices</groupId>
-			<artifactId>scheduler</artifactId>
+            <groupId>com.danhaywood.ddd.domainservices</groupId>
+            <artifactId>danhaywood-domainservice-scheduler</artifactId>
 		</dependency>
 
 	</dependencies>
