@@ -454,12 +454,6 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>app-wicket-ui-extensions</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
-			<dependency>
-				<groupId>${project.groupId}</groupId>
 				<artifactId>app-webapp</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -470,14 +464,11 @@
 				<version>${project.version}</version>
 			</dependency>
 
-
-
 			<dependency>
 				<groupId>org.xnap.commons</groupId>
 				<artifactId>gettext-commons</artifactId>
 				<version>0.9.6</version>
 			</dependency>
-
 
             <dependency>
                 <groupId>junit</groupId>
@@ -716,7 +707,6 @@
 		        <module>objstore-jdo</module>
 		        <module>services</module>
 		        <module>tests-junit</module>
-		        <module>wicket-ui-extensions</module>
 		        <module>webapp</module>
 		        <module>webrest</module>
 		    </modules>
@@ -732,7 +722,6 @@
                </property>
            </activation>
            <modules>
-		        <module>wicket-ui-extensions</module>
                 <module>dom</module>
                 <module>fixture</module>
                 <module>objstore-jdo</module>
