@@ -35,8 +35,11 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Charge;
 import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.lease.IndexationFrequency;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActorType;
@@ -380,7 +383,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("startDate") @Optional LocalDate startDate, 
             @Named("endDate") @Optional LocalDate endDate, 
             @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate, 
-            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate, 
+            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate,
             @Named("chargeReference") @Optional String chargeReference,
             @Named("nextDueDate") @Optional LocalDate nextDueDate, 
             @Named("invoicingFrequency") @Optional String invoicingFrequency, 
@@ -441,7 +444,9 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("baseValue") @Optional BigDecimal baseValue, 
             @Named("indexedValue") @Optional BigDecimal indexedValue, 
             @Named("levellingValue") @Optional BigDecimal levellingValue,
-            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, 
+            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage,
+            @Named("indexReference") @Optional String indexReference,
+            @Named("indexationFrequency") @Optional String indexationFrequency,
             @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, 
             @Named("baseIndexReference") @Optional String baseIndexReference, 
             @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate,
@@ -453,6 +458,10 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue
         ){
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
+        Index index = indices.findByReference(indexReference);
+        IndexationFrequency indexationFreq = IndexationFrequency.valueOf(indexationFrequency);
+        term.setIndex(index);
+        term.setIndexationFrequency(indexationFreq);
         term.setValue(value);
         term.setReviewDate(reviewDate);
         term.setEffectiveDate(effectiveDate);
@@ -630,6 +639,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void setChargesRepo(final Charges charges) {
         this.charges = charges;
+    }
+
+    private Indices indices;
+
+    public void setIndexRepo(final Indices indices) {
+        this.indices = indices;
     }
 
 }

@@ -162,38 +162,6 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     // }}
 
-    // {{ Index (property)
-    private Index index;
-
-    @MemberOrder(sequence = "10")
-    public Index getIndex() {
-        return index;
-    }
-
-    public void setIndex(final Index index) {
-        this.index = index;
-    }
-
-    public List<Index> choicesIndex() {
-        return indexService.allIndices();
-    }
-
-    // }}
-
-    // {{ IndexationFrequency (property)
-    private IndexationFrequency indexationFrequency;
-
-    @MemberOrder(sequence = "11")
-    public IndexationFrequency getIndexationFrequency() {
-        return indexationFrequency;
-    }
-
-    public void setIndexationFrequency(final IndexationFrequency indexationFrequency) {
-        this.indexationFrequency = indexationFrequency;
-    }
-
-    // }}
-
     // {{ InvoicingFrequency (property)
     private InvoicingFrequency invoicingFrequency;
 
@@ -336,11 +304,6 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     // {{ Injected Services
 
-    private Indices indexService;
-
-    public void setIndexService(Indices indexes) {
-        this.indexService = indexes;
-    }
 
     private Charges chargeService;
 

@@ -92,13 +92,13 @@ public class Index extends AbstractDomainObject implements Comparable<Index> {
     // {{ Actions
     @Hidden
     public BigDecimal getIndexValueForDate(LocalDate date) {
-        IndexValue indexValue = getIndices().findIndexValueForDate(this, date, date.dayOfMonth().withMaximumValue());
+        IndexValue indexValue = indexService.findIndexValueForDate(this, date, date.dayOfMonth().withMaximumValue());
         return indexValue == null ? null : indexValue.getValue();
     }
 
     @Hidden
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
-        IndexValue nextIndexValue = getIndices().findIndexValueForDate(this, nextIndexStartDate, nextIndexStartDate.dayOfMonth().withMaximumValue());
+        IndexValue nextIndexValue = indexService.findIndexValueForDate(this, nextIndexStartDate, nextIndexStartDate.dayOfMonth().withMaximumValue());
         if (nextIndexValue != null) {
             BigDecimal rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseIndexStartDate);
             return rebaseFactor;
@@ -117,14 +117,10 @@ public class Index extends AbstractDomainObject implements Comparable<Index> {
     // }}
 
     // {{ injected: Indices
-    private Indices indices;
+    private Indices indexService;
 
-    public Indices getIndices() {
-        return indices;
-    }
-
-    public void setIndices(Indices indices) {
-        this.indices = indices;
+    public void setIndexService(Indices indices) {
+        this.indexService = indices;
     }
 
     // }}

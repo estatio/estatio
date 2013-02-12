@@ -6,6 +6,7 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
@@ -25,6 +26,7 @@ public class PropertyActor extends AbstractDomainObject implements Comparable<Pr
     @Title(sequence="1")
     @MemberOrder(sequence = "1")
     @Hidden(where=Where.PARENTED_TABLES)
+    @Disabled
     public Property getProperty() {
         return property;
     }
@@ -40,6 +42,7 @@ public class PropertyActor extends AbstractDomainObject implements Comparable<Pr
 
     @Title(sequence="2", prepend=", ")
     @MemberOrder(sequence = "2")
+    @Disabled
     public Party getParty() {
         return party;
     }
@@ -53,6 +56,7 @@ public class PropertyActor extends AbstractDomainObject implements Comparable<Pr
     // {{ Type (property)
     private PropertyActorType type;
 
+    @Disabled
     @MemberOrder(sequence = "3")
     public PropertyActorType getType() {
         return type;

@@ -107,17 +107,17 @@ public class IntegrationTest {
     @Test
     public void indexationFrequencyCannotBeNull() throws Exception {
         LeaseTerms terms = isft.getService(LeaseTerms.class);
-        List<LeaseTerm> alLeaseTerms = terms.allLeaseTerms();
-        LeaseTerm term = alLeaseTerms.get(0);
-        Assert.assertNotNull(term.getLeaseItem().getIndexationFrequency());
+        List<LeaseTerm> allLeaseTerms = terms.allLeaseTerms();
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) allLeaseTerms.get(0);
+        Assert.assertNotNull(term.getIndexationFrequency());
     }
     
     @Test
     public void nexDateCannotBeNull() throws Exception {
         LeaseTerms terms = isft.getService(LeaseTerms.class);
-        List<LeaseTerm> alLeaseTerms = terms.allLeaseTerms();
-        LeaseTerm term = alLeaseTerms.get(0);
-        Assert.assertNotNull(term.getLeaseItem().getIndexationFrequency().nextDate(new LocalDate(2012,1,1)));
+        List<LeaseTerm> allLeaseTerms = terms.allLeaseTerms();
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) allLeaseTerms.get(0);
+        Assert.assertNotNull(term.getIndexationFrequency().nextDate(new LocalDate(2012,1,1)));
     }
 
     @Test

@@ -72,8 +72,6 @@ public class LeasesFixture extends AbstractFixture {
         LeaseItem li = leaseItems.newLeaseItem(lease);
         li.setType(leaseItemType);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setIndexationFrequency(IndexationFrequency.YEARLY);
-        li.setIndex(indices.findByReference("ISTAT-FOI"));
         li.setCharge(charge);
         li.setStartDate(startDate);
         li.setSequence(BigInteger.valueOf(1));
@@ -97,6 +95,8 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setNextIndexStartDate(nextIndexDate);
         leaseTerm.setNextIndexEndDate(nextIndexDate.dayOfMonth().withMaximumValue());
         leaseTerm.setEffectiveDate(indexationApplicationDate);
+        leaseTerm.setIndexationFrequency(IndexationFrequency.YEARLY);
+        leaseTerm.setIndex(indices.findByReference("ISTAT-FOI"));
         return leaseTerm;
     }
 

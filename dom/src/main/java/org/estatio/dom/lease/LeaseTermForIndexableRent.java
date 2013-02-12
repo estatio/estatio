@@ -1,6 +1,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
@@ -13,27 +14,54 @@ import javax.jdo.annotations.Persistent;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
+import org.estatio.dom.index.Indices;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
-    @Hidden
-    void dummyAction1(LeaseTermForIndexableRent x) {}
-    
+    // {{ Index (property)
+    private Index index;
+
+    @MemberOrder(sequence = "10", name = "Indexable Rent")
+    public Index getIndex() {
+        return index;
+    }
+
+    public void setIndex(final Index index) {
+        this.index = index;
+    }
+
+    public List<Index> choicesIndex() {
+        return indexService.allIndices();
+    }
+
+    // }}
+
+    // {{ IndexationFrequency (property)
+    private IndexationFrequency indexationFrequency;
+
+    @MemberOrder(sequence = "11", name = "Indexable Rent")
+    public IndexationFrequency getIndexationFrequency() {
+        return indexationFrequency;
+    }
+
+    public void setIndexationFrequency(final IndexationFrequency indexationFrequency) {
+        this.indexationFrequency = indexationFrequency;
+    }
+
+    // }}
+
     // {{ BaseIndexStartDate (property)
     private LocalDate baseIndexStartDate;
 
     @Persistent
-    @MemberOrder(sequence = "10", name = "Indexable Rent")
+    @MemberOrder(sequence = "12", name = "Indexable Rent")
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
     }
@@ -48,7 +76,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate baseIndexEndDate;
 
     @Persistent
-    @MemberOrder(sequence = "11", name = "Indexable Rent")
+    @MemberOrder(sequence = "13", name = "Indexable Rent")
     public LocalDate getBaseIndexEndDate() {
         return baseIndexEndDate;
     }
@@ -62,9 +90,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ BaseIndexValue (property)
     private BigDecimal baseIndexValue;
 
-    @MemberOrder(sequence = "12", name = "Indexable Rent")
+    @MemberOrder(sequence = "14", name = "Indexable Rent")
     @Optional
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
     }
@@ -79,7 +107,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate nextIndexStartDate;
 
     @Persistent
-    @MemberOrder(sequence = "13", name = "Indexable Rent")
+    @MemberOrder(sequence = "15", name = "Indexable Rent")
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
     }
@@ -94,7 +122,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate nextIndexEndDate;
 
     @Persistent
-    @MemberOrder(sequence = "14", name = "Indexable Rent")
+    @MemberOrder(sequence = "16", name = "Indexable Rent")
     public LocalDate getNextIndexEndDate() {
         return nextIndexEndDate;
     }
@@ -108,9 +136,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ NextIndexValue (property)
     private BigDecimal nextIndexValue;
 
-    @MemberOrder(sequence = "15", name = "Indexable Rent")
+    @MemberOrder(sequence = "17", name = "Indexable Rent")
     @Optional
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
     }
@@ -125,7 +153,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate reviewDate;
 
     @Persistent
-    @MemberOrder(sequence = "16", name = "Indexable Rent")
+    @Optional
+    @MemberOrder(sequence = "18", name = "Indexable Rent")
     public LocalDate getReviewDate() {
         return reviewDate;
     }
@@ -140,7 +169,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate effectiveDate;
 
     @Persistent
-    @MemberOrder(sequence = "17", name = "Indexable Rent")
+    @Optional
+    @MemberOrder(sequence = "19", name = "Indexable Rent")
     public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
@@ -154,9 +184,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ IndexationPercentage (property)
     private BigDecimal indexationPercentage;
 
-    @MemberOrder(sequence = "19", name = "Indexable Rent")
+    @MemberOrder(sequence = "20", name = "Indexable Rent")
     @Optional
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }
@@ -170,7 +200,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ LevellingPercentage (property)
     private BigDecimal levellingPercentage;
 
-    @MemberOrder(sequence = "20", name = "Indexable Rent")
+    @MemberOrder(sequence = "21", name = "Indexable Rent")
     @Optional
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
@@ -185,9 +215,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // {{ LevellingValue (property)
     private BigDecimal levellingValue;
 
-    @MemberOrder(sequence = "21", name = "Indexable Rent")
+    @MemberOrder(sequence = "22", name = "Indexable Rent")
     @Optional
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getLevellingValue() {
         return levellingValue;
     }
@@ -197,13 +227,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     // }}
-    
-    
+
     // {{ BaseValue (property)
     private BigDecimal baseValue;
 
     @MemberOrder(sequence = "30", name = "Values")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getBaseValue() {
         return baseValue;
     }
@@ -214,13 +243,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // }}
 
-
     // {{ IndexedValue (property)
     private BigDecimal indexedValue;
 
     @MemberOrder(sequence = "31", name = "Values")
     @Optional
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getIndexedValue() {
         return indexedValue;
     }
@@ -232,48 +260,61 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{
-    public void verify() {
+    public LeaseTerm verify() {
         IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getBaseIndexEndDate(), getNextIndexStartDate(), getNextIndexEndDate(), getBaseValue());
         calculator.calculate(this);
+        return this;
     }
+
+    public LeaseTerm approve() {
+        setValue(getIndexedValue());
+        super.approve();
+        return this;
+     }
 
     // }}
 
     // {{
-    public LeaseTermForIndexableRent createNextLeaseTerm(@Named("Start Date") LocalDate startDate, BigDecimal value) {
-
+    public LeaseTermForIndexableRent createNextLeaseTerm() {
         // create new term
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) getNextTerm();
         if (getNextTerm() == null) {
             term = (LeaseTermForIndexableRent) leaseTermsService.newLeaseTerm(this.getLeaseItem());
         }
-        term.setStartDate(startDate);
+        // new start Date
+        LocalDate newStartDate = this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
+        term.setStartDate(newStartDate);
+        // index
+        term.setIndex(this.getIndex());
         term.setBaseIndexStartDate(this.getNextIndexStartDate());
         term.setBaseIndexEndDate(this.getNextIndexEndDate());
-        term.setNextIndexStartDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
-        term.setNextIndexEndDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getNextIndexEndDate()));
-        term.setEffectiveDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getEffectiveDate()));
-        term.setReviewDate(this.getLeaseItem().getIndexationFrequency().nextDate(this.getReviewDate()));
-        term.setBaseValue(value);
-        // terminate current term
-        this.setEndDate(startDate.minusDays(1));
-        // this.setNextTerm(term);
-        return null;
+        term.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
+        term.setNextIndexEndDate(this.getIndexationFrequency().nextDate(this.getNextIndexEndDate()));
+        term.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
+        term.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
+        // value
+        term.setBaseValue(this.getValue());
+        // set fields on this term
+        this.setNextTerm(term);
+        this.setEndDate(term.getStartDate().minusDays(1));
+        return term;
     }
 
     // }}
 
-    // {{
+    // {{ Injected Services
     private LeaseTerms leaseTermsService;
 
     public void setLeaseTermsService(LeaseTerms leaseTerms) {
         this.leaseTermsService = leaseTerms;
     }
 
-    // }}
-    @Hidden
-    public Index getIndex() {
-        return this.getLeaseItem().getIndex();
+    private Indices indexService;
+
+    public void setIndexService(Indices indexes) {
+        this.indexService = indexes;
     }
+
+    // }}
 
 }

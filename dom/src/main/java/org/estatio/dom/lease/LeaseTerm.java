@@ -26,11 +26,13 @@ import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.security.RoleMemento;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -44,6 +46,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "1")
     @Persistent
+    @Disabled
     public LeaseItem getLeaseItem() {
         return leaseItem;
     }
@@ -90,6 +93,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     @Persistent
     @MemberOrder(sequence = "3")
+    @Optional
     @Title(sequence = "2", prepend = "-")
     public LocalDate getEndDate() {
         return endDate;
@@ -143,6 +147,11 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     public void setStatus(final LeaseTermStatus status) {
         this.status = status;
     }
+    
+    public String disableStatus() {
+        return getUser().hasRole("admin_role") ? null : "You need to be an administrator to change the status"; 
+        // TODO: Create an enum of roles?
+    }
 
     // }}
 
@@ -157,8 +166,6 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     public void setInvoiceItems(final Set<InvoiceItem> invoiceItems) {
         this.invoiceItems = invoiceItems;
     }
-
-    // }}
 
     public void addToInvoiceItems(final InvoiceItem invoiceItem) {
         // check for no-op
@@ -196,6 +203,8 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     }
 
+    // }}
+
     public void removeUnapprovedInvoiceItems() {
         for (InvoiceItem item : getInvoiceItems()) {
             if (item.getInvoice() == null) {
@@ -214,10 +223,13 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
         }
     }
 
-    public void verify() {
-        return;
+    // {{ Actions
+    public LeaseTerm verify() {
+        return this;
     }
 
+    // TODO: Discuss with Dan: remodelling  
+    @Hidden
     public BigDecimal calculate(LocalDate startDate) {
         InvoicingFrequency freq = this.getLeaseItem().getInvoicingFrequency();
         DateRange parentRange = new DateRange(CalenderUtils.currentInterval(startDate, freq.rrule));
@@ -230,9 +242,20 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
         return getValue().multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
     }
 
-    // {{ CompareTo
+    public LeaseTerm approve() {
+       setStatus(LeaseTermStatus.APPROVED);
+       return this;
+    }
 
+    public String disableApprove() {
+        return this.getStatus() == LeaseTermStatus.CONCEPT ? null : "Cannot approve. Already approved?";
+    }
+
+    // }}
+
+    // {{ CompareTo
     @Override
+    @Hidden
     public int compareTo(LeaseTerm o) {
         return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
     }
