@@ -91,9 +91,7 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBaseValue(value);
         leaseTerm.setBaseIndexStartDate(baseIndexDate);
-        leaseTerm.setBaseIndexEndDate(baseIndexDate.dayOfMonth().withMaximumValue());
         leaseTerm.setNextIndexStartDate(nextIndexDate);
-        leaseTerm.setNextIndexEndDate(nextIndexDate.dayOfMonth().withMaximumValue());
         leaseTerm.setEffectiveDate(indexationApplicationDate);
         leaseTerm.setIndexationFrequency(IndexationFrequency.YEARLY);
         leaseTerm.setIndex(indices.findByReference("ISTAT-FOI"));

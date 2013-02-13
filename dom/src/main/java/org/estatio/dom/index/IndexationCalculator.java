@@ -13,9 +13,7 @@ public class IndexationCalculator {
 
     private Index index;
     private LocalDate baseIndexStartDate;
-    private LocalDate baseIndexEndDate;
     private LocalDate nextIndexStartDate;
-    private LocalDate nextIndexEndDate;
     private BigDecimal baseIndexValue;
     private BigDecimal nextIndexValue;
     private BigDecimal indexationFactor;
@@ -24,13 +22,11 @@ public class IndexationCalculator {
     private BigDecimal indexedValue;
     private BigDecimal indexationPercentage;
 
-    public IndexationCalculator(Index index, LocalDate baseIndexStartDate, LocalDate baseIndexEndDate, LocalDate nextIndexStartDate, LocalDate nextIndexEndDate, BigDecimal baseValue) {
+    public IndexationCalculator(Index index, LocalDate baseIndexStartDate,LocalDate nextIndexStartDate, BigDecimal baseValue) {
         super();
         this.index = index;
         this.baseIndexStartDate = baseIndexStartDate;
-        this.baseIndexEndDate = baseIndexEndDate;
         this.nextIndexStartDate = nextIndexStartDate;
-        this.nextIndexEndDate = nextIndexEndDate;
         this.baseValue = baseValue;
     }
 

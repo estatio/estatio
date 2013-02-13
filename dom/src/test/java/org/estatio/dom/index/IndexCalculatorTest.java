@@ -28,7 +28,7 @@ public class IndexCalculatorTest {
 
     @Before
     public void setup() {
-        indexCalculator = new IndexationCalculator(mockIndex, new LocalDate(2010, 1, 1), new LocalDate(2010, 1, 31), new LocalDate(2011, 1, 1), new LocalDate(2011, 1, 31), new BigDecimal(250000));
+        indexCalculator = new IndexationCalculator(mockIndex, new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1), new BigDecimal(250000));
         indexCalculator.setBaseIndexValue(BigDecimal.valueOf(122.2));
         indexCalculator.setNextIndexValue(BigDecimal.valueOf(111.1));
         indexCalculator.setRebaseFactor(BigDecimal.valueOf(1.234));

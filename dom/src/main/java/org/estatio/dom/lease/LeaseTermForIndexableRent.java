@@ -72,21 +72,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // }}
 
-    // {{ BaseIndexEndDate (property)
-    private LocalDate baseIndexEndDate;
-
-    @Persistent
-    @MemberOrder(sequence = "13", name = "Indexable Rent")
-    public LocalDate getBaseIndexEndDate() {
-        return baseIndexEndDate;
-    }
-
-    public void setBaseIndexEndDate(final LocalDate baseIndexEndDate) {
-        this.baseIndexEndDate = baseIndexEndDate;
-    }
-
-    // }}
-
     // {{ BaseIndexValue (property)
     private BigDecimal baseIndexValue;
 
@@ -114,21 +99,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     public void setNextIndexStartDate(final LocalDate nextIndexStartDate) {
         this.nextIndexStartDate = nextIndexStartDate;
-    }
-
-    // }}
-
-    // {{ NextIndexEndDate (property)
-    private LocalDate nextIndexEndDate;
-
-    @Persistent
-    @MemberOrder(sequence = "16", name = "Indexable Rent")
-    public LocalDate getNextIndexEndDate() {
-        return nextIndexEndDate;
-    }
-
-    public void setNextIndexEndDate(final LocalDate nextIndexEndDate) {
-        this.nextIndexEndDate = nextIndexEndDate;
     }
 
     // }}
@@ -261,7 +231,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // {{
     public LeaseTerm verify() {
-        IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getBaseIndexEndDate(), getNextIndexStartDate(), getNextIndexEndDate(), getBaseValue());
+        IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
         calculator.calculate(this);
         return this;
     }
@@ -287,9 +257,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         // index
         term.setIndex(this.getIndex());
         term.setBaseIndexStartDate(this.getNextIndexStartDate());
-        term.setBaseIndexEndDate(this.getNextIndexEndDate());
         term.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
-        term.setNextIndexEndDate(this.getIndexationFrequency().nextDate(this.getNextIndexEndDate()));
         term.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
         term.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
         // value
