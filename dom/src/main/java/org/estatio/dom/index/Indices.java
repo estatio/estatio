@@ -66,12 +66,10 @@ public class Indices extends AbstractFactoryAndRepository {
     public IndexValue newIndexValue(
             final @Named("Index Base") IndexBase indexBase, 
             final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate, 
             final @Named("Value") BigDecimal value) {
         IndexValue indexValue = newTransientInstance(IndexValue.class);
         indexValue.setIndexBase(indexBase);
         indexValue.setStartDate(startDate);
-        indexValue.setEndDate(endDate);
         indexValue.setValue(value);
         persist(indexValue);
         indexBase.addToValues(indexValue);
@@ -108,14 +106,11 @@ public class Indices extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "6")
     public IndexValue findIndexValueForDate(
             final Index index, 
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate) {
+            final @Named("Start Date") LocalDate startDate) {
         return firstMatch(IndexValue.class, new Filter<IndexValue>() {
             @Override
             public boolean accept(final IndexValue indexValue) {
-                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex())  ; // &&
-                // this.equals(indexValue.getIndexBase().getIndex());
-                // TODO: Should match two dates
+                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex())  ;
             }
         });
     }

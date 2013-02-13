@@ -62,13 +62,11 @@ public class IndexTest {
         iv1 = new IndexValue();
         iv1.setIndexBase(ib2000);
         iv1.setStartDate(baseDate);
-        iv1.setEndDate(baseDate.dayOfMonth().withMaximumValue());
         iv1.setValue(BigDecimal.valueOf(122.2));
 
         iv2 = new IndexValue();
         iv2.setIndexBase(ib2010);
         iv2.setStartDate(nextDate);
-        iv2.setEndDate(nextDate.dayOfMonth().withMaximumValue());
         iv2.setValue(BigDecimal.valueOf(111.1));
         
         result = BigDecimal.valueOf(111.1).divide(BigDecimal.valueOf(122.2), 5, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(1.234));
@@ -84,9 +82,9 @@ public class IndexTest {
     public void testGetIndexValueForDate() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))), with(equal(new LocalDate(2001, 1, 31))));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
                 will(returnValue(iv1));
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -98,7 +96,7 @@ public class IndexTest {
     public void testGetRebaseFactor() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -109,7 +107,7 @@ public class IndexTest {
     public void testGetRebaseFactorWithNull() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))), with(equal(new LocalDate(2011, 1, 31))));
+                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(null));
             }
         });

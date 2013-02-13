@@ -70,7 +70,7 @@ public class IndexFixture extends AbstractFixture {
     private void createIndexValues(IndexBase indexBase, int year, double[] values, double average) {
         int i = 0;
         for (double value : values) {
-            indices.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), new LocalDate(year, i + 1, 1).dayOfMonth().withMaximumValue(), BigDecimal.valueOf(value));
+            indices.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), BigDecimal.valueOf(value));
             i++;
         }
     }

@@ -44,21 +44,6 @@ public class IndexValue extends AbstractDomainObject implements Comparable<Index
 
     // }}
 
-    // {{ EndDate (property)
-    private LocalDate endDate;
-
-    @Persistent
-    @MemberOrder(sequence = "3")
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    // }}
-
     // {{ Value (property)
     private BigDecimal value;
 

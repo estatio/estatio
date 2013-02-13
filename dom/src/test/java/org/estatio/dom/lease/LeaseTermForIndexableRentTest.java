@@ -58,14 +58,12 @@ public class LeaseTermForIndexableRentTest {
 
         iv1 = new IndexValue();
         iv1.setStartDate(new LocalDate(2010,1,1));
-        iv1.setEndDate(iv1.getStartDate().plusMonths(1).minusDays(1));
         iv1.setIndexBase(ib1);
         iv1.setValue(BigDecimal.valueOf(137.6));
         ib1.addToValues(iv1);
 
         iv2 = new IndexValue();
         iv2.setStartDate(new LocalDate(2011,1,1));
-        iv2.setEndDate(iv2.getStartDate().plusMonths(1).minusDays(1));
         iv2.setIndexBase(ib2);
         iv2.setValue(BigDecimal.valueOf(101.2));
         ib2.addToValues(iv2);
@@ -88,9 +86,9 @@ public class LeaseTermForIndexableRentTest {
         i.setIndexService(mockIndices);
         context.checking(new Expectations() {
             {
-                allowing(mockIndices).findIndexValueForDate(with(equal(i)), with(equal(iv1.getStartDate())), with(equal(iv1.getEndDate())));
+                allowing(mockIndices).findIndexValueForDate(with(equal(i)), with(equal(iv1.getStartDate())));
                 will(returnValue(iv1));
-                allowing(mockIndices).findIndexValueForDate(with(equal(i)), with(equal(iv2.getStartDate())), with(equal(iv2.getEndDate())));
+                allowing(mockIndices).findIndexValueForDate(with(equal(i)), with(equal(iv2.getStartDate())));
                 will(returnValue(iv2));
             }
         });
