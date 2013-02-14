@@ -29,6 +29,20 @@ public class InvoiceItem extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ Charge (property)
+    private Charge charge;
+
+    @MemberOrder(sequence = "1")
+    public Charge getCharge() {
+        return charge;
+    }
+
+    public void setCharge(final Charge charge) {
+        this.charge = charge;
+    }
+    // }}
+
 
     // {{ Quantity (property)
     private BigDecimal quantity;
