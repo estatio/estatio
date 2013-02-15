@@ -12,6 +12,7 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -358,6 +359,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     // }}
 
     // {{ Action: verify
+    @Bulk
     public void verify() {
         //Do something fancy
     }

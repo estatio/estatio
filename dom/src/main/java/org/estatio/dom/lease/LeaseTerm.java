@@ -20,6 +20,7 @@ import javax.jdo.annotations.Persistent;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Resolve;
@@ -111,6 +112,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     @MemberOrder(sequence = "4")
     @Column(scale = 4)
+    @Mask("")
     public BigDecimal getValue() {
         return value;
     }

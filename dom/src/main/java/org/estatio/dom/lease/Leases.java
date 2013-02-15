@@ -85,8 +85,8 @@ public class Leases extends AbstractFactoryAndRepository {
 
     // }}
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    public void verifySelected(Lease lease) {
-        lease.verify();
-    }
+//    @ActionSemantics(Of.NON_IDEMPOTENT)
+//    public void verifySelected(Lease lease) {
+//        lease.verify();
+//    }
 }

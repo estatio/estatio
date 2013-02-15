@@ -11,10 +11,11 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
+import javax.xml.stream.Location;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.PostalAddress;
+import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
@@ -23,6 +24,7 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -43,6 +45,7 @@ public class Property extends AbstractDomainObject implements Comparable<Propert
     @Unique(name="REFERENCE_IDX")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @MemberOrder(sequence = "1.1")
+    @Mask("AAAAAAAA")
     public String getReference() {
         return reference;
     }
@@ -148,31 +151,45 @@ public class Property extends AbstractDomainObject implements Comparable<Propert
     // }}
 
     // {{ AreaOfUnits (attribute)
+    // @MemberOrder(sequence = "1.8")
+    // public BigDecimal getAreaOfUnits() {
+    // BigDecimal area = BigDecimal.ZERO;
+    // for (Unit unit : getUnits()) {
+    // area.add(unit.getArea() != null ? unit.getArea() : BigDecimal.ZERO);
+    // }
+    // return area;
+    // }
+
+    // }}
+
+    
+    // {{ City (property)
+    private String propertyName;
+
     @MemberOrder(sequence = "1.8")
-    public BigDecimal getAreaOfUnits() {
-        BigDecimal area = BigDecimal.ZERO;
-        for (Unit unit : getUnits()) {
-            area.add(unit.getArea() != null ? unit.getArea() : BigDecimal.ZERO);
-        }
-        return area;
-    }
-
-    // }}
-
-    // {{ City (derived attribute)
-    @MemberOrder(sequence = "1.9")
     public String getCity() {
-        // TODO: Ugly piece of code
-        for (CommunicationChannel communicationChannel : getCommunicationChannels()) {
-            if (communicationChannel instanceof PostalAddress) {
-                return ((PostalAddress) communicationChannel).getCity();
-            }
-        }
-        return "";
+        return propertyName;
+    }
+
+    public void setCity(final String propertyName) {
+        this.propertyName = propertyName;
+    }
+    // }}
+
+    // {{ Country (property)
+    private Country country;
+
+    @MemberOrder(sequence = "1.9")
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(final Country country) {
+        this.country = country;
     }
 
     // }}
-   
+
     // {{ Actors (list, unidir)
     @Persistent(mappedBy = "property")
     private SortedSet<PropertyActor> actors = new TreeSet<PropertyActor>();
