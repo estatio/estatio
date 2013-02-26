@@ -2,7 +2,7 @@ package org.estatio.dom.invoice;
 
 public enum InvoiceStatus {
     
-    NEW("New"),
+    CONCEPT("Concept"),
     APPROVED("Approved"),
     INVOICED("Invoiced");
     

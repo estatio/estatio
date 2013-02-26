@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DateRangeTest {
-    private DateRange parentRange = new DateRange(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
+    private DateRange boundingRange = new DateRange(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
     // exact match
     private DateRange dateRange1 = new DateRange(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
     // overlap
@@ -26,14 +26,14 @@ public class DateRangeTest {
 
     @Before
     public void setup() {
-        dateRange1.setParentRange(parentRange);
-        dateRange2.setParentRange(parentRange);
-        dateRange3.setParentRange(parentRange);
-        dateRange4.setParentRange(parentRange);
-        dateRange5.setParentRange(parentRange);
-        dateRange6.setParentRange(parentRange);
-        dateRange7.setParentRange(parentRange);
-        dateRange8.setParentRange(parentRange);
+        dateRange1.setBoundingRange(boundingRange);
+        dateRange2.setBoundingRange(boundingRange);
+        dateRange3.setBoundingRange(boundingRange);
+        dateRange4.setBoundingRange(boundingRange);
+        dateRange5.setBoundingRange(boundingRange);
+        dateRange6.setBoundingRange(boundingRange);
+        dateRange7.setBoundingRange(boundingRange);
+        dateRange8.setBoundingRange(boundingRange);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class DateRangeTest {
 
     @Test
     public void testGetDays() {
-        Assert.assertEquals(91, parentRange.getDays());
+        Assert.assertEquals(91, boundingRange.getDays());
         Assert.assertEquals(360464, dateRange8.getDays());
 
     }

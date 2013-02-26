@@ -11,12 +11,14 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 //@ObjectType("PRTY")
 @PersistenceCapable
+@AutoComplete(repository = Parties.class)
 public abstract class Party extends AbstractDomainObject {
 
     // {{ Reference (attribute)

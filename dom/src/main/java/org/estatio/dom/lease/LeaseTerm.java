@@ -17,16 +17,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Mask;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Resolve;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.Resolve.Type;
+import com.google.common.collect.Ordering;
+
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.utils.CalenderUtils;
@@ -34,7 +26,16 @@ import org.estatio.dom.utils.DateRange;
 import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
-import com.google.common.collect.Ordering;
+import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Mask;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -162,7 +163,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     private Set<InvoiceItem> invoiceItems = new LinkedHashSet<InvoiceItem>();
 
     @MemberOrder(sequence = "1")
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     public Set<InvoiceItem> getInvoiceItems() {
         return invoiceItems;
     }
@@ -209,52 +210,21 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     // }}
 
+    @Hidden
     public void removeUnapprovedInvoiceItems() {
         for (InvoiceItem item : getInvoiceItems()) {
             if (item.getInvoice() == null) {
-                // TODO remove the invoice item
-                // Select items within this period
+                //remove from collection
+                removeFromInvoiceItems(item);
+                //remove from database
+                remove(item);
             }
         }
-    }
-
-    public LeaseTerm createInvoiceItems(LocalDate date) {
-        BigDecimal calculatedValue = this.calculate(date);
-        BigDecimal invoicedValue = BigDecimal.ZERO;
-        for (InvoiceItem item : getInvoiceItems()) {
-            // retrieve current value
-            invoicedValue.add(item.getNetAmount());
-        }
-        BigDecimal newValue = calculatedValue.subtract(invoicedValue);
-        if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-            InvoiceItem ii = invoiceService.newInvoiceItem();
-            ii.setLeaseTerm(this);
-            ii.setNetAmount(newValue);
-            ii.setDescription(String.format("Due date {d}", date));
-            ii.setQuantity(BigDecimal.ONE);
-            ii.setCharge(this.getLeaseItem().getCharge());
-            this.addToInvoiceItems(ii);
-        }
-        return this;
     }
 
     // {{ Actions
     public LeaseTerm verify() {
         return this;
-    }
-
-    // TODO: Discuss with Dan: remodeling  
-    @Hidden
-    public BigDecimal calculate(LocalDate startDate) {
-        InvoicingFrequency freq = this.getLeaseItem().getInvoicingFrequency();
-        DateRange parentRange = new DateRange(CalenderUtils.currentInterval(startDate, freq.rrule));
-        DateRange range = new DateRange(this.getStartDate(), this.getEndDate(), true);
-        range.setParentRange(parentRange);
-        BigDecimal parentRangeDays = new BigDecimal(parentRange.getDays());
-        BigDecimal rangeDays = new BigDecimal(range.getActualDays());
-        BigDecimal rangeFactor = rangeDays.divide(parentRangeDays, MathContext.DECIMAL64);
-        BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
-        return getValue().multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
     }
 
     public LeaseTerm approve() {
@@ -288,12 +258,13 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     };
 
     // }}
-    
+   
+
     // {{ Injected services
-    private Invoices invoiceService;
+    private Invoices invoiceRepository;
 
     public void setInvoiceService(Invoices service) {
-        this.invoiceService = service;
+        this.invoiceRepository = service;
     }
     
     // }}

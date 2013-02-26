@@ -11,21 +11,18 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Charge;
 import org.estatio.dom.invoice.Charges;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Resolve;
-import org.apache.isis.applib.annotation.Resolve.Type;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -233,7 +230,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // {{ Terms (Collection)
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
     @MemberOrder(name = "Terms", sequence = "15")
     public SortedSet<LeaseTerm> getTerms() {

@@ -2,22 +2,62 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.lease.PaymentMethodType;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.estatio.dom.currency.Currency;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
 public class Invoice extends AbstractDomainObject {
 
+    // {{ Buyer (property)
+    private Party buyer;
+
+    @MemberOrder(sequence = "1")
+    public Party getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(final Party buyer) {
+        this.buyer = buyer;
+    }
+
+    public List<Party> choicesBuyer() {
+        return parties.allParties();
+    }
+
+    // }}
+
+    // {{ Seller (property)
+    private Party seller;
+
+    @MemberOrder(sequence = "2")
+    public Party getSeller() {
+        return seller;
+    }
+
+    public void setSeller(final Party seller) {
+        this.seller = seller;
+    }
+
+    public List<Party> choicesSeller() {
+        return parties.allParties();
+    }
+    // }}
+
     // {{ Reference (property)
     private String reference;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "3")
     public String getReference() {
         return reference;
     }
@@ -31,7 +71,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ InvoiceDate (property)
     private LocalDate invoiceDate;
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "4")
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -45,7 +85,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ DueDate (property)
     private LocalDate dueDate;
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "5")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -59,7 +99,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ Status (property)
     private InvoiceStatus status;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "6")
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -73,7 +113,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ Currency (property)
     private Currency currency;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "7")
     public Currency getCurrency() {
         return currency;
     }
@@ -84,10 +124,23 @@ public class Invoice extends AbstractDomainObject {
 
     // }}
 
+    // {{ PaymentMethod (property)
+    private PaymentMethodType paymentMethod;
+
+    @MemberOrder(sequence = "8")
+    public PaymentMethodType getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(final PaymentMethodType paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+    // }}
+
     // {{ Items (Collection)
     private Set<InvoiceItem> items = new LinkedHashSet<InvoiceItem>();
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "9")
     public Set<InvoiceItem> getItems() {
         return items;
     }
@@ -153,7 +206,14 @@ public class Invoice extends AbstractDomainObject {
         return total;
     }
 
-    // TODO: Add aggreated fields for NetAmount, VatAmount and GrossAmount
-    // amount
+    // {{ Inject services
+
+    private Parties parties;
+
+    public void setParties(Parties parties) {
+        this.parties = parties;
+    }
+
+    // }}
 
 }

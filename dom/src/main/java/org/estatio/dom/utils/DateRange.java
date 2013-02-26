@@ -10,7 +10,7 @@ public final class DateRange {
 
     private LocalDate startDate;
     private LocalDate endDate;
-    private DateRange parentRange;
+    private DateRange boundingRange;
 
     public DateRange(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
@@ -46,30 +46,30 @@ public final class DateRange {
         this.endDate = endDate;
     }
 
-    public void setParentRange(DateRange parentRange) {
-        this.parentRange = parentRange;
+    public void setBoundingRange(DateRange boundingRange) {
+        this.boundingRange = boundingRange;
     }
 
     public LocalDate getActualStartDate() {
         if (isWithinParent()) {
-            return getStartDate().compareTo(parentRange.getStartDate()) < 0 ? parentRange.getStartDate() : getStartDate();
+            return getStartDate().compareTo(boundingRange.getStartDate()) < 0 ? boundingRange.getStartDate() : getStartDate();
         }
         return null;
     }
 
     public LocalDate getActualEndDate() {
         if (isWithinParent()) {
-            return getEndDate().compareTo(parentRange.getEndDate()) > 0 ? parentRange.getEndDate() : getEndDate();
+            return getEndDate().compareTo(boundingRange.getEndDate()) > 0 ? boundingRange.getEndDate() : getEndDate();
         }
         return null;
     }
 
     public boolean isFullInterval() {
-        return (getStartDate().compareTo(parentRange.getStartDate()) <= 0 && getEndDate().compareTo(parentRange.getEndDate()) >= 0);
+        return (getStartDate().compareTo(boundingRange.getStartDate()) <= 0 && getEndDate().compareTo(boundingRange.getEndDate()) >= 0);
     }
 
     public boolean isWithinParent() {
-        return !(getStartDate().compareTo(parentRange.getEndDate()) >= 0 || this.getEndDate().compareTo(parentRange.getStartDate()) <= 0);
+        return !(getStartDate().compareTo(boundingRange.getEndDate()) >= 0 || this.getEndDate().compareTo(boundingRange.getStartDate()) <= 0);
     }
 
     public int getDays() {
@@ -85,10 +85,6 @@ public final class DateRange {
         } catch (IllegalArgumentException e) {
             return 0;
         }
-
-        // Period p = new Period(this.getActualStartDate(),
-        // this.getActualEndDate(), PeriodType.days());
-        // return p.getDays();
     }
 
 }

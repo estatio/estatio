@@ -131,4 +131,12 @@ public class Parties extends AbstractFactoryAndRepository {
         return allInstances(Party.class);
     }
     // }}
+
+    // {{ autoComplete (hidden)
+    @Hidden
+    public List<Party> autoComplete(String searchPhrase) {
+        return findPartiesByReference(searchPhrase);
+    }
+    // }}
+
 }
