@@ -16,13 +16,18 @@ public class InvoiceCalculator {
     private DateRange boundingRange;
     private BigDecimal calculatedValue;
 
-    private Invoices invoiceRepository;
-
-    public InvoiceCalculator(LeaseTerm leaseTerm) {
-        this.leaseTerm = leaseTerm;
+    public BigDecimal getCalculatedValue() {
+        return calculatedValue;
     }
 
-    public void calculate(LocalDate startDate) {
+    private LocalDate startDate;
+
+    public InvoiceCalculator(LeaseTerm leaseTerm, LocalDate startDate) {
+        this.leaseTerm = leaseTerm;
+        this.startDate = startDate;
+    }
+
+    public void calculate() {
         InvoicingFrequency freq = leaseTerm.getLeaseItem().getInvoicingFrequency();
         boundingRange = new DateRange(CalenderUtils.currentInterval(startDate, freq.rrule));
         DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
@@ -32,31 +37,19 @@ public class InvoiceCalculator {
         BigDecimal rangeFactor = rangeDays.divide(boundingRangeDays, MathContext.DECIMAL64);
         BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
         calculatedValue = leaseTerm.getValue().multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal invoicedValue = BigDecimal.ZERO;
-        for (InvoiceItem item : leaseTerm.getInvoiceItems()) {
-            if (item.getStartDate().equals(startDate)){
-                // retrieve current value
-                invoicedValue.add(item.getNetAmount());
-            }
-        }
-        BigDecimal newValue = calculatedValue.subtract(invoicedValue);
+    }
+    
+    public void createInvoiceItems(){
+        BigDecimal newValue = calculatedValue.subtract(leaseTerm.getInvoicedValueForDate(startDate));
         if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-            InvoiceItem ii = invoiceRepository.newInvoiceItem();
-            ii.setLeaseTerm(leaseTerm);
-            ii.setNetAmount(newValue);
-            ii.setDescription(String.format("Due date {d}", startDate));
-            ii.setQuantity(BigDecimal.ONE);
-            ii.setCharge(leaseTerm.getLeaseItem().getCharge());
-            leaseTerm.addToInvoiceItems(ii);
+            InvoiceItem invoiceItem = leaseTerm.createInvoiceItem();
+            invoiceItem.setNetAmount(newValue);
+            invoiceItem.setDescription(String.format("Due date {d}", startDate));
+            invoiceItem.setQuantity(BigDecimal.ONE);
+            invoiceItem.setCharge(leaseTerm.getLeaseItem().getCharge());
+            invoiceItem.setStartDate(boundingRange.getStartDate());
+            invoiceItem.setEndDate(boundingRange.getEndDate());
         }
     }
-
-    public void removeConceptItems() {
-        for (InvoiceItem item : leaseTerm.getInvoiceItems()) {
-            if (item.getInvoice() == null) {
-                // TODO: how to delete?
-
-            }
-        }
-    }
+    
 }

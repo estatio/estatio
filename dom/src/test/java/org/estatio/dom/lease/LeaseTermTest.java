@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 
 import junit.framework.Assert;
 
+import org.estatio.dom.invoice.InvoiceCalculator;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.Invoices;
 import org.jmock.Expectations;
@@ -52,8 +53,11 @@ public class LeaseTermTest {
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
         li.addToTerms(lt);
+        
+        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
+        ic.calculate();
 
-        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), lt.calculate(new LocalDate(2012, 1, 1)));
+        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
     }
 
     @Test
@@ -71,7 +75,10 @@ public class LeaseTermTest {
         lt.setLeaseItem(li);
         li.addToTerms(lt);
 
-        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), lt.calculate(new LocalDate(2012, 1, 1)));
+        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
+        ic.calculate();
+
+        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
     }
     
     @Test
@@ -88,7 +95,11 @@ public class LeaseTermTest {
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
         li.addToTerms(lt);
-        Assert.assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), lt.calculate(new LocalDate(2012, 1, 1)));
+
+        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
+        ic.calculate();
+
+        Assert.assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
     }
 
     @Test
@@ -106,7 +117,10 @@ public class LeaseTermTest {
         lt.setLeaseItem(li);
         li.addToTerms(lt);
 
-        Assert.assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), lt.calculate(new LocalDate(2012, 1, 1)));
+        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
+        ic.calculate();
+        
+        Assert.assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
     }
     
     @Test
@@ -118,8 +132,8 @@ public class LeaseTermTest {
         l.addToItems(li);
 
         lt = new LeaseTerm();
-        lt.setStartDate(new LocalDate(2013,1,1));
-        lt.setEndDate(new LocalDate(2013,3,1));
+        lt.setStartDate(new LocalDate(2012,1,1));
+        lt.setEndDate(new LocalDate(2013,1,1));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
         li.addToTerms(lt);
@@ -132,9 +146,14 @@ public class LeaseTermTest {
                 will(returnValue(new InvoiceItem()));
             }
         });
+
+        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
+        ic.calculate();
+        ic.createInvoiceItems();
+
+        InvoiceItem invoiceItem = lt.getInvoiceItems().iterator().next();
         
-        lt.createInvoiceItems(new LocalDate(2012, 1, 1));
-        
-        Assert.assertEquals(1, lt.getInvoiceItems().size());
+        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), invoiceItem.getNetAmount());
+        Assert.assertEquals(new LocalDate(2012, 1, 1), invoiceItem.getStartDate());
     }
 }

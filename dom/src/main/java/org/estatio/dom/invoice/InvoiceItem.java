@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
@@ -148,6 +149,7 @@ public class InvoiceItem extends AbstractDomainObject {
     private LocalDate startDate;
 
     @MemberOrder(sequence = "8")
+    @Persistent
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -162,6 +164,7 @@ public class InvoiceItem extends AbstractDomainObject {
     private LocalDate endDate;
 
     @MemberOrder(sequence = "9")
+    @Persistent
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -175,8 +178,8 @@ public class InvoiceItem extends AbstractDomainObject {
     // {{ LeaseTerm (property)
     private LeaseTerm leaseTerm;
 
-    @Optional
     @Disabled
+    @Hidden(where=Where.REFERENCES_PARENT)
     @MemberOrder(sequence = "10")
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;

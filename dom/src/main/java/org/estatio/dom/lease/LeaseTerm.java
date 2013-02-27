@@ -19,6 +19,7 @@ import javax.jdo.annotations.Persistent;
 
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.invoice.InvoiceCalculator;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.utils.CalenderUtils;
@@ -31,6 +32,8 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -211,9 +214,9 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     // }}
 
     @Hidden
-    public void removeUnapprovedInvoiceItems() {
+    public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate) {
         for (InvoiceItem item : getInvoiceItems()) {
-            if (item.getInvoice() == null) {
+            if (item.getInvoice() == null && startDate.equals(getStartDate())) {
                 //remove from collection
                 removeFromInvoiceItems(item);
                 //remove from database
@@ -221,12 +224,41 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
             }
         }
     }
+    
+    @Hidden
+    public BigDecimal getInvoicedValueForDate(LocalDate startDate){
+        BigDecimal invoicedValue = BigDecimal.ZERO;
+        for (InvoiceItem item : getInvoiceItems()) {
+            if (item.getStartDate() == null || item.getStartDate().equals(startDate)){
+                // retrieve current value
+                invoicedValue.add(item.getNetAmount());
+            }
+        }
+        return invoicedValue;
+    }
+    
+    @Hidden
+    public InvoiceItem createInvoiceItem(){
+        InvoiceItem ii = invoiceRepository.newInvoiceItem();
+        invoiceItems.add(ii);
+        ii.setLeaseTerm(this);
+        return ii;
+    }
+    
 
     // {{ Actions
     public LeaseTerm verify() {
         return this;
     }
 
+    public LeaseTerm calculate(@Named("Date") LocalDate date) {
+        removeUnapprovedInvoiceItemsForDate(date);
+        InvoiceCalculator ic = new InvoiceCalculator(this, date);
+        ic.calculate();
+        ic.createInvoiceItems();
+        return this;
+    }
+    
     public LeaseTerm approve() {
        setStatus(LeaseTermStatus.APPROVED);
        return this;
@@ -241,6 +273,7 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     // {{ CompareTo
     @Override
     @Hidden
+    @NotContributed
     public int compareTo(LeaseTerm o) {
         return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
     }
