@@ -74,8 +74,15 @@
                    startDate == :startDate &&
                    endDate == :endDate 
             ]]></query>
+            <query name="leaseActor_findWithType" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.lease.LeaseActor 
+             WHERE lease == :lease &&
+                   type == :type && 
+                   (startDate == null || startDate.asBefore(:date)) &&
+                   (endDate == null || endDate.isAfter(:date))
+            ]]></query>
         </class>
-        
     </package>
     <package name="org.estatio.dom.invoice">
         <class name="Charge">
@@ -90,6 +97,18 @@
             SELECT 
               FROM org.estatio.dom.invoice.ChargeGroup 
             WHERE reference.mathes(:r)
+            ]]></query>
+        </class>
+        <class name="Invoice">
+            <query name="invoice_findMatchingInvoices" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.invoice.Invoice 
+            WHERE 
+                lease == :lease &&
+                seller == :seller &&
+                buyer == :buyer &&
+                paymentMethod == :paymentMethod &&
+                invoiceStatus == :invoiceStatus
             ]]></query>
         </class>
     </package>

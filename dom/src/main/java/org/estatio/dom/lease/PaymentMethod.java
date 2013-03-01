@@ -1,6 +1,6 @@
 package org.estatio.dom.lease;
 
-public enum PaymentMethodType {
+public enum PaymentMethod {
 
     DIRECT_DEBIT,
     BILLING_ACCOUNT,

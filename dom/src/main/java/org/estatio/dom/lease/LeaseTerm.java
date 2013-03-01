@@ -215,12 +215,12 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     @Hidden
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate) {
-        for (InvoiceItem item : getInvoiceItems()) {
-            if (item.getInvoice() == null && startDate.equals(getStartDate())) {
+        for (InvoiceItem invoiceItem : getInvoiceItems()) {
+            if (invoiceItem.getInvoice() == null && startDate.equals(invoiceItem.getStartDate())) {
                 //remove from collection
-                removeFromInvoiceItems(item);
+                removeFromInvoiceItems(invoiceItem);
                 //remove from database
-                remove(item);
+                remove(invoiceItem);
             }
         }
     }

@@ -54,7 +54,7 @@ import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseUnit;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.PaymentMethodType;
+import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -419,7 +419,7 @@ public class Api extends AbstractFactoryAndRepository {
         item.setType(itemType);
         item.setSequence(sequence);
         item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
-        item.setPaymentMethod(PaymentMethodType.valueOf(paymentMethod));
+        item.setPaymentMethod(PaymentMethod.valueOf(paymentMethod));
         item.setCharge(charge);
     }
 

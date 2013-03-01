@@ -10,6 +10,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyActor;
@@ -21,6 +22,9 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.invoice.Charge;
 import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActor;
 import org.estatio.dom.lease.LeaseActorType;
@@ -30,6 +34,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixture;
@@ -41,8 +46,6 @@ import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 
 public class IntegrationTest {
@@ -233,7 +236,15 @@ public class IntegrationTest {
 //        indices.
 //        
 //    }
-
+    
+    @Test
+    public void invoiceCanBeFound() throws Exception {
+        Parties parties = isft.getService(Parties.class);
+        Leases leases = isft.getService(Leases.class);
+        Invoices invoices = isft.getService(Invoices.class);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.CONCEPT).get(0);
+        Assert.assertNotNull(invoice);
+    }
 
     
 }

@@ -49,6 +49,8 @@ public class InvoiceCalculator {
             invoiceItem.setCharge(leaseTerm.getLeaseItem().getCharge());
             invoiceItem.setStartDate(boundingRange.getStartDate());
             invoiceItem.setEndDate(boundingRange.getEndDate());
+            invoiceItem.setTax(leaseTerm.getLeaseItem().getCharge().getTax());
+            invoiceItem.findInvoice();
         }
     }
     

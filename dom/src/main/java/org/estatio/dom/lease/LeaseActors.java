@@ -74,6 +74,24 @@ public class LeaseActors extends AbstractFactoryAndRepository {
     }
     // }}
 
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "1")
+    @NotContributed
+    public LeaseActor findLeaseActorWithType(
+            final Lease lease, 
+            final LeaseActorType type, 
+            final @Named("Date") LocalDate date) {
+        
+        return firstMatch(LeaseActor.class, new Filter<LeaseActor>() {
+            @Override
+            public boolean accept(final LeaseActor leaseActor) {
+                return leaseActor.getLease().equals(lease) & type.equals(type);
+                        //TODO handle optional condition fields as they can contain null
+                        // leaseActor.getStartDate().equals(startDate) & leaseActor.getEndDate().equals(endDate)
+            }
+        });
+    }
+
     
     // {{ allLeaseActors
     @Prototype

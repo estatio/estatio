@@ -18,8 +18,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Resolve;
-import org.apache.isis.applib.annotation.Resolve.Type;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
@@ -189,7 +189,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     private SortedSet<LeaseActor> actors = new TreeSet<LeaseActor>();
 
     @MemberOrder(name="Actors", sequence = "11")
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     public SortedSet<LeaseActor> getActors() {
         return actors;
     }
@@ -244,7 +244,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
 
     @Persistent(mappedBy = "lease", defaultFetchGroup = "false")
     @MemberOrder(name="Units", sequence = "20")
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     public SortedSet<LeaseUnit> getUnits() {
         return units;
     }
@@ -293,7 +293,7 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     // {{ Items (Collection)
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     @MemberOrder(name="Items",sequence = "30")
     public SortedSet<LeaseItem> getItems() {
         return items;
@@ -341,6 +341,11 @@ public class Lease extends AbstractDomainObject implements Comparable<Lease> {
     @Hidden
     public LeaseActor findActor(Party party, LeaseActorType type, LocalDate startDate) {
         return leaseActors.findLeaseActor(this, party, type, startDate, startDate);
+    }
+    
+    @Hidden 
+    public LeaseActor findActorWithType(LeaseActorType leaseActorType, LocalDate date) {
+        return leaseActors.findLeaseActorWithType(this, leaseActorType, date);
     }
 
     @Hidden

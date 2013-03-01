@@ -174,14 +174,14 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // }}
 
     // {{ PayymentMethod (property)
-    private PaymentMethodType paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @MemberOrder(sequence = "13")
-    public PaymentMethodType getPayymentMethod() {
+    public PaymentMethod getPayymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(final PaymentMethodType paymentMethod) {
+    public void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 

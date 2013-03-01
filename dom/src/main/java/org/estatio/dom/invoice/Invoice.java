@@ -7,14 +7,14 @@ import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.lease.PaymentMethodType;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
 
 @PersistenceCapable
 public class Invoice extends AbstractDomainObject {
@@ -67,11 +67,24 @@ public class Invoice extends AbstractDomainObject {
     }
 
     // }}
+    
+    // {{ Lease (property)
+    private Lease lease;
+
+    @MemberOrder(sequence = "4")
+    public Lease getLease() {
+        return lease;
+    }
+
+    public void setLease(final Lease lease) {
+        this.lease = lease;
+    }
+    // }}
 
     // {{ InvoiceDate (property)
     private LocalDate invoiceDate;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "5")
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -85,7 +98,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ DueDate (property)
     private LocalDate dueDate;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "6")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -99,7 +112,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ Status (property)
     private InvoiceStatus status;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "7")
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -113,7 +126,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ Currency (property)
     private Currency currency;
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "8")
     public Currency getCurrency() {
         return currency;
     }
@@ -125,14 +138,14 @@ public class Invoice extends AbstractDomainObject {
     // }}
 
     // {{ PaymentMethod (property)
-    private PaymentMethodType paymentMethod;
+    private PaymentMethod paymentMethod;
 
-    @MemberOrder(sequence = "8")
-    public PaymentMethodType getPaymentMethod() {
+    @MemberOrder(sequence = "9")
+    public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(final PaymentMethodType paymentMethod) {
+    public void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
     // }}
@@ -140,7 +153,7 @@ public class Invoice extends AbstractDomainObject {
     // {{ Items (Collection)
     private Set<InvoiceItem> items = new LinkedHashSet<InvoiceItem>();
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "10")
     public Set<InvoiceItem> getItems() {
         return items;
     }
@@ -179,7 +192,7 @@ public class Invoice extends AbstractDomainObject {
 
     // }}
 
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "11")
     public BigDecimal getNetAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -188,7 +201,7 @@ public class Invoice extends AbstractDomainObject {
         return total;
     }
 
-    @MemberOrder(sequence = "11")
+    @MemberOrder(sequence = "12")
     public BigDecimal getVatAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -197,7 +210,7 @@ public class Invoice extends AbstractDomainObject {
         return total;
     }
 
-    @MemberOrder(sequence = "12")
+    @MemberOrder(sequence = "13")
     public BigDecimal getGrossAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {

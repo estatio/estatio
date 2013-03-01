@@ -66,6 +66,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
     private IsisConfiguration testConfiguration() {
         final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
         testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
+        testConfiguration.add("javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test"); //disable default sqlloq
         testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY , "true");
         return testConfiguration;
     }

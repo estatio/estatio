@@ -7,16 +7,19 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.tax.Tax;
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseActorType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.tax.Tax;
+import org.joda.time.LocalDate;
 
 @PersistenceCapable
 public class InvoiceItem extends AbstractDomainObject {
@@ -145,10 +148,24 @@ public class InvoiceItem extends AbstractDomainObject {
 
     // }}
 
+    // {{ DueDate (property)
+    private LocalDate dueDate;
+
+    @Persistent
+    @MemberOrder(sequence = "8")
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(final LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+    // }}
+    
     // {{ StartDate (property)
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "9")
     @Persistent
     public LocalDate getStartDate() {
         return startDate;
@@ -163,7 +180,7 @@ public class InvoiceItem extends AbstractDomainObject {
     // {{ EndDate (property)
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "10")
     @Persistent
     public LocalDate getEndDate() {
         return endDate;
@@ -180,7 +197,7 @@ public class InvoiceItem extends AbstractDomainObject {
 
     @Disabled
     @Hidden(where=Where.REFERENCES_PARENT)
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "11")
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
     }
@@ -220,6 +237,27 @@ public class InvoiceItem extends AbstractDomainObject {
     }
     // }}
 
+    public void findInvoice() {
+        Lease lease = getLeaseTerm().getLeaseItem().getLease();
+        if (lease != null) {
+            Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
+            Party buyer = lease.findActorWithType(LeaseActorType.TENANT, getDueDate()).getParty();
+            PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPayymentMethod();
+            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.CONCEPT);
+            if (invoice == null) {
+                invoice = invoices.newInvoice();
+                invoice.setBuyer(buyer);
+                invoice.setSeller(seller);
+                invoice.setLease(lease);
+                invoice.setDueDate(getDueDate());
+                invoice.setPaymentMethod(paymentMethod);
+                invoice.setStatus(InvoiceStatus.CONCEPT);
+            }
+            invoice.addToItems(this);
+            this.setInvoice(invoice);
+        }
+    }    
+    
     // {{ Inject services
 
     private Charges charges;
@@ -229,6 +267,14 @@ public class InvoiceItem extends AbstractDomainObject {
         this.charges = charges;
     }
 
+    private Invoices invoices;
+    
+    @Hidden
+    public void setInvoices(Invoices invoices) {
+        this.invoices = invoices;
+    }
+    
+    
     // }}
 
 }
