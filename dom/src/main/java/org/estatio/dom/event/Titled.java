@@ -1,6 +1,6 @@
 package org.estatio.dom.event;
 
-public interface EventType {
+public interface Titled {
     
     String title();
 

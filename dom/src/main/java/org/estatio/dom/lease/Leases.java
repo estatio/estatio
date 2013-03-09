@@ -14,7 +14,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
-@Named("Leases")
+@Named("Numerators")
 public class Leases extends AbstractFactoryAndRepository {
 
     // {{ Id, iconName

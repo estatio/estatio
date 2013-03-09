@@ -7,15 +7,18 @@ import java.util.List;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
-public class Index extends AbstractDomainObject implements Comparable<Index> {
+@Immutable
+public class Index extends EstatioRefDataObject implements Comparable<Index> {
 
     // {{ Reference (property)
     private String reference;
@@ -99,6 +102,7 @@ public class Index extends AbstractDomainObject implements Comparable<Index> {
     @Hidden
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
         IndexValue nextIndexValue = indexService.findIndexValueForDate(this, nextIndexStartDate);
+        //TODO: check efficiency.. seems to retrieve every single index value for the last 15 years...
         if (nextIndexValue != null) {
             BigDecimal rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseIndexStartDate);
             return rebaseFactor;

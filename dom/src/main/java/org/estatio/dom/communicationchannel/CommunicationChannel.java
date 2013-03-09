@@ -6,6 +6,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.estatio.dom.EstatioTransactionalObject;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
@@ -19,7 +22,8 @@ import org.apache.isis.applib.annotation.Optional;
 // required since subtypes are rolling-up
 @ObjectType("CCHN")
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
-public abstract class CommunicationChannel extends AbstractDomainObject implements Comparable<CommunicationChannel> {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public abstract class CommunicationChannel extends EstatioTransactionalObject implements Comparable<CommunicationChannel> {
 
     // {{ Type (attribute)
     private CommunicationChannelType type;

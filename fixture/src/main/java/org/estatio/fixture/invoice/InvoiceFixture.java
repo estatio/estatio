@@ -17,23 +17,9 @@ public class InvoiceFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        createCharges();
         createInvoices();
     }
 
-    private void createCharges() {
-        ChargeGroup cg = chargeRepository.newChargeGroup();
-        cg.setDescription("Rent");
-        cg.setReference("RENT");
-        createCharge("RENT", "Rent", "IT-VATSTD");
-    }
-
-    private void createCharge(String reference, String description, String taxReference) {
-        Charge c = chargeRepository.newCharge(reference);
-        c.setDescription(description);
-        c.setTax(taxRepository.findTaxByReference(taxReference));
-    }
-    
     private void createInvoices() {
         Invoice invoice = invoiceRepository.newInvoice();
         invoice.setBuyer(partyRepository.findPartyByReference("TOPMODEL"));
@@ -61,15 +47,4 @@ public class InvoiceFixture extends AbstractFixture {
         this.leaseRepository = leaseRepository;
     }
     
-    private Charges chargeRepository;
-    
-    public void setChargeRepository(Charges chargeRepository) {
-        this.chargeRepository = chargeRepository;
-    }
-    
-    private Taxes taxRepository;
-    
-    public void setTaxRepository(Taxes taxes) {
-        this.taxRepository = taxes;
-    }
 }

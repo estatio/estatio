@@ -1,7 +1,9 @@
 package org.estatio.dom.asset;
 
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
@@ -18,7 +20,8 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Query(name = "propact_find", 
     language = "JDOQL", 
     value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
-public class PropertyActor extends AbstractDomainObject implements Comparable<PropertyActor> {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class PropertyActor extends EstatioTransactionalObject implements Comparable<PropertyActor> {
 
     // {{ Property (property)
     private Property property;

@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -16,7 +18,8 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
-public class TaxRate extends AbstractDomainObject implements Comparable<TaxRate> {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate> {
 
     // {{ Tax (property)
     private Tax tax;

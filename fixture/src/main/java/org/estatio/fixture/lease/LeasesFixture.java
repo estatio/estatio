@@ -23,6 +23,7 @@ import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 
@@ -32,7 +33,7 @@ public class LeasesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        Charge charge = charges.newCharge("RENT");
+        Charge charge = charges.findChargeByReference("RENT");
         manager = parties.findPartyByReference("JDOE");
         createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2010, 7, 15).plusYears(10).minusDays(1), charge);
         createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2008, 1, 1).plusYears(10).minusDays(1), charge);
@@ -58,7 +59,7 @@ public class LeasesFixture extends AbstractFixture {
         lease.addActor(manager, LeaseActorType.MANAGER, null, null);
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
         LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.RENT, charge, startDate);
-        leaseItem.addToTerms(createIndexableLeaseTerm(leaseItem, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1)));
+        leaseItem.addToTerms(createLeaseTermForIndexableRent(leaseItem, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1)));
         lease.addToItems(leaseItem);
         return lease;
     }
@@ -72,13 +73,14 @@ public class LeasesFixture extends AbstractFixture {
         LeaseItem li = leaseItems.newLeaseItem(lease);
         li.setType(leaseItemType);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        li.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         li.setCharge(charge);
         li.setStartDate(startDate);
         li.setSequence(BigInteger.valueOf(1));
         return li;
     }
 
-    private LeaseTerm createIndexableLeaseTerm(
+    private LeaseTerm createLeaseTermForIndexableRent(
             LeaseItem leaseItem, 
             LocalDate startDate, 
             LocalDate endDate, 

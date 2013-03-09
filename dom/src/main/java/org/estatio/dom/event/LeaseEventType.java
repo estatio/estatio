@@ -1,6 +1,6 @@
 package org.estatio.dom.event;
 
-public enum LeaseEventType implements EventType {
+public enum LeaseEventType implements Titled {
 
     LEASE_BRK_OPT_LNDLRD("Break Option - Landlord"), 
     LEASE_BRK_OPT_MTL("Break Option - Mutual"), 

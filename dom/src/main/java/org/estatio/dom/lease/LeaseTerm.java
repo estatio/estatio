@@ -2,11 +2,10 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.jdo.JDOHelper;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.Discriminator;
@@ -16,14 +15,16 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceCalculator;
 import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.CalenderUtils;
-import org.estatio.dom.utils.DateRange;
 import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
@@ -44,8 +45,10 @@ import org.apache.isis.applib.annotation.Where;
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
-public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseTerm> {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
 
+    
     // {{ Lease (property)
     private LeaseItem leaseItem;
 
@@ -216,17 +219,24 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     @Hidden
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate) {
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
-            if (invoiceItem.getInvoice() == null && startDate.equals(invoiceItem.getStartDate())) {
-                //remove from collection
+            Invoice invoice = invoiceItem.getInvoice();
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.CONCEPT)) && startDate.equals(invoiceItem.getStartDate())) {
+                //remove item from term collection
                 removeFromInvoiceItems(invoiceItem);
+                //remove item from invoice
+                if (invoice != null) {
+                    invoice.removeFromItems(invoiceItem);
+                }
                 //remove from database
+                resolve(invoiceItem);
                 remove(invoiceItem);
             }
         }
     }
-    
+
+
     @Hidden
-    public BigDecimal getInvoicedValueForDate(LocalDate startDate){
+    public BigDecimal invoicedValueFor(LocalDate startDate){
         BigDecimal invoicedValue = BigDecimal.ZERO;
         for (InvoiceItem item : getInvoiceItems()) {
             if (item.getStartDate() == null || item.getStartDate().equals(startDate)){
@@ -236,15 +246,30 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
         }
         return invoicedValue;
     }
-    
+
     @Hidden
-    public InvoiceItem createInvoiceItem(){
-        InvoiceItem ii = invoiceRepository.newInvoiceItem();
-        invoiceItems.add(ii);
-        ii.setLeaseTerm(this);
+    public InvoiceItem createInvoiceItemFor(LocalDate startDate){
+        InvoiceItem ii = unapprovedInvoiceItemFor(startDate);
+        if (ii==null){
+            ii = invoiceRepository.newInvoiceItem();
+            invoiceItems.add(ii);
+            ii.setLeaseTerm(this); 
+        }
         return ii;
     }
-    
+
+    @Hidden
+    public InvoiceItem unapprovedInvoiceItemFor(LocalDate startDate) {
+        for (InvoiceItem invoiceItem : getInvoiceItems()) {
+            Invoice invoice = invoiceItem.getInvoice();
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.CONCEPT)) && startDate.equals(invoiceItem.getStartDate())) {
+                return invoiceItem;
+            }
+        }
+        return null;
+    }
+
+
 
     // {{ Actions
     public LeaseTerm verify() {
@@ -252,10 +277,9 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
     }
 
     public LeaseTerm calculate(@Named("Date") LocalDate date) {
-        removeUnapprovedInvoiceItemsForDate(date);
+        //removeUnapprovedInvoiceItemsForDate(date);
         InvoiceCalculator ic = new InvoiceCalculator(this, date);
-        ic.calculate();
-        ic.createInvoiceItems();
+        ic.calculateAndInvoiceItems();
         return this;
     }
     
@@ -270,6 +294,8 @@ public class LeaseTerm extends AbstractDomainObject implements Comparable<LeaseT
 
     // }}
 
+    
+    
     // {{ CompareTo
     @Override
     @Hidden

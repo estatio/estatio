@@ -4,15 +4,21 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -22,8 +28,12 @@ import org.estatio.dom.tax.Tax;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
-public class InvoiceItem extends AbstractDomainObject {
+// REVIEW: is one needed?
+//@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "INVOICE_ITEM_ID")
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class InvoiceItem extends EstatioTransactionalObject {
 
+    
     // {{ Invoice (property)
     private Invoice invoice;
 

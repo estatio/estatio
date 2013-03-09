@@ -8,16 +8,19 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
-public class IndexBase extends AbstractDomainObject implements Comparable<IndexBase> {
+@Immutable
+public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase> {
 
     // {{ Index (property)
     private Index index;
@@ -47,8 +50,6 @@ public class IndexBase extends AbstractDomainObject implements Comparable<IndexB
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-
-    // }}
 
     // }}
 

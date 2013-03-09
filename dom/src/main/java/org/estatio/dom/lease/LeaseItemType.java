@@ -11,9 +11,8 @@ public enum LeaseItemType {
     RENT("Rent", LeaseTermForIndexableRent.class), 
     TURNOVER_RENT("Turnover Rent", LeaseTermForTurnoverRent.class),
     SERVICE_CHARGE("Service Charge", LeaseTermForServiceCharge.class);
-    
+
     //DISCOUNT("Discount", LeaseTerm.class) 
-    
     private final String title;
     private final Class<? extends LeaseTerm> clss;
     public static final Ordering<LeaseItemType> ORDERING_NATURAL = Ordering.<LeaseItemType>natural().nullsFirst();
@@ -26,7 +25,7 @@ public enum LeaseItemType {
     public String title() {
         return title;
     }
-        
+
     public LeaseTerm createLeaseTerm(DomainObjectContainer container){ 
         try {
             LeaseTerm term = container.newTransientInstance(clss);
@@ -35,9 +34,4 @@ public enum LeaseItemType {
             throw new ApplicationException(ex);
         }
     }
-
-    
-    
-    
-    
 }

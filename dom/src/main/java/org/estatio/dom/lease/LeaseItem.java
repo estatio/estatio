@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
@@ -27,6 +28,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseItem> {
 
     @Hidden

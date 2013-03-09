@@ -2,6 +2,7 @@ package org.estatio.dom.assets;
 
 import org.estatio.dom.FixtureDatumFactoriesForJoda;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.geography.FixtureDatumFactoriesForGeography;
 import org.junit.Test;
 
 import com.danhaywood.testsupport.coverage.PojoTester;
@@ -16,6 +17,7 @@ public class PropertyTest_beanProperties {
 		    .withFixture(FixtureDatumFactoriesForAssets.units())
 		    .withFixture(FixtureDatumFactoriesForAssets.propertyActors())
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
+			.withFixture(FixtureDatumFactoriesForGeography.countries())
 			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo", "properties", "unitsRepo", "actors", "parties", "communicationChannels" ));
 	}
 

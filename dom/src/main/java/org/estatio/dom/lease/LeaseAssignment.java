@@ -1,21 +1,26 @@
 package org.estatio.dom.lease;
 
+import javax.jdo.annotations.VersionStrategy;
+
+import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-public class LeaseAssignment extends AbstractDomainObject {
+//TODO: to complete
+//@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class LeaseAssignment extends EstatioTransactionalObject {
 
     // {{ previousLease (property)
     private Lease previousLease;
 
     @MemberOrder(sequence = "1")
-    public Lease getpreviousLease() {
+    public Lease getPreviousLease() {
         return previousLease;
     }
 
-    public void setpreviousLease(final Lease previousLease) {
+    public void setPreviousLease(final Lease previousLease) {
         this.previousLease = previousLease;
     }
 

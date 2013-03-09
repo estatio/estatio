@@ -27,7 +27,7 @@ public class Invoices extends AbstractFactoryAndRepository {
         return invoice;
     }
     // }}
-    
+
     // {{ newInvoiceItem
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -57,7 +57,6 @@ public class Invoices extends AbstractFactoryAndRepository {
     }
     // }}
 
-    
     @ActionSemantics(Of.SAFE)
     public Invoice findMatchingInvoice(
             Party seller,

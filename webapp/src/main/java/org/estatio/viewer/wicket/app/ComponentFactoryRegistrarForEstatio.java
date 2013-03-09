@@ -12,6 +12,5 @@ public class ComponentFactoryRegistrarForEstatio extends ComponentFactoryRegistr
     public void addComponentFactories(ComponentFactoryList componentFactories) {
         super.addComponentFactories(componentFactories);
         // currently no replacements
-        componentFactories.add(new CollectionContentsAsFullCalendarFactory());
     }
 }

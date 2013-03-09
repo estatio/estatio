@@ -6,18 +6,23 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.numerator.InvoiceNumber;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
-public class Invoice extends AbstractDomainObject {
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+public class Invoice extends EstatioTransactionalObject {
 
     // {{ Buyer (property)
     private Party buyer;
@@ -52,6 +57,7 @@ public class Invoice extends AbstractDomainObject {
     public List<Party> choicesSeller() {
         return parties.allParties();
     }
+
     // }}
 
     // {{ Reference (property)
@@ -67,7 +73,7 @@ public class Invoice extends AbstractDomainObject {
     }
 
     // }}
-    
+
     // {{ Lease (property)
     private Lease lease;
 
@@ -79,6 +85,7 @@ public class Invoice extends AbstractDomainObject {
     public void setLease(final Lease lease) {
         this.lease = lease;
     }
+
     // }}
 
     // {{ InvoiceDate (property)
@@ -148,6 +155,7 @@ public class Invoice extends AbstractDomainObject {
     public void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
     // }}
 
     // {{ Items (Collection)
@@ -217,6 +225,13 @@ public class Invoice extends AbstractDomainObject {
             total = total.add(item.getGrossAmount());
         }
         return total;
+    }
+
+    @MemberOrder(sequence = "20")
+    public Invoice assignInvoiceNumber() {
+        InvoiceNumber invoiceNumber = new InvoiceNumber(this);
+        invoiceNumber.assign();
+        return this;
     }
 
     // {{ Inject services

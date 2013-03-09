@@ -11,8 +11,9 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
-import javax.xml.stream.Location;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
@@ -23,21 +24,28 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.PublishedAction;
+import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Resolve;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @Auditable
 @AutoComplete(repository = Properties.class)
-public class Property extends AbstractDomainObject implements Comparable<Property> {
+@PublishedObject
+public class Property extends EstatioTransactionalObject implements Comparable<Property> {
 
+    
     // {{ Reference (attribute, title)
     private String reference;
 
@@ -284,6 +292,7 @@ public class Property extends AbstractDomainObject implements Comparable<Propert
     // }}
 
     // {{ NewUnit (action)
+    @PublishedAction
     @MemberOrder(name = "Units", sequence = "1")
     public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
         Unit unit = unitsRepo.newUnit(code, name);

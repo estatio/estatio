@@ -10,6 +10,7 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
@@ -17,14 +18,18 @@ import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.index.Indices;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
+    
     // {{ Index (property)
     private Index index;
 
@@ -156,7 +161,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "20", name = "Indexable Rent")
     @Optional
-    @Column(scale = 4)
+    @Column(scale = 1)
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }

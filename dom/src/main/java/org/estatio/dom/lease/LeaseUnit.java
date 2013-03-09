@@ -2,7 +2,9 @@ package org.estatio.dom.lease;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.asset.Unit;
 import org.joda.time.LocalDate;
 
@@ -16,7 +18,8 @@ import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
 @Auditable
-public class LeaseUnit extends AbstractDomainObject implements Comparable<LeaseUnit> {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit> {
 
     // {{ Lease (property)
     private Lease lease;

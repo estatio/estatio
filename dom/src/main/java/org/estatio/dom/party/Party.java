@@ -6,7 +6,9 @@ import java.util.TreeSet;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
@@ -16,10 +18,10 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-//@ObjectType("PRTY")
 @PersistenceCapable
 @AutoComplete(repository = Parties.class)
-public abstract class Party extends AbstractDomainObject {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public abstract class Party extends EstatioTransactionalObject {
 
     // {{ Reference (attribute)
     private String reference;

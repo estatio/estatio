@@ -1,11 +1,16 @@
 package org.estatio.dom.event;
 
+import javax.jdo.annotations.VersionStrategy;
+
+import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-public class Event extends AbstractDomainObject {
+// TODO: instate when want to ...
+//@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class Event extends EstatioTransactionalObject {
 
     // {{ StartDate (property)
     private LocalDate startDate;

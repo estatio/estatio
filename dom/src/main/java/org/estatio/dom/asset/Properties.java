@@ -81,7 +81,14 @@ public class Properties extends AbstractFactoryAndRepository {
     @Prototype
     @ActionSemantics(Of.SAFE)
     public List<Property> allProperties() {
-        return allInstances(Property.class);
+        
+        List<Property> allInstances = allInstances(Property.class);
+        if(allInstances.isEmpty()) {
+            warnUser("oh no!");
+        } else {
+            informUser("woohoo!");
+        }
+        return allInstances;
     }
     // }}
 

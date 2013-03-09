@@ -11,7 +11,9 @@ import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.lease.LeaseUnit;
@@ -20,6 +22,7 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Resolve;
 import org.apache.isis.applib.annotation.Resolve.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -28,7 +31,9 @@ import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
 @Auditable
-public class Unit extends AbstractDomainObject implements Comparable<Unit> {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@PublishedObject
+public class Unit extends EstatioTransactionalObject implements Comparable<Unit> {
 
     // {{ Reference (attribute, title)
     private String reference;
@@ -175,7 +180,7 @@ public class Unit extends AbstractDomainObject implements Comparable<Unit> {
 
     // }}
 
-    // {{ Leases (Collection)
+    // {{ Numerators (Collection)
     @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
     private SortedSet<LeaseUnit> leases = new TreeSet<LeaseUnit>();
 

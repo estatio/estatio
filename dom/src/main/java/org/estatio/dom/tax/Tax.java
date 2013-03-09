@@ -9,17 +9,20 @@ import java.util.TreeSet;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
 @Bounded
-public class Tax extends AbstractDomainObject {
+@Immutable
+public class Tax extends EstatioRefDataObject {
 
     // {{ Reference (property)
     private String reference;

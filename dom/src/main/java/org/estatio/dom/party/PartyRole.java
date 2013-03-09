@@ -18,7 +18,9 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -26,11 +28,11 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.value.Date;
 
-//@javax.jdo.annotations.PersistenceCapable(schema="party", identityType=IdentityType.DATASTORE)
+// TODO: why not?
 //@javax.jdo.annotations.DatastoreIdentity(strategy=IdGeneratorStrategy.IDENTITY)
-//@ObjectType("PROL")
 @javax.jdo.annotations.PersistenceCapable
-public class PartyRole extends AbstractDomainObject {
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class PartyRole extends EstatioTransactionalObject {
 
     // {{ Party (property)
     private Party party;

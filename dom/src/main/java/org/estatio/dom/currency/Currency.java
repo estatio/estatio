@@ -2,13 +2,17 @@ package org.estatio.dom.currency;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.estatio.dom.EstatioRefDataObject;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 @PersistenceCapable
 @Bounded
-public class Currency extends AbstractDomainObject {
+@Immutable
+public class Currency extends EstatioRefDataObject {
 
     // {{ Reference (property)
     private String reference;
@@ -25,15 +29,15 @@ public class Currency extends AbstractDomainObject {
     // }}
 
     // {{ Description (property)
-    private String despription;
+    private String description;
 
     @MemberOrder(sequence = "1")
     public String getDescription() {
-        return despription;
+        return description;
     }
 
     public void setDescription(final String despription) {
-        this.despription = despription;
+        this.description = despription;
     }
     // }}
 

@@ -5,7 +5,9 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.DateRange;
 import org.joda.time.LocalDate;
@@ -27,7 +29,12 @@ public class InvoiceCalculator {
         this.startDate = startDate;
     }
 
-    public void calculate() {
+    public void calculateAndInvoiceItems() {
+        calculate();
+        createInvoiceItems();
+    }
+
+    void calculate() {
         InvoicingFrequency freq = leaseTerm.getLeaseItem().getInvoicingFrequency();
         boundingRange = new DateRange(CalenderUtils.currentInterval(startDate, freq.rrule));
         DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
@@ -39,19 +46,23 @@ public class InvoiceCalculator {
         calculatedValue = leaseTerm.getValue().multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
     }
     
-    public void createInvoiceItems(){
-        BigDecimal newValue = calculatedValue.subtract(leaseTerm.getInvoicedValueForDate(startDate));
+    void createInvoiceItems(){
+        BigDecimal newValue = calculatedValue.subtract(leaseTerm.invoicedValueFor(startDate));
         if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-            InvoiceItem invoiceItem = leaseTerm.createInvoiceItem();
+            InvoiceItem invoiceItem = leaseTerm.createInvoiceItemFor(startDate);
             invoiceItem.setNetAmount(newValue);
             invoiceItem.setDescription(String.format("Due date {d}", startDate));
             invoiceItem.setQuantity(BigDecimal.ONE);
-            invoiceItem.setCharge(leaseTerm.getLeaseItem().getCharge());
+            LeaseItem leaseItem = leaseTerm.getLeaseItem();
+            Charge charge = leaseItem.getCharge();
+            invoiceItem.setCharge(charge);
+            invoiceItem.setDueDate(startDate);
             invoiceItem.setStartDate(boundingRange.getStartDate());
             invoiceItem.setEndDate(boundingRange.getEndDate());
-            invoiceItem.setTax(leaseTerm.getLeaseItem().getCharge().getTax());
+            Tax tax = charge.getTax();
+            invoiceItem.setTax(tax);
             invoiceItem.findInvoice();
         }
     }
-    
+
 }

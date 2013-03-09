@@ -28,18 +28,18 @@ import org.estatio.jdo.TaxesJdo;
 import org.estatio.jdo.UnitsJdo;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
-    
+
     public static EstatioIntegTestBuilder builder() {
         return builderWith(new EstatioFixture());
     }
-    
+
     public static EstatioIntegTestBuilder builderWith(InstallableFixture... fixtures) {
         EstatioIntegTestBuilder builder = new EstatioIntegTestBuilder();
         builder.withFixtures(fixtures);
         builder.withLoggingAt(Level.INFO);
         return builder;
     }
-    
+
     private EstatioIntegTestBuilder() {
         with(testConfiguration());
         with(new DataNucleusPersistenceMechanismInstaller());
@@ -65,9 +65,13 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
     private IsisConfiguration testConfiguration() {
         final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
+
+        //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); // use log4jdbc instead
+        //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test"); //disable default sqlloq
+        
         testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
-        testConfiguration.add("javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test"); //disable default sqlloq
         testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY , "true");
+        
         return testConfiguration;
     }
 }

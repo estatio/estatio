@@ -20,9 +20,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-//@javax.jdo.annotations.PersistenceCapable(schema="party")
-//@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-//@ObjectType("PERS")
 @javax.jdo.annotations.PersistenceCapable
 public class Person extends Party {
 

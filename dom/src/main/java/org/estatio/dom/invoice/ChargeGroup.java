@@ -2,11 +2,15 @@ package org.estatio.dom.invoice;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.estatio.dom.EstatioRefDataObject;
+
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 @PersistenceCapable
-public class ChargeGroup extends AbstractDomainObject {
+@Immutable
+public class ChargeGroup extends EstatioRefDataObject {
 
     // {{ Reference (property)
     private String reference;

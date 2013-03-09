@@ -1,6 +1,6 @@
 package org.estatio.dom.event;
 
-public enum PropertyEventType implements EventType {
+public enum PropertyEventType implements Titled {
 
     PROPERTY_DISRUPTION("Disruption"), 
     PROPERTY_EXTENSION("Extension"), 

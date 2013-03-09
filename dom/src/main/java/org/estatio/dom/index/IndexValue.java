@@ -7,12 +7,16 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
-public class IndexValue extends AbstractDomainObject implements Comparable<IndexValue> {
+@Immutable
+public class IndexValue extends EstatioRefDataObject implements Comparable<IndexValue> {
 
     // {{ IndexBase (property)
     private IndexBase indexBase;

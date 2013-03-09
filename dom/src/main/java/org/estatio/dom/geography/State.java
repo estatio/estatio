@@ -2,14 +2,18 @@ package org.estatio.dom.geography;
 
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.estatio.dom.EstatioRefDataObject;
+
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
 @Bounded
-public class State extends AbstractDomainObject {
+@Immutable
+public class State extends EstatioRefDataObject {
 
     // {{ Reference (attribute)
     private String reference;

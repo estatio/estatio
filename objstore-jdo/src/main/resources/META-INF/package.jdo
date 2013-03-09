@@ -79,8 +79,8 @@
               FROM org.estatio.dom.lease.LeaseActor 
              WHERE lease == :lease &&
                    type == :type && 
-                   (startDate == null || startDate.asBefore(:date)) &&
-                   (endDate == null || endDate.isAfter(:date))
+                   (startDate == null | startDate < :date) &&
+                   (endDate == null | endDate > :date)
             ]]></query>
         </class>
     </package>
@@ -108,7 +108,7 @@
                 seller == :seller &&
                 buyer == :buyer &&
                 paymentMethod == :paymentMethod &&
-                invoiceStatus == :invoiceStatus
+                status == :status
             ]]></query>
         </class>
     </package>

@@ -4,12 +4,18 @@ import javax.jdo.annotations.PersistenceCapable;
 
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
 @PersistenceCapable
-public class Charge extends AbstractDomainObject {
+@Bounded
+@Immutable
+public class Charge extends EstatioRefDataObject {
 
     // {{ Reference (property)
     private String reference;

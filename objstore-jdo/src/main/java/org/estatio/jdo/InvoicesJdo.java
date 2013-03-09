@@ -16,18 +16,17 @@ public class InvoicesJdo extends Invoices {
 
     @Override
     @ActionSemantics(Of.SAFE)
-    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus) {
-        return findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus).get(0);
+    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus status) {
+        return firstMatch(queryForFindMatchingInvoices(seller, buyer, paymentMethod, lease, status));
     }
 
     @Override
     @ActionSemantics(Of.SAFE)
-    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus) {
-        return allMatches(queryForFindMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus));
-
+    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus status) {
+        return allMatches(queryForFindMatchingInvoices(seller, buyer, paymentMethod, lease, status));
     }
 
-    private static QueryDefault<Invoice> queryForFindMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus) {
-        return new QueryDefault<Invoice>(Invoice.class, "invoices_findMatchingInvoice", "seller", seller, "buyer", buyer, "paymentMethod", paymentMethod, "lease", lease, "invoiceStatus", invoiceStatus);
+    private static QueryDefault<Invoice> queryForFindMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus status) {
+        return new QueryDefault<Invoice>(Invoice.class, "invoice_findMatchingInvoices", "seller", seller, "buyer", buyer, "paymentMethod", paymentMethod, "lease", lease, "status", status);
     }
 }

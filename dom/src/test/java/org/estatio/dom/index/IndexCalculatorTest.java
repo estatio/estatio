@@ -53,7 +53,7 @@ public class IndexCalculatorTest {
             }
         });
         indexCalculator.calculate();
-        Assert.assertEquals(BigDecimal.valueOf(280500).setScale(2), indexCalculator.getIndexedValue());
+        Assert.assertEquals(BigDecimal.valueOf(280500).setScale(4), indexCalculator.getIndexedValue());
     }
 
 }
