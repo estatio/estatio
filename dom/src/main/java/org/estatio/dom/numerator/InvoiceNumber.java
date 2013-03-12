@@ -1,47 +1,22 @@
 package org.estatio.dom.numerator;
 
-import java.math.BigInteger;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 
 import org.estatio.dom.invoice.Invoice;
 
-import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
+//@PersistenceCapable(serializeRead = "true")
+@PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+public class InvoiceNumber extends Numerator {
 
-public class InvoiceNumber implements NumeratorStrategy {
-
-    private Invoice invoice;
-
-    public InvoiceNumber(Invoice invoice) {
-        this.invoice = invoice;
+    public void assign(Invoice invoice){
+        if (invoice.getInvoiceNumber() == null) {
+            invoice.setInvoiceNumber(String.format("%s-%05d", "TEST", increment()));
+        } else {
+            //TODO: it's not fun doing unit tests without a container
+            //getContainer().warnUser("Unable to assign a number to an invoice multiple times");
+        }
     }
-
-    public void assign() {
-        Numerator numerator = numerators.retrieve(key(), description());
-        BigInteger next = numerator.increment();
-        invoice.setReference(next.toString());
-    }
-
-    @Override
-    public String key() {
-        Bookmark bookmark = bookmarkService.bookmarkFor(invoice.getSeller());
-        return String.format("InvoiceNumber~", bookmark.toString());
-    }
-
-    @Override
-    public String description() {
-        return invoice.getSeller().getReference();
-    }
-
-    private BookmarkService bookmarkService;
-
-    public void setBookmarkService(BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
-    }
-
-    private Numerators numerators;
-
-    public void setNumerators(Numerators numerators) {
-        this.numerators = numerators;
-    }
-
 }

@@ -1,6 +1,5 @@
 package org.estatio.dom.numerator;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -27,26 +26,29 @@ public class Numerators extends AbstractFactoryAndRepository {
     // }}
 
     @Hidden
-    public Numerator retrieve(final String key, String description) {
-        Numerator numerator = firstMatch(Numerator.class, new Filter<Numerator>() {
-            @Override
-            public boolean accept(final Numerator t) {
-                return t.getKey() == key;
-            }
-        });
-        return numerator == null ? create(key, description) : numerator;
-    }
-
-    @Hidden
-    public Numerator create(String key, String description) {
-        Numerator numerator = newTransientInstance(Numerator.class);
-        numerator.setKey(key);
-        numerator.setLastIncrement(BigInteger.ZERO);
-        numerator.setDescription(description);
+    public Numerator create(NumeratorType type){
+        Numerator numerator = type.create(getContainer());
         persist(numerator);
         return numerator;
     }
+    
+    //TODO: This naive implementation doesn't find the numerator, the JDO implementation does.
+    public Numerator find(final NumeratorType type) {
+        Numerator numerator = firstMatch(Numerator.class, new Filter<Numerator>() {
+            @Override
+            public boolean accept(final Numerator n) {
+                return n.getType().equals(type);
+            }
+        });
+        return numerator;
+    }
 
+    public Numerator findOrCreate(NumeratorType type){
+        Numerator numerator = find(type);
+        return numerator == null ? create(type) : numerator;
+    }
+    
+    
     // {{ allNumerators
     @Prototype
     @ActionSemantics(Of.SAFE)
