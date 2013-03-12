@@ -121,4 +121,13 @@
             ]]></query>
         </class>
     </package>
+    <package name="org.estatio.dom.numerator">
+        <class name="Numerator">
+            <query name="numerator_find" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.Numerator.Numerator 
+            WHERE type == :type
+            ]]></query>
+        </class>
+    </package>
 </jdo>

@@ -20,6 +20,7 @@ import org.estatio.jdo.LeaseItemsJdo;
 import org.estatio.jdo.LeaseTermsJdo;
 import org.estatio.jdo.LeaseUnitsJdo;
 import org.estatio.jdo.LeasesJdo;
+import org.estatio.jdo.NumeratorsJdo;
 import org.estatio.jdo.PartiesJdo;
 import org.estatio.jdo.PropertiesJdo;
 import org.estatio.jdo.PropertyActorsJdo;
@@ -59,7 +60,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new StatesJdo(),
                 new IndicesJdo(),
                 new TaxesJdo(),
-                new ChargesJdo()
+                new ChargesJdo(),
+                new NumeratorsJdo()
                 );
     }
 
