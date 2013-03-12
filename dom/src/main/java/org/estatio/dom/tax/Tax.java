@@ -96,16 +96,14 @@ public class Tax extends EstatioRefDataObject {
         rate.setPercentage(percentage);
         persist(rate);
         this.addToRates(rate);
-        return rate;
-        
+        return rate;        
 //        rates.getCurrentRate();
     }
 
     // }}
 
     // {{ getPercentageForDate
-    public BigDecimal getPercentageForDate(LocalDate date) {
-
+    public BigDecimal percentageFor(LocalDate date) {
         TaxRate rate = taxRepo.findTaxRateForDate(this, date);
         if (rate.equals(null)){
             return null;

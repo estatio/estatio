@@ -80,8 +80,6 @@ public class TaxTest {
                     }};
             }
         });
-        
-
 
         final BigDecimal p1;
         final BigDecimal p2;
@@ -121,6 +119,6 @@ public class TaxTest {
         final LocalDate d1;
         d1 = new LocalDate(1980, 1, 1);
         
-        assertEquals(BigDecimal.valueOf(19), tax.getPercentageForDate(d1));
+        assertEquals(BigDecimal.valueOf(19), tax.percentageFor(d1));
     }
 }
