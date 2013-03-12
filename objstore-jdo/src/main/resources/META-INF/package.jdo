@@ -84,21 +84,23 @@
             ]]></query>
         </class>
     </package>
-    <package name="org.estatio.dom.invoice">
+    <package name="org.estatio.dom.charge">
         <class name="Charge">
             <query name="charge_findChargeByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM org.estatio.dom.invoice.Charge 
+              FROM org.estatio.dom.charge.Charge 
             WHERE reference.matches(:r)
             ]]></query>
         </class>
         <class name="ChargeGroup">
             <query name="charge_findChargeGroupByReference" language="JDOQL"><![CDATA[
             SELECT 
-              FROM org.estatio.dom.invoice.ChargeGroup 
+              FROM org.estatio.dom.charge.ChargeGroup 
             WHERE reference.mathes(:r)
             ]]></query>
         </class>
+    </package>
+    <package name="org.estatio.dom.invoice">
         <class name="Invoice">
             <query name="invoice_findMatchingInvoices" language="JDOQL"><![CDATA[
             SELECT 
