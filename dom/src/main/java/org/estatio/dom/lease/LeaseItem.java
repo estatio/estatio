@@ -12,8 +12,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.invoice.Charge;
-import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;

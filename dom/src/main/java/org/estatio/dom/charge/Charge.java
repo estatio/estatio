@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.dom.charge;
 
 import javax.jdo.annotations.PersistenceCapable;
 

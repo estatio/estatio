@@ -1,9 +1,9 @@
 package org.estatio.fixture.invoice;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.estatio.dom.invoice.Charge;
-import org.estatio.dom.invoice.ChargeGroup;
-import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;

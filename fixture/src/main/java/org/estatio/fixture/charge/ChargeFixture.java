@@ -1,7 +1,7 @@
 package org.estatio.fixture.charge;
-import org.estatio.dom.invoice.Charge;
-import org.estatio.dom.invoice.ChargeGroup;
-import org.estatio.dom.invoice.Charges;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Taxes;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;

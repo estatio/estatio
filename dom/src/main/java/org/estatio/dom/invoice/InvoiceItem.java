@@ -1,6 +1,7 @@
 package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.jdo.annotations.Column;
@@ -19,6 +20,8 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -98,6 +101,9 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.netAmount = netAmount;
     }
 
+    public BigDecimal defaultNetAmount() {
+        return BigDecimal.ZERO;
+    }
     // }}
 
     // {{ VatAmount (property)
@@ -113,6 +119,9 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.vatAmount = vatAmount;
     }
 
+    public BigDecimal defaultVatAmount() {
+        return BigDecimal.ZERO;
+    }
     // }}
 
     // {{ Amount (property)
@@ -128,6 +137,9 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.grossAmount = grossAmount;
     }
 
+    public BigDecimal defaultGrossAmount() {
+        return BigDecimal.ZERO;
+    }
     // }}
 
     // {{ Tax (property)
@@ -266,7 +278,24 @@ public class InvoiceItem extends EstatioTransactionalObject {
             invoice.addToItems(this);
             this.setInvoice(invoice);
         }
-    }    
+    }
+    
+    public InvoiceItem verify() {
+        calulateTax();
+        return this;
+    }
+    
+    private void calulateTax() {
+        BigDecimal vatAmount = BigDecimal.ZERO;
+        if (getTax() != null){
+            BigDecimal rate = tax.percentageFor(getDueDate()).divide(BigDecimal.valueOf(100));
+            vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
+        }
+        if (vatAmount.compareTo(getVatAmount()) != 0){
+            setVatAmount(vatAmount);
+            setGrossAmount(getNetAmount().add(vatAmount));
+        }
+    }
     
     // {{ Inject services
 

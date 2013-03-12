@@ -8,14 +8,14 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
-
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.numerator.InvoiceNumber;
+import org.estatio.dom.numerator.NumeratorType;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
@@ -60,6 +60,19 @@ public class Invoice extends EstatioTransactionalObject {
 
     // }}
 
+    // {{ InvoiceNumber (property)
+    private String invoiceNumber;
+
+    @MemberOrder(sequence = "2")
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(final String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+    // }}
+    
     // {{ Reference (property)
     private String reference;
 
@@ -229,8 +242,8 @@ public class Invoice extends EstatioTransactionalObject {
 
     @MemberOrder(sequence = "20")
     public Invoice assignInvoiceNumber() {
-        InvoiceNumber invoiceNumber = new InvoiceNumber(this);
-        invoiceNumber.assign();
+        InvoiceNumber numerator = (InvoiceNumber) numerators.find(NumeratorType.INVOICE_NUMBER);
+        numerator.assign(this);
         return this;
     }
 
@@ -242,6 +255,12 @@ public class Invoice extends EstatioTransactionalObject {
         this.parties = parties;
     }
 
+    private Numerators numerators;
+    
+    public void setNumerators(Numerators numerators) {
+        this.numerators = numerators;
+    }
     // }}
+    
 
 }
