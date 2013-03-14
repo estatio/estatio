@@ -3,7 +3,7 @@ package org.estatio.dom.invoice;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;

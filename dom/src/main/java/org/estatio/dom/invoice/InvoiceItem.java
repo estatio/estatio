@@ -5,20 +5,16 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -57,7 +53,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Charge (property)
     private Charge charge;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     public Charge getCharge() {
         return charge;
     }
@@ -76,7 +72,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Quantity (property)
     private BigDecimal quantity;
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "3")
     @Column(scale = 4)
     public BigDecimal getQuantity() {
         return quantity;
@@ -91,7 +87,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ NetAmount (property)
     private BigDecimal netAmount;
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     @Column(scale = 4)
     public BigDecimal getNetAmount() {
         return netAmount;
@@ -109,7 +105,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ VatAmount (property)
     private BigDecimal vatAmount;
 
-    @MemberOrder(sequence = "4")
+    @Hidden(where= Where.PARENTED_TABLES)
+    @MemberOrder(sequence = "5")
     @Column(scale = 4)
     public BigDecimal getVatAmount() {
         return vatAmount;
@@ -127,7 +124,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Amount (property)
     private BigDecimal grossAmount;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "6")
     @Column(scale = 4)
     public BigDecimal getGrossAmount() {
         return grossAmount;
@@ -145,7 +142,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Tax (property)
     private Tax tax;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "7")
+    @Hidden(where= Where.PARENTED_TABLES)
     public Tax getTax() {
         return tax;
     }
@@ -159,7 +157,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Description (property)
     private String description;
 
-    @MemberOrder(sequence = "7")
+    @Hidden(where= Where.PARENTED_TABLES)
+    @MemberOrder(sequence = "8")
     public String getDescription() {
         return description;
     }
@@ -174,7 +173,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     private LocalDate dueDate;
 
     @Persistent
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "9")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -187,7 +186,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ StartDate (property)
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "10")
     @Persistent
     public LocalDate getStartDate() {
         return startDate;
@@ -202,7 +201,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ EndDate (property)
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "11")
     @Persistent
     public LocalDate getEndDate() {
         return endDate;
@@ -259,7 +258,12 @@ public class InvoiceItem extends EstatioTransactionalObject {
     }
     // }}
 
-    public void findInvoice() {
+    // {{ Actions
+    /**
+     * Attaches this item to an invoice with similar attributes. Creates a new invoice when no matching found.
+     */
+    @Hidden
+    public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
             Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
@@ -279,12 +283,14 @@ public class InvoiceItem extends EstatioTransactionalObject {
             this.setInvoice(invoice);
         }
     }
-    
+ 
+    @Bulk
     public InvoiceItem verify() {
         calulateTax();
         return this;
     }
-    
+
+    @Hidden
     private void calulateTax() {
         BigDecimal vatAmount = BigDecimal.ZERO;
         if (getTax() != null){
@@ -296,6 +302,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
             setGrossAmount(getNetAmount().add(vatAmount));
         }
     }
+    
+    //}
     
     // {{ Inject services
 

@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
@@ -23,6 +24,10 @@ import org.joda.time.LocalDate;
 @PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Invoice extends EstatioTransactionalObject {
+
+    public String title() {
+        return getInvoiceNumber() == null ? "TEMP" : "Invoice";
+    }
 
     // {{ Buyer (property)
     private Party buyer;
@@ -63,7 +68,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ InvoiceNumber (property)
     private String invoiceNumber;
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "3")
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -71,12 +76,13 @@ public class Invoice extends EstatioTransactionalObject {
     public void setInvoiceNumber(final String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
     }
+
     // }}
-    
+
     // {{ Reference (property)
     private String reference;
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public String getReference() {
         return reference;
     }
@@ -90,7 +96,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ Lease (property)
     private Lease lease;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "5")
     public Lease getLease() {
         return lease;
     }
@@ -104,7 +110,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ InvoiceDate (property)
     private LocalDate invoiceDate;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "6")
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -118,7 +124,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ DueDate (property)
     private LocalDate dueDate;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "7")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -132,7 +138,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ Status (property)
     private InvoiceStatus status;
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "8")
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -146,7 +152,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ Currency (property)
     private Currency currency;
 
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "9")
     public Currency getCurrency() {
         return currency;
     }
@@ -160,7 +166,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ PaymentMethod (property)
     private PaymentMethod paymentMethod;
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "10")
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
@@ -174,7 +180,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ Items (Collection)
     private Set<InvoiceItem> items = new LinkedHashSet<InvoiceItem>();
 
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "11")
     public Set<InvoiceItem> getItems() {
         return items;
     }
@@ -213,7 +219,7 @@ public class Invoice extends EstatioTransactionalObject {
 
     // }}
 
-    @MemberOrder(sequence = "11")
+    @MemberOrder(sequence = "12")
     public BigDecimal getNetAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -222,7 +228,7 @@ public class Invoice extends EstatioTransactionalObject {
         return total;
     }
 
-    @MemberOrder(sequence = "12")
+    @MemberOrder(sequence = "13")
     public BigDecimal getVatAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -231,7 +237,7 @@ public class Invoice extends EstatioTransactionalObject {
         return total;
     }
 
-    @MemberOrder(sequence = "13")
+    @MemberOrder(sequence = "14")
     public BigDecimal getGrossAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -240,6 +246,9 @@ public class Invoice extends EstatioTransactionalObject {
         return total;
     }
 
+    // {{ Actions
+
+    @Bulk
     @MemberOrder(sequence = "20")
     public Invoice assignInvoiceNumber() {
         InvoiceNumber numerator = (InvoiceNumber) numerators.find(NumeratorType.INVOICE_NUMBER);
@@ -247,6 +256,8 @@ public class Invoice extends EstatioTransactionalObject {
         return this;
     }
 
+    // }}
+    
     // {{ Inject services
 
     private Parties parties;
@@ -256,11 +267,10 @@ public class Invoice extends EstatioTransactionalObject {
     }
 
     private Numerators numerators;
-    
+
     public void setNumerators(Numerators numerators) {
         this.numerators = numerators;
     }
     // }}
-    
 
 }

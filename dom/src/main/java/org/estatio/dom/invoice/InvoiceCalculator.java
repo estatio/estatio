@@ -50,7 +50,7 @@ public class InvoiceCalculator {
     void createInvoiceItems(){
         BigDecimal newValue = calculatedValue.subtract(leaseTerm.invoicedValueFor(startDate));
         if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-            InvoiceItem invoiceItem = leaseTerm.createInvoiceItemFor(startDate);
+            InvoiceItem invoiceItem = leaseTerm.findOrCreateInvoiceItemFor(startDate);
             invoiceItem.setNetAmount(newValue);
             invoiceItem.setDescription(String.format("Due date {d}", startDate));
             invoiceItem.setQuantity(BigDecimal.ONE);
@@ -62,7 +62,8 @@ public class InvoiceCalculator {
             invoiceItem.setEndDate(boundingRange.getEndDate());
             Tax tax = charge.getTax();
             invoiceItem.setTax(tax);
-            invoiceItem.findInvoice();
+            invoiceItem.attachToInvoice();
+            invoiceItem.verify();
         }
     }
 
