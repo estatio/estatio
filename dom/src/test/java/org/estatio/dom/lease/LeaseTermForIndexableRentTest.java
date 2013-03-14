@@ -2,7 +2,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
@@ -93,7 +93,7 @@ public class LeaseTermForIndexableRentTest {
             }
         });
         ltfir.verify();
-        Assert.assertEquals(BigDecimal.valueOf(23691.35), ltfir.getIndexedValue());
+        Assert.assertEquals(new BigDecimal("23691.3500"), ltfir.getIndexedValue());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class LeaseTermForIndexableRentTest {
         });
         ltfir.setLeaseTermsService(mockLeaseTerms);
 
-        LeaseTermForIndexableRent newTerm = ltfir.createNextLeaseTerm();
+        LeaseTermForIndexableRent newTerm = ltfir.createOrUpdateNext();
         Assert.assertEquals(newTerm.getStartDate(), ltfir.getStartDate().plusYears(1));
     }
 

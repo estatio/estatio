@@ -1,19 +1,13 @@
 package org.estatio.integtest.testing;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Properties;
 
-import com.google.common.io.Resources;
-
-import junit.framework.Assert;
-
-import org.apache.log4j.BasicConfigurator;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.log4j.PropertyConfigurator;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActor;
@@ -28,8 +22,10 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.integtest.IntegrationSystemForTestRule;
+import org.estatio.jdo.LeaseTermsJdo;
+import org.estatio.jdo.LeasesJdo;
 import org.joda.time.LocalDate;
-import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -37,11 +33,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import com.google.common.io.Resources;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseIntegrationTest {
 
+    private Leases leases;
+    private LeaseTerms leaseTerms;
+    
     @Rule
     public IntegrationSystemForTestRule isisSystemRule = new IntegrationSystemForTestRule();
 
@@ -49,6 +48,12 @@ public class LeaseIntegrationTest {
         return isisSystemRule.getIsisSystemForTest();
     }
 
+    @Before
+    public void setup(){
+        leases = getIsft().getService(LeasesJdo.class);
+        leaseTerms = getIsft().getService(LeaseTermsJdo.class);
+    }
+    
     @BeforeClass
     public static void setUpLogging() throws Exception {
         PropertyConfigurator.configure(Resources.getResource(LeaseIntegrationTest.class, "logging.properties"));
@@ -156,7 +161,6 @@ public class LeaseIntegrationTest {
 
     @Test
     public void t12_leaseTermInvoiceItemCreated() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
         Lease lease = leases.findByReference("OXF-TOPMODEL-001");
         //first item
         LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
@@ -173,4 +177,17 @@ public class LeaseIntegrationTest {
         assertThat(term.getInvoiceItems().size(), is(1));
     }
 
+    @Test
+    public void t13_leaseVerifiesWell() throws Exception {
+        Lease l = leases.findByReference("OXF-TOPMODEL-001");
+        l.verify();
+        assertThat(l.getItems().first().getTerms().size(), is(5));
+    }
+
+    @Test
+    public void t14_leaseVerifiesWell() throws Exception {
+        Lease l = leases.findByReference("OXF-MEDIAX-002");
+        l.verify();
+        assertThat(l.getItems().first().getTerms().size(), is(7));
+    }
 }

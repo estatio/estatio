@@ -10,26 +10,20 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.index.Indices;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Where;
-
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
-    
     // {{ Index (property)
     private Index index;
 
@@ -234,10 +228,19 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // }}
 
-    // {{
+    // {{ Actions
     public LeaseTerm verify() {
         IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
         calculator.calculate(this);
+        if ((getValue() == null || getValue().compareTo(BigDecimal.ZERO) == 0) && (getIndexedValue() != null && getIndexedValue().compareTo(BigDecimal.ZERO) > 0)) {
+            setValue(getIndexedValue());
+        }
+        if (getStartDate().compareTo(LocalDate.now()) < 0) {
+            LeaseTermForIndexableRent nextTerm = createOrUpdateNext();
+            if (nextTerm != null) {
+                nextTerm.verify();
+            }
+        }
         return this;
     }
 
@@ -245,32 +248,45 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         setValue(getIndexedValue());
         super.approve();
         return this;
-     }
+    }
 
-    // }}
+    public String disableApprove() {
+        return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
+    }
 
-    // {{
-    public LeaseTermForIndexableRent createNextLeaseTerm() {
-        // create new term
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) getNextTerm();
-        if (getNextTerm() == null) {
-            term = (LeaseTermForIndexableRent) leaseTermsService.newLeaseTerm(this.getLeaseItem());
-        }
-        // new start Date
+    // @Override
+    public LeaseTermForIndexableRent createOrUpdateNext() {
         LocalDate newStartDate = this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
-        term.setStartDate(newStartDate);
-        // index
-        term.setIndex(this.getIndex());
-        term.setBaseIndexStartDate(this.getNextIndexStartDate());
-        term.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
-        term.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
-        term.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
-        // value
-        term.setBaseValue(this.getValue());
-        // set fields on this term
-        this.setNextTerm(term);
-        this.setEndDate(term.getStartDate().minusDays(1));
-        return term;
+        LocalDate endDate = getLeaseItem().getEndDate();
+        if (newStartDate.isAfter(endDate)) {
+            // date is after end date, do nothing
+            return null;
+        } else {
+            LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) getNextTerm();
+            if (getNextTerm() == null) {
+                term = (LeaseTermForIndexableRent) leaseTermsService.newLeaseTerm(this.getLeaseItem());
+                // TODO: Q:who should be responsible for maintainting the
+                // relationship?
+                this.setNextTerm(term);
+                term.setPreviousTerm(this);
+                term.setLeaseItem(this.getLeaseItem());
+                // TODO: Q:it seems that it's not needed to add the term to the
+                // item collection (using a
+                // this.getLeaseItem().addToTerms(term);
+            }
+            // new start Date
+            term.setStartDate(newStartDate);
+            // index
+            term.setIndex(this.getIndex());
+            term.setBaseIndexStartDate(this.getNextIndexStartDate());
+            term.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
+            term.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
+            term.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
+            // value
+            term.setBaseValue(this.getValue());
+            // set fields on this term
+            return term;
+        }
     }
 
     // }}

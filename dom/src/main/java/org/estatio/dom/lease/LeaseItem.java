@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseItem> {
 
     @Hidden
@@ -228,7 +228,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     // }}
-    
+
     // {{ Terms (Collection)
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
@@ -291,18 +291,35 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     protected void onRemoveFromTerms(final LeaseTerm terms) {
     }
 
-    @Hidden
     @MemberOrder(name = "Terms", sequence = "11")
-    public LeaseTerm addTerm() {
-        LeaseTerm term = getType().createLeaseTerm(getContainer());
-        terms.add(term);
+    public LeaseTerm createTerm() {
+        LeaseTerm term = leaseTerms.newLeaseTerm(this);
         return term;
+    }
+    
+    //FIXME: action is not disabled
+    public String disableCreateTerm() {
+        return getTerms().size() > 0 ? "Use Create Next Term on last term" : null;
+    }
+
+//    public Integer getNumberOfTerms() {
+//        return getTerms().size();
+//    }
+    
+    // }}
+
+    // {{ Actions
+
+    public LeaseItem verify() {
+        for (LeaseTerm term : getTerms()) {
+            term.verify();
+        }
+        return this;
     }
 
     // }}
 
     // {{ Injected Services
-
 
     private Charges chargeService;
 
@@ -310,8 +327,14 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         this.chargeService = charges;
     }
 
-    // }}
+    private LeaseTerms leaseTerms;
     
+    public void setLeaseTerms(LeaseTerms leaseTerms) {
+        this.leaseTerms = leaseTerms;
+    }
+    
+    // }}
+
     // {{ Comparable
 
     @Override

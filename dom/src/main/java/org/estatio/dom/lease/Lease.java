@@ -8,12 +8,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -23,10 +17,12 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
 
 @PersistenceCapable
-@Auditable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class Lease extends EstatioTransactionalObject implements Comparable<Lease> {
 
@@ -368,8 +364,11 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
 
     // {{ Action: verify
     @Bulk
-    public void verify() {
-        //Do something fancy
+    public Lease verify() {
+        for (LeaseItem item : getItems()) {
+            item.verify();
+        }
+        return this;
     }
 
     // }}

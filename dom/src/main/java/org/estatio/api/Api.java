@@ -559,7 +559,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         LeaseTerm term = item.findTerm(startDate);
         if (term == null) {
-            term = item.addTerm();
+            term = item.createTerm();
         }
         term.setSequence(sequence);
         term.setStartDate(startDate);

@@ -58,7 +58,7 @@ public class LeasesFixture extends AbstractFixture {
         lease.addActor(tenant, LeaseActorType.TENANT, null, null);
         lease.addActor(manager, LeaseActorType.MANAGER, null, null);
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
-        LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.RENT, charge, startDate);
+        LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.RENT, charge, startDate, endDate);
         leaseItem.addToTerms(createLeaseTermForIndexableRent(leaseItem, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1)));
         lease.addToItems(leaseItem);
         return lease;
@@ -69,13 +69,15 @@ public class LeasesFixture extends AbstractFixture {
             LeaseItemType 
             leaseItemType, 
             Charge charge, 
-            LocalDate startDate) {
+            LocalDate startDate,
+            LocalDate endDate) {
         LeaseItem li = leaseItems.newLeaseItem(lease);
         li.setType(leaseItemType);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         li.setCharge(charge);
         li.setStartDate(startDate);
+        li.setEndDate(endDate);
         li.setSequence(BigInteger.valueOf(1));
         return li;
     }
