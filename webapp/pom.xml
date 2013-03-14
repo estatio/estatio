@@ -36,7 +36,6 @@
     
 	<build>
 		<plugins>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -54,13 +53,16 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
+                            <addClasspath>false</addClasspath>
+                        </manifest>                            
                         <manifestEntries>
-                            <Implementation-Environment>$env}</Implementation-Environment>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                            <Git-Sha-Id>${buildNumber}</Git-Sha-Id>
-                            <Timestamp>${timestamp}</Timestamp>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                            <Build-Host>${agent.name}</Build-Host>
+                            <Build-User>${user.name}</Build-User>
+                            <Build-Maven>Maven ${maven.version}</Build-Maven>
+                            <Build-Java>${java.version}</Build-Java>
+                            <Build-OS>${os.name}</Build-OS>
+                            <Build-Label>${project.version}</Build-Label>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -75,7 +77,7 @@
                         </configuration>
                     </execution>
                 </executions>
-                </plugin>
+            </plugin>
 
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
