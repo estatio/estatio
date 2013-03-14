@@ -28,17 +28,17 @@ import org.joda.time.LocalDate;
 
 @PersistenceCapable
 // REVIEW: is one needed?
-//@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "INVOICE_ITEM_ID")
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+// @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column =
+// "INVOICE_ITEM_ID")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class InvoiceItem extends EstatioTransactionalObject {
 
-    
     // {{ Invoice (property)
     private Invoice invoice;
 
     @Disabled
     @MemberOrder(sequence = "1")
-    @Hidden(where=Where.REFERENCES_PARENT)
+    @Hidden(where = Where.REFERENCES_PARENT)
     @Optional
     public Invoice getInvoice() {
         return invoice;
@@ -100,12 +100,13 @@ public class InvoiceItem extends EstatioTransactionalObject {
     public BigDecimal defaultNetAmount() {
         return BigDecimal.ZERO;
     }
+
     // }}
 
     // {{ VatAmount (property)
     private BigDecimal vatAmount;
 
-    @Hidden(where= Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
     @Column(scale = 4)
     public BigDecimal getVatAmount() {
@@ -116,9 +117,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.vatAmount = vatAmount;
     }
 
-    public BigDecimal defaultVatAmount() {
-        return BigDecimal.ZERO;
-    }
     // }}
 
     // {{ Amount (property)
@@ -134,16 +132,13 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.grossAmount = grossAmount;
     }
 
-    public BigDecimal defaultGrossAmount() {
-        return BigDecimal.ZERO;
-    }
     // }}
 
     // {{ Tax (property)
     private Tax tax;
 
     @MemberOrder(sequence = "7")
-    @Hidden(where= Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     public Tax getTax() {
         return tax;
     }
@@ -157,7 +152,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Description (property)
     private String description;
 
-    @Hidden(where= Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "8")
     public String getDescription() {
         return description;
@@ -181,8 +176,9 @@ public class InvoiceItem extends EstatioTransactionalObject {
     public void setDueDate(final LocalDate dueDate) {
         this.dueDate = dueDate;
     }
+
     // }}
-    
+
     // {{ StartDate (property)
     private LocalDate startDate;
 
@@ -217,7 +213,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     private LeaseTerm leaseTerm;
 
     @Disabled
-    @Hidden(where=Where.REFERENCES_PARENT)
+    @Hidden(where = Where.REFERENCES_PARENT)
     @MemberOrder(sequence = "11")
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
@@ -256,11 +252,13 @@ public class InvoiceItem extends EstatioTransactionalObject {
 
     protected void onClearLeaseTerm(final LeaseTerm oldLeaseTerm) {
     }
+
     // }}
 
     // {{ Actions
     /**
-     * Attaches this item to an invoice with similar attributes. Creates a new invoice when no matching found.
+     * Attaches this item to an invoice with similar attributes. Creates a new
+     * invoice when no matching found.
      */
     @Hidden
     public void attachToInvoice() {
@@ -283,7 +281,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
             this.setInvoice(invoice);
         }
     }
- 
+
     @Bulk
     public InvoiceItem verify() {
         calulateTax();
@@ -293,18 +291,28 @@ public class InvoiceItem extends EstatioTransactionalObject {
     @Hidden
     private void calulateTax() {
         BigDecimal vatAmount = BigDecimal.ZERO;
-        if (getTax() != null){
+        if (getTax() != null) {
             BigDecimal rate = tax.percentageFor(getDueDate()).divide(BigDecimal.valueOf(100));
             vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
         }
-        if (vatAmount.compareTo(getVatAmount()) != 0){
+        if (vatAmount.compareTo(getVatAmount()) != 0) {
             setVatAmount(vatAmount);
             setGrossAmount(getNetAmount().add(vatAmount));
         }
     }
-    
-    //}
-    
+
+    // }
+
+    // {{ Lifecycle Events
+    public void created() {
+        // set defaults
+        setVatAmount(BigDecimal.ZERO);
+        setGrossAmount(BigDecimal.ZERO);
+        setNetAmount(BigDecimal.ZERO);
+    }
+
+    // }}
+
     // {{ Inject services
 
     private Charges charges;
@@ -315,13 +323,12 @@ public class InvoiceItem extends EstatioTransactionalObject {
     }
 
     private Invoices invoices;
-    
+
     @Hidden
     public void setInvoices(Invoices invoices) {
         this.invoices = invoices;
     }
-    
-    
+
     // }}
 
 }

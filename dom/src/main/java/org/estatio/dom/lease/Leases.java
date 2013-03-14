@@ -66,16 +66,6 @@ public class Leases extends AbstractFactoryAndRepository {
 
     // }}
 
-    // {{ runIndexation
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
-    public void runIndexation(final @Named("Until") LocalDate until) {
-
-        // TODO Auto-generated method stub
-    }
-
-    // }}
-
     // {{ allLeases
     @Prototype
     @ActionSemantics(Of.SAFE)

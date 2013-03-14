@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 
@@ -24,9 +25,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     // {{ Lease (property)
     private Lease lease;
 
-    // TODO: Fix title since this displays
     @Title(sequence = "1")
     @MemberOrder(sequence = "1")
+    @Hidden(where= Where.REFERENCES_PARENT)
     public Lease getLease() {
         return lease;
     }
@@ -40,8 +41,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     // {{ Unit (property)
     private Unit unit;
 
-    //@Title(sequence = "2")
+    @Title(sequence = "2", prepend=":")
     @MemberOrder(sequence = "2")
+    @Hidden(where= Where.REFERENCES_PARENT)
     public Unit getUnit() {
         return unit;
     }

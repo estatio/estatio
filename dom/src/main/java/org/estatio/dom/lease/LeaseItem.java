@@ -43,6 +43,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
+    @Title(sequence="1")
     @MemberOrder(sequence = "1")
     public Lease getLease() {
         return lease;
@@ -71,7 +72,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // {{ LeaseItemType (property)
     private LeaseItemType type;
 
-    @Title
+    @Title(sequence="2", prepend=":")
     @MemberOrder(sequence = "2")
     public LeaseItemType getType() {
         return type;
@@ -291,15 +292,15 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     protected void onRemoveFromTerms(final LeaseTerm terms) {
     }
 
-    @MemberOrder(name = "Terms", sequence = "11")
-    public LeaseTerm createTerm() {
+    @MemberOrder(/*name = "terms",*/ sequence = "11")
+    public LeaseTerm createInitialTerm() {
         LeaseTerm term = leaseTerms.newLeaseTerm(this);
         return term;
     }
     
     //FIXME: action is not disabled
-    public String disableCreateTerm() {
-        return getTerms().size() > 0 ? "Use Create Next Term on last term" : null;
+    public String disableCreateInitialTerm() {
+        return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
 //    public Integer getNumberOfTerms() {

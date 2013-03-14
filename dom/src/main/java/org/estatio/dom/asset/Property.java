@@ -276,7 +276,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
 
     // }}
 
-    // {{ Units (list, bidir)
+    // {{ Units (set, bidir)
     @Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();
     @Resolve(Type.EAGERLY)

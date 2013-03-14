@@ -5,7 +5,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.estatio.dom.utils.StringUtils;
 
 public enum NumeratorType {
-    INVOICE_NUMBER(InvoiceNumber.class);
+    INVOICE_NUMBER(InvoiceNumberNumerator.class);
 
     private Class<? extends Numerator> cls;
 

@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 import org.estatio.dom.EstatioTransactionalObject;
@@ -46,15 +47,6 @@ import com.google.common.collect.Ordering;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
 
-    //TODO: these @Title things are annoying
-    
-
-    public String title(){
-        TitleBuffer tb = new TitleBuffer(getStartDate());
-        tb.append(getEndDate());
-        return tb.toString();
-    }
-    
     // {{ Lease (property)
     private LeaseItem leaseItem;
 
@@ -62,6 +54,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     @MemberOrder(sequence = "1")
     @Persistent
     @Disabled
+    @Title(sequence="1")
     public LeaseItem getLeaseItem() {
         return leaseItem;
     }
@@ -87,12 +80,13 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     // }}
 
+
     // {{ StartDate (property)
     private LocalDate startDate;
 
     @Persistent
+    @Title(sequence = "2", prepend=":")
     @MemberOrder(sequence = "2")
-    //@Title(sequence = "1")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -108,8 +102,8 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @Persistent
     @MemberOrder(sequence = "3")
+    @Title(sequence = "3", prepend="-")
     @Optional
-    //@Title(sequence = "2", prepend = "-")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -170,7 +164,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     // {{ Status (property)
     private LeaseTermStatus status;
-
+    @Disabled // maintained through LeaseTermContributedActions
     @MemberOrder(sequence = "1")
     public LeaseTermStatus getStatus() {
         return status;
@@ -180,14 +174,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.status = status;
     }
 
-    public String disableStatus() {
-        return getUser().hasRole("admin_role") ? null : "You need to be an administrator to change the status";
-        // TODO: Create an enum of roles?
-    }
-
     // }}
 
     // {{ InvoiceItems (Collection)
+    @Persistent(mappedBy = "leaseTerm")
     private Set<InvoiceItem> invoiceItems = new LinkedHashSet<InvoiceItem>();
 
     @MemberOrder(sequence = "1")
@@ -210,13 +200,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         // associate arg
         invoiceItem.setLeaseTerm(this);
         getInvoiceItems().add(invoiceItem);
-        // additional business logic
-        onAddToInvoiceItems(invoiceItem);
-    }
-
-    private void onAddToInvoiceItems(InvoiceItem invoiceItem) {
-        // TODO Auto-generated method stub
-
     }
 
     public void removeFromInvoiceItems(final InvoiceItem invoiceItem) {
@@ -227,13 +210,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         // dissociate arg
         invoiceItem.setLeaseTerm(null);
         getInvoiceItems().remove(invoiceItem);
-        // additional business logic
-        onRemoveFromInvoiceItems(invoiceItem);
-    }
-
-    private void onRemoveFromInvoiceItems(InvoiceItem invoiceItem) {
-        // TODO Auto-generated method stub
-
     }
 
     // }}
@@ -297,7 +273,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return this;
     }
 
-    @MemberOrder(sequence="2")
+    @MemberOrder(name="invoiceItems", sequence="2")
     public LeaseTerm calculate(@Named("Date") LocalDate date) {
         // removeUnapprovedInvoiceItemsForDate(date);
         InvoiceCalculator ic = new InvoiceCalculator(this, date);

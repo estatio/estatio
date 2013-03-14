@@ -7,7 +7,7 @@ import static org.junit.Assert.assertThat;
 import java.math.BigInteger;
 
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.estatio.dom.numerator.InvoiceNumber;
+import org.estatio.dom.numerator.InvoiceNumberNumerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.integtest.IntegrationSystemForTestRule;
@@ -34,7 +34,7 @@ public class NumeratorIntegrationTest {
     @Test
     public void numberOfNumeratorsIsOne() throws Exception {
         Numerators numerators = getIsft().getService(NumeratorsJdo.class);
-        InvoiceNumber in = (InvoiceNumber) numerators.findOrCreate(NumeratorType.INVOICE_NUMBER);
+        InvoiceNumberNumerator in = (InvoiceNumberNumerator) numerators.findOrCreate(NumeratorType.INVOICE_NUMBER);
         assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
         assertThat(in.increment(), is(BigInteger.ONE));
         assertNotNull(numerators.find(NumeratorType.INVOICE_NUMBER));

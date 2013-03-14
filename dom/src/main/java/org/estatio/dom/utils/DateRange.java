@@ -87,4 +87,8 @@ public final class DateRange {
         }
     }
 
+    public boolean contains(LocalDate localDate) {
+        return getStartDate().compareTo(localDate) <= 0 && getEndDate().compareTo(localDate) >= 0;
+    }
+
 }

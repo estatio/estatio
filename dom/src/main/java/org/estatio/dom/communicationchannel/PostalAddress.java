@@ -27,7 +27,6 @@ public class PostalAddress extends CommunicationChannel {
     // {{ Address1 (attribute, title)
     private String address1;
 
-    // TODO: Title throws error in ui interface
     @Title(sequence = "1", append = ", ")
     @MemberOrder(sequence = "1")
     public String getAddress1() {
@@ -140,7 +139,7 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     public List<State> choicesState() {
-        return states.findByCountry(country);
+        return states.findByCountry(getCountry());
     }
     
     // }}

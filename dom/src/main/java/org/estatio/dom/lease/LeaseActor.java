@@ -4,15 +4,21 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.DateRange;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.clock.Clock;
 
 
 @PersistenceCapable
@@ -24,6 +30,7 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
 
     @Title(sequence = "1")
     @MemberOrder(sequence = "1")
+    @Hidden(where = Where.REFERENCES_PARENT)
     public Lease getLease() {
         return lease;
     }
@@ -39,6 +46,7 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
 
     @Title(sequence = "2", prepend = " ")
     @MemberOrder(sequence = "2")
+    @Hidden(where = Where.REFERENCES_PARENT)
     public Party getParty() {
         return party;
     }
@@ -100,5 +108,15 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     public int compareTo(LeaseActor o) {
         return this.getClass().getName().compareTo(o.getClass().getName());
     }
+
+    // {[
+    public boolean isCurrent() {
+        return isActiveOn(LocalDate.now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return new DateRange(getStartDate(), getEndDate()).contains(localDate);
+    }
+    // }}
 
 }

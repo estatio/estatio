@@ -1,12 +1,17 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
@@ -40,7 +45,40 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     }
 
     // }}
+    
+    // {{ Derived attribute
 
+    public Party getCurrentLandlord() {
+        // TODO:test to see if this is faster:
+        // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
+        Iterable<Party> landlords = Iterables.transform(
+                Iterables.filter(getActors(), currentLeaseActorOfType(LeaseActorType.LANDLORD)), partyOfLeaseActor());
+        return firstElseNull(landlords);
+    }
+
+    private Party firstElseNull(Iterable<Party> landlords) {
+        Iterator<Party> iterator = landlords.iterator();
+        return iterator.hasNext()? iterator.next(): null;
+    }
+
+    private Function<LeaseActor, Party> partyOfLeaseActor() {
+        return new Function<LeaseActor, Party>(){
+            public Party apply(LeaseActor la) {
+                return la.getParty();
+            }
+        };
+    }
+
+    private static Predicate<LeaseActor> currentLeaseActorOfType(final LeaseActorType lat) {
+        return new Predicate<LeaseActor>() {
+            public boolean apply(LeaseActor candidate) {
+                return candidate.getType() == lat && candidate.isCurrent();
+            }
+        };
+    }
+
+    // }}
+    
     // {{ Name (property)
     private String name;
 
@@ -349,7 +387,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
 
     @Hidden
     public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
-        // TODO: better/faster filter options?
+        // TODO: better/faster filter options? -> Use predicate
         for (LeaseItem item : getItems()) {
             LocalDate itemStartDate = item.getStartDate();
             LeaseItemType itemType = item.getType();

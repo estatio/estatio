@@ -8,6 +8,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 
 @Hidden
@@ -29,6 +30,7 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     // {{ newLeaseTerm
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
+    @NotContributed
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
         leaseTerm.setLeaseItem(leaseItem);

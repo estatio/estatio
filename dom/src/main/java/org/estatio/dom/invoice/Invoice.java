@@ -8,13 +8,15 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.PaymentMethod;
-import org.estatio.dom.numerator.InvoiceNumber;
+import org.estatio.dom.numerator.InvoiceNumberNumerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
@@ -65,7 +67,7 @@ public class Invoice extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ InvoiceNumber (property)
+    // {{ InvoiceNumberNumerator (property)
     private String invoiceNumber;
 
     @MemberOrder(sequence = "3")
@@ -251,8 +253,10 @@ public class Invoice extends EstatioTransactionalObject {
     @Bulk
     @MemberOrder(sequence = "20")
     public Invoice assignInvoiceNumber() {
-        InvoiceNumber numerator = (InvoiceNumber) numerators.find(NumeratorType.INVOICE_NUMBER);
-        numerator.assign(this);
+        InvoiceNumberNumerator numerator = (InvoiceNumberNumerator) numerators.find(NumeratorType.INVOICE_NUMBER);
+        if(numerator.assign(this)) {
+            informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
+        }
         return this;
     }
 
