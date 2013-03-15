@@ -11,7 +11,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 
-//TODO: Q: do we need separate repositories for each entity or can/should we cluster them?
 @Named("Lease Items")
 @Hidden
 public class LeaseItems extends AbstractFactoryAndRepository {

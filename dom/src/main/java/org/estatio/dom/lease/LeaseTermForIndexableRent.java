@@ -265,14 +265,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
             LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) getNextTerm();
             if (getNextTerm() == null) {
                 term = (LeaseTermForIndexableRent) leaseTermsService.newLeaseTerm(this.getLeaseItem());
-                // TODO: Q:who should be responsible for maintainting the
-                // relationship?
-                this.setNextTerm(term);
-                term.setPreviousTerm(this);
-                term.setLeaseItem(this.getLeaseItem());
-                // TODO: Q:it seems that it's not needed to add the term to the
-                // item collection (using a
-                // this.getLeaseItem().addToTerms(term);
+                this.modifyNextTerm(term);
             }
             // new start Date
             term.setStartDate(newStartDate);
@@ -290,6 +283,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     // }}
+
 
     // {{ Injected Services
     private LeaseTerms leaseTermsService;

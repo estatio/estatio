@@ -10,11 +10,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -53,6 +54,11 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
     }
 
     // }}
+
+    @Title
+    @MemberOrder(sequence="1")
+    @Hidden(where=Where.OBJECT_FORMS)
+    public abstract String getName();
 
     // {{ Description (property)
     private String description;

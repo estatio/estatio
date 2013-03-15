@@ -48,6 +48,21 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                  <executions>
+                    <execution>
+                      <phase>validate</phase>
+                      <goals>
+                        <goal>maven-version</goal>
+                      </goals>
+                    </execution>
+                  </executions>
+            </plugin>
+            
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
@@ -56,6 +71,7 @@
                             <addClasspath>false</addClasspath>
                         </manifest>                            
                         <manifestEntries>
+                            <Implementation-Version>${project.version}.${maven.build.timestamp}</Implementation-Version>
                             <Build-Time>${maven.build.timestamp}</Build-Time>
                             <Build-Host>${agent.name}</Build-Host>
                             <Build-User>${user.name}</Build-User>

@@ -162,33 +162,11 @@
 		<url-pattern>/wicket/*</url-pattern>
 	</filter-mapping>
 
-
-
-    <!--
-    -
-    - config specific to the restfulobjects-viewer
-    -
-    -->
-
-    <!--
-    THE FOLLOWING CONFIGURATION IS NOT REQUIRED IF THE WICKET VIEWER IS IN USE.
-    IF THE WICKET VIEWER CONFIGURATION IS REMOVED, THEN UNCOMMENT
-    
-    <listener>
-        <listener-class>org.apache.isis.core.webapp.IsisWebAppBootstrapper</listener-class>
-    </listener>
-
-    <context-param>
-        <param-name>deploymentType</param-name>
-        <param-value>SERVER_EXPLORATION</param-value>
-    </context-param>
-
     <context-param>
         <param-name>isis.viewers</param-name>
-        <param-value>restfulobjects</param-value>
-    </context-param>    
-    -->    
-    
+        <param-value>wicket,restfulobjects</param-value>
+    </context-param>
+
     <!-- bootstrap the RestEasy framework -->
     <listener>
         <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>

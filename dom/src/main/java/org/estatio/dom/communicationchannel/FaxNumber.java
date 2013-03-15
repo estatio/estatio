@@ -16,6 +16,12 @@ import org.apache.isis.applib.annotation.Title;
 @ObjectType("FAXN")
 public class FaxNumber extends CommunicationChannel {
 
+    @Override
+    @Title
+    public String getName() {
+        return "Fax ".concat(getFaxNumber());
+    }
+
     // {{ Number (title, attribute)
     private String faxNumber;
 

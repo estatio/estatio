@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.core.commons.exceptions.NotYetImplementedException;
 
 @Named("Numerators")
 public class Numerators extends AbstractFactoryAndRepository {
@@ -25,7 +26,6 @@ public class Numerators extends AbstractFactoryAndRepository {
 
     // }}
 
-    @Hidden
     public Numerator create(NumeratorType type){
         Numerator numerator = type.create(getContainer());
         persist(numerator);
@@ -43,7 +43,11 @@ public class Numerators extends AbstractFactoryAndRepository {
         return numerator;
     }
 
-    public Numerator findOrCreate(NumeratorType type){
+    public Numerator find2(final NumeratorType type) {
+        throw new NotYetImplementedException();
+    }
+
+    public Numerator establish(NumeratorType type){
         Numerator numerator = find(type);
         return numerator == null ? create(type) : numerator;
     }

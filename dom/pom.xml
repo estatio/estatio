@@ -131,6 +131,11 @@
 
 		<!-- testing -->
 
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-unittestsupport</artifactId>
+        </dependency>
+
 		<dependency>
             <groupId>com.danhaywood.java</groupId>
             <artifactId>danhaywood-java-testsupport</artifactId>

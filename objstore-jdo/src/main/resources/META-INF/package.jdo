@@ -125,7 +125,7 @@
     </package>
     <package name="org.estatio.dom.numerator">
         <class name="Numerator">
-            <query name="numerator_find" language="JDOQL"><![CDATA[
+            <query name="numerator_find" language="JDOQL" cached="false"><![CDATA[
             SELECT 
               FROM org.estatio.dom.Numerator.Numerator 
             WHERE type == :type

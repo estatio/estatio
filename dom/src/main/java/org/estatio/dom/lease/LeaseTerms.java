@@ -18,8 +18,7 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     // {{ Id, iconName
     @Override
     public String getId() {
-        //TODO: Q: why does getId always returns the class name in lower case?
-        return "leaseterms";
+        return "leaseTerms";
     }
 
     public String iconName() {

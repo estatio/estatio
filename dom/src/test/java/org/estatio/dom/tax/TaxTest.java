@@ -98,13 +98,12 @@ public class TaxTest {
 
         r1 = tax.newRate(d1, p1);
         r2 = r1.newRate(d2, p1);
-        //FIXME: getContainer returns null 
 
         context.checking(new Expectations() {
             {
-                one(taxMock).findTaxRateForDate(with(equal(tax)), with(equal(d1)));
+                oneOf(taxMock).findTaxRateForDate(with(equal(tax)), with(equal(d1)));
                 will(returnValue(r1));
-                one(taxMock).findTaxRateForDate(with(equal(tax)), with(equal(d2)));
+                oneOf(taxMock).findTaxRateForDate(with(equal(tax)), with(equal(d2)));
                 will(returnValue(r2));
             }
         });

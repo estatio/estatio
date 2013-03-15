@@ -28,7 +28,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
 
     @Title(sequence="1")
     @MemberOrder(sequence = "1")
-    @Hidden(where=Where.PARENTED_TABLES)
+    @Hidden(where=Where.REFERENCES_PARENT)
     @Disabled
     public Property getProperty() {
         return property;
@@ -46,6 +46,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
     @Title(sequence="2", prepend=", ")
     @MemberOrder(sequence = "2")
     @Disabled
+    @Hidden(where=Where.REFERENCES_PARENT)
     public Party getParty() {
         return party;
     }

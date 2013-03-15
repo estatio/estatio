@@ -15,6 +15,12 @@ import org.apache.isis.applib.annotation.Title;
 @ObjectType("EMAI")
 public class EmailAddress extends CommunicationChannel {
 
+    @Override
+    @Title
+    public String getName() {
+        return getAddress();
+    }
+
     // {{ EmailAddress (attribute)
     private String address;
 

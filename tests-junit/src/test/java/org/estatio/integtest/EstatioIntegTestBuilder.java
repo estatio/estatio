@@ -74,6 +74,12 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
         testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY , "true");
         
+        testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.cache.level2.type","none");
+        // TODO: this is a (temporary?) work-around for NumeratorIntegrationTest failing if do a find prior to create and then a find; 
+        // believe that the second find fails to work due to original find caching an incorrect query compilation plan
+        testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.query.compilation.cached","false");
+
+        
         return testConfiguration;
     }
 }

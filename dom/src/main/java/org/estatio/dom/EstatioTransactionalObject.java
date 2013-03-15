@@ -1,12 +1,6 @@
 package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
-import javax.jdo.annotations.Discriminator;
-import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.VersionStrategy;
-
-import org.datanucleus.api.jdo.NucleusJDOHelper;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
@@ -28,8 +22,6 @@ import org.apache.isis.applib.annotation.Where;
  * }
  * </pre>
  */
-@PersistenceCapable
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 public abstract class EstatioTransactionalObject extends AbstractDomainObject {
 
     // {{ Version (derived property)

@@ -5,12 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Allowing;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.ClassUnderTest;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Ignoring;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
-
 import org.estatio.dom.numerator.InvoiceNumberNumerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
@@ -21,8 +15,12 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-public class InvoiceTest2 {
+public class InvoiceTest_assignInvoiceNumber {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -74,5 +72,4 @@ public class InvoiceTest2 {
             }
         });
     }
-
 }

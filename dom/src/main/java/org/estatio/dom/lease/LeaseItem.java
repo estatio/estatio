@@ -251,19 +251,17 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         }
         // associate new
         getTerms().add(leaseTerm);
-        // additional business logic
-        onAddToTerms(leaseTerm);
+        leaseTerm.setLeaseItem(this);
     }
 
-    public void removeFromTerms(final LeaseTerm terms) {
+    public void removeFromTerms(final LeaseTerm leaseTerm) {
         // check for no-op
-        if (terms == null || !getTerms().contains(terms)) {
+        if (leaseTerm == null || !getTerms().contains(leaseTerm)) {
             return;
         }
         // dissociate existing
-        getTerms().remove(terms);
-        // additional business logic
-        onRemoveFromTerms(terms);
+        getTerms().remove(leaseTerm);
+        leaseTerm.setLeaseItem(null);
     }
 
     @Hidden
@@ -286,27 +284,18 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         return null;
     }
 
-    protected void onAddToTerms(final LeaseTerm terms) {
-    }
-
-    protected void onRemoveFromTerms(final LeaseTerm terms) {
-    }
-
+    // FIXME: move into the 'terms' collection once enablement/disablement is working in the wicket viewer.
     @MemberOrder(/*name = "terms",*/ sequence = "11")
     public LeaseTerm createInitialTerm() {
         LeaseTerm term = leaseTerms.newLeaseTerm(this);
         return term;
     }
-    
-    //FIXME: action is not disabled
+
     public String disableCreateInitialTerm() {
         return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
-//    public Integer getNumberOfTerms() {
-//        return getTerms().size();
-//    }
-    
+
     // }}
 
     // {{ Actions

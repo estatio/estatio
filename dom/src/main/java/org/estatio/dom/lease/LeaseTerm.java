@@ -133,6 +133,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     // {{ PreviousTerm (property)
     private LeaseTerm previousTerm;
 
+    @Persistent(mappedBy="nextTerm")
     @MemberOrder(sequence = "1")
     @Hidden
     @Optional
@@ -158,6 +159,19 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     public void setNextTerm(final LeaseTerm nextTerm) {
         this.nextTerm = nextTerm;
+    }
+
+    public void modifyNextTerm(LeaseTerm term) {
+        this.setNextTerm(term);
+        term.setPreviousTerm(this); // not strictly necessary, as JDO will also do this (bidir link)
+    }
+
+    public void clearNextTerm() {
+        LeaseTerm nextTerm = getNextTerm();
+        if(nextTerm != null) {
+            nextTerm.setPreviousTerm(null);
+            setNextTerm(null);
+        }
     }
 
     // }}
