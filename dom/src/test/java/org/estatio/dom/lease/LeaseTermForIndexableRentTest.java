@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.junit.Assert;
 
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.ClassUnderTest;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.index.Index;
@@ -22,7 +23,10 @@ public class LeaseTermForIndexableRentTest {
 
     private LeaseItem li;
     private LeaseTermForIndexableRent ltfir;
-    private Index i;
+    
+    @ClassUnderTest
+    public Index i;
+    
     private IndexBase ib1;
     private IndexBase ib2;
     private IndexValue iv1;
@@ -40,7 +44,7 @@ public class LeaseTermForIndexableRentTest {
     @Before
     public void setup() {
 
-        i = new Index();
+        i = context.getClassUnderTest();
 
         ib1 = new IndexBase();
         ib1.setStartDate(new LocalDate(2000,1,1));
@@ -95,12 +99,12 @@ public class LeaseTermForIndexableRentTest {
         ltfir.verify();
         Assert.assertEquals(new BigDecimal("23691.3500"), ltfir.getIndexedValue());
     }
-
+ 
     @Test
-    public void createNewTerm() {
+    public void createOrUpdateNext() {
         context.checking(new Expectations() {
             {
-                one(mockLeaseTerms).newLeaseTerm(with(equal(li)));
+                oneOf(mockLeaseTerms).newLeaseTerm(with(equal(li)));
                 will(returnValue(new LeaseTermForIndexableRent()));
             }
         });

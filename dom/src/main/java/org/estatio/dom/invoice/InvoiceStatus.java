@@ -1,11 +1,12 @@
 package org.estatio.dom.invoice;
 
 public enum InvoiceStatus {
-    
-    CONCEPT("Concept"),
-    APPROVED("Approved"),
+
+    NEW("New"), 
+    APPROVED("Approved"), 
+    COLLECTED("Collected"), 
     INVOICED("Invoiced");
-    
+
     private final String title;
 
     private InvoiceStatus(String title) {
@@ -15,7 +16,5 @@ public enum InvoiceStatus {
     public String title() {
         return title;
     }
-
-    
 
 }

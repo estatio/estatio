@@ -3,23 +3,24 @@ package org.estatio.dom.invoice;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.junit.Assert;
-
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
-
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
+import org.estatio.dom.tax.Taxes;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 public class InvoiceCalculatorTest {
 
@@ -29,8 +30,12 @@ public class InvoiceCalculatorTest {
     private LocalDate startDate = new LocalDate(2011, 11, 1);
 
     private Tax tax;
+    private TaxRate taxRate;
     private Charge charge;
 
+    @Mock
+    Taxes mockTaxes;
+    
     @Mock
     Invoices mockInvoices;
 
@@ -44,6 +49,8 @@ public class InvoiceCalculatorTest {
         l.setEndDate(startDate.plusYears(1).minusDays(1));
         tax = new Tax();
         tax.setReference("VAT");
+        taxRate = new TaxRate();
+        taxRate.setPercentage(BigDecimal.valueOf(21));
         charge = new Charge();
         charge.setReference("RENT");
         charge.setTax(tax);
@@ -149,11 +156,14 @@ public class InvoiceCalculatorTest {
         li.addToTerms(lt);
 
         lt.setInvoiceService(mockInvoices);
+        tax.setTaxRepo(mockTaxes);
 
         context.checking(new Expectations() {
             {
                 allowing(mockInvoices).newInvoiceItem();
                 will(returnValue(new InvoiceItem()));
+                allowing(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012,1,1)));
+                will(returnValue(taxRate));
             }
         });
 

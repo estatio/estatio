@@ -145,6 +145,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.previousTerm = previousTerm;
     }
 
+    public void modifyPreviousTerm(LeaseTerm term) {
+        this.setPreviousTerm(term);
+        term.setNextTerm(this); // not strictly necessary, as JDO will also do this (bidir link)
+    }
+
     // }}
 
     // {{ NextTerm (property)
@@ -232,7 +237,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate) {
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.CONCEPT)) && startDate.equals(invoiceItem.getStartDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate())) {
                 // remove item from term collection
                 removeFromInvoiceItems(invoiceItem);
                 // remove item from invoice
@@ -273,7 +278,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public InvoiceItem unapprovedInvoiceItemFor(LocalDate startDate) {
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.CONCEPT)) && startDate.equals(invoiceItem.getStartDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate())) {
                 return invoiceItem;
             }
         }
@@ -302,7 +307,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     public String disableApprove() {
-        return this.getStatus() == LeaseTermStatus.CONCEPT ? null : "Cannot approve. Already approved?";
+        return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
     }
 
     @MemberOrder(sequence="4")

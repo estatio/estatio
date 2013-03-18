@@ -2,7 +2,8 @@ package org.estatio.dom.lease;
 
 public enum LeaseItemStatus {
 
-    APPROVED("Approved"), CONCEPT("Concept");
+    APPROVED("Approved"), 
+    NEW("New");
 
     private final String title;
 

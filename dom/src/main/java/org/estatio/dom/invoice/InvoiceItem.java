@@ -267,7 +267,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
             Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
             Party buyer = lease.findActorWithType(LeaseActorType.TENANT, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPayymentMethod();
-            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.CONCEPT);
+            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW);
             if (invoice == null) {
                 invoice = invoices.newInvoice();
                 invoice.setBuyer(buyer);
@@ -275,7 +275,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
                 invoice.setLease(lease);
                 invoice.setDueDate(getDueDate());
                 invoice.setPaymentMethod(paymentMethod);
-                invoice.setStatus(InvoiceStatus.CONCEPT);
+                invoice.setStatus(InvoiceStatus.NEW);
             }
             invoice.addToItems(this);
             this.setInvoice(invoice);
@@ -295,7 +295,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
             BigDecimal rate = tax.percentageFor(getDueDate()).divide(BigDecimal.valueOf(100));
             vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
         }
-        if (vatAmount.compareTo(getVatAmount()) != 0) {
+        BigDecimal currentVatAmount = getVatAmount();
+        if (currentVatAmount == null || vatAmount.compareTo(currentVatAmount) != 0) {
             setVatAmount(vatAmount);
             setGrossAmount(getNetAmount().add(vatAmount));
         }

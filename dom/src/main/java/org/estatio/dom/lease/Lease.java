@@ -48,11 +48,21 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     
     // {{ Derived attribute
 
+    @MemberOrder(sequence="2")
     public Party getCurrentLandlord() {
         // TODO:test to see if this is faster:
         // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
         Iterable<Party> landlords = Iterables.transform(
                 Iterables.filter(getActors(), currentLeaseActorOfType(LeaseActorType.LANDLORD)), partyOfLeaseActor());
+        return firstElseNull(landlords);
+    }
+    
+    @MemberOrder(sequence="3")
+    public Party getCurrentTenant() {
+        // TODO:test to see if this is faster:
+        // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
+        Iterable<Party> landlords = Iterables.transform(
+                Iterables.filter(getActors(), currentLeaseActorOfType(LeaseActorType.TENANT)), partyOfLeaseActor());
         return firstElseNull(landlords);
     }
 
@@ -82,7 +92,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     // {{ Name (property)
     private String name;
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence="4")
     @Optional
     public String getName() {
         return name;
@@ -98,7 +108,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private LocalDate startDate;
 
     @Persistent
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "5")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -113,7 +123,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private LocalDate endDate;
 
     @Persistent
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "6")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -128,7 +138,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private LocalDate terminationDate;
 
     @Persistent
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "7")
     @Optional
     public LocalDate getTerminationDate() {
         return terminationDate;
@@ -143,7 +153,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     // {{ Type (property)
     private LeaseType type;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "8")
     public LeaseType getType() {
         return type;
     }
@@ -158,7 +168,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private Lease previousLease;
 
     @Disabled
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "9")
     public Lease getPreviousLease() {
         return previousLease;
     }
@@ -210,7 +220,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private Lease nextLease;
 
     @Disabled
-    @MemberOrder(sequence = "8")
+    @MemberOrder(sequence = "10")
     public Lease getNextLease() {
         return nextLease;
     }

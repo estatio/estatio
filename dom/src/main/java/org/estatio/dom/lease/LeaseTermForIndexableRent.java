@@ -258,7 +258,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     public LeaseTermForIndexableRent createOrUpdateNext() {
         LocalDate newStartDate = this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
         LocalDate endDate = getLeaseItem().getEndDate();
-        if (newStartDate.isAfter(endDate)) {
+        LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
+        if (newStartDate.isAfter(maxEndDate)) {
             // date is after end date, do nothing
             return null;
         } else {
@@ -283,7 +284,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     // }}
-
 
     // {{ Injected Services
     private LeaseTerms leaseTermsService;

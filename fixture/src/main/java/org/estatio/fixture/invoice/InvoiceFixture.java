@@ -25,7 +25,7 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setBuyer(partyRepository.findPartyByReference("TOPMODEL"));
         invoice.setSeller(partyRepository.findPartyByReference("ACME"));
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        invoice.setStatus(InvoiceStatus.CONCEPT);
+        invoice.setStatus(InvoiceStatus.NEW);
         invoice.setLease(leaseRepository.findByReference("OXF-TOPMODEL-001"));
     }
     

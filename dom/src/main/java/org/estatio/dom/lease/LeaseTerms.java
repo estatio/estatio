@@ -30,15 +30,28 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
+    @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
         leaseTerm.setLeaseItem(leaseItem);
-        leaseTerm.setStatus(LeaseTermStatus.CONCEPT);
+        leaseTerm.setStatus(LeaseTermStatus.NEW);
         persist(leaseTerm);
         return leaseTerm;
     }
     // }}
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    @NotContributed
+    @Hidden
+    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
+        LeaseTerm leaseTerm = newLeaseTerm(leaseItem);
+        leaseTerm.modifyPreviousTerm(previous);       
+        return leaseTerm;
+    }
+    // }}
+
+    
     // {{ allLeaseTerms
     @Prototype
     @ActionSemantics(Of.SAFE)

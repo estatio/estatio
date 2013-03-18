@@ -47,7 +47,7 @@ public class InvoiceIntegrationTest {
         Parties parties = getIsft().getService(Parties.class);
         Leases leases = getIsft().getService(Leases.class);
         Invoices invoices = getIsft().getService(Invoices.class);
-        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.CONCEPT).get(0);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW).get(0);
         Assert.assertNotNull(invoice);
     }
 }
