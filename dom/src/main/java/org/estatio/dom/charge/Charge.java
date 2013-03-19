@@ -26,12 +26,13 @@ public class Charge extends EstatioRefDataObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
+
     // }}
 
     // {{ Code (property)
     private String code;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     public String getCode() {
         return code;
     }
@@ -39,12 +40,13 @@ public class Charge extends EstatioRefDataObject {
     public void setCode(final String code) {
         this.code = code;
     }
+
     // }}
 
     // {{ Tax (property)
     private Tax tax;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "3")
     public Tax getTax() {
         return tax;
     }
@@ -52,18 +54,33 @@ public class Charge extends EstatioRefDataObject {
     public void setTax(final Tax tax) {
         this.tax = tax;
     }
+
     // }}
-    
+
     // {{ Description (property)
     private String description;
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "4")
     public String getDescription() {
         return description;
     }
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    // }}
+
+    // {{ Group (property)
+    private ChargeGroup group;
+
+    @MemberOrder(sequence = "5")
+    public ChargeGroup getGroup() {
+        return group;
+    }
+
+    public void setGroup(final ChargeGroup group) {
+        this.group = group;
     }
     // }}
 

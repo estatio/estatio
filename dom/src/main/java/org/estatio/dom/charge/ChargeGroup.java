@@ -4,12 +4,13 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import org.estatio.dom.EstatioRefDataObject;
 
-import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 @PersistenceCapable
 @Immutable
+@Bounded
 public class ChargeGroup extends EstatioRefDataObject {
 
     // {{ Reference (property)
