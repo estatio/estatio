@@ -45,7 +45,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     }
 
     // }}
-    
+
     // {{ Derived attribute
 
     @MemberOrder(sequence="2")
@@ -357,8 +357,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         }
         // associate new
         getItems().add(leaseItem);
-        // additional business logic
-        onAddToItems(leaseItem);
     }
 
     public void removeFromItems(final LeaseItem leaseItem) {
@@ -368,20 +366,11 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         }
         // dissociate existing
         getItems().remove(leaseItem);
-        // additional business logic
-        onRemoveFromItems(leaseItem);
-    }
-
-    protected void onAddToItems(final LeaseItem leaseItem) {
-    }
-
-    protected void onRemoveFromItems(final LeaseItem leaseItem) {
     }
 
     @MemberOrder(name="Items",sequence = "31")
-    public LeaseItem addItem() {
+    public LeaseItem newItem() {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this);
-        addToItems(leaseItem);
         return leaseItem;
     }
 

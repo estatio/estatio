@@ -20,6 +20,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
@@ -33,10 +34,9 @@ public class LeasesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        Charge charge = charges.findChargeByReference("RENT");
         manager = parties.findPartyByReference("JDOE");
-        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2010, 7, 15).plusYears(10).minusDays(1), charge);
-        createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2008, 1, 1).plusYears(10).minusDays(1), charge);
+        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2010, 7, 15).plusYears(10).minusDays(1));
+        createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2008, 1, 1).plusYears(10).minusDays(1));
     }
 
     private Lease createLease(
@@ -46,8 +46,7 @@ public class LeasesFixture extends AbstractFixture {
             String landlordReference, 
             String tentantReference, 
             LocalDate startDate, 
-            LocalDate endDate, 
-            Charge charge) {
+            LocalDate endDate) {
         Party landlord = parties.findPartyByReference(landlordReference);
         Party tenant = parties.findPartyByReference(tentantReference);
         Unit unit = units.findByReference(unitReference);
@@ -58,9 +57,14 @@ public class LeasesFixture extends AbstractFixture {
         lease.addActor(tenant, LeaseActorType.TENANT, null, null);
         lease.addActor(manager, LeaseActorType.MANAGER, null, null);
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
-        LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.RENT, charge, startDate, endDate);
-        leaseItem.addToTerms(createLeaseTermForIndexableRent(leaseItem, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1)));
-        lease.addToItems(leaseItem);
+
+        LeaseItem leaseItem1 = createLeaseItem(lease, LeaseItemType.RENT, charges.findChargeByReference("RENT"), startDate, endDate);
+        LeaseTerm leaseTermForIndexableRent = createLeaseTermForIndexableRent(leaseItem1, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1));
+//        leaseItem1.addToTerms(leaseTermForIndexableRent);
+
+        LeaseItem leaseItem2 = createLeaseItem(lease, LeaseItemType.SERVICE_CHARGE, charges.findChargeByReference("SERVICE_CHARGE"), startDate, endDate);
+        LeaseTerm leaseTermForServiceCharge = createLeaseTermForServiceCharge(leaseItem2, startDate, null, BigDecimal.valueOf(6000));
+//        leaseItem2.addToTerms(leaseTermForServiceCharge);
         return lease;
     }
 
@@ -99,6 +103,18 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setEffectiveDate(indexationApplicationDate);
         leaseTerm.setIndexationFrequency(IndexationFrequency.YEARLY);
         leaseTerm.setIndex(indices.findByReference("ISTAT-FOI"));
+        return leaseTerm;
+    }
+
+    private LeaseTerm createLeaseTermForServiceCharge(
+            LeaseItem leaseItem, 
+            LocalDate startDate, 
+            LocalDate endDate, 
+            BigDecimal value) {
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.newLeaseTerm(leaseItem);
+        leaseTerm.setStartDate(startDate);
+        leaseTerm.setEndDate(endDate);
+        leaseTerm.setBudgetedValue(value);
         return leaseTerm;
     }
 

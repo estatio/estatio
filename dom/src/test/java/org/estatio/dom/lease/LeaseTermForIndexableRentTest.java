@@ -44,7 +44,8 @@ public class LeaseTermForIndexableRentTest {
     @Before
     public void setup() {
 
-        i = context.getClassUnderTest();
+        //i = context.getClassUnderTest();
+        i = new Index();
 
         ib1 = new IndexBase();
         ib1.setStartDate(new LocalDate(2000,1,1));
@@ -87,7 +88,6 @@ public class LeaseTermForIndexableRentTest {
 
     @Test
     public void verifyRunsWell() {
-        i.setIndexService(mockIndices);
         context.checking(new Expectations() {
             {
                 allowing(mockIndices).findIndexValueForDate(with(equal(i)), with(equal(iv1.getStartDate())));

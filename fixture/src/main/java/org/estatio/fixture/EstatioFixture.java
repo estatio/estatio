@@ -33,12 +33,12 @@ public class EstatioFixture extends AbstractFixture {
         getContainer().newTransientInstance(LeasesFixture.class),
         getContainer().newTransientInstance(InvoiceFixture.class)
         );
-        
+
         for (AbstractFixture fixture : fixtures) {
             fixture.install(); 
             getContainer().flush();
         }
-        
+
     }
 
 }

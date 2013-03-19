@@ -10,7 +10,6 @@ import javax.jdo.annotations.Persistent;
 import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;

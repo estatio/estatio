@@ -34,6 +34,7 @@ public class LeaseItems extends AbstractFactoryAndRepository {
         LeaseItem leaseItem = newTransientInstance(LeaseItem.class);
         leaseItem.setLease(lease);
         persist(leaseItem);
+        lease.addToItems(leaseItem);
         return leaseItem;
     }
     // }}
