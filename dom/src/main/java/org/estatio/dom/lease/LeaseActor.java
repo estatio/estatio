@@ -4,13 +4,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateRange;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -18,7 +14,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.clock.Clock;
 
 
 @PersistenceCapable
@@ -28,7 +23,7 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     // {{ Lease (property)
     private Lease lease;
 
-    @Title(sequence = "1")
+    @Title(sequence = "3", prepend = ":")
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Lease getLease() {
@@ -44,7 +39,7 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     // {{ Party (property)
     private Party party;
 
-    @Title(sequence = "2", prepend = " ")
+    @Title(sequence = "2", prepend = ":")
     @MemberOrder(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Party getParty() {
@@ -60,7 +55,7 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     // {{ Type (property)
     private LeaseActorType type;
 
-    @Title(sequence = "3", prepend = " ")
+    @Title(sequence = "1")
     @MemberOrder(sequence = "3")
     public LeaseActorType getType() {
         return type;
@@ -103,10 +98,30 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     }
     // }}
 
+    /**
+     * This is necessary but not sufficient; in {@link Lease#addActor(Party, LeaseActorType, LocalDate, LocalDate)}
+     * there is logic to ensure that there cannot be two {@link LeaseActor actor}s of the same type
+     * at the same point in time.
+     * 
+     * TODO: need to implement the above statement!!!
+     */
     @Override
     @Hidden
     public int compareTo(LeaseActor o) {
-        return this.getClass().getName().compareTo(o.getClass().getName());
+        int compareType = this.getType().compareTo(o.getType());
+        if(compareType != 0) {
+            return compareType;
+        }
+        if(this.getStartDate() == null && o.getStartDate() != null) {
+            return -1;
+        }
+        if(this.getStartDate() != null && o.getStartDate() == null) {
+            return +1;
+        }
+        if(this.getStartDate() == null && o.getStartDate() == null) {
+            return 0;
+        }
+        return this.getStartDate().compareTo(o.getStartDate());
     }
 
     // {[

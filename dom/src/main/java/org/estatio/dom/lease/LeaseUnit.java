@@ -8,24 +8,21 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.asset.Unit;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 
 @PersistenceCapable
-@Auditable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit> {
 
     // {{ Lease (property)
     private Lease lease;
 
-    @Title(sequence = "1")
+    @Title(sequence = "1", append = ":")
     @MemberOrder(sequence = "1")
     @Hidden(where= Where.REFERENCES_PARENT)
     public Lease getLease() {
@@ -41,7 +38,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     // {{ Unit (property)
     private Unit unit;
 
-    @Title(sequence = "2", prepend=":")
+    @Title(sequence = "2", append = ":")
     @MemberOrder(sequence = "2")
     @Hidden(where= Where.REFERENCES_PARENT)
     public Unit getUnit() {

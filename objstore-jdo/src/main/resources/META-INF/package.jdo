@@ -43,7 +43,7 @@
 			<query name="parties_findPartyByReference" language="JDOQL"><![CDATA[
             SELECT 
               FROM org.estatio.dom.party.Party 
-             WHERE reference.matches(:r)
+             WHERE reference.matches(:reference)
             ]]></query>
 		</class>
 	</package>
@@ -100,6 +100,15 @@
             ]]></query>
         </class>
     </package>
+    <package name="org.estatio.dom.currency">
+        <class name="Currency">
+            <query name="charge_findCurrencyByReference" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.currency.Currency 
+            WHERE reference.matches(:r)
+            ]]></query>
+        </class>
+    </package>
     <package name="org.estatio.dom.invoice">
         <class name="Invoice">
             <query name="invoice_findMatchingInvoices" language="JDOQL"><![CDATA[
@@ -127,7 +136,7 @@
         <class name="Numerator">
             <query name="numerator_find" language="JDOQL" cached="false"><![CDATA[
             SELECT 
-              FROM org.estatio.dom.Numerator.Numerator 
+              FROM org.estatio.dom.numerator.Numerator 
             WHERE type == :type
             ]]></query>
         </class>

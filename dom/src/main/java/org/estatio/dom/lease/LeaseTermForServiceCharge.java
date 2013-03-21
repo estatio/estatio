@@ -14,7 +14,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-//@Discriminator("LTRI")
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
     // {{ BudgetedValue (property)

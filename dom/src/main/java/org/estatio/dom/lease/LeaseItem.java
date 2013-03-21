@@ -43,7 +43,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @Title(sequence="1")
+    @Title(sequence="1", append = ":")
     @MemberOrder(sequence = "1")
     public Lease getLease() {
         return lease;
@@ -72,7 +72,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // {{ LeaseItemType (property)
     private LeaseItemType type;
 
-    @Title(sequence="2", prepend=":")
+    @Title(sequence = "2")
     @MemberOrder(sequence = "2")
     public LeaseItemType getType() {
         return type;

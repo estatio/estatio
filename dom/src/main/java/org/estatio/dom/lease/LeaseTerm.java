@@ -16,7 +16,18 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.commons.lang.NotImplementedException;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceCalculator;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.utils.Orderings;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
@@ -28,17 +39,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.TitleBuffer;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceCalculator;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.Orderings;
-import org.joda.time.LocalDate;
-
-import com.google.common.collect.Ordering;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -54,7 +54,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     @MemberOrder(sequence = "1")
     @Persistent
     @Disabled
-    @Title(sequence="1")
+    @Title(sequence = "1", append = ":")
     public LeaseItem getLeaseItem() {
         return leaseItem;
     }
@@ -85,7 +85,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     private LocalDate startDate;
 
     @Persistent
-    @Title(sequence = "2", prepend=":")
+    @Title(sequence = "2", append = "-")
     @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
@@ -102,7 +102,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @Persistent
     @MemberOrder(sequence = "3")
-    @Title(sequence = "3", prepend="-")
+    @Title(sequence = "3")
     @Optional
     public LocalDate getEndDate() {
         return endDate;

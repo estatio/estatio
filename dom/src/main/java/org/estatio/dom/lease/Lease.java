@@ -13,6 +13,11 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -22,10 +27,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
@@ -56,7 +57,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
                 Iterables.filter(getActors(), currentLeaseActorOfType(LeaseActorType.LANDLORD)), partyOfLeaseActor());
         return firstElseNull(landlords);
     }
-    
+
     @MemberOrder(sequence="3")
     public Party getCurrentTenant() {
         // TODO:test to see if this is faster:
@@ -88,7 +89,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     }
 
     // }}
-    
+
     // {{ Name (property)
     private String name;
 
@@ -252,8 +253,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         }
         // associate new
         getActors().add(leaseActor);
-        // additional business logic
-        onAddToActors(leaseActor);
     }
 
     public void removeFromActors(final LeaseActor leaseActor) {
@@ -263,14 +262,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         }
         // dissociate existing
         getActors().remove(leaseActor);
-        // additional business logic
-        onRemoveFromActors(leaseActor);
-    }
-
-    protected void onAddToActors(final LeaseActor elementName) {
-    }
-
-    protected void onRemoveFromActors(final LeaseActor elementName) {
     }
 
     @MemberOrder(name="Actors", sequence = "11")
@@ -284,12 +275,15 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         return leaseActor;
     }
 
+    public int getNumberOfActors() {
+        return getActors().size();
+    }
     // }}
 
     // {{ Units (Collection)
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
-    @Persistent(mappedBy = "lease", defaultFetchGroup = "false")
+    @Persistent(mappedBy = "lease")
     @MemberOrder(name="Units", sequence = "20")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseUnit> getUnits() {

@@ -11,6 +11,7 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -21,10 +22,8 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -32,15 +31,12 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.PublishedObject;
-import org.apache.isis.applib.annotation.Resolve;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.Resolve.Type;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-@Auditable
+@Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @AutoComplete(repository = Properties.class)
 @PublishedObject
 public class Property extends EstatioTransactionalObject implements Comparable<Property> {
@@ -202,8 +198,8 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     @Persistent(mappedBy = "property")
     private SortedSet<PropertyActor> actors = new TreeSet<PropertyActor>();
 
-    @Resolve(Type.EAGERLY)
-    @MemberOrder(sequence = "2.1")
+    @Render(Type.EAGERLY)
+    @MemberOrder(name = "Actors", sequence = "2.1")
     public SortedSet<PropertyActor> getActors() {
         return actors;
     }
@@ -219,8 +215,6 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         }
         // associate new
         getActors().add(actor);
-        // additional business logic
-        onAddToActors(actor);
     }
 
     public void removeFromActors(final PropertyActor actor) {
@@ -230,14 +224,24 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         }
         // dissociate existing
         getActors().remove(actor);
-        // additional business logic
-        onRemoveFromActors(actor);
     }
 
-    protected void onAddToActors(final PropertyActor actor) {
+    @MemberOrder(name="Actors", sequence = "1")
+    public PropertyActor addActor(
+           @Named("party") Party party, 
+           @Named("type") PropertyActorType type, 
+           @Named("startDate") @Optional LocalDate startDate, 
+           @Named("endDate") @Optional LocalDate endDate) {
+        PropertyActor propertyActor = propertyActorsRepo.findPropertyActor(this, party, type, startDate, endDate);
+        if (propertyActor ==  null) { 
+            propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
+            actors.add(propertyActor);
+        }
+        return propertyActor;
     }
 
-    protected void onRemoveFromActors(final PropertyActor actor) {
+    public List<Party> choices0AddActor() {
+        return parties.allParties();
     }
 
     // }}
@@ -247,8 +251,8 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
-    @Resolve(Type.EAGERLY)
-    @MemberOrder(sequence = "1")
+    @Render(Type.EAGERLY)
+    @MemberOrder( name = "CommunicationChannels", sequence = "1")
     public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
@@ -279,8 +283,8 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     // {{ Units (set, bidir)
     @Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();
-    @Resolve(Type.EAGERLY)
-    @MemberOrder(sequence = "2.2")
+    @Render(Type.EAGERLY)
+    @MemberOrder(sequence = "2", name = "Units")
     public SortedSet<Unit> getUnits() {
         return units;
     }
@@ -303,26 +307,6 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
 
     // }}
 
-    // {{ addActor (action)
-    @MemberOrder(name="Actors", sequence = "1")
-    public PropertyActor addActor(
-           @Named("party") Party party, 
-           @Named("type") PropertyActorType type, 
-           @Named("startDate") @Optional LocalDate startDate, 
-           @Named("endDate") @Optional LocalDate endDate) {
-        PropertyActor propertyActor = propertyActorsRepo.findPropertyActor(this, party, type, startDate, endDate);
-        if (propertyActor ==  null) { 
-            propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
-            actors.add(propertyActor);
-        }
-        return propertyActor;
-    }
-    
-    public List<Party> choices0AddActor() {
-        return parties.allParties();
-    }
-    
-    // }}
     
     // {{ injected: Units
     

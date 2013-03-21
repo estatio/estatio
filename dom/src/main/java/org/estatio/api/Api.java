@@ -218,15 +218,15 @@ public class Api extends AbstractFactoryAndRepository {
         // TODO: Find if communication channel exists
         if (address1 != null) {
             CommunicationChannel comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
-            party.addCommunicationChannel(comm);
+            party.addToCommunicationChannels(comm);
         }
         if (phoneNumber != null) {
             CommunicationChannel comm = communicationChannels.newPhoneNumber(phoneNumber);
-            party.addCommunicationChannel(comm);
+            party.addToCommunicationChannels(comm);
         }
         if (faxNumber != null) {
             CommunicationChannel comm = communicationChannels.newFaxNumber(faxNumber);
-            party.addCommunicationChannel(comm);
+            party.addToCommunicationChannels(comm);
         }
     }
     

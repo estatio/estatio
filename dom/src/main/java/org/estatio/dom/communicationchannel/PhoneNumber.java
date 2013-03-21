@@ -16,7 +16,6 @@ import org.apache.isis.applib.annotation.Title;
 public class PhoneNumber extends CommunicationChannel {
 
     @Override
-    @Title
     public String getName() {
         return "Phone ".concat(getPhoneNumber());
     }

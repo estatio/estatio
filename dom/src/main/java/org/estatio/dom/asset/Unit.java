@@ -11,6 +11,7 @@ import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -18,20 +19,19 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.lease.LeaseUnit;
 
-import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.PublishedObject;
-import org.apache.isis.applib.annotation.Resolve;
-import org.apache.isis.applib.annotation.Resolve.Type;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.core.objectstore.jdo.applib.annotations.Auditable;
 
 @PersistenceCapable
-@Auditable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@AutoComplete(repository = Units.class)
 @PublishedObject
 public class Unit extends EstatioTransactionalObject implements Comparable<Unit> {
 
@@ -88,7 +88,7 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
     private BigDecimal area;
 
     @MemberOrder(sequence = "4")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getArea() {
         return area;
     }
@@ -104,7 +104,7 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -120,7 +120,7 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "6")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -136,7 +136,7 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "7")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -152,7 +152,7 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "8")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getTerraceArea() {
         return terraceArea;
     }
@@ -184,7 +184,7 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
     @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
     private SortedSet<LeaseUnit> leases = new TreeSet<LeaseUnit>();
 
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     @MemberOrder(sequence = "2.2")
     public SortedSet<LeaseUnit> getLeases() {
         return leases;
@@ -197,11 +197,11 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @Join(column="UNIT_ID", generateForeignKey = "false")
+    @Join(column = "UNIT_ID", generateForeignKey = "false")
     @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
-    @Resolve(Type.EAGERLY)
+    @Render(Type.EAGERLY)
     @MemberOrder(sequence = "2.1")
     public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
@@ -221,11 +221,11 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
     public void addCommunicationChannel(CommunicationChannel communicationChannel) {
         communicationChannels.add(communicationChannel);
     }
-    
+
     @Hidden
-    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type){
-        for (CommunicationChannel c : communicationChannels){
-            if (c.getType().equals(type)){
+    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
+        for (CommunicationChannel c : communicationChannels) {
+            if (c.getType().equals(type)) {
                 return c;
             }
         }

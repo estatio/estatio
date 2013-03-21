@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -23,8 +20,13 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Invoice extends EstatioTransactionalObject {
 
     public String title() {
@@ -183,6 +185,7 @@ public class Invoice extends EstatioTransactionalObject {
     private Set<InvoiceItem> items = new LinkedHashSet<InvoiceItem>();
 
     @MemberOrder(sequence = "11")
+    @Render(Type.EAGERLY)
     public Set<InvoiceItem> getItems() {
         return items;
     }

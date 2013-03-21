@@ -19,8 +19,6 @@
 package org.estatio.integtest;
 
 import org.estatio.fixture.EstatioFixture;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -45,7 +43,6 @@ public class IntegrationSystemForTestRule implements MethodRule {
     public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
         final IsisSystemForTest isft = getIsisSystemForTest(); // creates and starts running if required
         return new Statement() {
-            
             @Override
             public void evaluate() throws Throwable {
                 isft.beginTran();

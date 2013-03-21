@@ -43,7 +43,9 @@ public class InvoiceTest_assignInvoiceNumber {
         inn = new InvoiceNumberNumerator();
         inn.setLastIncrement(BigInteger.TEN);
 
-        invoice = context.getClassUnderTest();
+        invoice = new Invoice();
+        
+//        invoice = context.getClassUnderTest();
         invoice.setContainer(mockContainer);// to fix
         invoice.setNumerators(mockNumerators); // to fix
 

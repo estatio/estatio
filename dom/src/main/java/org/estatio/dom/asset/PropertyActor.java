@@ -26,7 +26,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
     // {{ Property (property)
     private Property property;
 
-    @Title(sequence="1")
+    @Title(sequence = "3", prepend = ":")
     @MemberOrder(sequence = "1")
     @Hidden(where=Where.REFERENCES_PARENT)
     @Disabled
@@ -43,7 +43,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
     // {{ Party (property)
     private Party party;
 
-    @Title(sequence="2", prepend=", ")
+    @Title(sequence = "2", prepend = ":")
     @MemberOrder(sequence = "2")
     @Disabled
     @Hidden(where=Where.REFERENCES_PARENT)
@@ -62,6 +62,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
 
     @Disabled
     @MemberOrder(sequence = "3")
+    @Title(sequence = "1")
     public PropertyActorType getType() {
         return type;
     }

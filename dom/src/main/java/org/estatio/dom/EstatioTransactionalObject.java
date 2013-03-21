@@ -24,16 +24,26 @@ import org.apache.isis.applib.annotation.Where;
  */
 public abstract class EstatioTransactionalObject extends AbstractDomainObject {
 
+    // {{ ID (derived property)
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @MemberOrder(name="Detail", sequence = "100")
+    @Named("Id")
+    public String getId() {
+        final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
+        return id;
+    }
+    // }}
+
     // {{ Version (derived property)
     @Hidden(where=Where.ALL_TABLES)
     @Disabled
-    @MemberOrder(name="Detail", sequence = "99")
+    @MemberOrder(name="Detail", sequence = "101")
     @Named("Version")
     public Long getVersionSequence() {
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;
     }
     // }}
-    
 
 }

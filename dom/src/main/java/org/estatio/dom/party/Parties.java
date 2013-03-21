@@ -107,7 +107,7 @@ public class Parties extends AbstractFactoryAndRepository {
         throw new NotImplementedException();
     }
     // }}
-    
+
     // {{ findPartyByReference
     @Hidden
     @ActionSemantics(Of.SAFE)
@@ -135,7 +135,7 @@ public class Parties extends AbstractFactoryAndRepository {
     // {{ autoComplete (hidden)
     @Hidden
     public List<Party> autoComplete(String searchPhrase) {
-        return findPartiesByReference(searchPhrase);
+        return findPartiesByReference("*".concat(searchPhrase).concat("*"));
     }
     // }}
 

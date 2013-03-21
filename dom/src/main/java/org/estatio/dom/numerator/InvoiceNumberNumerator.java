@@ -6,7 +6,7 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import org.estatio.dom.invoice.Invoice;
 
-@PersistenceCapable(serializeRead = "true")
+@PersistenceCapable(/*serializeRead = "true"*/)
 @Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
 public class InvoiceNumberNumerator extends Numerator {
 

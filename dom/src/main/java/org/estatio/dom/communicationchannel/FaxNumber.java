@@ -17,7 +17,6 @@ import org.apache.isis.applib.annotation.Title;
 public class FaxNumber extends CommunicationChannel {
 
     @Override
-    @Title
     public String getName() {
         return "Fax ".concat(getFaxNumber());
     }

@@ -58,13 +58,18 @@ public class LeasesFixture extends AbstractFixture {
         lease.addActor(manager, LeaseActorType.MANAGER, null, null);
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
 
-        LeaseItem leaseItem1 = createLeaseItem(lease, LeaseItemType.RENT, charges.findChargeByReference("RENT"), startDate, endDate);
-        LeaseTerm leaseTermForIndexableRent = createLeaseTermForIndexableRent(leaseItem1, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1));
-//        leaseItem1.addToTerms(leaseTermForIndexableRent);
+        if (leases.findByReference(reference) == null) {
+            new RuntimeException();
+        }
 
-        LeaseItem leaseItem2 = createLeaseItem(lease, LeaseItemType.SERVICE_CHARGE, charges.findChargeByReference("SERVICE_CHARGE"), startDate, endDate);
-        LeaseTerm leaseTermForServiceCharge = createLeaseTermForServiceCharge(leaseItem2, startDate, null, BigDecimal.valueOf(6000));
-//        leaseItem2.addToTerms(leaseTermForServiceCharge);
+        Charge chargeRent = charges.findChargeByReference("RENT");
+        Charge chargeService = charges.findChargeByReference("SERVICE_CHARGE");
+
+        LeaseItem leaseItem1 = createLeaseItem(lease, LeaseItemType.RENT, chargeRent, startDate, endDate);
+        createLeaseTermForIndexableRent(leaseItem1, startDate, null, BigDecimal.valueOf(20000), startDate.dayOfMonth().withMinimumValue(), startDate.plusYears(1).withMonthOfYear(1).withDayOfMonth(1), startDate.plusYears(1).withMonthOfYear(4).withDayOfMonth(1));
+
+        LeaseItem leaseItem2 = createLeaseItem(lease, LeaseItemType.SERVICE_CHARGE, chargeService, startDate, endDate);
+        createLeaseTermForServiceCharge(leaseItem2, startDate, null, BigDecimal.valueOf(6000));
         return lease;
     }
 
@@ -111,7 +116,8 @@ public class LeasesFixture extends AbstractFixture {
             LocalDate startDate, 
             LocalDate endDate, 
             BigDecimal value) {
-        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.newLeaseTerm(leaseItem);
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.getType().createLeaseTerm(getContainer());
+        leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBudgetedValue(value);

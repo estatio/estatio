@@ -236,7 +236,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
             setValue(getIndexedValue());
         }
         if (getStartDate().compareTo(LocalDate.now()) < 0) {
-            LeaseTermForIndexableRent nextTerm = createOrUpdateNext();
+            LeaseTermForIndexableRent nextTerm = (LeaseTermForIndexableRent) createOrUpdateNext();
             if (nextTerm != null) {
                 nextTerm.verify();
             }
@@ -254,8 +254,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
     }
 
-    // @Override
-    public LeaseTermForIndexableRent createOrUpdateNext() {
+    @Override
+    public LeaseTerm createOrUpdateNext() {
         LocalDate newStartDate = this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
         LocalDate endDate = getLeaseItem().getEndDate();
         LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;

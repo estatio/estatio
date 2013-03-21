@@ -65,7 +65,7 @@ public class LeaseActors extends AbstractFactoryAndRepository {
         return firstMatch(LeaseActor.class, new Filter<LeaseActor>() {
             @Override
             public boolean accept(final LeaseActor leaseActor) {
-                return leaseActor.getLease().equals(lease) & leaseActor.getParty().equals(party) 
+                return leaseActor.getLease().equals(lease) & leaseActor.getParty().equals(party) & leaseActor.getType().equals(type) 
                         //TODO handle optional condition fields as they can contain null
                         // leaseActor.getStartDate().equals(startDate) & leaseActor.getEndDate().equals(endDate)
                         ;

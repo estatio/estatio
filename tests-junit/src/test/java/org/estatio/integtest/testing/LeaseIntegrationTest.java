@@ -76,6 +76,14 @@ public class LeaseIntegrationTest {
         LeaseActor la = lease.findActor(party, LeaseActorType.TENANT, null);
         Assert.assertNotNull(la);
     }
+    
+    @Test
+    public void t02b_numberOfleaseActorsIs3() throws Exception {
+        Leases leases = getIsft().getService(Leases.class);
+        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
+        assertThat(lease.getActors().size(), is(3));
+    }
+
 
     @Test
     public void t03_indexationFrequencyCannotBeNull() throws Exception {
@@ -109,7 +117,7 @@ public class LeaseIntegrationTest {
     public void t07_leaseHasXItems() throws Exception {
         Leases leases = getIsft().getService(Leases.class);
         Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        assertThat(lease.getItems().size(), is(1));
+        assertThat(lease.getItems().size(), is(2));
     }
 
     @Test

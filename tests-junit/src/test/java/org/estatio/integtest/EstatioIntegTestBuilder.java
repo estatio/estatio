@@ -9,6 +9,8 @@ import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
+
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;
@@ -45,20 +47,21 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         with(testConfiguration());
         with(new DataNucleusPersistenceMechanismInstaller());
         withServices(
+                new RegisterEntities(),
+                new CountriesJdo(),
+                new StatesJdo(),
+                new IndicesJdo(),
                 new PropertiesJdo(),
                 new UnitsJdo(),
-                new PropertyActorsJdo(),
                 new PartiesJdo(),
                 new LeasesJdo(),
-                new LeaseItemsJdo(),
+                new PropertyActorsJdo(),
                 new LeaseTermsJdo(),
+                new LeaseItemsJdo(),
                 new LeaseActorsJdo(),
                 new LeaseUnitsJdo(),
                 new InvoicesJdo(),
                 new CommunicationChannelsJdo(),
-                new CountriesJdo(),
-                new StatesJdo(),
-                new IndicesJdo(),
                 new TaxesJdo(),
                 new ChargesJdo(),
                 new NumeratorsJdo()
@@ -68,6 +71,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
     private IsisConfiguration testConfiguration() {
         final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
 
+        testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
         //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); // use log4jdbc instead
         //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test"); //disable default sqlloq
         

@@ -27,7 +27,6 @@ import org.estatio.dom.geography.States;
 public class PostalAddress extends CommunicationChannel {
 
     @Override
-    @Title
     public String getName() {
         TitleBuffer title = new TitleBuffer(getAddress1());
         title.append(", ", getAddress2());

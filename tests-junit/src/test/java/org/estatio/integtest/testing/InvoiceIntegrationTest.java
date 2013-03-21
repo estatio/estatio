@@ -2,7 +2,6 @@ package org.estatio.integtest.testing;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import junit.framework.Assert;
 
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -14,6 +13,7 @@ import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.ChargesJdo;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -31,8 +31,7 @@ public class InvoiceIntegrationTest {
     @Test
     public void numberOfChargesIsOne() throws Exception {
         Charges charges = getIsft().getService(ChargesJdo.class);
-        assertThat(charges.allCharges().size(), is(1));
-        assertThat(charges.allCharges().get(0).getReference(), is("RENT"));
+        assertThat(charges.allCharges().size(), is(2));
     }
 
     @Test

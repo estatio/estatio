@@ -3,6 +3,10 @@ package org.estatio.dom.invoice;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.party.Party;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -10,9 +14,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.PaymentMethod;
-import org.estatio.dom.party.Party;
 
 
 @Named("Invoices")
@@ -58,6 +59,7 @@ public class Invoices extends AbstractFactoryAndRepository {
     // }}
 
     @ActionSemantics(Of.SAFE)
+    @Hidden
     public Invoice findMatchingInvoice(
             Party seller,
             Party buyer,
@@ -69,6 +71,7 @@ public class Invoices extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.SAFE)
+    @Hidden
     public List<Invoice> findMatchingInvoices(
             Party seller,
             Party buyer,

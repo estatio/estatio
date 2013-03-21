@@ -73,5 +73,25 @@ public class Units extends AbstractFactoryAndRepository {
         return allInstances(Unit.class);
     }
     // }}
+    
+    // {{ autoComplete (hidden)
+    @Hidden
+    public List<Unit> autoComplete(String searchPhrase) {        
+        return findMatching(searchPhrase);
+    }
+    // }}
+
+    // {{ findByReference
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public List<Unit> findMatching(
+            final @Named("searchPrase") String searchPhrase) {
+        return allMatches(Unit.class, new Filter<Unit>() {
+            @Override
+            public boolean accept(final Unit unit) {
+                return unit.getReference().contains(searchPhrase.toUpperCase());
+            }
+        });
+    }
 
 }

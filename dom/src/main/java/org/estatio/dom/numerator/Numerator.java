@@ -12,7 +12,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.EstatioTransactionalObject;
 
-@PersistenceCapable(serializeRead = "true")
+@PersistenceCapable(/*serializeRead = "true"*/)
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 public class Numerator extends EstatioTransactionalObject {
