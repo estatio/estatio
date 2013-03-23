@@ -16,7 +16,6 @@
  */
 package org.estatio.dom.party;
 
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 

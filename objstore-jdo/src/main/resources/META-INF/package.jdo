@@ -45,6 +45,11 @@
               FROM org.estatio.dom.party.Party 
              WHERE reference.matches(:reference)
             ]]></query>
+			<query name="parties_findParties" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.party.Party 
+             WHERE reference.matches(:reference) OR fullName.matches(:reference)
+            ]]></query>
 		</class>
 	</package>
     <package name="org.estatio.dom.lease">

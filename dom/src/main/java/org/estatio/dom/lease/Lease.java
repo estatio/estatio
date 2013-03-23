@@ -275,11 +275,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         return leaseActor;
     }
 
-    public int getNumberOfActors() {
-        return getActors().size();
-    }
-    // }}
-
     // {{ Units (Collection)
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 

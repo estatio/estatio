@@ -15,8 +15,11 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
 
 @PersistenceCapable
@@ -38,6 +41,10 @@ public abstract class Party extends EstatioTransactionalObject {
     }
 
     // }}
+
+    @Title
+    @MemberOrder(sequence="2")
+    public abstract String getName();
 
     // {{ CommunicationChannels (list, unidir)
     @Join(column = "PARTY_ID", generateForeignKey = "false")

@@ -27,9 +27,7 @@ public class Parties extends AbstractFactoryAndRepository {
     public String iconName() {
         return "Party";
     }
-    // }}
 
-    // {{ newPerson
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Person newPerson(
@@ -43,9 +41,7 @@ public class Parties extends AbstractFactoryAndRepository {
         persist(person);
         return person;
     }
-    // }}
 
-    // {{ newOrganisation
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
     public Organisation newOrganisation(
@@ -55,9 +51,7 @@ public class Parties extends AbstractFactoryAndRepository {
         persist(org);
         return org;
     }
-    // }}
 
-    // {{ findOrganisationByReference
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public Organisation findOrganisationByReference(
@@ -69,9 +63,7 @@ public class Parties extends AbstractFactoryAndRepository {
             }
         });
     }
-    // }}
 
-    // {{ findOrganisationByName
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
     public Organisation findOrganisationByName(
@@ -83,35 +75,17 @@ public class Parties extends AbstractFactoryAndRepository {
             }
         });
     }
-    // }}
 
-    // {{ findPerson
+    @Hidden
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public Person findPerson(
-            final @Named("First Name") @Optional String firstName, 
-            final @Named("Last Name") @Optional String lastName) {
-        return firstMatch(Person.class, new Filter<Person>() {
-            @Override
-            public boolean accept(final Person person) {
-                return person.getLastName().contains(lastName) || person.getFirstName().contains(firstName);
-            }
-        });
-    }
-    // }}
-
-    // {{ findPartiesByReference
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "6")
     public List<Party> findPartiesByReference(@Named("Reference") final String reference) {
         throw new NotImplementedException();
     }
-    // }}
-
-    // {{ findPartyByReference
+ 
     @Hidden
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "6")
+    @MemberOrder(sequence = "3")
     public Party findPartyByReference(
             @Named("Reference") final String reference) {
         return firstMatch(Party.class, new Filter<Party>() {
@@ -121,7 +95,12 @@ public class Parties extends AbstractFactoryAndRepository {
             }
         });
     }
-    // }}
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
+    public List<Party> findParties(@Named("searchPattern") String searchPattern) {
+        throw new NotImplementedException();
+    }
 
     // {{ allParties
     @Prototype
@@ -138,5 +117,5 @@ public class Parties extends AbstractFactoryAndRepository {
         return findPartiesByReference("*".concat(searchPhrase).concat("*"));
     }
     // }}
-
+ 
 }

@@ -18,7 +18,7 @@ public class Currencies extends AbstractFactoryAndRepository {
     // {{ NewCurrency
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Currency newCurrency(String reference) {
+    public Currency newCurrency(@Named("reference") String reference) {
         Currency curr = newTransientInstance(Currency.class);
         curr.setReference(reference);
         persist(curr);
@@ -29,7 +29,7 @@ public class Currencies extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public Currency findCurrencyByReference(final String reference) {
+    public Currency findCurrencyByReference(@Named("reference") final String reference) {
         final String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch(Currency.class, new Filter<Currency>() {
             @Override
@@ -39,7 +39,7 @@ public class Currencies extends AbstractFactoryAndRepository {
         });
     }
 
-    // {{ AllCharges
+    // {{ AllCurrencies
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")

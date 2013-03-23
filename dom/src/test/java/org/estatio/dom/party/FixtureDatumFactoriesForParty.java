@@ -7,9 +7,9 @@ import com.danhaywood.testsupport.coverage.PojoTester.FixtureDatumFactory;
 public class FixtureDatumFactoriesForParty {
 
 	public static FixtureDatumFactory<Party> parties() {
-		Party party1 = new Party(){};
+		Party party1 = new Person(){};
 		party1.setReference("ref 1");
-		Party party2 = new Party(){};
+		Party party2 = new Person(){};
 		party2.setReference("ref 2");
 		return new FixtureDatumFactory<Party>(Party.class, party1, party2);
 	}

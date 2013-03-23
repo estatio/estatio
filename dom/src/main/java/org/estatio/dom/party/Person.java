@@ -16,9 +16,12 @@
  */
 package org.estatio.dom.party;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
 public class Person extends Party {
@@ -38,11 +41,19 @@ public class Person extends Party {
     }
 
     // }}
+    
+    @Override
+    @Title
+    @MemberOrder(sequence = "2")
+    @Hidden(where = Where.OBJECT_FORMS)
+    public String getName() {
+        TitleBuffer tb = new TitleBuffer();
+        return tb.append(getLastName()).append(",", getFirstName()).toString(); 
+    }
 
     // {{ FirstName (attribute, title)
     private String firstName;
 
-    @Title(prepend=", ", sequence="2")
     @MemberOrder(sequence = "1")
     @Optional
     public String getFirstName() {
@@ -57,7 +68,6 @@ public class Person extends Party {
     // {{ LastName (attribute, title)
     private String lastName;
 
-    @Title(sequence="1")
     @MemberOrder(sequence = "2")
     public String getLastName() {
         return lastName;
