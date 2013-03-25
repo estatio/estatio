@@ -30,8 +30,8 @@ public class PartiesJdo extends Parties {
         return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
-    private static QueryDefault<Party> queryForFindParties(String reference) {
-        return new QueryDefault<Party>(Party.class, "parties_findParties", "reference", StringUtils.wildcardToRegex(reference));
+    private static QueryDefault<Party> queryForFindParties(String searchPattern) {
+        return new QueryDefault<Party>(Party.class, "parties_findParties", "searchPattern", StringUtils.wildcardToRegex(searchPattern));
     }
 
 }
