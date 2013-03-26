@@ -11,15 +11,14 @@ import org.junit.Test;
 public class InvoiceNumberTest {
 
     private Invoice invoice;
-    private InvoiceNumberNumerator in;
+    private NumeratorForInvoiceNumber in;
 
-    
     @Before
     public void setup() {
         invoice = new Invoice();
-        in = new InvoiceNumberNumerator();
+        in = new NumeratorForInvoiceNumber();
     }
-    
+
     @Test
     public void test() {
         assertThat(in.assign(invoice), is(true));

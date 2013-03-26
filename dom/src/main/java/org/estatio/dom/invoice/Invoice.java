@@ -13,7 +13,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.PaymentMethod;
-import org.estatio.dom.numerator.InvoiceNumberNumerator;
+import org.estatio.dom.numerator.NumeratorForInvoiceNumber;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 public class Invoice extends EstatioTransactionalObject {
 
     public String title() {
-        return getInvoiceNumber() == null ? "TEMP" : "Invoice";
+        return String.format("%08d", Integer.parseInt(getId()));
     }
 
     // {{ Buyer (property)
@@ -69,7 +69,7 @@ public class Invoice extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ InvoiceNumberNumerator (property)
+    // {{ NumeratorForInvoiceNumber (property)
     private String invoiceNumber;
 
     @MemberOrder(sequence = "3")
@@ -256,15 +256,15 @@ public class Invoice extends EstatioTransactionalObject {
     @Bulk
     @MemberOrder(sequence = "20")
     public Invoice assignInvoiceNumber() {
-        InvoiceNumberNumerator numerator = (InvoiceNumberNumerator) numerators.find(NumeratorType.INVOICE_NUMBER);
-        if(numerator.assign(this)) {
+        NumeratorForInvoiceNumber numerator = (NumeratorForInvoiceNumber) numerators.find(NumeratorType.INVOICE_NUMBER);
+        if (numerator.assign(this)) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
         }
         return this;
     }
 
     // }}
-    
+
     // {{ Inject services
 
     private Parties parties;

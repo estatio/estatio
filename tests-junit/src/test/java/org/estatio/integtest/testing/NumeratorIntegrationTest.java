@@ -6,17 +6,16 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.estatio.dom.numerator.InvoiceNumberNumerator;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.NumeratorsJdo;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 public class NumeratorIntegrationTest {
 
@@ -33,25 +32,24 @@ public class NumeratorIntegrationTest {
         numerators = getIsft().getService(NumeratorsJdo.class);
         numerators.establish(NumeratorType.INVOICE_NUMBER);
     }
-    
+
     @Test
-    public void numeratorCanBeFound() throws Exception {
+    public void t01_numeratorCanBeFound() throws Exception {
         Numerator numerator = numerators.find(NumeratorType.INVOICE_NUMBER);
         assertNotNull(numerator);
     }
-    
+
     @Test
-    public void canFindUsingNaiveImpl() throws Exception {
+    public void t02_canFindUsingNaiveImpl() throws Exception {
         assertThat(numerators.allNumerators().size(), is(1));
     }
 
     @Test
-    public void numberOfNumeratorsIsOne() throws Exception {
+    public void t03_numberOfNumeratorsIsOne() throws Exception {
         Numerator in = numerators.find(NumeratorType.INVOICE_NUMBER);
         assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
         assertThat(in.increment(), is(BigInteger.ONE));
         assertThat(in.getLastIncrement(), is(BigInteger.ONE));
     }
-
 
 }

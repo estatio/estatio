@@ -7,9 +7,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
-import org.apache.isis.core.commons.exceptions.NotYetImplementedException;
 
 @Named("Numerators")
 public class Numerators extends AbstractFactoryAndRepository {
@@ -21,18 +19,19 @@ public class Numerators extends AbstractFactoryAndRepository {
     }
 
     public String iconName() {
-        return "Numerators";
+        return "Numerator";
     }
 
     // }}
 
-    public Numerator create(NumeratorType type){
+    @Hidden
+    public Numerator create(NumeratorType type) {
         Numerator numerator = type.create(getContainer());
         persist(numerator);
         return numerator;
     }
-    
-    //TODO: This naive implementation doesn't find the numerator, the JDO implementation does.
+
+    @Hidden
     public Numerator find(final NumeratorType type) {
         Numerator numerator = firstMatch(Numerator.class, new Filter<Numerator>() {
             @Override
@@ -43,18 +42,13 @@ public class Numerators extends AbstractFactoryAndRepository {
         return numerator;
     }
 
-    public Numerator find2(final NumeratorType type) {
-        throw new NotYetImplementedException();
-    }
-
-    public Numerator establish(NumeratorType type){
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    public Numerator establish(NumeratorType type) {
         Numerator numerator = find(type);
         return numerator == null ? create(type) : numerator;
     }
-    
-    
+
     // {{ allNumerators
-    @Prototype
     @ActionSemantics(Of.SAFE)
     public List<Numerator> allNumerators() {
         List<Numerator> allInstances = allInstances(Numerator.class);

@@ -7,14 +7,20 @@ import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
+
+import org.estatio.dom.EstatioTransactionalObject;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.estatio.dom.EstatioTransactionalObject;
+import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable(/*serializeRead = "true"*/)
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@PersistenceCapable(/* serializeRead = "true" */)
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Numerator extends EstatioTransactionalObject {
 
     // {{ Type (property)
@@ -34,6 +40,7 @@ public class Numerator extends EstatioTransactionalObject {
     // {{ Description (property)
     private String description;
 
+    @Title
     @MemberOrder(sequence = "1")
     public String getDescription() {
         return description;
@@ -49,6 +56,7 @@ public class Numerator extends EstatioTransactionalObject {
     private BigInteger lastIncrement;
 
     @MemberOrder(sequence = "1")
+    @Persistent
     public BigInteger getLastIncrement() {
         return lastIncrement;
     }
@@ -62,7 +70,7 @@ public class Numerator extends EstatioTransactionalObject {
     @Hidden
     public BigInteger increment() {
         BigInteger last = getLastIncrement();
-        if (last==null){
+        if (last == null) {
             last = BigInteger.ZERO;
         }
         BigInteger next = last.add(BigInteger.ONE);
