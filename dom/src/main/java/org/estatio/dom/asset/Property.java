@@ -36,17 +36,16 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
-@Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Properties.class)
 @PublishedObject
 public class Property extends EstatioTransactionalObject implements Comparable<Property> {
 
-    
     // {{ Reference (attribute, title)
     private String reference;
 
     @DescribedAs("Unique reference code for this property")
-    @Unique(name="REFERENCE_IDX")
+    @Unique(name = "REFERENCE_IDX")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @MemberOrder(sequence = "1.1")
     @Mask("AAAAAAAA")
@@ -57,6 +56,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     public void setReference(final String code) {
         this.reference = code;
     }
+
     // }}
 
     // {{ Name (attribute, title)
@@ -143,7 +143,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     private BigDecimal area;
 
     @MemberOrder(sequence = "1.7")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getArea() {
         return area;
     }
@@ -166,7 +166,6 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
 
     // }}
 
-    
     // {{ City (property)
     private String propertyName;
 
@@ -178,6 +177,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     public void setCity(final String propertyName) {
         this.propertyName = propertyName;
     }
+
     // }}
 
     // {{ Country (property)
@@ -226,14 +226,10 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         getActors().remove(actor);
     }
 
-    @MemberOrder(name="Actors", sequence = "1")
-    public PropertyActor addActor(
-           @Named("party") Party party, 
-           @Named("type") PropertyActorType type, 
-           @Named("startDate") @Optional LocalDate startDate, 
-           @Named("endDate") @Optional LocalDate endDate) {
+    @MemberOrder(name = "Actors", sequence = "1")
+    public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         PropertyActor propertyActor = propertyActorsRepo.findPropertyActor(this, party, type, startDate, endDate);
-        if (propertyActor ==  null) { 
+        if (propertyActor == null) {
             propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
             actors.add(propertyActor);
         }
@@ -247,12 +243,12 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @Join(column="PROPERTY_ID", generateForeignKey = "false")
+    @Join(column = "PROPERTY_ID", generateForeignKey = "false")
     @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder( name = "CommunicationChannels", sequence = "1")
+    @MemberOrder(name = "CommunicationChannels", sequence = "1")
     public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
@@ -261,17 +257,17 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         this.communicationChannels = communicationChannels;
     }
 
-    @MemberOrder(name="CommunicationChannels", sequence="1")
+    @MemberOrder(name = "CommunicationChannels", sequence = "1")
     public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
         CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
         communicationChannels.add(communicationChannel);
         return communicationChannel;
     }
-    
+
     @Hidden
-    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type){
-        for (CommunicationChannel c : communicationChannels){
-            if (c.getType().equals(type)){
+    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
+        for (CommunicationChannel c : communicationChannels) {
+            if (c.getType().equals(type)) {
                 return c;
             }
         }
@@ -283,6 +279,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     // {{ Units (set, bidir)
     @Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();
+
     @Render(Type.EAGERLY)
     @MemberOrder(sequence = "2", name = "Units")
     public SortedSet<Unit> getUnits() {
@@ -307,9 +304,8 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
 
     // }}
 
-    
-    // {{ injected: Units
-    
+    // {{ injected services
+
     private Units unitsRepo;
 
     public void setUnitsRepo(final Units unitsRepo) {
@@ -321,10 +317,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     public void setParties(Parties parties) {
         this.parties = parties;
     }
-    
-    // }}
 
-    // {{ injected: PropertyActors
     private PropertyActors propertyActorsRepo;
 
     public void setPropertyActorsRepo(final PropertyActors propertyActors) {
@@ -338,5 +331,4 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         return this.getName().compareTo(other.getName());
     }
 
-    
 }

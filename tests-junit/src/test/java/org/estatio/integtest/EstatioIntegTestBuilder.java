@@ -11,6 +11,7 @@ import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
+import org.estatio.api.Api;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;
@@ -64,7 +65,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new CommunicationChannelsJdo(),
                 new TaxesJdo(),
                 new ChargesJdo(),
-                new NumeratorsJdo()
+                new NumeratorsJdo(),
+                new Api()
                 );
     }
 

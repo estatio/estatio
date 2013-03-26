@@ -557,9 +557,12 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));
         }
-        LeaseTerm term = item.findTerm(startDate);
-        if (term == null) {
+        LeaseTerm term;
+        if (sequence.equals(BigInteger.ONE)) {
             term = item.createInitialTerm();
+        } else {
+            LeaseTerm currentTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
+            term = item.createNextTerm(currentTerm);
         }
         term.setSequence(sequence);
         term.setStartDate(startDate);

@@ -275,7 +275,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     @Hidden
-    public LeaseTerm findTermForSequence(BigInteger sequence) {
+    public LeaseTerm findTermWithSequence(BigInteger sequence) {
         for (LeaseTerm term : getTerms()) {
             if (sequence.equals(term.getSequence())) {
                 return term;
@@ -295,6 +295,12 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
+    @Hidden
+    @MemberOrder(/*name = "terms",*/ sequence = "11")
+    public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
+        LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm);
+        return term;
+    }
 
     // }}
 
