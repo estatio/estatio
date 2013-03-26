@@ -23,7 +23,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
 
 @PersistenceCapable
-@Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Parties.class)
 public abstract class Party extends EstatioTransactionalObject {
 
@@ -42,9 +42,20 @@ public abstract class Party extends EstatioTransactionalObject {
 
     // }}
 
+    // {{ Name (property)
+    private String name;
+
+    @MemberOrder(sequence = "2")
     @Title
-    @MemberOrder(sequence="2")
-    public abstract String getName();
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    // }}
 
     // {{ CommunicationChannels (list, unidir)
     @Join(column = "PARTY_ID", generateForeignKey = "false")
@@ -79,7 +90,6 @@ public abstract class Party extends EstatioTransactionalObject {
         getCommunicationChannels().remove(communicationChannel);
     }
 
-
     @MemberOrder(name = "CommunicationChannels", sequence = "10")
     public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
         CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
@@ -87,11 +97,11 @@ public abstract class Party extends EstatioTransactionalObject {
         return communicationChannel;
     }
 
-
     // }}
 
     // {{ Roles (set, bidir)
-    // REVIEW: changed this startDate set of PartyRoleType, which I suspect was wrong
+    // REVIEW: changed this startDate set of PartyRoleType, which I suspect was
+    // wrong
     // (in any case can't have sets of enums)
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
@@ -106,16 +116,16 @@ public abstract class Party extends EstatioTransactionalObject {
         this.roles = roles;
     }
 
-    @MemberOrder(name = "Roles", sequence = "20") 
+    @MemberOrder(name = "Roles", sequence = "20")
     public Party addRole() {
-        //TODO: some code here
+        // TODO: some code here
         return this;
     }
 
     // }}
 
     // {{ Registrations (set, bidir)
-    //@javax.jdo.annotations.Persistent(mappedBy = "party")
+    // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
     @MemberOrder(name = "Registrations", sequence = "21")

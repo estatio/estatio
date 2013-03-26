@@ -16,24 +16,8 @@
  */
 package org.estatio.dom.party;
 
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 public class Organisation extends Party {
-
-    // {{ Name (attribute, title)
-    private String name;
-
-    @Title
-    @MemberOrder(sequence = "10")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-    // }}
 
 }

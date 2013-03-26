@@ -38,6 +38,7 @@ public class Parties extends AbstractFactoryAndRepository {
         person.setInitials(initials);
         person.setLastName(lastName);
         person.setFirstName(firstName);
+        person.updating();
         persist(person);
         return person;
     }
@@ -114,7 +115,7 @@ public class Parties extends AbstractFactoryAndRepository {
     // {{ autoComplete (hidden)
     @Hidden
     public List<Party> autoComplete(String searchPhrase) {
-        return findPartiesByReference("*".concat(searchPhrase).concat("*"));
+        return findParties("*".concat(searchPhrase).concat("*"));
     }
     // }}
  

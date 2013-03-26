@@ -1,6 +1,5 @@
 package org.estatio.integtest.testing;
 
-
 import static org.hamcrest.CoreMatchers.is;
 
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
@@ -10,6 +9,7 @@ import org.estatio.jdo.PartiesJdo;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+
 public class PartyIntegrationTest {
 
     @Rule
@@ -18,13 +18,13 @@ public class PartyIntegrationTest {
     public IsisSystemForTest getIsft() {
         return webServerRule.getIsisSystemForTest();
     }
-    
+
     @Test
     public void partyCanBeFound() throws Exception {
         Parties parties = getIsft().getService(PartiesJdo.class);
         Assert.assertEquals(parties.findPartyByReference("HELLOWORLD").getReference(), "HELLOWORLD");
     }
-    
+
     @Test
     public void partyCanBeFoundOnPartialReference() {
         Parties parties = getIsft().getService(PartiesJdo.class);
@@ -32,9 +32,22 @@ public class PartyIntegrationTest {
     }
 
     @Test
-    public void partyCanBeFoundOnPartialName() {
+    public void partyCanBeFoundOnPartialName1() {
         Parties parties = getIsft().getService(PartiesJdo.class);
         Assert.assertThat(parties.findParties("*ello Wor*").size(), is(1));
     }
 
+    @Test
+    public void partyCanBeFoundOnPartialName2() {
+        Parties parties = getIsft().getService(PartiesJdo.class);
+        Assert.assertThat(parties.findParties("Doe, Jo*").size(), is(1));
+    }
+
+    @Test
+    public void partyCanBeFoundCaseInsensitive() {
+        Parties parties = getIsft().getService(PartiesJdo.class);
+        Assert.assertThat(parties.findParties("*OE, jO*").size(), is(1));
+    }
+
+    
 }

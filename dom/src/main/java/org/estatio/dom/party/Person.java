@@ -16,11 +16,8 @@
  */
 package org.estatio.dom.party;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -29,7 +26,6 @@ public class Person extends Party {
     // {{ Initials (attribute, title)
     private String initials;
 
-    @Title(prepend=" - ", sequence="3")
     @MemberOrder(sequence = "3")
     @Optional
     public String getInitials() {
@@ -41,20 +37,11 @@ public class Person extends Party {
     }
 
     // }}
-    
-    @Override
-    @Title
-    @MemberOrder(sequence = "2")
-    @Hidden(where = Where.OBJECT_FORMS)
-    public String getName() {
-        TitleBuffer tb = new TitleBuffer();
-        return tb.append(getLastName()).append(",", getFirstName()).toString(); 
-    }
 
     // {{ FirstName (attribute, title)
     private String firstName;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "3")
     @Optional
     public String getFirstName() {
         return firstName;
@@ -63,12 +50,13 @@ public class Person extends Party {
     public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
+
     // }}
 
     // {{ LastName (attribute, title)
     private String lastName;
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "4")
     public String getLastName() {
         return lastName;
     }
@@ -76,13 +64,13 @@ public class Person extends Party {
     public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
+
     // }}
 
     // {{ Gender (attribute)
     private PersonGenderType gender;
 
-    @MemberOrder(sequence = "4")
-    //@Optional
+    @MemberOrder(sequence = "5")
     public PersonGenderType getGender() {
         return gender;
     }
@@ -90,16 +78,23 @@ public class Person extends Party {
     public void setGender(final PersonGenderType gender) {
         this.gender = gender;
     }
-    
-//    public PersonGenderType defaultGender() {
-//        return PersonGenderType.UNKNOWN;
-//    }
+
+    public PersonGenderType defaultGender() {
+        return PersonGenderType.UNKNOWN;
+    }
+
     // }}
 
-    // {{ validate
+    // {{ Lifecycle methods
     public String validate() {
-        return getFirstName().isEmpty() || getLastName().isEmpty() ? "At least the first name or initials have to be filled in" : null;
+        return getFirstName().isEmpty() || getInitials().isEmpty() ? "At least the first name or initials have to be filled in" : null;
     }
+
+    public void updating() {
+        TitleBuffer tb = new TitleBuffer();
+        setName(tb.append(getLastName()).append(",", getFirstName()).toString());
+    }
+
     // }}
 
 }
