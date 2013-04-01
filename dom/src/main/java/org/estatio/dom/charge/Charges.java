@@ -15,7 +15,6 @@ import org.estatio.dom.utils.StringUtils;
 @Named("Charges")
 public class Charges extends AbstractFactoryAndRepository {
 
-    // {{ newCharge
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Charge newCharge(String reference) {
@@ -27,7 +26,6 @@ public class Charges extends AbstractFactoryAndRepository {
         }
         return charge;
     }
-    // }}
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
@@ -41,32 +39,10 @@ public class Charges extends AbstractFactoryAndRepository {
         });
     }
 
-    // {{ AllCharges
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Charge> allCharges() {
         return allInstances(Charge.class);
     }
-    // }}
-
-    // {{ newCharge
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "4")
-    public ChargeGroup newChargeGroup() {
-        ChargeGroup chargeGroup = newTransientInstance(ChargeGroup.class);
-        persist(chargeGroup);
-        return chargeGroup;
-    }
-    // }}
-    
-    // {{ AllChargeGroups
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "4")
-    public List<ChargeGroup> allChargeGroups() {
-        return allInstances(ChargeGroup.class);
-    }
-    // }}
-
 }

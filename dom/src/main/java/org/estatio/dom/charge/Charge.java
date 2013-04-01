@@ -17,7 +17,7 @@ public class Charge extends EstatioRefDataObject {
     // {{ Reference (property)
     private String reference;
 
-    @Title
+    @Title(sequence="1")
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
@@ -61,6 +61,7 @@ public class Charge extends EstatioRefDataObject {
     private String description;
 
     @MemberOrder(sequence = "4")
+    @Title(sequence = "2", prepend = "-")
     public String getDescription() {
         return description;
     }
