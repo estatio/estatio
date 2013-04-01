@@ -2,12 +2,10 @@ package org.estatio.dom.currency;
 
 import javax.jdo.annotations.PersistenceCapable;
 
-import org.estatio.dom.EstatioRefDataObject;
-
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.estatio.dom.EstatioRefDataObject;
 
 @PersistenceCapable
 @Bounded
@@ -31,7 +29,7 @@ public class Currency extends EstatioRefDataObject {
     // {{ Description (property)
     private String description;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "2")
     public String getDescription() {
         return description;
     }
