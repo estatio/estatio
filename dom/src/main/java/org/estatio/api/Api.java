@@ -406,7 +406,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         LeaseItem item = lease.findItem(itemType, startDate, sequence);
         if (item == null) {
-            item = lease.newItem();
+            item = lease.newItem(itemType);
         }
         Charge charge = charges.findChargeByReference(chargeReference);
         if (charge == null) {
