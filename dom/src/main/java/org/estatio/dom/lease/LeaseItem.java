@@ -19,6 +19,7 @@ import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
@@ -59,6 +60,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     private BigInteger sequence;
 
     @MemberOrder(sequence = "1")
+    @Hidden
     public BigInteger getSequence() {
         return sequence;
     }
@@ -152,6 +154,8 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     private LocalDate nextDueDate;
 
     @MemberOrder(sequence = "7")
+    @Disabled
+    @Optional //TODO: Wicket still marks disabled fields a mandatory. Don't know if that
     public LocalDate getNextDueDate() {
         return nextDueDate;
     }
@@ -166,6 +170,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     private InvoicingFrequency invoicingFrequency;
 
     @MemberOrder(sequence = "12")
+    @Hidden(where = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
     }
@@ -180,6 +185,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     private PaymentMethod paymentMethod;
 
     @MemberOrder(sequence = "13")
+    @Hidden(where = Where.PARENTED_TABLES)
     public PaymentMethod getPayymentMethod() {
         return paymentMethod;
     }
@@ -209,13 +215,10 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // }}
 
     // {{ CurrentValue
+    @Disabled
+    @Optional //TODO: Wicket still marks disabled fields a mandatory. Don't know if that
     public BigDecimal getCurrentValue() {
-        for (LeaseTerm term : getTerms()) {
-            if (CalenderUtils.isBetween(LocalDate.now(), term.getStartDate(), term.getEndDate())) {
-                return term.getValue();
-            }
-        }
-        return null;
+        return getValueForDate(LocalDate.now());
     }
 
     @Hidden

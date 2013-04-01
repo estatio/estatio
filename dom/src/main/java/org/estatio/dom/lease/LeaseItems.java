@@ -30,9 +30,10 @@ public class LeaseItems extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
-    public LeaseItem newLeaseItem(final Lease lease) {
+    public LeaseItem newLeaseItem(final Lease lease, final LeaseItemType type) {
         LeaseItem leaseItem = newTransientInstance(LeaseItem.class);
         leaseItem.setLease(lease);
+        leaseItem.setType(type);
         persist(leaseItem);
         lease.addToItems(leaseItem);
         return leaseItem;

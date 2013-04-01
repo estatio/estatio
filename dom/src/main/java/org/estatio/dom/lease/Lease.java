@@ -358,8 +358,8 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     }
 
     @MemberOrder(name="Items",sequence = "31")
-    public LeaseItem newItem() {
-        LeaseItem leaseItem = leaseItems.newLeaseItem(this);
+    public LeaseItem newItem(LeaseItemType type) {
+        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
         return leaseItem;
     }
 
