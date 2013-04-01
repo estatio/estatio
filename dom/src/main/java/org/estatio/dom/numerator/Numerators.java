@@ -25,6 +25,16 @@ public class Numerators extends AbstractFactoryAndRepository {
     // }}
 
     @Hidden
+    public NumeratorForInvoiceNumber dummyNFIN() {
+        return null;
+    }
+    
+    @Hidden 
+    public NumeratorForCollectionNumber dummyNFCN() {
+        return null;
+    }
+    
+    @Hidden
     public Numerator create(NumeratorType type) {
         Numerator numerator = type.create(getContainer());
         persist(numerator);
