@@ -14,7 +14,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.financial.BankAccount;
+import org.estatio.dom.financial.BankAccount;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;

@@ -1,4 +1,4 @@
-package org.estatio.financial;
+package org.estatio.dom.financial;
 
 import javax.jdo.annotations.PersistenceCapable;
 

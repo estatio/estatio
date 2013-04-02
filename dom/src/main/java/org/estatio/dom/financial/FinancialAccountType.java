@@ -1,4 +1,4 @@
-package org.estatio.financial;
+package org.estatio.dom.financial;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
