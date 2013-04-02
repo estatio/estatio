@@ -7,7 +7,10 @@ package org.estatio.dom.party;
  */
 public enum PartyRoleType {
 
-    OWNER("Owner"), TENANT("Tenant"), LANDLORD("Landlord");
+    OWNER("Owner"), 
+    TENANT("Tenant"), 
+    LANDLORD("Landlord"),
+    BANK("Bank");
 
     private final String title;
 

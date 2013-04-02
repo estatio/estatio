@@ -1,5 +1,7 @@
 package org.estatio.dom.party;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -12,6 +14,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.financial.BankAccount;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;
@@ -143,6 +146,19 @@ public abstract class Party extends EstatioTransactionalObject {
         return this;
     }
 
+    // }}
+
+    // {{ BankAccounts (Collection)
+    private SortedSet<BankAccount> bankAccounts = new TreeSet<BankAccount>();
+
+    @MemberOrder(sequence = "22")
+    public Set<BankAccount> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public void setBankAccounts(final SortedSet<BankAccount> bankAccounts) {
+        this.bankAccounts = bankAccounts;
+    }
     // }}
 
 }
