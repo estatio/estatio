@@ -53,22 +53,24 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     public Party getCurrentLandlord() {
         // TODO:test to see if this is faster:
         // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
-        Iterable<Party> landlords = Iterables.transform(
-                Iterables.filter(getActors(), currentLeaseActorOfType(LeaseActorType.LANDLORD)), partyOfLeaseActor());
-        return firstElseNull(landlords);
+        return firstElseNull(LeaseActorType.LANDLORD);
     }
 
     @MemberOrder(sequence="3")
     public Party getCurrentTenant() {
         // TODO:test to see if this is faster:
         // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
-        Iterable<Party> landlords = Iterables.transform(
-                Iterables.filter(getActors(), currentLeaseActorOfType(LeaseActorType.TENANT)), partyOfLeaseActor());
-        return firstElseNull(landlords);
+        return firstElseNull(LeaseActorType.TENANT);
     }
 
-    private Party firstElseNull(Iterable<Party> landlords) {
-        Iterator<Party> iterator = landlords.iterator();
+    private Party firstElseNull(LeaseActorType lat) {
+        Iterable<Party> parties = Iterables.transform(
+                Iterables.filter(getActors(), currentLeaseActorOfType(lat)), partyOfLeaseActor());
+        return firstElseNull(parties);
+    }
+
+    public static <T> T firstElseNull(Iterable<T> elements) {
+        Iterator<T> iterator = elements.iterator();
         return iterator.hasNext()? iterator.next(): null;
     }
 
