@@ -4,7 +4,9 @@ public enum AgreementRoleType {
 
     TENANT("Tenant"), 
     LANDLORD("Landlord"),
-    MANAGER("Manager");
+    MANAGER("Manager"),
+    OWNER("Owner"),
+    EMPLOYEE("Employee");
 
     private final String title;
 

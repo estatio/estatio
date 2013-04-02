@@ -1,6 +1,5 @@
 package org.estatio.agreement;
 
-import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -9,7 +8,14 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bulk;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -18,16 +24,9 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
 
     // {{ Reference (property)
@@ -47,31 +46,31 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
 
     // {{ Derived attribute
 
-    @MemberOrder(sequence="2")
-    public Party getCurrentLandlord() {
+    @MemberOrder(sequence = "2")
+    public Party getPrimaryParty() {
         // TODO:test to see if this is faster:
-        // agreementRoles.findAgreementRoleWithType(this, AgreementRoleType.LANDLORD, LocalDate.now())
-        Iterable<Party> landlords = Iterables.transform(
-                Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.LANDLORD)), partyOfAgreementRole());
+        // agreementRoles.findAgreementRoleWithType(this,
+        // AgreementRoleType.LANDLORD, LocalDate.now())
+        Iterable<Party> landlords = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.LANDLORD)), partyOfAgreementRole());
         return firstElseNull(landlords);
     }
 
-    @MemberOrder(sequence="3")
-    public Party getCurrentTenant() {
+    @MemberOrder(sequence = "3")
+    public Party getSecondaryParty() {
         // TODO:test to see if this is faster:
-        // agreementRoles.findAgreementRoleWithType(this, AgreementRoleType.LANDLORD, LocalDate.now())
-        Iterable<Party> landlords = Iterables.transform(
-                Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.TENANT)), partyOfAgreementRole());
+        // agreementRoles.findAgreementRoleWithType(this,
+        // AgreementRoleType.LANDLORD, LocalDate.now())
+        Iterable<Party> landlords = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.TENANT)), partyOfAgreementRole());
         return firstElseNull(landlords);
     }
 
     private Party firstElseNull(Iterable<Party> landlords) {
         Iterator<Party> iterator = landlords.iterator();
-        return iterator.hasNext()? iterator.next(): null;
+        return iterator.hasNext() ? iterator.next() : null;
     }
 
     private Function<AgreementRole, Party> partyOfAgreementRole() {
-        return new Function<AgreementRole, Party>(){
+        return new Function<AgreementRole, Party>() {
             public Party apply(AgreementRole la) {
                 return la.getParty();
             }
@@ -91,7 +90,7 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
     // {{ Name (property)
     private String name;
 
-    @MemberOrder(sequence="4")
+    @MemberOrder(sequence = "4")
     @Optional
     public String getName() {
         return name;
@@ -234,7 +233,7 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
     @Persistent(mappedBy = "agreement")
     private SortedSet<AgreementRole> actors = new TreeSet<AgreementRole>();
 
-    @MemberOrder(name="Roles", sequence = "11")
+    @MemberOrder(name = "Roles", sequence = "11")
     @Render(Type.EAGERLY)
     public SortedSet<AgreementRole> getRoles() {
         return actors;
@@ -262,7 +261,7 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
         getRoles().remove(agreementRole);
     }
 
-    @MemberOrder(name="Roles", sequence = "11")
+    @MemberOrder(name = "Roles", sequence = "11")
     public AgreementRole addRole(@Named("party") Party party, @Named("type") AgreementRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         AgreementRole agreementRole = findRole(party, type, startDate);
         if (agreementRole == null) {
@@ -275,90 +274,19 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
 
     // }}
 
-    // {{ Items (Collection)
-    private SortedSet<AgreementItem> items = new TreeSet<AgreementItem>();
-
-    @Render(Type.EAGERLY)
-    @MemberOrder(name="Items",sequence = "30")
-    public SortedSet<AgreementItem> getItems() {
-        return items;
-    }
-
-    public void setItems(final SortedSet<AgreementItem> items) {
-        this.items = items;
-    }
-
-    public void addToItems(final AgreementItem agreementItem) {
-        // check for no-op
-        if (agreementItem == null || getItems().contains(agreementItem)) {
-            return;
-        }
-        // associate new
-        getItems().add(agreementItem);
-    }
-
-    public void removeFromItems(final AgreementItem agreementItem) {
-        // check for no-op
-        if (agreementItem == null || !getItems().contains(agreementItem)) {
-            return;
-        }
-        // dissociate existing
-        getItems().remove(agreementItem);
-    }
-
-    @MemberOrder(name="Items",sequence = "31")
-    public AgreementItem newItem(AgreementItemType type) {
-        AgreementItem agreementItem = agreementItems.newAgreementItem(this, type);
-        return agreementItem;
-    }
-
     @Hidden
     public AgreementRole findRole(Party party, AgreementRoleType type, LocalDate startDate) {
         return agreementRoles.findAgreementRole(this, party, type, startDate, startDate);
     }
-    
-    @Hidden 
+
+    @Hidden
     public AgreementRole findRoleWithType(AgreementRoleType agreementRoleType, LocalDate date) {
         return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
     }
 
-    @Hidden
-    public AgreementItem findItem(AgreementItemType type, LocalDate startDate, BigInteger sequence) {
-        // TODO: better/faster filter options? -> Use predicate
-        for (AgreementItem item : getItems()) {
-            LocalDate itemStartDate = item.getStartDate();
-            AgreementItemType itemType = item.getType();
-            if (itemType.equals(type) && itemStartDate.equals(startDate) && item.getSequence().equals(sequence)) {
-                return item;
-            }
-        }
-        return null;
-    }
-
-    // }}
-
-    // {{ Action: verify
-    @Bulk
-    public Agreement verify() {
-        for (AgreementItem item : getItems()) {
-            item.verify();
-        }
-        return this;
-    }
-
-    // }}
-
     @Override
     public int compareTo(Agreement other) {
         return this.getReference().compareTo(other.getReference());
-    }
-
-
-    // {{ injected services
-    private AgreementItems agreementItems;
-
-    public void setAgreementItems(final AgreementItems agreementItems) {
-        this.agreementItems = agreementItems;
     }
 
     private AgreementRoles agreementRoles;
