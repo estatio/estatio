@@ -1,13 +1,27 @@
 package org.estatio.dom.financial;
 
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 
 @PersistenceCapable
-public class FinancialAccount extends EstatioTransactionalObject {
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
+@Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+public class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>{
 
     // {{ Reference (property)
     private String reference;
@@ -26,7 +40,8 @@ public class FinancialAccount extends EstatioTransactionalObject {
     // {{ Name (property)
     private String name;
 
-    @MemberOrder(sequence = "1")
+    @Title
+    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }
@@ -39,7 +54,8 @@ public class FinancialAccount extends EstatioTransactionalObject {
 
     // {{ Type (property)
     private FinancialAccountType type;
-
+    
+    @Hidden
     @MemberOrder(sequence = "1")
     public FinancialAccountType getType() {
         return type;
@@ -62,5 +78,11 @@ public class FinancialAccount extends EstatioTransactionalObject {
         this.owner = owner;
     }
     // }}
+
+    @Override
+    public int compareTo(FinancialAccount o) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 }

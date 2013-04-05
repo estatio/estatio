@@ -1,6 +1,5 @@
 package org.estatio.dom.party;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -8,22 +7,21 @@ import java.util.TreeSet;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.financial.BankAccount;
-
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.Render.Type;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountType;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -106,7 +104,7 @@ public abstract class Party extends EstatioTransactionalObject {
     // REVIEW: changed this startDate set of PartyRoleType, which I suspect was
     // wrong
     // (in any case can't have sets of enums)
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
+    @Persistent(mappedBy = "party")
     private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
 
     @MemberOrder(name = "Roles", sequence = "20")
@@ -148,17 +146,57 @@ public abstract class Party extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ BankAccounts (Collection)
-    private SortedSet<BankAccount> bankAccounts = new TreeSet<BankAccount>();
+    // {{ accounts (Collection)
+    @Persistent(mappedBy="owner")
+    private SortedSet<FinancialAccount> accounts = new TreeSet<FinancialAccount>();
 
-    @MemberOrder(sequence = "22")
-    public Set<BankAccount> getBankAccounts() {
-        return bankAccounts;
+    @MemberOrder(name = "Accounts", sequence = "22")
+    public Set<FinancialAccount> getAccounts() {
+        return accounts;
     }
 
-    public void setBankAccounts(final SortedSet<BankAccount> bankAccounts) {
-        this.bankAccounts = bankAccounts;
+    public void setAccounts(final SortedSet<FinancialAccount> accounts) {
+        this.accounts = accounts;
     }
+
+    public void addToAccounts(final FinancialAccount account) {
+        // check for no-op
+        if (account == null || getAccounts().contains(account)) {
+            return;
+        }
+        // associate new
+        getAccounts().add(account);
+        // additional business logic
+        onAddToAccounts(account);
+    }
+
+    public void removeFromAccounts(final FinancialAccount account) {
+        // check for no-op
+        if (account == null || !getAccounts().contains(account)) {
+            return;
+        }
+        // dissociate existing
+        getAccounts().remove(account);
+        // additional business logic
+        onRemoveFromAccounts(account);
+    }
+
+    protected void onAddToAccounts(final FinancialAccount account) {
+        account.setOwner(this);
+    }
+
+    protected void onRemoveFromAccounts(final FinancialAccount account) {
+        account.setOwner(null);
+    }
+    
+    @MemberOrder(name = "Accounts", sequence = "10")
+    public FinancialAccount addAccount(final FinancialAccountType financialAccountType) {
+        FinancialAccount financialAccount = financialAccountType.createAccount(getContainer());
+        addToAccounts(financialAccount);
+        return financialAccount;
+    }
+
     // }}
+    
 
 }

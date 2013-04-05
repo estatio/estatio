@@ -1,20 +1,32 @@
 package org.estatio.dom.financial;
 
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.IBANHelper;
 
 @PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
+@Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class BankAccount extends FinancialAccount {
 
-    // {{ Bank (property)
     private Party bank;
 
     @Optional
-    @MemberOrder(sequence = "10")
+    @MemberOrder(name = "Account Details", sequence = "10")
     public Party getBank() {
         return bank;
     }
@@ -23,12 +35,9 @@ public class BankAccount extends FinancialAccount {
         this.bank = bank;
     }
 
-    // }}
-
-    // {{ Country (property)
     private Country country;
 
-    @MemberOrder(sequence = "11")
+    @MemberOrder(name = "Account Details", sequence = "11")
     public Country getCountry() {
         return country;
     }
@@ -37,12 +46,9 @@ public class BankAccount extends FinancialAccount {
         this.country = country;
     }
 
-    // }}
-
-    // {{ IBAN (property)
     private String IBAN;
 
-    @MemberOrder(sequence = "12")
+    @MemberOrder(name = "Account Details", sequence = "12")
     public String getIBAN() {
         return IBAN;
     }
@@ -51,12 +57,9 @@ public class BankAccount extends FinancialAccount {
         this.IBAN = IBAN;
     }
 
-    // }}
-
-    // {{ NationalCheckCode (property)
     private String nationalCheckCode;
 
-    @MemberOrder(sequence = "13")
+    @MemberOrder(name = "Account Details", sequence = "13")
     public String getNationalCheckCode() {
         return nationalCheckCode;
     }
@@ -65,12 +68,9 @@ public class BankAccount extends FinancialAccount {
         this.nationalCheckCode = nationalCheckCode;
     }
 
-    // }}
-
-    // {{ NationalBankCode (property)
     private String nationalBankCode;
 
-    @MemberOrder(sequence = "14")
+    @MemberOrder(name = "Account Details", sequence = "14")
     public String getNationalBankCode() {
         return nationalBankCode;
     }
@@ -79,12 +79,9 @@ public class BankAccount extends FinancialAccount {
         this.nationalBankCode = nationalBankCode;
     }
 
-    // }}
-
-    // {{ BranchCode (property)
     private String branchCode;
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(name = "Account Details", sequence = "15")
     public String getBranchCode() {
         return branchCode;
     }
@@ -93,12 +90,9 @@ public class BankAccount extends FinancialAccount {
         this.branchCode = branchCode;
     }
 
-    // }}
-
-    // {{ AccountNumber (property)
     private String accountNumber;
 
-    @MemberOrder(sequence = "8")
+    @MemberOrder(name = "Account Details", sequence = "16")
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -106,6 +100,10 @@ public class BankAccount extends FinancialAccount {
     public void setAccountNumber(final String accountNumber) {
         this.accountNumber = accountNumber;
     }
-    // }}
 
+    public void checkAccount() {
+        IBANHelper ibanHelper = new IBANHelper(getIBAN());
+        ibanHelper.update(this);
+    }
+    
 }
