@@ -46,7 +46,6 @@ import org.apache.isis.viewer.junit.Services;
     @Service(LeaseUnits.class),
     @Service(Invoices.class),
     @Service(Charges.class),
-    @Service(Indices.class),
     @Service(Taxes.class),
     })
 public abstract class AbstractTest {

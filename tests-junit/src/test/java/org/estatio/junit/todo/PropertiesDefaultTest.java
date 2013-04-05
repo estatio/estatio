@@ -10,7 +10,6 @@ import org.apache.isis.viewer.junit.Fixtures;
 import org.estatio.dom.asset.Property;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.junit.AbstractTest;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -24,7 +23,8 @@ public class PropertiesDefaultTest extends AbstractTest {
         assertThat(property, is(not(nullValue())));
         assertThat(property.getReference(), is("CODE-1"));
         assertThat(property.getName(), is("Some name"));
-        assertThat(getDomainObjectContainer().isPersistent(property), is(true));
+        assertThat(getDomainObjectContainer().isPersistent(property), is(true));        
     }
+    
 
 }

@@ -55,7 +55,7 @@ public class InvoiceTest_assignInvoiceNumber {
     @Test
     public void hasNoInvoiceNumber() {
         invoice.assignInvoiceNumber();
-        assertThat(invoice.getInvoiceNumber(), is("TEST-00011"));
+        assertThat(invoice.getInvoiceNumber(), is("INV-00011"));
     }
 
 

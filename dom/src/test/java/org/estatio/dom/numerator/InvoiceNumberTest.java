@@ -22,9 +22,9 @@ public class InvoiceNumberTest {
     @Test
     public void test() {
         assertThat(in.assign(invoice), is(true));
-        Assert.assertEquals("TEST-00001", invoice.getInvoiceNumber());
+        Assert.assertEquals("INV-00001", invoice.getInvoiceNumber());
         assertThat(in.assign(invoice), is(false));
-        Assert.assertEquals("TEST-00001", invoice.getInvoiceNumber());
+        Assert.assertEquals("INV-00001", invoice.getInvoiceNumber());
     }
 
 }

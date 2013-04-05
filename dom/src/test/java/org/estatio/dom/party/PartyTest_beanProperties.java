@@ -10,7 +10,7 @@ public class PartyTest_beanProperties {
 	public static class PartyForTesting extends Person {}
 	@Test
 	public void test() {
-		new PojoTester().exercise(new PartyForTesting(), FilterSet.excluding("container", "communicationChannels", "roles", "registrations"));
+		new PojoTester().exercise(new PartyForTesting(), FilterSet.excluding("container", "communicationChannels", "roles", "registrations", "accounts"));
 	}
 
 }

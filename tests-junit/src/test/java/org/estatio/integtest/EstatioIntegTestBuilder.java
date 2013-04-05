@@ -1,8 +1,5 @@
 package org.estatio.integtest;
 
-import org.apache.log4j.Level;
-
-
 import org.apache.isis.applib.fixtures.InstallableFixture;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
@@ -10,12 +7,15 @@ import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
-
+import org.apache.log4j.Level;
 import org.estatio.api.Api;
 import org.estatio.fixture.EstatioFixture;
+import org.estatio.jdo.ChargeGroupsJdo;
 import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;
 import org.estatio.jdo.CountriesJdo;
+import org.estatio.jdo.CurrenciesJdo;
+import org.estatio.jdo.FinancialAccountsJdo;
 import org.estatio.jdo.IndicesJdo;
 import org.estatio.jdo.InvoicesJdo;
 import org.estatio.jdo.LeaseActorsJdo;
@@ -51,6 +51,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new RegisterEntities(),
                 new CountriesJdo(),
                 new StatesJdo(),
+                new CurrenciesJdo(),
                 new IndicesJdo(),
                 new PropertiesJdo(),
                 new UnitsJdo(),
@@ -65,6 +66,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new CommunicationChannelsJdo(),
                 new TaxesJdo(),
                 new ChargesJdo(),
+                new ChargeGroupsJdo(),
+                new FinancialAccountsJdo(),
                 new NumeratorsJdo(),
                 new Api()
                 );
