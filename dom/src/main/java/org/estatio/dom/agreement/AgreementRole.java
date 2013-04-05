@@ -1,4 +1,4 @@
-package org.estatio.agreement;
+package org.estatio.dom.agreement;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -21,17 +21,17 @@ import org.apache.isis.applib.annotation.Where;
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole> {
 
     // {{ Agreement (property)
-    private Agreement lease;
+    private Agreement agreement;
 
     @Title(sequence = "3", prepend = ":")
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Agreement getAgreement() {
-        return lease;
+        return agreement;
     }
 
     public void setAgreement(final Agreement lease) {
-        this.lease = lease;
+        this.agreement = lease;
     }
 
     // }}

@@ -1,11 +1,10 @@
-package org.estatio.agreement;
+package org.estatio.dom.agreement;
 
 import java.util.Arrays;
 import java.util.List;
 
 public enum AgreementType {
 
-    DEFAULT("Default"),
     LEASE("Lease", AgreementRoleType.TENANT, AgreementRoleType.LANDLORD),
     MANDATE("Mandate", AgreementRoleType.OWNER, AgreementRoleType.EMPLOYEE);
 

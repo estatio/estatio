@@ -1,4 +1,4 @@
-package org.estatio.agreement;
+package org.estatio.dom.agreement;
 
 import java.util.List;
 
