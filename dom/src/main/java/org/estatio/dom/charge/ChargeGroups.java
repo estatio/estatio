@@ -23,7 +23,7 @@ public class ChargeGroups extends AbstractFactoryAndRepository {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public Charge findChargeByReference(final String reference) {
+    public ChargeGroup findChargeGroupByReference(final String reference) {
         throw new NotImplementedException();
     }
 
