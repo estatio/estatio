@@ -26,7 +26,7 @@ public class BankAccount extends FinancialAccount {
     private Party bank;
 
     @Optional
-    @MemberOrder(name = "Account Details", sequence = "10")
+    @MemberOrder(name = "Account Details", sequence = "9")
     public Party getBank() {
         return bank;
     }
@@ -35,6 +35,22 @@ public class BankAccount extends FinancialAccount {
         this.bank = bank;
     }
 
+    // {{ BankAccountType (property)
+    private BankAccountType bankAccountType;
+
+    @MemberOrder(name = "Account Details", sequence = "10")
+    public BankAccountType getBankAccountType() {
+        return bankAccountType;
+    }
+
+    public void setBankAccountType(final BankAccountType bankAccountType) {
+        this.bankAccountType = bankAccountType;
+    }
+    // }}
+
+
+    
+    
     private Country country;
 
     @MemberOrder(name = "Account Details", sequence = "11")

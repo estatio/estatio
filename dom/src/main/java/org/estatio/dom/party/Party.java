@@ -151,6 +151,7 @@ public abstract class Party extends EstatioTransactionalObject {
     private SortedSet<FinancialAccount> accounts = new TreeSet<FinancialAccount>();
 
     @MemberOrder(name = "Accounts", sequence = "22")
+    @Render(Type.EAGERLY)
     public Set<FinancialAccount> getAccounts() {
         return accounts;
     }
@@ -189,7 +190,7 @@ public abstract class Party extends EstatioTransactionalObject {
         account.setOwner(null);
     }
     
-    @MemberOrder(name = "Accounts", sequence = "10")
+    @MemberOrder(name = "Accounts", sequence = "23")
     public FinancialAccount addAccount(final FinancialAccountType financialAccountType) {
         FinancialAccount financialAccount = financialAccountType.createAccount(getContainer());
         addToAccounts(financialAccount);

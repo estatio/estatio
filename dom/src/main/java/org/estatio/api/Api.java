@@ -19,6 +19,13 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyActor;
@@ -33,6 +40,9 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.BankAccountType;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -45,7 +55,6 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
@@ -62,14 +71,6 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 
 @Hidden
 public class Api extends AbstractFactoryAndRepository {
@@ -569,6 +570,34 @@ public class Api extends AbstractFactoryAndRepository {
         term.setEndDate(endDate);
         return term;
     }
+    
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putBankAccount(
+            //start generic fields
+            @Named("reference") @Optional String reference, 
+            @Named("name") @Optional String name, 
+            @Named("bankAccountType") @Optional String bankAccountType,
+            @Named("ownerReference") String ownerReference, 
+            @Named("iban") @Optional String iban, 
+            @Named("nationalCheckCode") @Optional String nationalCheckCode,
+            @Named("nationalBankCode") @Optional String nationalBankCode,
+            @Named("branchCode") @Optional String branchCode,
+            @Named("accountNumber") @Optional String accountNumber
+            ){
+        BankAccount bankAccount = (BankAccount) financialAccounts.findByReference(reference);
+        Party owner = parties.findPartyByReference(ownerReference);
+        if (owner==null) return;
+        if (bankAccount == null) {
+            bankAccount = financialAccounts.newBankAccount(iban);
+        }
+        bankAccount.setReference(reference);
+        bankAccount.setAccountNumber(accountNumber);
+        bankAccount.setBranchCode(branchCode);
+        bankAccount.setName(name);
+        bankAccount.setNationalBankCode(nationalBankCode);
+        bankAccount.setNationalCheckCode(nationalCheckCode);
+        bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
+    }    
 
     private Countries countries;
 
@@ -624,12 +653,6 @@ public class Api extends AbstractFactoryAndRepository {
         this.leaseUnits = leaseUnits;
     }
 
-    private LeaseItems leaseItems;
-
-    public void setLeaseItemsRepository(final LeaseItems leaseItems) {
-        this.leaseItems = leaseItems;
-    }
-
     private Taxes taxes;
 
     public void setTaxesRepsitory(final Taxes taxes) {
@@ -646,6 +669,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void setIndexRepo(final Indices indices) {
         this.indices = indices;
+    }
+    
+    private FinancialAccounts financialAccounts;
+    
+    public void setFinancialAccounts(FinancialAccounts financialAccounts) {
+        this.financialAccounts = financialAccounts;
     }
 
 }

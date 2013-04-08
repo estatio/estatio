@@ -1,12 +1,12 @@
 package org.estatio.dom.utils;
 
-import org.apache.commons.validator.routines.checkdigit.IBANCheckDigit;
 import org.estatio.dom.financial.BankAccount;
 
 public class IBANHelper {
 
     public enum IBANFormat {
-        IT("ITkk xaaa aabb bbbc cccc cccc ccc"), NL("NLkk aaaa cccc cccc cc");
+        IT("ITkk xaaa aabb bbbc cccc cccc ccc"), 
+        NL("NLkk aaaa cccc cccc cc");
 
         private String format;
 
