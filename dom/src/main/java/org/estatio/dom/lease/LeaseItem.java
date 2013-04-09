@@ -22,6 +22,7 @@ import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -312,6 +313,14 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     public LeaseItem verify() {
         for (LeaseTerm term : getTerms()) {
             term.verify();
+        }
+        return this;
+    }
+    
+    public LeaseItem calculate(@Named("Due date") LocalDate dueDate) {
+        for (LeaseTerm term : getTerms()) {
+            getContainer().resolve(term); //TODO: need to call resolve, otherwise services are not injected when running in the wicket viewer.
+            term.calculate(dueDate);
         }
         return this;
     }

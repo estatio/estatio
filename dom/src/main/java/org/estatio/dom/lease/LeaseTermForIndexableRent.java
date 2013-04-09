@@ -17,6 +17,7 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.utils.MathUtils;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
@@ -232,9 +233,16 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     public LeaseTerm verify() {
         IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
         calculator.calculate(this);
-        if ((getValue() == null || getValue().compareTo(BigDecimal.ZERO) == 0) && (getIndexedValue() != null && getIndexedValue().compareTo(BigDecimal.ZERO) > 0)) {
-            setValue(getIndexedValue());
+        if (getStatus() == LeaseTermStatus.NEW) {
+            if (MathUtils.isNotZeroOrNull(getIndexedValue())) {
+                setValue(getIndexedValue());
+            } else {
+                setValue(getBaseValue());
+            }
+        } else {
+            // TODO: handle updating values for other statuses
         }
+
         if (getStartDate().compareTo(LocalDate.now()) < 0) {
             LeaseTermForIndexableRent nextTerm = (LeaseTermForIndexableRent) createOrUpdateNext();
             if (nextTerm != null) {
@@ -244,8 +252,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         return this;
     }
 
+    @Override
     public LeaseTerm approve() {
-        setValue(getIndexedValue());
         super.approve();
         return this;
     }
@@ -256,31 +264,18 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public LeaseTerm createOrUpdateNext() {
-        LocalDate newStartDate = this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
-        LocalDate endDate = getLeaseItem().getEndDate();
-        LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
-        if (newStartDate.isAfter(maxEndDate)) {
-            // date is after end date, do nothing
-            return null;
-        } else {
-            LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) getNextTerm();
-            if (getNextTerm() == null) {
-                term = (LeaseTermForIndexableRent) leaseTermsService.newLeaseTerm(this.getLeaseItem());
-                this.modifyNextTerm(term);
-            }
-            // new start Date
-            term.setStartDate(newStartDate);
-            // index
-            term.setIndex(this.getIndex());
-            term.setBaseIndexStartDate(this.getNextIndexStartDate());
-            term.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
-            term.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
-            term.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
-            // value
-            term.setBaseValue(this.getValue());
-            // set fields on this term
-            return term;
+        LeaseTermForIndexableRent nextTerm = (LeaseTermForIndexableRent) createOrUpdateNext(this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1));
+        if (nextTerm != null){
+            //Do term sepecific stuff
+            nextTerm.setIndex(this.getIndex());
+            nextTerm.setBaseIndexStartDate(this.getNextIndexStartDate());
+            nextTerm.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
+            nextTerm.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
+            nextTerm.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
+            nextTerm.setBaseValue(this.getValue());
+            return nextTerm;
         }
+        return this;
     }
 
     // }}

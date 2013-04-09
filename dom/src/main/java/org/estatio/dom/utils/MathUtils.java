@@ -12,4 +12,13 @@ public class MathUtils {
         return input.round(mc);
     }
 
+    public static boolean isZeroOrNull(BigDecimal input) {
+        if (input == null) return true;
+        if (input.compareTo(BigDecimal.ZERO) == 0) return true;
+        return false;
+    }
+
+    public static boolean isNotZeroOrNull(BigDecimal input) {
+        return !isZeroOrNull(input);
+    }
 }

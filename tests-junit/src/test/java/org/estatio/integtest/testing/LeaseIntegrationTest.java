@@ -16,6 +16,7 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
@@ -24,6 +25,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.LeaseTermsJdo;
 import org.estatio.jdo.LeasesJdo;
+import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,7 +42,9 @@ public class LeaseIntegrationTest {
 
     private Leases leases;
     private LeaseTerms leaseTerms;
-    
+    private Lease lease;
+    private Parties parties;
+
     @Rule
     public IntegrationSystemForTestRule isisSystemRule = new IntegrationSystemForTestRule();
 
@@ -49,103 +53,91 @@ public class LeaseIntegrationTest {
     }
 
     @Before
-    public void setup(){
+    public void setup() {
         leases = getIsft().getService(LeasesJdo.class);
         leaseTerms = getIsft().getService(LeaseTermsJdo.class);
+        parties = getIsft().getService(Parties.class);
+        lease = leases.findByReference("OXF-TOPMODEL-001");
     }
-    
+
     @BeforeClass
     public static void setUpLogging() throws Exception {
         PropertyConfigurator.configure(Resources.getResource(LeaseIntegrationTest.class, "logging.properties"));
     }
-    
-    
+
     @Test
     public void t01_numberOfLeaseActorsIs3() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
         assertThat(lease.getActors().size(), is(3));
     }
 
     @Test
     public void t02_leaseActorCanBeFound() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        Parties parties = getIsft().getService(Parties.class);
         Party party = parties.findPartyByReference("TOPMODEL");
         LeaseActor la = lease.findActor(party, LeaseActorType.TENANT, null);
         Assert.assertNotNull(la);
     }
-    
+
     @Test
     public void t02b_numberOfleaseActorsIs3() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
         assertThat(lease.getActors().size(), is(3));
     }
 
-
     @Test
     public void t03_indexationFrequencyCannotBeNull() throws Exception {
-        LeaseTerms terms = getIsft().getService(LeaseTerms.class);
-        List<LeaseTerm> allLeaseTerms = terms.allLeaseTerms();
+        List<LeaseTerm> allLeaseTerms = leaseTerms.allLeaseTerms();
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) allLeaseTerms.get(0);
         Assert.assertNotNull(term.getIndexationFrequency());
     }
 
     @Test
     public void t04_nextDateCannotBeNull() throws Exception {
-        LeaseTerms terms = getIsft().getService(LeaseTerms.class);
-        List<LeaseTerm> allLeaseTerms = terms.allLeaseTerms();
+        List<LeaseTerm> allLeaseTerms = leaseTerms.allLeaseTerms();
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) allLeaseTerms.get(0);
         Assert.assertNotNull(term.getIndexationFrequency().nextDate(new LocalDate(2012, 1, 1)));
     }
 
     @Test
     public void t05_leaseCanBeFound() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
         Assert.assertEquals("OXF-TOPMODEL-001", leases.findByReference("OXF-TOPMODEL-001").getReference());
     }
 
     @Test
     public void t06_leasesCanBeFoundUsingWildcard() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
         assertThat(leases.findLeasesByReference("OXF*").size(), is(2));
     }
 
     @Test
     public void t07_leaseHasXItems() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
         assertThat(lease.getItems().size(), is(2));
     }
 
     @Test
     public void t08_leaseItemCanBeFound() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        Assert.assertNotNull(lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1)));
+        LeaseItem rentItem = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        Assert.assertNotNull(rentItem);
     }
 
     @Test
-    public void t09_leaseTermCanBeFound() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
-        LeaseTermForIndexableRent findTerm = (LeaseTermForIndexableRent) item.findTerm(new LocalDate(2010, 7, 15));
-        Assert.assertNotNull(findTerm);
-        BigDecimal baseValue = findTerm.getBaseValue();
+    public void t09_leaseTermForRentCanBeFound() throws Exception {
+        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) item.findTerm(new LocalDate(2010, 7, 15));
+        Assert.assertNotNull(leaseTerm);
+        BigDecimal baseValue = leaseTerm.getBaseValue();
         Assert.assertEquals(new BigDecimal("20000.0000"), baseValue);
     }
 
     @Test
+    public void t09_leaseTermForServiceChargeCanBeFound() throws Exception {
+        LeaseItem item = (LeaseItem) lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        Assert.assertThat(item.getTerms().size(), Is.is(1));
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) item.findTerm(new LocalDate(2010, 7, 15));
+        Assert.assertThat(leaseTerm.getBudgetedValue(), Is.is(new BigDecimal("6000.0000")));
+    }
+
+    @Test
     public void t10_leaseTermVerifiedCorrectly() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        //first item
-        LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
-        //first term
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().toArray()[0];
+        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().first();
         Assert.assertNotNull(term);
         term.verify();
         assertThat(term.getBaseIndexValue(), is(BigDecimal.valueOf(137.6).setScale(4)));
@@ -155,47 +147,62 @@ public class LeaseIntegrationTest {
     }
 
     @Test
-    public void t11_leaseTermApprovesWell() throws Exception {
-        Leases leases = getIsft().getService(Leases.class);
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        //first item
-        LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
-        //first term
+    public void t11_leaseVerifiesWell() throws Exception {
+        lease.verify();
+        assertThat(lease.getItems().first().getTerms().size(), is(5));
+    }
+
+    @Test
+    public void t12_leaseVerifiesWell() throws Exception {
+        Lease leaseMediax = leases.findByReference("OXF-MEDIAX-002");
+        leaseMediax.verify();
+        assertThat(leaseMediax.getItems().first().getTerms().size(), is(7));
+    }
+    
+    @Test
+    public void t13_leaseTermApprovesWell() throws Exception {
+        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().toArray()[0];
         term.approve();
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
         assertThat(term.getValue(), is(BigDecimal.valueOf(20200).setScale(4)));
     }
-
+    
     @Test
-    public void t12_leaseTermInvoiceItemCreated() throws Exception {
-        Lease lease = leases.findByReference("OXF-TOPMODEL-001");
-        //first item
-        LeaseItem item = (LeaseItem) lease.getItems().toArray()[0];
-        //first term
+    public void t14_invoiceItemsForRentCreated() throws Exception {
+        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        // first term
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().toArray()[0];
-        term.calculate(new LocalDate(2012,1,1));
+        term.calculate(new LocalDate(2010, 7, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
-        term.calculate(new LocalDate(2012,4,1));
+        term.calculate(new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
-        term.calculate(new LocalDate(2012,4,1));
+        term.calculate(new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
-        
-        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2012,4,1));
+        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
     }
 
     @Test
-    public void t13_leaseVerifiesWell() throws Exception {
-        Lease l = leases.findByReference("OXF-TOPMODEL-001");
-        l.verify();
-        assertThat(l.getItems().first().getTerms().size(), is(5));
+    public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
+        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
+        term.calculate(new LocalDate(2012, 1, 1));
+        assertThat(term.getInvoiceItems().size(), is(1));
+        term.calculate(new LocalDate(2012, 4, 1));
+        assertThat(term.getInvoiceItems().size(), is(2));
+        term.calculate(new LocalDate(2012, 4, 1));
+        assertThat(term.getInvoiceItems().size(), is(2));
+        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2012, 4, 1));
+        assertThat(term.getInvoiceItems().size(), is(1));
     }
 
     @Test
-    public void t14_leaseVerifiesWell() throws Exception {
-        Lease l = leases.findByReference("OXF-MEDIAX-002");
-        l.verify();
-        assertThat(l.getItems().first().getTerms().size(), is(7));
+    public void t16_bulkLeaseCalculate() throws Exception {
+        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
+        // call calulate on lease
+        lease.calculate(new LocalDate(2012, 7, 1));
+        assertThat(term.getInvoiceItems().size(), is(2)); // the previous test already supplied one
     }
 }

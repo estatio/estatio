@@ -390,11 +390,20 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
 
     // }}
 
-    // {{ Action: verify
+    // {{ Actions
     @Bulk
     public Lease verify() {
         for (LeaseItem item : getItems()) {
             item.verify();
+        }
+        return this;
+    }
+
+    @Bulk
+    public Lease calculate(@Named("Due date") LocalDate dueDate) {
+        //TODO: I know that bulk actions only appear whith a no-arg but why not? 
+        for (LeaseItem item : getItems()) {
+            item.calculate(dueDate);
         }
         return this;
     }

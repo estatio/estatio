@@ -35,8 +35,8 @@ public class LeasesFixture extends AbstractFixture {
     @Override
     public void install() {
         manager = parties.findPartyByReference("JDOE");
-        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2010, 7, 15).plusYears(10).minusDays(1));
-        createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2008, 1, 1).plusYears(10).minusDays(1));
+        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2012, 7, 15).plusYears(10).minusDays(1));
+        createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2012, 1, 1).plusYears(10).minusDays(1));
     }
 
     private Lease createLease(
@@ -115,7 +115,7 @@ public class LeasesFixture extends AbstractFixture {
             LocalDate startDate, 
             LocalDate endDate, 
             BigDecimal value) {
-        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.getType().createLeaseTerm(getContainer());
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);

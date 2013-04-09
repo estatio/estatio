@@ -293,7 +293,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @MemberOrder(name="invoiceItems", sequence="2")
-    public LeaseTerm calculate(@Named("Date") LocalDate date) {
+    public LeaseTerm calculate(@Named("Due date") LocalDate date) {
         // removeUnapprovedInvoiceItemsForDate(date);
         InvoiceCalculator ic = new InvoiceCalculator(this, date);
         ic.calculateAndInvoiceItems();
@@ -314,6 +314,25 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public LeaseTerm createOrUpdateNext() {
         new NotImplementedException();
         return null;
+    }
+    
+    @Hidden
+    public LeaseTerm createOrUpdateNext(LocalDate newStartDate) {
+        LocalDate endDate = getLeaseItem().getEndDate();
+        LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
+        if (newStartDate.isAfter(maxEndDate)) {
+            // date is after end date, do nothing
+            return null;
+        } else {
+            LeaseTerm term = getNextTerm();
+            if (getNextTerm() == null) {
+                term = getLeaseItem().createNextTerm(this);
+            }
+            // new start Date
+            term.setStartDate(newStartDate);
+            this.setEndDate(newStartDate.minusDays(1));
+            return term;
+        }
     }
     
     // }}

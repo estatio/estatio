@@ -4,17 +4,12 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -24,9 +19,17 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 public class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
 
     // {{ Reference (property)
@@ -51,8 +54,8 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
         // TODO:test to see if this is faster:
         // agreementRoles.findAgreementRoleWithType(this,
         // AgreementRoleType.LANDLORD, LocalDate.now())
-        Iterable<Party> landlords = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.LANDLORD)), partyOfAgreementRole());
-        return firstElseNull(landlords);
+        Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.LANDLORD)), partyOfAgreementRole());
+        return firstElseNull(parties);
     }
 
     @MemberOrder(sequence = "3")
@@ -60,19 +63,19 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
         // TODO:test to see if this is faster:
         // agreementRoles.findAgreementRoleWithType(this,
         // AgreementRoleType.LANDLORD, LocalDate.now())
-        Iterable<Party> landlords = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.TENANT)), partyOfAgreementRole());
-        return firstElseNull(landlords);
+        Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.TENANT)), partyOfAgreementRole());
+        return firstElseNull(parties);
     }
 
-    private Party firstElseNull(Iterable<Party> landlords) {
-        Iterator<Party> iterator = landlords.iterator();
+    private Party firstElseNull(Iterable<Party> parties) {
+        Iterator<Party> iterator = parties.iterator();
         return iterator.hasNext() ? iterator.next() : null;
     }
 
     private Function<AgreementRole, Party> partyOfAgreementRole() {
         return new Function<AgreementRole, Party>() {
-            public Party apply(AgreementRole la) {
-                return la.getParty();
+            public Party apply(AgreementRole agreementRole) {
+                return agreementRole.getParty();
             }
         };
     }

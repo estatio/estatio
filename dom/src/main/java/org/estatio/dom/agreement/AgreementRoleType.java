@@ -2,11 +2,12 @@ package org.estatio.dom.agreement;
 
 public enum AgreementRoleType {
 
+    CREDITOR("Creditor"), 
+    DEBTOR("Debtor"), 
     TENANT("Tenant"), 
     LANDLORD("Landlord"),
     MANAGER("Manager"),
-    OWNER("Owner"),
-    EMPLOYEE("Employee");
+    OWNER("Owner");
 
     private final String title;
 
