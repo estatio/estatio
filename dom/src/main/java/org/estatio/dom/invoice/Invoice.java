@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -13,6 +14,8 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorForCollectionNumber;
 import org.estatio.dom.numerator.NumeratorForInvoiceNumber;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
@@ -114,6 +117,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ InvoiceDate (property)
     private LocalDate invoiceDate;
 
+    @Persistent
     @MemberOrder(sequence = "6")
     public LocalDate getInvoiceDate() {
         return invoiceDate;
@@ -128,6 +132,7 @@ public class Invoice extends EstatioTransactionalObject {
     // {{ DueDate (property)
     private LocalDate dueDate;
 
+    @Persistent
     @MemberOrder(sequence = "7")
     public LocalDate getDueDate() {
         return dueDate;
@@ -255,13 +260,34 @@ public class Invoice extends EstatioTransactionalObject {
 
     @Bulk
     @MemberOrder(sequence = "20")
-    public Invoice assignInvoiceNumber() {
-        NumeratorForInvoiceNumber numerator = (NumeratorForInvoiceNumber) numerators.find(NumeratorType.INVOICE_NUMBER);
+    public Invoice approve() {
+        this.setStatus(InvoiceStatus.APPROVED);
+        return this;
+    }
+    
+    @Bulk
+    @MemberOrder(sequence = "21")
+    public Invoice assignCollectionNumber() {
+        NumeratorForCollectionNumber numerator =  (NumeratorForCollectionNumber) numerators.establish(NumeratorType.COLLECTION_NUMBER);
         if (numerator.assign(this)) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
+            this.setStatus(InvoiceStatus.COLLECTED);
         }
         return this;
     }
+    
+    @Bulk
+    @MemberOrder(sequence = "22")
+    public Invoice assignInvoiceNumber() {
+        NumeratorForInvoiceNumber numerator = (NumeratorForInvoiceNumber) numerators.establish(NumeratorType.INVOICE_NUMBER);
+        if (numerator.assign(this)) {
+            informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
+            this.setStatus(InvoiceStatus.INVOICED);
+        }
+        return this;
+    }
+    
+    
 
     // }}
 

@@ -3,10 +3,6 @@ package org.estatio.dom.invoice;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.PaymentMethod;
-import org.estatio.dom.party.Party;
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -14,6 +10,10 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
 
 
 @Named("Invoices")
@@ -65,7 +65,8 @@ public class Invoices extends AbstractFactoryAndRepository {
             Party buyer,
             PaymentMethod paymentMethod,
             Lease lease,
-            InvoiceStatus invoiceStatus
+            InvoiceStatus invoiceStatus,
+            LocalDate dueDate
             ){
         throw new NotImplementedException();
     }
@@ -77,8 +78,14 @@ public class Invoices extends AbstractFactoryAndRepository {
             Party buyer,
             PaymentMethod paymentMethod,
             Lease lease,
-            InvoiceStatus invoiceStatus
+            InvoiceStatus invoiceStatus,
+            LocalDate dueDate
             ){
         throw new NotImplementedException();
+    }
+    
+    @Prototype
+    public void removeAll(){
+        //TODO: For prototyping reasons we need a remove?
     }
 }

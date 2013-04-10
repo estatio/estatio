@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.charge.Charge;
@@ -39,6 +40,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     @Disabled
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
+    @Title(sequence = "1", append = ":")
     @Optional
     public Invoice getInvoice() {
         return invoice;
@@ -53,6 +55,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     // {{ Charge (property)
     private Charge charge;
 
+    @Title(sequence = "2")
     @MemberOrder(sequence = "2")
     public Charge getCharge() {
         return charge;
@@ -267,7 +270,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
             Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
             Party buyer = lease.findActorWithType(LeaseActorType.TENANT, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPayymentMethod();
-            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW);
+            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
             if (invoice == null) {
                 invoice = invoices.newInvoice();
                 invoice.setBuyer(buyer);
