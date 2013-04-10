@@ -75,6 +75,20 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
 
     // }}
 
+    // {{ Legal (property)
+    private boolean Legal;
+
+    @MemberOrder(sequence = "10")
+    public boolean getLegal() {
+        return Legal;
+    }
+
+    public void setLegal(final boolean Legal) {
+        this.Legal = Legal;
+    }
+    // }}
+    
+    
     @Hidden
     public int compareTo(CommunicationChannel other) {
         return this.getClass().getName().compareTo(other.getClass().getName());
