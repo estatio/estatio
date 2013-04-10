@@ -17,6 +17,7 @@ import org.apache.isis.applib.filter.Filter;
 import org.estatio.dom.party.Party;
 
 @Named("Lease Actors")
+@Hidden
 public class LeaseActors extends AbstractFactoryAndRepository {
 
     // {{ Id, iconName

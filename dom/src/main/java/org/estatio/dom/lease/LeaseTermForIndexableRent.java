@@ -230,6 +230,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ Actions
+    @Override
     public LeaseTerm verify() {
         IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
         calculator.calculate(this);
@@ -242,13 +243,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         } else {
             // TODO: handle updating values for other statuses
         }
+        super.verify();
 
-        if (getStartDate().compareTo(LocalDate.now()) < 0) {
-            LeaseTermForIndexableRent nextTerm = (LeaseTermForIndexableRent) createOrUpdateNext();
-            if (nextTerm != null) {
-                nextTerm.verify();
-            }
-        }
         return this;
     }
 
@@ -264,6 +260,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public LeaseTerm createOrUpdateNext() {
+        //super.createOrUpdateNext(newStartDate)
         LeaseTermForIndexableRent nextTerm = (LeaseTermForIndexableRent) createOrUpdateNext(this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1));
         if (nextTerm != null){
             //Do term sepecific stuff
@@ -279,13 +276,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     // }}
-
-    // {{ Injected Services
-    private LeaseTerms leaseTermsService;
-
-    public void setLeaseTermsService(LeaseTerms leaseTerms) {
-        this.leaseTermsService = leaseTerms;
-    }
 
     private Indices indexService;
 

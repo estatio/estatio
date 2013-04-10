@@ -17,6 +17,7 @@ import org.apache.isis.applib.filter.Filter;
 import org.estatio.dom.asset.Unit;
 
 @Named("LeaseUnits")
+@Hidden
 public class LeaseUnits extends AbstractFactoryAndRepository {
 
     // {{ Id, iconName

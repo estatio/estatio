@@ -291,7 +291,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // FIXME: move into the 'terms' collection once enablement/disablement is working in the wicket viewer.
     @MemberOrder(/*name = "terms",*/ sequence = "11")
     public LeaseTerm createInitialTerm() {
-        LeaseTerm term = leaseTerms.newLeaseTerm(this);
+        LeaseTerm term = leaseTermsService.newLeaseTerm(this);
         return term;
     }
 
@@ -302,7 +302,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     @Hidden
     @MemberOrder(/*name = "terms",*/ sequence = "11")
     public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
-        LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm);
+        LeaseTerm term = leaseTermsService.newLeaseTerm(this, currentTerm);
         return term;
     }
 
@@ -335,10 +335,10 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         this.chargeService = charges;
     }
 
-    private LeaseTerms leaseTerms;
+    private LeaseTerms leaseTermsService;
     
-    public void setLeaseTerms(LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
+    public void setLeaseTermsService(LeaseTerms leaseTerms) {
+        this.leaseTermsService = leaseTerms;
     }
     
     // }}

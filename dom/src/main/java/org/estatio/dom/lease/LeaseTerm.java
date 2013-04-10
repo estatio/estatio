@@ -288,7 +288,13 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     // {{ Actions
     @MemberOrder(sequence="1")
     public LeaseTerm verify() {
-        new NotImplementedException();
+        if (getStartDate().compareTo(LocalDate.now()) < 0) {
+            createOrUpdateNext();
+            LeaseTerm nextTerm = getNextTerm();
+            if (nextTerm != null) {
+                nextTerm.verify();
+            }
+        }
         return this;
     }
 
@@ -297,6 +303,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         // removeUnapprovedInvoiceItemsForDate(date);
         InvoiceCalculator ic = new InvoiceCalculator(this, date);
         ic.calculateAndInvoiceItems();
+        informUser("Calculated"+this.toString());
         return this;
     }
 

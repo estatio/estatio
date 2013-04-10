@@ -74,7 +74,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     
     @Override
     public LeaseTerm verify() {
-        super.verify();
+        //specific stuff for service charges
         if (getStatus() == LeaseTermStatus.NEW) {
             if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
                 setValue(getAuditedValue());
@@ -84,12 +84,15 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
                 }
             }
         }
+        // call suer
+        super.verify();
         return this;
     }
 
     @Override
     public LeaseTerm createOrUpdateNext() {
-        LeaseTermForServiceCharge nextTerm = (LeaseTermForServiceCharge) createOrUpdateNext(this.getEndDate() == null ? this.getTermFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1));
+        createOrUpdateNext(this.getEndDate() == null ? this.getTermFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1));
+        LeaseTermForServiceCharge nextTerm = (LeaseTermForServiceCharge) getNextTerm();
         if (nextTerm != null){
             //Do term sepecific stuff
             nextTerm.setBudgetedValue(MathUtils.isNotZeroOrNull(getAuditedValue()) ? getAuditedValue(): getBudgetedValue());

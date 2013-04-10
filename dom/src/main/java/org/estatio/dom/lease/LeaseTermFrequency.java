@@ -6,7 +6,8 @@ import org.joda.time.LocalDate;
 
 public enum LeaseTermFrequency {
 
-    YEARLY("Yearly", "RRULE:FREQ=YEARLY;INTERVAL=1");
+    YEARLY("Yearly", "RRULE:FREQ=YEARLY;INTERVAL=1"),
+    NO_FREQUENCY("No Frequency", null);
 
     private String title;
 

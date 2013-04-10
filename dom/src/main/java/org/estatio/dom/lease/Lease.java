@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Lease extends EstatioTransactionalObject implements Comparable<Lease> {
 
     // {{ Reference (property)
@@ -49,33 +49,38 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
 
     // {{ Derived attribute
 
-    @MemberOrder(sequence="2")
+    @MemberOrder(sequence = "2")
+    @Disabled
+    @Optional
     public Party getCurrentLandlord() {
         // TODO:test to see if this is faster:
-        // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
+        // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD,
+        // LocalDate.now())
         return firstElseNull(LeaseActorType.LANDLORD);
     }
 
-    @MemberOrder(sequence="3")
+    @MemberOrder(sequence = "3")
+    @Disabled
+    @Optional
     public Party getCurrentTenant() {
         // TODO:test to see if this is faster:
-        // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD, LocalDate.now())
+        // leaseActors.findLeaseActorWithType(this, LeaseActorType.LANDLORD,
+        // LocalDate.now())
         return firstElseNull(LeaseActorType.TENANT);
     }
 
     private Party firstElseNull(LeaseActorType lat) {
-        Iterable<Party> parties = Iterables.transform(
-                Iterables.filter(getActors(), currentLeaseActorOfType(lat)), partyOfLeaseActor());
+        Iterable<Party> parties = Iterables.transform(Iterables.filter(getActors(), currentLeaseActorOfType(lat)), partyOfLeaseActor());
         return firstElseNull(parties);
     }
 
     public static <T> T firstElseNull(Iterable<T> elements) {
         Iterator<T> iterator = elements.iterator();
-        return iterator.hasNext()? iterator.next(): null;
+        return iterator.hasNext() ? iterator.next() : null;
     }
 
     private Function<LeaseActor, Party> partyOfLeaseActor() {
-        return new Function<LeaseActor, Party>(){
+        return new Function<LeaseActor, Party>() {
             public Party apply(LeaseActor la) {
                 return la.getParty();
             }
@@ -95,7 +100,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     // {{ Name (property)
     private String name;
 
-    @MemberOrder(sequence="4")
+    @MemberOrder(sequence = "4")
     @Optional
     public String getName() {
         return name;
@@ -170,7 +175,9 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     // {{ PreviousLease (property)
     private Lease previousLease;
 
+    @Persistent(mappedBy = "nextLease")
     @Disabled
+    @Optional
     @MemberOrder(sequence = "9")
     public Lease getPreviousLease() {
         return previousLease;
@@ -180,41 +187,10 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         this.previousLease = previousLease;
     }
 
-    public void modifyPreviousLease(final Lease previousLease) {
-        Lease currentPreviousLease = getPreviousLease();
-        // check for no-op
-        if (previousLease == null || previousLease.equals(currentPreviousLease)) {
-            return;
-        }
-        // associate new
-        setPreviousLease(previousLease);
-        // additional business logic
-        onModifyPreviousLease(currentPreviousLease, previousLease);
-    }
-
-    public void clearPreviousLease() {
-        Lease currentPreviousLease = getPreviousLease();
-        // check for no-op
-        if (currentPreviousLease == null) {
-            return;
-        }
-        // dissociate existing
-        setPreviousLease(null);
-        // additional business logic
-        onClearPreviousLease(currentPreviousLease);
-    }
-
-    protected void onModifyPreviousLease(final Lease oldPreviousLease, final Lease newPreviousLease) {
-        if (oldPreviousLease != null) {
-            oldPreviousLease.setNextLease(null);
-        }
-        if (newPreviousLease != null) {
-            newPreviousLease.setNextLease(this);
-        }
-    }
-
-    protected void onClearPreviousLease(final Lease oldPreviousLease) {
-        oldPreviousLease.setNextLease(null);
+    public void modifyPreviousLease(Lease lease) {
+        this.setPreviousLease(lease);
+        lease.setNextLease(this); // not strictly necessary, as JDO will also do
+                                  // this (bidir link)
     }
 
     // }}
@@ -223,6 +199,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private Lease nextLease;
 
     @Disabled
+    @Optional
     @MemberOrder(sequence = "10")
     public Lease getNextLease() {
         return nextLease;
@@ -232,13 +209,27 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         this.nextLease = nextLease;
     }
 
+    public void modifyNextLease(Lease lease) {
+        this.setNextLease(lease);
+        lease.setPreviousLease(this); // not strictly necessary, as JDO will
+                                      // also do this (bidir link)
+    }
+
+    public void clearNextLease() {
+        Lease nextLease = getNextLease();
+        if (nextLease != null) {
+            nextLease.setPreviousLease(null);
+            setNextLease(null);
+        }
+    }
+
     // }}
 
     // {{ Actors (Collection)
     @Persistent(mappedBy = "lease")
     private SortedSet<LeaseActor> actors = new TreeSet<LeaseActor>();
 
-    @MemberOrder(name="Actors", sequence = "11")
+    @MemberOrder(name = "Actors", sequence = "11")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseActor> getActors() {
         return actors;
@@ -266,8 +257,10 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         getActors().remove(leaseActor);
     }
 
-    @MemberOrder(name="Actors", sequence = "11")
+    @MemberOrder(name = "Actors", sequence = "11")
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
+        if (party == null || type == null)
+            return null;
         LeaseActor leaseActor = findActor(party, type, startDate);
         if (leaseActor == null) {
             leaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
@@ -281,7 +274,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
     @Persistent(mappedBy = "lease")
-    @MemberOrder(name="Units", sequence = "20")
+    @MemberOrder(name = "Units", sequence = "20")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseUnit> getUnits() {
         return units;
@@ -319,7 +312,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     protected void onRemoveFromUnits(final LeaseUnit leaseUnit) {
     }
 
-    @MemberOrder(name="Units", sequence = "21")
+    @MemberOrder(name = "Units", sequence = "21")
     public LeaseUnit addUnit(@Named("unit") Unit unit) {
         LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
         units.add(leaseUnit);
@@ -332,7 +325,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder(name="Items",sequence = "30")
+    @MemberOrder(name = "Items", sequence = "30")
     public SortedSet<LeaseItem> getItems() {
         return items;
     }
@@ -359,7 +352,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         getItems().remove(leaseItem);
     }
 
-    @MemberOrder(name="Items",sequence = "31")
+    @MemberOrder(name = "Items", sequence = "31")
     public LeaseItem newItem(LeaseItemType type) {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
         return leaseItem;
@@ -369,8 +362,8 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     public LeaseActor findActor(Party party, LeaseActorType type, LocalDate startDate) {
         return leaseActors.findLeaseActor(this, party, type, startDate, startDate);
     }
-    
-    @Hidden 
+
+    @Hidden
     public LeaseActor findActorWithType(LeaseActorType leaseActorType, LocalDate date) {
         return leaseActors.findLeaseActorWithType(this, leaseActorType, date);
     }
@@ -401,7 +394,8 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
 
     @Bulk
     public Lease calculate(@Named("Due date") LocalDate dueDate) {
-        //TODO: I know that bulk actions only appear whith a no-arg but why not? 
+        // TODO: I know that bulk actions only appear whith a no-arg but why
+        // not?
         for (LeaseItem item : getItems()) {
             item.calculate(dueDate);
         }
@@ -414,7 +408,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     public int compareTo(Lease other) {
         return this.getReference().compareTo(other.getReference());
     }
-
 
     // {{ injected services
     private LeaseItems leaseItems;
