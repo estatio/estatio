@@ -1,5 +1,6 @@
 package org.estatio.dom.party;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -22,6 +23,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.lease.LeaseActor;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -107,8 +109,7 @@ public abstract class Party extends EstatioTransactionalObject {
     @Persistent(mappedBy = "party")
     private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
 
-    @MemberOrder(name = "Roles", sequence = "20")
-    @Render(Type.EAGERLY)
+    @MemberOrder(name = "Roles", sequence = "11")
     public SortedSet<PartyRole> getRoles() {
         return roles;
     }
@@ -117,7 +118,7 @@ public abstract class Party extends EstatioTransactionalObject {
         this.roles = roles;
     }
 
-    @MemberOrder(name = "Roles", sequence = "20")
+    @MemberOrder(name = "Roles", sequence = "11")
     public Party addRole() {
         // TODO: some code here
         return this;
@@ -129,7 +130,7 @@ public abstract class Party extends EstatioTransactionalObject {
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
-    @MemberOrder(name = "Registrations", sequence = "21")
+    @MemberOrder(name = "Registrations", sequence = "12")
     @Render(Type.EAGERLY)
     public SortedSet<PartyRegistration> getRegistrations() {
         return registrations;
@@ -139,7 +140,7 @@ public abstract class Party extends EstatioTransactionalObject {
         this.registrations = registrations;
     }
 
-    @MemberOrder(name = "Registrations", sequence = "21")
+    @MemberOrder(name = "Registrations", sequence = "12")
     public Party addRegistration() {
         return this;
     }
@@ -150,7 +151,7 @@ public abstract class Party extends EstatioTransactionalObject {
     @Persistent(mappedBy="owner")
     private SortedSet<FinancialAccount> accounts = new TreeSet<FinancialAccount>();
 
-    @MemberOrder(name = "Accounts", sequence = "22")
+    @MemberOrder(name = "Accounts", sequence = "13")
     @Render(Type.EAGERLY)
     public Set<FinancialAccount> getAccounts() {
         return accounts;
@@ -190,7 +191,7 @@ public abstract class Party extends EstatioTransactionalObject {
         account.setOwner(null);
     }
     
-    @MemberOrder(name = "Accounts", sequence = "23")
+    @MemberOrder(name = "Accounts", sequence = "13")
     public FinancialAccount addAccount(final FinancialAccountType financialAccountType) {
         FinancialAccount financialAccount = financialAccountType.createAccount(getContainer());
         addToAccounts(financialAccount);
@@ -198,6 +199,22 @@ public abstract class Party extends EstatioTransactionalObject {
     }
 
     // }}
+    
+    // {{ LeaseRoles (Collection)
+    @Persistent(mappedBy="party")
+    private Set<LeaseActor> leaseRoles = new LinkedHashSet<LeaseActor>();
+
+    @MemberOrder(sequence = "14")
+    public Set<LeaseActor> getLeaseRoles() {
+        return leaseRoles;
+    }
+
+    public void setLeaseRoles(final Set<LeaseActor> leaseRoles) {
+        this.leaseRoles = leaseRoles;
+    }
+    // }}
+
+
     
 
 }

@@ -158,7 +158,7 @@ public class Api extends AbstractFactoryAndRepository {
     public void putOrganisation(@Named("reference") String reference, @Named("name") String name) {
         Organisation org = (Organisation) parties.findPartyByReference(reference);
         if (org == null) {
-            org = parties.newOrganisation(name);
+            org = parties.newOrganisation(reference, name);
             org.setReference(reference);
         }
         org.setName(name);
@@ -346,7 +346,7 @@ public class Api extends AbstractFactoryAndRepository {
                 throw new ApplicationException(String.format("Previous lease with reference %s not found.", previousLeaseReference));
             }
         }
-        lease.modifyPreviousLease(previousLease);
+        lease.setPreviousLease(previousLease);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

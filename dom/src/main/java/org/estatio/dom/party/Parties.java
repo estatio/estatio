@@ -1,6 +1,8 @@
 package org.estatio.dom.party;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
 
@@ -46,11 +48,13 @@ public class Parties extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
     public Organisation newOrganisation(
-            final @Named("name") String name) {
-        final Organisation org = newTransientInstance(Organisation.class);
-        org.setName(name);
-        persist(org);
-        return org;
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name) {
+        final Organisation organisation = newTransientInstance(Organisation.class);
+        organisation.setReference(reference);
+        organisation.setName(name);
+        persist(organisation);
+        return organisation;
     }
 
     @ActionSemantics(Of.SAFE)
@@ -118,5 +122,6 @@ public class Parties extends AbstractFactoryAndRepository {
         return findParties("*".concat(searchPhrase).concat("*"));
     }
     // }}
+    
  
 }

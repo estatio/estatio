@@ -10,6 +10,7 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
 @Named("Communication Channels")
+@Hidden
 public class CommunicationChannels extends AbstractFactoryAndRepository {
 
     // {{ Id, iconName

@@ -3,6 +3,7 @@ package org.estatio.integtest.testing;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.Invoice;
@@ -13,11 +14,10 @@ import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.ChargesJdo;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 public class InvoiceIntegrationTest {
 
@@ -46,7 +46,7 @@ public class InvoiceIntegrationTest {
         Parties parties = getIsft().getService(Parties.class);
         Leases leases = getIsft().getService(Leases.class);
         Invoices invoices = getIsft().getService(Invoices.class);
-        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW).get(0);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW, new LocalDate(2012, 1, 1)).get(0);
         Assert.assertNotNull(invoice);
     }
 }

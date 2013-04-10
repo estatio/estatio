@@ -69,7 +69,7 @@ public class PartiesFixture extends AbstractFixture {
     }
 
     private Party createOrganisation(String reference, String name, FinancialAccount account, CommunicationChannel ... communicationChannels ) {
-        Party p = parties.newOrganisation(name);
+        Party p = parties.newOrganisation(reference, name);
         p.setReference(reference);
         p.addToAccounts(account);
         for (CommunicationChannel channel : communicationChannels) {

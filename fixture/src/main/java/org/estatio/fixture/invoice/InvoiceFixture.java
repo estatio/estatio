@@ -12,6 +12,7 @@ import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.joda.time.LocalDate;
 
 public class InvoiceFixture extends AbstractFixture {
 
@@ -27,6 +28,7 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
         invoice.setLease(leaseRepository.findByReference("OXF-TOPMODEL-001"));
+        invoice.setDueDate(new LocalDate(2012,1,1));
     }
     
     private Parties partyRepository;

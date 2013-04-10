@@ -21,6 +21,7 @@ import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
@@ -120,6 +121,7 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBudgetedValue(value);
+        leaseTerm.setTermFrequency(LeaseTermFrequency.YEARLY);
         return leaseTerm;
     }
 

@@ -20,6 +20,7 @@ public class NumeratorForInvoiceNumber extends Numerator {
         return "Numerator";
     }
 
+    //TODO: Q: should this override a method on the superclass eg assign(Object object) 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
     public boolean assign(Invoice invoice) {

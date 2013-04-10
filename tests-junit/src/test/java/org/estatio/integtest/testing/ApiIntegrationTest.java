@@ -27,6 +27,8 @@ public class ApiIntegrationTest {
 
     private Api api;
 
+    private Leases leases;
+    
     @Rule
     public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
 
@@ -37,6 +39,7 @@ public class ApiIntegrationTest {
     @Before
     public void init() {
         api = getIsft().getService(Api.class);
+        leases = getIsft().getService(LeasesJdo.class);
     }
 
     @Test
@@ -82,7 +85,6 @@ public class ApiIntegrationTest {
                 null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
         api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", new LocalDate(2012, 1, 1), BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", BigDecimal.valueOf(12345), null, null, BigDecimal.valueOf(12345), null, null,
                 null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
-        Leases leases = getIsft().getService(LeasesJdo.class);
         Assert.assertThat(leases.findByReference("APILEASE").getItems().first().getTerms().size() , Is.is(2));
     }
 

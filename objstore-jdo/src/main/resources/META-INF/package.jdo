@@ -124,7 +124,8 @@
                 seller == :seller &&
                 buyer == :buyer &&
                 paymentMethod == :paymentMethod &&
-                status == :status
+                status == :status &&
+                dueDate == :dueDate
             ]]></query>
         </class>
     </package>

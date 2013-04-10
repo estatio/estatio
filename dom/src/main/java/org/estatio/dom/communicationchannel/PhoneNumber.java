@@ -8,16 +8,18 @@ import javax.jdo.annotations.PersistenceCapable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
 
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator("PHON") // required since subtypes are rolling-up
+@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator("PHON")
+// required since subtypes are rolling-up
 @ObjectType("PHON")
 public class PhoneNumber extends CommunicationChannel {
 
     @Override
     public String getName() {
-        return "Phone ".concat(getPhoneNumber());
+        return new TitleBuffer("Phone").append(getPhoneNumber()).toString();
     }
 
     // {{ Number (attribute)
