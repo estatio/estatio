@@ -21,7 +21,7 @@ public class NumeratorIntegrationTest {
 
     @Rule
     public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
-    private Numerators numerators;
+    private NumeratorsJdo numerators;
 
     public IsisSystemForTest getIsft() {
         return webServerRule.getIsisSystemForTest();

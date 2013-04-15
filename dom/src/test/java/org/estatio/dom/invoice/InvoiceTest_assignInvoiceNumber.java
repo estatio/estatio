@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import org.estatio.dom.numerator.NumeratorForInvoiceNumber;
+import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.jmock.Expectations;
@@ -35,12 +35,12 @@ public class InvoiceTest_assignInvoiceNumber {
     @ClassUnderTest
     private Invoice invoice;
 
-    private NumeratorForInvoiceNumber inn;
+    private Numerator inn;
 
     @Before
     public void setUp() throws Exception {
 
-        inn = new NumeratorForInvoiceNumber();
+        inn = new Numerator();
         inn.setLastIncrement(BigInteger.TEN);
 
         invoice = new Invoice();
@@ -66,10 +66,10 @@ public class InvoiceTest_assignInvoiceNumber {
         assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
     }
 
-    private void allowingMockNumeratorsRepoToReturn(final NumeratorForInvoiceNumber inn) {
+    private void allowingMockNumeratorsRepoToReturn(final Numerator inn) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumerators).find(NumeratorType.INVOICE_NUMBER);
+                allowing(mockNumerators).establish(NumeratorType.INVOICE_NUMBER);
                 will(returnValue(inn));
             }
         });

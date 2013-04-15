@@ -1,19 +1,22 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.PaymentMethod;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 
 @Named("Invoices")
@@ -58,6 +61,7 @@ public class Invoices extends AbstractFactoryAndRepository {
     }
     // }}
 
+
     @ActionSemantics(Of.SAFE)
     @Hidden
     public Invoice findMatchingInvoice(
@@ -86,6 +90,13 @@ public class Invoices extends AbstractFactoryAndRepository {
     
     @Prototype
     public void removeAll(){
-        //TODO: For prototyping reasons we need a remove?
-    }
+        final List<Invoice> invoices = allInvoices();
+        for (Invoice invoice : invoices) {
+            Set<InvoiceItem> items = invoice.getItems();
+            for (InvoiceItem invoiceItem : items) {
+                getContainer().removeIfNotAlready(invoiceItem);
+            }
+            getContainer().removeIfNotAlready(invoice);
+        }
+    }        
 }

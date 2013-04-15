@@ -15,8 +15,6 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorForCollectionNumber;
-import org.estatio.dom.numerator.NumeratorForInvoiceNumber;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
@@ -268,8 +266,8 @@ public class Invoice extends EstatioTransactionalObject {
     @Bulk
     @MemberOrder(sequence = "21")
     public Invoice assignCollectionNumber() {
-        NumeratorForCollectionNumber numerator =  (NumeratorForCollectionNumber) numerators.establish(NumeratorType.COLLECTION_NUMBER);
-        if (numerator.assign(this)) {
+        Numerator numerator =   numerators.establish(NumeratorType.COLLECTION_NUMBER);
+        if (assign(this, numerator, "COL-%05d")) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
             this.setStatus(InvoiceStatus.COLLECTED);
         }
@@ -279,14 +277,23 @@ public class Invoice extends EstatioTransactionalObject {
     @Bulk
     @MemberOrder(sequence = "22")
     public Invoice assignInvoiceNumber() {
-        NumeratorForInvoiceNumber numerator = (NumeratorForInvoiceNumber) numerators.establish(NumeratorType.INVOICE_NUMBER);
-        if (numerator.assign(this)) {
+        Numerator numerator =  numerators.establish(NumeratorType.INVOICE_NUMBER);
+        if (assign(this, numerator, "INV-%05d")) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
             this.setStatus(InvoiceStatus.INVOICED);
         }
         return this;
     }
     
+    
+    private static boolean assign(Invoice invoice, Numerator numerator, String format){
+        if (invoice.getInvoiceNumber() != null) {
+            return false;
+        } 
+        invoice.setInvoiceNumber(String.format(format , numerator.increment()));
+        return true;
+    }
+
     
 
     // }}

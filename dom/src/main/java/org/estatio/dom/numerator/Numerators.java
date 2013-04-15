@@ -24,25 +24,17 @@ public class Numerators extends AbstractFactoryAndRepository {
 
     // }}
 
-    @Hidden
-    public NumeratorForInvoiceNumber dummyNFIN() {
-        return null;
-    }
-    
-    @Hidden 
-    public NumeratorForCollectionNumber dummyNFCN() {
-        return null;
-    }
-    
+
     @Hidden
     public Numerator create(NumeratorType type) {
-        Numerator numerator = type.create(getContainer());
+        Numerator numerator =  newTransientInstance(Numerator.class);
+        numerator.setType(type);
         persist(numerator);
         return numerator;
     }
 
-    @Hidden
-    public Numerator find(final NumeratorType type) {
+    // for subclasses to override
+    protected Numerator find(final NumeratorType type) {
         Numerator numerator = firstMatch(Numerator.class, new Filter<Numerator>() {
             @Override
             public boolean accept(final Numerator n) {
