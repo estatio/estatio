@@ -1,6 +1,6 @@
 package org.estatio.jdo;
 
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTerms;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -16,5 +16,5 @@ public class LeaseTermsJdo extends LeaseTerms {
      * HSQLDB 1.8.10 didn't have this problem.
      */
     @Hidden
-    public LeaseTermForIndexableRent dummy() {return null;}
+    public LeaseTerm dummy() {return null;}
 }

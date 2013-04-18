@@ -79,7 +79,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
     private boolean Legal;
 
     @MemberOrder(sequence = "10")
-    public boolean getLegal() {
+    public boolean isLegal() {
         return Legal;
     }
 

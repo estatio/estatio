@@ -9,29 +9,15 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.utils.MathUtils;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-    // {{ TermFrequency (property)
-    //TODO: investigate weather this can be merged with indextionFrequency
-    private LeaseTermFrequency termFrequency;
-    
-    @MemberOrder(sequence = "10")
-    public LeaseTermFrequency getTermFrequency() {
-        return termFrequency;
-    }
-
-    public void setTermFrequency(final LeaseTermFrequency termFrequency) {
-        this.termFrequency = termFrequency;
-    }
-    // }}
-    
     // {{ BudgetedValue (property)
     private BigDecimal budgetedValue;
 
@@ -71,11 +57,32 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     public String disableApprove() {
         return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
     }
-    
+
     @Override
-    public LeaseTerm verify() {
-        //specific stuff for service charges
+    @Hidden
+    public void initialize() {
+        super.initialize();
+        LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPreviousTerm();
+        if (previousTerm != null) {
+            this.setBudgetedValue(MathUtils.isNotZeroOrNull(previousTerm.getAuditedValue()) ? previousTerm.getAuditedValue() : previousTerm.getBudgetedValue());
+            this.setFrequency(previousTerm.getFrequency());
+        }
+        setFrequency(LeaseTermFrequency.YEARLY);
+    }
+
+    @Override
+    @Hidden
+    public void update() {
+        super.update();
         if (getStatus() == LeaseTermStatus.NEW) {
+            // date from previous term
+            if (getPreviousTerm() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
+                if (MathUtils.isNotZeroOrNull(getPreviousTerm().getValue())) {
+                setBudgetedValue(getPreviousTerm().getValue());
+                }
+                
+            }
+            // update itself
             if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
                 setValue(getAuditedValue());
             } else {
@@ -84,23 +91,6 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
                 }
             }
         }
-        // call suer
-        super.verify();
-        return this;
     }
 
-    @Override
-    public LeaseTerm createOrUpdateNext() {
-        createOrUpdateNext(this.getEndDate() == null ? this.getTermFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1));
-        LeaseTermForServiceCharge nextTerm = (LeaseTermForServiceCharge) getNextTerm();
-        if (nextTerm != null){
-            //Do term sepecific stuff
-            nextTerm.setBudgetedValue(MathUtils.isNotZeroOrNull(getAuditedValue()) ? getAuditedValue(): getBudgetedValue());
-            nextTerm.setTermFrequency(getTermFrequency());
-            return nextTerm;
-        }
-        return this;
-    }
-    
-    
 }

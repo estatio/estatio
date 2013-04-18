@@ -16,18 +16,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.collect.Ordering;
-
-import org.apache.commons.lang.NotImplementedException;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceCalculator;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.Orderings;
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
@@ -39,6 +27,16 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceCalculator;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.utils.Orderings;
+import org.joda.time.LocalDate;
+
+import com.google.common.collect.Ordering;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -47,7 +45,6 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
 
-    // {{ Lease (property)
     private LeaseItem leaseItem;
 
     @Hidden(where = Where.REFERENCES_PARENT)
@@ -63,9 +60,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.leaseItem = leaseItem;
     }
 
-    // }}
-
-    // {{ Sequence (property)
     private BigInteger sequence;
 
     @Hidden
@@ -78,10 +72,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.sequence = sequence;
     }
 
-    // }}
-
-
-    // {{ StartDate (property)
     private LocalDate startDate;
 
     @Persistent
@@ -95,9 +85,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @Persistent
@@ -112,9 +99,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.endDate = endDate;
     }
 
-    // }}
-
-    // {{ Value (property)
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
@@ -128,13 +112,34 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.value = value;
     }
 
-    // }}
+    private LeaseTermStatus status;
 
-    // {{ PreviousTerm (property)
+    @Disabled
+    // maintained through LeaseTermContributedActions
+    @MemberOrder(sequence = "5")
+    public LeaseTermStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(final LeaseTermStatus status) {
+        this.status = status;
+    }
+
+    private LeaseTermFrequency frequency;
+
+    @MemberOrder(sequence = "6")
+    public LeaseTermFrequency getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(final LeaseTermFrequency frequency) {
+        this.frequency = frequency;
+    }
+
     private LeaseTerm previousTerm;
 
-    @Persistent(mappedBy="nextTerm")
-    @MemberOrder(sequence = "1")
+    @Persistent(mappedBy = "nextTerm")
+    @MemberOrder(sequence = "6")
     @Hidden
     @Optional
     public LeaseTerm getPreviousTerm() {
@@ -147,15 +152,13 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     public void modifyPreviousTerm(LeaseTerm term) {
         this.setPreviousTerm(term);
-        term.setNextTerm(this); // not strictly necessary, as JDO will also do this (bidir link)
+        term.setNextTerm(this); // not strictly necessary, as JDO will also do
+                                // this (bidir link)
     }
 
-    // }}
-
-    // {{ NextTerm (property)
     private LeaseTerm nextTerm;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "7")
     @Hidden
     @Optional
     public LeaseTerm getNextTerm() {
@@ -168,34 +171,18 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     public void modifyNextTerm(LeaseTerm term) {
         this.setNextTerm(term);
-        term.setPreviousTerm(this); // not strictly necessary, as JDO will also do this (bidir link)
+        term.setPreviousTerm(this); // not strictly necessary, as JDO will also
+                                    // do this (bidir link)
     }
 
     public void clearNextTerm() {
         LeaseTerm nextTerm = getNextTerm();
-        if(nextTerm != null) {
+        if (nextTerm != null) {
             nextTerm.setPreviousTerm(null);
             setNextTerm(null);
         }
     }
 
-    // }}
-
-    // {{ Status (property)
-    private LeaseTermStatus status;
-    @Disabled // maintained through LeaseTermContributedActions
-    @MemberOrder(sequence = "1")
-    public LeaseTermStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(final LeaseTermStatus status) {
-        this.status = status;
-    }
-
-    // }}
-
-    // {{ InvoiceItems (Collection)
     @Persistent(mappedBy = "leaseTerm")
     private Set<InvoiceItem> invoiceItems = new LinkedHashSet<InvoiceItem>();
 
@@ -209,44 +196,18 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.invoiceItems = invoiceItems;
     }
 
-    public void addToInvoiceItems(final InvoiceItem invoiceItem) {
-        // check for no-op
-        if (invoiceItem == null || getInvoiceItems().contains(invoiceItem)) {
-            return;
-        }
-        // dissociate arg from its current parent (if any).
-        invoiceItem.clearLeaseTerm();
-        // associate arg
-        invoiceItem.setLeaseTerm(this);
-        getInvoiceItems().add(invoiceItem);
-    }
-
-    public void removeFromInvoiceItems(final InvoiceItem invoiceItem) {
-        // check for no-op
-        if (invoiceItem == null || !getInvoiceItems().contains(invoiceItem)) {
-            return;
-        }
-        // dissociate arg
-        invoiceItem.setLeaseTerm(null);
-        getInvoiceItems().remove(invoiceItem);
-    }
-
-    // }}
-
     @Hidden
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate) {
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate())) {
-                // remove item from term collection
-                removeFromInvoiceItems(invoiceItem);
-                // remove item from invoice
-                if (invoice != null) {
-                    invoice.removeFromItems(invoiceItem);
-                }
-                // remove from database
-                resolve(invoiceItem);
+                invoiceItem.setInvoice(null); //dissociate
+                invoiceItem.setLeaseTerm(null); //dissociate
+                getContainer().flush();
                 remove(invoiceItem);
+                resolve(invoice);
+                resolve(this);
+                // TODO: to prevent runtime errors I find myself calling resolve more and more
             }
         }
     }
@@ -286,28 +247,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     // {{ Actions
-    @MemberOrder(sequence="1")
-    public LeaseTerm verify() {
-        if (getStartDate().compareTo(LocalDate.now()) < 0) {
-            createOrUpdateNext();
-            LeaseTerm nextTerm = getNextTerm();
-            if (nextTerm != null) {
-                nextTerm.verify();
-            }
-        }
-        return this;
-    }
-
-    @MemberOrder(name="invoiceItems", sequence="2")
-    public LeaseTerm calculate(@Named("Due date") LocalDate date) {
-        // removeUnapprovedInvoiceItemsForDate(date);
-        InvoiceCalculator ic = new InvoiceCalculator(this, date);
-        ic.calculateAndInvoiceItems();
-        informUser("Calculated"+this.toString());
-        return this;
-    }
-
-    @MemberOrder(sequence="3")
+    @MemberOrder(sequence = "1")
     public LeaseTerm approve() {
         setStatus(LeaseTermStatus.APPROVED);
         return this;
@@ -316,18 +256,34 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public String disableApprove() {
         return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
     }
-
-    @MemberOrder(sequence="4")
-    public LeaseTerm createOrUpdateNext() {
-        new NotImplementedException();
-        return null;
-    }
     
+    @MemberOrder(sequence = "2")
+    public LeaseTerm verify() {
+        update();
+
+        // convenience code to automatically create terms but not for terms who
+        // have a start date after today
+        if (getStartDate().compareTo(LocalDate.now()) < 0) {
+            createNext();
+            nextTerm = getNextTerm();
+            if (nextTerm != null) {
+                nextTerm.verify();
+            }
+        }
+        return this;
+    }
+
+    @MemberOrder(sequence = "3")
+    public LeaseTerm createNext() {
+        LocalDate newStartDate = this.getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
+        return createNext(newStartDate);
+    }
+
     @Hidden
-    public LeaseTerm createOrUpdateNext(LocalDate newStartDate) {
+    public LeaseTerm createNext(LocalDate nextStartDate) {
         LocalDate endDate = getLeaseItem().getEndDate();
         LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
-        if (newStartDate.isAfter(maxEndDate)) {
+        if (nextStartDate.isAfter(maxEndDate)) {
             // date is after end date, do nothing
             return null;
         } else {
@@ -336,12 +292,36 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
                 term = getLeaseItem().createNextTerm(this);
             }
             // new start Date
-            term.setStartDate(newStartDate);
-            this.setEndDate(newStartDate.minusDays(1));
+            term.setStartDate(nextStartDate);
+            term.update();
+            this.setEndDate(nextStartDate.minusDays(1));
             return term;
         }
     }
     
+    @Hidden
+    public void initialize() {
+        setStatus(LeaseTermStatus.NEW);
+    }
+
+    @Hidden
+    public void update() {
+        // check endDate and startDate relationship
+        LeaseTerm nextTerm = getNextTerm();
+        if (nextTerm != null && nextTerm.getStartDate() != null && (getEndDate() == null || nextTerm.getStartDate().compareTo(getEndDate().plusDays(1)) != 1)) {
+            setEndDate(nextTerm.getStartDate().minusDays(1));
+        }
+    }
+
+    @MemberOrder(name = "invoiceItems", sequence = "2")
+    public LeaseTerm calculate(@Named("Due date") LocalDate date) {
+        // removeUnapprovedInvoiceItemsForDate(date);
+        InvoiceCalculator ic = new InvoiceCalculator(this, date);
+        ic.calculateAndInvoiceItems();
+        informUser("Calculated" + this.toString());
+        return this;
+    }
+
     // }}
 
     // {{ CompareTo

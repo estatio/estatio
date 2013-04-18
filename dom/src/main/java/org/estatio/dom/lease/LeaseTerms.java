@@ -34,9 +34,8 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
         leaseTerm.setLeaseItem(leaseItem);
-        leaseTerm.setStatus(LeaseTermStatus.NEW);
         persist(leaseTerm);
-        leaseItem.addToTerms(leaseTerm);
+        leaseTerm.initialize();
         return leaseTerm;
     }
     // }}

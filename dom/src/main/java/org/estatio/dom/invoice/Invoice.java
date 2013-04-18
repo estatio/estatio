@@ -10,6 +10,11 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -20,11 +25,6 @@ import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -189,40 +189,13 @@ public class Invoice extends EstatioTransactionalObject {
 
     @MemberOrder(sequence = "11")
     @Render(Type.EAGERLY)
+    @Persistent(mappedBy = "invoice")
     public Set<InvoiceItem> getItems() {
         return items;
     }
 
     public void setItems(final Set<InvoiceItem> items) {
         this.items = items;
-    }
-
-    public void addToItems(final InvoiceItem item) {
-        // check for no-op
-        if (item == null || getItems().contains(item)) {
-            return;
-        }
-        // associate new
-        getItems().add(item);
-        // additional business logic
-        onAddToItems(item);
-    }
-
-    public void removeFromItems(final InvoiceItem item) {
-        // check for no-op
-        if (item == null || !getItems().contains(item)) {
-            return;
-        }
-        // dissociate existing
-        getItems().remove(item);
-        // additional business logic
-        onRemoveFromItems(item);
-    }
-
-    protected void onAddToItems(final InvoiceItem item) {
-    }
-
-    protected void onRemoveFromItems(final InvoiceItem item) {
     }
 
     // }}
@@ -294,7 +267,16 @@ public class Invoice extends EstatioTransactionalObject {
         return true;
     }
 
-    
+    @Prototype
+    @Bulk
+    public void remove() {
+        if (getStatus().equals(InvoiceStatus.NEW)) {
+            for (InvoiceItem item : getItems()){
+                item.remove();
+            }
+            getContainer().remove(this);
+        }
+    }
 
     // }}
 

@@ -35,7 +35,6 @@ public class LeaseItems extends AbstractFactoryAndRepository {
         leaseItem.setLease(lease);
         leaseItem.setType(type);
         persist(leaseItem);
-        lease.addToItems(leaseItem);
         return leaseItem;
     }
     // }}

@@ -226,36 +226,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.leaseTerm = leaseTerm;
     }
 
-    public void modifyLeaseTerm(final LeaseTerm leaseTerm) {
-        LeaseTerm currentLeaseTerm = getLeaseTerm();
-        // check for no-op
-        if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
-            return;
-        }
-        // delegate to parent to associate
-        leaseTerm.addToInvoiceItems(this);
-        // additional business logic
-        onModifyLeaseTerm(currentLeaseTerm, leaseTerm);
-    }
-
-    public void clearLeaseTerm() {
-        LeaseTerm currentLeaseTerm = getLeaseTerm();
-        // check for no-op
-        if (currentLeaseTerm == null) {
-            return;
-        }
-        // delegate to parent to dissociate
-        currentLeaseTerm.removeFromInvoiceItems(this);
-        // additional business logic
-        onClearLeaseTerm(currentLeaseTerm);
-    }
-
-    protected void onModifyLeaseTerm(final LeaseTerm oldLeaseTerm, final LeaseTerm newLeaseTerm) {
-    }
-
-    protected void onClearLeaseTerm(final LeaseTerm oldLeaseTerm) {
-    }
-
     // }}
 
     // {{ Actions
@@ -267,6 +237,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
+            resolve(lease);
             Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
             Party buyer = lease.findActorWithType(LeaseActorType.TENANT, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPayymentMethod();
@@ -280,7 +251,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
                 invoice.setPaymentMethod(paymentMethod);
                 invoice.setStatus(InvoiceStatus.NEW);
             }
-            invoice.addToItems(this);
             this.setInvoice(invoice);
         }
     }
@@ -289,6 +259,15 @@ public class InvoiceItem extends EstatioTransactionalObject {
     public InvoiceItem verify() {
         calulateTax();
         return this;
+    }
+    
+    @Hidden 
+    public void remove() {
+        // no safeguard, assuming being called with precaution
+        setInvoice(null);
+        setLeaseTerm(null);
+        getContainer().flush();
+        getContainer().remove(this);
     }
 
     @Hidden

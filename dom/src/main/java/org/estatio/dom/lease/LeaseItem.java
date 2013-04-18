@@ -33,19 +33,11 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseItem> {
 
-    @Hidden
-    void dummyAction1(LeaseTermForIndexableRent x) {
-    }
-
-    @Hidden
-    void dummyAction2(LeaseTermForTurnoverRent x) {
-    }
-
     // {{ Lease (property)
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @Title(sequence="1", append = ":")
+    @Title(sequence = "1", append = ":")
     @MemberOrder(sequence = "1")
     public Lease getLease() {
         return lease;
@@ -156,7 +148,8 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     @MemberOrder(sequence = "7")
     @Disabled
-    @Optional //TODO: Wicket still marks disabled fields a mandatory. Don't know if that
+    @Optional
+    // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
     public LocalDate getNextDueDate() {
         return nextDueDate;
     }
@@ -217,7 +210,8 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     // {{ CurrentValue
     @Disabled
-    @Optional //TODO: Wicket still marks disabled fields a mandatory. Don't know if that
+    @Optional
+    // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
     public BigDecimal getCurrentValue() {
         return getValueForDate(LocalDate.now());
     }
@@ -248,26 +242,6 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         this.terms = terms;
     }
 
-    public void addToTerms(final LeaseTerm leaseTerm) {
-        // check for no-op
-        if (leaseTerm == null || getTerms().contains(leaseTerm)) {
-            return;
-        }
-        // associate new
-        getTerms().add(leaseTerm);
-        leaseTerm.setLeaseItem(this);
-    }
-
-    public void removeFromTerms(final LeaseTerm leaseTerm) {
-        // check for no-op
-        if (leaseTerm == null || !getTerms().contains(leaseTerm)) {
-            return;
-        }
-        // dissociate existing
-        getTerms().remove(leaseTerm);
-        leaseTerm.setLeaseItem(null);
-    }
-
     @Hidden
     public LeaseTerm findTerm(LocalDate startDate) {
         for (LeaseTerm term : getTerms()) {
@@ -288,8 +262,9 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         return null;
     }
 
-    // FIXME: move into the 'terms' collection once enablement/disablement is working in the wicket viewer.
-    @MemberOrder(/*name = "terms",*/ sequence = "11")
+    // FIXME: move into the 'terms' collection once enablement/disablement is
+    // working in the wicket viewer.
+    @MemberOrder(/* name = "terms", */sequence = "11")
     public LeaseTerm createInitialTerm() {
         LeaseTerm term = leaseTermsService.newLeaseTerm(this);
         return term;
@@ -300,7 +275,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     @Hidden
-    @MemberOrder(/*name = "terms",*/ sequence = "11")
+    @MemberOrder(/* name = "terms", */sequence = "11")
     public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
         LeaseTerm term = leaseTermsService.newLeaseTerm(this, currentTerm);
         return term;
@@ -312,14 +287,20 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     public LeaseItem verify() {
         for (LeaseTerm term : getTerms()) {
-            term.verify();
+            if (term.getPreviousTerm() == null) {
+                // since verify is recursive on terms only start on the main
+                // term
+                term.verify();
+            }
         }
         return this;
     }
-    
+
     public LeaseItem calculate(@Named("Due date") LocalDate dueDate) {
         for (LeaseTerm term : getTerms()) {
-            getContainer().resolve(term); //TODO: need to call resolve, otherwise services are not injected when running in the wicket viewer.
+            resolve(term); // TODO: need to call resolve,
+                                          // otherwise services are not injected
+                                          // when running in the wicket viewer.
             term.calculate(dueDate);
         }
         return this;
@@ -336,11 +317,11 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     private LeaseTerms leaseTermsService;
-    
+
     public void setLeaseTermsService(LeaseTerms leaseTerms) {
         this.leaseTermsService = leaseTerms;
     }
-    
+
     // }}
 
     // {{ Comparable

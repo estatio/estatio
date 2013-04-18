@@ -200,6 +200,7 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
 
     @Render(Type.EAGERLY)
     @MemberOrder(name = "Actors", sequence = "2.1")
+    @Persistent(mappedBy = "property")
     public SortedSet<PropertyActor> getActors() {
         return actors;
     }
@@ -208,30 +209,11 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         this.actors = actors;
     }
 
-    public void addToActors(final PropertyActor actor) {
-        // check for no-op
-        if (actor == null || getActors().contains(actor)) {
-            return;
-        }
-        // associate new
-        getActors().add(actor);
-    }
-
-    public void removeFromActors(final PropertyActor actor) {
-        // check for no-op
-        if (actor == null || !getActors().contains(actor)) {
-            return;
-        }
-        // dissociate existing
-        getActors().remove(actor);
-    }
-
     @MemberOrder(name = "Actors", sequence = "1")
     public PropertyActor addActor(@Named("party") Party party, @Named("type") PropertyActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         PropertyActor propertyActor = propertyActorsRepo.findPropertyActor(this, party, type, startDate, endDate);
         if (propertyActor == null) {
             propertyActor = propertyActorsRepo.newPropertyActor(this, party, type, startDate, endDate);
-            actors.add(propertyActor);
         }
         return propertyActor;
     }
@@ -298,7 +280,6 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
     public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
         Unit unit = unitsRepo.newUnit(code, name);
         unit.setProperty(this);
-        getUnits().add(unit);
         return unit;
     }
 

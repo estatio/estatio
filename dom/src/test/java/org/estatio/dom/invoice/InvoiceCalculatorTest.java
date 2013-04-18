@@ -62,13 +62,13 @@ public class InvoiceCalculatorTest {
         li.setStartDate(startDate);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setNextDueDate(new LocalDate(2012, 1, 1));
-        l.addToItems(li);
+        l.getItems().add(li);
 
         lt = new LeaseTerm();
         lt.setStartDate(startDate);
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
-        li.addToTerms(lt);
+        li.getTerms().add(lt);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -82,14 +82,14 @@ public class InvoiceCalculatorTest {
         li.setStartDate(startDate);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setNextDueDate(new LocalDate(2012, 1, 1));
-        l.addToItems(li);
+        l.getItems().add(li);
 
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2012, 1, 1));
         lt.setEndDate(new LocalDate(2012, 3, 31));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
-        li.addToTerms(lt);
+        li.getTerms().add(lt);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -103,14 +103,14 @@ public class InvoiceCalculatorTest {
         li.setStartDate(startDate);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setNextDueDate(new LocalDate(2012, 1, 1));
-        l.addToItems(li);
+        l.getItems().add(li);
 
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2012, 2, 1));
         lt.setEndDate(new LocalDate(2012, 2, 29));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
-        li.addToTerms(lt);
+        li.getTerms().add(lt);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -124,14 +124,14 @@ public class InvoiceCalculatorTest {
         li.setStartDate(startDate);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setNextDueDate(new LocalDate(2012, 1, 1));
-        l.addToItems(li);
+        l.getItems().add(li);
 
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2013, 1, 1));
         lt.setEndDate(new LocalDate(2013, 3, 1));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
-        li.addToTerms(lt);
+        li.getTerms().add(lt);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -146,14 +146,14 @@ public class InvoiceCalculatorTest {
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.setCharge(charge);
-        l.addToItems(li);
+        l.getItems().add(li);
         lt = new LeaseTerm();
 
         lt.setStartDate(new LocalDate(2012, 1, 1));
         lt.setEndDate(new LocalDate(2013, 1, 1));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.setLeaseItem(li);
-        li.addToTerms(lt);
+        li.getTerms().add(lt);
 
         lt.setInvoiceService(mockInvoices);
         tax.setTaxRepo(mockTaxes);

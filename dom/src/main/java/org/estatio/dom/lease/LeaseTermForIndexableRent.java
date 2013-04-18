@@ -11,6 +11,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.index.Index;
@@ -39,20 +40,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     public List<Index> choicesIndex() {
         return indexService.allIndices();
-    }
-
-    // }}
-
-    // {{ IndexationFrequency (property)
-    private IndexationFrequency indexationFrequency;
-
-    @MemberOrder(sequence = "11", name = "Indexable Rent")
-    public IndexationFrequency getIndexationFrequency() {
-        return indexationFrequency;
-    }
-
-    public void setIndexationFrequency(final IndexationFrequency indexationFrequency) {
-        this.indexationFrequency = indexationFrequency;
     }
 
     // }}
@@ -230,23 +217,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ Actions
-    @Override
-    public LeaseTerm verify() {
-        IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
-        calculator.calculate(this);
-        if (getStatus() == LeaseTermStatus.NEW) {
-            if (MathUtils.isNotZeroOrNull(getIndexedValue())) {
-                setValue(getIndexedValue());
-            } else {
-                setValue(getBaseValue());
-            }
-        } else {
-            // TODO: handle updating values for other statuses
-        }
-        super.verify();
-
-        return this;
-    }
 
     @Override
     public LeaseTerm approve() {
@@ -259,20 +229,46 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     @Override
-    public LeaseTerm createOrUpdateNext() {
-        //super.createOrUpdateNext(newStartDate)
-        LeaseTermForIndexableRent nextTerm = (LeaseTermForIndexableRent) createOrUpdateNext(this.getEndDate() == null ? this.getIndexationFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1));
-        if (nextTerm != null){
-            //Do term sepecific stuff
-            nextTerm.setIndex(this.getIndex());
-            nextTerm.setBaseIndexStartDate(this.getNextIndexStartDate());
-            nextTerm.setNextIndexStartDate(this.getIndexationFrequency().nextDate(this.getNextIndexStartDate()));
-            nextTerm.setEffectiveDate(this.getIndexationFrequency().nextDate(this.getEffectiveDate()));
-            nextTerm.setReviewDate(this.getIndexationFrequency().nextDate(this.getReviewDate()));
-            nextTerm.setBaseValue(this.getValue());
-            return nextTerm;
+    @Hidden
+    public void initialize() {
+        super.initialize();
+        setFrequency(LeaseTermFrequency.YEARLY);
+        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
+        if (previousTerm != null) {
+            LeaseTermFrequency frequency = previousTerm.getFrequency();
+            if (frequency != null) {
+                setIndex(previousTerm.getIndex());
+                setBaseIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
+                setNextIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
+                setEffectiveDate(frequency.nextDate(previousTerm.getEffectiveDate()));
+                setReviewDate(frequency.nextDate(previousTerm.getReviewDate()));
+                setBaseValue(previousTerm.getValue());
+            }
         }
-        return this;
+    }
+
+    @Hidden
+    @Override
+    public void update() {
+        super.update();
+        //TODO: not really elegant to fetch teh data from th previous term. Who is responsible?
+        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
+        if (previousTerm != null) {
+            if (previousTerm.getValue() != null && (getBaseValue() == null || previousTerm.getValue().compareTo(getBaseValue()) != 0)) {
+                setBaseValue(previousTerm.getValue());
+            }
+        }
+        IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
+        calculator.calculate(this);
+        if (getStatus() == LeaseTermStatus.NEW) {
+            if (MathUtils.isNotZeroOrNull(getIndexedValue())) {
+                setValue(getIndexedValue());
+            } else {
+                setValue(getBaseValue());
+            }
+        } else {
+            // TODO: handle updating values for other statuses
+        }
     }
 
     // }}

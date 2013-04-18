@@ -16,10 +16,13 @@ import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.ChargesJdo;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class InvoiceIntegrationTest {
+    
+    private         Invoices invoices;
 
     @Rule
     public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
@@ -28,6 +31,12 @@ public class InvoiceIntegrationTest {
         return webServerRule.getIsisSystemForTest();
     }
 
+    @Before
+    public void setup() {
+        invoices = getIsft().getService(Invoices.class);
+        
+    }
+    
     @Test
     public void numberOfChargesIsOne() throws Exception {
         Charges charges = getIsft().getService(ChargesJdo.class);
@@ -45,8 +54,15 @@ public class InvoiceIntegrationTest {
     public void invoiceCanBeFound() throws Exception {
         Parties parties = getIsft().getService(Parties.class);
         Leases leases = getIsft().getService(Leases.class);
-        Invoices invoices = getIsft().getService(Invoices.class);
         Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW, new LocalDate(2012, 1, 1)).get(0);
         Assert.assertNotNull(invoice);
+    }
+    
+    @Test
+    public void invoiceCanBeRemoved() throws Exception {
+        Parties parties = getIsft().getService(Parties.class);
+        Leases leases = getIsft().getService(Leases.class);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW, new LocalDate(2012, 1, 1)).get(0);
+        invoice.remove();
     }
 }

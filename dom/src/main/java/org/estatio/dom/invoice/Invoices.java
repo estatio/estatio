@@ -87,16 +87,4 @@ public class Invoices extends AbstractFactoryAndRepository {
             ){
         throw new NotImplementedException();
     }
-    
-    @Prototype
-    public void removeAll(){
-        final List<Invoice> invoices = allInvoices();
-        for (Invoice invoice : invoices) {
-            Set<InvoiceItem> items = invoice.getItems();
-            for (InvoiceItem invoiceItem : items) {
-                getContainer().removeIfNotAlready(invoiceItem);
-            }
-            getContainer().removeIfNotAlready(invoice);
-        }
-    }        
 }

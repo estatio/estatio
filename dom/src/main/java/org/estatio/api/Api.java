@@ -49,7 +49,6 @@ import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
-import org.estatio.dom.lease.IndexationFrequency;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActorType;
@@ -59,6 +58,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseUnit;
 import org.estatio.dom.lease.LeaseUnits;
@@ -460,9 +460,9 @@ public class Api extends AbstractFactoryAndRepository {
         ){
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
         Index index = indices.findByReference(indexReference);
-        IndexationFrequency indexationFreq = IndexationFrequency.valueOf(indexationFrequency);
+        LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
         term.setIndex(index);
-        term.setIndexationFrequency(indexationFreq);
+        term.setFrequency(indexationFreq);
         term.setValue(value);
         term.setReviewDate(reviewDate);
         term.setEffectiveDate(effectiveDate);
@@ -564,10 +564,12 @@ public class Api extends AbstractFactoryAndRepository {
         } else {
             LeaseTerm currentTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
             term = item.createNextTerm(currentTerm);
+            if (startDate != null)
+                currentTerm.setEndDate(startDate.minusDays(1));
         }
         term.setSequence(sequence);
         term.setStartDate(startDate);
-        term.setEndDate(endDate);
+        // term.setEndDate(endDate);
         return term;
     }
     

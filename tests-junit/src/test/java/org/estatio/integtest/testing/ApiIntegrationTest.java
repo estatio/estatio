@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 import org.estatio.api.Api;
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.integtest.IntegrationSystemForTestRule;
@@ -85,7 +86,8 @@ public class ApiIntegrationTest {
                 null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
         api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", new LocalDate(2012, 1, 1), BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", BigDecimal.valueOf(12345), null, null, BigDecimal.valueOf(12345), null, null,
                 null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
-        Assert.assertThat(leases.findByReference("APILEASE").getItems().first().getTerms().size() , Is.is(2));
+        Lease lease = leases.findByReference("APILEASE");
+        Assert.assertThat(lease.getItems().first().getTerms().size() , Is.is(2));
     }
 
 }

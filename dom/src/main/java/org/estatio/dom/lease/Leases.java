@@ -31,7 +31,7 @@ public class Leases extends AbstractFactoryAndRepository {
     // }}
 
     // {{ newLease
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(final @Named("Reference") String reference, final @Named("Name") String name) {
         Lease lease = newTransientInstance(Lease.class);
@@ -41,7 +41,7 @@ public class Leases extends AbstractFactoryAndRepository {
         return lease;
     }
 
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease2(
             final @Named("Reference") String reference, 

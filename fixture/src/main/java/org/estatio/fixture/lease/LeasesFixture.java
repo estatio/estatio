@@ -3,15 +3,12 @@ package org.estatio.fixture.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
-import org.estatio.dom.lease.IndexationFrequency;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActorType;
@@ -28,6 +25,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
 
 public class LeasesFixture extends AbstractFixture {
 
@@ -106,7 +104,7 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setBaseIndexStartDate(baseIndexDate);
         leaseTerm.setNextIndexStartDate(nextIndexDate);
         leaseTerm.setEffectiveDate(indexationApplicationDate);
-        leaseTerm.setIndexationFrequency(IndexationFrequency.YEARLY);
+        leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setIndex(indices.findByReference("ISTAT-FOI"));
         return leaseTerm;
     }
@@ -121,7 +119,7 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBudgetedValue(value);
-        leaseTerm.setTermFrequency(LeaseTermFrequency.YEARLY);
+        leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         return leaseTerm;
     }
 

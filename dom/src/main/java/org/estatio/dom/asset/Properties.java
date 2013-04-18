@@ -46,8 +46,7 @@ public class Properties extends AbstractFactoryAndRepository {
         property.setReference(reference);
         property.setName(name);
         property.setType(propertyType);
-        getContainer().flush();
-        persist(property);
+        persistIfNotAlready(property);
         return property;
     }
 

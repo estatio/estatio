@@ -325,6 +325,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Render(Type.EAGERLY)
+    @Persistent(mappedBy = "lease")
     @MemberOrder(name = "Items", sequence = "30")
     public SortedSet<LeaseItem> getItems() {
         return items;
@@ -332,24 +333,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
 
     public void setItems(final SortedSet<LeaseItem> items) {
         this.items = items;
-    }
-
-    public void addToItems(final LeaseItem leaseItem) {
-        // check for no-op
-        if (leaseItem == null || getItems().contains(leaseItem)) {
-            return;
-        }
-        // associate new
-        getItems().add(leaseItem);
-    }
-
-    public void removeFromItems(final LeaseItem leaseItem) {
-        // check for no-op
-        if (leaseItem == null || !getItems().contains(leaseItem)) {
-            return;
-        }
-        // dissociate existing
-        getItems().remove(leaseItem);
     }
 
     @MemberOrder(name = "Items", sequence = "31")
