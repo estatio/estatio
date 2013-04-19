@@ -2,6 +2,8 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.estatio.dom.workarounds.IsisJdoSupport;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -35,6 +37,9 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
         leaseTerm.setLeaseItem(leaseItem);
         persist(leaseTerm);
+        getContainer().flush();
+        isisJdoSupport.refresh(leaseItem);
+        //TODO: without this flush the collection of terms on the item is not updated
         leaseTerm.initialize();
         return leaseTerm;
     }
@@ -46,7 +51,8 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
         LeaseTerm leaseTerm = newLeaseTerm(leaseItem);
-        leaseTerm.modifyPreviousTerm(previous);       
+        leaseTerm.setPreviousTerm(previous);
+        previous.setNextTerm(leaseTerm);
         return leaseTerm;
     }
     // }}
@@ -59,4 +65,13 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         return allInstances(LeaseTerm.class);
     }
     // }}
+    
+
+    // {{
+    private IsisJdoSupport isisJdoSupport;
+    public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+        this.isisJdoSupport = isisJdoSupport;
+    }
+    // }}
+
 }

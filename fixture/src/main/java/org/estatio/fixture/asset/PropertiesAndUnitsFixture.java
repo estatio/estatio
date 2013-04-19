@@ -2,6 +2,8 @@ package org.estatio.fixture.asset;
 
 import java.math.BigDecimal;
 
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
+
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
@@ -26,7 +28,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         Party owner2 = parties.findPartyByReference("ACME");
         Party manager = parties.findPartyByReference("JDOE");
         
-        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1, manager);
+        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1, manager, 51.74579, -1.24334);
         State state = states.findByReference("GB-OXF");
         Country country = countries.findByReference("GBR");
         
@@ -35,7 +37,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         prop1.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newFaxNumber("+44 987 654321"));
         prop1.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newEmailAddress("info@oxford.example.com"));
 
-        Property prop2 = createPropertyAndUnits("KAL", "Winkelcentrum Kalvertoren", PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), owner2, manager);
+        Property prop2 = createPropertyAndUnits("KAL", "Winkelcentrum Kalvertoren", PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), owner2, manager, 52.37597, 4.90814);
         Country c2 = countries.findByReference("NLD");
         State s2 = states.findByReference("NL-NH");
         
@@ -45,13 +47,13 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         prop2.getCommunicationChannels().add((CommunicationChannel) communicationChannels.newEmailAddress("info@kalvertoren.example.com"));
     }
 
-    private Property createPropertyAndUnits(final String reference, String name, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager) {
+    private Property createPropertyAndUnits(final String reference, String name, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager, double lat, double lng) {
         Property property = properties.newProperty(reference, name, type);
         property.setOpeningDate(openingDate);
         property.setAcquireDate(acquireDate);
         property.addActor(owner, PropertyActorType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
         property.addActor(manager, PropertyActorType.ASSET_MANAGER, null, null);
-        
+        //property.setLocation(new Location(lat, lng));
         for (int i = 0; i < numberOfUnits; i++) {
             int unitNumber = i + 1;
             property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber).setArea(new BigDecimal((i + 1) * 100));

@@ -10,6 +10,7 @@ import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 import org.apache.log4j.Level;
 import org.estatio.api.Api;
 import org.estatio.fixture.EstatioFixture;
+import org.estatio.isis.workarounds.IsisJdoSupportImpl;
 import org.estatio.jdo.ChargeGroupsJdo;
 import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;
@@ -69,7 +70,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new ChargeGroupsJdo(),
                 new FinancialAccountsJdo(),
                 new NumeratorsJdo(),
-                new Api()
+                new Api(),
+                new IsisJdoSupportImpl()
                 );
     }
 
@@ -78,7 +80,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
         testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
         //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); // use log4jdbc instead
-        //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test"); //disable default sqlloq
+        testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test"); //disable default sqlloq
         
         testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
         testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY , "true");

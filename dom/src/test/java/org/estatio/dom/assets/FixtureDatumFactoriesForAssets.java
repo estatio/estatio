@@ -4,17 +4,18 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyActor;
 import org.estatio.dom.asset.Unit;
 
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.testsupport.coverage.PojoTester.FixtureDatumFactory;
 
 public class FixtureDatumFactoriesForAssets {
 
-	public static FixtureDatumFactory<Property> properties() {
-		Property prop1 = new Property();
-		prop1.setName("Property 1");
-		Property prop2 = new Property();
-		prop2.setName("Property 2");
-		return new FixtureDatumFactory<Property>(Property.class, prop1, prop2);
-	}
+    public static FixtureDatumFactory<Property> properties() {
+        Property prop1 = new Property();
+        prop1.setName("Property 1");
+        Property prop2 = new Property();
+        prop2.setName("Property 2");
+        return new FixtureDatumFactory<Property>(Property.class, prop1, prop2);
+    }
 
     public static FixtureDatumFactory<Unit> units() {
         Unit unit1 = new Unit();
@@ -24,11 +25,15 @@ public class FixtureDatumFactoriesForAssets {
         return new FixtureDatumFactory<Unit>(Unit.class, unit1, unit2);
     }
 
-	public static FixtureDatumFactory<PropertyActor> propertyActors() {
-	    PropertyActor pa1 = new PropertyActor();
-	    PropertyActor pa2 = new PropertyActor();
+    public static FixtureDatumFactory<PropertyActor> propertyActors() {
+        PropertyActor pa1 = new PropertyActor();
+        PropertyActor pa2 = new PropertyActor();
         return new FixtureDatumFactory<PropertyActor>(PropertyActor.class, pa1, pa2);
     }
 
+    public static FixtureDatumFactory<Location> locations() {
+        Location location =  new Location(0, 0);
+        return new FixtureDatumFactory<Location>(Location.class, location);
+    }
 
 }

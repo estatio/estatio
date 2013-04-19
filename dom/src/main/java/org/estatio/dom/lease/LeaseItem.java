@@ -10,12 +10,17 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
 
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.workarounds.InjectingSet;
+import org.estatio.dom.workarounds.IsisJdoSupport;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -180,7 +185,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     @MemberOrder(sequence = "13")
     @Hidden(where = Where.PARENTED_TABLES)
-    public PaymentMethod getPayymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 
@@ -235,7 +240,22 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     @Persistent(mappedBy = "leaseItem")
     @MemberOrder(name = "Terms", sequence = "15")
     public SortedSet<LeaseTerm> getTerms() {
-        return terms;
+        
+        // TOFIX: a workaround until we figure out how to get 
+        // JDO/DN to callback on the lazy loading of this collection
+        
+        if (this.terms == null) {
+            // this can happen, it would seem, by JDO/DN when it is setting up the object
+            // with its own set impl for lazy loading.  It would seem that it could be null...
+            return null;
+        } else {
+            // inject each element before returning it
+            return Sets.newTreeSet(Iterables.transform(this.terms, new Function<LeaseTerm, LeaseTerm>(){
+                public LeaseTerm apply(LeaseTerm leaseTerm) {
+                    return isisServiceInjector.injected(leaseTerm);                        
+                }
+            }));
+        }
     }
 
     public void setTerms(final SortedSet<LeaseTerm> terms) {
@@ -262,9 +282,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
         return null;
     }
 
-    // FIXME: move into the 'terms' collection once enablement/disablement is
-    // working in the wicket viewer.
-    @MemberOrder(/* name = "terms", */sequence = "11")
+    @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createInitialTerm() {
         LeaseTerm term = leaseTermsService.newLeaseTerm(this);
         return term;
@@ -275,7 +293,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     @Hidden
-    @MemberOrder(/* name = "terms", */sequence = "11")
+    @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
         LeaseTerm term = leaseTermsService.newLeaseTerm(this, currentTerm);
         return term;
@@ -297,10 +315,16 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     public LeaseItem calculate(@Named("Due date") LocalDate dueDate) {
+//        SortedSet<LeaseTerm> terms = Sets.newTreeSet(Iterables.transform(getTerms(), new Function<LeaseTerm, LeaseTerm>(){
+//            public LeaseTerm apply(LeaseTerm leaseTerm) {
+//                return isisServiceInjector.injected(leaseTerm);                        
+//            }
+//        }));
+
         for (LeaseTerm term : getTerms()) {
-            resolve(term); // TODO: need to call resolve,
-                                          // otherwise services are not injected
-                                          // when running in the wicket viewer.
+//            resolve(term); // TODO: need to call resolve,
+//                                          // otherwise services are not injected
+//                                          // when running in the wicket viewer.
             term.calculate(dueDate);
         }
         return this;
@@ -345,4 +369,11 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     // }}
 
+    
+    // {{ services
+    private IsisJdoSupport isisServiceInjector;
+    public void setIsisServiceInjector(IsisJdoSupport isisServiceInjector) {
+        this.isisServiceInjector = isisServiceInjector;
+    }
+    //}}
 }

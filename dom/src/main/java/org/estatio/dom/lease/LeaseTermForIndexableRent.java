@@ -3,6 +3,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.jdo.InstanceCallbacks;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -26,6 +27,9 @@ import org.joda.time.LocalDate;
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
+    public LeaseTermForIndexableRent() {
+        
+    }
     // {{ Index (property)
     private Index index;
 

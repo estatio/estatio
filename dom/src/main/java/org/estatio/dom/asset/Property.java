@@ -14,6 +14,10 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
+import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -24,6 +28,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -39,7 +44,7 @@ import org.apache.isis.applib.annotation.Title;
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Properties.class)
 @PublishedObject
-public class Property extends EstatioTransactionalObject implements Comparable<Property> {
+public class Property extends EstatioTransactionalObject implements Comparable<Property> /*, Locatable*/ {
 
     // {{ Reference (attribute, title)
     private String reference;
@@ -154,6 +159,30 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
 
     // }}
 
+//    // {{ Location
+//    private Location location;
+//    
+//    @javax.jdo.annotations.Persistent
+//    @Override
+//    @Disabled
+//    @Optional
+//    @MemberOrder(sequence = "1.8")
+//    public Location getLocation() {
+//        return location;
+//    }
+//    public void setLocation(Location location) {
+//        this.location = location;
+//    }
+//    
+//    
+//    @MemberOrder(sequence = "1.9")
+//    public Property lookupLocation(@Named("Address") String address) {
+//        setLocation(locationLookupService.lookup(address));
+//        return this;
+//    }
+//    
+//    // }}
+    
     // {{ AreaOfUnits (attribute)
     // @MemberOrder(sequence = "1.8")
     // public BigDecimal getAreaOfUnits() {
@@ -305,11 +334,18 @@ public class Property extends EstatioTransactionalObject implements Comparable<P
         this.propertyActorsRepo = propertyActors;
     }
 
+    private LocationLookupService locationLookupService;
+    public void setLocationLookupService(LocationLookupService locationLookupService) {
+        this.locationLookupService = locationLookupService;
+    }
+
     // }}
 
     @Override
     public int compareTo(Property other) {
         return this.getName().compareTo(other.getName());
     }
+
+    
 
 }

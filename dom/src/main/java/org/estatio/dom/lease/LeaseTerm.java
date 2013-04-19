@@ -34,6 +34,7 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.workarounds.IsisJdoSupport;
 import org.joda.time.LocalDate;
 
 import com.google.common.collect.Ordering;
@@ -150,12 +151,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.previousTerm = previousTerm;
     }
 
-    public void modifyPreviousTerm(LeaseTerm term) {
-        this.setPreviousTerm(term);
-        term.setNextTerm(this); // not strictly necessary, as JDO will also do
-                                // this (bidir link)
-    }
-
     private LeaseTerm nextTerm;
 
     @MemberOrder(sequence = "7")
@@ -201,13 +196,14 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate())) {
-                invoiceItem.setInvoice(null); //dissociate
-                invoiceItem.setLeaseTerm(null); //dissociate
-                getContainer().flush();
+              //dissociate
+//                invoiceItem.setInvoice(null); 
+//                invoiceItem.setLeaseTerm(null); 
+//                getContainer().flush();
                 remove(invoiceItem);
-                resolve(invoice);
-                resolve(this);
-                // TODO: to prevent runtime errors I find myself calling resolve more and more
+                getContainer().flush();
+//                resolve(invoice);
+//                resolve(this);
             }
         }
     }
@@ -352,7 +348,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setInvoiceService(Invoices service) {
         this.invoiceRepository = service;
     }
-
     // }}
-
+    
 }

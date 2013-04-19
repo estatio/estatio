@@ -501,6 +501,51 @@
                 <version>2.6.0</version>
             </dependency>
             
+            
+            
+            <!-- 3rd party extensions -->
+
+            <!--
+            GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3
+            -->
+            <dependency>
+                <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+                <artifactId>danhaywood-isis-wicket-gmap3</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--
+            WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts
+            -->
+            <dependency>
+                <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+                <artifactId>danhaywood-isis-wicket-wickedcharts</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--
+            EXCEL: uncomment to use https://github.com/danhaywood/isis-wicket-excel
+            -->
+            <dependency>
+                <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+                <artifactId>danhaywood-isis-wicket-excel</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!--
+            CALENDAR
+            <dependency>
+                <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+                <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            -->            
+            
+            
 		</dependencies>
 	</dependencyManagement>
 	<reporting>

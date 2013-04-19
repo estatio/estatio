@@ -20,11 +20,11 @@ import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 public class NumeratorIntegrationTest {
 
     @Rule
-    public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
+    public IntegrationSystemForTestRule integrationTestRule = new IntegrationSystemForTestRule();
     private NumeratorsJdo numerators;
 
     public IsisSystemForTest getIsft() {
-        return webServerRule.getIsisSystemForTest();
+        return integrationTestRule.getIsisSystemForTest();
     }
 
     @Before

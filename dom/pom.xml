@@ -199,6 +199,19 @@
 			<artifactId>rfc-2445</artifactId> 
 			<version>0.0.20110304</version>
 		</dependency>
+        
+        <!--
+        GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 
+         -->
+        <dependency>
+            <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+            <artifactId>danhaywood-isis-wicket-gmap3-applib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
+            <artifactId>danhaywood-isis-wicket-gmap3-service</artifactId>
+        </dependency>
+        
    	</dependencies>
    	
    <profiles>

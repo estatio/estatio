@@ -240,7 +240,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
             resolve(lease);
             Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
             Party buyer = lease.findActorWithType(LeaseActorType.TENANT, getDueDate()).getParty();
-            PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPayymentMethod();
+            PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
             Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
             if (invoice == null) {
                 invoice = invoices.newInvoice();
@@ -260,7 +260,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
         calulateTax();
         return this;
     }
-    
+
     @Hidden 
     public void remove() {
         // no safeguard, assuming being called with precaution
@@ -288,6 +288,11 @@ public class InvoiceItem extends EstatioTransactionalObject {
 
     // {{ Lifecycle Events
     public void created() {
+        initialize();
+    }
+
+    @Hidden
+    public void initialize() {
         // set defaults
         setVatAmount(BigDecimal.ZERO);
         setGrossAmount(BigDecimal.ZERO);

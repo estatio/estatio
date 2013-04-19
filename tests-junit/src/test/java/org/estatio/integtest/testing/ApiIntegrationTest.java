@@ -31,10 +31,10 @@ public class ApiIntegrationTest {
     private Leases leases;
     
     @Rule
-    public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
+    public IntegrationSystemForTestRule integrationTestRule = new IntegrationSystemForTestRule();
 
     public IsisSystemForTest getIsft() {
-        return webServerRule.getIsisSystemForTest();
+        return integrationTestRule.getIsisSystemForTest();
     }
 
     @Before
@@ -55,7 +55,7 @@ public class ApiIntegrationTest {
         api.putProperty("APIPROP", "Apiland", "SHOPPING_CENTER", null, null, null, "HELLOWORLD");
         api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", null, null, null, null, null, null, null, null, null, null, null, null);
         Properties properties = getIsft().getService(PropertiesJdo.class);
-        Assert.assertNotNull(properties.findPropertiesByReference("API"));
+        Assert.assertThat(properties.findPropertiesByReference("APIPROP").size(), Is.is(1));
     }
 
     @Test

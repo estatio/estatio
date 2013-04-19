@@ -47,6 +47,10 @@ public class IntegrationSystemForTestRule implements MethodRule {
             public void evaluate() throws Throwable {
                 isft.beginTran();
                 base.evaluate();
+                // if an exception is thrown by any test, then we don't attempt to cleanup (eg by calling bounceSystem)#
+                // because - in any case - we only ever install the fixtures once for ALL of the tests.
+                // therefore, just fix the first test that fails and don't worry about any other test failures beyond that
+                // (fix them up one by one)
                 isft.commitTran();
             }
         };

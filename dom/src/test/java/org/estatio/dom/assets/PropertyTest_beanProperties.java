@@ -16,9 +16,10 @@ public class PropertyTest_beanProperties {
 		    .withFixture(FixtureDatumFactoriesForAssets.properties())
 		    .withFixture(FixtureDatumFactoriesForAssets.units())
 		    .withFixture(FixtureDatumFactoriesForAssets.propertyActors())
+		    .withFixture(FixtureDatumFactoriesForAssets.locations())
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
 			.withFixture(FixtureDatumFactoriesForGeography.countries())
-			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo", "properties", "unitsRepo", "actors", "parties", "communicationChannels" ));
+			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo", "properties", "unitsRepo", "actors", "parties", "communicationChannels", "locationLookupService" ));
 	}
 
 }
