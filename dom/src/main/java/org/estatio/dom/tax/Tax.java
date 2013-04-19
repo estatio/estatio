@@ -36,8 +36,9 @@ public class Tax extends EstatioRefDataObject {
     public void setReference(final String reference) {
         this.reference = reference;
     }
+
     // }}
-    
+
     // {{ Name (property)
     private String name;
 
@@ -49,6 +50,7 @@ public class Tax extends EstatioRefDataObject {
     public void setName(final String name) {
         this.name = name;
     }
+
     // }}
 
     // {{ Rates (Collection)
@@ -63,41 +65,12 @@ public class Tax extends EstatioRefDataObject {
     public void setRates(final SortedSet<TaxRate> rates) {
         this.rates = rates;
     }
+
     // }}
 
-    public void addToRates(final TaxRate taxRate) {
-        // check for no-op
-        if (taxRate == null || getRates().contains(taxRate)) {
-            return;
-        }
-        // associate arg
-        taxRate.setTax(this);
-        getRates().add(taxRate);
-        // additional business logic
-    }
-
-    public void removeFromRates(final TaxRate taxRate) {
-        // check for no-op
-        if (taxRate == null || !getRates().contains(taxRate)) {
-            return;
-        }
-        // dissociate arg
-        taxRate.setTax(null);
-        getRates().remove(taxRate);
-        // additional business logic
-    }
-
     // {{ NewRate (action)
-    public TaxRate newRate(
-                           @Named("Start Date") LocalDate startDate,
-                           @Named("Percentage") BigDecimal percentage) {
-        TaxRate rate = newTransientInstance(TaxRate.class);
-        rate.setStartDate(startDate);
-        rate.setPercentage(percentage);
-        persist(rate);
-        this.addToRates(rate);
-        return rate;        
-//        rates.getCurrentRate();
+    public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
+        return taxRepo.newRate(this, startDate, percentage);
     }
 
     // }}
@@ -105,12 +78,12 @@ public class Tax extends EstatioRefDataObject {
     // {{ getPercentageForDate
     public BigDecimal percentageFor(LocalDate date) {
         TaxRate rate = taxRepo.findTaxRateForDate(this, date);
-        if (rate.equals(null)){
+        if (rate.equals(null)) {
             return null;
         }
         return rate.getPercentage();
     }
-    
+
     // {{
 
     // {{ Taxes (injected)

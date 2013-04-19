@@ -42,6 +42,17 @@ public class Taxes extends AbstractFactoryAndRepository {
     }
     // }}
     
+    @MemberOrder(sequence = "2")
+    public TaxRate newRate(@Named("Tax") Tax tax, @Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
+        TaxRate rate = newTransientInstance(TaxRate.class);
+        rate.setTax(tax);
+        rate.setStartDate(startDate);
+        rate.setPercentage(percentage);
+        persist(rate);
+        return rate;
+    }
+
+    
     @MemberOrder(sequence = "3")
     public Tax findTaxByReference(final String reference) {
         final String regex = StringUtils.wildcardToRegex(reference);

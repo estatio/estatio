@@ -1,6 +1,10 @@
 package org.estatio.dom.charge;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
@@ -39,6 +43,21 @@ public class ChargeGroup extends EstatioRefDataObject {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    // }}
+
+    // {{ Charges (Collection)
+    @Persistent(mappedBy = "group")
+    private Set<Charge> charges = new LinkedHashSet<Charge>();
+
+    @MemberOrder(sequence = "1")
+    public Set<Charge> getCharges() {
+        return charges;
+    }
+
+    public void setCharges(final Set<Charge> charges) {
+        this.charges = charges;
     }
     // }}
 
