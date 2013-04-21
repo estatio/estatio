@@ -16,6 +16,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
@@ -27,6 +31,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceCalculator;
@@ -34,10 +39,6 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.workarounds.IsisJdoSupport;
-import org.joda.time.LocalDate;
-
-import com.google.common.collect.Ordering;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)

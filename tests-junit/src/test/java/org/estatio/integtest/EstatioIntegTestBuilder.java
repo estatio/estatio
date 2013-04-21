@@ -1,16 +1,18 @@
 package org.estatio.integtest;
 
+import org.apache.log4j.Level;
+
 import org.apache.isis.applib.fixtures.InstallableFixture;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
-import org.apache.log4j.Level;
+
 import org.estatio.api.Api;
 import org.estatio.fixture.EstatioFixture;
-import org.estatio.isis.workarounds.IsisJdoSupportImpl;
 import org.estatio.jdo.ChargeGroupsJdo;
 import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;

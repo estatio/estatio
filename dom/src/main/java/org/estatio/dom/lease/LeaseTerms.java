@@ -2,8 +2,6 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
-import org.estatio.dom.workarounds.IsisJdoSupport;
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -12,6 +10,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 @Hidden
 @Named("Lease Terms")
@@ -37,9 +36,9 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
         leaseTerm.setLeaseItem(leaseItem);
         persist(leaseTerm);
+        //TOFIX: without this flush and refresh, the collection of terms on the item is not updated
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
-        //TODO: without this flush the collection of terms on the item is not updated
         leaseTerm.initialize();
         return leaseTerm;
     }

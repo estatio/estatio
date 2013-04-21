@@ -15,12 +15,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.utils.CalenderUtils;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.workarounds.InjectingSet;
-import org.estatio.dom.workarounds.IsisJdoSupport;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
@@ -33,6 +27,12 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.utils.CalenderUtils;
+import org.estatio.dom.utils.Orderings;
 
 @PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -252,7 +252,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
             // inject each element before returning it
             return Sets.newTreeSet(Iterables.transform(this.terms, new Function<LeaseTerm, LeaseTerm>(){
                 public LeaseTerm apply(LeaseTerm leaseTerm) {
-                    return isisServiceInjector.injected(leaseTerm);                        
+                    return isisJdoSupport.injected(leaseTerm);                        
                 }
             }));
         }
@@ -371,9 +371,9 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     
     // {{ services
-    private IsisJdoSupport isisServiceInjector;
-    public void setIsisServiceInjector(IsisJdoSupport isisServiceInjector) {
-        this.isisServiceInjector = isisServiceInjector;
+    private IsisJdoSupport isisJdoSupport;
+    public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+        this.isisJdoSupport = isisJdoSupport;
     }
     //}}
 }
