@@ -14,7 +14,7 @@ public class PartyRoleTest_beanProperties {
 		new PojoTester()
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
 			.withFixture(FixtureDatumFactoriesForParty.parties())
-			.exercise(new PartyRole(), FilterSet.excluding("container"));
+			.exercise(new PartyRole(), FilterSet.excluding("container", "isisJdoSupport"));
 	}
 
 }

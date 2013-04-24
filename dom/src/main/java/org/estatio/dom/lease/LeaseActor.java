@@ -15,9 +15,8 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseActor extends EstatioTransactionalObject implements Comparable<LeaseActor> {
 
     // {{ Lease (property)
@@ -32,6 +31,30 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
 
     public void setLease(final Lease lease) {
         this.lease = lease;
+    }
+    
+    public void modifyLease(final Lease lease) {
+        Lease currentLease = getLease();
+        // check for no-op
+        if (lease == null || lease.equals(currentLease)) {
+            return;
+        }
+        // associate new
+        setLease(lease);
+        // additional business logic
+        // onModifyLease(currentLease, lease);
+    }
+
+    public void clearLease() {
+        Lease currentLease = getLease();
+        // check for no-op
+        if (currentLease == null) {
+            return;
+        }
+        // dissociate existing
+        setLease(null);
+        // additional business logic
+        // onClearLease(currentLease);
     }
 
     // }}
@@ -96,12 +119,14 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
     // }}
 
     /**
-     * This is necessary but not sufficient; in {@link Lease#addActor(Party, LeaseActorType, LocalDate, LocalDate)}
-     * there is logic to ensure that there cannot be two {@link LeaseActor actor}s of the same type
-     * at the same point in time.
+     * This is necessary but not sufficient; in
+     * {@link Lease#addActor(Party, LeaseActorType, LocalDate, LocalDate)} there
+     * is logic to ensure that there cannot be two {@link LeaseActor actor}s of
+     * the same type at the same point in time.
      * 
      * TODO: need to implement the above statement!!!
      */
@@ -109,16 +134,16 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
     @Hidden
     public int compareTo(LeaseActor o) {
         int compareType = this.getType().compareTo(o.getType());
-        if(compareType != 0) {
+        if (compareType != 0) {
             return compareType;
         }
-        if(this.getStartDate() == null && o.getStartDate() != null) {
+        if (this.getStartDate() == null && o.getStartDate() != null) {
             return -1;
         }
-        if(this.getStartDate() != null && o.getStartDate() == null) {
+        if (this.getStartDate() != null && o.getStartDate() == null) {
             return +1;
         }
-        if(this.getStartDate() == null && o.getStartDate() == null) {
+        if (this.getStartDate() == null && o.getStartDate() == null) {
             return 0;
         }
         return this.getStartDate().compareTo(o.getStartDate());

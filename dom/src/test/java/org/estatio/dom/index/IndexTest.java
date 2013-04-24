@@ -1,5 +1,6 @@
 package org.estatio.dom.index;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
@@ -82,9 +83,9 @@ public class IndexTest {
     public void testGetIndexValueForDate() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
+                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
                 will(returnValue(iv1));
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -93,10 +94,16 @@ public class IndexTest {
     }
 
     @Test
+    public void testGetIndexValueForDateWithNulls() {
+        assertNull(index.getIndexValueForDate(null));
+    }
+
+    
+    @Test
     public void testGetRebaseFactor() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -107,7 +114,7 @@ public class IndexTest {
     public void testGetRebaseFactorWithNull() {
         context.checking(new Expectations() {
             {
-                one(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(null));
             }
         });

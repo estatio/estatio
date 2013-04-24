@@ -16,10 +16,20 @@ import org.junit.Test;
 public class CalenderUtilsTest_interval {
 
     @Test
-    public void currentIntervalTest() throws Exception {
-        assertEquals(CalenderUtils.currentInterval(new LocalDate(2012,2,1), "RRULE:FREQ=MONTHLY;INTERVAL=3" ), new Interval(new LocalDate(2012,1,1).toInterval().getStartMillis(), new LocalDate(2012,4,1).toInterval().getStartMillis()));
+    public void intervalContainingTest() throws Exception {
+        assertEquals(CalenderUtils.intervalContaining(new LocalDate(2012,2,1), "RRULE:FREQ=MONTHLY;INTERVAL=3" ), new Interval(new LocalDate(2012,1,1).toInterval().getStartMillis(), new LocalDate(2012,4,1).toInterval().getStartMillis()));
     }
 
+    @Test
+    public void intervalMatchingTest() throws Exception {
+        assertEquals(CalenderUtils.intervalMatching(new LocalDate(2012,1,1), "RRULE:FREQ=MONTHLY;INTERVAL=3" ), new Interval(new LocalDate(2012,1,1).toInterval().getStartMillis(), new LocalDate(2012,4,1).toInterval().getStartMillis()));
+    }
+
+    @Test
+    public void intervalMatchingNotExactDateTest() throws Exception {
+        assertNull(CalenderUtils.intervalMatching(new LocalDate(2012,1,2), "RRULE:FREQ=MONTHLY;INTERVAL=3" ));
+    }
+    
     @Test
     public void zaraIntervalTest() throws Exception {
         assertEquals(CalenderUtils.currentInterval(new LocalDate(2012,3,1), "RRULE:FREQ=MONTHLY;INTERVAL=3", new LocalDate(2010,2,1) ), new Interval(new LocalDate(2012,2,1).toInterval().getStartMillis(), new LocalDate(2012,5,1).toInterval().getStartMillis()));

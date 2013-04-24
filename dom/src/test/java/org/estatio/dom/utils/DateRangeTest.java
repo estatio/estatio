@@ -1,7 +1,10 @@
 package org.estatio.dom.utils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,6 +26,8 @@ public class DateRangeTest {
     private DateRange dateRange7 = new DateRange(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1));
     // starts in, open ended
     private DateRange dateRange8 = new DateRange(new LocalDate(2012, 2, 1), null);
+    // open start, open end
+    private DateRange dateRange9 = new DateRange(null, null);
 
     @Before
     public void setup() {
@@ -34,72 +39,78 @@ public class DateRangeTest {
         dateRange6.setBoundingRange(boundingRange);
         dateRange7.setBoundingRange(boundingRange);
         dateRange8.setBoundingRange(boundingRange);
+        dateRange9.setBoundingRange(boundingRange);
     }
 
     @Test
     public void testIsWithinParent() {
-        Assert.assertTrue(dateRange1.isWithinParent());
-        Assert.assertTrue(dateRange2.isWithinParent());
-        Assert.assertTrue(dateRange3.isWithinParent());
-        Assert.assertTrue(dateRange4.isWithinParent());
-        Assert.assertTrue(dateRange5.isWithinParent());
-        Assert.assertFalse(dateRange6.isWithinParent());
-        Assert.assertFalse(dateRange7.isWithinParent());
-        Assert.assertTrue(dateRange8.isWithinParent());
+        assertTrue(dateRange1.isWithinParent());
+        assertTrue(dateRange2.isWithinParent());
+        assertTrue(dateRange3.isWithinParent());
+        assertTrue(dateRange4.isWithinParent());
+        assertTrue(dateRange5.isWithinParent());
+        assertFalse(dateRange6.isWithinParent());
+        assertFalse(dateRange7.isWithinParent());
+        assertTrue(dateRange8.isWithinParent());
+        assertTrue(dateRange9.isWithinParent());
     }
 
     @Test
     public void testIsFullInterval() {
-        Assert.assertTrue(dateRange1.isFullInterval());
-        Assert.assertTrue(dateRange2.isFullInterval());
-        Assert.assertFalse(dateRange3.isFullInterval());
-        Assert.assertFalse(dateRange4.isFullInterval());
-        Assert.assertFalse(dateRange5.isFullInterval());
-        Assert.assertFalse(dateRange6.isFullInterval());
-        Assert.assertFalse(dateRange7.isFullInterval());
-        Assert.assertFalse(dateRange8.isFullInterval());
+        assertTrue(dateRange1.isFullInterval());
+        assertTrue(dateRange2.isFullInterval());
+        assertFalse(dateRange3.isFullInterval());
+        assertFalse(dateRange4.isFullInterval());
+        assertFalse(dateRange5.isFullInterval());
+        assertFalse(dateRange6.isFullInterval());
+        assertFalse(dateRange7.isFullInterval());
+        assertFalse(dateRange8.isFullInterval());
+        assertTrue(dateRange9.isFullInterval());
     }
 
     @Test
     public void testGetActualStartDate() {
-        Assert.assertEquals(new LocalDate(2012, 1, 1), dateRange1.getActualStartDate());
-        Assert.assertEquals(new LocalDate(2012, 1, 1), dateRange2.getActualStartDate());
-        Assert.assertEquals(new LocalDate(2012, 1, 1), dateRange3.getActualStartDate());
-        Assert.assertEquals(new LocalDate(2012, 2, 1), dateRange4.getActualStartDate());
-        Assert.assertEquals(new LocalDate(2012, 2, 1), dateRange5.getActualStartDate());
-        Assert.assertEquals(null, dateRange6.getActualStartDate());
-        Assert.assertEquals(null, dateRange7.getActualStartDate());
-        Assert.assertEquals(new LocalDate(2012, 2, 1), dateRange8.getActualStartDate());
+        assertEquals(new LocalDate(2012, 1, 1), dateRange1.getActualStartDate());
+        assertEquals(new LocalDate(2012, 1, 1), dateRange2.getActualStartDate());
+        assertEquals(new LocalDate(2012, 1, 1), dateRange3.getActualStartDate());
+        assertEquals(new LocalDate(2012, 2, 1), dateRange4.getActualStartDate());
+        assertEquals(new LocalDate(2012, 2, 1), dateRange5.getActualStartDate());
+        assertEquals(null, dateRange6.getActualStartDate());
+        assertEquals(null, dateRange7.getActualStartDate());
+        assertEquals(new LocalDate(2012, 2, 1), dateRange8.getActualStartDate());
+        assertEquals(new LocalDate(2012, 1, 1), dateRange9.getActualStartDate());
     }
 
     @Test
     public void testGetActualEndDate() {
-        Assert.assertEquals(new LocalDate(2012, 4, 1), dateRange1.getActualEndDate());
-        Assert.assertEquals(new LocalDate(2012, 4, 1), dateRange2.getActualEndDate());
-        Assert.assertEquals(new LocalDate(2012, 3, 1), dateRange3.getActualEndDate());
-        Assert.assertEquals(new LocalDate(2012, 4, 1), dateRange4.getActualEndDate());
-        Assert.assertEquals(new LocalDate(2012, 3, 1), dateRange5.getActualEndDate());
-        Assert.assertEquals(null, dateRange6.getActualEndDate());
-        Assert.assertEquals(null, dateRange7.getActualEndDate());
-        Assert.assertEquals(new LocalDate(2012, 4, 1), dateRange8.getActualEndDate());
+        assertEquals(new LocalDate(2012, 4, 1), dateRange1.getActualEndDate());
+        assertEquals(new LocalDate(2012, 4, 1), dateRange2.getActualEndDate());
+        assertEquals(new LocalDate(2012, 3, 1), dateRange3.getActualEndDate());
+        assertEquals(new LocalDate(2012, 4, 1), dateRange4.getActualEndDate());
+        assertEquals(new LocalDate(2012, 3, 1), dateRange5.getActualEndDate());
+        assertEquals(null, dateRange6.getActualEndDate());
+        assertEquals(null, dateRange7.getActualEndDate());
+        assertEquals(new LocalDate(2012, 4, 1), dateRange8.getActualEndDate());
+        assertEquals(new LocalDate(2012, 4, 1), dateRange9.getActualEndDate());
     }
 
     @Test
     public void testGetActualDays() {
-        Assert.assertEquals(91, dateRange1.getActualDays());
-        Assert.assertEquals(91, dateRange2.getActualDays());
-        Assert.assertEquals(60, dateRange3.getActualDays());
-        Assert.assertEquals(60, dateRange4.getActualDays());
-        Assert.assertEquals(29, dateRange5.getActualDays());
-        Assert.assertEquals(0, dateRange6.getActualDays());
-        Assert.assertEquals(0, dateRange7.getActualDays());
-        Assert.assertEquals(60, dateRange8.getActualDays());
+        assertEquals(91, dateRange1.getActualDays());
+        assertEquals(91, dateRange2.getActualDays());
+        assertEquals(60, dateRange3.getActualDays());
+        assertEquals(60, dateRange4.getActualDays());
+        assertEquals(29, dateRange5.getActualDays());
+        assertEquals(0, dateRange6.getActualDays());
+        assertEquals(0, dateRange7.getActualDays());
+        assertEquals(60, dateRange8.getActualDays());
+        assertEquals(91, dateRange9.getActualDays());
     }
 
     @Test
     public void testGetDays() {
-        Assert.assertEquals(91, boundingRange.getDays());
-        Assert.assertEquals(360464, dateRange8.getDays());
+        assertEquals(91, boundingRange.getDays());
+        assertEquals(360464, dateRange8.getDays());
 
     }
 

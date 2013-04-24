@@ -25,30 +25,26 @@ public class Indices extends AbstractFactoryAndRepository {
     public String iconName() {
         return "Index";
     }
+
     // }}
 
     // {{ newIndex
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Index newIndex(
-            final @Named("Reference") String reference, 
-            final @Named("Name") String name) {
+    public Index newIndex(final @Named("Reference") String reference, final @Named("Name") String name) {
         final Index index = newTransientInstance(Index.class);
         index.setReference(reference);
         index.setName(name);
         persist(index);
         return index;
     }
+
     // }}
 
     // {{ newIndexBase
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
-    public IndexBase newIndexBase(
-            final @Named("Index") Index index, 
-            final @Named("Previous Base") IndexBase previousBase, 
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("Factor") BigDecimal factor) {
+    public IndexBase newIndexBase(final @Named("Index") Index index, final @Named("Previous Base") IndexBase previousBase, final @Named("Start Date") LocalDate startDate, final @Named("Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance(IndexBase.class);
         indexBase.setIndex(index);
         indexBase.setPreviousBase(previousBase);
@@ -58,15 +54,13 @@ public class Indices extends AbstractFactoryAndRepository {
         index.addToIndexBases(indexBase);
         return indexBase;
     }
+
     // }}
 
     // {{ newIndexValue
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "3")
-    public IndexValue newIndexValue(
-            final @Named("Index Base") IndexBase indexBase, 
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("Value") BigDecimal value) {
+    public IndexValue newIndexValue(final @Named("Index Base") IndexBase indexBase, final @Named("Start Date") LocalDate startDate, final @Named("Value") BigDecimal value) {
         IndexValue indexValue = newTransientInstance(IndexValue.class);
         indexValue.setIndexBase(indexBase);
         indexValue.setStartDate(startDate);
@@ -75,13 +69,13 @@ public class Indices extends AbstractFactoryAndRepository {
         indexBase.addToValues(indexValue);
         return indexValue;
     }
+
     // }}
 
     // {{ findByReference
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public Index findByReference(
-            final @Named("Reference") String reference) {
+    public Index findByReference(final @Named("Reference") String reference) {
         return firstMatch(Index.class, new Filter<Index>() {
             @Override
             public boolean accept(final Index index) {
@@ -89,6 +83,7 @@ public class Indices extends AbstractFactoryAndRepository {
             }
         });
     }
+
     // }}
 
     // {{ allIndices
@@ -98,26 +93,23 @@ public class Indices extends AbstractFactoryAndRepository {
     public List<Index> allIndices() {
         return allInstances(Index.class);
     }
-    // }}
 
+    // }}
 
     // {{ findIndexValueForDate
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "6")
-    public IndexValue findIndexValueForDate(
-            final Index index, 
-            final @Named("Start Date") LocalDate startDate) {
-        return firstMatch(IndexValue.class, new Filter<IndexValue>() {
+    public IndexValue findIndexValueForDate(final Index index, final @Named("Start Date") LocalDate startDate) {
+        return startDate == null ? null : firstMatch(IndexValue.class, new Filter<IndexValue>() {
             @Override
             public boolean accept(final IndexValue indexValue) {
-                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex())  ;
+                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex());
             }
         });
     }
 
     // }}
 
-    
     // {{ allIndexBases
     @Prototype
     @ActionSemantics(Of.SAFE)
@@ -125,8 +117,9 @@ public class Indices extends AbstractFactoryAndRepository {
     public List<IndexBase> allIndexBases() {
         return allInstances(IndexBase.class);
     }
+
     // }}
-    
+
     // {{ allIndexValues
     @Prototype
     @ActionSemantics(Of.SAFE)
@@ -135,6 +128,5 @@ public class Indices extends AbstractFactoryAndRepository {
         return allInstances(IndexValue.class);
     }
     // }}
-
 
 }

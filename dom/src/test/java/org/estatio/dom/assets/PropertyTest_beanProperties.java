@@ -19,7 +19,7 @@ public class PropertyTest_beanProperties {
 		    .withFixture(FixtureDatumFactoriesForAssets.locations())
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
 			.withFixture(FixtureDatumFactoriesForGeography.countries())
-			.exercise(new Property(), FilterSet.excluding("container","units","propertyActorsRepo", "properties", "unitsRepo", "actors", "parties", "communicationChannels", "locationLookupService" ));
+			.exercise(new Property(), FilterSet.excluding("container", "isisJdoSupport", "units","propertyActorsRepo", "properties", "unitsRepo", "actors", "parties", "communicationChannels", "locationLookupService" ));
 	}
 
 }

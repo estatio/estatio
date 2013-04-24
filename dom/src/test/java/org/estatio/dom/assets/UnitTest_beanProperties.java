@@ -12,7 +12,7 @@ public class UnitTest_beanProperties {
 	public void test() {
 		new PojoTester()
 			.withFixture(FixtureDatumFactoriesForAssets.properties())
-			.exercise(new Unit(), FilterSet.excluding("container", "leases", "communicationChannels", "countries"));
+			.exercise(new Unit(), FilterSet.excluding("container", "isisJdoSupport", "leases", "communicationChannels", "countries"));
 	}
 
 }

@@ -11,6 +11,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
+import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -35,7 +36,7 @@ public class InvoiceCalculatorTest {
 
     @Mock
     Taxes mockTaxes;
-    
+
     @Mock
     Invoices mockInvoices;
 
@@ -67,8 +68,7 @@ public class InvoiceCalculatorTest {
         lt = new LeaseTerm();
         lt.setStartDate(startDate);
         lt.setValue(BigDecimal.valueOf(20000));
-        lt.setLeaseItem(li);
-        li.getTerms().add(lt);
+        lt.modifyLeaseItem(li);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -88,8 +88,7 @@ public class InvoiceCalculatorTest {
         lt.setStartDate(new LocalDate(2012, 1, 1));
         lt.setEndDate(new LocalDate(2012, 3, 31));
         lt.setValue(BigDecimal.valueOf(20000));
-        lt.setLeaseItem(li);
-        li.getTerms().add(lt);
+        lt.modifyLeaseItem(li);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -109,8 +108,7 @@ public class InvoiceCalculatorTest {
         lt.setStartDate(new LocalDate(2012, 2, 1));
         lt.setEndDate(new LocalDate(2012, 2, 29));
         lt.setValue(BigDecimal.valueOf(20000));
-        lt.setLeaseItem(li);
-        li.getTerms().add(lt);
+        lt.modifyLeaseItem(li);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
@@ -130,13 +128,30 @@ public class InvoiceCalculatorTest {
         lt.setStartDate(new LocalDate(2013, 1, 1));
         lt.setEndDate(new LocalDate(2013, 3, 1));
         lt.setValue(BigDecimal.valueOf(20000));
-        lt.setLeaseItem(li);
-        li.getTerms().add(lt);
+        lt.modifyLeaseItem(li);
 
         InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1));
         ic.calculate();
 
         Assert.assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
+    }
+
+    @Test
+    public void testWithWrongDate() {
+        li = new LeaseItem();
+        li.setStartDate(startDate);
+        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        li.setNextDueDate(new LocalDate(2012, 1, 1));
+        l.getItems().add(li);
+
+        lt = new LeaseTerm();
+        lt.setStartDate(new LocalDate(2013, 1, 1));
+        lt.setEndDate(new LocalDate(2013, 3, 1));
+        lt.setValue(BigDecimal.valueOf(20000));
+        lt.modifyLeaseItem(li);
+        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 2));
+        ic.calculate();
+        Assert.assertNull(ic.getCalculatedValue());
     }
 
     @Test
@@ -152,8 +167,8 @@ public class InvoiceCalculatorTest {
         lt.setStartDate(new LocalDate(2012, 1, 1));
         lt.setEndDate(new LocalDate(2013, 1, 1));
         lt.setValue(BigDecimal.valueOf(20000));
-        lt.setLeaseItem(li);
-        li.getTerms().add(lt);
+        lt.modifyLeaseItem(li);
+        li.getTermsWorkaround().add(lt);
 
         lt.setInvoiceService(mockInvoices);
         tax.setTaxRepo(mockTaxes);
@@ -162,7 +177,7 @@ public class InvoiceCalculatorTest {
             {
                 allowing(mockInvoices).newInvoiceItem();
                 will(returnValue(new InvoiceItem()));
-                allowing(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012,1,1)));
+                allowing(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(taxRate));
             }
         });

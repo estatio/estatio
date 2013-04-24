@@ -464,7 +464,6 @@ public class Api extends AbstractFactoryAndRepository {
         term.setIndex(index);
         term.setFrequency(indexationFreq);
         term.setValue(value);
-        term.setReviewDate(reviewDate);
         term.setEffectiveDate(effectiveDate);
         term.setBaseValue(baseValue);
         term.setIndexedValue(indexedValue);

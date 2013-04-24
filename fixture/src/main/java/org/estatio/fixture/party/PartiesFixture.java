@@ -41,7 +41,16 @@ public class PartiesFixture extends AbstractFixture {
                 );
         createOrganisation(
                 "MEDIAX", 
-                "Mediax Electronix",
+                "Mediax Electronics",
+                financialAccounts.newBankAccount("NL31ABNA0580744434"),
+                communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
+                communicationChannels.newPhoneNumber("+31202211333"),
+                communicationChannels.newFaxNumber("+312022211399"),
+                communicationChannels.newEmailAddress("info@topmodel.example.com")
+                );
+        createOrganisation(
+                "POISON", 
+                "Poison Perfumeries",
                 financialAccounts.newBankAccount("NL31ABNA0580744434"),
                 communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
                 communicationChannels.newPhoneNumber("+31202211333"),

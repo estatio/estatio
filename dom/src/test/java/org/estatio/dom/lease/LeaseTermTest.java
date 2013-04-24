@@ -32,7 +32,7 @@ public class LeaseTermTest {
         item.setLeaseTermsService(mockLeaseTerms);
 
         term = new LeaseTerm();
-        term.setLeaseItem(item);
+        term.modifyLeaseItem(item);
         term.setStartDate(new LocalDate(2012, 1, 1));
         //term.setEndDate(new LocalDate(2999, 9, 9));
         term.setFrequency(LeaseTermFrequency.YEARLY);
@@ -71,7 +71,7 @@ public class LeaseTermTest {
         });
         LeaseTerm term = new LeaseTerm();
         term = new LeaseTerm();
-        term.setLeaseItem(item);
+        term.modifyLeaseItem(item);
         term.setStartDate(new LocalDate(2012, 1, 1));
         //term.setEndDate(new LocalDate(2999, 9, 9));
         term.setFrequency(LeaseTermFrequency.YEARLY);

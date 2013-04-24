@@ -25,6 +25,7 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     public String iconName() {
         return "LeaseTerm";
     }
+
     // }}
 
     // {{ newLeaseTerm
@@ -33,15 +34,17 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @NotContributed
     @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
-        LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer()) ;
-        leaseTerm.setLeaseItem(leaseItem);
+        LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer());
         persist(leaseTerm);
-        //TOFIX: without this flush and refresh, the collection of terms on the item is not updated
+        // TOFIX: without this flush and refresh, the collection of terms on the
+        // item is not updated
+        leaseTerm.modifyLeaseItem(leaseItem);
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
         leaseTerm.initialize();
         return leaseTerm;
     }
+
     // }}
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
@@ -54,20 +57,21 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         previous.setNextTerm(leaseTerm);
         return leaseTerm;
     }
+
     // }}
 
-    
     // {{ allLeaseTerms
     @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances(LeaseTerm.class);
     }
+
     // }}
-    
 
     // {{
     private IsisJdoSupport isisJdoSupport;
+
     public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
         this.isisJdoSupport = isisJdoSupport;
     }

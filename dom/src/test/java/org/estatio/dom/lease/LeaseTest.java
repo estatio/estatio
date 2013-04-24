@@ -36,7 +36,7 @@ public class LeaseTest {
         la.setParty(org);
         la.setStartDate(new LocalDate(2000,1,1));
         la.setType(LeaseActorType.TENANT);
-        lease.getActors().add(la);
+        la.modifyLease(lease);
     }
 
     @Ignore
@@ -49,7 +49,7 @@ public class LeaseTest {
     @Test
     public void addActorIsIdempotent() {
         lease.addActor(org, LeaseActorType.TENANT, new LocalDate(2000,1,1), null);
-        Assert.assertEquals(1, lease.getActors().size());
+        Assert.assertEquals(1, lease.getActorsWorkaround().size());
     }
     
 }

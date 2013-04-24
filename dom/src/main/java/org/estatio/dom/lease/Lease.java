@@ -12,6 +12,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.asset.Unit;
@@ -27,6 +28,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 @PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -70,7 +72,7 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     }
 
     private Party firstElseNull(LeaseActorType lat) {
-        Iterable<Party> parties = Iterables.transform(Iterables.filter(getActors(), currentLeaseActorOfType(lat)), partyOfLeaseActor());
+        Iterable<Party> parties = Iterables.transform(Iterables.filter(getActorsWorkaround(), currentLeaseActorOfType(lat)), partyOfLeaseActor());
         return firstElseNull(parties);
     }
 
@@ -226,37 +228,66 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     // }}
 
     // {{ Actors (Collection)
-    @Persistent(mappedBy = "lease")
     private SortedSet<LeaseActor> actors = new TreeSet<LeaseActor>();
 
+    @Persistent(mappedBy = "lease")
     @MemberOrder(name = "Actors", sequence = "11")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseActor> getActors() {
         return actors;
     }
 
+    @Hidden
+    public SortedSet<LeaseActor> getActorsWorkaround() {
+
+        if (getActors() == null) {
+            return null;
+        } else {
+            if (isisJdoSupport == null) {
+                return getActors(); // otherwise I have to inject this in every
+                                    // single unit test.
+            } else {
+                // inject each element before returning it
+                return Sets.newTreeSet(Iterables.transform(getActors(), new Function<LeaseActor, LeaseActor>() {
+                    public LeaseActor apply(LeaseActor leaseActor) {
+                        return isisJdoSupport.injected(leaseActor);
+                    }
+                }));
+            }
+        }
+
+    }
+
     public void setActors(final SortedSet<LeaseActor> actors) {
         this.actors = actors;
     }
 
-    public void addToActors(final LeaseActor leaseActor) {
+    public void addToActors(final LeaseActor actor) {
         // check for no-op
-        if (leaseActor == null || getActors().contains(leaseActor)) {
+        if (actor == null || getActorsWorkaround().contains(actor)) {
             return;
         }
-        // associate new
-        getActors().add(leaseActor);
+        // dissociate arg from its current parent (if any).
+        actor.clearLease();
+        // associate arg
+        actor.setLease(this);
+        getActors().add(actor);
+        // additional business logic
+        // onAddToActors(actor);
     }
 
-    public void removeFromActors(final LeaseActor leaseActor) {
+    public void removeFromActors(final LeaseActor actor) {
         // check for no-op
-        if (leaseActor == null || !getActors().contains(leaseActor)) {
+        if (actor == null || !getActorsWorkaround().contains(actor)) {
             return;
         }
-        // dissociate existing
-        getActors().remove(leaseActor);
+        // dissociate arg
+        actor.setLease(null);
+        getActors().remove(actor);
+        // additional business logic
+        // onRemoveFromActors(actor);
     }
-
+    
     @MemberOrder(name = "Actors", sequence = "11")
     public LeaseActor addActor(@Named("party") Party party, @Named("type") LeaseActorType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         if (party == null || type == null)
@@ -264,7 +295,6 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
         LeaseActor leaseActor = findActor(party, type, startDate);
         if (leaseActor == null) {
             leaseActor = leaseActors.newLeaseActor(this, party, type, startDate, endDate);
-            actors.add(leaseActor);
         }
         leaseActor.setEndDate(endDate);
         return leaseActor;
@@ -412,4 +442,11 @@ public class Lease extends EstatioTransactionalObject implements Comparable<Leas
     }
 
     // }}
+    // {{ services
+    private IsisJdoSupport isisJdoSupport;
+
+    public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+        this.isisJdoSupport = isisJdoSupport;
+    }
+
 }

@@ -10,7 +10,7 @@ public class EmailAddressTest_beanProperties {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new EmailAddress(), FilterSet.excluding("container"));
+		new PojoTester().exercise(new EmailAddress(), FilterSet.excluding("container", "isisJdoSupport"));
 	}
 
 }

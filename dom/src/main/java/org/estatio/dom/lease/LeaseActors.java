@@ -43,11 +43,12 @@ public class LeaseActors extends AbstractFactoryAndRepository {
             final @Named("End Date") LocalDate endDate) {
         final LeaseActor leaseActor = newTransientInstance(LeaseActor.class);
         leaseActor.setParty(party);
-        leaseActor.setLease(lease);
         leaseActor.setStartDate(startDate);
         leaseActor.setEndDate(endDate);
         leaseActor.setType(type);
         persist(leaseActor);
+//        getContainer().flush();
+        leaseActor.modifyLease(lease);
         return leaseActor;
     }
     // }}

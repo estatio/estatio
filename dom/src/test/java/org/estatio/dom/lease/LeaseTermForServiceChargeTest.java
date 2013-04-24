@@ -41,7 +41,7 @@ public class LeaseTermForServiceChargeTest {
         item.setLeaseTermsService(mockLeaseTerms);
 
         term = new LeaseTermForServiceCharge();
-        term.setLeaseItem(item);
+        term.modifyLeaseItem(item);
         term.initialize();
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.setBudgetedValue(BigDecimal.valueOf(6000).setScale(4));

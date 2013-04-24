@@ -17,7 +17,6 @@ public final class DateRange {
         this.endDate = endDate;
     }
 
-
     public DateRange(LocalDate startDate, LocalDate endDate, boolean inclusiveEndDate) {
         this.startDate = startDate;
         if (endDate != null) {
@@ -26,12 +25,14 @@ public final class DateRange {
     }
 
     public DateRange(Interval interval) {
-        this.setStartDate(interval.getStart().toLocalDate());
-        this.setEndDate(interval.getEnd().toLocalDate());
+        if (interval != null) {
+            this.setStartDate(interval.getStart().toLocalDate());
+            this.setEndDate(interval.getEnd().toLocalDate());
+        }
     }
 
     public LocalDate getStartDate() {
-        return startDate == null ? new LocalDate(1900, 1, 1) : startDate;
+        return startDate;
     }
 
     public void setStartDate(LocalDate startDate) {
@@ -52,7 +53,7 @@ public final class DateRange {
 
     public LocalDate getActualStartDate() {
         if (isWithinParent()) {
-            return getStartDate().compareTo(boundingRange.getStartDate()) < 0 ? boundingRange.getStartDate() : getStartDate();
+            return (getStartDate() == null || getStartDate().compareTo(boundingRange.getStartDate()) < 0) ? boundingRange.getStartDate() : getStartDate();
         }
         return null;
     }
@@ -65,11 +66,11 @@ public final class DateRange {
     }
 
     public boolean isFullInterval() {
-        return (getStartDate().compareTo(boundingRange.getStartDate()) <= 0 && getEndDate().compareTo(boundingRange.getEndDate()) >= 0);
+        return (getStartDate() == null || getStartDate().compareTo(boundingRange.getStartDate()) <= 0) && (getEndDate() == null || getEndDate().compareTo(boundingRange.getEndDate()) >= 0);
     }
 
     public boolean isWithinParent() {
-        return !(getStartDate().compareTo(boundingRange.getEndDate()) >= 0 || this.getEndDate().compareTo(boundingRange.getStartDate()) <= 0);
+        return (getStartDate() == null || getStartDate().compareTo(boundingRange.getEndDate()) <= 0) && (getEndDate() == null || getEndDate().compareTo(boundingRange.getStartDate()) >= 0);
     }
 
     public int getDays() {
@@ -88,7 +89,7 @@ public final class DateRange {
     }
 
     public boolean contains(LocalDate localDate) {
-        return getStartDate().compareTo(localDate) <= 0 && getEndDate().compareTo(localDate) >= 0;
+        return (getStartDate() == null || getStartDate().compareTo(localDate) <= 0) && (getEndDate() == null || getEndDate().compareTo(localDate) >= 0);
     }
 
 }

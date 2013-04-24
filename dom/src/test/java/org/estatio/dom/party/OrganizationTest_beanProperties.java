@@ -10,7 +10,7 @@ public class OrganizationTest_beanProperties {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new Organisation(), FilterSet.excluding("container", "roles", "communicationChannels", "registrations", "accounts"));
+		new PojoTester().exercise(new Organisation(), FilterSet.excluding("container", "isisJdoSupport", "roles", "communicationChannels", "registrations", "accounts"));
 	}
 
 }

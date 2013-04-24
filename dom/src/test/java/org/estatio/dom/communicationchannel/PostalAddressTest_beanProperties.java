@@ -14,7 +14,7 @@ public class PostalAddressTest_beanProperties {
 		new PojoTester()
 			.withFixture(FixtureDatumFactoriesForGeography.countries())
 			.withFixture(FixtureDatumFactoriesForGeography.states())
-			.exercise(new PostalAddress(), FilterSet.excluding("container", "states", "countries"));
+			.exercise(new PostalAddress(), FilterSet.excluding("container", "isisJdoSupport", "states", "countries"));
 	}
 
 }

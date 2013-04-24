@@ -37,16 +37,18 @@ public class InvoiceCalculator {
 
     void calculate() {
         InvoicingFrequency freq = leaseTerm.getLeaseItem().getInvoicingFrequency();
-        boundingRange = new DateRange(CalenderUtils.currentInterval(startDate, freq.rrule));
-        DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
-        range.setBoundingRange(boundingRange);
-        BigDecimal boundingRangeDays = new BigDecimal(boundingRange.getDays());
-        BigDecimal rangeDays = new BigDecimal(range.getActualDays());
-        BigDecimal rangeFactor = rangeDays.divide(boundingRangeDays, MathContext.DECIMAL64);
-        BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
-        BigDecimal currentValue = leaseTerm.getValue();
-        if (currentValue != null && freqFactor != null && rangeFactor != null) {
-            calculatedValue = currentValue.multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
+        boundingRange = new DateRange(CalenderUtils.intervalMatching(startDate, freq.rrule));
+        if (boundingRange.getStartDate() != null) {
+            DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
+            range.setBoundingRange(boundingRange);
+            BigDecimal boundingRangeDays = new BigDecimal(boundingRange.getDays());
+            BigDecimal rangeDays = new BigDecimal(range.getActualDays());
+            BigDecimal rangeFactor = rangeDays.divide(boundingRangeDays, MathContext.DECIMAL64);
+            BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
+            BigDecimal currentValue = leaseTerm.getValue();
+            if (currentValue != null && freqFactor != null && rangeFactor != null) {
+                calculatedValue = currentValue.multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
+            }
         }
     }
 

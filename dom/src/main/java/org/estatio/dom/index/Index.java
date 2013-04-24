@@ -60,36 +60,35 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
     }
 
     public void addToIndexBases(final IndexBase indexBase) {
-        // check for no-op
         if (indexBase == null || getIndexBases().contains(indexBase)) {
             return;
         }
-        // associate new
         getIndexBases().add(indexBase);
     }
 
     public void removeFromIndexBases(final IndexBase indexBase) {
-        // check for no-op
         if (indexBase == null || !getIndexBases().contains(indexBase)) {
             return;
         }
-        // dissociate existing
         getIndexBases().remove(indexBase);
     }
 
     // }}
 
-    // {{ Actions
     @Hidden
     public BigDecimal getIndexValueForDate(LocalDate date) {
-        IndexValue indexValue = indexService.findIndexValueForDate(this, date);
-        return indexValue == null ? null : indexValue.getValue();
+        if (date != null) {
+            IndexValue indexValue = indexService.findIndexValueForDate(this, date);
+            return indexValue == null ? null : indexValue.getValue();
+        }
+        return null;
     }
 
     @Hidden
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
         IndexValue nextIndexValue = indexService.findIndexValueForDate(this, nextIndexStartDate);
-        //TODO: check efficiency.. seems to retrieve every single index value for the last 15 years...
+        // TODO: check efficiency.. seems to retrieve every single index value
+        // for the last 15 years...
         if (nextIndexValue != null) {
             BigDecimal rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseIndexStartDate);
             return rebaseFactor;
@@ -103,8 +102,6 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         indexationCalculator.setNextIndexValue(getIndexValueForDate(nextIndexStartDate));
         indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
     }
-
-    // }}
 
     // {{ injected: Indices
     private Indices indexService;
@@ -120,6 +117,5 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
     public int compareTo(Index o) {
         return o.getReference().compareTo(this.getReference());
     }
-
 
 }

@@ -62,6 +62,30 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.leaseItem = leaseItem;
     }
 
+    public void modifyLeaseItem(final LeaseItem item) {
+        LeaseItem currentLeaseItem = getLeaseItem();
+        // check for no-op
+        if (item == null || item.equals(currentLeaseItem)) {
+            return;
+        }
+        // delegate to parent to associate
+        item.addToTerms(this);
+        // additional business logic
+        // onModifyLeaseItem(currentLeaseItem, item);
+    }
+
+    public void clearLeaseItem() {
+        LeaseItem currentLeaseItem = getLeaseItem();
+        // check for no-op
+        if (currentLeaseItem == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentLeaseItem.removeFromTerms(this);
+        // additional business logic
+        // onClearLeaseItem(currentLeaseItem);
+    }
+
     private BigInteger sequence;
 
     @Hidden
@@ -197,14 +221,14 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate())) {
-              //dissociate
-//                invoiceItem.setInvoice(null); 
-//                invoiceItem.setLeaseTerm(null); 
-//                getContainer().flush();
+                // dissociate
+                // invoiceItem.setInvoice(null);
+                // invoiceItem.setLeaseTerm(null);
+                // getContainer().flush();
                 remove(invoiceItem);
                 getContainer().flush();
-//                resolve(invoice);
-//                resolve(this);
+                // resolve(invoice);
+                // resolve(this);
             }
         }
     }
@@ -243,6 +267,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return null;
     }
 
+    @Hidden
+    public BigDecimal valueForDate(LocalDate date) {
+        return getValue();
+    }
+
     // {{ Actions
     @MemberOrder(sequence = "1")
     public LeaseTerm approve() {
@@ -253,14 +282,14 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public String disableApprove() {
         return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
     }
-    
+
     @MemberOrder(sequence = "2")
     public LeaseTerm verify() {
         update();
 
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
-        if (getStartDate().compareTo(LocalDate.now()) < 0) {
+        if (getStartDate() != null && getStartDate().compareTo(LocalDate.now()) < 0) {
             createNext();
             nextTerm = getNextTerm();
             if (nextTerm != null) {
@@ -295,7 +324,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
             return term;
         }
     }
-    
+
     @Hidden
     public void initialize() {
         setStatus(LeaseTermStatus.NEW);
@@ -350,5 +379,5 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.invoiceRepository = service;
     }
     // }}
-    
+
 }

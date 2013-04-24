@@ -87,7 +87,7 @@ public class ApiIntegrationTest {
         api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", new LocalDate(2012, 1, 1), BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", BigDecimal.valueOf(12345), null, null, BigDecimal.valueOf(12345), null, null,
                 null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
         Lease lease = leases.findByReference("APILEASE");
-        Assert.assertThat(lease.getItems().first().getTerms().size() , Is.is(2));
+        Assert.assertThat(lease.getItems().first().getTermsWorkaround().size() , Is.is(2));
     }
 
 }

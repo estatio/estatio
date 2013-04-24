@@ -82,7 +82,7 @@ public class LeaseTermForIndexableRentTest {
         term.setNextIndexStartDate(iv2.getStartDate());
         term.setBaseValue(BigDecimal.valueOf(23456.78));
         term.setIndex(i);
-        term.setLeaseItem(item);
+        term.modifyLeaseItem(item);
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.initialize();
     }
@@ -101,6 +101,22 @@ public class LeaseTermForIndexableRentTest {
         Assert.assertEquals(new BigDecimal("23691.3500"), term.getIndexedValue());
     }
 
+    @Test
+    public void updateRunsWellWithEmptyIndex() {
+        context.checking(new Expectations() {
+            {
+                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010,1,1)));
+                will(returnValue(iv1));
+                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011,1,1)));
+                will(returnValue(iv2));
+            }
+        });
+        term.update();
+        Assert.assertEquals(new BigDecimal("23691.3500"), term.getIndexedValue());
+    }
+
+    
+    
     @Test
     public void createNextRunsWell() {
         context.checking(new Expectations() {

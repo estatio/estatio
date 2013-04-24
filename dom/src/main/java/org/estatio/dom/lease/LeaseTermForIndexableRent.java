@@ -110,22 +110,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // }}
 
-    // {{ ReviewDate (property)
-    private LocalDate reviewDate;
-
-    @Persistent
-    @Optional
-    @MemberOrder(sequence = "18", name = "Indexable Rent")
-    public LocalDate getReviewDate() {
-        return reviewDate;
-    }
-
-    public void setReviewDate(final LocalDate reviewDate) {
-        this.reviewDate = reviewDate;
-    }
-
-    // }}
-
     // {{ EffectiveDate (property)
     private LocalDate effectiveDate;
 
@@ -245,7 +229,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
                 setBaseIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
                 setNextIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
                 setEffectiveDate(frequency.nextDate(previousTerm.getEffectiveDate()));
-                setReviewDate(frequency.nextDate(previousTerm.getReviewDate()));
                 setBaseValue(previousTerm.getValue());
             }
         }
@@ -275,6 +258,17 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         }
     }
 
+    @Override
+    @Hidden
+    public BigDecimal valueForDate(LocalDate date) {
+        //return the value on a specific date
+        // assume that indexation wil be applided a month after the index date
+        if (MathUtils.isNotZeroOrNull(getIndexedValue()) && getNextIndexStartDate().plusMonths(2).compareTo(date) > 0) {
+            return getIndexedValue();
+        }
+        return getBaseIndexValue();
+    }
+    
     // }}
 
     private Indices indexService;

@@ -237,7 +237,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
-            resolve(lease);
+            //resolve(lease);
             Party seller = lease.findActorWithType(LeaseActorType.LANDLORD, getDueDate()).getParty();
             Party buyer = lease.findActorWithType(LeaseActorType.TENANT, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();

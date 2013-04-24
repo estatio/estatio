@@ -10,7 +10,7 @@ public class FaxNumberTest_beanProperties {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new FaxNumber(), FilterSet.excluding("container"));
+		new PojoTester().exercise(new FaxNumber(), FilterSet.excluding("container", "isisJdoSupport"));
 	}
 
 }

@@ -223,7 +223,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     @Hidden
     public BigDecimal getValueForDate(LocalDate date) {
-        for (LeaseTerm term : getTerms()) {
+        for (LeaseTerm term : getTermsWorkaround()) {
             if (CalenderUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
                 return term.getValue();
             }
@@ -240,31 +240,85 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     @Persistent(mappedBy = "leaseItem")
     @MemberOrder(name = "Terms", sequence = "15")
     public SortedSet<LeaseTerm> getTerms() {
-        
-        // TOFIX: a workaround until we figure out how to get 
+        return terms;
+    }
+
+    @Hidden
+    public SortedSet<LeaseTerm> getTermsWorkaround() {
+        // TOFIX: a workaround until we figure out how to get
         // JDO/DN to callback on the lazy loading of this collection
-        
-        if (this.terms == null) {
-            // this can happen, it would seem, by JDO/DN when it is setting up the object
-            // with its own set impl for lazy loading.  It would seem that it could be null...
+        // return terms;
+        // if (this.terms == null) {
+        // // this can happen, it would seem, by JDO/DN when it is setting up
+        // the object
+        // // with its own set impl for lazy loading. It would seem that it
+        // could be null...
+        // return null;
+        // } else {
+        // // inject each element before returning it
+        // return Sets.newTreeSet(Iterables.transform(this.terms, new
+        // Function<LeaseTerm, LeaseTerm>(){
+        // public LeaseTerm apply(LeaseTerm leaseTerm) {
+        // leaseTerm.getStartDate(); // force lazy loading callback.
+        // return leaseTerm;
+        // }
+        // }));
+        // }
+
+        if (getTerms() == null) {
+            // this can happen, it would seem, by JDO/DN when it is setting up
+            // the object
+            // with its own set impl for lazy loading. It would seem that it
+            // could be null...
             return null;
         } else {
-            // inject each element before returning it
-            return Sets.newTreeSet(Iterables.transform(this.terms, new Function<LeaseTerm, LeaseTerm>(){
-                public LeaseTerm apply(LeaseTerm leaseTerm) {
-                    return isisJdoSupport.injected(leaseTerm);                        
-                }
-            }));
+            if (isisJdoSupport == null) {
+                return getTerms(); // otherwise I have to inject this in every single unit test.
+            } else {
+                // inject each element before returning it
+                return Sets.newTreeSet(Iterables.transform(getTerms(), new Function<LeaseTerm, LeaseTerm>() {
+                    public LeaseTerm apply(LeaseTerm leaseTerm) {
+                        return isisJdoSupport.injected(leaseTerm);
+                    }
+                }));
+            }
         }
+
     }
 
     public void setTerms(final SortedSet<LeaseTerm> terms) {
         this.terms = terms;
     }
 
+    public void addToTerms(final LeaseTerm term) {
+        // check for no-op
+        if (term == null || getTermsWorkaround().contains(term)) {
+            return;
+        }
+        // dissociate arg from its current parent (if any).
+        term.clearLeaseItem();
+        // associate arg
+        term.setLeaseItem(this);
+        getTerms().add(term);
+        // additional business logic
+        // onAddToTerms(term);
+    }
+
+    public void removeFromTerms(final LeaseTerm term) {
+        // check for no-op
+        if (term == null || !getTermsWorkaround().contains(term)) {
+            return;
+        }
+        // dissociate arg
+        term.setLeaseItem(null);
+        getTerms().remove(term);
+        // additional business logic
+        // onRemoveFromTerms(term);
+    }
+
     @Hidden
     public LeaseTerm findTerm(LocalDate startDate) {
-        for (LeaseTerm term : getTerms()) {
+        for (LeaseTerm term : getTermsWorkaround()) {
             if (startDate.equals(term.getStartDate())) {
                 return term;
             }
@@ -274,7 +328,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     @Hidden
     public LeaseTerm findTermWithSequence(BigInteger sequence) {
-        for (LeaseTerm term : getTerms()) {
+        for (LeaseTerm term : getTermsWorkaround()) {
             if (sequence.equals(term.getSequence())) {
                 return term;
             }
@@ -289,7 +343,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     public String disableCreateInitialTerm() {
-        return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
+        return getTermsWorkaround().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
     @Hidden
@@ -304,7 +358,7 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     // {{ Actions
 
     public LeaseItem verify() {
-        for (LeaseTerm term : getTerms()) {
+        for (LeaseTerm term : getTermsWorkaround()) {
             if (term.getPreviousTerm() == null) {
                 // since verify is recursive on terms only start on the main
                 // term
@@ -315,16 +369,18 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
     }
 
     public LeaseItem calculate(@Named("Due date") LocalDate dueDate) {
-//        SortedSet<LeaseTerm> terms = Sets.newTreeSet(Iterables.transform(getTerms(), new Function<LeaseTerm, LeaseTerm>(){
-//            public LeaseTerm apply(LeaseTerm leaseTerm) {
-//                return isisServiceInjector.injected(leaseTerm);                        
-//            }
-//        }));
+        // SortedSet<LeaseTerm> terms =
+        // Sets.newTreeSet(Iterables.transform(getTerms(), new
+        // Function<LeaseTerm, LeaseTerm>(){
+        // public LeaseTerm apply(LeaseTerm leaseTerm) {
+        // return isisServiceInjector.injected(leaseTerm);
+        // }
+        // }));
 
-        for (LeaseTerm term : getTerms()) {
-//            resolve(term); // TODO: need to call resolve,
-//                                          // otherwise services are not injected
-//                                          // when running in the wicket viewer.
+        for (LeaseTerm term : getTermsWorkaround()) {
+            // resolve(term); // TODO: need to call resolve,
+            // // otherwise services are not injected
+            // // when running in the wicket viewer.
             term.calculate(dueDate);
         }
         return this;
@@ -369,11 +425,11 @@ public class LeaseItem extends AbstractDomainObject implements Comparable<LeaseI
 
     // }}
 
-    
     // {{ services
     private IsisJdoSupport isisJdoSupport;
+
     public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
         this.isisJdoSupport = isisJdoSupport;
     }
-    //}}
+    // }}
 }
