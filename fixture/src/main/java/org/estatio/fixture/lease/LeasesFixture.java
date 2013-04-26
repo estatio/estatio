@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
+
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
@@ -57,9 +59,9 @@ public class LeasesFixture extends AbstractFixture {
         Lease lease = leases.newLease(reference, name);
         lease.setStartDate(startDate);
         lease.setEndDate(endDate);
-        lease.addActor(landlord, LeaseActorType.LANDLORD, null, null);
-        lease.addActor(tenant, LeaseActorType.TENANT, null, null);
-        lease.addActor(manager, LeaseActorType.MANAGER, null, null);
+        lease.addRole(landlord, AgreementRoleType.LANDLORD, null, null);
+        lease.addRole(tenant, AgreementRoleType.TENANT, null, null);
+        lease.addRole(manager, AgreementRoleType.MANAGER, null, null);
         lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
 
         if (leases.findByReference(reference) == null) {

@@ -12,6 +12,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
@@ -57,8 +59,8 @@ public class Leases extends AbstractFactoryAndRepository {
         lease.setStartDate(startDate);
         lease.setEndDate(endDate);
         persist(lease);
-        lease.addActor(tenant, LeaseActorType.TENANT, startDate, null);
-        lease.addActor(landlord, LeaseActorType.LANDLORD, startDate, null);
+        lease.addRole(tenant, AgreementRoleType.TENANT, startDate, null);
+        lease.addRole(landlord, AgreementRoleType.LANDLORD, startDate, null);
         return lease;
     }
 

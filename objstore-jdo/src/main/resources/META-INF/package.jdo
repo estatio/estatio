@@ -89,6 +89,34 @@
             ]]></query>
         </class>
     </package>
+    <package name="org.estatio.dom.agreement">
+        <class name="Agreement">
+            <query name="agreement_findAgreementByReference" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.agreement.Agreement 
+             WHERE reference.matches(:r)
+            ]]></query>
+        </class>
+        <class name="AgreementRole">
+            <query name="agreementRole_find" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.agreement.AgreementRole 
+             WHERE agreement == :agreement &&
+                   party == :party &&
+                   type == :type &&
+                   startDate == :startDate &&
+                   endDate == :endDate 
+            ]]></query>
+            <query name="agreementRole_findWithType" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.agreement.AgreementRole 
+             WHERE agreement == :agreement &&
+                   type == :type && 
+                   (startDate == null | startDate < :date) &&
+                   (endDate == null | endDate > :date)
+            ]]></query>
+        </class>
+    </package>
     <package name="org.estatio.dom.charge">
         <class name="Charge">
             <query name="charge_findChargeByReference" language="JDOQL"><![CDATA[

@@ -12,7 +12,11 @@ import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSuppor
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.api.Api;
+import org.estatio.dom.agreement.AgreementRoles;
+import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioFixture;
+import org.estatio.jdo.AgreementRolesJdo;
+import org.estatio.jdo.AgreementsJdo;
 import org.estatio.jdo.ChargeGroupsJdo;
 import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;
@@ -57,10 +61,12 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new CurrenciesJdo(),
                 new IndicesJdo(),
                 new PropertiesJdo(),
+                new PropertyActorsJdo(),
                 new UnitsJdo(),
                 new PartiesJdo(),
                 new LeasesJdo(),
-                new PropertyActorsJdo(),
+                new AgreementsJdo(),
+                new AgreementRolesJdo(),
                 new LeaseTermsJdo(),
                 new LeaseItemsJdo(),
                 new LeaseActorsJdo(),

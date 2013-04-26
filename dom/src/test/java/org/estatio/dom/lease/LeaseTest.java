@@ -1,21 +1,18 @@
 package org.estatio.dom.lease;
 
-import junit.framework.Assert;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseActor;
-import org.estatio.dom.lease.LeaseActorType;
-import org.estatio.dom.lease.LeaseActors;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.party.Organisation;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 public class LeaseTest {
 
@@ -42,14 +39,14 @@ public class LeaseTest {
     @Ignore
     @Test
     public void findActorIsNotNull() {
-        Assert.assertNotNull(lease.findActor(org, LeaseActorType.TENANT, new LocalDate(2000,1,1)));
+        Assert.assertNotNull(lease.findRole(org, AgreementRoleType.TENANT, new LocalDate(2000,1,1)));
     }
     
     @Ignore
     @Test
     public void addActorIsIdempotent() {
-        lease.addActor(org, LeaseActorType.TENANT, new LocalDate(2000,1,1), null);
-        Assert.assertEquals(1, lease.getActorsWorkaround().size());
+        lease.addRole(org, AgreementRoleType.TENANT, new LocalDate(2000,1,1), null);
+        Assert.assertEquals(1, lease.getRoles().size());
     }
     
 }

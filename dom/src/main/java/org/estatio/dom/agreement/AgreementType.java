@@ -2,22 +2,23 @@ package org.estatio.dom.agreement;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import org.estatio.dom.lease.Lease;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
 public enum AgreementType {
 
-    //LEASE("Lease", Lease.class, AgreementRoleType.TENANT, AgreementRoleType.LANDLORD),
-    MANDATE("Mandate", BankMandate.class, AgreementRoleType.DEBTOR, AgreementRoleType.CREDITOR);
+    MANDATE("Mandate", BankMandate.class),
+    LEASE("Lease", Lease.class);
 
     private final String title;
-    private final List<AgreementRoleType> roles;
     private final Class<? extends Agreement> cls;
 
-    private AgreementType(String title, Class<? extends Agreement> cls, AgreementRoleType... roles) {
+    private AgreementType(String title, Class<? extends Agreement> cls) {
         this.title = title;
-        this.roles = Arrays.asList(roles);
         this.cls = cls;
     }
 
@@ -25,14 +26,14 @@ public enum AgreementType {
         return title;
     }
     
-    public List<AgreementRoleType> getRoles() {
-        return roles;
+    public Set<AgreementRoleType> getRoles() {
+        return AgreementRoleType.applicableTo(this);
     }
     
     public Agreement create(DomainObjectContainer container) {
         try {
             Agreement agreement = container.newTransientInstance(cls);
-            agreement.setType(this);
+            agreement.setAgreementType(this);
             return agreement;
         } catch (Exception ex) {
             throw new ApplicationException(ex);

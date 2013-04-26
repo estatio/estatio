@@ -7,11 +7,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.log4j.PropertyConfigurator;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseActor;
-import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -35,7 +34,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.google.common.io.Resources;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseIntegrationTest {
@@ -67,19 +66,19 @@ public class LeaseIntegrationTest {
 
     @Test
     public void t01_numberOfLeaseActorsIs3() throws Exception {
-        assertThat(lease.getActorsWorkaround().size(), is(3));
+        assertThat(lease.getRoles().size(), is(3));
     }
 
     @Test
     public void t02_leaseActorCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("TOPMODEL");
-        LeaseActor la = lease.findActor(party, LeaseActorType.TENANT, null);
+        AgreementRole la = lease.findRole(party, AgreementRoleType.TENANT, null);
         Assert.assertNotNull(la);
     }
 
     @Test
     public void t02b_numberOfleaseActorsIs3() throws Exception {
-        assertThat(lease.getActorsWorkaround().size(), is(3));
+        assertThat(lease.getRoles().size(), is(3));
     }
 
     @Test

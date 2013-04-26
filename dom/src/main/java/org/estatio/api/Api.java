@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyActor;
@@ -324,8 +326,8 @@ public class Api extends AbstractFactoryAndRepository {
         lease.setStartDate(startDate);
         lease.setEndDate(endDate);
         lease.setTerminationDate(terminationDate);
-        lease.addActor(landlord, LeaseActorType.LANDLORD, null, null);
-        lease.addActor(tenant, LeaseActorType.TENANT, null, null);
+        lease.addRole(landlord, AgreementRoleType.LANDLORD, null, null);
+        lease.addRole(tenant, AgreementRoleType.TENANT, null, null);
     }
     
     @ActionSemantics(Of.IDEMPOTENT)
@@ -346,7 +348,7 @@ public class Api extends AbstractFactoryAndRepository {
                 throw new ApplicationException(String.format("Previous lease with reference %s not found.", previousLeaseReference));
             }
         }
-        lease.setPreviousLease(previousLease);
+        lease.modifyPreviousAgreement(previousLease);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

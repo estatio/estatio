@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.financial.FinancialAccount;
@@ -102,26 +103,18 @@ public abstract class Party extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ Roles (set, bidir)
-    // REVIEW: changed this startDate set of PartyRoleType, which I suspect was
-    // wrong
-    // (in any case can't have sets of enums)
-    @Persistent(mappedBy = "party")
-    private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
+    // {{ Agreements (Collection)
+    private Set<AgreementRole> agreements = new LinkedHashSet<AgreementRole>();
 
-    @MemberOrder(name = "Roles", sequence = "11")
-    public SortedSet<PartyRole> getRoles() {
-        return roles;
+    @MemberOrder(name = "Agreements", sequence = "11")
+    @Render(Type.EAGERLY)
+    @Persistent(mappedBy="party")
+    public Set<AgreementRole> getAgreements() {
+        return agreements;
     }
 
-    public void setRoles(final SortedSet<PartyRole> roles) {
-        this.roles = roles;
-    }
-
-    @MemberOrder(name = "Roles", sequence = "11")
-    public Party addRole() {
-        // TODO: some code here
-        return this;
+    public void setAgreements(final Set<AgreementRole> agreements) {
+        this.agreements = agreements;
     }
 
     // }}
@@ -148,7 +141,7 @@ public abstract class Party extends EstatioTransactionalObject {
     // }}
 
     // {{ accounts (Collection)
-    @Persistent(mappedBy="owner")
+    @Persistent(mappedBy = "owner")
     private SortedSet<FinancialAccount> accounts = new TreeSet<FinancialAccount>();
 
     @MemberOrder(name = "Accounts", sequence = "13")
@@ -190,7 +183,7 @@ public abstract class Party extends EstatioTransactionalObject {
     protected void onRemoveFromAccounts(final FinancialAccount account) {
         account.setOwner(null);
     }
-    
+
     @MemberOrder(name = "Accounts", sequence = "13")
     public FinancialAccount addAccount(final FinancialAccountType financialAccountType) {
         FinancialAccount financialAccount = financialAccountType.createAccount(getContainer());
@@ -199,22 +192,30 @@ public abstract class Party extends EstatioTransactionalObject {
     }
 
     // }}
-    
-    // {{ LeaseRoles (Collection)
-    @Persistent(mappedBy="party")
-    private Set<LeaseActor> leaseRoles = new LinkedHashSet<LeaseActor>();
 
-    @MemberOrder(sequence = "14")
-    public Set<LeaseActor> getLeaseRoles() {
-        return leaseRoles;
+    // {{ Roles (set, bidir)
+    // REVIEW: changed this startDate set of PartyRoleType, which I suspect was
+    // wrong
+    // (in any case can't have sets of enums)
+    @Persistent(mappedBy = "party")
+    private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
+
+    @MemberOrder(name = "Roles", sequence = "14")
+    public SortedSet<PartyRole> getRoles() {
+        return roles;
     }
 
-    public void setLeaseRoles(final Set<LeaseActor> leaseRoles) {
-        this.leaseRoles = leaseRoles;
+    public void setRoles(final SortedSet<PartyRole> roles) {
+        this.roles = roles;
     }
+
+    @MemberOrder(name = "Roles", sequence = "14")
+    public Party addRole() {
+        // TODO: some code here
+        return this;
+    }
+
     // }}
 
-
     
-
 }

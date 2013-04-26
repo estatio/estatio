@@ -6,10 +6,20 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -19,15 +29,9 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 @PersistenceCapable
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 public class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
@@ -47,22 +51,31 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
 
     // }}
 
-    // {{ Derived attribute
+    // {{ Name (property)
+    private String name;
 
     @MemberOrder(sequence = "2")
+    @Optional
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    // }}
+
+    // {{ Derived attribute
+
+    @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
-        // TODO:test to see if this is faster:
-        // agreementRoles.findAgreementRoleWithType(this,
-        // AgreementRoleType.LANDLORD, LocalDate.now())
         Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.LANDLORD)), partyOfAgreementRole());
         return firstElseNull(parties);
     }
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public Party getSecondaryParty() {
-        // TODO:test to see if this is faster:
-        // agreementRoles.findAgreementRoleWithType(this,
-        // AgreementRoleType.LANDLORD, LocalDate.now())
         Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.TENANT)), partyOfAgreementRole());
         return firstElseNull(parties);
     }
@@ -80,27 +93,12 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
         };
     }
 
-    private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType lat) {
+    protected static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType lat) {
         return new Predicate<AgreementRole>() {
             public boolean apply(AgreementRole candidate) {
                 return candidate.getType() == lat && candidate.isCurrent();
             }
         };
-    }
-
-    // }}
-
-    // {{ Name (property)
-    private String name;
-
-    @MemberOrder(sequence = "4")
-    @Optional
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
     }
 
     // }}
@@ -152,15 +150,15 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
     // }}
 
     // {{ Type (property)
-    private AgreementType type;
+    private AgreementType agreementType;
 
     @MemberOrder(sequence = "8")
-    public AgreementType getType() {
-        return type;
+    public AgreementType getAgreementType() {
+        return agreementType;
     }
 
-    public void setType(final AgreementType type) {
-        this.type = type;
+    public void setAgreementType(final AgreementType type) {
+        this.agreementType = type;
     }
 
     // }}
@@ -265,7 +263,7 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
     }
 
     @MemberOrder(name = "Roles", sequence = "11")
-    public AgreementRole addRole(@Named("party") Party party, @Named("type") AgreementRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
+    public AgreementRole addRole(@Named("party") Party party, @Named("agreementType") AgreementRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         AgreementRole agreementRole = findRole(party, type, startDate);
         if (agreementRole == null) {
             agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);

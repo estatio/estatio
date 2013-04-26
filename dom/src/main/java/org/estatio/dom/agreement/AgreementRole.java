@@ -15,9 +15,8 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole> {
 
     // {{ Agreement (property)
@@ -96,12 +95,14 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
     // }}
 
     /**
-     * This is necessary but not sufficient; in {@link Agreement#addActor(Party, AgreementRoleType, LocalDate, LocalDate)}
-     * there is logic to ensure that there cannot be two {@link AgreementRole actor}s of the same type
-     * at the same point in time.
+     * This is necessary but not sufficient; in
+     * {@link Agreement#addActor(Party, AgreementRoleType, LocalDate, LocalDate)}
+     * there is logic to ensure that there cannot be two {@link AgreementRole
+     * actor}s of the same type at the same point in time.
      * 
      * TODO: need to implement the above statement!!!
      */
@@ -109,16 +110,16 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     @Hidden
     public int compareTo(AgreementRole o) {
         int compareType = this.getType().compareTo(o.getType());
-        if(compareType != 0) {
+        if (compareType != 0) {
             return compareType;
         }
-        if(this.getStartDate() == null && o.getStartDate() != null) {
+        if (this.getStartDate() == null && o.getStartDate() != null) {
             return -1;
         }
-        if(this.getStartDate() != null && o.getStartDate() == null) {
+        if (this.getStartDate() != null && o.getStartDate() == null) {
             return +1;
         }
-        if(this.getStartDate() == null && o.getStartDate() == null) {
+        if (this.getStartDate() == null && o.getStartDate() == null) {
             return 0;
         }
         return this.getStartDate().compareTo(o.getStartDate());
