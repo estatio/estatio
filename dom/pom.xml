@@ -30,8 +30,8 @@
 		<plugins>
 			<plugin>
 				<groupId>org.datanucleus</groupId>
-				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>3.1.1</version>
+				<artifactId>datanucleus-maven-plugin</artifactId>
+				<version>3.2.0-release</version>
 				<configuration>
 					<fork>false</fork>
 					<log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
@@ -64,10 +64,10 @@
 											org.datanucleus
 										</groupId>
 										<artifactId>
-											maven-datanucleus-plugin
+											datanucleus-maven-plugin
 										</artifactId>
 										<versionRange>
-											[3.0.2,)
+											[3.2.0-release,)
 										</versionRange>
 										<goals>
 											<goal>enhance</goal>
@@ -114,17 +114,7 @@
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-enhancer</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.ow2.asm</groupId>
-					<artifactId>asm</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
+        <dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jdo</artifactId>
 		</dependency>
@@ -181,7 +171,6 @@
         <dependency>
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
-            <version>2.14.1</version>
         </dependency>
 
         <!-- 
@@ -226,13 +215,7 @@
                 <dependency>
                     <groupId>org.datanucleus</groupId>
                     <artifactId>datanucleus-core</artifactId>
-                    <version>(3.0.99, 3.1.99)</version>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-enhancer</artifactId>
-                    <version>(3.0.99, 3.1.99)</version>
+                    <version>(3.1.99, 3.2.99)</version>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>

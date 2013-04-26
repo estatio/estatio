@@ -22,7 +22,8 @@ import org.apache.isis.applib.annotation.Where;
  * }
  * </pre>
  */
-public abstract class EstatioTransactionalObject extends AbstractDomainObject {
+public abstract class EstatioTransactionalObject extends EstatioDomainObject {
+
 
     // {{ ID (derived property)
     @Hidden(where=Where.ALL_TABLES)

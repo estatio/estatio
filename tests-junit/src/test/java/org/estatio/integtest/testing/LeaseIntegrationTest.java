@@ -128,7 +128,7 @@ public class LeaseIntegrationTest {
     @Test
     public void t09_leaseTermForServiceChargeCanBeFound() throws Exception {
         LeaseItem item = (LeaseItem) lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        Assert.assertThat(item.getTermsWorkaround().size(), Is.is(1));
+        Assert.assertThat(item.getTerms().size(), Is.is(1));
         LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) item.findTerm(new LocalDate(2010, 7, 15));
         Assert.assertThat(leaseTerm.getBudgetedValue(), Is.is(new BigDecimal("6000.0000")));
     }
@@ -136,7 +136,7 @@ public class LeaseIntegrationTest {
     @Test
     public void t10_leaseTermForIndexableRentVerifiedCorrectly() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTermsWorkaround().first();
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().first();
         term.verify();
         assertThat(term.getBaseIndexValue(), is(BigDecimal.valueOf(137.6).setScale(4)));
         assertThat(term.getNextIndexValue(), is(BigDecimal.valueOf(101.2).setScale(4)));
@@ -147,20 +147,20 @@ public class LeaseIntegrationTest {
     @Test
     public void t10_leaseTermForServiceChargeVerifiedCorrectly() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item.getTermsWorkaround().size(), is(1));        
-        LeaseTerm term = item.getTermsWorkaround().first();
+        assertThat(item.getTerms().size(), is(1));        
+        LeaseTerm term = item.getTerms().first();
         term.verify();
-        assertThat(item.getTermsWorkaround().size(), is(5));        
+        assertThat(item.getTerms().size(), is(5));        
     }
     
     @Test
     public void t11_leaseVerifiesWell() throws Exception {
         lease.verify();
         LeaseItem item1 = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item1.getTermsWorkaround().size(), is(5));
+        assertThat(item1.getTerms().size(), is(5));
         LeaseItem item2 = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         item2.verify();
-        assertThat(item2.getTermsWorkaround().size(), is(5));
+        assertThat(item2.getTerms().size(), is(5));
     }
 
     @Test
@@ -168,8 +168,8 @@ public class LeaseIntegrationTest {
         Lease leaseMediax = leases.findByReference("OXF-MEDIAX-002");
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item.getTermsWorkaround().size(), is(5));
-        assertThat(item.getTermsWorkaround().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
+        assertThat(item.getTerms().size(), is(5));
+        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
 
     }
 
@@ -178,15 +178,15 @@ public class LeaseIntegrationTest {
         Lease leaseMediax = leases.findByReference("OXF-POISON-003");
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item.getTermsWorkaround().size(), is(5));
-        assertThat(item.getTermsWorkaround().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
+        assertThat(item.getTerms().size(), is(5));
+        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
 
     }
 
     @Test
     public void t13_leaseTermApprovesWell() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        LeaseTerm term = (LeaseTerm) item.getTermsWorkaround().toArray()[0];
+        LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
         term.approve();
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
         assertThat(term.getValue(), is(BigDecimal.valueOf(20200).setScale(4)));
@@ -196,7 +196,7 @@ public class LeaseIntegrationTest {
     public void t14_invoiceItemsForRentCreated() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         // first term
-        LeaseTerm term = (LeaseTerm) item.getTermsWorkaround().toArray()[0];
+        LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
         term.calculate(new LocalDate(2010, 7, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
         term.calculate(new LocalDate(2010, 10, 1));
@@ -220,7 +220,7 @@ public class LeaseIntegrationTest {
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTermsWorkaround().first();
+        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         term.calculate(new LocalDate(2010, 7, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
         term.calculate(new LocalDate(2010, 10, 1));
@@ -234,7 +234,7 @@ public class LeaseIntegrationTest {
     @Test
     public void t16_bulkLeaseCalculate() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTermsWorkaround().first();
+        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         // call calulate on lease
         lease.calculate(new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2)); // the previous test already supplied one

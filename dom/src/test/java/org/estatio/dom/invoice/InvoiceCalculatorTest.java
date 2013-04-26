@@ -168,7 +168,7 @@ public class InvoiceCalculatorTest {
         lt.setEndDate(new LocalDate(2013, 1, 1));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
-        li.getTermsWorkaround().add(lt);
+        li.getTerms().add(lt);
 
         lt.setInvoiceService(mockInvoices);
         tax.setTaxRepo(mockTaxes);
