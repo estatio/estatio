@@ -124,7 +124,7 @@ public class LeaseActor extends EstatioTransactionalObject implements Comparable
 
     /**
      * This is necessary but not sufficient; in
-     * {@link Lease#addActor(Party, LeaseActorType, LocalDate, LocalDate)} there
+     * {@link Lease#addRole(Party, LeaseActorType, LocalDate, LocalDate)} there
      * is logic to ensure that there cannot be two {@link LeaseActor actor}s of
      * the same type at the same point in time.
      * 

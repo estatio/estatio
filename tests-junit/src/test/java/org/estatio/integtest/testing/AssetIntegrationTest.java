@@ -10,9 +10,9 @@ import java.util.Set;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyActor;
-import org.estatio.dom.asset.PropertyActorType;
-import org.estatio.dom.asset.PropertyActors;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.party.Parties;
@@ -20,7 +20,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.PartiesJdo;
 import org.estatio.jdo.PropertiesJdo;
-import org.estatio.jdo.PropertyActorsJdo;
+import org.estatio.jdo.FixedAssetRolesJdo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +29,7 @@ import org.junit.Test;
 public class AssetIntegrationTest {
 
     private Properties properties;
-    private PropertyActors actors;
+    private FixedAssetRoles actors;
     private Parties parties;
     private Units units;
     
@@ -43,7 +43,7 @@ public class AssetIntegrationTest {
     @Before
     public void init() {
         properties = getIsft().getService(PropertiesJdo.class);
-        actors = getIsft().getService(PropertyActorsJdo.class);
+        actors = getIsft().getService(FixedAssetRolesJdo.class);
         parties = getIsft().getService(PartiesJdo.class);
         units = getIsft().getService(Units.class);
     }
@@ -70,7 +70,7 @@ public class AssetIntegrationTest {
     public void propertyActorCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("HELLOWORLD");
         Property property = properties.findPropertyByReference("OXF");
-        PropertyActor propertyActor = actors.findPropertyActor(property, party, PropertyActorType.PROPERTY_OWNER);
+        FixedAssetRole propertyActor = actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
@@ -78,7 +78,7 @@ public class AssetIntegrationTest {
     public void propertyActorWithoutStartDateCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("HELLOWORLD");
         Property property = properties.findPropertyByReference("OXF");
-        PropertyActor propertyActor = actors.findPropertyActor(property, party, PropertyActorType.PROPERTY_OWNER);
+        FixedAssetRole propertyActor = actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 

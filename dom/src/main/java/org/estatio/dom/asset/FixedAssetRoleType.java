@@ -1,6 +1,6 @@
 package org.estatio.dom.asset;
 
-public enum PropertyActorType {
+public enum FixedAssetRoleType {
 
     PROPERTY_OWNER("Property Owner"), 
     PROPERTY_MANAGER("Property Manager"), 
@@ -9,7 +9,7 @@ public enum PropertyActorType {
 
     private final String title;
 
-    private PropertyActorType(String title) {
+    private FixedAssetRoleType(String title) {
         this.title = title;
     }
 

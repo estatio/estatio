@@ -7,7 +7,6 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -19,34 +18,34 @@ import org.apache.isis.applib.annotation.Where;
 @PersistenceCapable
 @javax.jdo.annotations.Query(name = "propact_find", 
     language = "JDOQL", 
-    value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
+    value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:r)")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class PropertyActor extends EstatioTransactionalObject implements Comparable<PropertyActor> {
+public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole> {
 
-    // {{ Property (property)
-    private Property property;
+    // {{ Property (asset)
+    private FixedAsset asset;
 
     @Title(sequence = "3", prepend = ":")
     @MemberOrder(sequence = "1")
     @Hidden(where=Where.REFERENCES_PARENT)
     @Disabled
-    public Property getProperty() {
-        return property;
+    public FixedAsset getAsset() {
+        return asset;
     }
 
-    public void setProperty(final Property property) {
-        this.property = property;
+    public void setAsset(final FixedAsset asset) {
+        this.asset = asset;
     }
 
     // }}
 
-    // {{ Party (property)
+    // {{ Party (asset)
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
     @MemberOrder(sequence = "2")
-    @Disabled
     @Hidden(where=Where.REFERENCES_PARENT)
+    @Disabled
     public Party getParty() {
         return party;
     }
@@ -57,23 +56,23 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
 
     // }}
 
-    // {{ Type (property)
-    private PropertyActorType type;
+    // {{ Type (asset)
+    private FixedAssetRoleType type;
 
     @Disabled
     @MemberOrder(sequence = "3")
     @Title(sequence = "1")
-    public PropertyActorType getType() {
+    public FixedAssetRoleType getType() {
         return type;
     }
 
-    public void setType(final PropertyActorType type) {
+    public void setType(final FixedAssetRoleType type) {
         this.type = type;
     }
 
     // }}
 
-    // {{ StartDate (property)
+    // {{ StartDate (asset)
     private LocalDate startDate;
 
     @MemberOrder(sequence = "4")
@@ -88,7 +87,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
 
     // }}
 
-    // {{ EndDate (property)
+    // {{ EndDate (asset)
     private LocalDate endDate;
 
     @MemberOrder(sequence = "5")
@@ -104,7 +103,7 @@ public class PropertyActor extends EstatioTransactionalObject implements Compara
 
     @Hidden
     @Override
-    public int compareTo(PropertyActor o) {
+    public int compareTo(FixedAssetRole o) {
         return this.getType().compareTo(o.getType());
     }
 

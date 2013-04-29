@@ -8,13 +8,14 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Element;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.lease.LeaseUnit;
@@ -26,45 +27,14 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
 @AutoComplete(repository = Units.class)
 @PublishedObject
-public class Unit extends EstatioTransactionalObject implements Comparable<Unit> {
-
-    // {{ Reference (attribute, title)
-    private String reference;
-
-    @Title(sequence = "1", append = ", ")
-    @MemberOrder(sequence = "1")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String code) {
-        this.reference = code;
-    }
-
-    // }}
-
-    // {{ Name (attribute, title)
-    private String name;
-
-    @Disabled
-    @Title(sequence = "2")
-    @MemberOrder(sequence = "2")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    // }}
+public class Unit extends FixedAsset {
 
     // {{ Type (attribute)
     private UnitType type;
@@ -230,12 +200,6 @@ public class Unit extends EstatioTransactionalObject implements Comparable<Unit>
             }
         }
         return null;
-    }
-
-    @Hidden
-    @Override
-    public int compareTo(Unit other) {
-        return this.getReference().compareTo(other.getReference());
     }
 
     // }}
