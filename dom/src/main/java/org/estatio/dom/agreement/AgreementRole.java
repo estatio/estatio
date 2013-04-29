@@ -100,7 +100,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
 
     /**
      * This is necessary but not sufficient; in
-     * {@link Agreement#addActor(Party, AgreementRoleType, LocalDate, LocalDate)}
+     * {@link Agreement#addRole(Party, AgreementRoleType, LocalDate, LocalDate)}
      * there is logic to ensure that there cannot be two {@link AgreementRole
      * actor}s of the same type at the same point in time.
      * 

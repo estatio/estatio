@@ -1,7 +1,7 @@
 package org.estatio.dom.assets;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyActor;
+import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.Unit;
 
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
@@ -25,10 +25,10 @@ public class FixtureDatumFactoriesForAssets {
         return new FixtureDatumFactory<Unit>(Unit.class, unit1, unit2);
     }
 
-    public static FixtureDatumFactory<PropertyActor> propertyActors() {
-        PropertyActor pa1 = new PropertyActor();
-        PropertyActor pa2 = new PropertyActor();
-        return new FixtureDatumFactory<PropertyActor>(PropertyActor.class, pa1, pa2);
+    public static FixtureDatumFactory<FixedAssetRole> propertyActors() {
+        FixedAssetRole pa1 = new FixedAssetRole();
+        FixedAssetRole pa2 = new FixedAssetRole();
+        return new FixtureDatumFactory<FixedAssetRole>(FixedAssetRole.class, pa1, pa2);
     }
 
     public static FixtureDatumFactory<Location> locations() {

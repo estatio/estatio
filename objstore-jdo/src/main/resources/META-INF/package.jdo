@@ -23,16 +23,12 @@
              WHERE reference.matches(:r)
             ]]></query>
 		</class>
-		<class name="PropertyActor">
-			<!-- <query name="properyActor_findByPropertyParty" language="JDOQL"><![CDATA[ 
-				SELECT FROM org.estatio.dom.asset.PropertyActor 
-				WHERE property.equals(:property) AND party.equals(:party) AND type.equals(:type) 
-				]]></query> -->
-			<query name="properyActor_findByPropertyParty" language="JDOQL"><![CDATA[
+		<class name="FixedAssetRole">
+			<query name="fixedAssetRole_findByAssetParty" language="JDOQL"><![CDATA[
             SELECT 
-              FROM org.estatio.dom.asset.PropertyActor 
+              FROM org.estatio.dom.asset.FixedAssetRole 
              WHERE 
-	             property == :property 
+	             asset == :asset 
 	             && party == :party
 	             && type == :type
             ]]></query>

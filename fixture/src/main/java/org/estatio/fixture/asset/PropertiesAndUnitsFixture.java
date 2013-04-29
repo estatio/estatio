@@ -7,7 +7,7 @@ import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyActorType;
+import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -51,8 +51,8 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         Property property = properties.newProperty(reference, name, type);
         property.setOpeningDate(openingDate);
         property.setAcquireDate(acquireDate);
-        property.addActor(owner, PropertyActorType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
-        property.addActor(manager, PropertyActorType.ASSET_MANAGER, null, null);
+        property.addRole(owner, FixedAssetRoleType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
+        property.addRole(manager, FixedAssetRoleType.ASSET_MANAGER, null, null);
         //property.setLocation(new Location(lat, lng));
         for (int i = 0; i < numberOfUnits; i++) {
             int unitNumber = i + 1;

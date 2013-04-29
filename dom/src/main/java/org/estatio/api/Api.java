@@ -30,9 +30,9 @@ import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.PropertyActor;
-import org.estatio.dom.asset.PropertyActorType;
-import org.estatio.dom.asset.PropertyActors;
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitType;
@@ -188,7 +188,7 @@ public class Api extends AbstractFactoryAndRepository {
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);
-        property.addActor(owner, PropertyActorType.PROPERTY_OWNER, null, null);
+        property.addRole(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -249,9 +249,9 @@ public class Api extends AbstractFactoryAndRepository {
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
-        PropertyActor actor = propertyActors.findPropertyActor(property, party, PropertyActorType.valueOf(type), startDate, endDate);
+        FixedAssetRole actor = propertyActors.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
         if (actor == null) {
-            actor = propertyActors.newPropertyActor(property, party, PropertyActorType.valueOf(type), startDate, endDate);
+            actor = propertyActors.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
         }
     }
 
@@ -632,9 +632,9 @@ public class Api extends AbstractFactoryAndRepository {
         this.parties = parties;
     }
 
-    private PropertyActors propertyActors;
+    private FixedAssetRoles propertyActors;
 
-    public void setPropertyActorRepository(final PropertyActors propertyActors) {
+    public void setPropertyActorRepository(final FixedAssetRoles propertyActors) {
         this.propertyActors = propertyActors;
     }
 
