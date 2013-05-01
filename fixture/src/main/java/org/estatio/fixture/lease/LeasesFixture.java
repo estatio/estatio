@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
-
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
@@ -13,7 +12,6 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseItems;
@@ -62,7 +60,7 @@ public class LeasesFixture extends AbstractFixture {
         lease.addRole(landlord, AgreementRoleType.LANDLORD, null, null);
         lease.addRole(tenant, AgreementRoleType.TENANT, null, null);
         lease.addRole(manager, AgreementRoleType.MANAGER, null, null);
-        lease.addToUnits(leaseUnits.newLeaseUnit(lease, unit));
+        leaseUnits.newLeaseUnit(lease, unit);
 
         if (leases.findByReference(reference) == null) {
             new RuntimeException();

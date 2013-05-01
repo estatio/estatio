@@ -4,22 +4,14 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
-import com.danhaywood.isis.wicket.gmap3.applib.Location;
-import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Mask;
@@ -28,12 +20,21 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
+import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
+import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @PublishedObject
+@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 public class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
 
     // {{ Reference (attribute, title)
@@ -108,9 +109,9 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
 
     @MemberOrder(name = "Roles", sequence = "1")
     public FixedAssetRole addRole(@Named("party") Party party, @Named("type") FixedAssetRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        FixedAssetRole role = fixedASsetRolesRepo.findRole(this, party, type, startDate, endDate);
+        FixedAssetRole role = fixedAssetRolesRepo.findRole(this, party, type, startDate, endDate);
         if (role == null) {
-            role = fixedASsetRolesRepo.newRole(this, party, type, startDate, endDate);
+            role = fixedAssetRolesRepo.newRole(this, party, type, startDate, endDate);
         }
         return role;
     }
@@ -123,10 +124,10 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
 
     
     // {{ Injected services
-    private FixedAssetRoles fixedASsetRolesRepo;
+    private FixedAssetRoles fixedAssetRolesRepo;
 
     public void setFixedAssetRolesRepo(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedASsetRolesRepo = fixedAssetRoles;
+        this.fixedAssetRolesRepo = fixedAssetRoles;
     }
 
     private Parties parties;
@@ -134,10 +135,6 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
     public void setParties(Parties parties) {
         this.parties = parties;
     }
-
-    // }}
-
-    
     
     private LocationLookupService locationLookupService;
 
@@ -145,6 +142,7 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
         this.locationLookupService = locationLookupService;
     }
 
+    
     @Override
     public int compareTo(FixedAsset other) {
         return this.getName().compareTo(other.getName());

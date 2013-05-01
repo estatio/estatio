@@ -6,6 +6,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -33,22 +35,23 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
 @PersistenceCapable
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Properties.class)
 @PublishedObject
 public class Property extends FixedAsset {
 
     // {{ Type (attribute)
-    private PropertyType type;
+    private PropertyType propertyType;
 
     @MemberOrder(sequence = "1.3")
-    public PropertyType getType() {
-        return type;
+    public PropertyType getPropertyType() {
+        return propertyType;
     }
 
-    public void setType(final PropertyType type) {
-        this.type = type;
+    public void setPropertyType(final PropertyType type) {
+        this.propertyType = type;
     }
 
     // }}

@@ -38,12 +38,6 @@ public class InvoiceIntegrationTest {
     }
     
     @Test
-    public void numberOfChargesIsOne() throws Exception {
-        Charges charges = getIsft().getService(ChargesJdo.class);
-        assertThat(charges.allCharges().size(), is(2));
-    }
-
-    @Test
     public void chargeCanBeFound() throws Exception {
         Charges charges = getIsft().getService(ChargesJdo.class);
         Charge charge = charges.findChargeByReference("RENT");

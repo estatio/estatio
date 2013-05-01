@@ -1,7 +1,5 @@
 package org.estatio.integtest;
 
-import org.apache.log4j.Level;
-
 import org.apache.isis.applib.fixtures.InstallableFixture;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
@@ -10,10 +8,8 @@ import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
-
+import org.apache.log4j.Level;
 import org.estatio.api.Api;
-import org.estatio.dom.agreement.AgreementRoles;
-import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.AgreementRolesJdo;
 import org.estatio.jdo.AgreementsJdo;
@@ -23,9 +19,9 @@ import org.estatio.jdo.CommunicationChannelsJdo;
 import org.estatio.jdo.CountriesJdo;
 import org.estatio.jdo.CurrenciesJdo;
 import org.estatio.jdo.FinancialAccountsJdo;
+import org.estatio.jdo.FixedAssetRolesJdo;
 import org.estatio.jdo.IndicesJdo;
 import org.estatio.jdo.InvoicesJdo;
-import org.estatio.jdo.LeaseActorsJdo;
 import org.estatio.jdo.LeaseItemsJdo;
 import org.estatio.jdo.LeaseTermsJdo;
 import org.estatio.jdo.LeaseUnitsJdo;
@@ -33,7 +29,6 @@ import org.estatio.jdo.LeasesJdo;
 import org.estatio.jdo.NumeratorsJdo;
 import org.estatio.jdo.PartiesJdo;
 import org.estatio.jdo.PropertiesJdo;
-import org.estatio.jdo.FixedAssetRolesJdo;
 import org.estatio.jdo.StatesJdo;
 import org.estatio.jdo.TaxesJdo;
 import org.estatio.jdo.UnitsJdo;
@@ -64,12 +59,11 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new FixedAssetRolesJdo(),
                 new UnitsJdo(),
                 new PartiesJdo(),
-                new LeasesJdo(),
                 new AgreementsJdo(),
                 new AgreementRolesJdo(),
+                new LeasesJdo(),
                 new LeaseTermsJdo(),
                 new LeaseItemsJdo(),
-                new LeaseActorsJdo(),
                 new LeaseUnitsJdo(),
                 new InvoicesJdo(),
                 new CommunicationChannelsJdo(),

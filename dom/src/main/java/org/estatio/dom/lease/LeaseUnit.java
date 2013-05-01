@@ -14,9 +14,8 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit> {
 
     // {{ Lease (property)
@@ -24,13 +23,37 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
     @Title(sequence = "1", append = ":")
     @MemberOrder(sequence = "1")
-    @Hidden(where= Where.REFERENCES_PARENT)
+    @Hidden(where = Where.REFERENCES_PARENT)
     public Lease getLease() {
         return lease;
     }
 
     public void setLease(final Lease lease) {
         this.lease = lease;
+    }
+
+    public void modifyLease(final Lease lease) {
+        Lease currentLease = getLease();
+        // check for no-op
+        if (lease == null || lease.equals(currentLease)) {
+            return;
+        }
+        // delegate to parent to associate
+        lease.addToUnits(this);
+        // additional business logic
+        // onModifyLease(currentLease, lease);
+    }
+
+    public void clearLease() {
+        Lease currentLease = getLease();
+        // check for no-op
+        if (currentLease == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentLease.removeFromUnits(this);
+        // additional business logic
+        // onClearLease(currentLease);
     }
 
     // }}
@@ -40,7 +63,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
     @Title(sequence = "2", append = ":")
     @MemberOrder(sequence = "2")
-    @Hidden(where= Where.REFERENCES_PARENT)
+    @Hidden(where = Where.REFERENCES_PARENT)
     public Unit getUnit() {
         return unit;
     }
@@ -49,7 +72,29 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.unit = unit;
     }
 
-    // }}
+    public void modifyUnit(final Unit unit) {
+        Unit currentUnit = getUnit();
+        // check for no-op
+        if (unit == null || unit.equals(currentUnit)) {
+            return;
+        }
+        // delegate to parent to associate
+        unit.addToLeases(this);
+        // additional business logic
+        // onModifyUnit(currentUnit, unit);
+    }
+
+    public void clearUnit() {
+        Unit currentUnit = getUnit();
+        // check for no-op
+        if (currentUnit == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentUnit.removeFromLeases(this);
+        // additional business logic
+        // onClearUnit(currentUnit);
+    }
 
     // {{ StartDate (property)
     private LocalDate startDate;
@@ -81,8 +126,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
     // }}
-    
+
     // {{ TenancyStartDate (property)
     private LocalDate tenancyStartDate;
 
@@ -95,8 +141,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setTenancyStartDate(final LocalDate tenancyStartDate) {
         this.tenancyStartDate = tenancyStartDate;
     }
+
     // }}
-    
+
     // {{ TenancyEndDate (property)
     private LocalDate tenancyEndDate;
 
@@ -109,6 +156,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setTenancyEndDate(final LocalDate tenancyEndDate) {
         this.tenancyEndDate = tenancyEndDate;
     }
+
     // }}
 
     // {{ Brand (property)
@@ -123,8 +171,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setBrand(final String brand) {
         this.brand = brand;
     }
+
     // }}
-    
+
     // {{ Sector (property)
     private String sector;
 
@@ -137,6 +186,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setSector(final String sector) {
         this.sector = sector;
     }
+
     // }}
 
     // {{ Activity (property)
@@ -151,8 +201,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setActivity(final String activity) {
         this.activity = activity;
     }
+
     // }}
-    
+
     @Override
     @Hidden
     public int compareTo(LeaseUnit o) {

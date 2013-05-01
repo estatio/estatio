@@ -32,8 +32,8 @@ import org.apache.isis.applib.annotation.Title;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
 
     // {{ Reference (property)
@@ -232,16 +232,16 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
 
     // {{ Roles (Collection)
     @Persistent(mappedBy = "agreement")
-    private SortedSet<AgreementRole> actors = new TreeSet<AgreementRole>();
+    private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
     @MemberOrder(name = "Roles", sequence = "11")
     @Render(Type.EAGERLY)
     public SortedSet<AgreementRole> getRoles() {
-        return actors;
+        return roles;
     }
 
     public void setRoles(final SortedSet<AgreementRole> actors) {
-        this.actors = actors;
+        this.roles = actors;
     }
 
     public void addToRoles(final AgreementRole agreementRole) {
@@ -267,7 +267,7 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
         AgreementRole agreementRole = findRole(party, type, startDate);
         if (agreementRole == null) {
             agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
-            actors.add(agreementRole);
+            roles.add(agreementRole);
         }
         agreementRole.setEndDate(endDate);
         return agreementRole;

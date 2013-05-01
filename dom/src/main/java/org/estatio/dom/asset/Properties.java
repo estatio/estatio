@@ -45,7 +45,7 @@ public class Properties extends AbstractFactoryAndRepository {
         final Property property = newTransientInstance(Property.class);
         property.setReference(reference);
         property.setName(name);
-        property.setType(propertyType);
+        property.setPropertyType(propertyType);
         persistIfNotAlready(property);
         return property;
     }

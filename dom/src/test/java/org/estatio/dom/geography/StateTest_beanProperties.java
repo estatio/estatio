@@ -10,7 +10,7 @@ public class StateTest_beanProperties {
 
 	@Test
 	public void test() {
-		new PojoTester().withFixture(FixtureDatumFactoriesForGeography.countries()).exercise(new State(), FilterSet.excluding("container"));
+		new PojoTester().withFixture(FixtureDatumFactoriesForGeography.countries()).exercise(new State(), FilterSet.excluding("container", "isisJdoSupport"));
 	}
 
 

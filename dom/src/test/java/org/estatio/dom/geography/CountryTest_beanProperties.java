@@ -10,7 +10,7 @@ public class CountryTest_beanProperties {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new Country(), FilterSet.excluding("container"));
+		new PojoTester().exercise(new Country(), FilterSet.excluding("container",  "isisJdoSupport"));
 	}
 
 }

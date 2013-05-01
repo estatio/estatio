@@ -26,13 +26,12 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitType;
@@ -53,7 +52,6 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -184,7 +182,7 @@ public class Api extends AbstractFactoryAndRepository {
             property = properties.newProperty(reference, name);
         }
         property.setName(name);
-        property.setType(PropertyType.valueOf(type));
+        property.setPropertyType(PropertyType.valueOf(type));
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);

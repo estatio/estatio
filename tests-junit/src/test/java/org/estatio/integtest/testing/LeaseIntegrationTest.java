@@ -7,10 +7,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseActor;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -33,8 +33,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseIntegrationTest {

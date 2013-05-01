@@ -7,6 +7,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -32,20 +34,21 @@ import org.apache.isis.applib.annotation.Where;
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @AutoComplete(repository = Units.class)
 @PublishedObject
 public class Unit extends FixedAsset {
 
     // {{ Type (attribute)
-    private UnitType type;
+    private UnitType unitType;
 
     @MemberOrder(sequence = "3")
-    public UnitType getType() {
-        return type;
+    public UnitType getUnitType() {
+        return unitType;
     }
 
     public void setType(final UnitType type) {
-        this.type = type;
+        this.unitType = type;
     }
 
     public List<UnitType> choicesType() {
@@ -163,6 +166,35 @@ public class Unit extends FixedAsset {
     public void setLeases(final SortedSet<LeaseUnit> leases) {
         this.leases = leases;
     }
+    
+    public void addToLeases(final LeaseUnit leaseUnit) {
+        // check for no-op
+        if (leaseUnit == null || getLeases().contains(leaseUnit)) {
+            return;
+        }
+        // associate new
+        getLeases().add(leaseUnit);
+        // additional business logic
+        onAddToLeases(leaseUnit);
+    }
+
+    public void removeFromLeases(final LeaseUnit leaseUnit) {
+        // check for no-op
+        if (leaseUnit == null || !getLeases().contains(leaseUnit)) {
+            return;
+        }
+        // dissociate existing
+        getLeases().remove(leaseUnit);
+        // additional business logic
+        onRemoveFromLeases(leaseUnit);
+    }
+
+    protected void onAddToLeases(final LeaseUnit leaseUnit) {
+    }
+
+    protected void onRemoveFromLeases(final LeaseUnit leaseUnit) {
+    }
+    
 
     // }}
 

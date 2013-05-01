@@ -1,11 +1,9 @@
 package org.estatio.dom.asset;
 
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -13,13 +11,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
 
 @PersistenceCapable
-@javax.jdo.annotations.Query(name = "propact_find", 
-    language = "JDOQL", 
-    value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:r)")
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole> {
 
     // {{ Property (asset)
@@ -27,7 +24,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
 
     @Title(sequence = "3", prepend = ":")
     @MemberOrder(sequence = "1")
-    @Hidden(where=Where.REFERENCES_PARENT)
+    @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     public FixedAsset getAsset() {
         return asset;
@@ -44,7 +41,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
 
     @Title(sequence = "2", prepend = ":")
     @MemberOrder(sequence = "2")
-    @Hidden(where=Where.REFERENCES_PARENT)
+    @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     public Party getParty() {
         return party;
@@ -77,6 +74,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
 
     @MemberOrder(sequence = "4")
     @Optional
+    @Persistent
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -92,6 +90,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
 
     @MemberOrder(sequence = "5")
     @Optional
+    @Persistent
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -99,6 +98,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
     // }}
 
     @Hidden

@@ -21,7 +21,6 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseActorType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Party;

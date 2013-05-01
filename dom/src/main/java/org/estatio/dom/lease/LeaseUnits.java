@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -29,21 +28,22 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
     public String iconName() {
         return "LeaseUnit";
     }
+
     // }}
 
     // {{ newLeaseUnit
-    //@Hidden
+    // @Hidden
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
     public LeaseUnit newLeaseUnit(@Named("Lease") Lease lease, @Named("Unit") Unit unit) {
         LeaseUnit lu = newTransientInstance(LeaseUnit.class);
-        lu.setLease(lease);
-        lu.setUnit(unit);
         persist(lu);
-        lease.addToUnits(lu);
+        lu.modifyLease(lease);
+        lu.modifyUnit(unit);
         return lu;
     }
+
     // }}
 
     // {{ find
@@ -54,14 +54,13 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
         return firstMatch(LeaseUnit.class, new Filter<LeaseUnit>() {
             @Override
             public boolean accept(final LeaseUnit leaseUnit) {
-                return leaseUnit.getLease().equals(lease) &&  leaseUnit.getUnit().equals(unit);
+                return leaseUnit.getLease().equals(lease) && leaseUnit.getUnit().equals(unit);
             }
         });
     }
-    
+
     // }}
-    
-    
+
     // {{ allLeaseUnits
     @Prototype
     @ActionSemantics(Of.SAFE)

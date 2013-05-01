@@ -33,6 +33,30 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.agreement = lease;
     }
 
+    public void modifyAgreement(final Agreement agreement) {
+        Agreement currentAgreement = getAgreement();
+        // check for no-op
+        if (agreement == null || agreement.equals(currentAgreement)) {
+            return;
+        }
+        // delegate to parent to associate
+        agreement.addToRoles(this);
+        // additional business logic
+        // onModifyAgreement(currentAgreement, agreement);
+    }
+
+    public void clearAgreement() {
+        Agreement currentAgreement = getAgreement();
+        // check for no-op
+        if (currentAgreement == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentAgreement.removeFromRoles(this);
+        // additional business logic
+        // onClearAgreement(currentAgreement);
+    }
+
     // }}
 
     // {{ Party (property)
