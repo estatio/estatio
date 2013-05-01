@@ -47,11 +47,11 @@ public class Unit extends FixedAsset {
         return unitType;
     }
 
-    public void setType(final UnitType type) {
+    public void setUnitType(final UnitType type) {
         this.unitType = type;
     }
 
-    public List<UnitType> choicesType() {
+    public List<UnitType> choicesUnitType() {
         return Arrays.asList(UnitType.values());
     }
 

@@ -46,7 +46,7 @@ public class Units extends AbstractFactoryAndRepository {
         final Unit unit = newTransientInstance(Unit.class);
         unit.setReference(reference);
         unit.setName(name);
-        unit.setType(type);
+        unit.setUnitType(type);
         //getContainer().flush();
         persist(unit);
         return unit;
