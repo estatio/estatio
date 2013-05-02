@@ -2,6 +2,8 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -14,6 +16,8 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
@@ -90,7 +94,12 @@ public class Leases extends AbstractFactoryAndRepository {
 
     // }}
 
-    public void calculate(
+    
+    /**
+     * Returns the {@link InvoiceItem}s that are newly {@link Lease#calculate(LocalDate, LocalDate) calculate}d
+     * for all of the {@link Lease}s matched by the provided <tt>leaseReference</tt> and the other parameters.
+     */
+    public List<InvoiceItem> calculate(
             final @Named("Lease reference") String leaseReference,
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due date") LocalDate dueDate
@@ -99,6 +108,9 @@ public class Leases extends AbstractFactoryAndRepository {
         for (Lease lease : leases) {
             lease.calculate(startDate, dueDate);
         }
+        // As a convenience, we now go find them and display them.
+        // We've done it this way so that the user can always just go to the menu and make this query.
+        return invoices.findItems(leaseReference, startDate, dueDate);
     }    
     
     // {{ allLeases
@@ -114,4 +126,15 @@ public class Leases extends AbstractFactoryAndRepository {
 //    public void verifySelected(Lease lease) {
 //        lease.verify();
 //    }
+    
+    // {{ injected: Invoices
+    private Invoices invoices;
+
+    public void setInvoices(final Invoices invoices) {
+        this.invoices = invoices;
+    }
+    // }}
+
+
+    
 }

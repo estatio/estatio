@@ -3,6 +3,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.Column;
@@ -27,6 +28,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -34,7 +36,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceCalculator;
+import org.estatio.dom.invoice.InvoiceCalculationService;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -346,13 +348,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @MemberOrder(name = "invoiceItems", sequence = "2")
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
-        // removeUnapprovedInvoiceItemsForDate(date);
-        InvoiceCalculator ic = new InvoiceCalculator(this, startDate, dueDate);
-        ic.calculateAndInvoiceItems();
+        invoiceCalculationService.calculateAndInvoiceItems(this, startDate, dueDate);
         informUser("Calculated" + this.toString());
         return this;
     }
-        
+
     // }}
 
     // {{ CompareTo
@@ -380,9 +380,17 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     // {{ Injected services
     private Invoices invoiceRepository;
 
+
     public void setInvoiceService(Invoices service) {
         this.invoiceRepository = service;
     }
+    
+    
+    private InvoiceCalculationService invoiceCalculationService;
+    public void setInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
+        this.invoiceCalculationService = invoiceCalculationService;
+    }
+    
     // }}
 
 }

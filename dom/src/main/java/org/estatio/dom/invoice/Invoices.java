@@ -87,4 +87,9 @@ public class Invoices extends AbstractFactoryAndRepository {
             ){
         throw new NotImplementedException();
     }
+
+    @ActionSemantics(Of.SAFE)
+    public List<InvoiceItem> findItems(String leaseReference, LocalDate startDate, LocalDate dueDate) {
+        throw new NotImplementedException();
+    }
 }

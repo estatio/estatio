@@ -198,6 +198,24 @@ public class Invoice extends EstatioTransactionalObject {
         this.items = items;
     }
 
+    public void addToItems(final InvoiceItem item) {
+        // check for no-op
+        if (item == null || getItems().contains(item)) {
+            return;
+        }
+        // associate new
+        getItems().add(item);
+    }
+
+    public void removeFromItems(final InvoiceItem item) {
+        // check for no-op
+        if (item == null || !getItems().contains(item)) {
+            return;
+        }
+        // dissociate existing
+        getItems().remove(item);
+    }
+
     // }}
 
     @MemberOrder(sequence = "12")
@@ -235,35 +253,34 @@ public class Invoice extends EstatioTransactionalObject {
         this.setStatus(InvoiceStatus.APPROVED);
         return this;
     }
-    
+
     @Bulk
     @MemberOrder(sequence = "21")
     public Invoice assignCollectionNumber() {
-        Numerator numerator =   numerators.establish(NumeratorType.COLLECTION_NUMBER);
+        Numerator numerator = numerators.establish(NumeratorType.COLLECTION_NUMBER);
         if (assign(this, numerator, "COL-%05d")) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
             this.setStatus(InvoiceStatus.COLLECTED);
         }
         return this;
     }
-    
+
     @Bulk
     @MemberOrder(sequence = "22")
     public Invoice assignInvoiceNumber() {
-        Numerator numerator =  numerators.establish(NumeratorType.INVOICE_NUMBER);
+        Numerator numerator = numerators.establish(NumeratorType.INVOICE_NUMBER);
         if (assign(this, numerator, "INV-%05d")) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
             this.setStatus(InvoiceStatus.INVOICED);
         }
         return this;
     }
-    
-    
-    private static boolean assign(Invoice invoice, Numerator numerator, String format){
+
+    private static boolean assign(Invoice invoice, Numerator numerator, String format) {
         if (invoice.getInvoiceNumber() != null) {
             return false;
-        } 
-        invoice.setInvoiceNumber(String.format(format , numerator.increment()));
+        }
+        invoice.setInvoiceNumber(String.format(format, numerator.increment()));
         return true;
     }
 
@@ -271,7 +288,7 @@ public class Invoice extends EstatioTransactionalObject {
     @Bulk
     public void remove() {
         if (getStatus().equals(InvoiceStatus.NEW)) {
-            for (InvoiceItem item : getItems()){
+            for (InvoiceItem item : getItems()) {
                 item.remove();
             }
             getContainer().remove(this);

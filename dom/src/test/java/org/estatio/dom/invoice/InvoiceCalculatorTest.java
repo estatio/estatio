@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -70,10 +71,10 @@ public class InvoiceCalculatorTest {
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
 
-        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
-        ic.calculate();
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
-        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
+        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
@@ -90,10 +91,10 @@ public class InvoiceCalculatorTest {
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
 
-        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
-        ic.calculate();
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
-        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
+        Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
@@ -110,10 +111,10 @@ public class InvoiceCalculatorTest {
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
 
-        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
-        ic.calculate();
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
-        Assert.assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
+        Assert.assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
@@ -130,10 +131,10 @@ public class InvoiceCalculatorTest {
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
 
-        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
-        ic.calculate();
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
-        Assert.assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), ic.getCalculatedValue());
+        Assert.assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
@@ -149,9 +150,9 @@ public class InvoiceCalculatorTest {
         lt.setEndDate(new LocalDate(2013, 3, 1));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
-        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
-        ic.calculate();
-        Assert.assertNull(ic.getCalculatedValue());
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
+        Assert.assertNull(result.getCalculatedValue());
     }
 
     @Test
@@ -182,9 +183,8 @@ public class InvoiceCalculatorTest {
             }
         });
 
-        InvoiceCalculator ic = new InvoiceCalculator(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
-        ic.calculate();
-        ic.createInvoiceItems();
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        ic.calculateAndInvoiceItems(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
         InvoiceItem invoiceItem = lt.getInvoiceItems().iterator().next();
 

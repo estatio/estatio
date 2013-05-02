@@ -50,6 +50,26 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.invoice = invoice;
     }
 
+    public void modifyInvoice(final Invoice invoice) {
+        Invoice currentInvoice = getInvoice();
+        // check for no-op
+        if (invoice == null || invoice.equals(currentInvoice)) {
+            return;
+        }
+        // delegate to parent to associate
+        invoice.addToItems(this);
+    }
+
+    public void clearInvoice() {
+        Invoice currentInvoice = getInvoice();
+        // check for no-op
+        if (currentInvoice == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentInvoice.removeFromItems(this);
+    }
+
     // }}
 
     // {{ Charge (property)
@@ -260,7 +280,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
         return this;
     }
 
-    @Hidden 
+    @Hidden
     public void remove() {
         // no safeguard, assuming being called with precaution
         setInvoice(null);
