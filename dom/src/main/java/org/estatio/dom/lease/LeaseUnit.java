@@ -18,7 +18,6 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit> {
 
-    // {{ Lease (property)
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
@@ -40,8 +39,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         // delegate to parent to associate
         lease.addToUnits(this);
-        // additional business logic
-        // onModifyLease(currentLease, lease);
     }
 
     public void clearLease() {
@@ -52,13 +49,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         // delegate to parent to dissociate
         currentLease.removeFromUnits(this);
-        // additional business logic
-        // onClearLease(currentLease);
     }
 
-    // }}
-
-    // {{ Unit (property)
     private Unit unit;
 
     @Title(sequence = "2", append = ":")
@@ -80,8 +72,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         // delegate to parent to associate
         unit.addToLeases(this);
-        // additional business logic
-        // onModifyUnit(currentUnit, unit);
     }
 
     public void clearUnit() {
@@ -92,11 +82,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         // delegate to parent to dissociate
         currentUnit.removeFromLeases(this);
-        // additional business logic
-        // onClearUnit(currentUnit);
     }
 
-    // {{ StartDate (property)
     private LocalDate startDate;
 
     @Persistent
@@ -109,11 +96,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-
-    // }}
-
-    // {{ EndDate (property)
-    // meaning, all meant to bound an item to a period.
     private LocalDate endDate;
 
     @Persistent
@@ -127,9 +109,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.endDate = endDate;
     }
 
-    // }}
-
-    // {{ TenancyStartDate (property)
     private LocalDate tenancyStartDate;
 
     @Optional
@@ -142,9 +121,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.tenancyStartDate = tenancyStartDate;
     }
 
-    // }}
-
-    // {{ TenancyEndDate (property)
     private LocalDate tenancyEndDate;
 
     @Optional
@@ -157,9 +133,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.tenancyEndDate = tenancyEndDate;
     }
 
-    // }}
-
-    // {{ Brand (property)
     private String brand;
 
     @Optional
@@ -172,9 +145,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.brand = brand;
     }
 
-    // }}
-
-    // {{ Sector (property)
     private String sector;
 
     @Optional
@@ -187,9 +157,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.sector = sector;
     }
 
-    // }}
-
-    // {{ Activity (property)
     private String activity;
 
     @Optional
@@ -202,11 +169,14 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.activity = activity;
     }
 
-    // }}
-
     @Override
     @Hidden
     public int compareTo(LeaseUnit o) {
-        return this.getUnit().getReference().compareTo(o.getUnit().getReference());
+        Unit thisUnit = this.getUnit();
+        Unit otherUnit = o.getUnit();
+        if (thisUnit == null && otherUnit == null) return 0;
+        if (thisUnit == null) return 1;
+        if (otherUnit == null) return -1;
+        return thisUnit.getReference().compareTo(otherUnit.getReference());
     }
 }
