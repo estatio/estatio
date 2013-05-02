@@ -28,8 +28,9 @@ import org.joda.time.LocalDate;
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     public LeaseTermForIndexableRent() {
-        
+
     }
+
     // {{ Index (property)
     private Index index;
 
@@ -226,7 +227,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
             LeaseTermFrequency frequency = previousTerm.getFrequency();
             if (frequency != null) {
                 setIndex(previousTerm.getIndex());
-                setBaseIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
+                setBaseIndexStartDate(previousTerm.getNextIndexStartDate());
                 setNextIndexStartDate(frequency.nextDate(previousTerm.getNextIndexStartDate()));
                 setEffectiveDate(frequency.nextDate(previousTerm.getEffectiveDate()));
                 setBaseValue(previousTerm.getValue());
@@ -238,7 +239,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Override
     public void update() {
         super.update();
-        //TODO: not really elegant to fetch teh data from th previous term. Who is responsible?
+        // TODO: not really elegant to fetch teh data from th previous term. Who
+        // is responsible?
         LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
         if (previousTerm != null) {
             if (previousTerm.getValue() != null && (getBaseValue() == null || previousTerm.getValue().compareTo(getBaseValue()) != 0)) {
@@ -260,15 +262,22 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     @Hidden
-    public BigDecimal valueForDate(LocalDate date) {
-        //return the value on a specific date
-        // assume that indexation wil be applided a month after the index date
-        if (MathUtils.isNotZeroOrNull(getIndexedValue()) && getNextIndexStartDate().plusMonths(2).compareTo(date) > 0) {
-            return getIndexedValue();
+    public BigDecimal valueForDueDate(LocalDate dueDate) {
+        // use the indexed value on or after the effective date, use the base
+        // value otherwise. If effective date is empty use a date two months
+        // after next index date
+        if (MathUtils.isNotZeroOrNull(getIndexedValue())) {
+            if (getEffectiveDate() != null) {
+                if (dueDate.compareTo(getEffectiveDate()) >= 0)
+                    return getIndexedValue();
+            } else {
+                if (getNextIndexStartDate().plusMonths(2).compareTo(dueDate) > 0)
+                    return getIndexedValue();
+            }
         }
-        return getBaseIndexValue();
+        return getBaseValue();
     }
-    
+
     // }}
 
     private Indices indexService;

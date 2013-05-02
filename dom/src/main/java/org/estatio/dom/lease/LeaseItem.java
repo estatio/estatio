@@ -326,7 +326,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return this;
     }
 
-    public LeaseItem calculate(@Named("Due date") LocalDate dueDate) {
+    public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate) {
         // SortedSet<LeaseTerm> terms =
         // Sets.newTreeSet(Iterables.transform(getTerms(), new
         // Function<LeaseTerm, LeaseTerm>(){
@@ -339,7 +339,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
             // resolve(term); // TODO: need to call resolve,
             // // otherwise services are not injected
             // // when running in the wicket viewer.
-            term.calculate(dueDate);
+            term.calculate(startDate, dueDate);
         }
         return this;
     }

@@ -78,6 +78,7 @@ public class LeaseTermForIndexableRentTest {
         item.setLeaseTermsService(mockLeaseTerms);
 
         term = new LeaseTermForIndexableRent();
+        term.setFrequency(LeaseTermFrequency.YEARLY);
         term.setBaseIndexStartDate(iv1.getStartDate());
         term.setNextIndexStartDate(iv2.getStartDate());
         term.setBaseValue(BigDecimal.valueOf(23456.78));
@@ -91,9 +92,9 @@ public class LeaseTermForIndexableRentTest {
     public void updateRunsWell() {
         context.checking(new Expectations() {
             {
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010,1,1)));
+                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
                 will(returnValue(iv1));
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011,1,1)));
+                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
                 will(returnValue(iv2));
             }
         });
@@ -105,9 +106,9 @@ public class LeaseTermForIndexableRentTest {
     public void updateRunsWellWithEmptyIndex() {
         context.checking(new Expectations() {
             {
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010,1,1)));
+                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
                 will(returnValue(iv1));
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011,1,1)));
+                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
                 will(returnValue(iv2));
             }
         });
@@ -115,8 +116,6 @@ public class LeaseTermForIndexableRentTest {
         Assert.assertEquals(new BigDecimal("23691.3500"), term.getIndexedValue());
     }
 
-    
-    
     @Test
     public void createNextRunsWell() {
         context.checking(new Expectations() {
@@ -132,4 +131,27 @@ public class LeaseTermForIndexableRentTest {
         Assert.assertThat(newTerm.getIndex(), Is.is(term.getIndex()));
     }
 
+    @Test
+    public void testValueForDueDate() throws Exception {
+        LeaseTermForIndexableRent term = new LeaseTermForIndexableRent();
+        term.setEffectiveDate(new LocalDate(2012, 4, 1));
+        term.setBaseValue(BigDecimal.valueOf(20000));
+        term.setIndexedValue(BigDecimal.valueOf(30000));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), Is.is(BigDecimal.valueOf(20000)));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), Is.is(BigDecimal.valueOf(20000)));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), Is.is(BigDecimal.valueOf(30000)));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), Is.is(BigDecimal.valueOf(30000)));
+    }
+
+    public void testInitialize() throws Exception {
+        LeaseTermForIndexableRent nextTerm = new LeaseTermForIndexableRent();
+        term.modifyNextTerm(nextTerm);
+        nextTerm.initialize();
+        
+        Assert.assertThat(nextTerm.getBaseIndexStartDate(), Is.is(term.getNextIndexStartDate()));
+        Assert.assertThat(nextTerm.getNextIndexStartDate(), Is.is(term.getNextIndexStartDate().plusYears(1)));
+        Assert.assertThat(nextTerm.getEffectiveDate(), Is.is(term.getEffectiveDate().plusYears(1)));
+        
+        
+    }
 }

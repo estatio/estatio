@@ -24,10 +24,12 @@ public class InvoiceCalculator {
     }
 
     private LocalDate startDate;
-
-    public InvoiceCalculator(LeaseTerm leaseTerm, LocalDate startDate) {
+    private LocalDate dueDate;
+    
+    public InvoiceCalculator(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
         this.leaseTerm = leaseTerm;
         this.startDate = startDate;
+        this.dueDate = dueDate;
     }
 
     public void calculateAndInvoiceItems() {
@@ -45,25 +47,27 @@ public class InvoiceCalculator {
             BigDecimal rangeDays = new BigDecimal(range.getActualDays());
             BigDecimal rangeFactor = rangeDays.divide(boundingRangeDays, MathContext.DECIMAL64);
             BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
-            BigDecimal currentValue = leaseTerm.getValue();
+            BigDecimal currentValue = leaseTerm.valueForDueDate(dueDate);
             if (currentValue != null && freqFactor != null && rangeFactor != null) {
                 calculatedValue = currentValue.multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
             }
         }
     }
+    
+    
 
     void createInvoiceItems() {
         if (calculatedValue != null) {
             BigDecimal newValue = calculatedValue.subtract(leaseTerm.invoicedValueFor(startDate));
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                InvoiceItem invoiceItem = leaseTerm.findOrCreateInvoiceItemFor(startDate);
+                InvoiceItem invoiceItem = leaseTerm.findOrCreateInvoiceItemFor(startDate, dueDate);
                 invoiceItem.setNetAmount(newValue);
                 invoiceItem.setDescription(String.format("Due date {d}", startDate));
                 invoiceItem.setQuantity(BigDecimal.ONE);
                 LeaseItem leaseItem = leaseTerm.getLeaseItem();
                 Charge charge = leaseItem.getCharge();
                 invoiceItem.setCharge(charge);
-                invoiceItem.setDueDate(startDate);
+                invoiceItem.setDueDate(dueDate);
                 invoiceItem.setStartDate(boundingRange.getStartDate());
                 invoiceItem.setEndDate(boundingRange.getEndDate());
                 Tax tax = charge.getTax();

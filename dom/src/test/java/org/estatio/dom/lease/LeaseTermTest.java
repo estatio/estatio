@@ -56,7 +56,7 @@ public class LeaseTermTest {
     public void testUpdate() {
         LeaseTerm nextTerm = new LeaseTerm();
         nextTerm.setStartDate(new LocalDate(2013, 1, 1));
-        term.setNextTerm(nextTerm);
+        term.modifyNextTerm(nextTerm);
         term.update();
         assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
     }

@@ -13,16 +13,16 @@ public class CalenderUtils {
     private CalenderUtils() {
     }
 
-    public static Interval intervalMatching(LocalDate date, String rrule) {
-        Interval interval =  currentInterval(date, rrule, START_DATE);
-        if (interval.getStart().toLocalDate().equals(date)) {
+    public static Interval intervalMatching(LocalDate startDate, String rrule) {
+        Interval interval =  intervalContaining(startDate, rrule);
+        if (interval.getStart().toLocalDate().equals(startDate)) {
             return interval;
         }
         return null;
     }
     
-    public static Interval intervalContaining(LocalDate date, String rrule) {
-        return currentInterval(date, rrule, START_DATE);
+    public static Interval intervalContaining(LocalDate containingDate, String rrule) {
+        return currentInterval(containingDate, rrule, START_DATE);
     }
     
     public static Interval currentInterval(LocalDate date, String rrule, LocalDate startDate) {
@@ -51,7 +51,7 @@ public class CalenderUtils {
     }
 
     public static LocalDate nextDate(LocalDate date, String rrule) {
-        return date == null ? null : intervalContaining(date, rrule).getEnd().toLocalDate();
+        return date == null || rrule == null ? null : currentInterval(date, rrule, date).getEnd().toLocalDate();
     }
 
     public static boolean isBetween(LocalDate date, LocalDate startDate, LocalDate endDate) {

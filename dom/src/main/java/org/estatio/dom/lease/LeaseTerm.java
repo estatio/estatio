@@ -191,8 +191,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     public void modifyNextTerm(LeaseTerm term) {
         this.setNextTerm(term);
-        term.setPreviousTerm(this); // not strictly necessary, as JDO will also
-                                    // do this (bidir link)
+        term.setPreviousTerm(this);
     }
 
     public void clearNextTerm() {
@@ -246,8 +245,8 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
-    public InvoiceItem findOrCreateInvoiceItemFor(LocalDate startDate) {
-        InvoiceItem ii = unapprovedInvoiceItemFor(startDate);
+    public InvoiceItem findOrCreateInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+        InvoiceItem ii = unapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
             ii = invoiceRepository.newInvoiceItem();
             invoiceItems.add(ii);
@@ -257,10 +256,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
-    public InvoiceItem unapprovedInvoiceItemFor(LocalDate startDate) {
+    public InvoiceItem unapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
                 return invoiceItem;
             }
         }
@@ -268,7 +267,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
-    public BigDecimal valueForDate(LocalDate date) {
+    public BigDecimal valueForDueDate(LocalDate dueDate) {
         return getValue();
     }
 
@@ -328,6 +327,12 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     @Hidden
     public void initialize() {
         setStatus(LeaseTermStatus.NEW);
+        if (getPreviousTerm() == null){
+            setSequence(BigInteger.ONE);
+        } else
+        {
+            setSequence(getPreviousTerm().getSequence().add(BigInteger.ONE));
+        }
     }
 
     @Hidden
@@ -340,14 +345,14 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @MemberOrder(name = "invoiceItems", sequence = "2")
-    public LeaseTerm calculate(@Named("Due date") LocalDate date) {
+    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
         // removeUnapprovedInvoiceItemsForDate(date);
-        InvoiceCalculator ic = new InvoiceCalculator(this, date);
+        InvoiceCalculator ic = new InvoiceCalculator(this, startDate, dueDate);
         ic.calculateAndInvoiceItems();
         informUser("Calculated" + this.toString());
         return this;
     }
-
+        
     // }}
 
     // {{ CompareTo

@@ -156,11 +156,11 @@ public class Lease extends Agreement {
     }
 
     @Bulk
-    public Lease calculate(@Named("Due date") LocalDate dueDate) {
+    public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate) {
         // TODO: I know that bulk actions only appear whith a no-arg but why
         // not?
         for (LeaseItem item : getItems()) {
-            item.calculate(dueDate);
+            item.calculate(startDate, dueDate);
         }
         return this;
     }

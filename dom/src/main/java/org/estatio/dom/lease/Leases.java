@@ -92,11 +92,12 @@ public class Leases extends AbstractFactoryAndRepository {
 
     public void calculate(
             final @Named("Lease reference") String leaseReference,
+            final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due date") LocalDate dueDate
             ){
         List<Lease> leases = findLeasesByReference(leaseReference);
         for (Lease lease : leases) {
-            lease.calculate(dueDate);
+            lease.calculate(startDate, dueDate);
         }
     }    
     

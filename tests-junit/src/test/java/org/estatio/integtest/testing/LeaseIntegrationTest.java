@@ -59,7 +59,8 @@ public class LeaseIntegrationTest {
 
     @BeforeClass
     public static void setUpLogging() throws Exception {
-        //PropertyConfigurator.configure(Resources.getResource(LeaseIntegrationTest.class, "logging.properties"));
+        // PropertyConfigurator.configure(Resources.getResource(LeaseIntegrationTest.class,
+        // "logging.properties"));
     }
 
     @Test
@@ -145,12 +146,12 @@ public class LeaseIntegrationTest {
     @Test
     public void t10_leaseTermForServiceChargeVerifiedCorrectly() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item.getTerms().size(), is(1));        
+        assertThat(item.getTerms().size(), is(1));
         LeaseTerm term = item.getTerms().first();
         term.verify();
-        assertThat(item.getTerms().size(), is(5));        
+        assertThat(item.getTerms().size(), is(5));
     }
-    
+
     @Test
     public void t11_leaseVerifiesWell() throws Exception {
         lease.verify();
@@ -189,17 +190,17 @@ public class LeaseIntegrationTest {
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
         assertThat(term.getValue(), is(BigDecimal.valueOf(20200).setScale(4)));
     }
-    
+
     @Test
     public void t14_invoiceItemsForRentCreated() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         // first term
         LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
-        term.calculate(new LocalDate(2010, 7, 1));
+        term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
-        term.calculate(new LocalDate(2010, 10, 1));
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
-        term.calculate(new LocalDate(2010, 10, 1));
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
         term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
@@ -208,22 +209,22 @@ public class LeaseIntegrationTest {
     @Test
     public void t14b_invoiceItemsNotCreated() throws Exception {
         Lease lease = leases.findByReference("OXF-POISON-003");
-        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2011,1,1), BigInteger.ONE);
+        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2011, 1, 1), BigInteger.ONE);
         LeaseTerm term = item.getTerms().first();
         term.verify();
-        term.calculate(new LocalDate(2011,1,2));
+        term.calculate(new LocalDate(2011, 1, 2), new LocalDate(2011, 1, 1));
         assertThat(term.getInvoiceItems().size(), is(0));
     }
-    
+
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
-        term.calculate(new LocalDate(2010, 7, 1));
+        term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
-        term.calculate(new LocalDate(2010, 10, 1));
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
-        term.calculate(new LocalDate(2010, 10, 1));
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
         term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
@@ -234,7 +235,9 @@ public class LeaseIntegrationTest {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         // call calulate on lease
-        lease.calculate(new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(2)); // the previous test already supplied one
+        lease.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
+        assertThat(term.getInvoiceItems().size(), is(2)); // the previous test
+                                                          // already supplied
+                                                          // one
     }
 }

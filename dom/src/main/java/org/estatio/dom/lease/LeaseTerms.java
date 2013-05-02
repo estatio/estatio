@@ -33,12 +33,15 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "1")
     @NotContributed
     @Hidden
-    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
+    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
         LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer());
         persist(leaseTerm);
+        leaseTerm.modifyLeaseItem(leaseItem);
+        if (previous != null) {
+            previous.modifyNextTerm(leaseTerm);
+        }
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated
-        leaseTerm.modifyLeaseItem(leaseItem);
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
         leaseTerm.initialize();
@@ -51,10 +54,8 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "1")
     @NotContributed
     @Hidden
-    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
-        LeaseTerm leaseTerm = newLeaseTerm(leaseItem);
-        leaseTerm.setPreviousTerm(previous);
-        previous.setNextTerm(leaseTerm);
+    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
+        LeaseTerm leaseTerm = newLeaseTerm(leaseItem, null);
         return leaseTerm;
     }
 
