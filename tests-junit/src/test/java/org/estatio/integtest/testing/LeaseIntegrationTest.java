@@ -1,6 +1,7 @@
 package org.estatio.integtest.testing;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
@@ -149,17 +150,17 @@ public class LeaseIntegrationTest {
         assertThat(item.getTerms().size(), is(1));
         LeaseTerm term = item.getTerms().first();
         term.verify();
-        assertThat(item.getTerms().size(), is(5));
+        assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
     }
 
     @Test
     public void t11_leaseVerifiesWell() throws Exception {
         lease.verify();
         LeaseItem item1 = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item1.getTerms().size(), is(5));
+        assertNotNull(item1.findTerm(new LocalDate(2012, 7, 15)));
         LeaseItem item2 = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         item2.verify();
-        assertThat(item2.getTerms().size(), is(5));
+        assertNotNull(item2.findTerm(new LocalDate(2012, 7, 15)));
     }
 
     @Test
@@ -167,9 +168,8 @@ public class LeaseIntegrationTest {
         Lease leaseMediax = leases.findByReference("OXF-MEDIAX-002");
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item.getTerms().size(), is(5));
+        assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
         assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
-
     }
 
     @Test
@@ -177,7 +177,7 @@ public class LeaseIntegrationTest {
         Lease leaseMediax = leases.findByReference("OXF-POISON-003");
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertThat(item.getTerms().size(), is(5));
+        assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
         assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
 
     }
