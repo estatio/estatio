@@ -71,7 +71,8 @@ public class LeasesFixture extends AbstractFixture {
     private LeaseItem createLeaseItem(Lease lease, LeaseItemType leaseItemType, Charge charge) {
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
-            li = leaseItems.newLeaseItem(lease, leaseItemType);
+            li = lease.newItem(leaseItemType);
+            //li = leaseItems.newLeaseItem(lease, leaseItemType);
             li.setType(leaseItemType);
             li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
             li.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);

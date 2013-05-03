@@ -62,7 +62,7 @@ public class InvoiceCalculationService {
         if (calculationResult.value != null) {
             BigDecimal newValue = calculationResult.value.subtract(leaseTerm.invoicedValueFor(startDate));
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                InvoiceItem invoiceItem = leaseTerm.findOrCreateInvoiceItemFor(startDate, dueDate);
+                InvoiceItem invoiceItem = leaseTerm.findOrCreateUnapprovedInvoiceItemFor(startDate, dueDate);
                 invoiceItem.setNetAmount(newValue);
                 invoiceItem.setDescription(String.format("Due date {d}", startDate));
                 invoiceItem.setQuantity(BigDecimal.ONE);

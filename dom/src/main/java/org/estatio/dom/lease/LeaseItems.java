@@ -32,9 +32,9 @@ public class LeaseItems extends AbstractFactoryAndRepository {
     @NotContributed
     public LeaseItem newLeaseItem(final Lease lease, final LeaseItemType type) {
         LeaseItem leaseItem = newTransientInstance(LeaseItem.class);
-        leaseItem.setLease(lease);
+        persistIfNotAlready(leaseItem);
+        lease.addToItems(leaseItem);
         leaseItem.setType(type);
-        persist(leaseItem);
         return leaseItem;
     }
     // }}

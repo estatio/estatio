@@ -12,10 +12,10 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
+import org.estatio.fixture.invoice.InvoiceFixture;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.ChargesJdo;
 import org.hamcrest.core.Is;
-import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -55,13 +55,13 @@ public class InvoiceIntegrationTest {
     public void t2_invoiceCanBeFound() throws Exception {
         Parties parties = getIsft().getService(Parties.class);
         Leases leases = getIsft().getService(Leases.class);
-        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW, new LocalDate(2012, 1, 1)).get(0);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.DATE).get(0);
         Assert.assertNotNull(invoice);
     }
 
     @Test
     public void t3_invoiceItemCanBeFound() throws Exception {
-        List<InvoiceItem> invoiceItems = invoices.findItems("OXF*", new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        List<InvoiceItem> invoiceItems = invoices.findItems("OXF-MEDIA*", InvoiceFixture.DATE, InvoiceFixture.DATE);
         Assert.assertThat(invoiceItems.size(), Is.is(1));
     }
 
@@ -69,7 +69,8 @@ public class InvoiceIntegrationTest {
     public void t4_invoiceCanBeRemoved() throws Exception {
         Parties parties = getIsft().getService(Parties.class);
         Leases leases = getIsft().getService(Leases.class);
-        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference("ACME"), parties.findPartyByReference("TOPMODEL"), PaymentMethod.DIRECT_DEBIT, leases.findByReference("OXF-TOPMODEL-001"), InvoiceStatus.NEW, new LocalDate(2012, 1, 1)).get(0);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.DATE).get(0);
         invoice.remove();
+        Assert.assertThat(invoices.findMatchingInvoices(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.DATE).size(), Is.is(0));
     }
 }

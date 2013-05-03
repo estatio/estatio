@@ -10,14 +10,15 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.utils.CalenderUtils;
+import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -27,13 +28,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.utils.CalenderUtils;
-import org.estatio.dom.utils.Orderings;
 
 @PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -51,6 +45,24 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     public void setLease(final Lease lease) {
         this.lease = lease;
+    }
+
+    public void modifyLease(final Lease lease) {
+        Lease currentLease = getLease();
+        if (lease == null || lease.equals(currentLease)) {
+            return;
+        }
+        lease.addToItems(this);
+    }
+
+    public void clearLease() {
+        Lease currentLease = getLease();
+        // check for no-op
+        if (currentLease == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentLease.removeFromItems(this);
     }
 
     // }}

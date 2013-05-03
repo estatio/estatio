@@ -130,6 +130,29 @@ public class Lease extends Agreement {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
         return leaseItem;
     }
+    
+    public void addToItems(final LeaseItem leaseItem) {
+        // check for no-op
+        if (leaseItem == null || getItems().contains(leaseItem)) {
+            return;
+        }
+        // dissociate arg from its current parent (if any).
+        leaseItem.clearLease();
+        // associate arg
+        leaseItem.setLease(this);
+        getItems().add(leaseItem);
+    }
+
+    public void removeFromItems(final LeaseItem leaseItem) {
+        // check for no-op
+        if (leaseItem == null || !getItems().contains(leaseItem)) {
+            return;
+        }
+        // dissociate arg
+        leaseItem.setLease(null);
+        getItems().remove(leaseItem);
+    }
+
 
     @Hidden
     public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
@@ -180,6 +203,7 @@ public class Lease extends Agreement {
         this.leaseUnits = leaseUnits;
     }
 
+    
     // }}
 
 }

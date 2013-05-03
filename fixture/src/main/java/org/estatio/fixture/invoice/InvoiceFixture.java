@@ -1,9 +1,5 @@
 package org.estatio.fixture.invoice;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -12,11 +8,16 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.Taxes;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.fixtures.AbstractFixture;
+
 public class InvoiceFixture extends AbstractFixture {
+
+    public static final LocalDate DATE = new LocalDate(2012, 1, 1);
+    public static final String LEASE = "OXF-MEDIAX-002";
+    public static final String SELLER_PARTY = "ACME";
+    public static final String BUYER_PARTY = "MEDIAX";
 
     @Override
     public void install() {
@@ -25,20 +26,21 @@ public class InvoiceFixture extends AbstractFixture {
 
     private void createInvoices() {
         Invoice invoice = invoiceRepository.newInvoice();
-        invoice.setBuyer(partyRepository.findPartyByReference("TOPMODEL"));
-        invoice.setSeller(partyRepository.findPartyByReference("ACME"));
+        invoice.setBuyer(partyRepository.findPartyByReference(BUYER_PARTY));
+        invoice.setSeller(partyRepository.findPartyByReference(SELLER_PARTY));
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
-        Lease lease = leaseRepository.findByReference("OXF-TOPMODEL-001");
+        Lease lease = leaseRepository.findByReference(LEASE);
         invoice.setLease(lease);
-        invoice.setDueDate(new LocalDate(2012, 1, 1));
+        invoice.setDueDate(DATE);
+        invoice.setInvoiceDate(DATE);
 
         InvoiceItem item = invoiceRepository.newInvoiceItem();
         item.modifyInvoice(invoice);
-        item.setDueDate(invoice.getDueDate());
-        item.setStartDate(new LocalDate(2012, 1, 1));
-        //quick n dirty, just need some link
-        item.setLeaseTerm(lease.getItems().first().getTerms().first());
+        item.setDueDate(DATE);
+        item.setStartDate(DATE);
+        // quick n dirty, just need some link
+        item.modifyLeaseTerm(lease.getItems().first().getTerms().first());
 
     }
 

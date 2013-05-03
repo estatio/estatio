@@ -195,14 +195,14 @@ public class LeaseIntegrationTest {
     public void t14_invoiceItemsForRentCreated() throws Exception {
         LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         // first term
-        LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
+        LeaseTerm term = (LeaseTerm) item.getTerms().first();
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
-        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1));
+        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
     }
 
@@ -226,7 +226,7 @@ public class LeaseIntegrationTest {
         assertThat(term.getInvoiceItems().size(), is(2));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(2));
-        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1));
+        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(term.getInvoiceItems().size(), is(1));
     }
 

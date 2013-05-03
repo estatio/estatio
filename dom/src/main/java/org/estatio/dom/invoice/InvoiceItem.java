@@ -246,9 +246,26 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.leaseTerm = leaseTerm;
     }
 
-    // }}
+    public void modifyLeaseTerm(final LeaseTerm leaseTerm) {
+        LeaseTerm currentLeaseTerm = getLeaseTerm();
+        // check for no-op
+        if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
+            return;
+        }
+        // delegate to parent to associate
+        leaseTerm.addToInvoiceItems(this);
+    }
 
-    // {{ Actions
+    public void clearLeaseTerm() {
+        LeaseTerm currentLeaseTerm = getLeaseTerm();
+        // check for no-op
+        if (currentLeaseTerm == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentLeaseTerm.removeFromInvoiceItems(this);
+    }
+
     /**
      * Attaches this item to an invoice with similar attributes. Creates a new
      * invoice when no matching found.
@@ -260,9 +277,9 @@ public class InvoiceItem extends EstatioTransactionalObject {
             Party seller = lease.findRoleWithType(AgreementRoleType.LANDLORD, getDueDate()).getParty();
             Party buyer = lease.findRoleWithType(AgreementRoleType.TENANT, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
-            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
+            Invoice invoice = invoicesService.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
             if (invoice == null) {
-                invoice = invoices.newInvoice();
+                invoice = invoicesService.newInvoice();
                 invoice.setBuyer(buyer);
                 invoice.setSeller(seller);
                 invoice.setLease(lease);
@@ -283,8 +300,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
     @Hidden
     public void remove() {
         // no safeguard, assuming being called with precaution
-        setInvoice(null);
-        setLeaseTerm(null);
+        clearInvoice();
+        clearLeaseTerm();
         getContainer().flush();
         getContainer().remove(this);
     }
@@ -329,11 +346,11 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.charges = charges;
     }
 
-    private Invoices invoices;
+    private Invoices invoicesService;
 
     @Hidden
-    public void setInvoices(Invoices invoices) {
-        this.invoices = invoices;
+    public void setInvoicesService(Invoices invoices) {
+        this.invoicesService = invoices;
     }
 
     // }}
