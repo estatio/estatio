@@ -14,7 +14,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.estatio</groupId>
-	<artifactId>app</artifactId>
+	<artifactId>estatio</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>Estatio App</name>
@@ -442,25 +442,25 @@
 			<!-- this project's own modules -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>app-dom</artifactId>
+				<artifactId>estatio-dom</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>app-fixture</artifactId>
+				<artifactId>estatio-fixture</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>app-objstore-jdo</artifactId>
+				<artifactId>estatio-objstore-jdo</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>app-webapp</artifactId>
+				<artifactId>estatio-webapp</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
@@ -759,7 +759,6 @@
 		        <module>services</module>
 		        <module>tests-junit</module>
 		        <module>webapp</module>
-		        <module>webrest</module>
 		    </modules>
 	    </profile>
     
@@ -779,7 +778,6 @@
                 <module>services</module>
                 <module>tests-junit</module>
                 <module>webapp</module>
-                <module>webrest</module>
            </modules>
        </profile>
 

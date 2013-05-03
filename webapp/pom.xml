@@ -22,11 +22,11 @@
 
     <parent>
         <groupId>org.estatio</groupId>
-        <artifactId>app</artifactId>
+        <artifactId>estatio</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-	<artifactId>app-webapp</artifactId>
+	<artifactId>estatio-webapp</artifactId>
 	<name>Estatio Webapp</name>
 	
 	<packaging>war</packaging>
@@ -151,12 +151,12 @@
         <!-- other modules in this project -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>app-dom</artifactId>
+            <artifactId>estatio-dom</artifactId>
         </dependency>
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>app-fixture</artifactId>
+            <artifactId>estatio-fixture</artifactId>
         </dependency>
 
 
@@ -164,7 +164,7 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>app-objstore-jdo</artifactId>
+            <artifactId>estatio-objstore-jdo</artifactId>
         </dependency>
         
 

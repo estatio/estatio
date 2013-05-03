@@ -15,7 +15,7 @@
 
 	<parent>
 		<groupId>org.estatio</groupId>
-		<artifactId>app</artifactId>
+		<artifactId>estatio</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -23,7 +23,7 @@
 		<siteBaseDir>..</siteBaseDir>
 	</properties>
 
-	<artifactId>app-dom</artifactId>
+	<artifactId>estatio-dom</artifactId>
 	<name>Estatio DOM</name>
 
 	<build>

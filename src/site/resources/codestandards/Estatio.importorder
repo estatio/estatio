@@ -1,8 +1,0 @@
-#Organize Import Order
-#Fri Jun 22 16:32:38 BST 2012
-5=com.eurocommercialproperties
-4=org.apache.isis
-3=org
-2=com
-1=javax
-0=java

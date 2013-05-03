@@ -21,11 +21,11 @@
 
 	<parent>
     	<groupId>org.estatio</groupId>
-    	<artifactId>app</artifactId>
+    	<artifactId>estatio</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>app-services</artifactId>
+	<artifactId>estatio-services</artifactId>
 	<name>Estatio Services</name>
 
 	<properties>
