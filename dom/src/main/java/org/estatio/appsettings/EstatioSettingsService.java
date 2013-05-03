@@ -4,7 +4,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.services.appsettings.ApplicationSettingsServiceAbstract;
 
 @Hidden
 public class EstatioSettingsService extends ApplicationSettingsServiceAbstract<EstatioSetting> {
