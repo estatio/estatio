@@ -8,15 +8,13 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+import org.estatio.dom.EstatioRefDataObject;
+import org.joda.time.LocalDate;
 
 @PersistenceCapable
 @Immutable
@@ -74,7 +72,7 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     @Optional
     @MemberOrder(sequence = "4")
     @Persistent
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getFactor() {
         return factor;
     }
@@ -173,4 +171,3 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     }
 
 }
-

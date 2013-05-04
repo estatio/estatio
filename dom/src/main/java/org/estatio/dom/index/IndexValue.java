@@ -52,7 +52,7 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
-    @Column(scale=4)
+    @Column(scale = 4)
     public BigDecimal getValue() {
         return value;
     }
@@ -60,6 +60,7 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
     public void setValue(final BigDecimal value) {
         this.value = value;
     }
+
     // }}
 
     @Override

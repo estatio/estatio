@@ -2,7 +2,6 @@ package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -26,7 +25,7 @@ public abstract class EstatioTransactionalObject extends EstatioDomainObject {
 
 
     // {{ ID (derived property)
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden()
     @Disabled
     @MemberOrder(name="Detail", sequence = "100")
     @Named("Id")
@@ -37,7 +36,7 @@ public abstract class EstatioTransactionalObject extends EstatioDomainObject {
     // }}
 
     // {{ Version (derived property)
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden()
     @Disabled
     @MemberOrder(name="Detail", sequence = "101")
     @Named("Version")

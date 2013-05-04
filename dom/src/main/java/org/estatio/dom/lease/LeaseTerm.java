@@ -127,7 +127,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 4)
+    @Column(scale = 2)
     @Mask("")
     public BigDecimal getValue() {
         return value;

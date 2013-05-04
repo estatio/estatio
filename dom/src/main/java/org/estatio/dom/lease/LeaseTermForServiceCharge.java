@@ -22,7 +22,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     private BigDecimal budgetedValue;
 
     @MemberOrder(sequence = "11", name = "Service Charges")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
@@ -37,7 +37,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     private BigDecimal auditedValue;
 
     @MemberOrder(sequence = "12", name = "Service Charges")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

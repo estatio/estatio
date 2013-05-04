@@ -110,7 +110,7 @@ public class Property extends FixedAsset {
     private BigDecimal area;
 
     @MemberOrder(sequence = "1.7")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getArea() {
         return area;
     }

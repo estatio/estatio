@@ -96,7 +96,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     private BigDecimal quantity;
 
     @MemberOrder(sequence = "3")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -111,7 +111,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     private BigDecimal netAmount;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getNetAmount() {
         return netAmount;
     }
@@ -131,7 +131,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -146,7 +146,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
     private BigDecimal grossAmount;
 
     @MemberOrder(sequence = "6")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getGrossAmount() {
         return grossAmount;
     }

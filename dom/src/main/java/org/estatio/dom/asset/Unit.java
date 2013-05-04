@@ -61,7 +61,7 @@ public class Unit extends FixedAsset {
     private BigDecimal area;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getArea() {
         return area;
     }
@@ -77,7 +77,7 @@ public class Unit extends FixedAsset {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -93,7 +93,7 @@ public class Unit extends FixedAsset {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "6")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -109,7 +109,7 @@ public class Unit extends FixedAsset {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "7")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -125,7 +125,7 @@ public class Unit extends FixedAsset {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "8")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getTerraceArea() {
         return terraceArea;
     }

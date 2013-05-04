@@ -122,7 +122,7 @@ public class LeaseIntegrationTest {
         LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) item.findTerm(new LocalDate(2010, 7, 15));
         Assert.assertNotNull(leaseTerm);
         BigDecimal baseValue = leaseTerm.getBaseValue();
-        Assert.assertEquals(new BigDecimal("20000.0000"), baseValue);
+        Assert.assertEquals(new BigDecimal("20000.00"), baseValue);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class LeaseIntegrationTest {
         LeaseItem item = (LeaseItem) lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         Assert.assertThat(item.getTerms().size(), Is.is(1));
         LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) item.findTerm(new LocalDate(2010, 7, 15));
-        Assert.assertThat(leaseTerm.getBudgetedValue(), Is.is(new BigDecimal("6000.0000")));
+        Assert.assertThat(leaseTerm.getBudgetedValue(), Is.is(new BigDecimal("6000.00")));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class LeaseIntegrationTest {
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
+        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(2)));
     }
 
     @Test
@@ -178,7 +178,7 @@ public class LeaseIntegrationTest {
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(4)));
+        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(2)));
 
     }
 
@@ -188,7 +188,7 @@ public class LeaseIntegrationTest {
         LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
         term.approve();
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
-        assertThat(term.getValue(), is(BigDecimal.valueOf(20200).setScale(4)));
+        assertThat(term.getValue(), is(BigDecimal.valueOf(20200).setScale(2)));
     }
 
     @Test

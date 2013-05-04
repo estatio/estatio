@@ -20,7 +20,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     private BigDecimal turnoverRentPercentage;
 
     @MemberOrder(sequence = "10", name = "Turnover Rent")
-    @Column(scale=4)
+    @Column(scale = 2)
     public BigDecimal getTurnoverRentPercentage() {
         return turnoverRentPercentage;
     }
@@ -28,13 +28,14 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public void setTurnoverRentPercentage(final BigDecimal turnoverRentPercentage) {
         this.turnoverRentPercentage = turnoverRentPercentage;
     }
+
     // }}
 
     // {{ AuditedTurnover (property)
     private BigDecimal auditedTurnover;
 
     @MemberOrder(sequence = "11", name = "Turnover Rent")
-    @Column(scale=4)
+    @Column(scale = 2)
     public BigDecimal getAuditedTurnover() {
         return auditedTurnover;
     }
@@ -42,41 +43,44 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public void setAuditedTurnover(final BigDecimal auditedTurnover) {
         this.auditedTurnover = auditedTurnover;
     }
+
     // }}
 
     // {{ BudgetedTurnover (property)
     private BigDecimal budgetedTurnover;
-    
+
     @MemberOrder(sequence = "12", name = "Turnover Rent")
-    @Column(scale=4)
+    @Column(scale = 2)
     public BigDecimal getBudgetedTurnover() {
         return budgetedTurnover;
     }
-    
+
     public void setBudgetedTurnover(final BigDecimal budgetedTurnover) {
         this.budgetedTurnover = budgetedTurnover;
     }
+
     // }}
-    
+
     // {{ BudgetedValue (property)
     private BigDecimal budgetedValue;
-    
+
     @MemberOrder(sequence = "20", name = "Values")
-    @Column(scale=4)
+    @Column(scale = 2)
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
-    
+
     public void setBudgetedValue(final BigDecimal budgetedValue) {
         this.budgetedValue = budgetedValue;
     }
+
     // }}
 
     // {{ AuditedValue (property)
     private BigDecimal auditedValue;
 
     @MemberOrder(sequence = "21", name = "Values")
-    @Column(scale=4)
+    @Column(scale = 2)
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

@@ -69,7 +69,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "14", name = "Indexable Rent")
     @Optional
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
     }
@@ -100,7 +100,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "17", name = "Indexable Rent")
     @Optional
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
     }
@@ -163,7 +163,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "22", name = "Indexable Rent")
     @Optional
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getLevellingValue() {
         return levellingValue;
     }
@@ -178,7 +178,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private BigDecimal baseValue;
 
     @MemberOrder(sequence = "30", name = "Values")
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getBaseValue() {
         return baseValue;
     }
@@ -194,7 +194,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @MemberOrder(sequence = "31", name = "Values")
     @Optional
-    @Column(scale = 4)
+    @Column(scale = 2)
     public BigDecimal getIndexedValue() {
         return indexedValue;
     }
