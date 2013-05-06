@@ -46,8 +46,8 @@
 		     see https://issues.apache.org/jira/browse/ACCUMULO-443 -->
 		<targetJdk>1.6</targetJdk>    
         <distMgmtSiteUrl>file:///tmp/m2-sites/estatio</distMgmtSiteUrl>
-        <checkstyle.configLocation>${trunkBaseDir}/src/site/resources/codequality/checkstyle.xml</checkstyle.configLocation>
-        <pmd.ruleset>${trunkBaseDir}/src/site/resources/codequality/pmd.xml</pmd.ruleset>
+        <checkstyle.configLocation>${trunkBaseDir}/../standards/site/resources/codequality/checkstyle.xml</checkstyle.configLocation>
+        <pmd.ruleset>${trunkBaseDir}/../standards/site/resources/codequality/pmd.xml</pmd.ruleset>
 	</properties>
 
 	<repositories>
@@ -67,11 +67,6 @@
 			<url>http://gettext-commons.googlecode.com/svn/maven-repository/</url>
 		</repository>
 	</repositories>
-
-
-
-
-
 
 	<build>
 		<pluginManagement>
@@ -891,6 +886,5 @@
             </build>
         </profile>
     </profiles>
-    
 
 </project>
