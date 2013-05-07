@@ -283,7 +283,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @Hidden
     public BigDecimal valueForDueDate(LocalDate dueDate) {
-        throw new NotImplementedException();
+        return getValue();
     }
 
     // {{ Actions

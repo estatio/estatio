@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
+import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -49,6 +50,9 @@ public class InvoiceCalculatorTest {
 
     @Mock
     AgreementRoles mockAgreementRoles;
+    
+    @Mock
+    EstatioSettingsService mockSettings;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -181,10 +185,13 @@ public class InvoiceCalculatorTest {
                 will(returnValue(new AgreementRole()));
                 allowing(mockInvoices).findMatchingInvoice(with(aNull(Party.class)), with(aNull(Party.class)), with(aNull(PaymentMethod.class)), with(any(Lease.class)), with(any(InvoiceStatus.class)), with(any(LocalDate.class)));
                 will(returnValue(new Invoice()));
+                allowing(mockSettings).fetchMockDate();
+                will(returnValue(null));
             }
         });
 
         InvoiceCalculationService ic = new InvoiceCalculationService();
+        ic.setEstatioSettings(mockSettings);
         ic.calculateAndInvoiceItems(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
         InvoiceItem invoiceItem = lt.getInvoiceItems().iterator().next();

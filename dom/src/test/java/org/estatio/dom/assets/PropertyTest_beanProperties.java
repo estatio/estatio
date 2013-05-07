@@ -23,13 +23,14 @@ public class PropertyTest_beanProperties {
 			        "container", 
 			        "isisJdoSupport", 
 			        "units",
-			        "fixedAssetRolesRepo", 
+			        "fixedAssetRolesService", 
 			        "properties", 
 			        "unitsRepo", 
 			        "actors", 
 			        "parties", 
 			        "communicationChannels", 
-			        "locationLookupService", 
+			        "locationLookupService",
+			        "partiesService",
 			        "roles" ));
 	}
 
