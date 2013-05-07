@@ -1,14 +1,13 @@
 package org.estatio.integtest.testing;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
@@ -34,6 +33,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseIntegrationTest {
@@ -70,10 +71,10 @@ public class LeaseIntegrationTest {
     }
 
     @Test
-    public void t02_leaseActorCanBeFound() throws Exception {
+    public void t02_leaseRoleCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("TOPMODEL");
-        AgreementRole la = lease.findRole(party, AgreementRoleType.TENANT, null);
-        Assert.assertNotNull(la);
+        AgreementRole role = lease.findRole(party, AgreementRoleType.TENANT, null);
+        Assert.assertNotNull(role);
     }
 
     @Test

@@ -19,7 +19,6 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole> {
 
-    // {{ Agreement (property)
     private Agreement agreement;
 
     @Title(sequence = "3", prepend = ":")
@@ -41,8 +40,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         }
         // delegate to parent to associate
         agreement.addToRoles(this);
-        // additional business logic
-        // onModifyAgreement(currentAgreement, agreement);
     }
 
     public void clearAgreement() {
@@ -53,13 +50,8 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         }
         // delegate to parent to dissociate
         currentAgreement.removeFromRoles(this);
-        // additional business logic
-        // onClearAgreement(currentAgreement);
     }
 
-    // }}
-
-    // {{ Party (property)
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
@@ -73,9 +65,26 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.party = party;
     }
 
-    // }}
+    public void modifyParty(final Party party) {
+        Party currentParty = getParty();
+        // check for no-op
+        if (party == null || party.equals(currentParty)) {
+            return;
+        }
+        // delegate to parent to associate
+        party.addToAgreements(this);
+    }
 
-    // {{ Type (property)
+    public void clearParty() {
+        Party currentParty = getParty();
+        // check for no-op
+        if (currentParty == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentParty.removeFromAgreements(this);
+    }
+
     private AgreementRoleType type;
 
     @Title(sequence = "1")
@@ -88,9 +97,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.type = type;
     }
 
-    // }}
-
-    // {{ StartDate (property)
     private LocalDate startDate;
 
     @MemberOrder(sequence = "4")
@@ -104,9 +110,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @MemberOrder(sequence = "5")
@@ -119,8 +122,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-
-    // }}
 
     /**
      * This is necessary but not sufficient; in
@@ -149,7 +150,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         return this.getStartDate().compareTo(o.getStartDate());
     }
 
-    // {[
     public boolean isCurrent() {
         return isActiveOn(LocalDate.now());
     }
@@ -157,6 +157,5 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     private boolean isActiveOn(LocalDate localDate) {
         return new DateRange(getStartDate(), getEndDate()).contains(localDate);
     }
-    // }}
 
 }

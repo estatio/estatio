@@ -84,7 +84,7 @@ public class AssetIntegrationTest {
 
     @Test
     public void unitCanBeFound() throws Exception {
-        Assert.assertEquals("OXF-001", units.findByReference("OXF-001").getReference());
+        Assert.assertEquals("OXF-001", units.findUnitByReference("OXF-001").getReference());
     }
 
 }

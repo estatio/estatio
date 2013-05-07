@@ -267,7 +267,6 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
         AgreementRole agreementRole = findRole(party, type, startDate);
         if (agreementRole == null) {
             agreementRole = agreementRolesService.newAgreementRole(this, party, type, startDate, endDate);
-            roles.add(agreementRole);
         }
         agreementRole.setEndDate(endDate);
         return agreementRole;
@@ -277,7 +276,7 @@ public class Agreement extends EstatioTransactionalObject implements Comparable<
 
     @Hidden
     public AgreementRole findRole(Party party, AgreementRoleType type, LocalDate startDate) {
-        return agreementRolesService.findAgreementRole(this, party, type, startDate, startDate);
+        return agreementRolesService.findAgreementRole(this, party, type, startDate);
     }
 
     @Hidden

@@ -15,33 +15,23 @@ import org.apache.isis.applib.annotation.Prototype;
 @Named("Properties")
 public class Properties extends AbstractFactoryAndRepository {
 
-    // {{ Id, iconName
     @Override
     public String getId() {
         return "properties";
     }
+
     public String iconName() {
         return "Property";
     }
-    // }}
 
-    // {{ NewProperty (action)
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public Property newProperty(
-            final @Named("Reference") String reference, 
-            final @Named("Name") String name) {
+    public Property newProperty(final @Named("Reference") String reference, final @Named("Name") String name) {
         return newProperty(reference, name, PropertyType.MIXED);
     }
-    // }}
 
-    // {{ NewProperty (hidden)
-    // for use by fixtures
     @Hidden
-    public Property newProperty(
-            final String reference, 
-            final String name, 
-            final PropertyType propertyType) {
+    public Property newProperty(final String reference, final String name, final PropertyType propertyType) {
         final Property property = newTransientInstance(Property.class);
         property.setReference(reference);
         property.setName(name);
@@ -50,45 +40,26 @@ public class Properties extends AbstractFactoryAndRepository {
         return property;
     }
 
-    // }}
-
-    // {{ findPropertiesByReference, findPropertyByReference (hidden) 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public List<Property> findPropertiesByReference(
-            final @Named("Reference") String reference) {
+    public List<Property> findPropertiesByReference(final @Named("Reference") String reference) {
         throw new NotImplementedException();
     }
 
     @Hidden
-    public Property findPropertyByReference(
-            final String reference) {
+    public Property findPropertyByReference(final String reference) {
         throw new NotImplementedException();
     }
 
-    // }}
-
-    // {{ autoComplete (hidden)
-    @Hidden
-    public List<Property> autoComplete(String searchPhrase) {        
-        return findPropertiesByReference(searchPhrase);
-    }
-    // }}
-
-
-    // {{ allProperties
     @Prototype
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "3")
     public List<Property> allProperties() {
-        
-        List<Property> allInstances = allInstances(Property.class);
-        if(allInstances.isEmpty()) {
-            warnUser("oh no!");
-        } else {
-            informUser("woohoo!");
-        }
-        return allInstances;
+        return allInstances(Property.class);
     }
-    // }}
 
+    @Hidden
+    public List<Property> autoComplete(String searchPhrase) {
+        return findPropertiesByReference("*".concat(searchPhrase).concat("*"));
+    }
 }

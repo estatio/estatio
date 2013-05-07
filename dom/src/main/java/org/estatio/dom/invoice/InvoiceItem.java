@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -274,7 +275,8 @@ public class InvoiceItem extends EstatioTransactionalObject {
     public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
-            Party seller = lease.findRoleWithType(AgreementRoleType.LANDLORD, getDueDate()).getParty();
+            AgreementRole role = lease.findRoleWithType(AgreementRoleType.LANDLORD, getDueDate());
+            Party seller = role.getParty();
             Party buyer = lease.findRoleWithType(AgreementRoleType.TENANT, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
             Invoice invoice = invoicesService.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());

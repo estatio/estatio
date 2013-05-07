@@ -1,7 +1,6 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -14,14 +13,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -40,6 +38,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Properties.class)
 @PublishedObject
+@Query(name = "properties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
 public class Property extends FixedAsset {
 
     // {{ Type (attribute)

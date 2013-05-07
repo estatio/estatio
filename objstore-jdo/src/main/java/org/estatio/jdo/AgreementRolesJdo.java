@@ -20,8 +20,8 @@ public class AgreementRolesJdo extends AgreementRoles {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     @NotContributed
-    public AgreementRole findAgreementRole(Agreement agreement, Party party, AgreementRoleType type, @Named("Start Date") LocalDate startDate, @Named("End Date") LocalDate endDate) {
-        return firstMatch(queryForFind(agreement, party, type, startDate, endDate));
+    public AgreementRole findAgreementRole(Agreement agreement, Party party, AgreementRoleType type, LocalDate startDate) {
+        return firstMatch(queryForFind(agreement, party, type, startDate));
     }
 
     @Override
@@ -32,8 +32,8 @@ public class AgreementRolesJdo extends AgreementRoles {
         return firstMatch(queryForFindWithType(agreement, type, date));
     }
 
-    private static QueryDefault<AgreementRole> queryForFind(Agreement agreement, Party party, AgreementRoleType type, LocalDate startDate, LocalDate endDate) {
-        return new QueryDefault<AgreementRole>(AgreementRole.class, "agreementRole_find", "agreement", agreement, "party", party, "type", type, "startDate", startDate, "endDate", endDate);
+    private static QueryDefault<AgreementRole> queryForFind(Agreement agreement, Party party, AgreementRoleType type, LocalDate startDate) {
+        return new QueryDefault<AgreementRole>(AgreementRole.class, "agreementRole_find", "agreement", agreement, "party", party, "type", type, "startDate", startDate);
     }
 
     private static QueryDefault<AgreementRole> queryForFindWithType(Agreement agreement, AgreementRoleType type, LocalDate date) {

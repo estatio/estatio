@@ -275,7 +275,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
         }
-        Unit unit = units.findByReference(reference);
+        Unit unit = units.findUnitByReference(reference);
         if (unit == null) {
             unit = property.newUnit(reference, name);
         }
@@ -316,16 +316,12 @@ public class Api extends AbstractFactoryAndRepository {
         }
         Lease lease = leases.findByReference(reference);
         if (lease == null) {
-            lease = leases.newLease(reference, name);
+            lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         }
         if (name != null) {
             lease.setName(name);
         }
-        lease.setStartDate(startDate);
-        lease.setEndDate(endDate);
         lease.setTerminationDate(terminationDate);
-        lease.addRole(landlord, AgreementRoleType.LANDLORD, null, null);
-        lease.addRole(tenant, AgreementRoleType.TENANT, null, null);
     }
     
     @ActionSemantics(Of.IDEMPOTENT)
@@ -356,7 +352,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
         }
-        Unit unit = units.findByReference(unitReference);
+        Unit unit = units.findUnitByReference(unitReference);
         if (unitReference != null && unit == null) {
             throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
         }
@@ -396,7 +392,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         Unit unit;
         if (unitReference != null) {
-            unit = units.findByReference(unitReference);
+            unit = units.findUnitByReference(unitReference);
             if (unit == null) {
                 throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
             }
@@ -544,7 +540,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         Unit unit;
         if (unitReference != null) {
-            unit = units.findByReference(unitReference);
+            unit = units.findUnitByReference(unitReference);
             if (unitReference != null && unit == null) {
                 throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
             }

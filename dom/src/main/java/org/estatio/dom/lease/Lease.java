@@ -73,7 +73,7 @@ public class Lease extends Agreement {
     public void setUnits(final SortedSet<LeaseUnit> units) {
         this.units = units;
     }
-
+    
     public void addToUnits(final LeaseUnit leaseUnit) {
         // check for no-op
         if (leaseUnit == null || getUnits().contains(leaseUnit)) {

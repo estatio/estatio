@@ -10,14 +10,14 @@
 	</package>
 	<package name="org.estatio.dom.asset">
 		<class name="Property">
-			<query name="properties_findByReference" language="JDOQL"><![CDATA[
+			<query name="properties_findPropertiesByReference" language="JDOQL"><![CDATA[
 	            SELECT 
 	            FROM org.estatio.dom.asset.Property 
 	            WHERE reference.matches(:r)
 	            ]]></query>
 		</class>
 		<class name="Unit">
-			<query name="units_findUnitByReference" language="JDOQL"><![CDATA[
+			<query name="units_findUnitsByReference" language="JDOQL"><![CDATA[
             SELECT 
               FROM org.estatio.dom.asset.Unit 
              WHERE reference.matches(:r)
@@ -81,8 +81,7 @@
              WHERE agreement == :agreement &&
                    party == :party &&
                    type == :type &&
-                   startDate == :startDate &&
-                   endDate == :endDate 
+                   startDate == :startDate
             ]]></query>
             <query name="agreementRole_findWithType" language="JDOQL"><![CDATA[
             SELECT 

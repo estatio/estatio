@@ -116,6 +116,28 @@ public abstract class Party extends EstatioTransactionalObject {
         this.agreements = agreements;
     }
 
+    public void addToAgreements(final AgreementRole agreementRole) {
+        // check for no-op
+        if (agreementRole == null || getAgreements().contains(agreementRole)) {
+            return;
+        }
+        // dissociate arg from its current parent (if any).
+        agreementRole.clearParty();
+        // associate arg
+        agreementRole.setParty(this);
+        getAgreements().add(agreementRole);
+    }
+
+    public void removeFromAgreements(final AgreementRole agreementRole) {
+        // check for no-op
+        if (agreementRole == null || !getAgreements().contains(agreementRole)) {
+            return;
+        }
+        // dissociate arg
+        agreementRole.setParty(null);
+        getAgreements().remove(agreementRole);
+    }
+    
     // }}
 
     // {{ Registrations (set, bidir)
