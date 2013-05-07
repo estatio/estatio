@@ -66,4 +66,17 @@ public class LeaseTermForServiceChargeTest {
         Assert.assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
         Assert.assertThat(nextTerm.getValue(), Is.is(term.getValue()));
     }
+    
+    @Test
+    public void testValueForDueDate() throws Exception {
+        LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
+        term.setEndDate(new LocalDate(2011, 12, 31));
+        term.setBudgetedValue(BigDecimal.valueOf(6000));
+        term.setAuditedValue(BigDecimal.valueOf(6600));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), Is.is(BigDecimal.valueOf(6000)));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), Is.is(BigDecimal.valueOf(6000)));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 1, 1)), Is.is(BigDecimal.valueOf(6600)));
+        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), Is.is(BigDecimal.valueOf(6600)));
+    }
+
 }

@@ -17,7 +17,7 @@ public abstract class ApplicationSettingsServiceAbstract<T> {
         this.settingClass = settingCls;
     }
 
-    protected T fetchSetting() {
+    public T fetchSetting() {
         T setting = container.firstMatch(settingClass, new Filter<T>(){
             @Override
             public boolean accept(T t) {
@@ -31,7 +31,7 @@ public abstract class ApplicationSettingsServiceAbstract<T> {
     }
 
     // {{ injected: DomainObjectContainer
-    public DomainObjectContainer container;
+    private DomainObjectContainer container;
 
     public void setDomainObjectContainer(final DomainObjectContainer container) {
         this.container = container;

@@ -14,8 +14,10 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.query.QueryDefault;
 
+@Named("Invoices")
 public class InvoicesJdo extends Invoices {
 
     @Override

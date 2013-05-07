@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.party.Party;
@@ -41,9 +42,6 @@ public class Leases extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "1")
     public Lease newLease(final @Named("Reference") String reference, final @Named("Name") String name, final @Named("Start Date") LocalDate startDate, final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
             final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, final @Optional @Named("Landlord") Party landlord, final @Optional @Named("Tentant") Party tenant) {
-        if (duration == null && endDate == null) {
-            return null;
-        }
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
             Period p = DateTimeUtils.stringToPeriod(duration);
@@ -52,6 +50,7 @@ public class Leases extends AbstractFactoryAndRepository {
             }
         }
         Lease lease = newTransientInstance(Lease.class);
+        lease.setAgreementType(AgreementType.LEASE);
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);

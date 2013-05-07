@@ -6,6 +6,8 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Element;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
@@ -14,6 +16,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -23,6 +26,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
@@ -34,10 +39,9 @@ import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @PublishedObject
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
 
-    // {{ Reference (attribute, title)
     private String reference;
 
     @DescribedAs("Unique reference code for this property")
@@ -53,9 +57,6 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
         this.reference = code;
     }
 
-    // }}
-
-    // {{ Name (attribute, title)
     private String name;
 
     @DescribedAs("Unique reference code for this property")
@@ -69,9 +70,6 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
         this.name = name;
     }
 
-    // }}
-
-    // {{ Location
     private Location location;
 
     @javax.jdo.annotations.Persistent
@@ -93,7 +91,6 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
         return this;
     }
 
-    // {{ Roles (list, unidir)
     private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
 
     @Render(Type.EAGERLY)
@@ -109,45 +106,87 @@ public class FixedAsset extends EstatioTransactionalObject implements Comparable
 
     @MemberOrder(name = "Roles", sequence = "1")
     public FixedAssetRole addRole(@Named("party") Party party, @Named("type") FixedAssetRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        FixedAssetRole role = fixedAssetRolesRepo.findRole(this, party, type, startDate, endDate);
+        FixedAssetRole role = fixedAssetRolesService.findRole(this, party, type, startDate, endDate);
         if (role == null) {
-            role = fixedAssetRolesRepo.newRole(this, party, type, startDate, endDate);
+            role = fixedAssetRolesService.newRole(this, party, type, startDate, endDate);
         }
         return role;
     }
 
     public List<Party> choices0AddRole() {
-        return parties.allParties();
+        return partiesService.allParties();
     }
 
-    // }}
+    @Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
+    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
-    
-    // {{ Injected services
-    private FixedAssetRoles fixedAssetRolesRepo;
-
-    public void setFixedAssetRolesRepo(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRolesRepo = fixedAssetRoles;
+    @Render(Type.EAGERLY)
+    @MemberOrder(name = "CommunicationChannels", sequence = "1")
+    public SortedSet<CommunicationChannel> getCommunicationChannels() {
+        return communicationChannels;
     }
 
-    private Parties parties;
-
-    public void setParties(Parties parties) {
-        this.parties = parties;
+    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
+        this.communicationChannels = communicationChannels;
     }
-    
+
+    public void addToCommunicationChannels(final CommunicationChannel communicationChannel) {
+        // check for no-op
+        if (communicationChannel == null || getCommunicationChannels().contains(communicationChannel)) {
+            return;
+        }
+        // associate new
+        getCommunicationChannels().add(communicationChannel);
+    }
+
+    public void removeFromCommunicationChannels(final CommunicationChannel communicationChannel) {
+        // check for no-op
+        if (communicationChannel == null || !getCommunicationChannels().contains(communicationChannel)) {
+            return;
+        }
+        // dissociate existing
+        getCommunicationChannels().remove(communicationChannel);
+    }
+
+    @MemberOrder(name = "CommunicationChannels", sequence = "1")
+    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
+        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
+        communicationChannels.add(communicationChannel);
+        return communicationChannel;
+    }
+
+    @Hidden
+    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
+        for (CommunicationChannel c : communicationChannels) {
+            if (c.getType().equals(type)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    private FixedAssetRoles fixedAssetRolesService;
+
+    public void setFixedAssetRolesService(final FixedAssetRoles fixedAssetRoles) {
+        this.fixedAssetRolesService = fixedAssetRoles;
+    }
+
+    private Parties partiesService;
+
+    public void setPartiesService(Parties parties) {
+        this.partiesService = parties;
+    }
+
     private LocationLookupService locationLookupService;
 
     public void setLocationLookupService(LocationLookupService locationLookupService) {
         this.locationLookupService = locationLookupService;
     }
 
-    
     @Override
     public int compareTo(FixedAsset other) {
         return this.getName().compareTo(other.getName());
     }
-
-    // }}
 
 }

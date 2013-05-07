@@ -1,15 +1,18 @@
 package org.estatio.jdo;
 
 
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.ChargeGroups;
+import org.estatio.dom.utils.StringUtils;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.query.QueryDefault;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroups;
-import org.estatio.dom.utils.StringUtils;
 
+
+@Named("ChargeGroups")
 public class ChargeGroupsJdo extends ChargeGroups {
 
     @Override

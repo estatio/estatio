@@ -2,6 +2,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceCalculationService;
@@ -69,8 +71,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
         // delegate to parent to associate
         item.addToTerms(this);
-        // additional business logic
-        // onModifyLeaseItem(currentLeaseItem, item);
     }
 
     public void clearLeaseItem() {
@@ -81,8 +81,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
         // delegate to parent to dissociate
         currentLeaseItem.removeFromTerms(this);
-        // additional business logic
-        // onClearLeaseItem(currentLeaseItem);
     }
 
     private BigInteger sequence;
@@ -250,18 +248,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
-    public BigDecimal invoicedValueFor(LocalDate startDate) {
-        BigDecimal invoicedValue = BigDecimal.ZERO;
-        for (InvoiceItem item : getInvoiceItems()) {
-            if (item.getStartDate() == null || item.getStartDate().equals(startDate)) {
-                // retrieve current value
-                invoicedValue.add(item.getNetAmount());
-            }
-        }
-        return invoicedValue;
-    }
-
-    @Hidden
     public InvoiceItem findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
         InvoiceItem ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
@@ -283,8 +269,21 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
+    public BigDecimal invoicedValueFor(LocalDate date) {
+        BigDecimal invoicedValue = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        for (InvoiceItem invoiceItem : getInvoiceItems()) {
+            Invoice invoice = invoiceItem.getInvoice();
+            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || invoiceItem.getStartDate() == null || !invoiceItem.getStartDate().equals(startDate)) {
+                continue;
+            }
+            invoicedValue.add(invoiceItem.getNetAmount());
+        }
+        return invoicedValue;
+    }
+
+    @Hidden
     public BigDecimal valueForDueDate(LocalDate dueDate) {
-        return getValue();
+        throw new NotImplementedException();
     }
 
     // {{ Actions
@@ -361,8 +360,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @MemberOrder(name = "invoiceItems", sequence = "2")
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
-        invoiceCalculationService.calculateAndInvoiceItems(this, startDate, dueDate);
-        informUser("Calculated" + this.toString());
+        if (getStatus() == LeaseTermStatus.APPROVED) {
+            invoiceCalculationService.calculateAndInvoiceItems(this, startDate, dueDate);
+            informUser("Calculated"+ this.getLeaseItem().getLease().getReference());
+            //TODO: use the title of this term? But how access it.
+        }
         return this;
     }
 

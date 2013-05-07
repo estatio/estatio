@@ -2,7 +2,6 @@ package org.estatio.dom.currency;
 
 import java.util.List;
 
-
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -14,6 +13,15 @@ import org.estatio.dom.utils.StringUtils;
 
 @Named("Currencies")
 public class Currencies extends AbstractFactoryAndRepository {
+
+    @Override
+    public String getId() {
+        return "currencies";
+    }
+
+    public String iconName() {
+        return "Currency";
+    }
 
     // {{ NewCurrency
     @ActionSemantics(Of.NON_IDEMPOTENT)

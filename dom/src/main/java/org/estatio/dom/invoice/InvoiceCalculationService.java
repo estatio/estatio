@@ -3,9 +3,6 @@ package org.estatio.dom.invoice;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
@@ -22,20 +19,22 @@ import org.apache.isis.applib.annotation.Hidden;
 @Hidden
 public class InvoiceCalculationService {
 
-    public List<InvoiceItem> calculateAndInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
+    private static final LocalDate MOCK_DATE = new LocalDate(2013, 1, 1);
+
+    public void calculateAndInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
         CalculationResult result = calculate(leaseTerm, startDate, dueDate);
-        return createInvoiceItems(leaseTerm, startDate, dueDate, result);
+        createInvoiceItems(leaseTerm, startDate, dueDate, result);
     }
 
     static class CalculationResult {
         BigDecimal value;
         DateRange boundingRange;
-        
+
         public BigDecimal getCalculatedValue() {
             return value;
         }
     }
-    
+
     CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate) {
 
         CalculationResult result = new CalculationResult();
@@ -57,18 +56,25 @@ public class InvoiceCalculationService {
         return result;
     }
 
-    List<InvoiceItem> createInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, CalculationResult calculationResult) {
-        List<InvoiceItem> impactedItems = Lists.newArrayList();
+    void createInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, CalculationResult calculationResult) {
         if (calculationResult.value != null) {
-            BigDecimal newValue = calculationResult.value.subtract(leaseTerm.invoicedValueFor(startDate));
+            BigDecimal invoicedValue;
+            LocalDate mockDate = estatioSettingsService.fetchMockDate();
+            if (mockDate != null && startDate.compareTo(MOCK_DATE) < 0) {
+                CalculationResult mockResult = calculate(leaseTerm, startDate, startDate);
+                invoicedValue = mockResult.getCalculatedValue();
+            } else {
+                invoicedValue = leaseTerm.invoicedValueFor(startDate);
+            }
+            BigDecimal newValue = calculationResult.value.subtract(invoicedValue);
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
                 InvoiceItem invoiceItem = leaseTerm.findOrCreateUnapprovedInvoiceItemFor(startDate, dueDate);
                 invoiceItem.setNetAmount(newValue);
-                invoiceItem.setDescription(String.format("Due date {d}", startDate));
                 invoiceItem.setQuantity(BigDecimal.ONE);
                 LeaseItem leaseItem = leaseTerm.getLeaseItem();
                 Charge charge = leaseItem.getCharge();
                 invoiceItem.setCharge(charge);
+                invoiceItem.setDescription(charge.getDescription());
                 invoiceItem.setDueDate(dueDate);
                 invoiceItem.setStartDate(calculationResult.boundingRange.getStartDate());
                 invoiceItem.setEndDate(calculationResult.boundingRange.getEndDate());
@@ -76,14 +82,11 @@ public class InvoiceCalculationService {
                 invoiceItem.setTax(tax);
                 invoiceItem.attachToInvoice();
                 invoiceItem.verify();
-                
-                impactedItems.add(invoiceItem);
             }
+
         }
-        return impactedItems;
     }
 
-    
     // {{ injected: EstatioSettingsService
     private EstatioSettingsService estatioSettingsService;
 
@@ -91,6 +94,5 @@ public class InvoiceCalculationService {
         this.estatioSettingsService = estatioSettings;
     }
     // }}
-
 
 }

@@ -19,14 +19,6 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
@@ -72,7 +64,15 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.joda.time.LocalDate;
 
-@Hidden
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+
+//@Hidden
 public class Api extends AbstractFactoryAndRepository {
 
     // {{ Id, iconName
@@ -290,7 +290,7 @@ public class Api extends AbstractFactoryAndRepository {
         CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
         if (cc==null){
             cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
-            unit.addCommunicationChannel(cc);
+            unit.addToCommunicationChannels(cc);
         }
     }
 

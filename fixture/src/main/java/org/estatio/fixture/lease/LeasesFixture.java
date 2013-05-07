@@ -102,13 +102,14 @@ public class LeasesFixture extends AbstractFixture {
         return leaseTerm;
     }
 
-    private LeaseTerm createLeaseTermForServiceCharge(Lease lease, LocalDate startDate, LocalDate endDate, BigDecimal value) {
+    private LeaseTerm createLeaseTermForServiceCharge(Lease lease, LocalDate startDate, LocalDate endDate, BigDecimal budgetedValue) {
         LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.SERVICE_CHARGE, charges.findChargeByReference("SERVICE_CHARGE"));
         LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.modifyLeaseItem(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
-        leaseTerm.setBudgetedValue(value);
+        leaseTerm.setBudgetedValue(budgetedValue);
+        leaseTerm.setAuditedValue(budgetedValue.multiply(BigDecimal.valueOf(1.1)));
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         return leaseTerm;
     }

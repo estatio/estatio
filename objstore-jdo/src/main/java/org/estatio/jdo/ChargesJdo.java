@@ -10,6 +10,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.utils.StringUtils;
 
+@Named("Charges")
 public class ChargesJdo extends Charges {
 
     @Override

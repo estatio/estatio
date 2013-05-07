@@ -18,9 +18,17 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 
-
 @Named("Invoices")
 public class Invoices extends AbstractFactoryAndRepository {
+
+    @Override
+    public String getId() {
+        return "invoices";
+    }
+
+    public String iconName() {
+        return "Invoice";
+    }
 
     // {{ newInvoice
     @ActionSemantics(Of.NON_IDEMPOTENT)
@@ -30,6 +38,7 @@ public class Invoices extends AbstractFactoryAndRepository {
         persist(invoice);
         return invoice;
     }
+
     // }}
 
     // {{ newInvoiceItem
@@ -41,6 +50,7 @@ public class Invoices extends AbstractFactoryAndRepository {
         persist(invoiceItem);
         return invoiceItem;
     }
+
     // }}
 
     // {{ allInvoices
@@ -50,6 +60,7 @@ public class Invoices extends AbstractFactoryAndRepository {
     public List<Invoice> allInvoices() {
         return allInstances(Invoice.class);
     }
+
     // }}
 
     // {{ allInvoiceItems
@@ -59,32 +70,18 @@ public class Invoices extends AbstractFactoryAndRepository {
     public List<InvoiceItem> allInvoiceItems() {
         return allInstances(InvoiceItem.class);
     }
-    // }}
 
+    // }}
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public Invoice findMatchingInvoice(
-            Party seller,
-            Party buyer,
-            PaymentMethod paymentMethod,
-            Lease lease,
-            InvoiceStatus invoiceStatus,
-            LocalDate dueDate
-            ){
+    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
         throw new NotImplementedException();
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<Invoice> findMatchingInvoices(
-            Party seller,
-            Party buyer,
-            PaymentMethod paymentMethod,
-            Lease lease,
-            InvoiceStatus invoiceStatus,
-            LocalDate dueDate
-            ){
+    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
         throw new NotImplementedException();
     }
 

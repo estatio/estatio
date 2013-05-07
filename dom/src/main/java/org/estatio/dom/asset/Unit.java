@@ -33,8 +33,8 @@ import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @AutoComplete(repository = Units.class)
 @PublishedObject
 public class Unit extends FixedAsset {
@@ -166,7 +166,7 @@ public class Unit extends FixedAsset {
     public void setLeases(final SortedSet<LeaseUnit> leases) {
         this.leases = leases;
     }
-    
+
     public void addToLeases(final LeaseUnit leaseUnit) {
         // check for no-op
         if (leaseUnit == null || getLeases().contains(leaseUnit)) {
@@ -174,8 +174,6 @@ public class Unit extends FixedAsset {
         }
         // associate new
         getLeases().add(leaseUnit);
-        // additional business logic
-        onAddToLeases(leaseUnit);
     }
 
     public void removeFromLeases(final LeaseUnit leaseUnit) {
@@ -185,55 +183,6 @@ public class Unit extends FixedAsset {
         }
         // dissociate existing
         getLeases().remove(leaseUnit);
-        // additional business logic
-        onRemoveFromLeases(leaseUnit);
     }
-
-    protected void onAddToLeases(final LeaseUnit leaseUnit) {
-    }
-
-    protected void onRemoveFromLeases(final LeaseUnit leaseUnit) {
-    }
-    
-
-    // }}
-
-    // {{ CommunicationChannels (list, unidir)
-    @Join(column = "UNIT_ID", generateForeignKey = "false")
-    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
-
-    @Render(Type.EAGERLY)
-    @MemberOrder(sequence = "2.1")
-    public SortedSet<CommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
-
-    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
-        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
-        communicationChannels.add(communicationChannel);
-        return communicationChannel;
-    }
-
-    @Hidden
-    public void addCommunicationChannel(CommunicationChannel communicationChannel) {
-        communicationChannels.add(communicationChannel);
-    }
-
-    @Hidden
-    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
-        for (CommunicationChannel c : communicationChannels) {
-            if (c.getType().equals(type)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    // }}
 
 }

@@ -13,12 +13,13 @@ public class EstatioSettingsService extends ApplicationSettingsServiceAbstract<E
     }
 
     @MemberOrder(sequence = "1")
-    public LocalDate fetchLastDueDate() {
-        return fetchSetting().getLastDueDate();
+    public LocalDate fetchMockDate() {
+        return fetchSetting().getMockDate();
     }
 
-    public void updateLastDueDate(LocalDate d) {
-        fetchSetting().setLastDueDate(d);
+    public void updateMockDate(LocalDate d) {
+        fetchSetting().setMockDate(d);
     }
+
 
 }

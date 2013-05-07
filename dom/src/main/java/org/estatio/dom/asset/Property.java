@@ -148,40 +148,6 @@ public class Property extends FixedAsset {
 
     // }}
 
-    // {{ CommunicationChannels (list, unidir)
-    @Join(column = "PROPERTY_ID", generateForeignKey = "false")
-    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
-
-    @Render(Type.EAGERLY)
-    @MemberOrder(name = "CommunicationChannels", sequence = "1")
-    public SortedSet<CommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
-
-    @MemberOrder(name = "CommunicationChannels", sequence = "1")
-    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
-        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
-        communicationChannels.add(communicationChannel);
-        return communicationChannel;
-    }
-
-    @Hidden
-    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
-        for (CommunicationChannel c : communicationChannels) {
-            if (c.getType().equals(type)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    // }}
-
     // {{ Units (set, bidir)
     @Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();

@@ -15,6 +15,15 @@ import org.estatio.dom.utils.StringUtils;
 @Named("Charges")
 public class Charges extends AbstractFactoryAndRepository {
 
+    @Override
+    public String getId() {
+        return "charges";
+    }
+
+    public String iconName() {
+        return "Charge";
+    }
+
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Charge newCharge(String reference) {

@@ -12,6 +12,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.utils.MathUtils;
+import org.joda.time.LocalDate;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -56,6 +57,19 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     public String disableApprove() {
         return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
+    }
+
+    @Override
+    @Hidden
+    public BigDecimal valueForDueDate(LocalDate dueDate) {
+        // use the audited value after the end of the term and only when its available
+        if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
+            if (getEndDate() != null) {
+                if (dueDate.compareTo(getEndDate().plusDays(1)) >= 0)
+                    return getAuditedValue();
+            } 
+        }
+        return getBudgetedValue();
     }
 
     @Override

@@ -13,6 +13,15 @@ import org.apache.isis.applib.annotation.Prototype;
 @Named("ChargeGroups")
 public class ChargeGroups extends AbstractFactoryAndRepository {
 
+    @Override
+    public String getId() {
+        return "chargeGroups";
+    }
+
+    public String iconName() {
+        return "ChargeGroup";
+    }
+
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public ChargeGroup newChargeGroup() {

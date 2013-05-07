@@ -6,8 +6,10 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
+import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
@@ -24,6 +26,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.integtest.IntegrationSystemForTestRule;
 import org.estatio.jdo.LeaseTermsJdo;
 import org.estatio.jdo.LeasesJdo;
+import org.estatio.jdo.PartiesJdo;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -43,6 +46,7 @@ public class LeaseIntegrationTest {
     private LeaseTerms leaseTerms;
     private Lease lease;
     private Parties parties;
+    private EstatioSettingsService settings;
 
     @Rule
     public IntegrationSystemForTestRule isisSystemRule = new IntegrationSystemForTestRule();
@@ -55,7 +59,8 @@ public class LeaseIntegrationTest {
     public void setup() {
         leases = getIsft().getService(LeasesJdo.class);
         leaseTerms = getIsft().getService(LeaseTermsJdo.class);
-        parties = getIsft().getService(Parties.class);
+        parties = getIsft().getService(PartiesJdo.class);
+        settings = getIsft().getService(EstatioSettingsService.class);
         lease = leases.findByReference("OXF-TOPMODEL-001");
     }
 
@@ -170,7 +175,7 @@ public class LeaseIntegrationTest {
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(2)));
+        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6600).setScale(2)));
     }
 
     @Test
@@ -179,7 +184,7 @@ public class LeaseIntegrationTest {
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6000).setScale(2)));
+        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6600).setScale(2)));
 
     }
 
@@ -194,17 +199,27 @@ public class LeaseIntegrationTest {
 
     @Test
     public void t14_invoiceItemsForRentCreated() throws Exception {
+        settings.updateMockDate(null);
         LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         // first term
         LeaseTerm term = (LeaseTerm) item.getTerms().first();
+        //partial period
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
-        assertThat(term.getInvoiceItems().size(), is(1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
+        //full term
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(2));
-        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(2));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(5000.00).setScale(2, RoundingMode.HALF_UP)));
+        //invoice after effective date
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(5050.00).setScale(2, RoundingMode.HALF_UP)));
+        //invoice after effective date with mock
+        settings.updateMockDate(new LocalDate(2011,1,1));
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
+        //remove
         term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(1));
+        settings.updateMockDate(null);
+        assertThat(term.getInvoiceItems().size(), is(2));
     }
 
     @Test
@@ -219,16 +234,24 @@ public class LeaseIntegrationTest {
 
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
+        settings.updateMockDate(null);
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
+        term.approve();
+        //partial period
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
-        assertThat(term.getInvoiceItems().size(), is(1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
+        //full period
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(2));
-        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(2));
-        term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.getInvoiceItems().size(), is(1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(1500.00).setScale(2, RoundingMode.HALF_UP)));
+        //reconcile without mock
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
+        //reconcile with mock date
+        settings.updateMockDate(new LocalDate(2011,10,1));
+        term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
+        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
+        settings.updateMockDate(null);
     }
 
     @Test
