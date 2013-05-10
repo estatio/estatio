@@ -19,27 +19,30 @@ import org.apache.isis.applib.annotation.Hidden;
 @Hidden
 public class InvoiceCalculationService {
 
-    private static final LocalDate MOCK_DATE = new LocalDate(2013, 1, 1);
-
     public void calculateAndInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
-        CalculationResult result = calculate(leaseTerm, startDate, dueDate);
-        createInvoiceItems(leaseTerm, startDate, dueDate, result);
+        calculateAndInvoiceItems(leaseTerm, startDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
+    }
+
+    public void calculateAndInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, InvoicingFrequency freq) {
+        CalculationResult result = calculate(leaseTerm, startDate, dueDate, freq);
+        createInvoiceItems(leaseTerm, startDate, dueDate, result, freq);
     }
 
     static class CalculationResult {
-        BigDecimal value;
+        BigDecimal value = BigDecimal.ZERO;
         DateRange boundingRange;
 
         public BigDecimal getCalculatedValue() {
             return value;
         }
     }
-
+    
     CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate) {
+        return calculate(leaseTerm, periodStartDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
+    }
 
+    public CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
         CalculationResult result = new CalculationResult();
-
-        InvoicingFrequency freq = leaseTerm.getLeaseItem().getInvoicingFrequency();
         result.boundingRange = new DateRange(CalenderUtils.intervalMatching(periodStartDate, freq.rrule));
         if (result.boundingRange.getStartDate() != null) {
             DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
@@ -56,12 +59,17 @@ public class InvoiceCalculationService {
         return result;
     }
 
-    void createInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, CalculationResult calculationResult) {
+    public BigDecimal calculatedValue(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
+        CalculationResult result = calculate(leaseTerm, periodStartDate, dueDate, freq);
+        return result.getCalculatedValue();
+    }
+
+    void createInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, CalculationResult calculationResult, InvoicingFrequency freq) {
         if (calculationResult.value != null) {
             BigDecimal invoicedValue;
             LocalDate mockDate = estatioSettingsService.fetchMockDate();
-            if (mockDate != null && startDate.compareTo(MOCK_DATE) < 0) {
-                CalculationResult mockResult = calculate(leaseTerm, startDate, startDate);
+            if (mockDate != null && startDate.compareTo(mockDate) < 0) {
+                CalculationResult mockResult = calculate(leaseTerm, startDate, startDate, freq);
                 invoicedValue = mockResult.getCalculatedValue();
             } else {
                 invoicedValue = leaseTerm.invoicedValueFor(startDate);
@@ -83,7 +91,6 @@ public class InvoiceCalculationService {
                 invoiceItem.attachToInvoice();
                 invoiceItem.verify();
             }
-
         }
     }
 

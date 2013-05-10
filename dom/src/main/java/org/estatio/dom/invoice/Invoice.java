@@ -203,7 +203,10 @@ public class Invoice extends EstatioTransactionalObject {
         if (item == null || getItems().contains(item)) {
             return;
         }
-        // associate new
+        // dissociate arg from its current parent (if any).
+        item.clearInvoice();
+        // associate arg
+        item.setInvoice(this);
         getItems().add(item);
     }
 
@@ -212,7 +215,8 @@ public class Invoice extends EstatioTransactionalObject {
         if (item == null || !getItems().contains(item)) {
             return;
         }
-        // dissociate existing
+        // dissociate arg
+        item.setInvoice(null);
         getItems().remove(item);
     }
 
@@ -284,15 +288,16 @@ public class Invoice extends EstatioTransactionalObject {
         return true;
     }
 
-    @Prototype
+    // TODO: Prototype and Bulk don't seem to go well together
+    //@Prototype
     @Bulk
     public void remove() {
-        if (getStatus().equals(InvoiceStatus.NEW)) {
+//        if (getStatus().equals(InvoiceStatus.NEW)) {
             for (InvoiceItem item : getItems()) {
                 item.remove();
             }
             getContainer().remove(this);
-        }
+//        }
     }
 
     // }}

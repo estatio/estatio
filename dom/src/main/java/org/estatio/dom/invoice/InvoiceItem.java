@@ -312,8 +312,11 @@ public class InvoiceItem extends EstatioTransactionalObject {
     private void calulateTax() {
         BigDecimal vatAmount = BigDecimal.ZERO;
         if (getTax() != null) {
-            BigDecimal rate = tax.percentageFor(getDueDate()).divide(BigDecimal.valueOf(100));
-            vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal percentage = tax.percentageFor(getDueDate());
+            if (percentage != null) {
+                BigDecimal rate = percentage.divide(BigDecimal.valueOf(100));
+                vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
+            }
         }
         BigDecimal currentVatAmount = getVatAmount();
         if (currentVatAmount == null || vatAmount.compareTo(currentVatAmount) != 0) {

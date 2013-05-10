@@ -23,6 +23,7 @@ public class CalenderUtilsTest_interval {
     @Test
     public void intervalMatchingTest() throws Exception {
         assertEquals(CalenderUtils.intervalMatching(new LocalDate(2012,1,1), "RRULE:FREQ=MONTHLY;INTERVAL=3" ), new Interval(new LocalDate(2012,1,1).toInterval().getStartMillis(), new LocalDate(2012,4,1).toInterval().getStartMillis()));
+        assertEquals(CalenderUtils.intervalMatching(new LocalDate(2012,1,1), "RRULE:FREQ=YEARLY;INTERVAL=1" ), new Interval(new LocalDate(2012,1,1).toInterval().getStartMillis(), new LocalDate(2013,1,1).toInterval().getStartMillis()));
     }
 
     @Test

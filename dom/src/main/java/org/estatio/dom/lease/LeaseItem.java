@@ -15,15 +15,19 @@ import com.google.common.collect.Ordering;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -31,6 +35,7 @@ import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem> {
 
     // {{ Lease (property)
@@ -123,6 +128,10 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public LocalDate calculatedEndDate() {
+        return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
     // }}
@@ -231,11 +240,11 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     @Optional
     // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
     public BigDecimal getCurrentValue() {
-        return getValueForDate(LocalDate.now());
+        return valueForDate(LocalDate.now());
     }
 
     @Hidden
-    public BigDecimal getValueForDate(LocalDate date) {
+    public BigDecimal valueForDate(LocalDate date) {
         for (LeaseTerm term : getTerms()) {
             if (CalenderUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
                 return term.getValue();
@@ -252,6 +261,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     @Render(Type.EAGERLY)
     @Persistent(mappedBy = "leaseItem")
     @MemberOrder(name = "Terms", sequence = "15")
+    @Paged(15)
     public SortedSet<LeaseTerm> getTerms() {
         return terms;
     }
@@ -339,21 +349,19 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate) {
-        // SortedSet<LeaseTerm> terms =
-        // Sets.newTreeSet(Iterables.transform(getTerms(), new
-        // Function<LeaseTerm, LeaseTerm>(){
-        // public LeaseTerm apply(LeaseTerm leaseTerm) {
-        // return isisServiceInjector.injected(leaseTerm);
-        // }
-        // }));
-
         for (LeaseTerm term : getTerms()) {
-            // resolve(term); // TODO: need to call resolve,
-            // // otherwise services are not injected
-            // // when running in the wicket viewer.
             term.calculate(startDate, dueDate);
         }
         return this;
+    }
+
+    @Hidden
+    BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
+        BigDecimal total = new BigDecimal(0);
+        for (LeaseTerm term : getTerms()) {
+            total = total.add(term.valueForPeriod(frequency, periodStartDate, dueDate));
+        }
+        return total;
     }
 
     // }}

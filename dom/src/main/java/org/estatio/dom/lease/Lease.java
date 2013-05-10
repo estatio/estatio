@@ -17,6 +17,7 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.asset.Unit;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -29,6 +30,7 @@ import org.apache.isis.applib.annotation.Title;
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Bookmarkable
 public class Lease extends Agreement {
 
     // {{ Reference (property)
@@ -167,6 +169,17 @@ public class Lease extends Agreement {
         return null;
     }
 
+    @Hidden
+    public LeaseItem findFirstItemOfType(LeaseItemType type) {
+        for (LeaseItem item : getItems()) {
+            if (item.getType().equals(type)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    
     // }}
 
     // {{ Actions

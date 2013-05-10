@@ -2,7 +2,6 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,18 +16,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.collect.Ordering;
-
-import org.apache.commons.lang.NotImplementedException;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceCalculationService;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.Orderings;
-import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
@@ -40,12 +29,23 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceCalculationService;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.utils.Orderings;
+import org.joda.time.LocalDate;
+
+import com.google.common.collect.Ordering;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
 
     private LeaseItem leaseItem;
@@ -269,21 +269,26 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
-    public BigDecimal invoicedValueFor(LocalDate date) {
-        BigDecimal invoicedValue = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+    public BigDecimal invoicedValueFor(LocalDate startDate) {
+        BigDecimal invoicedValue = new BigDecimal(0);
         for (InvoiceItem invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || invoiceItem.getStartDate() == null || !invoiceItem.getStartDate().equals(startDate)) {
+            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || invoiceItem.getStartDate() == null || invoiceItem.getStartDate().compareTo(startDate) != 0) {
                 continue;
             }
-            invoicedValue.add(invoiceItem.getNetAmount());
+            invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
         }
         return invoicedValue;
     }
 
-    @Hidden
-    public BigDecimal valueForDueDate(LocalDate dueDate) {
-        return getValue();
+    @MemberOrder(name = "invoiceItems", sequence = "2")
+    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
+        if (getStatus() == LeaseTermStatus.APPROVED) {
+            invoiceCalculationService.calculateAndInvoiceItems(this, startDate, dueDate, getLeaseItem().getInvoicingFrequency());
+            informUser("Calculated" + this.getLeaseItem().getLease().getReference());
+            // TODO: use the title of this term? But how access it.
+        }
+        return this;
     }
 
     // {{ Actions
@@ -315,28 +320,31 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @MemberOrder(sequence = "3")
     public LeaseTerm createNext() {
-        LocalDate newStartDate = this.getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
+        LocalDate newStartDate = getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
         return createNext(newStartDate);
     }
 
     @Hidden
     public LeaseTerm createNext(LocalDate nextStartDate) {
-        LocalDate endDate = getLeaseItem().getEndDate();
-        LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
-        if (nextStartDate.isAfter(maxEndDate)) {
-            // date is after end date, do nothing
-            return null;
-        } else {
-            LeaseTerm term = getNextTerm();
-            if (getNextTerm() == null) {
-                term = getLeaseItem().createNextTerm(this);
+        if (getNextTerm() == null) {
+            LocalDate endDate = getLeaseItem().calculatedEndDate();
+            LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
+            if (nextStartDate.isAfter(maxEndDate)) {
+                // date is after end date, do nothing
+                return null;
+            } else {
+                LeaseTerm term = getNextTerm();
+                if (getNextTerm() == null) {
+                    term = getLeaseItem().createNextTerm(this);
+                }
+                // new start Date
+                term.setStartDate(nextStartDate);
+                term.update();
+                this.setEndDate(nextStartDate.minusDays(1));
+                return term;
             }
-            // new start Date
-            term.setStartDate(nextStartDate);
-            term.update();
-            this.setEndDate(nextStartDate.minusDays(1));
-            return term;
         }
+        return null;
     }
 
     @Hidden
@@ -358,17 +366,18 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
     }
 
-    @MemberOrder(name = "invoiceItems", sequence = "2")
-    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
-        if (getStatus() == LeaseTermStatus.APPROVED) {
-            invoiceCalculationService.calculateAndInvoiceItems(this, startDate, dueDate);
-            informUser("Calculated"+ this.getLeaseItem().getLease().getReference());
-            //TODO: use the title of this term? But how access it.
-        }
-        return this;
+    @Hidden
+    public BigDecimal valueForDueDate(LocalDate dueDate) {
+        return getValue();
     }
 
-    // }}
+    @Hidden BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
+        if (getStatus() == LeaseTermStatus.APPROVED) {
+            BigDecimal value = invoiceCalculationService.calculatedValue(this, periodStartDate, dueDate, frequency);
+            return value;
+        }
+        return BigDecimal.ZERO;
+    }
 
     // {{ CompareTo
     @Override

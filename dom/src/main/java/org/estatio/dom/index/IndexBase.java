@@ -23,7 +23,7 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     // {{ Index (property)
     private Index index;
 
-    @Title(sequence = "1")
+    @Title(sequence = "1", append = ", ")
     @MemberOrder(sequence = "1")
     public Index getIndex() {
         return index;
@@ -38,7 +38,7 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     // {{ StartDate (property)
     private LocalDate startDate;
 
-    @Title(sequence = "2", prepend = ", ")
+    @Title(sequence = "2")
     @Persistent
     @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {

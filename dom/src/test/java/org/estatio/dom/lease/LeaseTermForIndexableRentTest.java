@@ -20,6 +20,7 @@ import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 public class LeaseTermForIndexableRentTest {
 
+    private Lease lease; 
     private LeaseItem item;
     private LeaseTermForIndexableRent term;
 
@@ -72,8 +73,13 @@ public class LeaseTermForIndexableRentTest {
         iv2.setIndexBase(ib2);
         iv2.setValue(BigDecimal.valueOf(101.2));
         ib2.addToValues(iv2);
-
+        
+        lease = new Lease();
+        lease.setStartDate(new LocalDate(2011,1,1));
+        lease.setEndDate(new LocalDate(2020,12,31));
+        
         item = new LeaseItem();
+        item.modifyLease(lease);
         item.setType(LeaseItemType.RENT);
         item.setLeaseTermsService(mockLeaseTerms);
 

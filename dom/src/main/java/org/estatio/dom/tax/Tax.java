@@ -78,7 +78,7 @@ public class Tax extends EstatioRefDataObject {
     // {{ getPercentageForDate
     public BigDecimal percentageFor(LocalDate date) {
         TaxRate rate = taxRepo.findTaxRateForDate(this, date);
-        if (rate.equals(null)) {
+        if (rate == null) {
             return null;
         }
         return rate.getPercentage();

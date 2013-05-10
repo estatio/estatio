@@ -61,7 +61,7 @@ public class IndexationCalculator {
     public void calculate() {
         if (index != null){
             index.initialize(this, baseIndexStartDate, nextIndexStartDate);
-            if (this.baseIndexValue != null && this.nextIndexValue !=null){
+            if (this.baseIndexValue != null && this.nextIndexValue !=null && baseValue != null){
                 indexationFactor = nextIndexValue.divide(baseIndexValue, 4, RoundingMode.HALF_UP).multiply(rebaseFactor).setScale(3, RoundingMode.HALF_UP);
                 indexationPercentage = (indexationFactor.subtract(BigDecimal.ONE)).multiply(ONE_HUNDRED).setScale(1);
                 indexedValue = baseValue.multiply(indexationFactor).setScale(2, RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP);

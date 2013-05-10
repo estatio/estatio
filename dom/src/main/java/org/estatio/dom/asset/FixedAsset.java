@@ -14,6 +14,7 @@ import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -40,6 +41,7 @@ import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @PublishedObject
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@Bookmarkable
 public class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
 
     private String reference;
