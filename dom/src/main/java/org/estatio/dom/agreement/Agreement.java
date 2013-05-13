@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Title;
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
+public abstract class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
 
     // {{ Reference (property)
     private String reference;

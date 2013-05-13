@@ -21,7 +21,7 @@ import org.estatio.dom.party.Party;
 @Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
 @Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>{
+public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>{
 
     // {{ Reference (property)
     private String reference;

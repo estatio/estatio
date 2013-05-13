@@ -42,7 +42,7 @@ import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 @PublishedObject
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bookmarkable
-public class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
 
     private String reference;
 

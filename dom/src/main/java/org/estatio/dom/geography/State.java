@@ -1,50 +1,20 @@
 package org.estatio.dom.geography;
 
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
-import org.estatio.dom.EstatioRefDataObject;
-
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable
+@PersistenceCapable()
+@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bounded
-@Immutable
-public class State extends EstatioRefDataObject {
+public class State extends Geography implements Comparable<State> {
 
-    // {{ Reference (attribute)
-    private String reference;
-
-    @MemberOrder(sequence = "1")
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
-    
-    // }}
-
-    // {{ Name (attribute, title)
-    private String name;
-
-    @Title
-    @MemberOrder(sequence = "2")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    // }}
-
-    // {{ Country (attribute)
     private Country country;
 
     @MemberOrder(sequence = "10")
@@ -55,6 +25,14 @@ public class State extends EstatioRefDataObject {
     public void setCountry(final Country country) {
         this.country = country;
     }
-    // }}
+
+    @Override
+    public int compareTo(State o) {
+        int result = getCountry().compareTo(o.getCountry());
+        if (result == 0) {
+            result = getName().compareTo(o.getName());
+        }
+        return result;
+    }
 
 }
