@@ -9,6 +9,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
@@ -26,6 +28,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
 @PersistenceCapable
@@ -33,7 +36,7 @@ import org.joda.time.LocalDate;
 // @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column =
 // "INVOICE_ITEM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class InvoiceItem extends EstatioTransactionalObject {
+public class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>{
 
     // {{ Invoice (property)
     private Invoice invoice;
@@ -42,7 +45,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Title(sequence = "1", append = ":")
-    @Optional
     public Invoice getInvoice() {
         return invoice;
     }
@@ -71,9 +73,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         currentInvoice.removeFromItems(this);
     }
 
-    // }}
-
-    // {{ Charge (property)
     private Charge charge;
 
     @Title(sequence = "2")
@@ -87,13 +86,10 @@ public class InvoiceItem extends EstatioTransactionalObject {
     }
 
     public List<Charge> choicesCharge() {
-        return charges.allCharges();
+        return chargesService.allCharges();
 
     }
 
-    // }}
-
-    // {{ Quantity (property)
     private BigDecimal quantity;
 
     @MemberOrder(sequence = "3")
@@ -106,9 +102,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.quantity = quantity;
     }
 
-    // }}
-
-    // {{ NetAmount (property)
     private BigDecimal netAmount;
 
     @MemberOrder(sequence = "4")
@@ -125,9 +118,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         return BigDecimal.ZERO;
     }
 
-    // }}
-
-    // {{ VatAmount (property)
     private BigDecimal vatAmount;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -141,9 +131,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.vatAmount = vatAmount;
     }
 
-    // }}
-
-    // {{ Amount (property)
     private BigDecimal grossAmount;
 
     @MemberOrder(sequence = "6")
@@ -156,9 +143,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.grossAmount = grossAmount;
     }
 
-    // }}
-
-    // {{ Tax (property)
     private Tax tax;
 
     @MemberOrder(sequence = "7")
@@ -171,9 +155,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.tax = tax;
     }
 
-    // }}
-
-    // {{ Description (property)
     private String description;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -186,9 +167,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.description = description;
     }
 
-    // }}
-
-    // {{ DueDate (property)
     private LocalDate dueDate;
 
     @Persistent
@@ -201,9 +179,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.dueDate = dueDate;
     }
 
-    // }}
-
-    // {{ StartDate (property)
     private LocalDate startDate;
 
     @MemberOrder(sequence = "10")
@@ -216,9 +191,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @MemberOrder(sequence = "11")
@@ -231,9 +203,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.endDate = endDate;
     }
 
-    // }}
-
-    // {{ LeaseTerm (property)
     private LeaseTerm leaseTerm;
 
     @Disabled
@@ -249,21 +218,17 @@ public class InvoiceItem extends EstatioTransactionalObject {
 
     public void modifyLeaseTerm(final LeaseTerm leaseTerm) {
         LeaseTerm currentLeaseTerm = getLeaseTerm();
-        // check for no-op
         if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
             return;
         }
-        // delegate to parent to associate
         leaseTerm.addToInvoiceItems(this);
     }
 
     public void clearLeaseTerm() {
         LeaseTerm currentLeaseTerm = getLeaseTerm();
-        // check for no-op
         if (currentLeaseTerm == null) {
             return;
         }
-        // delegate to parent to dissociate
         currentLeaseTerm.removeFromInvoiceItems(this);
     }
 
@@ -289,7 +254,7 @@ public class InvoiceItem extends EstatioTransactionalObject {
                 invoice.setPaymentMethod(paymentMethod);
                 invoice.setStatus(InvoiceStatus.NEW);
             }
-            this.setInvoice(invoice);
+            this.modifyInvoice(invoice);
         }
     }
 
@@ -325,9 +290,6 @@ public class InvoiceItem extends EstatioTransactionalObject {
         }
     }
 
-    // }
-
-    // {{ Lifecycle Events
     public void created() {
         initialize();
     }
@@ -340,15 +302,11 @@ public class InvoiceItem extends EstatioTransactionalObject {
         setNetAmount(BigDecimal.ZERO);
     }
 
-    // }}
-
-    // {{ Inject services
-
-    private Charges charges;
+    private Charges chargesService;
 
     @Hidden
     public void setChargesService(Charges charges) {
-        this.charges = charges;
+        this.chargesService = charges;
     }
 
     private Invoices invoicesService;
@@ -358,6 +316,28 @@ public class InvoiceItem extends EstatioTransactionalObject {
         this.invoicesService = invoices;
     }
 
-    // }}
+    @Override
+    public int compareTo(InvoiceItem o) {
+        return ORDERING_BY_START_DATE.compound(ORDERING_BY_DUE_DATE).compound(ORDERING_BY_INVOICE).compare(this, o);
+    }
 
+    public static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
+        public int compare(InvoiceItem p, InvoiceItem q) {
+            return Ordering.<String> natural().compare(p.getClass().toString(), q.getClass().toString());
+        }
+    };
+
+    public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE = new Ordering<InvoiceItem>() {
+        public int compare(InvoiceItem p, InvoiceItem q) {
+            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+        }
+    };
+
+    public final static Ordering<InvoiceItem> ORDERING_BY_DUE_DATE = new Ordering<InvoiceItem>() {
+        public int compare(InvoiceItem p, InvoiceItem q) {
+            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
+        }
+    };
+
+    
 }
