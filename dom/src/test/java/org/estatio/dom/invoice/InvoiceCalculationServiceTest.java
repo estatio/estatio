@@ -3,6 +3,9 @@ package org.estatio.dom.invoice;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+
 import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
@@ -27,9 +30,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 public class InvoiceCalculationServiceTest {
     private static LocalDate START_DATE = new LocalDate(2011, 11, 1);
@@ -168,7 +168,7 @@ public class InvoiceCalculationServiceTest {
         lt.modifyLeaseItem(li);
         InvoiceCalculationService ic = new InvoiceCalculationService();
         CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
-        Assert.assertNull(result.getCalculatedValue());
+        Assert.assertThat(result.getCalculatedValue(), Is.is(BigDecimal.ZERO));
     }
 
     @Test
