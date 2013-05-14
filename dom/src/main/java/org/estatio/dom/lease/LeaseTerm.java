@@ -14,7 +14,19 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+
+import com.google.common.collect.Ordering;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceCalculationService;
+import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.utils.Orderings;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -29,22 +41,12 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceCalculationService;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.Orderings;
-import org.joda.time.LocalDate;
-
-import com.google.common.collect.Ordering;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
 

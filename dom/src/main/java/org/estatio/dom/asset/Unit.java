@@ -9,17 +9,13 @@ import java.util.TreeSet;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.lease.LeaseUnit;
 
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -39,7 +35,6 @@ import org.apache.isis.applib.annotation.Where;
 @PublishedObject
 public class Unit extends FixedAsset {
 
-    // {{ Type (attribute)
     private UnitType unitType;
 
     @MemberOrder(sequence = "3")
@@ -55,9 +50,6 @@ public class Unit extends FixedAsset {
         return Arrays.asList(UnitType.values());
     }
 
-    // }}
-
-    // {{ Area (attribute)
     private BigDecimal area;
 
     @MemberOrder(sequence = "4")
@@ -70,9 +62,6 @@ public class Unit extends FixedAsset {
         this.area = area;
     }
 
-    // }}
-
-    // {{ StorageArea (property)
     private BigDecimal storageArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -86,9 +75,6 @@ public class Unit extends FixedAsset {
         this.storageArea = storageArea;
     }
 
-    // }}
-
-    // {{ SalesArea (property)
     private BigDecimal salesArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -102,9 +88,6 @@ public class Unit extends FixedAsset {
         this.salesArea = salesArea;
     }
 
-    // }}
-
-    // {{ MezzanineArea (property)
     private BigDecimal mezzanineArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -118,9 +101,6 @@ public class Unit extends FixedAsset {
         this.mezzanineArea = mezzanineArea;
     }
 
-    // }}
-
-    // {{ TerraceArea (property)
     private BigDecimal terraceArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -134,12 +114,9 @@ public class Unit extends FixedAsset {
         this.terraceArea = terraceArea;
     }
 
-    // }}
-
-    // {{ Property (attribute)
     private Property property;
 
-    @javax.jdo.annotations.Column(name = "PROPERTY_ID")
+    @Column(name = "PROPERTY_ID")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     @MemberOrder(sequence = "9")
@@ -151,9 +128,6 @@ public class Unit extends FixedAsset {
         this.property = property;
     }
 
-    // }}
-
-    // {{ Numerators (Collection)
     @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
     private SortedSet<LeaseUnit> leases = new TreeSet<LeaseUnit>();
 
@@ -168,20 +142,19 @@ public class Unit extends FixedAsset {
     }
 
     public void addToLeases(final LeaseUnit leaseUnit) {
-        // check for no-op
         if (leaseUnit == null || getLeases().contains(leaseUnit)) {
             return;
         }
-        // associate new
+        leaseUnit.clearUnit();
+        leaseUnit.setUnit(this);
         getLeases().add(leaseUnit);
     }
 
     public void removeFromLeases(final LeaseUnit leaseUnit) {
-        // check for no-op
         if (leaseUnit == null || !getLeases().contains(leaseUnit)) {
             return;
         }
-        // dissociate existing
+        leaseUnit.setUnit(null);
         getLeases().remove(leaseUnit);
     }
 

@@ -15,7 +15,6 @@ import com.google.common.collect.Ordering;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.utils.CalenderUtils;
 import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
@@ -38,7 +37,6 @@ import org.apache.isis.applib.annotation.Where;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem> {
 
-    // {{ Lease (property)
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -62,17 +60,12 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     public void clearLease() {
         Lease currentLease = getLease();
-        // check for no-op
         if (currentLease == null) {
             return;
         }
-        // delegate to parent to dissociate
         currentLease.removeFromItems(this);
     }
 
-    // }}
-
-    // {{ Sequence (property)
     private BigInteger sequence;
 
     @MemberOrder(sequence = "1")
@@ -85,9 +78,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.sequence = sequence;
     }
 
-    // }}
-
-    // {{ LeaseItemType (property)
     private LeaseItemType type;
 
     @Title(sequence = "2")
@@ -100,9 +90,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.type = type;
     }
 
-    // }}
-
-    // {{ StartDate (property)
     private LocalDate startDate;
 
     @Persistent
@@ -115,9 +102,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @Persistent
@@ -134,9 +118,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
-    // }}
-
-    // {{ TenancyStartDate (property)
     private LocalDate tenancyStartDate;
 
     @Persistent
@@ -151,9 +132,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.tenancyStartDate = tenancyStartDate;
     }
 
-    // }}
-
-    // {{ TenancyEndDate (property)
     private LocalDate tenancyEndDate;
 
     @Persistent
@@ -168,9 +146,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.tenancyEndDate = tenancyEndDate;
     }
 
-    // }}
-
-    // {{ NextDueDate (property)
     private LocalDate nextDueDate;
 
     @MemberOrder(sequence = "7")
@@ -185,9 +160,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.nextDueDate = nextDueDate;
     }
 
-    // }}
-
-    // {{ InvoicingFrequency (property)
     private InvoicingFrequency invoicingFrequency;
 
     @MemberOrder(sequence = "12")
@@ -200,9 +172,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.invoicingFrequency = invoicingFrequency;
     }
 
-    // }}
-
-    // {{ PayymentMethod (property)
     private PaymentMethod paymentMethod;
 
     @MemberOrder(sequence = "13")
@@ -215,9 +184,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.paymentMethod = paymentMethod;
     }
 
-    // }}
-
-    // {{ Charge (property)
     private Charge charge;
 
     @MemberOrder(sequence = "14")
@@ -233,9 +199,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return chargeService.allCharges();
     }
 
-    // }}
-
-    // {{ CurrentValue
     @Disabled
     @Optional
     // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
@@ -253,9 +216,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return null;
     }
 
-    // }}
-
-    // {{ Terms (Collection)
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
     @Render(Type.EAGERLY)
@@ -271,29 +231,20 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     public void addToTerms(final LeaseTerm term) {
-        // check for no-op
         if (term == null || getTerms().contains(term)) {
             return;
         }
-        // dissociate arg from its current parent (if any).
         term.clearLeaseItem();
-        // associate arg
         term.setLeaseItem(this);
         getTerms().add(term);
-        // additional business logic
-        // onAddToTerms(term);
     }
 
     public void removeFromTerms(final LeaseTerm term) {
-        // check for no-op
         if (term == null || !getTerms().contains(term)) {
             return;
         }
-        // dissociate arg
         term.setLeaseItem(null);
         getTerms().remove(term);
-        // additional business logic
-        // onRemoveFromTerms(term);
     }
 
     @Hidden
@@ -333,10 +284,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return term;
     }
 
-    // }}
-
-    // {{ Actions
-
     public LeaseItem verify() {
         for (LeaseTerm term : getTerms()) {
             if (term.getPreviousTerm() == null) {
@@ -364,10 +311,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return total;
     }
 
-    // }}
-
-    // {{ Injected Services
-
     private Charges chargeService;
 
     public void setChargeService(Charges charges) {
@@ -379,10 +322,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     public void setLeaseTermsService(LeaseTerms leaseTerms) {
         this.leaseTermsService = leaseTerms;
     }
-
-    // }}
-
-    // {{ Comparable
 
     @Override
     public int compareTo(LeaseItem o) {
@@ -401,5 +340,4 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         }
     };
 
-    // }}
 }

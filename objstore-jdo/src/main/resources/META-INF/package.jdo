@@ -65,6 +65,13 @@
                    startDate == :startDate
             ]]></query>
         </class>
+        <class name="LeaseUnitReference">
+            <query name="leaseUnitReference_find" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.lease.LeaseUnitReference 
+              WHERE type == :type && reference.matches(:reference)
+            ]]></query>
+        </class>
     </package>
     <package name="org.estatio.dom.agreement">
         <class name="Agreement">

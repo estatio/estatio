@@ -3,7 +3,6 @@ package org.estatio.fixture.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
@@ -14,18 +13,25 @@ import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseUnit;
+import org.estatio.dom.lease.LeaseUnitActivity;
+import org.estatio.dom.lease.LeaseUnitBrand;
+import org.estatio.dom.lease.LeaseUnitReferenceType;
+import org.estatio.dom.lease.LeaseUnitReferences;
+import org.estatio.dom.lease.LeaseUnitSector;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.fixtures.AbstractFixture;
 
 public class LeasesFixture extends AbstractFixture {
 
@@ -56,8 +62,10 @@ public class LeasesFixture extends AbstractFixture {
         Unit unit = units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         lease.addRole(manager, AgreementRoleType.MANAGER, null, null);
-        leaseUnits.newLeaseUnit(lease, unit);
-
+        LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
+        lu.setBrand((LeaseUnitBrand) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.BRAND, tentantReference));
+        lu.setActivity((LeaseUnitActivity) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.ACTIVITY, "OTHER"));
+        lu.setSector((LeaseUnitSector) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.SECTOR, "OTHER"));
         if (leases.findByReference(reference) == null) {
             new RuntimeException();
         }
@@ -68,7 +76,7 @@ public class LeasesFixture extends AbstractFixture {
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
             li = lease.newItem(leaseItemType);
-            //li = leaseItems.newLeaseItem(lease, leaseItemType);
+            // li = leaseItems.newLeaseItem(lease, leaseItemType);
             li.setType(leaseItemType);
             li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
             li.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
@@ -85,10 +93,9 @@ public class LeasesFixture extends AbstractFixture {
         LeaseTermForIndexableRent leaseTerm;
         if (sequence.equals(BigInteger.ONE)) {
             leaseTerm = (LeaseTermForIndexableRent) leaseItem.createInitialTerm();
-        } else
-        {
+        } else {
             LeaseTerm currentTerm = leaseItem.findTermWithSequence(sequence.subtract(BigInteger.ONE));
-            leaseTerm = (LeaseTermForIndexableRent) leaseItem.createNextTerm(currentTerm);   
+            leaseTerm = (LeaseTermForIndexableRent) leaseItem.createNextTerm(currentTerm);
         }
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
@@ -138,10 +145,10 @@ public class LeasesFixture extends AbstractFixture {
         this.leaseUnits = leaseUnits;
     }
 
-    private LeaseItems leaseItems;
+    private LeaseUnitReferences leaseUnitReferences;
 
-    public void setLeaseRepository(final LeaseItems leaseItems) {
-        this.leaseItems = leaseItems;
+    public void setLeaseUnitReferences(LeaseUnitReferences leaseUnitReferences) {
+        this.leaseUnitReferences = leaseUnitReferences;
     }
 
     private LeaseTerms leaseTerms;

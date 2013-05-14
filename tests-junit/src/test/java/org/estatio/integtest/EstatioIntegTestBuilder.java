@@ -1,13 +1,5 @@
 package org.estatio.integtest;
 
-import org.apache.isis.applib.fixtures.InstallableFixture;
-import org.apache.isis.core.commons.config.IsisConfiguration;
-import org.apache.isis.core.commons.config.IsisConfigurationDefault;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
-import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 import org.apache.log4j.Level;
 import org.estatio.api.Api;
 import org.estatio.appsettings.EstatioSettingsService;
@@ -26,6 +18,7 @@ import org.estatio.jdo.IndicesJdo;
 import org.estatio.jdo.InvoicesJdo;
 import org.estatio.jdo.LeaseItemsJdo;
 import org.estatio.jdo.LeaseTermsJdo;
+import org.estatio.jdo.LeaseUnitReferencesJdo;
 import org.estatio.jdo.LeaseUnitsJdo;
 import org.estatio.jdo.LeasesJdo;
 import org.estatio.jdo.NumeratorsJdo;
@@ -34,6 +27,15 @@ import org.estatio.jdo.PropertiesJdo;
 import org.estatio.jdo.StatesJdo;
 import org.estatio.jdo.TaxesJdo;
 import org.estatio.jdo.UnitsJdo;
+
+import org.apache.isis.applib.fixtures.InstallableFixture;
+import org.apache.isis.core.commons.config.IsisConfiguration;
+import org.apache.isis.core.commons.config.IsisConfigurationDefault;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
@@ -67,6 +69,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new LeaseTermsJdo(),
                 new LeaseItemsJdo(),
                 new LeaseUnitsJdo(),
+                new LeaseUnitReferencesJdo(),
                 new InvoicesJdo(),
                 new CommunicationChannelsJdo(),
                 new TaxesJdo(),

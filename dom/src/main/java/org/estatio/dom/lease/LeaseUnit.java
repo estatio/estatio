@@ -2,6 +2,7 @@ package org.estatio.dom.lease;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -15,7 +16,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit> {
 
     private Lease lease;
@@ -33,21 +34,17 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
     public void modifyLease(final Lease lease) {
         Lease currentLease = getLease();
-        // check for no-op
         if (lease == null || lease.equals(currentLease)) {
             return;
         }
-        // delegate to parent to associate
         lease.addToUnits(this);
     }
 
     public void clearLease() {
         Lease currentLease = getLease();
-        // check for no-op
         if (currentLease == null) {
             return;
         }
-        // delegate to parent to dissociate
         currentLease.removeFromUnits(this);
     }
 
@@ -66,21 +63,17 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
     public void modifyUnit(final Unit unit) {
         Unit currentUnit = getUnit();
-        // check for no-op
         if (unit == null || unit.equals(currentUnit)) {
             return;
         }
-        // delegate to parent to associate
         unit.addToLeases(this);
     }
 
     public void clearUnit() {
         Unit currentUnit = getUnit();
-        // check for no-op
         if (currentUnit == null) {
             return;
         }
-        // delegate to parent to dissociate
         currentUnit.removeFromLeases(this);
     }
 
@@ -96,6 +89,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+
     private LocalDate endDate;
 
     @Persistent
@@ -133,39 +127,39 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.tenancyEndDate = tenancyEndDate;
     }
 
-    private String brand;
+    private LeaseUnitBrand brand;
 
-    @Optional
     @MemberOrder(sequence = "6")
-    public String getBrand() {
+    @Optional
+    public LeaseUnitBrand getBrand() {
         return brand;
     }
 
-    public void setBrand(final String brand) {
+    public void setBrand(final LeaseUnitBrand brand) {
         this.brand = brand;
     }
 
-    private String sector;
+    private LeaseUnitSector sector;
 
-    @Optional
     @MemberOrder(sequence = "7")
-    public String getSector() {
+    @Optional
+    public LeaseUnitSector getSector() {
         return sector;
     }
 
-    public void setSector(final String sector) {
+    public void setSector(final LeaseUnitSector sector) {
         this.sector = sector;
     }
 
-    private String activity;
+    private LeaseUnitActivity activity;
 
-    @Optional
     @MemberOrder(sequence = "8")
-    public String getActivity() {
+    @Optional
+    public LeaseUnitActivity getActivity() {
         return activity;
     }
 
-    public void setActivity(final String activity) {
+    public void setActivity(final LeaseUnitActivity activity) {
         this.activity = activity;
     }
 
@@ -174,9 +168,12 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public int compareTo(LeaseUnit o) {
         Unit thisUnit = this.getUnit();
         Unit otherUnit = o.getUnit();
-        if (thisUnit == null && otherUnit == null) return 0;
-        if (thisUnit == null) return 1;
-        if (otherUnit == null) return -1;
+        if (thisUnit == null && otherUnit == null)
+            return 0;
+        if (thisUnit == null)
+            return 1;
+        if (otherUnit == null)
+            return -1;
         return thisUnit.getReference().compareTo(otherUnit.getReference());
     }
 }

@@ -53,6 +53,11 @@ import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseUnit;
+import org.estatio.dom.lease.LeaseUnitActivity;
+import org.estatio.dom.lease.LeaseUnitBrand;
+import org.estatio.dom.lease.LeaseUnitReferenceType;
+import org.estatio.dom.lease.LeaseUnitReferences;
+import org.estatio.dom.lease.LeaseUnitSector;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.PaymentMethod;
@@ -68,7 +73,6 @@ import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
@@ -361,13 +365,17 @@ public class Api extends AbstractFactoryAndRepository {
             leaseUnit = lease.addUnit(unit);
             leaseUnit.setStartDate(startDate);
         }
+        LeaseUnitBrand b = (LeaseUnitBrand) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.BRAND, brand); 
+        LeaseUnitSector s = (LeaseUnitSector) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.SECTOR, brand); 
+        LeaseUnitActivity a = (LeaseUnitActivity) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.ACTIVITY, brand); 
+
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
         leaseUnit.setTenancyStartDate(tenancyStartDate);
         leaseUnit.setTenancyEndDate(tenancyEndDate);
-        leaseUnit.setBrand(brand);
-        leaseUnit.setSector(sector);
-        leaseUnit.setActivity(activity);
+        leaseUnit.setBrand(b);
+        leaseUnit.setSector(s);
+        leaseUnit.setActivity(a);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -666,6 +674,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void setIndexRepo(final Indices indices) {
         this.indices = indices;
+    }
+    
+    private LeaseUnitReferences leaseUnitReferencesService;
+    
+    public void setLeaseUnitReferencesService(LeaseUnitReferences leaseUnitReferencesService) {
+        this.leaseUnitReferencesService = leaseUnitReferencesService;
     }
     
     private FinancialAccounts financialAccounts;

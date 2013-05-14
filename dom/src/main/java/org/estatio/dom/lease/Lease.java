@@ -75,33 +75,22 @@ public class Lease extends Agreement {
     public void setUnits(final SortedSet<LeaseUnit> units) {
         this.units = units;
     }
-    
+
     public void addToUnits(final LeaseUnit leaseUnit) {
-        // check for no-op
         if (leaseUnit == null || getUnits().contains(leaseUnit)) {
             return;
         }
-        // associate new
+        leaseUnit.clearLease();
+        leaseUnit.setLease(this);
         getUnits().add(leaseUnit);
-        // additional business logic
-        onAddToUnits(leaseUnit);
     }
 
     public void removeFromUnits(final LeaseUnit leaseUnit) {
-        // check for no-op
         if (leaseUnit == null || !getUnits().contains(leaseUnit)) {
             return;
         }
-        // dissociate existing
+        leaseUnit.setLease(null);
         getUnits().remove(leaseUnit);
-        // additional business logic
-        onRemoveFromUnits(leaseUnit);
-    }
-
-    protected void onAddToUnits(final LeaseUnit leaseUnit) {
-    }
-
-    protected void onRemoveFromUnits(final LeaseUnit leaseUnit) {
     }
 
     @MemberOrder(name = "Units", sequence = "21")
@@ -132,7 +121,7 @@ public class Lease extends Agreement {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
         return leaseItem;
     }
-    
+
     public void addToItems(final LeaseItem leaseItem) {
         // check for no-op
         if (leaseItem == null || getItems().contains(leaseItem)) {
@@ -154,7 +143,6 @@ public class Lease extends Agreement {
         leaseItem.setLease(null);
         getItems().remove(leaseItem);
     }
-
 
     @Hidden
     public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
@@ -179,7 +167,6 @@ public class Lease extends Agreement {
         return null;
     }
 
-    
     // }}
 
     // {{ Actions
@@ -216,7 +203,6 @@ public class Lease extends Agreement {
         this.leaseUnits = leaseUnits;
     }
 
-    
     // }}
 
 }
