@@ -46,8 +46,7 @@ public class Indices extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "2")
     public IndexBase newIndexBase(final @Named("Index") Index index, final @Named("Previous Base") IndexBase previousBase, final @Named("Start Date") LocalDate startDate, final @Named("Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance(IndexBase.class);
-        indexBase.setIndex(index);
-        indexBase.setPreviousBase(previousBase);
+        indexBase.modifyPreviousBase(previousBase);
         indexBase.setStartDate(startDate);
         indexBase.setFactor(factor);
         persist(indexBase);
@@ -62,7 +61,6 @@ public class Indices extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "3")
     public IndexValue newIndexValue(final @Named("Index Base") IndexBase indexBase, final @Named("Start Date") LocalDate startDate, final @Named("Value") BigDecimal value) {
         IndexValue indexValue = newTransientInstance(IndexValue.class);
-        indexValue.setIndexBase(indexBase);
         indexValue.setStartDate(startDate);
         indexValue.setValue(value);
         persist(indexValue);

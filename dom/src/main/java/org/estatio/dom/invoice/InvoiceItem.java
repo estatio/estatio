@@ -11,13 +11,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -31,14 +24,17 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
-@PersistenceCapable
-// REVIEW: is one needed?
-// @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column =
-// "INVOICE_ITEM_ID")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>{
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
-    // {{ Invoice (property)
+@PersistenceCapable
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+public class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem> {
+
     private Invoice invoice;
 
     @Disabled
@@ -55,21 +51,17 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
 
     public void modifyInvoice(final Invoice invoice) {
         Invoice currentInvoice = getInvoice();
-        // check for no-op
         if (invoice == null || invoice.equals(currentInvoice)) {
             return;
         }
-        // delegate to parent to associate
         invoice.addToItems(this);
     }
 
     public void clearInvoice() {
         Invoice currentInvoice = getInvoice();
-        // check for no-op
         if (currentInvoice == null) {
             return;
         }
-        // delegate to parent to dissociate
         currentInvoice.removeFromItems(this);
     }
 
@@ -339,5 +331,4 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
         }
     };
 
-    
 }

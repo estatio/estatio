@@ -8,19 +8,20 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.estatio.dom.EstatioRefDataObject;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
 @Immutable
 public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase> {
 
-    // {{ Index (property)
     private Index index;
 
     @Title(sequence = "1", append = ", ")
@@ -33,9 +34,22 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         this.index = index;
     }
 
-    // }}
+    public void modifyIndex(final Index index) {
+        Index currentIndex = getIndex();
+        if (index == null || index.equals(currentIndex)) {
+            return;
+        }
+        index.addToIndexBases(this);
+    }
 
-    // {{ StartDate (property)
+    public void clearIndex() {
+        Index currentIndex = getIndex();
+        if (currentIndex == null) {
+            return;
+        }
+        currentIndex.removeFromIndexBases(this);
+    }
+
     private LocalDate startDate;
 
     @Title(sequence = "2")
@@ -49,24 +63,6 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ PreviousBase (property)
-    private IndexBase previousBase;
-
-    @Optional
-    @MemberOrder(sequence = "3")
-    public IndexBase getPreviousBase() {
-        return previousBase;
-    }
-
-    public void setPreviousBase(final IndexBase previousBase) {
-        this.previousBase = previousBase;
-    }
-
-    // }}
-
-    // {{ Factor (property)
     private BigDecimal factor;
 
     @Optional
@@ -85,7 +81,19 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         return (getPreviousBase() == null) ? null : (factor == null || factor.compareTo(BigDecimal.ZERO) == 0) ? "Factor is mandatory when there is a previous base" : null;
     }
 
-    // {{ NextBase (property)
+    private IndexBase previousBase;
+
+    @Optional
+    @MemberOrder(sequence = "3")
+    @Persistent(mappedBy = "nextBase")
+    public IndexBase getPreviousBase() {
+        return previousBase;
+    }
+
+    public void setPreviousBase(final IndexBase previousBase) {
+        this.previousBase = previousBase;
+    }
+
     private IndexBase nextBase;
 
     @Optional
@@ -98,22 +106,6 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         this.nextBase = nextBase;
     }
 
-    // }}
-
-    // {{ Values (Collection)
-    // @Persistent(mappedBy = "indexBase")
-    // private SortedSet<IndexValue> values = new TreeSortedSet<IndexValue>();
-    //
-    // @MemberOrder(sequence = "6")
-    // public SortedSet<IndexValue> getValues() {
-    // return values;
-    // }
-    //
-    // public void setValues(final SortedSet<IndexValue> values) {
-    // this.values = values;
-    // }
-
-    // {{ Values (Collection)
     @Persistent(mappedBy = "indexBase")
     private List<IndexValue> values = new ArrayList<IndexValue>();
 
@@ -122,41 +114,34 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         return values;
     }
 
+    @Hidden
+    public void modifyPreviousBase(IndexBase previous) {
+        setPreviousBase(previous);
+        if (previous != null)
+            previous.setNextBase(this);
+    }
+
     public void setValues(final List<IndexValue> values) {
         this.values = values;
     }
 
-    // }}
-
-    public void addToValues(final IndexValue indexValue) {
-        // check for no-op
-        if (indexValue == null || getValues().contains(indexValue)) {
+    public void addToValues(final IndexValue value) {
+        if (value == null || getValues().contains(value)) {
             return;
         }
-        // associate new
-        getValues().add(indexValue);
-        // additional business logic
-        onAddToValues(indexValue);
+        value.clearIndexBase();
+        value.setIndexBase(this);
+        getValues().add(value);
     }
 
-    public void removeFromValues(final IndexValue indexValue) {
+    public void removeFromValues(final IndexValue value) {
         // check for no-op
-        if (indexValue == null || !getValues().contains(indexValue)) {
+        if (value == null || !getValues().contains(value)) {
             return;
         }
-        // dissociate existing
-        getValues().remove(indexValue);
-        // additional business logic
-        onRemoveFromValues(indexValue);
+        value.setIndexBase(null);
+        getValues().remove(value);
     }
-
-    protected void onAddToValues(final IndexValue indexValue) {
-    }
-
-    protected void onRemoveFromValues(final IndexValue indexValue) {
-    }
-
-    // }}
 
     public BigDecimal getFactorForDate(@Named("Date") LocalDate date) {
         if (date.isBefore(getStartDate())) {

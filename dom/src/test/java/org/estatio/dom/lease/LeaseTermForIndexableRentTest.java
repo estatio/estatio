@@ -50,27 +50,23 @@ public class LeaseTermForIndexableRentTest {
 
         ib1 = new IndexBase();
         ib1.setStartDate(new LocalDate(2000, 1, 1));
-        ib1.setIndex(i);
 
         i.addToIndexBases(ib1);
 
         ib2 = new IndexBase();
         ib2.setFactor(BigDecimal.valueOf(1.373));
-        ib2.setPreviousBase(ib1);
+        ib2.modifyPreviousBase(ib1);
         ib2.setStartDate(new LocalDate(2011, 1, 1));
-        ib1.setNextBase(ib2);
-        ib2.setIndex(i);
+
         i.addToIndexBases(ib2);
 
         iv1 = new IndexValue();
         iv1.setStartDate(new LocalDate(2010, 1, 1));
-        iv1.setIndexBase(ib1);
         iv1.setValue(BigDecimal.valueOf(137.6));
         ib1.addToValues(iv1);
 
         iv2 = new IndexValue();
         iv2.setStartDate(new LocalDate(2011, 1, 1));
-        iv2.setIndexBase(ib2);
         iv2.setValue(BigDecimal.valueOf(101.2));
         ib2.addToValues(iv2);
         

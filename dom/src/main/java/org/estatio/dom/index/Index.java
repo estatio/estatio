@@ -19,7 +19,6 @@ import org.apache.isis.applib.annotation.Title;
 @Immutable
 public class Index extends EstatioRefDataObject implements Comparable<Index> {
 
-    // {{ Reference (property)
     private String reference;
 
     @MemberOrder(sequence = "1")
@@ -31,9 +30,6 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         this.reference = reference;
     }
 
-    // }}
-
-    // {{ Name (property)
     private String name;
 
     @Title
@@ -46,7 +42,6 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         this.name = name;
     }
 
-    // {{ IndexBases (Collection)
     @Persistent(mappedBy = "index")
     private List<IndexBase> indexBases = new ArrayList<IndexBase>();
 
@@ -63,17 +58,19 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         if (indexBase == null || getIndexBases().contains(indexBase)) {
             return;
         }
+        indexBase.clearIndex();
+        indexBase.setIndex(this);
         getIndexBases().add(indexBase);
+
     }
 
     public void removeFromIndexBases(final IndexBase indexBase) {
         if (indexBase == null || !getIndexBases().contains(indexBase)) {
             return;
         }
+        indexBase.setIndex(null);
         getIndexBases().remove(indexBase);
     }
-
-    // }}
 
     @Hidden
     public BigDecimal getIndexValueForDate(LocalDate date) {
@@ -103,14 +100,11 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
     }
 
-    // {{ injected: Indices
     private Indices indexService;
 
     public void setIndexService(Indices indices) {
         this.indexService = indices;
     }
-
-    // }}
 
     @Override
     @Hidden

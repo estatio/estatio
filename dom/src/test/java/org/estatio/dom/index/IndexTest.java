@@ -1,25 +1,20 @@
 package org.estatio.dom.index;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.Indices;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 public class IndexTest {
 
@@ -51,25 +46,25 @@ public class IndexTest {
         ib1990.setStartDate(new LocalDate(1990, 1, 1));
 
         ib2000 = new IndexBase();
-        ib2000.setPreviousBase(ib1990);
+        ib2000.modifyPreviousBase(ib1990);
         ib2000.setFactor(BigDecimal.valueOf(1.345));
         ib2000.setStartDate(new LocalDate(2000, 1, 1));
 
         ib2010 = new IndexBase();
-        ib2010.setPreviousBase(ib2000);
+        ib2010.modifyPreviousBase(ib2000);
         ib2010.setFactor(BigDecimal.valueOf(1.234));
         ib2010.setStartDate(new LocalDate(2010, 1, 1));
 
         iv1 = new IndexValue();
-        iv1.setIndexBase(ib2000);
+        iv1.modifyIndexBase(ib2000);
         iv1.setStartDate(baseDate);
         iv1.setValue(BigDecimal.valueOf(122.2));
 
         iv2 = new IndexValue();
-        iv2.setIndexBase(ib2010);
+        iv2.modifyIndexBase(ib2010);
         iv2.setStartDate(nextDate);
         iv2.setValue(BigDecimal.valueOf(111.1));
-        
+
         result = BigDecimal.valueOf(111.1).divide(BigDecimal.valueOf(122.2), 5, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(1.234));
     }
 
@@ -98,7 +93,6 @@ public class IndexTest {
         assertNull(index.getIndexValueForDate(null));
     }
 
-    
     @Test
     public void testGetRebaseFactor() {
         context.checking(new Expectations() {
@@ -109,7 +103,7 @@ public class IndexTest {
         });
         assertEquals(BigDecimal.valueOf(1.234), index.getRebaseFactorForDates(baseDate, nextDate));
     }
-    
+
     @Test
     public void testGetRebaseFactorWithNull() {
         context.checking(new Expectations() {
