@@ -1,10 +1,10 @@
 package org.estatio.viewer.wicket.app.administration;
 
-import org.estatio.appsettings.EstatioSetting;
-import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.index.IndexFixture;
+import org.estatio.services.appsettings.EstatioSetting;
+import org.estatio.services.appsettings.EstatioSettingsService;
 import org.estatio.viewer.wicket.app.scheduler.EstatioSchedulerService;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -15,11 +15,15 @@ import org.apache.isis.applib.annotation.Prototype;
 @Named("Administration")
 public class EstatioAdministrationService {
 
+    // {{
     @MemberOrder(sequence = "1")
     public void initializeSchedulerJobs() {
         scheduler.initializeJobs();
     }
+    // }}
 
+    
+    // {{
     @Prototype
     @MemberOrder(sequence = "2")
     public String installDemoFixtures() {
@@ -29,12 +33,15 @@ public class EstatioAdministrationService {
     }
 
     public String disableInstallDemoFixtures() {
-        if (indexRepo.allIndices().size() == 0) {
-            return null;
-        }
-        return "Demo fixtures already installed";
+        // REVIEW: is this right?  should it not check some other repo?
+        return !indexRepo.allIndices().isEmpty() 
+                ? "Demo fixtures already installed" 
+                : null;
     }
+    // }}
+    
 
+    // {{
     @Prototype
     @MemberOrder(sequence = "3")
     public String installIndexFixture() {
@@ -44,37 +51,39 @@ public class EstatioAdministrationService {
     }
 
     public String disableInstallIndexFixture() {
-        if (indexRepo.allIndices().size() == 0) {
-            return null;
-        }
-        return "Index fixture already installed";
+        return !indexRepo.allIndices().isEmpty() 
+                    ? "Index fixture already installed" 
+                    : null;
     }
-
-    public EstatioSetting applicatioSettings() {
+    // }}
+    
+    
+    public EstatioSetting applicationSettings() {
         return settingsService.fetchSetting();
     }
 
+    
     // {{ injected
     private DomainObjectContainer container;
-
     public void setContainer(DomainObjectContainer container) {
         this.container = container;
     }
 
+    
     private EstatioSchedulerService scheduler;
-
     public void setSchedulerService(EstatioSchedulerService scheduler) {
         this.scheduler = scheduler;
     }
 
+    
+    
     private Indices indexRepo;
-
     public void setIndexRepo(Indices indices) {
         this.indexRepo = indices;
     }
 
+    
     private EstatioSettingsService settingsService;
-
     public void setSettingsService(EstatioSettingsService settingsService) {
         this.settingsService = settingsService;
     }

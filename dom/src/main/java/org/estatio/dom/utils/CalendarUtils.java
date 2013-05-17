@@ -6,11 +6,16 @@ import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-public class CalenderUtils {
+import org.estatio.services.appsettings.EstatioSettingsService;
 
-    private static final LocalDate START_DATE = new LocalDate(2000, 1, 1);
+public class CalendarUtils {
 
-    private CalenderUtils() {
+    /**
+     * REVIEW: what is the significance of this date?  How does it relate to the {@link EstatioSettingsService#fetchEpochDate() epoch date}?
+     */
+    private static final LocalDate START_DATE_DEFAULT = new LocalDate(2000, 1, 1);
+
+    private CalendarUtils() {
     }
 
     public static Interval intervalMatching(LocalDate startDate, String rrule) {
@@ -22,7 +27,7 @@ public class CalenderUtils {
     }
     
     public static Interval intervalContaining(LocalDate containingDate, String rrule) {
-        return currentInterval(containingDate, rrule, START_DATE);
+        return currentInterval(containingDate, rrule, START_DATE_DEFAULT);
     }
     
     public static Interval currentInterval(LocalDate date, String rrule, LocalDate startDate) {

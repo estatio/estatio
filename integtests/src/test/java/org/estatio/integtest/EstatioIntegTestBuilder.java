@@ -2,7 +2,6 @@ package org.estatio.integtest;
 
 import org.apache.log4j.Level;
 import org.estatio.api.Api;
-import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.invoice.InvoiceCalculationService;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.AgreementRolesJdo;
@@ -27,6 +26,8 @@ import org.estatio.jdo.PropertiesJdo;
 import org.estatio.jdo.StatesJdo;
 import org.estatio.jdo.TaxesJdo;
 import org.estatio.jdo.UnitsJdo;
+import org.estatio.services.appsettings.EstatioSettingsService;
+import org.estatio.services.clock.ClockService;
 
 import org.apache.isis.applib.fixtures.InstallableFixture;
 import org.apache.isis.core.commons.config.IsisConfiguration;
@@ -77,6 +78,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new ChargeGroupsJdo(),
                 new FinancialAccountsJdo(),
                 new NumeratorsJdo(),
+                new ClockService(),
                 new Api(),
                 new IsisJdoSupportImpl(),
                 new InvoiceCalculationService(),

@@ -1,12 +1,11 @@
 package org.estatio.dom.event;
 
-import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.services.clock.ClockService;
 
 // TODO: instate when want to ...
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
@@ -25,9 +24,8 @@ public class Event extends EstatioTransactionalObject {
     }
     
     public LocalDate defaultStartDate() {
-        return LocalDate.now();
+        return clockService.now();
     }
-
     // }}
 
     // {{ EndDate (property)
@@ -56,6 +54,14 @@ public class Event extends EstatioTransactionalObject {
     }
     // }}
 
+
+    
+    // {{ injected: ClockService
+    private ClockService clockService;
+    public void injectClockService(final ClockService clockService) {
+        this.clockService = clockService;
+    }
+    // }}
 
 
 }

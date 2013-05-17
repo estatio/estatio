@@ -458,39 +458,12 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>2.1</version>
-            </dependency>
-
-			<!-- the testsupport module -->
-			<dependency>
-				<groupId>com.danhaywood</groupId>
-				<artifactId>testsupport</artifactId>
-				<version>0.2.0-SNAPSHOT</version>
-				<scope>test</scope>
-			</dependency>
-
 
 			<!-- the domain services -->
 			<dependency>
                 <groupId>com.danhaywood.ddd.domainservices</groupId>
                 <artifactId>danhaywood-domainservice-scheduler</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
-			<!-- the wicket fullcalendar module -->
-			<dependency>
-				<groupId>net.ftlines.wicket-fullcalendar</groupId>
-				<artifactId>wicket-fullcalendar-parent</artifactId>
-				<version>6.0-SNAPSHOT</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>net.ftlines.wicket-fullcalendar</groupId>
-				<artifactId>wicket-fullcalendar-core</artifactId>
-				<version>6.0-SNAPSHOT</version>
 			</dependency>
 
 			<!-- this project's own modules -->
@@ -514,12 +487,6 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>estatio-services</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-            
-			<dependency>
-				<groupId>${project.groupId}</groupId>
 				<artifactId>estatio-integtests</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -530,17 +497,24 @@
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>tests-junit</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 
-			<dependency>
-				<groupId>org.xnap.commons</groupId>
-				<artifactId>gettext-commons</artifactId>
-				<version>0.9.6</version>
-			</dependency>
+            <!-- other dependencies -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.2</version>
+            </dependency>
+            
+            
+            <dependency>
+                <groupId>org.xnap.commons</groupId>
+                <artifactId>gettext-commons</artifactId>
+                <version>0.9.6</version>
+            </dependency>
+
+
+
+            <!-- testing dependencies -->
 
             <dependency>
                 <groupId>junit</groupId>
@@ -572,10 +546,18 @@
                 <artifactId>jmock-legacy</artifactId>
                 <version>2.6.0</version>
             </dependency>
+
+            <!-- REVIEW: is this needed?  aren't we just using Isis' testsupport module -->
+            <dependency>
+                <groupId>com.danhaywood</groupId>
+                <artifactId>testsupport</artifactId>
+                <version>0.2.0-SNAPSHOT</version>
+                <scope>test</scope>
+            </dependency>
+
+
             
-            
-            
-            <!-- 3rd party extensions -->
+            <!-- viewer extensions -->
 
             <!--
             GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3
@@ -616,6 +598,20 @@
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             -->            
+
+            <!-- viewer extensions' dependencies -->
+            <dependency>
+                <groupId>net.ftlines.wicket-fullcalendar</groupId>
+                <artifactId>wicket-fullcalendar-parent</artifactId>
+                <version>6.0-SNAPSHOT</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>net.ftlines.wicket-fullcalendar</groupId>
+                <artifactId>wicket-fullcalendar-core</artifactId>
+                <version>6.0-SNAPSHOT</version>
+            </dependency>
+
             
             
 		</dependencies>
@@ -822,7 +818,6 @@
 		        <module>dom</module>
 		        <module>fixture</module>
 		        <module>objstore-jdo</module>
-		        <module>services</module>
 		        <module>integtests</module>
 		        <module>webapp</module>
 		    </modules>
@@ -841,8 +836,7 @@
                 <module>dom</module>
                 <module>fixture</module>
                 <module>objstore-jdo</module>
-                <module>services</module>
-                <module>tests-junit</module>
+                <module>integtests</module>
                 <module>webapp</module>
            </modules>
        </profile>

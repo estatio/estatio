@@ -163,10 +163,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-objstore-jdo</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-services</artifactId>
-        </dependency>
         
 
         <!-- other isis components -->
@@ -211,8 +207,6 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-
-        
         
 
         <dependency>
@@ -250,12 +244,11 @@
           <artifactId>slf4j-api</artifactId>
         </dependency>
 
-		<!-- domain services -->
-		<dependency>
+        <!-- scheduler -->
+        <dependency>
             <groupId>com.danhaywood.ddd.domainservices</groupId>
             <artifactId>danhaywood-domainservice-scheduler</artifactId>
-		</dependency>
-        
+        </dependency>
         
         <!-- 3rd party dependency -->
         <!-- 

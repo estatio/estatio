@@ -1,37 +1,36 @@
 package org.estatio.dom.agreement;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-
-import org.estatio.dom.lease.Lease;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
+import org.estatio.dom.utils.ClassUtils;
+
 public enum AgreementType {
 
-    MANDATE("Mandate", BankMandate.class),
-    LEASE("Lease", Lease.class);
+    MANDATE("Mandate", "org.estatio.dom.agreement.BankMandate"),
+    LEASE("Lease", "org.estatio.dom.lease.Lease");
 
     private final String title;
-    private final Class<? extends Agreement> cls;
+    private final String clsName;
 
-    private AgreementType(String title, Class<? extends Agreement> cls) {
+    private AgreementType(String title, String clsName) {
         this.title = title;
-        this.cls = cls;
+        this.clsName = clsName;
     }
 
     public String title() {
         return title;
     }
-    
+
     public Set<AgreementRoleType> getRoles() {
         return AgreementRoleType.applicableTo(this);
     }
-    
+
     public Agreement create(DomainObjectContainer container) {
         try {
+            Class<? extends Agreement> cls = ClassUtils.load(clsName, Agreement.class);
             Agreement agreement = container.newTransientInstance(cls);
             agreement.setAgreementType(this);
             return agreement;

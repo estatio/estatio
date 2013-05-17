@@ -6,6 +6,8 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.Indices;
+import org.estatio.services.clock.ClockService;
+
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -30,6 +32,11 @@ public class LeaseTermForIndexableRentTest {
     private IndexBase ib2;
     private IndexValue iv1;
     private IndexValue iv2;
+
+    private final LocalDate now = LocalDate.now();
+
+    @Mock
+    private ClockService mockClockService;
 
     @Mock
     LeaseTerms mockLeaseTerms;
@@ -75,11 +82,13 @@ public class LeaseTermForIndexableRentTest {
         lease.setEndDate(new LocalDate(2020,12,31));
         
         item = new LeaseItem();
+        item.injectClockService(mockClockService);
         item.modifyLease(lease);
         item.setType(LeaseItemType.RENT);
-        item.setLeaseTermsService(mockLeaseTerms);
+        item.injectLeaseTermsService(mockLeaseTerms);
 
         term = new LeaseTermForIndexableRent();
+        term.injectClockService(mockClockService);
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.setBaseIndexStartDate(iv1.getStartDate());
         term.setNextIndexStartDate(iv2.getStartDate());
@@ -88,6 +97,14 @@ public class LeaseTermForIndexableRentTest {
         term.modifyLeaseItem(item);
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.initialize();
+        
+        context.checking(new Expectations() {
+            {
+                allowing(mockClockService).now();
+                will(returnValue(now));
+            }
+        });
+
     }
 
     @Test

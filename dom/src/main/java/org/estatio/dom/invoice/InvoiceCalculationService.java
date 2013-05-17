@@ -4,14 +4,15 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.utils.CalenderUtils;
+import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.DateRange;
+import org.estatio.services.appsettings.EstatioSettingsService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -43,7 +44,7 @@ public class InvoiceCalculationService {
 
     public CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
         CalculationResult result = new CalculationResult();
-        result.boundingRange = new DateRange(CalenderUtils.intervalMatching(periodStartDate, freq.rrule));
+        result.boundingRange = new DateRange(CalendarUtils.intervalMatching(periodStartDate, freq.rrule));
         if (result.boundingRange.getStartDate() != null) {
             DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
             range.setBoundingRange(result.boundingRange);
@@ -67,7 +68,7 @@ public class InvoiceCalculationService {
     void createInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, CalculationResult calculationResult, InvoicingFrequency freq) {
         if (calculationResult.value != null) {
             BigDecimal invoicedValue;
-            LocalDate mockDate = estatioSettingsService.fetchMockDate();
+            LocalDate mockDate = estatioSettingsService.fetchEpochDate();
             if (mockDate != null && startDate.compareTo(mockDate) < 0) {
                 CalculationResult mockResult = calculate(leaseTerm, startDate, startDate, freq);
                 invoicedValue = mockResult.getCalculatedValue();

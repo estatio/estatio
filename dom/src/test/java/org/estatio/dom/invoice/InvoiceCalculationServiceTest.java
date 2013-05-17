@@ -6,7 +6,6 @@ import java.math.RoundingMode;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
-import org.estatio.appsettings.EstatioSettingsService;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -22,6 +21,8 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
+import org.estatio.services.appsettings.EstatioSettingsService;
+
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -201,7 +202,7 @@ public class InvoiceCalculationServiceTest {
                 will(returnValue(new AgreementRole()));
                 allowing(mockInvoices).findMatchingInvoice(with(aNull(Party.class)), with(aNull(Party.class)), with(aNull(PaymentMethod.class)), with(any(Lease.class)), with(any(InvoiceStatus.class)), with(any(LocalDate.class)));
                 will(returnValue(new Invoice()));
-                allowing(mockSettings).fetchMockDate();
+                allowing(mockSettings).fetchEpochDate();
                 will(returnValue(null));
             }
         });

@@ -1,4 +1,4 @@
-package org.estatio.audit;
+package org.estatio.services.audit;
 
 import javax.jdo.annotations.IdentityType;
 

@@ -15,8 +15,10 @@ import com.google.common.collect.Ordering;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.utils.CalenderUtils;
+import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -203,13 +205,13 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     @Optional
     // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
     public BigDecimal getCurrentValue() {
-        return valueForDate(LocalDate.now());
+        return valueForDate(clockService.now());
     }
 
     @Hidden
     public BigDecimal valueForDate(LocalDate date) {
         for (LeaseTerm term : getTerms()) {
-            if (CalenderUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
+            if (CalendarUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
                 return term.getValue();
             }
         }
@@ -319,7 +321,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     private LeaseTerms leaseTermsService;
 
-    public void setLeaseTermsService(LeaseTerms leaseTerms) {
+    public void injectLeaseTermsService(LeaseTerms leaseTerms) {
         this.leaseTermsService = leaseTerms;
     }
 
@@ -339,5 +341,13 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
+
+    
+    // {{ injected: ClockService
+    private ClockService clockService;
+    public void injectClockService(final ClockService clockService) {
+        this.clockService = clockService;
+    }
+    // }}
 
 }

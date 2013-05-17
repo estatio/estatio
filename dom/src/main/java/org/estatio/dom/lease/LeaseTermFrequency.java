@@ -1,6 +1,6 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.utils.CalenderUtils;
+import org.estatio.dom.utils.CalendarUtils;
 import org.joda.time.LocalDate;
 
 
@@ -27,6 +27,6 @@ public enum LeaseTermFrequency {
     }
 
     public LocalDate nextDate(LocalDate date) {
-        return CalenderUtils.nextDate(date, this.rrule);
+        return CalendarUtils.nextDate(date, this.rrule);
     }
 }

@@ -1,4 +1,4 @@
-package org.estatio.appsettings;
+package org.estatio.services.appsettings;
 
 import javax.jdo.annotations.PersistenceCapable;
 
@@ -12,15 +12,15 @@ public class EstatioSetting extends AbstractDomainObject {
 
 
     // {{ LastDueDate (property)
-    private LocalDate lastDueDate;
+    private LocalDate epochDate;
 
     @MemberOrder(sequence = "1")
-    public LocalDate getMockDate() {
-        return lastDueDate;
+    public LocalDate getEpochDate() {
+        return epochDate;
     }
 
-    public void setMockDate(final LocalDate lastDueDate) {
-        this.lastDueDate = lastDueDate;
+    public void setEpochDate(final LocalDate lastDueDate) {
+        this.epochDate = lastDueDate;
     }
     // }}
 

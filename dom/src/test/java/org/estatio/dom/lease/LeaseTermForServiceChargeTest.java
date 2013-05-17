@@ -38,7 +38,7 @@ public class LeaseTermForServiceChargeTest {
     public void setup() {
         item = new LeaseItem();
         item.setType(LeaseItemType.SERVICE_CHARGE);
-        item.setLeaseTermsService(mockLeaseTerms);
+        item.injectLeaseTermsService(mockLeaseTerms);
 
         term = new LeaseTermForServiceCharge();
         term.modifyLeaseItem(item);

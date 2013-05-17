@@ -1,4 +1,4 @@
-package org.estatio.audit;
+package org.estatio.services.audit;
 
 import java.util.List;
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-project language="java" version="3.5.4164" flavor="j2se">
+  <property name="hide-externals" value="true" />
+  <property name="show-needs-to-compile" value="false" />
+  <property name="detail-mode" value="true" />
+  <property name="project-type" value="maven" />
+  <property name="action-set-mod" value="10" />
+  <property name="hide-deprecated" value="false" />
+  <property name="parse-archive-in-archive" value="false" />
+  <classpath relativeto=".">
+    <classpathentry kind="lib" path="dom\target\estatio-dom-0.0.1-SNAPSHOT.jar" />
+    <classpathentry kind="lib" path="dom\target\estatio-dom-0.0.1-SNAPSHOT.jar" />
+  </classpath>
+  <pom-root-files>
+    <pom path="dom\pom.xml" />
+  </pom-root-files>
+  <transformations>
+    <transformation in="*" out="{jar}.*" />
+  </transformations>
+  <restructuring>
+    <set version="2" name="List 1" hiview="Codemap" active="true" todo="false" />
+  </restructuring>
+  <sourcepaths>
+    <pathentry type="file" path="dom\src\main\java" />
+  </sourcepaths>
+</local-project>
+

@@ -1,4 +1,4 @@
-package org.estatio.appsettings;
+package org.estatio.services.appsettings;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Hidden;

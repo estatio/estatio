@@ -26,6 +26,9 @@ import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -37,6 +40,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -310,7 +314,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
-        if (getStartDate() != null && getStartDate().compareTo(LocalDate.now()) < 0) {
+        if (getStartDate() != null && getStartDate().compareTo(clockService.now()) < 0) {
             createNext();
             nextTerm = getNextTerm();
             if (nextTerm != null) {
@@ -326,43 +330,46 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return createNext(newStartDate);
     }
 
-    @Hidden
-    public LeaseTerm createNext(LocalDate nextStartDate) {
+    LeaseTerm createNext(LocalDate nextStartDate) {
+        if (getNextTerm() != null) {
+            return null;
+        } 
+        
+        final LocalDate endDate = getLeaseItem().calculatedEndDate();
+        final LocalDate oneYearFromNow = clockService.now().plusYears(1);
+        final LocalDate maxEndDate = ValueUtils.coalesce(endDate, oneYearFromNow);
+        if (nextStartDate.isAfter(maxEndDate)) {
+            // date is after end date, do nothing
+            return null;
+        }
+        
+        LeaseTerm term = getNextTerm();
         if (getNextTerm() == null) {
-            LocalDate endDate = getLeaseItem().calculatedEndDate();
-            LocalDate maxEndDate = endDate == null ? LocalDate.now().plusYears(1) : endDate;
-            if (nextStartDate.isAfter(maxEndDate)) {
-                // date is after end date, do nothing
-                return null;
-            } else {
-                LeaseTerm term = getNextTerm();
-                if (getNextTerm() == null) {
-                    term = getLeaseItem().createNextTerm(this);
-                }
-                // new start Date
-                term.setStartDate(nextStartDate);
-                term.update();
-                this.setEndDate(nextStartDate.minusDays(1));
-                return term;
-            }
+            term = getLeaseItem().createNextTerm(this);
         }
-        return null;
+        
+        // new start Date
+        term.setStartDate(nextStartDate);
+        term.update();
+        this.setEndDate(nextStartDate.minusDays(1));
+        return term;
     }
 
-    @Hidden
-    public void initialize() {
+    protected void initialize() {
         setStatus(LeaseTermStatus.NEW);
-        if (getPreviousTerm() == null) {
-            setSequence(BigInteger.ONE);
-        } else {
-            setSequence(getPreviousTerm().getSequence().add(BigInteger.ONE));
-        }
+        final BigInteger previousTermSequence = previousTermSequence().add(BigInteger.ONE);
+        setSequence(previousTermSequence);
     }
 
-    @Hidden
-    public void update() {
+    private BigInteger previousTermSequence() {
+        return getPreviousTerm() != null 
+            ? getPreviousTerm().getSequence() 
+            : BigInteger.ZERO;
+    }
+
+    protected void update() {
         // check endDate and startDate relationship
-        LeaseTerm nextTerm = getNextTerm();
+        final LeaseTerm nextTerm = getNextTerm();
         if (nextTerm != null && nextTerm.getStartDate() != null && (getEndDate() == null || nextTerm.getStartDate().compareTo(getEndDate().plusDays(1)) != 1)) {
             setEndDate(nextTerm.getStartDate().minusDays(1));
         }
@@ -416,6 +423,14 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.invoiceCalculationService = invoiceCalculationService;
     }
 
+    // }}
+
+
+    // {{ injected: ClockService
+    private ClockService clockService;
+    public void injectClockService(final ClockService clockService) {
+        this.clockService = clockService;
+    }
     // }}
 
 }

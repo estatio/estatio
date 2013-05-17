@@ -7,6 +7,8 @@ import javax.jdo.annotations.VersionStrategy;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateRange;
+import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -151,11 +153,21 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     }
 
     public boolean isCurrent() {
-        return isActiveOn(LocalDate.now());
+        return isActiveOn(clockService.now());
     }
 
     private boolean isActiveOn(LocalDate localDate) {
         return new DateRange(getStartDate(), getEndDate()).contains(localDate);
     }
 
+
+    // {{ injected: ClockService
+    private ClockService clockService;
+    public void injectClockService(final ClockService clockService) {
+        this.clockService = clockService;
+    }
+    // }}
+
+
+    
 }
