@@ -155,18 +155,17 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-dom</artifactId>
         </dependency>
-        
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
         </dependency>
-
-
-        <!-- domain service implementations -->
-        
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-objstore-jdo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-services</artifactId>
         </dependency>
         
 

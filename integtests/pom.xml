@@ -25,8 +25,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>estatio-tests-junit</artifactId>
-	<name>Estatio JUnit Tests</name>
+	<artifactId>estatio-integtests</artifactId>
+	<name>Estatio Integration Tests</name>
 
 	<properties>
         <siteBaseDir>..</siteBaseDir>

@@ -514,6 +514,18 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>estatio-services</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+            
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>estatio-integtests</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>estatio-webapp</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -811,7 +823,7 @@
 		        <module>fixture</module>
 		        <module>objstore-jdo</module>
 		        <module>services</module>
-		        <module>tests-junit</module>
+		        <module>integtests</module>
 		        <module>webapp</module>
 		    </modules>
 	    </profile>
