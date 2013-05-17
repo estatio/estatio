@@ -66,6 +66,7 @@
             
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -135,9 +136,9 @@
 		</plugins>
  	</build>
 
+    <!--
 	<dependencyManagement>
 		<dependencies>
-			<!-- force version, conflict between docx4j and isis/wicket -->
 	        <dependency>
 			  <groupId>commons-codec</groupId>
 			  <artifactId>commons-codec</artifactId>
@@ -145,6 +146,7 @@
 	        </dependency>
 		</dependencies>
 	</dependencyManagement>
+    -->
 	
 	<dependencies>
 	
@@ -250,11 +252,6 @@
         </dependency>
 
 		<!-- domain services -->
-		<dependency>
-			<groupId>com.danhaywood.ddd.domainservices</groupId>
-			<artifactId>docx</artifactId>
-		</dependency>
-
 		<dependency>
             <groupId>com.danhaywood.ddd.domainservices</groupId>
             <artifactId>danhaywood-domainservice-scheduler</artifactId>

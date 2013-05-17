@@ -26,7 +26,7 @@
     </parent>
 
 	<artifactId>estatio-objstore-jdo</artifactId>
-	<name>Repositories (JDO)</name>
+	<name>Estatio Repositories (JDO)</name>
 
 	<properties>
         <siteBaseDir>..</siteBaseDir>

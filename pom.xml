@@ -128,6 +128,39 @@
 					</executions>
 				</plugin>
 
+
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.4.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.2</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.3.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.0</version>
+                </plugin>
+
+
+
+
+
+
+
+
 				<plugin>
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>maven-jetty-plugin</artifactId>
@@ -313,9 +346,49 @@
                     </configuration>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>1.2</version>
+                    <configuration>
+                        <rules>
+                            <requireMavenVersion>
+                                <version>[2.2.1,)</version>
+                            </requireMavenVersion>
+                            <requireJavaVersion>
+                                <version>[1.6.0-11,)</version>
+                            </requireJavaVersion>
+                            <requirePluginVersions>
+                                <message>All plugin versions must be
+                                    defined!</message>
+                                <banLatest>true</banLatest>
+                                <banRelease>true</banRelease>
+                            </requirePluginVersions>
+                            <DependencyConvergence />
+                        </rules>
+                    </configuration>
+                    <!-- goal:enforce supposedly binds to phase:validate, 
+                        but explicit binding seems to be required -->
+                    <executions>
+                        <execution>
+                            <id>validate-enforce</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
 			</plugins>
 		</pluginManagement>
 		<plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -385,14 +458,6 @@
                 <scope>import</scope>
             </dependency>
 
-			<dependency>
-				<groupId>org.apache.isis.security</groupId>
-				<artifactId>isis-security-file</artifactId>
-				<version>${isis-security-file.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
@@ -409,12 +474,6 @@
 
 
 			<!-- the domain services -->
-			<dependency>
-				<groupId>com.danhaywood.ddd.domainservices</groupId>
-				<artifactId>docx</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
 			<dependency>
                 <groupId>com.danhaywood.ddd.domainservices</groupId>
                 <artifactId>danhaywood-domainservice-scheduler</artifactId>
