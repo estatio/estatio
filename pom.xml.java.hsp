@@ -18,5 +18,42 @@
   <restructuring>
     <set version="2" name="List 1" hiview="Codemap" active="true" todo="false" />
   </restructuring>
+  <grid-set sep="." version="3.5.4164">
+    <grid name="org.estatio.dom" enforce="true" strict="false">
+      <row>
+        <cell pattern="" vexpanded="true" visibility="public" drill="false">
+          <grid>
+            <row>
+              <cell name="lease" pattern="org.estatio.dom.lease.*" vexpanded="false" visibility="public" drill="false" />
+            </row>
+            <row>
+              <cell name="asset" pattern="org.estatio.dom.asset.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="false" />
+              <cell name="invoice" pattern="org.estatio.dom.invoice.?" vexpanded="false" visibility="public" drill="false" />
+            </row>
+            <row>
+              <cell name="party_and_agreement" pattern="org.estatio.dom.party_and_agreement.*" vexpanded="false" visibility="public" drill="false" />
+            </row>
+            <row>
+              <cell name="communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="index" pattern="org.estatio.dom.index.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="charge" pattern="org.estatio.dom.charge.?" vexpanded="false" visibility="public" drill="false" />
+            </row>
+            <row>
+              <cell name="currency" pattern="org.estatio.dom.currency.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="event" pattern="org.estatio.dom.event.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="geography" pattern="org.estatio.dom.geography.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="numerator" pattern="org.estatio.dom.numerator.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="false" />
+            </row>
+            <row>
+              <cell name="dom" pattern="org.estatio.dom.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="utils" pattern="org.estatio.dom.utils.?" vexpanded="false" visibility="public" drill="false" />
+            </row>
+          </grid>
+        </cell>
+      </row>
+    </grid>
+  </grid-set>
 </local-project>
 

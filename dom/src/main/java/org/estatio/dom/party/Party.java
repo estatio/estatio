@@ -161,58 +161,6 @@ public abstract class Party extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ accounts (Collection)
-    @Persistent(mappedBy = "owner")
-    private SortedSet<FinancialAccount> accounts = new TreeSet<FinancialAccount>();
-
-    @MemberOrder(name = "Accounts", sequence = "13")
-    @Render(Type.EAGERLY)
-    public Set<FinancialAccount> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(final SortedSet<FinancialAccount> accounts) {
-        this.accounts = accounts;
-    }
-
-    public void addToAccounts(final FinancialAccount account) {
-        // check for no-op
-        if (account == null || getAccounts().contains(account)) {
-            return;
-        }
-        // associate new
-        getAccounts().add(account);
-        // additional business logic
-        onAddToAccounts(account);
-    }
-
-    public void removeFromAccounts(final FinancialAccount account) {
-        // check for no-op
-        if (account == null || !getAccounts().contains(account)) {
-            return;
-        }
-        // dissociate existing
-        getAccounts().remove(account);
-        // additional business logic
-        onRemoveFromAccounts(account);
-    }
-
-    protected void onAddToAccounts(final FinancialAccount account) {
-        account.setOwner(this);
-    }
-
-    protected void onRemoveFromAccounts(final FinancialAccount account) {
-        account.setOwner(null);
-    }
-
-    @MemberOrder(name = "Accounts", sequence = "13")
-    public FinancialAccount addAccount(final FinancialAccountType financialAccountType) {
-        FinancialAccount financialAccount = financialAccountType.createAccount(getContainer());
-        addToAccounts(financialAccount);
-        return financialAccount;
-    }
-
-    // }}
 
     // {{ Roles (set, bidir)
     // REVIEW: changed this startDate set of PartyRoleType, which I suspect was

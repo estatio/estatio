@@ -4,6 +4,8 @@ import org.apache.log4j.Level;
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
+import org.estatio.dom.lease.contributed.LeaseTermContributedActions;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.AgreementRolesJdo;
@@ -86,7 +88,9 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new Api(),
                 new IsisJdoSupportImpl(),
                 new InvoiceCalculationService(),
-                new EstatioSettingsService()
+                new EstatioSettingsService(),
+                new FinancialAccountContributedActions(),
+                new LeaseTermContributedActions()
                 );
     }
 
