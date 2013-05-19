@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,12 +13,17 @@ import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
@@ -52,7 +57,7 @@ public class InvoiceCalculationServiceTest {
     private Taxes mockTaxes;
 
     @Mock
-    private Invoices mockInvoices;
+    private InvoicesForLease mockInvoices;
 
     @Mock
     private AgreementRoles mockAgreementRoles;
@@ -78,6 +83,7 @@ public class InvoiceCalculationServiceTest {
         artTenant.setTitle("Tenant");
         
         l = new Lease();
+        l.injectAgreementRoles(mockAgreementRoles);
         l.setStartDate(START_DATE);
         l.setEndDate(START_DATE.plusYears(1).minusDays(1));
         tax = new Tax();
@@ -206,16 +212,17 @@ public class InvoiceCalculationServiceTest {
         li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.setCharge(charge);
         li.modifyLease(l);
+        
         lt = new LeaseTerm();
+        lt.injectInvoices(mockInvoices);
         lt.setStartDate(new LocalDate(2012, 1, 1));
         lt.setEndDate(new LocalDate(2013, 1, 1));
         lt.setValue(BigDecimal.valueOf(20000));
         lt.modifyLeaseItem(li);
         li.getTerms().add(lt);
-        lt.setInvoiceService(mockInvoices);
+        
         tax.setTaxRepo(mockTaxes);
-        l.injectAgreementRoles(mockAgreementRoles);
-        final InvoiceItem ii = new InvoiceItem();
+        final InvoiceItemForLease ii = new InvoiceItemForLease();
         ii.injectInvoices(mockInvoices);
         ii.injectAgreementRoleTypes(mockAgreementRoleTypes);
         ii.injectAgreementTypes(mockAgreementTypes);
@@ -239,7 +246,7 @@ public class InvoiceCalculationServiceTest {
         ic.setEstatioSettings(mockSettings);
         ic.calculateAndInvoiceItems(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
 
-        InvoiceItem invoiceItem = lt.getInvoiceItems().iterator().next();
+        InvoiceItemForLease invoiceItem = lt.getInvoiceItems().iterator().next();
 
         Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), invoiceItem.getNetAmount());
         Assert.assertEquals(new LocalDate(2012, 1, 1), invoiceItem.getStartDate());

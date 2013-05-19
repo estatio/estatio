@@ -3,18 +3,6 @@ package org.estatio.integtest.testing;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.PaymentMethod;
-import org.estatio.dom.party.Parties;
-import org.estatio.fixture.invoice.InvoiceFixture;
-import org.estatio.integtest.IntegrationSystemForTestRule;
-import org.estatio.jdo.ChargesJdo;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,10 +13,23 @@ import org.junit.runners.MethodSorters;
 
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.party.Parties;
+import org.estatio.fixture.invoice.InvoiceFixture;
+import org.estatio.integtest.IntegrationSystemForTestRule;
+import org.estatio.jdo.ChargesJdo;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoiceIntegrationTest {
 
-    private Invoices invoices;
+    private InvoicesForLease invoices;
 
     @Rule
     public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
@@ -40,7 +41,7 @@ public class InvoiceIntegrationTest {
 
     @Before
     public void setup() {
-        invoices = getIsft().getService(Invoices.class);
+        invoices = getIsft().getService(InvoicesForLease.class);
 
     }
 
@@ -61,7 +62,7 @@ public class InvoiceIntegrationTest {
 
     @Test
     public void t3_invoiceItemCanBeFound() throws Exception {
-        List<InvoiceItem> invoiceItems = invoices.findItems("OXF-MEDIA*", InvoiceFixture.DATE, InvoiceFixture.DATE);
+        List<InvoiceItemForLease> invoiceItems = invoices.findItems("OXF-MEDIA*", InvoiceFixture.DATE, InvoiceFixture.DATE);
         Assert.assertThat(invoiceItems.size(), Is.is(1));
     }
 

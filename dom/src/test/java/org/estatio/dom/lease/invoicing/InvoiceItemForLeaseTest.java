@@ -1,8 +1,9 @@
-package org.estatio.dom.invoice;
+package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
@@ -17,12 +18,12 @@ import org.junit.Test;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
 import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
-public class InvoiceItemTest {
+public class InvoiceItemForLeaseTest {
 
     private Charge charge;
     private Tax tax;
     private TaxRate rate;
-    private InvoiceItem item;
+    private InvoiceItemForLease item;
 
     @Mock
     Taxes mockTaxes;
@@ -37,7 +38,7 @@ public class InvoiceItemTest {
         tax.setTaxRepo(mockTaxes);
         rate = new TaxRate();
         rate.setPercentage(BigDecimal.valueOf(21));
-        item = new InvoiceItem();
+        item = new InvoiceItemForLease();
         item.setDueDate(new LocalDate(2012, 1, 1));
         item.setCharge(charge);
         item.setTax(tax);

@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -77,7 +77,7 @@ public class InvoiceCalculationService {
             }
             BigDecimal newValue = calculationResult.value.subtract(invoicedValue);
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                InvoiceItem invoiceItem = leaseTerm.findOrCreateUnapprovedInvoiceItemFor(startDate, dueDate);
+                InvoiceItemForLease invoiceItem = leaseTerm.findOrCreateUnapprovedInvoiceItemFor(startDate, dueDate);
                 invoiceItem.setNetAmount(newValue);
                 invoiceItem.setQuantity(BigDecimal.ONE);
                 LeaseItem leaseItem = leaseTerm.getLeaseItem();

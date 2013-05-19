@@ -21,10 +21,11 @@ import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceCalculationService;
-import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.services.clock.ClockService;
@@ -206,19 +207,19 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Persistent(mappedBy = "leaseTerm")
-    private Set<InvoiceItem> invoiceItems = new LinkedHashSet<InvoiceItem>();
+    private Set<InvoiceItemForLease> invoiceItems = new LinkedHashSet<InvoiceItemForLease>();
 
     @MemberOrder(sequence = "1")
     @Render(Type.EAGERLY)
-    public Set<InvoiceItem> getInvoiceItems() {
+    public Set<InvoiceItemForLease> getInvoiceItems() {
         return invoiceItems;
     }
 
-    public void setInvoiceItems(final Set<InvoiceItem> invoiceItems) {
+    public void setInvoiceItems(final Set<InvoiceItemForLease> invoiceItems) {
         this.invoiceItems = invoiceItems;
     }
 
-    public void addToInvoiceItems(final InvoiceItem invoiceItem) {
+    public void addToInvoiceItems(final InvoiceItemForLease invoiceItem) {
         // check for no-op
         if (invoiceItem == null || getInvoiceItems().contains(invoiceItem)) {
             return;
@@ -230,7 +231,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         getInvoiceItems().add(invoiceItem);
     }
 
-    public void removeFromInvoiceItems(final InvoiceItem invoiceItem) {
+    public void removeFromInvoiceItems(final InvoiceItemForLease invoiceItem) {
         // check for no-op
         if (invoiceItem == null || !getInvoiceItems().contains(invoiceItem)) {
             return;
@@ -242,7 +243,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     @Hidden
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate, LocalDate dueDate) {
-        for (InvoiceItem invoiceItem : getInvoiceItems()) {
+        for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
                 invoiceItem.clearInvoice();
@@ -254,18 +255,18 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     @Hidden
-    public InvoiceItem findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
-        InvoiceItem ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
+    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
-            ii = invoiceRepository.newInvoiceItem();
+            ii = invoices.newInvoiceItem();
             ii.modifyLeaseTerm(this);
         }
         return ii;
     }
 
     @Hidden
-    public InvoiceItem findUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
-        for (InvoiceItem invoiceItem : getInvoiceItems()) {
+    public InvoiceItemForLease findUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+        for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
                 return invoiceItem;
@@ -277,7 +278,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     @Hidden
     public BigDecimal invoicedValueFor(LocalDate startDate) {
         BigDecimal invoicedValue = new BigDecimal(0);
-        for (InvoiceItem invoiceItem : getInvoiceItems()) {
+        for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || invoiceItem.getStartDate() == null || invoiceItem.getStartDate().compareTo(startDate) != 0) {
                 continue;
@@ -411,22 +412,16 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     // }}
 
     // {{ Injected services
-    private Invoices invoiceRepository;
-
-    public void setInvoiceService(Invoices service) {
-        this.invoiceRepository = service;
+    private InvoicesForLease invoices;
+    public void injectInvoices(InvoicesForLease invoices) {
+        this.invoices = invoices;
     }
 
     private InvoiceCalculationService invoiceCalculationService;
-
-    public void setInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
+    public void injectInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
 
-    // }}
-
-
-    // {{ injected: ClockService
     private ClockService clockService;
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;

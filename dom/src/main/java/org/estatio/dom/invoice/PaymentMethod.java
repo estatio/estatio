@@ -1,4 +1,4 @@
-package org.estatio.dom.lease;
+package org.estatio.dom.invoice;
 
 public enum PaymentMethod {
 

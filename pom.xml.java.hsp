@@ -3,25 +3,20 @@
   <property name="hide-externals" value="true" />
   <property name="show-needs-to-compile" value="false" />
   <property name="detail-mode" value="true" />
-  <property name="project-type" value="maven" />
+  <property name="project-type" value="classpath" />
   <property name="action-set-mod" value="10" />
   <property name="hide-deprecated" value="false" />
   <property name="parse-archive-in-archive" value="false" />
   <classpath relativeto="c:\bitbucket\estatio\app">
-    <classpathentry kind="lib" path="dom\target\estatio-dom-0.0.1-SNAPSHOT.jar" />
-    <classpathentry kind="lib" path="dom\target\estatio-dom-0.0.1-SNAPSHOT.jar" />
+    <classpathentry kind="lib" path="dom\target-ide" />
   </classpath>
-  <pom-root-files>
-    <pom path="c:\bitbucket\estatio\app\dom\pom.xml" />
-  </pom-root-files>
+  <pom-root-files />
   <transformations>
-    <transformation in="*" out="{jar}.*" />
+    <transformation in="org.estatio.dom.agreement.*" out="org.estatio.dom.party_and_agreement.{1}" />
+    <transformation in="org.estatio.dom.party.*" out="org.estatio.dom.party_and_agreement.{1}" />
   </transformations>
   <restructuring>
     <set version="2" name="List 1" hiview="Codemap" active="true" todo="false" />
   </restructuring>
-  <sourcepaths>
-    <pathentry type="file" path="c:\bitbucket\estatio\app\dom\src\main\java" />
-  </sourcepaths>
 </local-project>
 

@@ -1,4 +1,4 @@
-package org.estatio.dom.agreement;
+package org.estatio.dom.financial;
 
 import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -9,7 +9,8 @@ import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.estatio.dom.financial.FinancialAccount;
+
+import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
 
@@ -41,7 +42,7 @@ public class BankMandate extends Agreement {
         // (because agreement does not depend on lease);
         // it does mean, though, that finance depends on lease.
         // Is this correct?
-        return findParty(LeaseConstants.ART_LANDLORD);
+        return findParty("Landlord"); // LeaseConstants.ART_LANDLORD
     }
 
     @MemberOrder(sequence = "4")
@@ -51,7 +52,7 @@ public class BankMandate extends Agreement {
         // (because agreement does not depend on lease);
         // it does mean, though, that finance depends on lease.
         // Is this correct?
-        return findParty(LeaseConstants.ART_TENANT);
+        return findParty("Tenant"); // LeaseConstants.ART_TENANT
     }
     // }}
 

@@ -1,4 +1,4 @@
-package org.estatio.dom.utils;
+package org.estatio.dom.financial.utils;
 
 import java.math.BigDecimal;
 

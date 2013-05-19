@@ -4,7 +4,7 @@ import org.apache.log4j.Level;
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.invoice.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.AgreementRolesJdo;
 import org.estatio.jdo.AgreementsJdo;
@@ -16,7 +16,7 @@ import org.estatio.jdo.CurrenciesJdo;
 import org.estatio.jdo.FinancialAccountsJdo;
 import org.estatio.jdo.FixedAssetRolesJdo;
 import org.estatio.jdo.IndicesJdo;
-import org.estatio.jdo.InvoicesJdo;
+import org.estatio.jdo.InvoicesForLeaseJdo;
 import org.estatio.jdo.LeaseItemsJdo;
 import org.estatio.jdo.LeaseTermsJdo;
 import org.estatio.jdo.LeaseUnitReferencesJdo;
@@ -75,7 +75,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new LeaseItemsJdo(),
                 new LeaseUnitsJdo(),
                 new LeaseUnitReferencesJdo(),
-                new InvoicesJdo(),
+                new InvoicesForLeaseJdo(),
                 new CommunicationChannelsJdo(),
                 new TaxesJdo(),
                 new ChargesJdo(),

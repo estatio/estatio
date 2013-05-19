@@ -12,9 +12,10 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+
+import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.IBANHelper;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)

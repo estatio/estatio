@@ -6,7 +6,7 @@ import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.BankMandate;
+import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 

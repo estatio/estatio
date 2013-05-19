@@ -125,6 +125,18 @@
             ]]></query>
         </class>
     </package>
+    <package name="org.estatio.dom.lease.invoicing">
+        <class name="InvoiceItemForLease">
+            <query name="invoiceItem_findItems" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease 
+            WHERE
+                leaseTerm.leaseItem.lease.reference.matches(:leaseReference) &&
+                dueDate == :dueDate &&
+                startDate == :startDate
+            ]]></query>
+        </class>
+    </package>
     <package name="org.estatio.dom.invoice">
         <class name="Invoice">
             <query name="invoice_findMatchingInvoices" language="JDOQL"><![CDATA[
@@ -137,16 +149,6 @@
                 paymentMethod == :paymentMethod &&
                 status == :status &&
                 dueDate == :dueDate
-            ]]></query>
-        </class>
-        <class name="InvoiceItem">
-            <query name="invoiceItem_findItems" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.invoice.InvoiceItem 
-            WHERE
-            	leaseTerm.leaseItem.lease.reference.matches(:leaseReference) &&
-            	dueDate == :dueDate &&
-            	startDate == :startDate
             ]]></query>
         </class>
     </package>

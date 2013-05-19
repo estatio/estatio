@@ -15,6 +15,7 @@ import com.google.common.collect.Ordering;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.Orderings;
 import org.estatio.services.clock.ClockService;

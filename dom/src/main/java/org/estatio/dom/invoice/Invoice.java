@@ -10,24 +10,27 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.PaymentMethod;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 @PersistenceCapable
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Bookmarkable
 public class Invoice extends EstatioTransactionalObject {
 
     public String title() {

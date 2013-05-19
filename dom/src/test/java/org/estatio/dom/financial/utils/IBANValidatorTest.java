@@ -1,9 +1,11 @@
-package org.estatio.dom.utils;
+package org.estatio.dom.financial.utils;
 
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.estatio.dom.financial.utils.IBANValidator;
 
 public class IBANValidatorTest {
 

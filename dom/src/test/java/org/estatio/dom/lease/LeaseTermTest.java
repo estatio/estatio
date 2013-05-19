@@ -17,8 +17,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {
@@ -110,12 +110,12 @@ public class LeaseTermTest {
         LeaseTerm term = new LeaseTerm();
         Invoice invoice = new Invoice();
         invoice.setStatus(InvoiceStatus.APPROVED);
-        InvoiceItem item1 = new InvoiceItem();
+        InvoiceItemForLease item1 = new InvoiceItemForLease();
         item1.modifyInvoice(invoice);
         item1.modifyLeaseTerm(term);
         item1.setStartDate(date);
         item1.setNetAmount(BigDecimal.valueOf(1234.45));
-        InvoiceItem item2 = new InvoiceItem();
+        InvoiceItemForLease item2 = new InvoiceItemForLease();
         item2.modifyInvoice(invoice);
         item2.setNetAmount(BigDecimal.valueOf(1234.45));
         item2.modifyLeaseTerm(term);

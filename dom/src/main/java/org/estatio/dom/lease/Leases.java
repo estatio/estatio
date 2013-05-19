@@ -7,8 +7,9 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.joda.time.LocalDate;
@@ -84,12 +85,12 @@ public class Leases extends AbstractFactoryAndRepository {
     }
 
     /**
-     * Returns the {@link InvoiceItem}s that are newly
+     * Returns the {@link InvoiceItemForLease}s that are newly
      * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
      * {@link Lease}s matched by the provided <tt>leaseReference</tt> and the
      * other parameters.
      */
-    public List<InvoiceItem> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate) {
+    public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate) {
         List<Lease> leases = findLeasesByReference(leaseReference);
         for (Lease lease : leases) {
             lease.calculate(startDate, dueDate);
@@ -97,7 +98,7 @@ public class Leases extends AbstractFactoryAndRepository {
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
-        return invoicesService.findItems(leaseReference, startDate, dueDate);
+        return invoices.findItems(leaseReference, startDate, dueDate);
     }
 
     @Prototype
@@ -107,9 +108,9 @@ public class Leases extends AbstractFactoryAndRepository {
     }
 
     // {{ injected: Invoices
-    private Invoices invoicesService;
-    public void injectInvoicesService(final Invoices invoices) {
-        this.invoicesService = invoices;
+    private InvoicesForLease invoices;
+    public void injectInvoicesService(final InvoicesForLease invoices) {
+        this.invoices = invoices;
     }
     // }}
 

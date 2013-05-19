@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
+
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
@@ -41,18 +42,6 @@ public class Invoices extends AbstractFactoryAndRepository {
 
     // }}
 
-    // {{ newInvoiceItem
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    @Hidden
-    public InvoiceItem newInvoiceItem() {
-        InvoiceItem invoiceItem = newTransientInstance(InvoiceItem.class);
-        persist(invoiceItem);
-        return invoiceItem;
-    }
-
-    // }}
-
     // {{ allInvoices
     @Prototype
     @ActionSemantics(Of.SAFE)
@@ -73,20 +62,5 @@ public class Invoices extends AbstractFactoryAndRepository {
 
     // }}
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
-    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
-        throw new NotImplementedException();
-    }
 
-    @ActionSemantics(Of.SAFE)
-    @Hidden
-    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
-        throw new NotImplementedException();
-    }
-
-    @ActionSemantics(Of.SAFE)
-    public List<InvoiceItem> findItems(String leaseReference, LocalDate startDate, LocalDate dueDate) {
-        throw new NotImplementedException();
-    }
 }

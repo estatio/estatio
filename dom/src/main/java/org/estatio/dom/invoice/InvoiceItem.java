@@ -5,11 +5,27 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.agreement.AgreementRole;
@@ -18,25 +34,20 @@ import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.Orderings;
-import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem> {
+@Bookmarkable(BookmarkPolicy.AS_CHILD)
+public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem> {
 
     private Invoice invoice;
 
@@ -198,63 +209,12 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
         this.endDate = endDate;
     }
 
-    private LeaseTerm leaseTerm;
-
-    @Disabled
-    @Hidden(where = Where.REFERENCES_PARENT)
-    @MemberOrder(sequence = "11")
-    public LeaseTerm getLeaseTerm() {
-        return leaseTerm;
-    }
-
-    public void setLeaseTerm(final LeaseTerm leaseTerm) {
-        this.leaseTerm = leaseTerm;
-    }
-
-    public void modifyLeaseTerm(final LeaseTerm leaseTerm) {
-        LeaseTerm currentLeaseTerm = getLeaseTerm();
-        if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
-            return;
-        }
-        leaseTerm.addToInvoiceItems(this);
-    }
-
-    public void clearLeaseTerm() {
-        LeaseTerm currentLeaseTerm = getLeaseTerm();
-        if (currentLeaseTerm == null) {
-            return;
-        }
-        currentLeaseTerm.removeFromInvoiceItems(this);
-    }
 
     /**
      * Attaches this item to an invoice with similar attributes. Creates a new
      * invoice when no matching found.
      */
-    @Hidden
-    public void attachToInvoice() {
-        Lease lease = getLeaseTerm().getLeaseItem().getLease();
-        if (lease != null) {
-            final AgreementRoleType landlord = agreementRoleTypes.find(LeaseConstants.ART_LANDLORD);
-            final AgreementRoleType tenant = agreementRoleTypes.find(LeaseConstants.ART_TENANT);
-            
-            AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
-            Party seller = role.getParty();
-            Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
-            PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
-            Invoice invoice = invoicesService.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
-            if (invoice == null) {
-                invoice = invoicesService.newInvoice();
-                invoice.setBuyer(buyer);
-                invoice.setSeller(seller);
-                invoice.setLease(lease);
-                invoice.setDueDate(getDueDate());
-                invoice.setPaymentMethod(paymentMethod);
-                invoice.setStatus(InvoiceStatus.NEW);
-            }
-            this.modifyInvoice(invoice);
-        }
-    }
+    public abstract void attachToInvoice();
 
     @Bulk
     public InvoiceItem verify() {
@@ -266,7 +226,6 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
     public void remove() {
         // no safeguard, assuming being called with precaution
         clearInvoice();
-        clearLeaseTerm();
         getContainer().flush();
         getContainer().remove(this);
     }
@@ -301,6 +260,7 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
     }
 
 
+    // {{ Comparable impl
     @Override
     public int compareTo(InvoiceItem o) {
         return ORDERING_BY_START_DATE.compound(ORDERING_BY_DUE_DATE).compound(ORDERING_BY_INVOICE).compare(this, o);
@@ -323,30 +283,13 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
         }
     };
-
-    
+    // }}
 
     
     // {{ injected
     private Charges chargesService;
     public void injectChargesService(Charges charges) {
         this.chargesService = charges;
-    }
-
-    private Invoices invoicesService;
-    @Hidden
-    public void injectInvoices(Invoices invoices) {
-        this.invoicesService = invoices;
-    }
-
-    private AgreementTypes agreementTypes;
-    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
-    }
-
-    private AgreementRoleTypes agreementRoleTypes;
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
     }
     // }}
 

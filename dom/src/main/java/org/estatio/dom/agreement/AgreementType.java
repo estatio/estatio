@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.filter.Filter;
 
@@ -68,19 +69,32 @@ public class AgreementType extends EstatioRefDataObject implements Comparable<Ag
         }
     }
 
+    
+    @Programmatic
+    @NotPersisted
+    public List<AgreementRoleType> getApplicableTo() {
+        return agreementRoleTypes.applicableTo(this);
+    }
+
+
+    // {{ Comparable impl
     @Override
     public int compareTo(AgreementType o) {
         return getTitle().compareTo(o.getTitle());
     }
+    // }}
 
 
-    @Override
-    @Hidden
-    public DomainObjectContainer getContainer() {
-        return super.getContainer();
+
+    // {{ injected
+    private AgreementRoleTypes agreementRoleTypes;
+    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+        this.agreementRoleTypes = agreementRoleTypes;
     }
+    // }}
 
     
+    // {{ for fixtures
     public static AgreementType create(final String title, final String implementationClassName, final DomainObjectContainer container) {
         final AgreementType agreementType = container.newTransientInstance(AgreementType.class);
         agreementType.setTitle(title);
@@ -88,4 +102,6 @@ public class AgreementType extends EstatioRefDataObject implements Comparable<Ag
         container.persist(agreementType);
         return agreementType;
     }
+    // }}
+
 }

@@ -1,12 +1,13 @@
 package org.estatio.fixture.invoice;
 
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.PaymentMethod;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Parties;
 import org.joda.time.LocalDate;
 
@@ -25,17 +26,17 @@ public class InvoiceFixture extends AbstractFixture {
     }
 
     private void createInvoices() {
-        Invoice invoice = invoiceRepository.newInvoice();
-        invoice.setBuyer(partyRepository.findPartyByReference(BUYER_PARTY));
-        invoice.setSeller(partyRepository.findPartyByReference(SELLER_PARTY));
+        Invoice invoice = invoices.newInvoice();
+        invoice.setBuyer(parties.findPartyByReference(BUYER_PARTY));
+        invoice.setSeller(parties.findPartyByReference(SELLER_PARTY));
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
-        Lease lease = leaseRepository.findByReference(LEASE);
+        Lease lease = leases.findByReference(LEASE);
         invoice.setLease(lease);
         invoice.setDueDate(DATE);
         invoice.setInvoiceDate(DATE);
 
-        InvoiceItem item = invoiceRepository.newInvoiceItem();
+        InvoiceItemForLease item = invoices.newInvoiceItem();
         item.modifyInvoice(invoice);
         item.setDueDate(DATE);
         item.setStartDate(DATE);
@@ -44,22 +45,22 @@ public class InvoiceFixture extends AbstractFixture {
 
     }
 
-    private Parties partyRepository;
+    private Parties parties;
 
-    public void setPartyRepository(Parties partyRepository) {
-        this.partyRepository = partyRepository;
+    public void injectParties(Parties parties) {
+        this.parties = parties;
     }
 
-    private Invoices invoiceRepository;
+    private InvoicesForLease invoices;
 
-    public void setInvoiceRepository(Invoices invoiceRepository) {
-        this.invoiceRepository = invoiceRepository;
+    public void injectInvoices(InvoicesForLease invoices) {
+        this.invoices = invoices;
     }
 
-    private Leases leaseRepository;
+    private Leases leases;
 
-    public void setLeaseRepository(Leases leaseRepository) {
-        this.leaseRepository = leaseRepository;
+    public void injectLeases(Leases leases) {
+        this.leases = leases;
     }
 
 }

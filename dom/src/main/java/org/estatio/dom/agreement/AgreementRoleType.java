@@ -46,16 +46,9 @@ public class AgreementRoleType extends EstatioRefDataObject implements Comparabl
 
 
     public static List<AgreementRoleType> applicableTo(final AgreementType at) {
-        return at.getContainer().allMatches(AgreementRoleType.class, artAppliesTo(at));
+        return at.getApplicableTo();
     }
 
-    static Filter<AgreementRoleType> artAppliesTo(final AgreementType at) {
-        return new Filter<AgreementRoleType>(){
-            @Override
-            public boolean accept(AgreementRoleType art) {
-                return art.getAppliesTo() == at;
-            }};
-    }
 
     
     @Override
