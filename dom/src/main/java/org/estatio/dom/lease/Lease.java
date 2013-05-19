@@ -15,6 +15,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.party.Party;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -22,6 +24,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -45,7 +48,21 @@ public class Lease extends Agreement {
     public void setReference(final String reference) {
         this.reference = reference;
     }
+    // }}
 
+    
+    // {{ Derived attribute (overridden)
+    @NotPersisted
+    @MemberOrder(sequence = "3")
+    public Party getPrimaryParty() {
+        return findParty(LeaseConstants.ART_LANDLORD);
+    }
+
+    @NotPersisted
+    @MemberOrder(sequence = "4")
+    public Party getSecondaryParty() {
+        return findParty(LeaseConstants.ART_TENANT);
+    }
     // }}
 
     // {{ Type (property)

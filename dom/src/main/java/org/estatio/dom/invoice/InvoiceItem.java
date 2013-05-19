@@ -14,8 +14,11 @@ import com.google.common.collect.Ordering;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.PaymentMethod;
@@ -232,9 +235,12 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
     public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
-            AgreementRole role = lease.findRoleWithType(AgreementRoleType.LANDLORD, getDueDate());
+            final AgreementRoleType landlord = agreementRoleTypes.find(LeaseConstants.ART_LANDLORD);
+            final AgreementRoleType tenant = agreementRoleTypes.find(LeaseConstants.ART_TENANT);
+            
+            AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
             Party seller = role.getParty();
-            Party buyer = lease.findRoleWithType(AgreementRoleType.TENANT, getDueDate()).getParty();
+            Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
             Invoice invoice = invoicesService.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
             if (invoice == null) {
@@ -294,19 +300,6 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
         setNetAmount(BigDecimal.ZERO);
     }
 
-    private Charges chargesService;
-
-    @Hidden
-    public void setChargesService(Charges charges) {
-        this.chargesService = charges;
-    }
-
-    private Invoices invoicesService;
-
-    @Hidden
-    public void setInvoicesService(Invoices invoices) {
-        this.invoicesService = invoices;
-    }
 
     @Override
     public int compareTo(InvoiceItem o) {
@@ -330,5 +323,31 @@ public class InvoiceItem extends EstatioTransactionalObject implements Comparabl
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
         }
     };
+
+    
+
+    
+    // {{ injected
+    private Charges chargesService;
+    public void injectChargesService(Charges charges) {
+        this.chargesService = charges;
+    }
+
+    private Invoices invoicesService;
+    @Hidden
+    public void injectInvoices(Invoices invoices) {
+        this.invoicesService = invoices;
+    }
+
+    private AgreementTypes agreementTypes;
+    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
+        this.agreementTypes = agreementTypes;
+    }
+
+    private AgreementRoleTypes agreementRoleTypes;
+    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+        this.agreementRoleTypes = agreementRoleTypes;
+    }
+    // }}
 
 }

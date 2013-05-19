@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.party.Party;
@@ -50,17 +52,19 @@ public class Leases extends AbstractFactoryAndRepository {
             }
         }
         Lease lease = newTransientInstance(Lease.class);
-        lease.setAgreementType(AgreementType.LEASE);
+        lease.setAgreementType(agreementTypes.find(LeaseConstants.AT_LEASE));
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);
         lease.setEndDate(calculatedEndDate);
         persistIfNotAlready(lease);
-        lease.addRole(tenant, AgreementRoleType.TENANT, null, null);
-        lease.addRole(landlord, AgreementRoleType.LANDLORD, null, null);
+        final AgreementRoleType artTenant = agreementRoleTypes.find(LeaseConstants.ART_TENANT);
+        lease.addRole(tenant, artTenant, null, null);
+        final AgreementRoleType artLandlord = agreementRoleTypes.find(LeaseConstants.ART_LANDLORD);
+        lease.addRole(landlord, artLandlord, null, null);
         return lease;
     }
-
+    
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Lease> findLeasesByReference(final @Named("Reference") String reference) {
@@ -104,10 +108,24 @@ public class Leases extends AbstractFactoryAndRepository {
 
     // {{ injected: Invoices
     private Invoices invoicesService;
-
-    public void setInvoicesService(final Invoices invoices) {
+    public void injectInvoicesService(final Invoices invoices) {
         this.invoicesService = invoices;
     }
     // }}
+
+    // {{ injected: AgreementTypes
+    private AgreementTypes agreementTypes;
+    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
+        this.agreementTypes = agreementTypes;
+    }
+    // }}
+
+    // {{ injected: AgreementRoleTypes
+    private AgreementRoleTypes agreementRoleTypes;
+    public void setAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+        this.agreementRoleTypes = agreementRoleTypes;
+    }
+    // }}
+
 
 }

@@ -26,28 +26,30 @@ public class LeaseTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+    private AgreementRoleType tenantArt;
 
     @Before
     public void setup() {
+        tenantArt = new AgreementRoleType();
         lease = new Lease();
         org = new Organisation();
         AgreementRole la = new AgreementRole();
         la.setParty(org);
         la.setStartDate(new LocalDate(2000,1,1));
-        la.setType(AgreementRoleType.TENANT);
+        la.setType(tenantArt);
         la.modifyAgreement(lease);
     }
 
     @Ignore
     @Test
     public void findActorIsNotNull() {
-        Assert.assertNotNull(lease.findRole(org, AgreementRoleType.TENANT, new LocalDate(2000,1,1)));
+        Assert.assertNotNull(lease.findRole(org, tenantArt, new LocalDate(2000,1,1)));
     }
     
     @Ignore
     @Test
     public void addActorIsIdempotent() {
-        lease.addRole(org, AgreementRoleType.TENANT, new LocalDate(2000,1,1), null);
+        lease.addRole(org, tenantArt, new LocalDate(2000,1,1), null);
         Assert.assertEquals(1, lease.getRoles().size());
     }
     

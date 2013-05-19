@@ -1,6 +1,5 @@
 package org.estatio.dom.agreement;
 
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -19,6 +18,8 @@ import com.google.common.collect.Iterables;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -69,23 +70,28 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     // {{ Derived attribute
 
     @MemberOrder(sequence = "3")
-    public Party getPrimaryParty() {
-        Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.LANDLORD)), partyOfAgreementRole());
-        return firstElseNull(parties);
-    }
+    public abstract Party getPrimaryParty();
 
     @MemberOrder(sequence = "4")
-    public Party getSecondaryParty() {
-        Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType(AgreementRoleType.TENANT)), partyOfAgreementRole());
-        return firstElseNull(parties);
+    public abstract Party getSecondaryParty();
+
+    protected Party findParty(final String agreementRoleTypeTitle) {
+        final AgreementRoleType art = agreementRoleTypes.find(agreementRoleTypeTitle);
+        final Predicate<AgreementRole> currentAgreementRoleOfType = currentAgreementRoleOfType(art);
+        final Iterable<Party> parties = Iterables.transform(
+                Iterables.filter(
+                        getRoles(), currentAgreementRoleOfType), partyOfAgreementRole());
+        return ValueUtils.firstElseNull(parties);
     }
 
-    private Party firstElseNull(Iterable<Party> parties) {
-        Iterator<Party> iterator = parties.iterator();
-        return iterator.hasNext() ? iterator.next() : null;
+    protected Party findParty(AgreementRoleType agreementRoleType) {
+        Iterable<Party> parties = Iterables.transform(
+                Iterables.filter(
+                        getRoles(), currentAgreementRoleOfType(agreementRoleType)), partyOfAgreementRole());
+        return ValueUtils.firstElseNull(parties);
     }
 
-    private Function<AgreementRole, Party> partyOfAgreementRole() {
+    private static Function<AgreementRole, Party> partyOfAgreementRole() {
         return new Function<AgreementRole, Party>() {
             public Party apply(AgreementRole agreementRole) {
                 return agreementRole.getParty();
@@ -93,7 +99,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         };
     }
 
-    protected static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType lat) {
+    private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType lat) {
         return new Predicate<AgreementRole>() {
             public boolean apply(AgreementRole candidate) {
                 return candidate.getType() == lat && candidate.isCurrent();
@@ -266,7 +272,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     public AgreementRole addRole(@Named("party") Party party, @Named("agreementType") AgreementRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         AgreementRole agreementRole = findRole(party, type, startDate);
         if (agreementRole == null) {
-            agreementRole = agreementRolesService.newAgreementRole(this, party, type, startDate, endDate);
+            agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
         }
         agreementRole.setEndDate(endDate);
         return agreementRole;
@@ -276,12 +282,12 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
 
     @Hidden
     public AgreementRole findRole(Party party, AgreementRoleType type, LocalDate startDate) {
-        return agreementRolesService.findAgreementRole(this, party, type, startDate);
+        return agreementRoles.findAgreementRole(this, party, type, startDate);
     }
 
     @Hidden
     public AgreementRole findRoleWithType(AgreementRoleType agreementRoleType, LocalDate date) {
-        return agreementRolesService.findAgreementRoleWithType(this, agreementRoleType, date);
+        return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
     }
 
     @Override
@@ -289,10 +295,14 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         return this.getReference().compareTo(other.getReference());
     }
 
-    private AgreementRoles agreementRolesService;
-
-    public void setAgreementRoles(final AgreementRoles agreementRoles) {
-        this.agreementRolesService = agreementRoles;
+    // {{ injected
+    private AgreementRoles agreementRoles;
+    public void injectAgreementRoles(final AgreementRoles agreementRoles) {
+        this.agreementRoles = agreementRoles;
+    }
+    private AgreementRoleTypes agreementRoleTypes;
+    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+        this.agreementRoleTypes = agreementRoleTypes;
     }
 
     // }}

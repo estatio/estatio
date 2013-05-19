@@ -32,11 +32,11 @@ public class AgreementRoles extends AbstractFactoryAndRepository {
     public AgreementRole newAgreementRole(final Agreement agreement, final Party party, final AgreementRoleType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         AgreementRole agreementRole = newTransientInstance(AgreementRole.class);
         persistIfNotAlready(agreementRole);
-        agreementRole.modifyParty(party);
-        agreementRole.modifyAgreement(agreement);
         agreementRole.setStartDate(startDate);
         agreementRole.setEndDate(endDate);
-        agreementRole.setType(type);
+        agreementRole.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
+        agreementRole.modifyParty(party);
+        agreementRole.modifyAgreement(agreement);
         return agreementRole;
     }
 

@@ -10,6 +10,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.party.Party;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -31,4 +33,27 @@ public class BankMandate extends Agreement {
     // }}
     
     
+    // {{ Derived attribute (overridden)
+    @MemberOrder(sequence = "3")
+    public Party getPrimaryParty() {
+        
+        // REVIEW: this code was moved down from Agreement
+        // (because agreement does not depend on lease);
+        // it does mean, though, that finance depends on lease.
+        // Is this correct?
+        return findParty(LeaseConstants.ART_LANDLORD);
+    }
+
+    @MemberOrder(sequence = "4")
+    public Party getSecondaryParty() {
+
+        // REVIEW: this code was moved down from Agreement
+        // (because agreement does not depend on lease);
+        // it does mean, though, that finance depends on lease.
+        // Is this correct?
+        return findParty(LeaseConstants.ART_TENANT);
+    }
+    // }}
+
+
 }

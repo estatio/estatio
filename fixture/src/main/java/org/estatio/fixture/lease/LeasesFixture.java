@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
@@ -11,6 +14,7 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -61,7 +65,7 @@ public class LeasesFixture extends AbstractFixture {
         Party tenant = parties.findPartyByReference(tentantReference);
         Unit unit = units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
-        lease.addRole(manager, AgreementRoleType.MANAGER, null, null);
+        lease.addRole(manager, agreementRoleTypes.find(LeaseConstants.ART_MANAGER), null, null);
         LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
         lu.setBrand((LeaseUnitBrand) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.BRAND, tentantReference));
         lu.setActivity((LeaseUnitActivity) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.ACTIVITY, "OTHER"));
@@ -121,52 +125,57 @@ public class LeasesFixture extends AbstractFixture {
         return leaseTerm;
     }
 
+    
+    // {{ injected
     private Indices indices;
-
-    public void setIndexRepository(final Indices indices) {
+    public void injectIndices(final Indices indices) {
         this.indices = indices;
     }
 
     private Units units;
-
-    public void setUnitRepository(final Units units) {
+    public void injectUnits(final Units units) {
         this.units = units;
     }
 
     private Leases leases;
-
-    public void setLeaseRepository(final Leases leases) {
+    public void injectLeases(final Leases leases) {
         this.leases = leases;
     }
 
     private LeaseUnits leaseUnits;
-
-    public void setLeaseRepository(final LeaseUnits leaseUnits) {
+    public void injectLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
 
     private LeaseUnitReferences leaseUnitReferences;
-
-    public void setLeaseUnitReferences(LeaseUnitReferences leaseUnitReferences) {
+    public void injectLeaseUnitReferences(LeaseUnitReferences leaseUnitReferences) {
         this.leaseUnitReferences = leaseUnitReferences;
     }
 
     private LeaseTerms leaseTerms;
-
-    public void setLeaseRepository(final LeaseTerms leaseTerms) {
+    public void injectLeaseTerms(final LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
     }
 
     private Parties parties;
-
-    public void setPartyRepository(final Parties parties) {
+    public void injectParties(final Parties parties) {
         this.parties = parties;
     }
 
     private Charges charges;
-
-    public void setChargeRepository(final Charges charges) {
+    public void injectCharges(final Charges charges) {
         this.charges = charges;
     }
+
+    private AgreementTypes agreementTypes;
+    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
+        this.agreementTypes = agreementTypes;
+    }
+
+    private AgreementRoleTypes agreementRoleTypes;
+    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+        this.agreementRoleTypes = agreementRoleTypes;
+    }
+    // }}
 
 }

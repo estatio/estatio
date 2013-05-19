@@ -9,7 +9,9 @@ import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.InvoicingFrequency;
@@ -43,23 +45,38 @@ public class InvoiceCalculationServiceTest {
     private TaxRate taxRate;
     private Charge charge;
 
+    private AgreementRoleType artLandlord;
+    private AgreementRoleType artTenant;
+    
     @Mock
-    Taxes mockTaxes;
+    private Taxes mockTaxes;
 
     @Mock
-    Invoices mockInvoices;
+    private Invoices mockInvoices;
 
     @Mock
-    AgreementRoles mockAgreementRoles;
+    private AgreementRoles mockAgreementRoles;
+    
+    @Mock
+    private AgreementRoleTypes mockAgreementRoleTypes;
 
     @Mock
-    EstatioSettingsService mockSettings;
+    private AgreementTypes mockAgreementTypes;
+    
+    @Mock
+    private EstatioSettingsService mockSettings;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Before
     public void setup() {
+        artLandlord = new AgreementRoleType();
+        artLandlord.setTitle("Landlord");
+        
+        artTenant = new AgreementRoleType();
+        artTenant.setTitle("Tenant");
+        
         l = new Lease();
         l.setStartDate(START_DATE);
         l.setEndDate(START_DATE.plusYears(1).minusDays(1));
@@ -70,6 +87,15 @@ public class InvoiceCalculationServiceTest {
         charge = new Charge();
         charge.setReference("RENT");
         charge.setTax(tax);
+        
+        context.checking(new Expectations() {
+            {
+                allowing(mockAgreementRoleTypes).find("Landlord");
+                will(returnValue(artLandlord));
+                allowing(mockAgreementRoleTypes).find("Tenant");
+                will(returnValue(artTenant));
+            }
+        });
     }
 
     @Test
@@ -188,21 +214,23 @@ public class InvoiceCalculationServiceTest {
         li.getTerms().add(lt);
         lt.setInvoiceService(mockInvoices);
         tax.setTaxRepo(mockTaxes);
-        l.setAgreementRoles(mockAgreementRoles);
+        l.injectAgreementRoles(mockAgreementRoles);
         final InvoiceItem ii = new InvoiceItem();
-        ii.setInvoicesService(mockInvoices);
+        ii.injectInvoices(mockInvoices);
+        ii.injectAgreementRoleTypes(mockAgreementRoleTypes);
+        ii.injectAgreementTypes(mockAgreementTypes);
 
         context.checking(new Expectations() {
             {
-                allowing(mockInvoices).newInvoiceItem();
+                oneOf(mockInvoices).newInvoiceItem();
                 will(returnValue(ii));
-                allowing(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
+                oneOf(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(taxRate));
-                allowing(mockAgreementRoles).findAgreementRoleWithType(with(any(Agreement.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
+                exactly(2).of(mockAgreementRoles).findAgreementRoleWithType(with(any(Agreement.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
                 will(returnValue(new AgreementRole()));
-                allowing(mockInvoices).findMatchingInvoice(with(aNull(Party.class)), with(aNull(Party.class)), with(aNull(PaymentMethod.class)), with(any(Lease.class)), with(any(InvoiceStatus.class)), with(any(LocalDate.class)));
+                oneOf(mockInvoices).findMatchingInvoice(with(aNull(Party.class)), with(aNull(Party.class)), with(aNull(PaymentMethod.class)), with(any(Lease.class)), with(any(InvoiceStatus.class)), with(any(LocalDate.class)));
                 will(returnValue(new Invoice()));
-                allowing(mockSettings).fetchEpochDate();
+                oneOf(mockSettings).fetchEpochDate();
                 will(returnValue(null));
             }
         });

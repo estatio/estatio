@@ -2,6 +2,8 @@ package org.estatio.integtest;
 
 import org.apache.log4j.Level;
 import org.estatio.api.Api;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.invoice.InvoiceCalculationService;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.AgreementRolesJdo;
@@ -65,6 +67,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new UnitsJdo(),
                 new PartiesJdo(),
                 new AgreementsJdo(),
+                new AgreementTypes(),
+                new AgreementRoleTypes(),
                 new AgreementRolesJdo(),
                 new LeasesJdo(),
                 new LeaseTermsJdo(),

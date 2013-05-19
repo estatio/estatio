@@ -11,7 +11,10 @@ import java.util.List;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -39,6 +42,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -48,6 +52,7 @@ public class LeaseIntegrationTest {
     private LeaseTerms leaseTerms;
     private Lease lease;
     private Parties parties;
+    private AgreementRoleTypes agreementRoleTypes;
     private EstatioSettingsService settings;
 
     @Rule
@@ -63,6 +68,7 @@ public class LeaseIntegrationTest {
         leaseTerms = getIsft().getService(LeaseTermsJdo.class);
         parties = getIsft().getService(PartiesJdo.class);
         settings = getIsft().getService(EstatioSettingsService.class);
+        agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
         lease = leases.findByReference("OXF-TOPMODEL-001");
     }
 
@@ -80,7 +86,7 @@ public class LeaseIntegrationTest {
     @Test
     public void t02_leaseRoleCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("TOPMODEL");
-        AgreementRole role = lease.findRole(party, AgreementRoleType.TENANT, null);
+        AgreementRole role = lease.findRole(party, agreementRoleTypes.find(LeaseConstants.ART_TENANT), null);
         Assert.assertNotNull(role);
     }
 

@@ -1,44 +1,85 @@
 package org.estatio.dom.agreement;
 
-import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import javax.jdo.annotations.PersistenceCapable;
 
-public enum AgreementRoleType {
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.filter.Filter;
 
-    CREDITOR("Creditor", AgreementType.MANDATE), 
-    DEBTOR("Debtor", AgreementType.MANDATE), 
-    OWNER("Owner", AgreementType.MANDATE),
-    TENANT("Tenant", AgreementType.LEASE), 
-    LANDLORD("Landlord", AgreementType.LEASE), 
-    MANAGER("Manager", AgreementType.LEASE); 
+import org.estatio.dom.EstatioRefDataObject;
 
-    private final String title;
-    private final AgreementType appliesTo;
+@PersistenceCapable
+@Immutable
+public class AgreementRoleType extends EstatioRefDataObject implements Comparable<AgreementRoleType> {
 
-    private AgreementRoleType(String title, AgreementType appliesTo) {
-        this.title = title;
-        this.appliesTo = appliesTo;
-    }
+    // {{ Title (property)
+    private String title;
 
-    public String title() {
+    @MemberOrder(sequence = "1")
+    @Title
+    public String getTitle() {
         return title;
     }
 
-    public static Set<AgreementRoleType> applicableTo(final AgreementType at) {
-        Predicate<AgreementRoleType> predicate = new Predicate<AgreementRoleType>() {
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+    // }}
+
+
+    // {{ AppliesTo (property)
+    private AgreementType appliesTo;
+    @MemberOrder(sequence = "2")
+    public AgreementType getAppliesTo() {
+        return appliesTo;
+    }
+
+    public void setAppliesTo(final AgreementType agreementType) {
+        this.appliesTo = agreementType;
+    }
+    // }}
+
+
+
+    public static List<AgreementRoleType> applicableTo(final AgreementType at) {
+        return at.getContainer().allMatches(AgreementRoleType.class, artAppliesTo(at));
+    }
+
+    static Filter<AgreementRoleType> artAppliesTo(final AgreementType at) {
+        return new Filter<AgreementRoleType>(){
             @Override
-            public boolean apply(AgreementRoleType art) {
-                return art.appliesTo.equals(at);
+            public boolean accept(AgreementRoleType art) {
+                return art.getAppliesTo() == at;
+            }};
+    }
+
+    
+    @Override
+    public int compareTo(AgreementRoleType o) {
+        return getTitle().compareTo(o.getTitle());
+    }
+
+    
+    public static AgreementRoleType create(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
+        final AgreementRoleType agreementRoleType = container.newTransientInstance(AgreementRoleType.class);
+        agreementRoleType.setTitle(title);
+        agreementRoleType.setAppliesTo(appliesTo);
+        container.persist(agreementRoleType);
+        return agreementRoleType;
+    }
+
+    public static AgreementRoleType find(final String title, DomainObjectContainer container) {
+        return container.firstMatch(AgreementRoleType.class, new Filter<AgreementRoleType>(){
+
+            @Override
+            public boolean accept(AgreementRoleType t) {
+                return title.equals(t.getTitle());
             }
-        };
-        return Sets.newLinkedHashSet(Iterables.filter(EnumSet.allOf(AgreementRoleType.class), predicate));
+        });
     }
 
 }
