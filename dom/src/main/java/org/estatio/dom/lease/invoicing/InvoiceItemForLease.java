@@ -75,7 +75,7 @@ public class InvoiceItemForLease extends InvoiceItem  {
                 invoice = invoices.newInvoice();
                 invoice.setBuyer(buyer);
                 invoice.setSeller(seller);
-                invoice.setLease(lease);
+                invoice.setProvenance(lease);
                 invoice.setDueDate(getDueDate());
                 invoice.setPaymentMethod(paymentMethod);
                 invoice.setStatus(InvoiceStatus.NEW);

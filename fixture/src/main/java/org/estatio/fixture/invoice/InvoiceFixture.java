@@ -32,7 +32,7 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
         Lease lease = leases.findByReference(LEASE);
-        invoice.setLease(lease);
+        invoice.setProvenance(lease);
         invoice.setDueDate(DATE);
         invoice.setInvoiceDate(DATE);
 

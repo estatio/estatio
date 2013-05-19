@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.filter.Filter;
 
 @Named("Agreement Role Types")

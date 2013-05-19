@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Version;
@@ -101,16 +102,17 @@ public class Invoice extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ Lease (property)
-    private Lease lease;
+    // {{ InvoiceProvenance (property)
+    private InvoiceProvenance provenance;
 
+    @Persistent(extensions={@Extension(vendorName="datanucleus", key = "mapping-strategy", value = "per-implementation")})
     @MemberOrder(sequence = "5")
-    public Lease getLease() {
-        return lease;
+    public InvoiceProvenance getProvenance() {
+        return provenance;
     }
 
-    public void setLease(final Lease lease) {
-        this.lease = lease;
+    public void setProvenance(final InvoiceProvenance provenance) {
+        this.provenance = provenance;
     }
 
     // }}

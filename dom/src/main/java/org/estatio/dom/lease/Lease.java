@@ -15,6 +15,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.invoice.InvoiceProvenance;
 import org.estatio.dom.party.Party;
 
 import org.joda.time.LocalDate;
@@ -34,7 +35,7 @@ import org.apache.isis.applib.annotation.Title;
 @Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
-public class Lease extends Agreement {
+public class Lease extends Agreement implements InvoiceProvenance {
 
     // {{ Reference (property)
     private String reference;

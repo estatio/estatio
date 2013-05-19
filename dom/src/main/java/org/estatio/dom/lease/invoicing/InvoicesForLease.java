@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceProvenance;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -35,13 +36,13 @@ public class InvoicesForLease extends Invoices {
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, InvoiceProvenance provenance, InvoiceStatus invoiceStatus, LocalDate dueDate) {
         throw new NotImplementedException();
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, InvoiceProvenance provenance, InvoiceStatus invoiceStatus, LocalDate dueDate) {
         throw new NotImplementedException();
     }
 
