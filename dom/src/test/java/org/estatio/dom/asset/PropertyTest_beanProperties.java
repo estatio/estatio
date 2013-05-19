@@ -1,22 +1,22 @@
-package org.estatio.dom.assets;
-
-import org.estatio.dom.FixtureDatumFactoriesForJoda;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.geography.FixtureDatumFactoriesForGeography;
-import org.junit.Test;
+package org.estatio.dom.asset;
 
 import com.danhaywood.testsupport.coverage.PojoTester;
 import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+
+import org.junit.Test;
+
+import org.estatio.dom.FixtureDatumFactoriesForJoda;
+import org.estatio.dom.geography.FixtureDatumFactoriesForGeography;
 
 public class PropertyTest_beanProperties {
 
 	@Test
 	public void test() {
 		new PojoTester()
-		    .withFixture(FixtureDatumFactoriesForAssets.properties())
-		    .withFixture(FixtureDatumFactoriesForAssets.units())
-		    .withFixture(FixtureDatumFactoriesForAssets.propertyActors())
-		    .withFixture(FixtureDatumFactoriesForAssets.locations())
+		    .withFixture(FixtureDatumFactoriesForFixedAssets.properties())
+		    .withFixture(FixtureDatumFactoriesForFixedAssets.units())
+		    .withFixture(FixtureDatumFactoriesForFixedAssets.propertyActors())
+		    .withFixture(FixtureDatumFactoriesForFixedAssets.locations())
 			.withFixture(FixtureDatumFactoriesForJoda.dates())
 			.withFixture(FixtureDatumFactoriesForGeography.countries())
 			.exercise(new Property(), FilterSet.excluding(

@@ -20,9 +20,13 @@ import javax.jdo.annotations.VersionStrategy;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.lease.UnitForLease;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -32,13 +36,14 @@ import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
-@PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Query(name = "properties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
 @AutoComplete(repository = Properties.class)
 @PublishedObject
-@Query(name = "properties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
+@Bookmarkable
 public class Property extends FixedAsset {
 
     // {{ Type (attribute)

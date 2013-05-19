@@ -1,4 +1,4 @@
-package org.estatio.dom.assets;
+package org.estatio.dom.asset;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

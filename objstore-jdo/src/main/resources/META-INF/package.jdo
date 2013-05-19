@@ -16,13 +16,6 @@
 	            WHERE reference.matches(:r)
 	            ]]></query>
 		</class>
-		<class name="Unit">
-			<query name="units_findUnitsByReference" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.asset.Unit 
-             WHERE reference.matches(:r)
-            ]]></query>
-		</class>
 		<class name="FixedAssetRole">
 			<query name="fixedAssetRole_findByAssetParty" language="JDOQL"><![CDATA[
             SELECT 
@@ -53,6 +46,13 @@
             <query name="lease_findLeaseByReference" language="JDOQL"><![CDATA[
             SELECT 
               FROM org.estatio.dom.lease.Lease 
+             WHERE reference.matches(:r)
+            ]]></query>
+        </class>
+        <class name="UnitForLease">
+            <query name="units_findUnitsByReference" language="JDOQL"><![CDATA[
+            SELECT 
+              FROM org.estatio.dom.lease.UnitForLease 
              WHERE reference.matches(:r)
             ]]></query>
         </class>

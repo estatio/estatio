@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+
 import org.estatio.dom.asset.Unit;
 
 @Named("LeaseUnits")
@@ -36,7 +37,7 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
-    public LeaseUnit newLeaseUnit(@Named("Lease") Lease lease, @Named("Unit") Unit unit) {
+    public LeaseUnit newLeaseUnit(@Named("Lease") Lease lease, @Named("Unit") UnitForLease unit) {
         LeaseUnit lu = newTransientInstance(LeaseUnit.class);
         persist(lu);
         lu.modifyLease(lease);

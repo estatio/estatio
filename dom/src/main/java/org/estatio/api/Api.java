@@ -61,6 +61,7 @@ import org.estatio.dom.lease.LeaseUnitReferences;
 import org.estatio.dom.lease.LeaseUnitSector;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -356,7 +357,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
         }
-        Unit unit = units.findUnitByReference(unitReference);
+        UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         if (unitReference != null && unit == null) {
             throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
         }

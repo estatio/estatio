@@ -1,4 +1,4 @@
-package org.estatio.dom.assets;
+package org.estatio.dom.asset;
 
 import org.estatio.dom.asset.Property;
 

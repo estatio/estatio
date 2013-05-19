@@ -7,6 +7,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.asset.Unit;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -48,21 +49,21 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         currentLease.removeFromUnits(this);
     }
 
-    private Unit unit;
+    private UnitForLease unit;
 
     @Title(sequence = "2", append = ":")
     @MemberOrder(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
-    public Unit getUnit() {
+    public UnitForLease getUnit() {
         return unit;
     }
 
-    public void setUnit(final Unit unit) {
+    public void setUnit(final UnitForLease unit) {
         this.unit = unit;
     }
 
-    public void modifyUnit(final Unit unit) {
-        Unit currentUnit = getUnit();
+    public void modifyUnit(final UnitForLease unit) {
+        UnitForLease currentUnit = getUnit();
         if (unit == null || unit.equals(currentUnit)) {
             return;
         }
@@ -70,7 +71,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     }
 
     public void clearUnit() {
-        Unit currentUnit = getUnit();
+        UnitForLease currentUnit = getUnit();
         if (currentUnit == null) {
             return;
         }

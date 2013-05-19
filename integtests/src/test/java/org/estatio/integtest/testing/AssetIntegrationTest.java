@@ -15,6 +15,7 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
+import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.integtest.IntegrationSystemForTestRule;

@@ -112,7 +112,7 @@ public class Lease extends Agreement implements InvoiceProvenance {
     }
 
     @MemberOrder(name = "Units", sequence = "21")
-    public LeaseUnit addUnit(@Named("unit") Unit unit) {
+    public LeaseUnit addUnit(@Named("unit") UnitForLease unit) {
         LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
         units.add(leaseUnit);
         return leaseUnit;

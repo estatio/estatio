@@ -31,6 +31,7 @@ import org.estatio.dom.lease.LeaseUnitReferences;
 import org.estatio.dom.lease.LeaseUnitSector;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
@@ -63,7 +64,7 @@ public class LeasesFixture extends AbstractFixture {
     private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tentantReference, LocalDate startDate, LocalDate endDate) {
         Party landlord = parties.findPartyByReference(landlordReference);
         Party tenant = parties.findPartyByReference(tentantReference);
-        Unit unit = units.findUnitByReference(unitReference);
+        UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         lease.addRole(manager, agreementRoleTypes.find(LeaseConstants.ART_MANAGER), null, null);
         LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
