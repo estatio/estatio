@@ -23,7 +23,7 @@ public class AgreementRoleTypeTest {
     private AgreementType at;
     
     @Mock
-    private DomainObjectContainer mockContainer;
+    private AgreementRoleTypes mockAgreementRoleTypes;
     
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -31,18 +31,18 @@ public class AgreementRoleTypeTest {
     @Before
     public void setUp() throws Exception {
         at = new AgreementType();
+        at.injectAgreementRoleTypes(mockAgreementRoleTypes);
+        
         art = new AgreementRoleType();
         art.setAppliesTo(at);
-        at.setContainer(mockContainer);
     }
     
 
     @Test
-    @Ignore // hmmm.
     public void test() {
         context.checking(new Expectations() {
             {
-                oneOf(mockContainer).allMatches(with(any(Class.class)), with(any(Filter.class)));
+                oneOf(mockAgreementRoleTypes).applicableTo(at);
             }
         }
         );
