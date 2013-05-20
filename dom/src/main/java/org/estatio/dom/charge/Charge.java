@@ -2,13 +2,19 @@ package org.estatio.dom.charge;
 
 import javax.jdo.annotations.Extension;
 
+import com.google.common.collect.Ordering;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.Orderings;
 
 @javax.jdo.annotations.PersistenceCapable/*(extensions={
         @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
@@ -92,9 +98,15 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
 
     // {{ Comparable impl
     @Override
-    public int compareTo(Charge o) {
-        return getCode().compareTo(o.getCode());
+    public int compareTo(Charge other) {
+        return ORDERING_BY_CODE.compare(this, other);
     }
     // }}
+
+    public final static Ordering<Charge> ORDERING_BY_CODE = new Ordering<Charge>() {
+        public int compare(Charge p, Charge q) {
+            return Ordering.<String>natural().nullsFirst().compare(p.getCode(), q.getCode());
+        }
+    };
 
 }
