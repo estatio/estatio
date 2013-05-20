@@ -5,20 +5,22 @@ import com.google.common.collect.Ordering;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
-public enum LeaseUnitReferenceType {
-    BRAND("Brand", LeaseUnitBrand.class), SECTOR("Sector", LeaseUnitSector.class), ACTIVITY("Activity", LeaseUnitActivity.class);
+import org.estatio.dom.utils.StringUtils;
 
-    private final String title;
+public enum LeaseUnitReferenceType {
+    BRAND(LeaseUnitBrand.class), 
+    SECTOR(LeaseUnitSector.class), 
+    ACTIVITY(LeaseUnitActivity.class);
+
     private final Class<? extends LeaseUnitReference> clss;
     public static final Ordering<LeaseUnitReferenceType> ORDERING_NATURAL = Ordering.<LeaseUnitReferenceType> natural().nullsFirst();
 
-    private LeaseUnitReferenceType(String title, Class<? extends LeaseUnitReference> clss) {
-        this.title = title;
+    private LeaseUnitReferenceType(Class<? extends LeaseUnitReference> clss) {
         this.clss = clss;
     }
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 
     public LeaseUnitReference create(DomainObjectContainer container) {

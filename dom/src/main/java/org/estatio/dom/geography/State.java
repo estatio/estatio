@@ -1,17 +1,17 @@
 package org.estatio.dom.geography;
 
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-@PersistenceCapable()
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
+})*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bounded
 public class State extends Geography implements Comparable<State> {
 
@@ -26,6 +26,8 @@ public class State extends Geography implements Comparable<State> {
         this.country = country;
     }
 
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(State o) {
         int result = getCountry().compareTo(o.getCountry());
@@ -34,5 +36,6 @@ public class State extends Geography implements Comparable<State> {
         }
         return result;
     }
+    // }}
 
 }

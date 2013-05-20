@@ -5,30 +5,14 @@ import java.math.BigInteger;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.services.clock.ClockService;
 
 import org.joda.time.LocalDate;
 
@@ -39,27 +23,39 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.services.clock.ClockService;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
 
+    
+    @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
     @Hidden(where = Where.REFERENCES_PARENT)
     @MemberOrder(sequence = "1")
-    @Persistent
     @Disabled
     @Title(sequence = "1", append = ":")
     public LeaseItem getLeaseItem() {
@@ -102,9 +98,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.sequence = sequence;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Persistent
     @Title(sequence = "2", append = "-")
     @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
@@ -115,9 +113,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Persistent
     @MemberOrder(sequence = "3")
     @Title(sequence = "3")
     @Optional
@@ -129,10 +129,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.endDate = endDate;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 2)
     @Mask("")
     public BigDecimal getValue() {
         return value;
@@ -155,6 +156,8 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.status = status;
     }
 
+    
+    
     private LeaseTermFrequency frequency;
 
     @MemberOrder(sequence = "6")
@@ -166,9 +169,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.frequency = frequency;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "nextTerm")
     private LeaseTerm previousTerm;
 
-    @Persistent(mappedBy = "nextTerm")
     @MemberOrder(sequence = "6")
     @Hidden
     @Optional
@@ -180,6 +185,8 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.previousTerm = previousTerm;
     }
 
+    
+    
     private LeaseTerm nextTerm;
 
     @MemberOrder(sequence = "7")
@@ -392,7 +399,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     // {{ CompareTo
     @Override
     @Hidden
-    @NotContributed
     public int compareTo(LeaseTerm o) {
         return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
     }

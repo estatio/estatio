@@ -1,18 +1,21 @@
 package org.estatio.dom.charge;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.EstatioRefDataObject;
 
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @Immutable
 @Bounded
 public class ChargeGroup extends EstatioRefDataObject {
@@ -48,15 +51,15 @@ public class ChargeGroup extends EstatioRefDataObject {
     // }}
 
     // {{ Charges (Collection)
-    @Persistent(mappedBy = "group")
-    private Set<Charge> charges = new LinkedHashSet<Charge>();
+    @javax.jdo.annotations.Persistent(mappedBy = "group")
+    private SortedSet<Charge> charges = new TreeSet<Charge>();
 
     @MemberOrder(sequence = "1")
-    public Set<Charge> getCharges() {
+    public SortedSet<Charge> getCharges() {
         return charges;
     }
 
-    public void setCharges(final Set<Charge> charges) {
+    public void setCharges(final SortedSet<Charge> charges) {
         this.charges = charges;
     }
     // }}

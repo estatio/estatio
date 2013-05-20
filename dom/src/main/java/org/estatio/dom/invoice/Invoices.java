@@ -1,22 +1,12 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.lang.NotImplementedException;
-
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 
 @Named("Invoices")

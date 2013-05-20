@@ -1,5 +1,11 @@
 package org.estatio.dom.lease;
 
+
+// REVIEW: this needs to be made into an entity, so can make into a multi-tenanted entity:
+//@javax.jdo.annotations.PersistenceCapable(extensions={
+//        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+//        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+//    })
 public enum LeaseType {
 
     AA("Apparecchiature Automatic"),

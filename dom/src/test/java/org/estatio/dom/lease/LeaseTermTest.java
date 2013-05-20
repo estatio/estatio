@@ -50,7 +50,7 @@ public class LeaseTermTest {
 
         item = new LeaseItem();
         item.setEndDate(new LocalDate(2013, 6, 30));
-        item.injectLeaseTermsService(mockLeaseTerms);
+        item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
 
         term = new LeaseTerm();

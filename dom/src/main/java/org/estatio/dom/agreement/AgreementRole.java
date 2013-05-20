@@ -1,24 +1,29 @@
 package org.estatio.dom.agreement;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.DateRange;
-import org.estatio.services.clock.ClockService;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.DateRange;
+import org.estatio.services.clock.ClockService;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole> {
 
     private Agreement agreement;
@@ -103,7 +108,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
 
     @MemberOrder(sequence = "4")
     @Optional
-    @Persistent
+    @javax.jdo.annotations.Persistent
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -116,7 +121,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
 
     @MemberOrder(sequence = "5")
     @Optional
-    @Persistent
+    @javax.jdo.annotations.Persistent
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -125,6 +130,8 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.endDate = endDate;
     }
 
+    
+    // {{ Comparable impl
     /**
      * This is necessary but not sufficient; in
      * {@link Agreement#addRole(Party, AgreementRoleType, LocalDate, LocalDate)}
@@ -151,6 +158,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         }
         return this.getStartDate().compareTo(o.getStartDate());
     }
+    // }}
 
     public boolean isCurrent() {
         return isActiveOn(clockService.now());
@@ -167,7 +175,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.clockService = clockService;
     }
     // }}
-
 
     
 }

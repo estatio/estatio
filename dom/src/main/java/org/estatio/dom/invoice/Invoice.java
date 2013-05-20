@@ -1,39 +1,40 @@
 package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 
-@PersistenceCapable
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
 public class Invoice extends EstatioTransactionalObject {
 
+    
     public String title() {
         return String.format("%08d", Integer.parseInt(getId()));
     }
@@ -103,9 +104,10 @@ public class Invoice extends EstatioTransactionalObject {
     // }}
 
     // {{ InvoiceProvenance (property)
+    @javax.jdo.annotations.Persistent(extensions={
+            @Extension(vendorName="datanucleus", key = "mapping-strategy", value = "per-implementation")})
     private InvoiceProvenance provenance;
 
-    @Persistent(extensions={@Extension(vendorName="datanucleus", key = "mapping-strategy", value = "per-implementation")})
     @MemberOrder(sequence = "5")
     public InvoiceProvenance getProvenance() {
         return provenance;
@@ -118,9 +120,9 @@ public class Invoice extends EstatioTransactionalObject {
     // }}
 
     // {{ InvoiceDate (property)
+    @javax.jdo.annotations.Persistent
     private LocalDate invoiceDate;
 
-    @Persistent
     @MemberOrder(sequence = "6")
     public LocalDate getInvoiceDate() {
         return invoiceDate;
@@ -133,9 +135,9 @@ public class Invoice extends EstatioTransactionalObject {
     // }}
 
     // {{ DueDate (property)
+    @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @Persistent
     @MemberOrder(sequence = "7")
     public LocalDate getDueDate() {
         return dueDate;
@@ -190,16 +192,16 @@ public class Invoice extends EstatioTransactionalObject {
     // }}
 
     // {{ Items (Collection)
-    private Set<InvoiceItem> items = new LinkedHashSet<InvoiceItem>();
+    @javax.jdo.annotations.Persistent(mappedBy = "invoice")
+    private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
 
     @MemberOrder(sequence = "11")
     @Render(Type.EAGERLY)
-    @Persistent(mappedBy = "invoice")
-    public Set<InvoiceItem> getItems() {
+    public SortedSet<InvoiceItem> getItems() {
         return items;
     }
 
-    public void setItems(final Set<InvoiceItem> items) {
+    public void setItems(final SortedSet<InvoiceItem> items) {
         this.items = items;
     }
 
@@ -227,6 +229,8 @@ public class Invoice extends EstatioTransactionalObject {
 
     // }}
 
+    // {{ derived
+    @NotPersisted
     @MemberOrder(sequence = "12")
     public BigDecimal getNetAmount() {
         BigDecimal total = BigDecimal.ZERO;
@@ -236,6 +240,7 @@ public class Invoice extends EstatioTransactionalObject {
         return total;
     }
 
+    @NotPersisted
     @MemberOrder(sequence = "13")
     public BigDecimal getVatAmount() {
         BigDecimal total = BigDecimal.ZERO;
@@ -245,6 +250,7 @@ public class Invoice extends EstatioTransactionalObject {
         return total;
     }
 
+    @NotPersisted
     @MemberOrder(sequence = "14")
     public BigDecimal getGrossAmount() {
         BigDecimal total = BigDecimal.ZERO;
@@ -253,6 +259,7 @@ public class Invoice extends EstatioTransactionalObject {
         }
         return total;
     }
+    // }}
 
     // {{ Actions
 
@@ -293,31 +300,32 @@ public class Invoice extends EstatioTransactionalObject {
         return true;
     }
 
-    // TODO: Prototype and Bulk don't seem to go well together
-    //@Prototype
+    @Prototype
     @Bulk
     public void remove() {
-//        if (getStatus().equals(InvoiceStatus.NEW)) {
-            for (InvoiceItem item : getItems()) {
-                item.remove();
-            }
-            getContainer().remove(this);
-//        }
+        // if (!getStatus().equals(InvoiceStatus.NEW)) { 
+        //    return; 
+        // }
+        for (InvoiceItem item : getItems()) {
+            item.remove();
+        }
+        getContainer().remove(this);
     }
 
     // }}
 
-    // {{ Inject services
+    
+    // {{ Injected services
 
     private Parties parties;
 
-    public void setParties(Parties parties) {
+    public void injectParties(Parties parties) {
         this.parties = parties;
     }
 
     private Numerators numerators;
 
-    public void setNumerators(Numerators numerators) {
+    public void injectNumerators(Numerators numerators) {
         this.numerators = numerators;
     }
     // }}

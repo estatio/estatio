@@ -22,6 +22,7 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.estatio.dom.utils.StringUtils;
 
 public enum CommunicationChannelType {
+
     ACCOUNTING_POSTAL_ADDRESS(PostalAddress.class), 
     POSTAL_ADDRESS(PostalAddress.class), 
     ACCOUNTING_EMAIL_ADDRESS(EmailAddress.class), 

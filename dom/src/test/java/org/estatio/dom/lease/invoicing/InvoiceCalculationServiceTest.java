@@ -221,7 +221,7 @@ public class InvoiceCalculationServiceTest {
         lt.modifyLeaseItem(li);
         li.getTerms().add(lt);
         
-        tax.setTaxRepo(mockTaxes);
+        tax.injectTaxes(mockTaxes);
         final InvoiceItemForLease ii = new InvoiceItemForLease();
         ii.injectInvoices(mockInvoices);
         ii.injectAgreementRoleTypes(mockAgreementRoleTypes);

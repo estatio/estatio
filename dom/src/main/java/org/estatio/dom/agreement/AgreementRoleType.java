@@ -2,7 +2,7 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Immutable;
@@ -12,7 +12,9 @@ import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioRefDataObject;
 
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
+})*/
 @Immutable
 public class AgreementRoleType extends EstatioRefDataObject implements Comparable<AgreementRoleType> {
 
@@ -50,11 +52,12 @@ public class AgreementRoleType extends EstatioRefDataObject implements Comparabl
     }
 
 
-    
+    // {{ Comparable impl
     @Override
     public int compareTo(AgreementRoleType o) {
         return getTitle().compareTo(o.getTitle());
     }
+    // }}
 
     
     public static AgreementRoleType create(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {

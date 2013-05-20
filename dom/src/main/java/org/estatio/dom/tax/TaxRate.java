@@ -3,19 +3,24 @@ package org.estatio.dom.tax;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.joda.time.LocalDate;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioTransactionalObject;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate> {
 

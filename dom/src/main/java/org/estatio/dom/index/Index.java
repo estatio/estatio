@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -15,7 +13,12 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioRefDataObject;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @Immutable
 public class Index extends EstatioRefDataObject implements Comparable<Index> {
 
@@ -42,7 +45,8 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         this.name = name;
     }
 
-    @Persistent(mappedBy = "index")
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "index")
     private List<IndexBase> indexBases = new ArrayList<IndexBase>();
 
     @MemberOrder(name = "Bases", sequence = "3")
@@ -75,7 +79,7 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
     @Hidden
     public BigDecimal getIndexValueForDate(LocalDate date) {
         if (date != null) {
-            IndexValue indexValue = indexService.findIndexValueForDate(this, date);
+            IndexValue indexValue = indices.findIndexValueForDate(this, date);
             return indexValue == null ? null : indexValue.getValue();
         }
         return null;
@@ -83,7 +87,7 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
 
     @Hidden
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
-        IndexValue nextIndexValue = indexService.findIndexValueForDate(this, nextIndexStartDate);
+        IndexValue nextIndexValue = indices.findIndexValueForDate(this, nextIndexStartDate);
         // TODO: check efficiency.. seems to retrieve every single index value
         // for the last 15 years...
         if (nextIndexValue != null) {
@@ -100,16 +104,22 @@ public class Index extends EstatioRefDataObject implements Comparable<Index> {
         indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
     }
 
-    private Indices indexService;
+    
+    // {{ injected
+    private Indices indices;
 
-    public void setIndexService(Indices indices) {
-        this.indexService = indices;
+    public void injectIndices(Indices indices) {
+        this.indices = indices;
     }
+    // }}
 
+    
+    // {{ Comparable impl
     @Override
     @Hidden
     public int compareTo(Index o) {
         return o.getReference().compareTo(this.getReference());
     }
+    // }}
 
 }

@@ -1,25 +1,17 @@
 package org.estatio.dom.party;
 
-/**
- * 
- * 
- * @version $Rev$ $Date$
- */
+import org.estatio.dom.utils.StringUtils;
+
+// TODO: this is only sketched at the moment...
 public enum PartyRoleType {
 
-    OWNER("Owner"), 
-    TENANT("Tenant"), 
-    LANDLORD("Landlord"),
-    BANK("Bank");
-
-    private final String title;
-
-    PartyRoleType(String title) {
-        this.title = title;
-    }
+    OWNER, 
+    TENANT, 
+    LANDLORD,
+    BANK;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 
 }

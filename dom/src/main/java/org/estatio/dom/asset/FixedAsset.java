@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Element;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Unique;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
+
+import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
+import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -26,21 +27,20 @@ import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
-import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
-import com.danhaywood.isis.wicket.gmap3.applib.Location;
-import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
-
-@PersistenceCapable
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @PublishedObject
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bookmarkable
 public abstract class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
 
@@ -93,11 +93,13 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         return this;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "asset")
     private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
 
     @Render(Type.EAGERLY)
     @MemberOrder(name = "Roles", sequence = "2.1")
-    @Persistent(mappedBy = "asset")
     public SortedSet<FixedAssetRole> getRoles() {
         return roles;
     }
@@ -108,19 +110,20 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
 
     @MemberOrder(name = "Roles", sequence = "1")
     public FixedAssetRole addRole(@Named("party") Party party, @Named("type") FixedAssetRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        FixedAssetRole role = fixedAssetRolesService.findRole(this, party, type, startDate, endDate);
+        FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
         if (role == null) {
-            role = fixedAssetRolesService.newRole(this, party, type, startDate, endDate);
+            role = fixedAssetRoles.newRole(this, party, type, startDate, endDate);
         }
         return role;
     }
 
     public List<Party> choices0AddRole() {
-        return partiesService.allParties();
+        return parties.allParties();
     }
 
-    @Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
-    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    
+    @javax.jdo.annotations.Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
+    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @Render(Type.EAGERLY)
@@ -168,27 +171,32 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         return null;
     }
 
-    private FixedAssetRoles fixedAssetRolesService;
+    // {{ injected
+    private FixedAssetRoles fixedAssetRoles;
 
-    public void setFixedAssetRolesService(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRolesService = fixedAssetRoles;
+    public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
+        this.fixedAssetRoles = fixedAssetRoles;
     }
 
-    private Parties partiesService;
+    private Parties parties;
 
-    public void setPartiesService(Parties parties) {
-        this.partiesService = parties;
+    public void injectParties(Parties parties) {
+        this.parties = parties;
     }
 
     private LocationLookupService locationLookupService;
 
-    public void setLocationLookupService(LocationLookupService locationLookupService) {
+    public void injectLocationLookupService(LocationLookupService locationLookupService) {
         this.locationLookupService = locationLookupService;
     }
+    // }}
+    
 
+    // {{ Comparable impl
     @Override
     public int compareTo(FixedAsset other) {
         return this.getName().compareTo(other.getName());
     }
+    // }}
 
 }

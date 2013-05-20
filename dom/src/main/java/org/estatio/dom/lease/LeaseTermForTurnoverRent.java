@@ -4,25 +4,27 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.estatio.dom.utils.MathUtils;
-import org.joda.time.LocalDate;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+import org.estatio.dom.utils.MathUtils;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal turnoverRentPercentage;
 
     @MemberOrder(sequence = "10", name = "Turnover Rent")
-    @Column(scale = 2)
     public BigDecimal getTurnoverRentPercentage() {
         return turnoverRentPercentage;
     }
@@ -31,10 +33,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.turnoverRentPercentage = turnoverRentPercentage;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedTurnover;
 
     @MemberOrder(sequence = "11", name = "Turnover Rent")
-    @Column(scale = 2)
     public BigDecimal getBudgetedTurnover() {
         return budgetedTurnover;
     }
@@ -43,10 +46,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.budgetedTurnover = budgetedTurnover;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedTurnover;
 
     @MemberOrder(sequence = "12", name = "Turnover Rent")
-    @Column(scale = 2)
     public BigDecimal getAuditedTurnover() {
         return auditedTurnover;
     }
@@ -67,10 +71,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.budgetedValue = budgetedValue;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedValue;
 
     @MemberOrder(sequence = "21", name = "Values")
-    @Column(scale = 2)
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

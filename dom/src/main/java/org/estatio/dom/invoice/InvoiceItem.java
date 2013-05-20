@@ -4,14 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
@@ -28,21 +23,15 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.Orderings;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -79,6 +68,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         currentInvoice.removeFromItems(this);
     }
 
+    
+    
+    
     private Charge charge;
 
     @Title(sequence = "2")
@@ -92,14 +84,16 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     }
 
     public List<Charge> choicesCharge() {
-        return chargesService.allCharges();
+        return charges.allCharges();
 
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal quantity;
 
     @MemberOrder(sequence = "3")
-    @Column(scale = 2)
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -108,10 +102,12 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.quantity = quantity;
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 2)
     public BigDecimal getNetAmount() {
         return netAmount;
     }
@@ -124,11 +120,12 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         return BigDecimal.ZERO;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal vatAmount;
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
-    @Column(scale = 2)
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -137,10 +134,12 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.vatAmount = vatAmount;
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
 
     @MemberOrder(sequence = "6")
-    @Column(scale = 2)
     public BigDecimal getGrossAmount() {
         return grossAmount;
     }
@@ -149,6 +148,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.grossAmount = grossAmount;
     }
 
+    
+    
     private Tax tax;
 
     @MemberOrder(sequence = "7")
@@ -173,9 +174,10 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.description = description;
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @Persistent
     @MemberOrder(sequence = "9")
     public LocalDate getDueDate() {
         return dueDate;
@@ -185,10 +187,11 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.dueDate = dueDate;
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
     @MemberOrder(sequence = "10")
-    @Persistent
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -197,10 +200,11 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.startDate = startDate;
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
     @MemberOrder(sequence = "11")
-    @Persistent
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -287,9 +291,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     
     // {{ injected
-    private Charges chargesService;
+    private Charges charges;
     public void injectChargesService(Charges charges) {
-        this.chargesService = charges;
+        this.charges = charges;
     }
     // }}
 

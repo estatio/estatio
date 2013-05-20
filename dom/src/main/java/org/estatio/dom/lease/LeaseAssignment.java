@@ -1,14 +1,16 @@
 package org.estatio.dom.lease;
 
-import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 
+import org.estatio.dom.EstatioTransactionalObject;
+
 //TODO: to complete
+//@javax.jdo.annotations.PersistenceCapable(extensions={
+//        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+//        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+//    })
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class LeaseAssignment extends EstatioTransactionalObject {
 

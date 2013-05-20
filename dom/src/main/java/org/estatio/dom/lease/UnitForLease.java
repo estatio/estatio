@@ -1,34 +1,29 @@
 package org.estatio.dom.lease;
 
-
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
-
-import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.asset.Unit;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class UnitForLease extends Unit {
 
-    @Persistent(mappedBy = "unit", defaultFetchGroup = "false")
+    @javax.jdo.annotations.Persistent(mappedBy = "unit", defaultFetchGroup = "false")
     private SortedSet<LeaseUnit> leases = new TreeSet<LeaseUnit>();
 
     @Render(Type.EAGERLY)

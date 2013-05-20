@@ -4,19 +4,10 @@ import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.invoice.InvoiceProvenance;
-import org.estatio.dom.party.Party;
 
 import org.joda.time.LocalDate;
 
@@ -30,10 +21,17 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable()
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.invoice.InvoiceProvenance;
+import org.estatio.dom.party.Party;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
 public class Lease extends Agreement implements InvoiceProvenance {
 
@@ -81,9 +79,9 @@ public class Lease extends Agreement implements InvoiceProvenance {
     // }}
 
     // {{ Units (Collection)
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
-    @Persistent(mappedBy = "lease")
     @MemberOrder(name = "Units", sequence = "20")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseUnit> getUnits() {
@@ -121,10 +119,10 @@ public class Lease extends Agreement implements InvoiceProvenance {
     // }}
 
     // {{ Items (Collection)
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Render(Type.EAGERLY)
-    @Persistent(mappedBy = "lease")
     @MemberOrder(name = "Items", sequence = "30")
     public SortedSet<LeaseItem> getItems() {
         return items;
@@ -208,16 +206,16 @@ public class Lease extends Agreement implements InvoiceProvenance {
 
     // }}
 
-    // {{ injected services
+    // {{ injected
     private LeaseItems leaseItems;
 
-    public void setLeaseItems(final LeaseItems leaseItems) {
+    public void injectLeaseItems(final LeaseItems leaseItems) {
         this.leaseItems = leaseItems;
     }
 
     private LeaseUnits leaseUnits;
 
-    public void setLeaseUnits(final LeaseUnits leaseUnits) {
+    public void injectLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
 

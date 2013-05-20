@@ -1,12 +1,7 @@
 package org.estatio.dom.lease;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.asset.Unit;
 
 import org.joda.time.LocalDate;
 
@@ -16,10 +11,17 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-@PersistenceCapable
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.asset.Unit;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit> {
 
+    
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
@@ -78,9 +80,11 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         currentUnit.removeFromLeases(this);
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Persistent
     @Optional
     @MemberOrder(sequence = "3")
     public LocalDate getStartDate() {
@@ -91,9 +95,11 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Persistent
     @Optional
     @MemberOrder(sequence = "4")
     public LocalDate getEndDate() {
@@ -164,6 +170,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.activity = activity;
     }
 
+    
+    // {{ Comparable impl
     @Override
     @Hidden
     public int compareTo(LeaseUnit o) {
@@ -177,4 +185,5 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
             return -1;
         return thisUnit.getReference().compareTo(otherUnit.getReference());
     }
+    // }}
 }

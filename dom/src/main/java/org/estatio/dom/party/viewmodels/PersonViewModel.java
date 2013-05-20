@@ -2,6 +2,7 @@ package org.estatio.dom.party.viewmodels;
 
 import org.estatio.dom.party.Person;
 
+// REVIEW: can this be removed?
 public class PersonViewModel {
 
     private String reference;

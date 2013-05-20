@@ -1,18 +1,13 @@
 package org.estatio.dom.lease;
 
+import org.estatio.dom.utils.StringUtils;
+
 public enum LeaseItemStatus {
 
-    APPROVED("Approved"), 
-    NEW("New");
-
-    private final String title;
-
-    private LeaseItemStatus(String title) {
-        this.title = title;
-    }
+    APPROVED, NEW;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 
  }

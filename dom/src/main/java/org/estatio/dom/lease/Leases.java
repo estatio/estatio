@@ -3,15 +3,6 @@ package org.estatio.dom.lease;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.DateTimeUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -25,6 +16,14 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.DateTimeUtils;
 
 @Named("Leases")
 public class Leases extends AbstractFactoryAndRepository {
@@ -107,23 +106,20 @@ public class Leases extends AbstractFactoryAndRepository {
         return allInstances(Lease.class);
     }
 
+    
     // {{ injected: Invoices
     private InvoicesForLease invoices;
     public void injectInvoicesService(final InvoicesForLease invoices) {
         this.invoices = invoices;
     }
-    // }}
 
-    // {{ injected: AgreementTypes
     private AgreementTypes agreementTypes;
     public void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
-    // }}
 
-    // {{ injected: AgreementRoleTypes
     private AgreementRoleTypes agreementRoleTypes;
-    public void setAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
     // }}

@@ -16,6 +16,7 @@
  */
 package org.estatio.dom.party;
 
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -23,14 +24,18 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class PartyRole extends EstatioTransactionalObject {
 
+    
     // {{ Party (property)
+    //@javax.jdo.annotations.Column(name="PARTY_ID")
     private Party party;
 
-    //@javax.jdo.annotations.Column(name="PARTY_ID")
     @MemberOrder(sequence = "1")
     public Party getParty() {
         return party;
@@ -57,6 +62,7 @@ public class PartyRole extends EstatioTransactionalObject {
     // }}
 
     // {{ StartDateDate (property)
+    // REVIEW: doesn't this require a @Persistent
     private LocalDate startDateDate;
 
     @MemberOrder(sequence = "1")
@@ -71,6 +77,7 @@ public class PartyRole extends EstatioTransactionalObject {
     // }}
 
     // {{ EndDateDate (property)
+    // REVIEW: doesn't this require a @Persistent
     private LocalDate endDateDate;
 
     @MemberOrder(sequence = "1")

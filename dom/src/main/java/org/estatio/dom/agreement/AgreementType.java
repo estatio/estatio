@@ -1,9 +1,8 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-import java.util.Set;
 
-import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
@@ -13,12 +12,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.utils.ClassUtils;
 
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
+})*/
 @Immutable
 public class AgreementType extends EstatioRefDataObject implements Comparable<AgreementType> {
 

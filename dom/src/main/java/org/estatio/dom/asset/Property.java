@@ -4,30 +4,15 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Element;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Query;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.lease.UnitForLease;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -36,7 +21,12 @@ import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
-@javax.jdo.annotations.PersistenceCapable
+import org.estatio.dom.geography.Country;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -46,6 +36,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 @Bookmarkable
 public class Property extends FixedAsset {
 
+    
     // {{ Type (attribute)
     private PropertyType propertyType;
 
@@ -61,10 +52,9 @@ public class Property extends FixedAsset {
     // }}
 
     // {{ OpeningDate (attribute)
+    @javax.jdo.annotations.Persistent
     private LocalDate openingDate;
 
-    @javax.jdo.annotations.Persistent
-    // required for applib.Date
     @MemberOrder(sequence = "1.4")
     public LocalDate getOpeningDate() {
         return openingDate;
@@ -77,10 +67,9 @@ public class Property extends FixedAsset {
     // }}
 
     // {{ AcquireDate (attribute)
+    @javax.jdo.annotations.Persistent
     private LocalDate acquireDate;
 
-    @javax.jdo.annotations.Persistent
-    // required for applib.Date
     @MemberOrder(sequence = "1.5")
     @Optional
     public LocalDate getAcquireDate() {
@@ -97,7 +86,6 @@ public class Property extends FixedAsset {
     private LocalDate disposalDate;
 
     @javax.jdo.annotations.Persistent
-    // required for applib.Date
     @MemberOrder(sequence = "1.6")
     @Optional
     public LocalDate getDisposalDate() {
@@ -111,10 +99,10 @@ public class Property extends FixedAsset {
     // }}
 
     // {{ Area (attribute)
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
     @MemberOrder(sequence = "1.7")
-    @Column(scale = 2)
     public BigDecimal getArea() {
         return area;
     }
@@ -154,7 +142,7 @@ public class Property extends FixedAsset {
     // }}
 
     // {{ Units (set, bidir)
-    @Persistent(mappedBy = "property")
+    @javax.jdo.annotations.Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();
 
     @Render(Type.EAGERLY)
@@ -183,11 +171,9 @@ public class Property extends FixedAsset {
     // {{ injected services
 
     private Units unitsRepo;
-
-    public void setUnitsRepo(final Units unitsRepo) {
+    public void injectUnitsRepo(final Units unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
-
 
     // }}
 

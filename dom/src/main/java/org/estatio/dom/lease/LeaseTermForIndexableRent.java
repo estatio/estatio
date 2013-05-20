@@ -3,33 +3,29 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.jdo.InstanceCallbacks;
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.utils.MathUtils;
-import org.joda.time.LocalDate;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
-
-    public LeaseTermForIndexableRent() {
-
-    }
 
     // {{ Index (property)
     private Index index;
@@ -44,15 +40,15 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     public List<Index> choicesIndex() {
-        return indexService.allIndices();
+        return indices.allIndices();
     }
 
     // }}
 
     // {{ BaseIndexStartDate (property)
+    @javax.jdo.annotations.Persistent
     private LocalDate baseIndexStartDate;
 
-    @Persistent
     @MemberOrder(sequence = "12", name = "Indexable Rent")
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
@@ -65,11 +61,11 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ BaseIndexValue (property)
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal baseIndexValue;
 
     @MemberOrder(sequence = "14", name = "Indexable Rent")
     @Optional
-    @Column(scale = 2)
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
     }
@@ -81,9 +77,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ NextIndexStartDate (property)
+    @javax.jdo.annotations.Persistent
     private LocalDate nextIndexStartDate;
 
-    @Persistent
     @MemberOrder(sequence = "15", name = "Indexable Rent")
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
@@ -96,11 +92,11 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ NextIndexValue (property)
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal nextIndexValue;
 
     @MemberOrder(sequence = "17", name = "Indexable Rent")
     @Optional
-    @Column(scale = 2)
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
     }
@@ -112,9 +108,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ EffectiveDate (property)
+    @javax.jdo.annotations.Persistent
     private LocalDate effectiveDate;
 
-    @Persistent
     @Optional
     @MemberOrder(sequence = "19", name = "Indexable Rent")
     public LocalDate getEffectiveDate() {
@@ -128,11 +124,11 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ IndexationPercentage (property)
+    @javax.jdo.annotations.Column(scale = 1)
     private BigDecimal indexationPercentage;
 
     @MemberOrder(sequence = "20", name = "Indexable Rent")
     @Optional
-    @Column(scale = 1)
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }
@@ -144,6 +140,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ LevellingPercentage (property)
+    // REVIEW: why now @Column annotation for this one?
     private BigDecimal levellingPercentage;
 
     @MemberOrder(sequence = "21", name = "Indexable Rent")
@@ -159,11 +156,11 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ LevellingValue (property)
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal levellingValue;
 
     @MemberOrder(sequence = "22", name = "Indexable Rent")
     @Optional
-    @Column(scale = 2)
     public BigDecimal getLevellingValue() {
         return levellingValue;
     }
@@ -175,10 +172,10 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ BaseValue (property)
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal baseValue;
 
     @MemberOrder(sequence = "30", name = "Values")
-    @Column(scale = 2)
     public BigDecimal getBaseValue() {
         return baseValue;
     }
@@ -190,11 +187,11 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // }}
 
     // {{ IndexedValue (property)
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal indexedValue;
 
     @MemberOrder(sequence = "31", name = "Values")
     @Optional
-    @Column(scale = 2)
     public BigDecimal getIndexedValue() {
         return indexedValue;
     }
@@ -217,6 +214,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
     }
 
+    
+    
     @Override
     @Hidden
     public void initialize() {
@@ -280,10 +279,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // }}
 
-    private Indices indexService;
+    
+    // {{ injected
+    private Indices indices;
 
-    public void setIndexService(Indices indexes) {
-        this.indexService = indexes;
+    public void setIndices(Indices indexes) {
+        this.indices = indexes;
     }
 
     // }}

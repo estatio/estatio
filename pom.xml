@@ -34,7 +34,6 @@
         <isis-security-shiro.version>1.1.1-SNAPSHOT</isis-security-shiro.version>
 
 		<isis-viewer-dnd.version>1.0.0-SNAPSHOT</isis-viewer-dnd.version>
-		<isis-viewer-junit.version>1.0.0-SNAPSHOT</isis-viewer-junit.version>
 
         <!-- override in each module (used by locate global resources) -->
         <siteBaseDir>.</siteBaseDir>
@@ -433,14 +432,6 @@
                 <type>pom</type>
                 <scope>import</scope>
 			</dependency>
-
-            <dependency>
-                <groupId>org.apache.isis.viewer</groupId>
-                <artifactId>isis-viewer-junit</artifactId>
-                <version>${isis-viewer-junit.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.apache.isis.security</groupId>

@@ -39,7 +39,7 @@ public class InvoiceNumberTest {
     public void setup() {
         invoice = new Invoice();
         numerator = new Numerator();
-        invoice.setNumerators(mockNumerators);
+        invoice.injectNumerators(mockNumerators);
         invoice.setContainer(mockContainer);
     }
 

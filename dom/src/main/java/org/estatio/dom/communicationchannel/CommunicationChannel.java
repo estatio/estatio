@@ -1,14 +1,9 @@
 package org.estatio.dom.communicationchannel;
 
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -17,13 +12,17 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator("CCHN")
-// required since subtypes are rolling-up
-@ObjectType("CCHN")
-@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
+import org.estatio.dom.EstatioTransactionalObject;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator("CCHN") // required since subtypes are rolling-up
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@ObjectType("CCHN")
 public abstract class CommunicationChannel extends EstatioTransactionalObject implements Comparable<CommunicationChannel> {
 
     // {{ Type (attribute)
@@ -88,10 +87,12 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
     }
     // }}
     
-    
+
+    // {{ Comparable impl
     @Hidden
     public int compareTo(CommunicationChannel other) {
         return this.getClass().getName().compareTo(other.getClass().getName());
     }
+    // }}
 
 }

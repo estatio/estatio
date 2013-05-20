@@ -1,18 +1,18 @@
 package org.estatio.dom.geography;
 
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable()
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bounded
 public class Country extends Geography implements Comparable<Country> {
 
@@ -28,9 +28,12 @@ public class Country extends Geography implements Comparable<Country> {
         this.alpha2Code = alpha2Code;
     }
 
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(Country o) {
         return getName().compareTo(o.getName());
     }
+    // }}
 
 }

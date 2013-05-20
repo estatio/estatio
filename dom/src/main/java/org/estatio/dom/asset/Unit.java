@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -18,7 +18,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Where;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
@@ -42,10 +45,12 @@ public class Unit extends FixedAsset {
         return Arrays.asList(UnitType.values());
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 2)
     public BigDecimal getArea() {
         return area;
     }
@@ -54,11 +59,12 @@ public class Unit extends FixedAsset {
         this.area = area;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal storageArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "5")
-    @Column(scale = 2)
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -67,11 +73,13 @@ public class Unit extends FixedAsset {
         this.storageArea = storageArea;
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal salesArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "6")
-    @Column(scale = 2)
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -80,11 +88,12 @@ public class Unit extends FixedAsset {
         this.salesArea = salesArea;
     }
 
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal mezzanineArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "7")
-    @Column(scale = 2)
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -93,11 +102,13 @@ public class Unit extends FixedAsset {
         this.mezzanineArea = mezzanineArea;
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal terraceArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
     @MemberOrder(sequence = "8")
-    @Column(scale = 2)
     public BigDecimal getTerraceArea() {
         return terraceArea;
     }
@@ -106,9 +117,10 @@ public class Unit extends FixedAsset {
         this.terraceArea = terraceArea;
     }
 
+    
+    @javax.jdo.annotations.Column(name = "PROPERTY_ID")
     private Property property;
 
-    @Column(name = "PROPERTY_ID")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     @MemberOrder(sequence = "9")

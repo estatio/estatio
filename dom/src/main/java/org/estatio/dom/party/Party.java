@@ -5,11 +5,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Element;
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -18,15 +14,17 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccountType;
 
-@PersistenceCapable
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Parties.class)
 public abstract class Party extends EstatioTransactionalObject {
 
@@ -61,8 +59,8 @@ public abstract class Party extends EstatioTransactionalObject {
     // }}
 
     // {{ CommunicationChannels (list, unidir)
-    @Join(column = "PARTY_ID", generateForeignKey = "false")
-    @Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
+    @javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey = "false")
+    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @MemberOrder(name = "CommunicationChannels", sequence = "10")
@@ -103,11 +101,11 @@ public abstract class Party extends EstatioTransactionalObject {
     // }}
 
     // {{ Agreements (Collection)
+    @javax.jdo.annotations.Persistent(mappedBy="party")
     private Set<AgreementRole> agreements = new LinkedHashSet<AgreementRole>();
 
     @MemberOrder(name = "Agreements", sequence = "11")
     @Render(Type.EAGERLY)
-    @Persistent(mappedBy="party")
     public Set<AgreementRole> getAgreements() {
         return agreements;
     }
@@ -163,10 +161,7 @@ public abstract class Party extends EstatioTransactionalObject {
 
 
     // {{ Roles (set, bidir)
-    // REVIEW: changed this startDate set of PartyRoleType, which I suspect was
-    // wrong
-    // (in any case can't have sets of enums)
-    @Persistent(mappedBy = "party")
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
 
     @MemberOrder(name = "Roles", sequence = "14")

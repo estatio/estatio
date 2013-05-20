@@ -1,4 +1,4 @@
-package org.estatio.dom.event;
+package org.estatio.dom;
 
 public interface Titled {
     

@@ -3,25 +3,17 @@ package org.estatio.dom.agreement;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -31,17 +23,25 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+    @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+    @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+})*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@Bookmarkable
 public abstract class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
 
     // {{ Reference (property)
     private String reference;
 
     @MemberOrder(sequence = "1")
-    @Title()
+    @Title
     public String getReference() {
         return reference;
     }
@@ -112,7 +112,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     // {{ StartDate (property)
     private LocalDate startDate;
 
-    @Persistent
+    @javax.jdo.annotations.Persistent
     @MemberOrder(sequence = "5")
     public LocalDate getStartDate() {
         return startDate;
@@ -127,7 +127,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     // {{ EndDate (property)
     private LocalDate endDate;
 
-    @Persistent
+    @javax.jdo.annotations.Persistent
     @MemberOrder(sequence = "6")
     public LocalDate getEndDate() {
         return endDate;
@@ -142,7 +142,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     // {{ TerminationDate (property)
     private LocalDate terminationDate;
 
-    @Persistent
+    @javax.jdo.annotations.Persistent
     @MemberOrder(sequence = "7")
     @Optional
     public LocalDate getTerminationDate() {
@@ -237,7 +237,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     // }}
 
     // {{ Roles (Collection)
-    @Persistent(mappedBy = "agreement")
+    @javax.jdo.annotations.Persistent(mappedBy = "agreement")
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
     @MemberOrder(name = "Roles", sequence = "11")
@@ -290,11 +290,13 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
     }
 
+    
     @Override
     public int compareTo(Agreement other) {
         return this.getReference().compareTo(other.getReference());
     }
-
+    
+    
     // {{ injected
     private AgreementRoles agreementRoles;
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {

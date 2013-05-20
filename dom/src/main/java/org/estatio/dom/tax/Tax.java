@@ -1,25 +1,26 @@
 package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Persistent;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioRefDataObject;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @Bounded
 @Immutable
 public class Tax extends EstatioRefDataObject {
@@ -54,9 +55,9 @@ public class Tax extends EstatioRefDataObject {
     // }}
 
     // {{ Rates (Collection)
+    @javax.jdo.annotations.Persistent(mappedBy = "tax")
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
-    @Persistent(mappedBy = "tax")
     @MemberOrder(sequence = "1")
     public SortedSet<TaxRate> getRates() {
         return rates;
@@ -70,27 +71,26 @@ public class Tax extends EstatioRefDataObject {
 
     // {{ NewRate (action)
     public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
-        return taxRepo.newRate(this, startDate, percentage);
+        return taxes.newRate(this, startDate, percentage);
     }
 
     // }}
 
     // {{ getPercentageForDate
     public BigDecimal percentageFor(LocalDate date) {
-        TaxRate rate = taxRepo.findTaxRateForDate(this, date);
+        TaxRate rate = taxes.findTaxRateForDate(this, date);
         if (rate == null) {
             return null;
         }
         return rate.getPercentage();
     }
+    // }}
 
-    // {{
+    // {{ injected
+    private Taxes taxes;
 
-    // {{ Taxes (injected)
-    private Taxes taxRepo;
-
-    public void setTaxRepo(Taxes taxes) {
-        this.taxRepo = taxes;
+    public void injectTaxes(Taxes taxes) {
+        this.taxes = taxes;
     }
 
     // }}

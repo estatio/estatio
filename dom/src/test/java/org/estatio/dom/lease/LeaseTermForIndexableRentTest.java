@@ -53,7 +53,7 @@ public class LeaseTermForIndexableRentTest {
         // i = context.getClassUnderTest();
         i = new Index();
 
-        i.setIndexService(mockIndices);
+        i.injectIndices(mockIndices);
 
         ib1 = new IndexBase();
         ib1.setStartDate(new LocalDate(2000, 1, 1));
@@ -85,7 +85,7 @@ public class LeaseTermForIndexableRentTest {
         item.injectClockService(mockClockService);
         item.modifyLease(lease);
         item.setType(LeaseItemType.RENT);
-        item.injectLeaseTermsService(mockLeaseTerms);
+        item.injectLeaseTerms(mockLeaseTerms);
 
         term = new LeaseTermForIndexableRent();
         term.injectClockService(mockClockService);

@@ -2,25 +2,26 @@ package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
 
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable(/* serializeRead = "true" */)
-@Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
-@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+import org.estatio.dom.EstatioTransactionalObject;
+
+@javax.jdo.annotations.PersistenceCapable( /*extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    }*/
+        /* serializeRead = "true" */
+        )
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class Numerator extends EstatioTransactionalObject {
 
     // {{ Type (property)
@@ -53,10 +54,10 @@ public class Numerator extends EstatioTransactionalObject {
     // }}
 
     // {{ LastValue (property)
+    @javax.jdo.annotations.Persistent
     private BigInteger lastIncrement;
 
     @MemberOrder(sequence = "1")
-    @Persistent
     public BigInteger getLastIncrement() {
         return lastIncrement;
     }

@@ -2,14 +2,10 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.utils.Orderings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -18,12 +14,19 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.utils.Orderings;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 public class IndexValue extends EstatioRefDataObject implements Comparable<IndexValue> {
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Persistent
     @MemberOrder(sequence = "1")
     @Title(sequence = "2", prepend = ":")
     public LocalDate getStartDate() {
@@ -34,6 +37,7 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
         this.startDate = startDate;
     }
 
+    
     private IndexBase indexBase;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -63,10 +67,12 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
         currentIndexBase.removeFromValues(this);
     }
 
+    
+    
+    @javax.jdo.annotations.Column(scale = 4)
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
-    @Column(scale = 4)
     public BigDecimal getValue() {
         return value;
     }
@@ -80,10 +86,13 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
         getContainer().remove(this);
     }
 
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(IndexValue o) {
         return ORDERING_BY_START_DATE.compare(this, o);
     }
+    // }}
 
     public final static Ordering<IndexValue> ORDERING_BY_START_DATE = new Ordering<IndexValue>() {
         public int compare(IndexValue p, IndexValue q) {

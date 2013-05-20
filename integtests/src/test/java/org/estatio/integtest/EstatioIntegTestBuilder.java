@@ -109,7 +109,11 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         // believe that the second find fails to work due to original find caching an incorrect query compilation plan
         testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.query.compilation.cached","false");
 
-        
+ 
+        // adding this is meant to be all that is required for across-the-board multi-tenancy support
+        // however, it causes DN to throw a NullPointerException...
+        //testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.tenantId","DEV1");
+
         return testConfiguration;
     }
 }

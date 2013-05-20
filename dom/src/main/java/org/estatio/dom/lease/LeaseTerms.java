@@ -70,10 +70,10 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
 
     // }}
 
-    // {{
+    // {{ injected
     private IsisJdoSupport isisJdoSupport;
 
-    public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
         this.isisJdoSupport = isisJdoSupport;
     }
     // }}

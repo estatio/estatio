@@ -1,20 +1,16 @@
 package org.estatio.dom.invoice;
 
+import org.estatio.dom.utils.StringUtils;
+
 public enum InvoiceStatus {
 
-    NEW("New"), 
-    APPROVED("Approved"), 
-    COLLECTED("Collected"), 
-    INVOICED("Invoiced");
-
-    private final String title;
-
-    private InvoiceStatus(String title) {
-        this.title = title;
-    }
+    NEW, 
+    APPROVED, 
+    COLLECTED, 
+    INVOICED;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 
 }

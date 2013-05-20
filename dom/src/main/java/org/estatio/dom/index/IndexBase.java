@@ -4,11 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -18,7 +15,12 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioRefDataObject;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @Immutable
 public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase> {
 
@@ -50,10 +52,12 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         currentIndex.removeFromIndexBases(this);
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
     @Title(sequence = "2")
-    @Persistent
     @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
@@ -63,12 +67,13 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         this.startDate = startDate;
     }
 
+    
+    @javax.jdo.annotations.Persistent
+    @javax.jdo.annotations.Column(scale = 4)
     private BigDecimal factor;
 
     @Optional
     @MemberOrder(sequence = "4")
-    @Persistent
-    @Column(scale = 4)
     public BigDecimal getFactor() {
         return factor;
     }
@@ -81,11 +86,13 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         return (getPreviousBase() == null) ? null : (factor == null || factor.compareTo(BigDecimal.ZERO) == 0) ? "Factor is mandatory when there is a previous base" : null;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "nextBase")
     private IndexBase previousBase;
 
     @Optional
     @MemberOrder(sequence = "3")
-    @Persistent(mappedBy = "nextBase")
     public IndexBase getPreviousBase() {
         return previousBase;
     }
@@ -94,6 +101,7 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         this.previousBase = previousBase;
     }
 
+    
     private IndexBase nextBase;
 
     @Optional
@@ -106,7 +114,9 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         this.nextBase = nextBase;
     }
 
-    @Persistent(mappedBy = "indexBase")
+    
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "indexBase")
     private List<IndexValue> values = new ArrayList<IndexValue>();
 
     @MemberOrder(sequence = "6")
@@ -150,9 +160,12 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         return BigDecimal.ONE;
     }
 
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(IndexBase o) {
         return o.getStartDate().compareTo(this.getStartDate());
     }
+    // }}
 
 }

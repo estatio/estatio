@@ -35,7 +35,7 @@ public class InvoiceItemForLeaseTest {
     public void setup() {
         charge = new Charge();
         tax = new Tax();
-        tax.setTaxRepo(mockTaxes);
+        tax.injectTaxes(mockTaxes);
         rate = new TaxRate();
         rate.setPercentage(BigDecimal.valueOf(21));
         item = new InvoiceItemForLease();

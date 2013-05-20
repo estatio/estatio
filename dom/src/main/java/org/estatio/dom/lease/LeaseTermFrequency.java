@@ -1,18 +1,23 @@
 package org.estatio.dom.lease;
 
 import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.dom.utils.StringUtils;
+
 import org.joda.time.LocalDate;
 
 
 public enum LeaseTermFrequency {
 
-    YEARLY("Yearly", "RRULE:FREQ=YEARLY;INTERVAL=1"),
-    NO_FREQUENCY("No Frequency", null);
+    YEARLY("RRULE:FREQ=YEARLY;INTERVAL=1"),
+    NO_FREQUENCY(null);
 
-    private String title;
-
+    private LeaseTermFrequency(String rrule) {
+        this.rrule = rrule;
+    }
+    
+    
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 
     private String rrule;
@@ -21,10 +26,6 @@ public enum LeaseTermFrequency {
         return rrule;
     }
 
-    private LeaseTermFrequency(String title, String rrule) {
-        this.rrule = rrule;
-        this.title = title;
-    }
 
     public LocalDate nextDate(LocalDate date) {
         return CalendarUtils.nextDate(date, this.rrule);

@@ -2,10 +2,8 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 
-import javax.jdo.annotations.Discriminator;
-import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -19,10 +17,12 @@ import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@Discriminator("POST")
-// required since subtypes are rolling-up
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Discriminator("POST") // required since subtypes are rolling-up
 @ObjectType("POST")
 public class PostalAddress extends CommunicationChannel {
 
@@ -104,11 +104,11 @@ public class PostalAddress extends CommunicationChannel {
     // TODO: When no country has been selected, the UI renders
     // "no objects returned" and an ok button. After that it's impossible to to
     // a searh again.
+    @javax.jdo.annotations.Column(name = "COUNTRY_ID")
     private Country country;
 
     @Optional
     @MemberOrder(sequence = "5")
-    @javax.jdo.annotations.Column(name = "COUNTRY_ID")
     public Country getCountry() {
         return country;
     }
@@ -136,9 +136,9 @@ public class PostalAddress extends CommunicationChannel {
     // }}
 
     // {{ State (attribute)
+    @javax.jdo.annotations.Column(name = "STATE_ID")
     private State state;
 
-    @javax.jdo.annotations.Column(name = "STATE_ID")
     @Optional
     @MemberOrder(sequence = "6")
     public State getState() {

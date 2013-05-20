@@ -69,12 +69,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.isis.viewer</groupId>
-            <artifactId>isis-viewer-junit-impl</artifactId>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
 		    <groupId>org.apache.isis.core</groupId>
 		    <artifactId>isis-core-unittestsupport</artifactId>
         </dependency>

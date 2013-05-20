@@ -1,13 +1,16 @@
 package org.estatio.dom.currency;
 
-import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+
 import org.estatio.dom.EstatioRefDataObject;
 
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
+})*/
 @Bounded
 @Immutable
 public class Currency extends EstatioRefDataObject {

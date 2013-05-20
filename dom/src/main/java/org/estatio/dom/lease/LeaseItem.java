@@ -6,19 +6,10 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.services.clock.ClockService;
 
 import org.joda.time.LocalDate;
 
@@ -35,11 +26,23 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-@PersistenceCapable
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.dom.utils.Orderings;
+import org.estatio.services.clock.ClockService;
+
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem> {
 
+    
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -69,6 +72,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         currentLease.removeFromItems(this);
     }
 
+    
     private BigInteger sequence;
 
     @MemberOrder(sequence = "1")
@@ -93,9 +97,10 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.type = type;
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Persistent
     @MemberOrder(sequence = "3")
     public LocalDate getStartDate() {
         return startDate;
@@ -105,9 +110,10 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Persistent
     @MemberOrder(sequence = "4")
     public LocalDate getEndDate() {
         return endDate;
@@ -121,9 +127,10 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate tenancyStartDate;
 
-    @Persistent
     @Optional
     @MemberOrder(sequence = "5")
     @Hidden(where = Where.PARENTED_TABLES)
@@ -135,9 +142,10 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.tenancyStartDate = tenancyStartDate;
     }
 
+    
+    @javax.jdo.annotations.Persistent
     private LocalDate tenancyEndDate;
 
-    @Persistent
     @Optional
     @MemberOrder(sequence = "6")
     @Hidden(where = Where.PARENTED_TABLES)
@@ -149,12 +157,14 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.tenancyEndDate = tenancyEndDate;
     }
 
+    
+    // REVIEW: there was no @Persistent annotation here??
     private LocalDate nextDueDate;
 
     @MemberOrder(sequence = "7")
     @Disabled
     @Optional
-    // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
+    // TODO: Wicket still marks disabled fields a mandatory.  It shouldn't
     public LocalDate getNextDueDate() {
         return nextDueDate;
     }
@@ -199,12 +209,12 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     public List<Charge> choicesCharge() {
-        return chargeService.allCharges();
+        return charges.allCharges();
     }
 
     @Disabled
     @Optional
-    // TODO: Wicket still marks disabled fields a mandatory. Don't know if that
+    // TODO: Wicket still marks disabled fields a mandatory... it shouldn't.
     public BigDecimal getCurrentValue() {
         return valueForDate(clockService.now());
     }
@@ -219,10 +229,12 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return null;
     }
 
+    
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "leaseItem")
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
     @Render(Type.EAGERLY)
-    @Persistent(mappedBy = "leaseItem")
     @MemberOrder(name = "Terms", sequence = "15")
     @Paged(15)
     public SortedSet<LeaseTerm> getTerms() {
@@ -270,9 +282,10 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return null;
     }
 
+    
     @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createInitialTerm() {
-        LeaseTerm term = leaseTermsService.newLeaseTerm(this);
+        LeaseTerm term = leaseTerms.newLeaseTerm(this);
         return term;
     }
 
@@ -280,10 +293,12 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
+    
+    
     @Hidden
     @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
-        LeaseTerm term = leaseTermsService.newLeaseTerm(this, currentTerm);
+        LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm);
         return term;
     }
 
@@ -314,18 +329,8 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return total;
     }
 
-    private Charges chargeService;
-
-    public void setChargeService(Charges charges) {
-        this.chargeService = charges;
-    }
-
-    private LeaseTerms leaseTermsService;
-
-    public void injectLeaseTermsService(LeaseTerms leaseTerms) {
-        this.leaseTermsService = leaseTerms;
-    }
-
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(LeaseItem o) {
         return ORDERING_BY_TYPE.compound(ORDERING_BY_START_DATE).compare(this, o);
@@ -342,9 +347,22 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
+    // }}
 
     
-    // {{ injected: ClockService
+    // {{ injected
+    private Charges charges;
+    
+    public void injectCharges(Charges charges) {
+        this.charges = charges;
+    }
+    
+    private LeaseTerms leaseTerms;
+    
+    public void injectLeaseTerms(LeaseTerms leaseTerms) {
+        this.leaseTerms = leaseTerms;
+    }
+    
     private ClockService clockService;
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;

@@ -1,16 +1,13 @@
 package org.estatio.dom.financial;
 
+import org.estatio.dom.utils.StringUtils;
+
 public enum BankAccountType {
 
-    DEPOSIT("Deposit"), CHECKING("Checking");
-
-    private String title;
-
-    private BankAccountType(String title) {
-        this.title = title;
-    }
+    DEPOSIT, 
+    CHECKING;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 }

@@ -40,7 +40,7 @@ public class IndexTest {
         baseDate = new LocalDate(2001, 1, 1);
         nextDate = new LocalDate(2011, 1, 1);
         index = new Index();
-        index.setIndexService(mockIndices);
+        index.injectIndices(mockIndices);
 
         ib1990 = new IndexBase();
         ib1990.setStartDate(new LocalDate(1990, 1, 1));

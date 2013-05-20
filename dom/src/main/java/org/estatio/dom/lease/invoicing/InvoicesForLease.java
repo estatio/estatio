@@ -16,7 +16,6 @@ import org.estatio.dom.invoice.InvoiceProvenance;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 
 @Named("Invoices")

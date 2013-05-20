@@ -1,18 +1,22 @@
 package org.estatio.dom.charge;
 
-import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Extension;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject {
+public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
 
     // {{ Reference (property)
     private String reference;
@@ -29,6 +33,7 @@ public class Charge extends EstatioRefDataObject {
 
     // }}
 
+    
     // {{ Code (property)
     private String code;
 
@@ -82,6 +87,13 @@ public class Charge extends EstatioRefDataObject {
 
     public void setGroup(final ChargeGroup group) {
         this.group = group;
+    }
+    // }}
+
+    // {{ Comparable impl
+    @Override
+    public int compareTo(Charge o) {
+        return getCode().compareTo(o.getCode());
     }
     // }}
 

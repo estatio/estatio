@@ -47,7 +47,7 @@ public class InvoiceTest_assignInvoiceNumber {
         
 //        invoice = context.getClassUnderTest();
         invoice.setContainer(mockContainer);// to fix
-        invoice.setNumerators(mockNumerators); // to fix
+        invoice.injectNumerators(mockNumerators); // to fix
 
         allowingMockNumeratorsRepoToReturn(inn);
     }

@@ -1,28 +1,29 @@
 package org.estatio.dom.financial;
 
-import javax.jdo.annotations.DatastoreIdentity;
-import javax.jdo.annotations.Discriminator;
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Version;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 
-@PersistenceCapable
-@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
-@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
-@Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.PersistenceCapable/*(extensions={
+        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
+        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
+    })*/
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
+@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>{
 
+    
     // {{ Reference (property)
     private String reference;
 
@@ -79,10 +80,12 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
     }
     // }}
 
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(FinancialAccount o) {
-        // TODO Auto-generated method stub
-        return 0;
+        return getName().compareTo(o.getName());
     }
+    // }}
 
 }
