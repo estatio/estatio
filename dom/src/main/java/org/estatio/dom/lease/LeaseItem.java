@@ -344,7 +344,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     public final static Ordering<LeaseItem> ORDERING_BY_START_DATE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
-            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
     // }}

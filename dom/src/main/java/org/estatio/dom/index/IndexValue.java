@@ -96,7 +96,7 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
 
     public final static Ordering<IndexValue> ORDERING_BY_START_DATE = new Ordering<IndexValue>() {
         public int compare(IndexValue p, IndexValue q) {
-            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
 

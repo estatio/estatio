@@ -1,7 +1,8 @@
 package org.estatio.dom.agreement;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
+
+import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
@@ -16,12 +17,10 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateRange;
+import org.estatio.dom.utils.Orderings;
 import org.estatio.services.clock.ClockService;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole> {
@@ -141,23 +140,20 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
      * TODO: need to implement the above statement!!!
      */
     @Override
-    @Hidden
-    public int compareTo(AgreementRole o) {
-        int compareType = this.getType().compareTo(o.getType());
-        if (compareType != 0) {
-            return compareType;
-        }
-        if (this.getStartDate() == null && o.getStartDate() != null) {
-            return -1;
-        }
-        if (this.getStartDate() != null && o.getStartDate() == null) {
-            return +1;
-        }
-        if (this.getStartDate() == null && o.getStartDate() == null) {
-            return 0;
-        }
-        return this.getStartDate().compareTo(o.getStartDate());
+    public int compareTo(AgreementRole other) {
+        return ORDERING_BY_TYPE.compound(ORDERING_BY_START_DATE).compare(this, other);
     }
+    
+    public static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
+        public int compare(AgreementRole p, AgreementRole q) {
+            return AgreementRoleType.ORDERING_BY_TITLE.nullsFirst().compare(p.getType(), q.getType());
+        }
+    };
+    public static Ordering<AgreementRole> ORDERING_BY_START_DATE = new Ordering<AgreementRole>() {
+        public int compare(AgreementRole p, AgreementRole q) {
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+        }
+    };
     // }}
 
     public boolean isCurrent() {

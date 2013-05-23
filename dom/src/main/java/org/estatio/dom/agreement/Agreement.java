@@ -10,6 +10,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
@@ -24,13 +25,11 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-    @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-    @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-})*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -290,13 +289,20 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
     }
 
-    
+
+    // {{ Comparable impl
     @Override
     public int compareTo(Agreement other) {
-        return this.getReference().compareTo(other.getReference());
+        return ORDERING_BY_REFERENCE.compare(this, other);
     }
     
-    
+    public static Ordering<Agreement> ORDERING_BY_REFERENCE = new Ordering<Agreement>() {
+        public int compare(Agreement p, Agreement q) {
+            return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
+        }
+    };
+    // }}
+
     // {{ injected
     private AgreementRoles agreementRoles;
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {

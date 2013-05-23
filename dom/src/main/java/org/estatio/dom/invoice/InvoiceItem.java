@@ -283,13 +283,13 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
-            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
 
     public final static Ordering<InvoiceItem> ORDERING_BY_DUE_DATE = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
-            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
         }
     };
 

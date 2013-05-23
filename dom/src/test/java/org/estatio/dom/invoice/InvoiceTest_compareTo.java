@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -34,13 +35,16 @@ public class InvoiceTest_compareTo {
         item3.setInvoiceNumber("000002");
         item4.setInvoiceNumber("000003");
         
-        assertThat(item1.compareTo(item2), is(-1));
-        assertThat(item2.compareTo(item1), is(+1));
-        
-        assertThat(item2.compareTo(item3), is(0));
-
-        assertThat(item3.compareTo(item4), is(-1));
-        assertThat(item4.compareTo(item3), is(+1));
+        assertOrder();
     }
 
+    void assertOrder() {
+        assertThat(item1.compareTo(item2), is(Matchers.lessThan(0)));
+        assertThat(item2.compareTo(item1), is(Matchers.greaterThan(0)));
+        
+        assertThat(item2.compareTo(item3), is(0));
+        
+        assertThat(item3.compareTo(item4), is(Matchers.lessThan(0)));
+        assertThat(item4.compareTo(item3), is(Matchers.greaterThan(0)));
+    }
 }

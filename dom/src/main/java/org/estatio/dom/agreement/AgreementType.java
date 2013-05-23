@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.jdo.annotations.Extension;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Hidden;
@@ -16,9 +18,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.utils.ClassUtils;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
-})*/
+@javax.jdo.annotations.PersistenceCapable
 @Immutable
 public class AgreementType extends EstatioRefDataObject implements Comparable<AgreementType> {
 
@@ -79,9 +79,15 @@ public class AgreementType extends EstatioRefDataObject implements Comparable<Ag
 
     // {{ Comparable impl
     @Override
-    public int compareTo(AgreementType o) {
-        return getTitle().compareTo(o.getTitle());
+    public int compareTo(AgreementType other) {
+        return ORDERING_BY_TITLE.compare(this, other);
     }
+    
+    public static Ordering<AgreementType> ORDERING_BY_TITLE = new Ordering<AgreementType>() {
+        public int compare(AgreementType p, AgreementType q) {
+            return Ordering.<String> natural().nullsFirst().compare(p.getTitle(), q.getTitle());
+        }
+    };
     // }}
 
 

@@ -411,7 +411,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     public final static Ordering<LeaseTerm> ORDERING_BY_START_DATE = new Ordering<LeaseTerm>() {
         public int compare(LeaseTerm p, LeaseTerm q) {
-            return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
 
