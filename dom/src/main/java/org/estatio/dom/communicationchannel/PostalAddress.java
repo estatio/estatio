@@ -17,10 +17,7 @@ import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator("POST") // required since subtypes are rolling-up
 @ObjectType("POST")

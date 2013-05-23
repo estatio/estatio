@@ -20,10 +20,7 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Parties.class)
 public abstract class Party extends EstatioTransactionalObject {

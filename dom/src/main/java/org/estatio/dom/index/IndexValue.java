@@ -17,10 +17,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.utils.Orderings;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 public class IndexValue extends EstatioRefDataObject implements Comparable<IndexValue> {
 
     

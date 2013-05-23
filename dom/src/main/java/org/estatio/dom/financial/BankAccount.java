@@ -14,10 +14,7 @@ import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")

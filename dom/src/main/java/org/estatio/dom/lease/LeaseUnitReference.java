@@ -11,9 +11,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-disable", value="true")
-})*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bounded

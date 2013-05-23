@@ -16,10 +16,7 @@ import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.Orderings;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
 public class Charge extends EstatioRefDataObject implements Comparable<Charge> {

@@ -17,10 +17,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate> {
 

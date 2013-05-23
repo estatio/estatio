@@ -12,10 +12,7 @@ import org.apache.isis.applib.value.DateTime;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE, table="AUDITENTRY"
-        /*,extensions={
-            @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-            @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-        }*/)
+        )
 @javax.jdo.annotations.DatastoreIdentity(strategy=javax.jdo.annotations.IdGeneratorStrategy.IDENTITY)
 @Immutable
 public class AuditEntryForEstatio {

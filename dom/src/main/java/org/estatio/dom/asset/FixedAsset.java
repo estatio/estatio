@@ -5,7 +5,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -34,10 +33,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @PublishedObject

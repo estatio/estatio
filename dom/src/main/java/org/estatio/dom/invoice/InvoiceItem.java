@@ -29,10 +29,7 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.Orderings;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")

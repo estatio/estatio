@@ -7,10 +7,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 public class EstatioSetting extends AbstractDomainObject {
 
 

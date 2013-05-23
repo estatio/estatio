@@ -19,10 +19,7 @@ package org.estatio.dom.party;
 import javax.jdo.annotations.Extension;
 
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 public class Organisation extends Party {
 
 }

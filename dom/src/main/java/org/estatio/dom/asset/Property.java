@@ -23,10 +23,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.geography.Country;
 
-@javax.jdo.annotations.PersistenceCapable/*(extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    })*/
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")

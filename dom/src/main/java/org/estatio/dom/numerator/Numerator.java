@@ -13,12 +13,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
 
-@javax.jdo.annotations.PersistenceCapable( /*extensions={
-        @Extension(vendorName="datanucleus", key="multitenancy-column-name", value="iid"),
-        @Extension(vendorName="datanucleus", key="multitenancy-column-length", value="4"),
-    }*/
-        /* serializeRead = "true" */
-        )
+@javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
