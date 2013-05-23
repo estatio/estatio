@@ -2,6 +2,7 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
@@ -267,12 +268,16 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     // {{ Comparable impl
     @Override
     public int compareTo(InvoiceItem o) {
-        return ORDERING_BY_START_DATE.compound(ORDERING_BY_DUE_DATE).compound(ORDERING_BY_INVOICE).compare(this, o);
+        return ORDERING_BY_INVOICE
+                .compound(ORDERING_BY_START_DATE)
+                .compound(ORDERING_BY_DUE_DATE)
+                .compound(ORDERING_BY_DESC)
+                .compare(this, o);
     }
 
     public static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.<String> natural().compare(p.getClass().toString(), q.getClass().toString());
+            return Ordering.<Invoice> natural().nullsFirst().compare(p.getInvoice(), q.getInvoice());
         }
     };
 
@@ -287,6 +292,13 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
             return Orderings.lOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
         }
     };
+
+    public static Ordering<InvoiceItem> ORDERING_BY_DESC = new Ordering<InvoiceItem>() {
+        public int compare(InvoiceItem p, InvoiceItem q) {
+            return Ordering.<String> natural().nullsFirst().compare(p.getDescription(), q.getDescription());
+        }
+    };
+
     // }}
 
     

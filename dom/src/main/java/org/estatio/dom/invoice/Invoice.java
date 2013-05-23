@@ -8,6 +8,8 @@ import java.util.TreeSet;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -32,7 +34,7 @@ import org.estatio.dom.party.Party;
     })*/
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject {
+public class Invoice extends EstatioTransactionalObject implements Comparable<Invoice> {
 
     
     public String title() {
@@ -329,5 +331,16 @@ public class Invoice extends EstatioTransactionalObject {
         this.numerators = numerators;
     }
     // }}
+
+    @Override
+    public int compareTo(Invoice o) {
+        return ORDERING_BY_NUMBER.compare(this, o);
+    }
+
+    public static Ordering<Invoice> ORDERING_BY_NUMBER = new Ordering<Invoice>() {
+        public int compare(Invoice p, Invoice q) {
+            return Ordering.<String> natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
+        }
+    };
 
 }
