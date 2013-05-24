@@ -3,10 +3,12 @@ package org.estatio.viewer.wicket.app.administration;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.index.IndexFixture;
+import org.estatio.fixturescripts.FixtureScript;
 import org.estatio.services.appsettings.EstatioSetting;
 import org.estatio.services.appsettings.EstatioSettingsService;
 import org.estatio.viewer.wicket.app.scheduler.EstatioSchedulerService;
 
+import org.apache.isis.applib.AbstractService;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -56,6 +58,19 @@ public class EstatioAdministrationService {
                     : null;
     }
     // }}
+    
+
+    // {{
+    @MemberOrder(sequence = "9")
+    @Prototype
+    public void runScript(FixtureScript fixtureScript) {
+        fixtureScript.run(container);
+    }
+    public FixtureScript default0RunScript() {
+        return FixtureScript.GenerateTopModelInvoice;
+    }
+    // }}
+
     
     
     public EstatioSetting applicationSettings() {

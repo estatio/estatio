@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
@@ -269,15 +270,20 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return this;
     }
 
+    @PublishedAction(InvoiceAndInvoiceItemPayloadFactory.class)
     @Bulk
     @MemberOrder(sequence = "21")
-    public Invoice assignCollectionNumber() {
+    public Invoice submitToCoda() {
+        assignCollectionNumber();
+        return this;
+    }
+
+    void assignCollectionNumber() {
         Numerator numerator = numerators.establish(NumeratorType.COLLECTION_NUMBER);
         if (assign(this, numerator, "COL-%05d")) {
             informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
             this.setStatus(InvoiceStatus.COLLECTED);
         }
-        return this;
     }
 
     @Bulk
