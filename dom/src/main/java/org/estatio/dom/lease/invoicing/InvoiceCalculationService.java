@@ -10,9 +10,10 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.DateRange;
 import org.estatio.services.appsettings.EstatioSettingsService;
 
+import org.estatio.dom.utils.LocalDateInterval;
+import org.estatio.dom.utils.LocalDateInterval.IntervalEnding;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -30,31 +31,33 @@ public class InvoiceCalculationService {
     }
 
     static class CalculationResult {
-        BigDecimal value = BigDecimal.ZERO;
-        DateRange boundingRange;
+        BigDecimal value = BigDecimal.ZERO.setScale(2);
+        LocalDateInterval periodInterval;
 
         public BigDecimal getCalculatedValue() {
             return value;
         }
     }
-    
+
     CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate) {
         return calculate(leaseTerm, periodStartDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
     }
 
     public CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
         CalculationResult result = new CalculationResult();
-        result.boundingRange = new DateRange(CalendarUtils.intervalMatching(periodStartDate, freq.rrule));
-        if (result.boundingRange.getStartDate() != null) {
-            DateRange range = new DateRange(leaseTerm.getStartDate(), leaseTerm.getEndDate(), true);
-            range.setBoundingRange(result.boundingRange);
-            BigDecimal boundingRangeDays = new BigDecimal(result.boundingRange.getDays());
-            BigDecimal rangeDays = new BigDecimal(range.getActualDays());
-            BigDecimal rangeFactor = rangeDays.divide(boundingRangeDays, MathContext.DECIMAL64);
-            BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
-            BigDecimal currentValue = leaseTerm.valueForDueDate(dueDate);
-            if (currentValue != null && freqFactor != null && rangeFactor != null) {
-                result.value = currentValue.multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
+        result.periodInterval = new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, freq.rrule));
+        if (result.periodInterval.getStartDate() != null) {
+            LocalDateInterval termInterval = new LocalDateInterval(leaseTerm.getStartDate(), leaseTerm.getEndDate(), IntervalEnding.INCLUDING_END_DATE);
+            LocalDateInterval overlap = result.periodInterval.overlap(termInterval);
+            if (overlap != null) {
+                BigDecimal boundingRangeDays = new BigDecimal(overlap.getDays());
+                BigDecimal rangeDays = new BigDecimal(termInterval.getDays());
+                BigDecimal rangeFactor = rangeDays.divide(boundingRangeDays, MathContext.DECIMAL64);
+                BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
+                BigDecimal currentValue = leaseTerm.valueForDueDate(dueDate);
+                if (currentValue != null && freqFactor != null && rangeFactor != null) {
+                    result.value = currentValue.multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
+                }
             }
         }
         return result;
@@ -85,8 +88,8 @@ public class InvoiceCalculationService {
                 invoiceItem.setCharge(charge);
                 invoiceItem.setDescription(charge.getDescription());
                 invoiceItem.setDueDate(dueDate);
-                invoiceItem.setStartDate(calculationResult.boundingRange.getStartDate());
-                invoiceItem.setEndDate(calculationResult.boundingRange.getEndDate());
+                invoiceItem.setStartDate(calculationResult.periodInterval.getStartDate());
+                invoiceItem.setEndDate(calculationResult.periodInterval.getEndDate());
                 Tax tax = charge.getTax();
                 invoiceItem.setTax(tax);
                 invoiceItem.attachToInvoice();

@@ -135,7 +135,6 @@ public class InvoiceCalculationServiceTest {
         Assert.assertThat(result, Is.is(BigDecimal.valueOf(20000).setScale(2, RoundingMode.HALF_UP)));
     }
 
-    
     @Test
     public void testCalculateExactPeriod() {
         li = new LeaseItem();
@@ -201,7 +200,7 @@ public class InvoiceCalculationServiceTest {
         lt.modifyLeaseItem(li);
         InvoiceCalculationService ic = new InvoiceCalculationService();
         CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
-        Assert.assertThat(result.getCalculatedValue(), Is.is(BigDecimal.ZERO));
+        Assert.assertThat(result.getCalculatedValue(), Is.is(BigDecimal.ZERO.setScale(2)));
     }
 
     @Test

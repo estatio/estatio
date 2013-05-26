@@ -45,11 +45,9 @@ public class BankAccount extends FinancialAccount {
     public void setBankAccountType(final BankAccountType bankAccountType) {
         this.bankAccountType = bankAccountType;
     }
+
     // }}
 
-
-    
-    
     private Country country;
 
     @MemberOrder(name = "Account Details", sequence = "11")
@@ -127,5 +125,5 @@ public class BankAccount extends FinancialAccount {
         IBANHelper ibanHelper = new IBANHelper(getIBAN());
         ibanHelper.update(this);
     }
-    
+
 }

@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
+@Deprecated
 public final class DateRange {
 
     private LocalDate startDate;
