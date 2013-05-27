@@ -36,7 +36,6 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@PublishedObject
 @Bookmarkable
 public abstract class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
 

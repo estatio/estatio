@@ -14,6 +14,13 @@ public class InvoiceAndInvoiceItemPayload extends EventPayloadForActionInvocatio
         super(actionIdentifier, target, arguments, result);
     }
 
+    
+    @Override
+    @Render(Type.EAGERLY)
+    public Invoice getTarget() {
+        return super.getTarget();
+    }
+    
     @Render(Type.EAGERLY)
     public SortedSet<InvoiceItem> getItems() {
         return getTarget().getItems();
