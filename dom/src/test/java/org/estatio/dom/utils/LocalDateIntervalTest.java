@@ -2,31 +2,32 @@ package org.estatio.dom.utils;
 
 import static org.junit.Assert.*;
 
+import org.estatio.dom.utils.LocalDateInterval.IntervalEnding;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 public class LocalDateIntervalTest {
 
-    private LocalDateInterval periodInterval = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
+    private LocalDateInterval periodInterval = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), IntervalEnding.EXCLUDING_END_DATE);
     // exact match
-    private LocalDateInterval interval1 = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
+    private LocalDateInterval interval1 = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), IntervalEnding.EXCLUDING_END_DATE);
     // overlap
-    private LocalDateInterval interval2 = new LocalDateInterval(new LocalDate(2011, 11, 1), new LocalDate(2012, 5, 1));
+    private LocalDateInterval interval2 = new LocalDateInterval(new LocalDate(2011, 11, 1), new LocalDate(2012, 5, 1), IntervalEnding.EXCLUDING_END_DATE);
     // ends in
-    private LocalDateInterval interval3 = new LocalDateInterval(new LocalDate(2011, 11, 1), new LocalDate(2012, 3, 1));
+    private LocalDateInterval interval3 = new LocalDateInterval(new LocalDate(2011, 11, 1), new LocalDate(2012, 3, 1), IntervalEnding.EXCLUDING_END_DATE);
     // starts in
-    private LocalDateInterval interval4 = new LocalDateInterval(new LocalDate(2012, 2, 1), new LocalDate(2012, 5, 1));
+    private LocalDateInterval interval4 = new LocalDateInterval(new LocalDate(2012, 2, 1), new LocalDate(2012, 5, 1), IntervalEnding.EXCLUDING_END_DATE);
     // start and ends in
-    private LocalDateInterval interval5 = new LocalDateInterval(new LocalDate(2012, 2, 1), new LocalDate(2012, 3, 1));
+    private LocalDateInterval interval5 = new LocalDateInterval(new LocalDate(2012, 2, 1), new LocalDate(2012, 3, 1), IntervalEnding.EXCLUDING_END_DATE);
     // outside before
-    private LocalDateInterval interval6 = new LocalDateInterval(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1));
+    private LocalDateInterval interval6 = new LocalDateInterval(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1), IntervalEnding.EXCLUDING_END_DATE);
     // outside after
-    private LocalDateInterval interval7 = new LocalDateInterval(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1));
+    private LocalDateInterval interval7 = new LocalDateInterval(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1), IntervalEnding.EXCLUDING_END_DATE);
     // starts in, open ended
-    private LocalDateInterval interval8 = new LocalDateInterval(new LocalDate(2012, 2, 1), null);
+    private LocalDateInterval interval8 = new LocalDateInterval(new LocalDate(2012, 2, 1), null, IntervalEnding.EXCLUDING_END_DATE);
     // open start, open end
-    private LocalDateInterval interval9 = new LocalDateInterval(null, null);
+    private LocalDateInterval interval9 = new LocalDateInterval(null, null, IntervalEnding.EXCLUDING_END_DATE);
 
     @Before
     public void setup() {
@@ -97,4 +98,12 @@ public class LocalDateIntervalTest {
         assertEquals(91, interval9.overlap(periodInterval).getDays());
     }
 
+    @Test
+    public void testContains() {
+        assertTrue(periodInterval.contains(new LocalDate(2012,1,1)));
+        assertTrue(periodInterval.contains(new LocalDate(2012,3,31)));
+        assertFalse(periodInterval.contains(new LocalDate(2012,4,1)));
+    }
+
+    
 }

@@ -154,22 +154,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.tenancyEndDate = tenancyEndDate;
     }
 
-    
-    // REVIEW: there was no @Persistent annotation here??
-    private LocalDate nextDueDate;
-
-    @MemberOrder(sequence = "7")
-    @Disabled
-    @Optional
-    // TODO: Wicket still marks disabled fields a mandatory.  It shouldn't
-    public LocalDate getNextDueDate() {
-        return nextDueDate;
-    }
-
-    public void setNextDueDate(final LocalDate nextDueDate) {
-        this.nextDueDate = nextDueDate;
-    }
-
     private InvoicingFrequency invoicingFrequency;
 
     @MemberOrder(sequence = "12")

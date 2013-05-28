@@ -34,22 +34,12 @@ public class BankMandate extends Agreement {
     // {{ Derived attribute (overridden)
     @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
-        
-        // REVIEW: this code was moved down from Agreement
-        // (because agreement does not depend on lease);
-        // it does mean, though, that finance depends on lease.
-        // Is this correct?
-        return findParty("Landlord"); // LeaseConstants.ART_LANDLORD
+        return findParty(FinancialConstants.ART_CREDITOR);
     }
 
     @MemberOrder(sequence = "4")
     public Party getSecondaryParty() {
-
-        // REVIEW: this code was moved down from Agreement
-        // (because agreement does not depend on lease);
-        // it does mean, though, that finance depends on lease.
-        // Is this correct?
-        return findParty("Tenant"); // LeaseConstants.ART_TENANT
+        return findParty(FinancialConstants.ART_DEBTOR);
     }
     // }}
 

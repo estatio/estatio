@@ -11,7 +11,7 @@ import org.estatio.services.appsettings.EstatioSettingsService;
 public class CalendarUtils {
 
     /**
-     * REVIEW: what is the significance of this date?  How does it relate to the {@link EstatioSettingsService#fetchEpochDate() epoch date}?
+     * TODO: EST-112
      */
     private static final LocalDate START_DATE_DEFAULT = new LocalDate(2000, 1, 1);
 

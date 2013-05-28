@@ -8,6 +8,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.LocalDateInterval;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.utils.LocalDateInterval.IntervalEnding;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
@@ -16,6 +17,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -160,7 +162,12 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     }
 
     private boolean isActiveOn(LocalDate localDate) {
-        return new LocalDateInterval(getStartDate(), getEndDate()).contains(localDate);
+        return getInterval().contains(localDate);
+    }
+
+    @Programmatic // excluded form the metamodel
+    public LocalDateInterval getInterval() {
+        return new LocalDateInterval(getStartDate(), getEndDate(), IntervalEnding.INCLUDING_END_DATE);
     }
 
     // {{ injected: ClockService
@@ -172,3 +179,35 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     // }}
 
 }
+
+//public class Lease {
+//enum IntervalDistinguisher {
+//    CONTRACT,
+//    TENANCY
+//}
+//
+//   public LocalDateInterval getInterval(IntervalDistinguisher d) {
+//       if (d==IntervalDistinguisher.CONTRACT) {
+//           return new LocalDateInterval(getContractStartDate(), getContractEndDate());
+//       }
+//   }
+//
+//   
+//}
+
+interface Intervalled {
+    LocalDate getStartDate();
+    LocalDate getEndDate();
+    @Programmatic
+    LocalDateInterval getInterval(Object distinguisher);
+}
+
+
+
+//main() {
+//    
+//    
+//    Lease l;
+//    
+//    LocalDateInterval ldi = l.getInterval(CONTRACT);
+//}

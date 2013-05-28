@@ -156,27 +156,5 @@ public abstract class Party extends EstatioTransactionalObject {
 
     // }}
 
-
-    // {{ Roles (set, bidir)
-    @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private SortedSet<PartyRole> roles = new TreeSet<PartyRole>();
-
-    @MemberOrder(name = "Roles", sequence = "14")
-    public SortedSet<PartyRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(final SortedSet<PartyRole> roles) {
-        this.roles = roles;
-    }
-
-    @MemberOrder(name = "Roles", sequence = "14")
-    public Party addRole() {
-        // TODO: some code here
-        return this;
-    }
-
-    // }}
-
     
 }

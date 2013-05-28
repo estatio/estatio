@@ -538,16 +538,6 @@
                 <version>2.6.0</version>
             </dependency>
 
-            <!-- REVIEW: is this needed?  aren't we just using Isis' testsupport module -->
-            <dependency>
-                <groupId>com.danhaywood</groupId>
-                <artifactId>testsupport</artifactId>
-                <version>0.2.0-SNAPSHOT</version>
-                <scope>test</scope>
-            </dependency>
-
-
-            
             <!-- viewer extensions -->
 
             <!--

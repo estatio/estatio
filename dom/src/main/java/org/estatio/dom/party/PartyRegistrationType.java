@@ -1,6 +1,5 @@
 package org.estatio.dom.party;
 
-// REVIEW: does this need to become multi-tenanted? 
 public enum PartyRegistrationType {
 
     VAT("VAT"), CHAMBER_OF_COMMERCE("Chamber of Commerce");

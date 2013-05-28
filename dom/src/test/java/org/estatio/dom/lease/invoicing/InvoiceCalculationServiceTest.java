@@ -106,7 +106,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         lt = new LeaseTerm();
         lt.setStartDate(START_DATE);
@@ -121,7 +120,6 @@ public class InvoiceCalculationServiceTest {
     public void testValueForPeriod() {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         lt = new LeaseTerm();
@@ -138,7 +136,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2012, 1, 1));
@@ -155,7 +152,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2012, 2, 1));
@@ -172,7 +168,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2013, 1, 1));
@@ -189,7 +184,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2013, 1, 1));
@@ -206,7 +200,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.modifyLease(l);
         lt = new LeaseTerm();
         lt.setStartDate(new LocalDate(2012, 2, 1));
@@ -227,7 +220,6 @@ public class InvoiceCalculationServiceTest {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
         li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setNextDueDate(new LocalDate(2012, 1, 1));
         li.setCharge(charge);
         li.modifyLease(l);
 

@@ -277,8 +277,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
         if (getStatus() == LeaseTermStatus.APPROVED) {
             invoiceCalculationService.calculateAndInvoiceItems(this, startDate, dueDate, getLeaseItem().getInvoicingFrequency());
-            informUser("Calculated" + this.getLeaseItem().getLease().getReference());
-            // TODO: use the title of this term? But how access it.
+            informUser("Calculated" + getContainer().titleOf(this));
         }
         return this;
     }

@@ -113,7 +113,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         this.indexationPercentage = indexationPercentage;
     }
 
-    // REVIEW: why now @Column annotation for this one?
+    @javax.jdo.annotations.Column(scale = 1)
     private BigDecimal levellingPercentage;
 
     @MemberOrder(sequence = "21", name = "Indexable Rent")

@@ -15,8 +15,7 @@ public final class LocalDateInterval {
     private long endInstant;
 
     public LocalDateInterval(LocalDate startDate, LocalDate endDate) {
-        startInstant = startDate == null ? Long.MIN_VALUE : startDate.toInterval().getStartMillis();
-        endInstant = endDate == null ? Long.MAX_VALUE : endDate.toInterval().getStartMillis();
+        this(startDate, endDate, IntervalEnding.EXCLUDING_END_DATE);
     }
 
     public LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
@@ -40,7 +39,12 @@ public final class LocalDateInterval {
     }
 
     public LocalDate getEndDate() {
-        return new LocalDate(endInstant);
+        return getEndDate(IntervalEnding.EXCLUDING_END_DATE);
+    }
+
+    public LocalDate getEndDate(IntervalEnding ending) {
+        LocalDate returnDate = new LocalDate(endInstant);
+        return ending == IntervalEnding.INCLUDING_END_DATE ? returnDate.minusDays(1) : returnDate;
     }
 
     /**
