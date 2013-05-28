@@ -125,34 +125,34 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     
-    @javax.jdo.annotations.Persistent
-    private LocalDate tenancyStartDate;
-
-    @Optional
-    @MemberOrder(sequence = "5")
-    @Hidden(where = Where.PARENTED_TABLES)
-    public LocalDate getTenancyStartDate() {
-        return tenancyStartDate;
-    }
-
-    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
-        this.tenancyStartDate = tenancyStartDate;
-    }
-
-    
-    @javax.jdo.annotations.Persistent
-    private LocalDate tenancyEndDate;
-
-    @Optional
-    @MemberOrder(sequence = "6")
-    @Hidden(where = Where.PARENTED_TABLES)
-    public LocalDate getTenancyEndDate() {
-        return tenancyEndDate;
-    }
-
-    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
-        this.tenancyEndDate = tenancyEndDate;
-    }
+//    @javax.jdo.annotations.Persistent
+//    private LocalDate tenancyStartDate;
+//
+//    @Optional
+//    @MemberOrder(sequence = "5")
+//    @Hidden(where = Where.PARENTED_TABLES)
+//    public LocalDate getTenancyStartDate() {
+//        return tenancyStartDate;
+//    }
+//
+//    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
+//        this.tenancyStartDate = tenancyStartDate;
+//    }
+//
+//    
+//    @javax.jdo.annotations.Persistent
+//    private LocalDate tenancyEndDate;
+//
+//    @Optional
+//    @MemberOrder(sequence = "6")
+//    @Hidden(where = Where.PARENTED_TABLES)
+//    public LocalDate getTenancyEndDate() {
+//        return tenancyEndDate;
+//    }
+//
+//    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
+//        this.tenancyEndDate = tenancyEndDate;
+//    }
 
     private InvoicingFrequency invoicingFrequency;
 

@@ -121,7 +121,7 @@ public class LeaseIntegrationTest {
 
     @Test
     public void t07_leaseHasXItems() throws Exception {
-        assertThat(lease.getItems().size(), is(2));
+        assertThat(lease.getItems().size(), is(3));
     }
 
     @Test

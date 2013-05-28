@@ -170,13 +170,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putProperty(
-            @Named("reference") String reference, 
-            @Named("name") String name, 
-            @Named("type") String type, 
-            @Named("acquireDate") @Optional LocalDate acquireDate, 
-            @Named("disposalDate") @Optional LocalDate disposalDate, 
-            @Named("openingDate") @Optional LocalDate openingDate,
+    public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional LocalDate acquireDate, @Named("disposalDate") @Optional LocalDate disposalDate, @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference) {
         Party owner = parties.findOrganisationByReference(ownerReference);
         if (owner == null) {
@@ -195,14 +189,8 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyPostalAddress(
-            @Named("propertyReference") String propertyReference, 
-            @Named("address1") @Optional String address1, 
-            @Named("address2") @Optional String address2, 
-            @Named("city") String city, 
-            @Named("postalCode") @Optional String postalCode,
-            @Named("stateCode") @Optional String stateCode, 
-            @Named("countryCode") String countryCode) {
+    public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode) {
         Property property = properties.findPropertyByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
@@ -235,7 +223,6 @@ public class Api extends AbstractFactoryAndRepository {
             party.addToCommunicationChannels(comm);
         }
     }
-    
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference) {
@@ -259,23 +246,9 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putUnit(
-            @Named("reference") String reference, 
-            @Named("propertyReference") String propertyReference, 
-            @Named("ownerReference") @Optional String ownerReference, 
-            @Named("name") String name, @Named("type") String type, 
-            @Named("startDate") @Optional LocalDate startDate,
-            @Named("endDate") @Optional LocalDate endDate, 
-            @Named("area") @Optional BigDecimal area, 
-            @Named("salesArea") @Optional BigDecimal salesArea, 
-            @Named("storageArea") @Optional BigDecimal storageArea, 
-            @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
-            @Named("terraceArea") @Optional BigDecimal terraceArea, 
-            @Named("address1") @Optional String address1, 
-            @Named("city") @Optional String city, 
-            @Named("postalCode") @Optional String postalCode, 
-            @Named("stateCode") @Optional String stateCode, 
-            @Named("countryCode") @Optional String countryCode) {
+    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") @Optional String ownerReference, @Named("name") String name, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate, @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
+            @Named("terraceArea") @Optional BigDecimal terraceArea, @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode) {
         Property property = properties.findPropertyByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
@@ -293,24 +266,15 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setMezzanineArea(mezzanineArea);
         unit.setTerraceArea(terraceArea);
         CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
-        if (cc==null){
+        if (cc == null) {
             cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
             unit.addToCommunicationChannels(cc);
         }
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLease(
-            @Named("reference") String reference, 
-            @Named("name") String name, 
-            @Named("tenantReference") String tenantReference, 
-            @Named("landlordReference") String landlordReference, 
-            @Named("type") @Optional String type, 
-            @Named("startDate") @Optional LocalDate startDate, 
-            @Named("endDate") @Optional LocalDate endDate, 
-            @Named("terminationDate") @Optional LocalDate terminationDate, 
-            @Named("propertyReference") @Optional String propertyReference
-            ) {
+    public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("type") @Optional String type, @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate, @Named("terminationDate") @Optional LocalDate terminationDate, @Named("propertyReference") @Optional String propertyReference) {
         Party tenant = parties.findPartyByReference(tenantReference);
         if (tenant == null) {
             throw new ApplicationException(String.format("Tenant with reference %s not found.", tenantReference));
@@ -328,11 +292,9 @@ public class Api extends AbstractFactoryAndRepository {
         }
         lease.setTerminationDate(terminationDate);
     }
-    
+
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseLink(
-            @Named("leaseReference") String leaseReference,
-            @Named("previousLeaseReference") String previousLeaseReference ) {
+    public void putLeaseLink(@Named("leaseReference") String leaseReference, @Named("previousLeaseReference") String previousLeaseReference) {
         Lease lease = null;
         if (leaseReference != null) {
             lease = leases.findByReference(leaseReference);
@@ -366,35 +328,21 @@ public class Api extends AbstractFactoryAndRepository {
             leaseUnit = lease.addUnit(unit);
             leaseUnit.setStartDate(startDate);
         }
-        LeaseUnitBrand b = (LeaseUnitBrand) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.BRAND, brand); 
-        LeaseUnitSector s = (LeaseUnitSector) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.SECTOR, brand); 
-        LeaseUnitActivity a = (LeaseUnitActivity) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.ACTIVITY, brand); 
+        LeaseUnitBrand b = (LeaseUnitBrand) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.BRAND, brand);
+        LeaseUnitSector s = (LeaseUnitSector) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.SECTOR, brand);
+        LeaseUnitActivity a = (LeaseUnitActivity) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.ACTIVITY, brand);
 
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
-        leaseUnit.setTenancyStartDate(tenancyStartDate);
-        leaseUnit.setTenancyEndDate(tenancyEndDate);
         leaseUnit.setBrand(b);
         leaseUnit.setSector(s);
         leaseUnit.setActivity(a);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseItem(
-            @Named("leaseReference") String leaseReference, 
-            @Named("tenantReference") String tenantReference, 
-            @Named("unitReference") @Optional String unitReference, 
-            @Named("type") @Optional String type, 
-            @Named("sequence") BigInteger sequence,
-            @Named("startDate") @Optional LocalDate startDate, 
-            @Named("endDate") @Optional LocalDate endDate, 
-            @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate, 
-            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate,
-            @Named("chargeReference") @Optional String chargeReference,
-            @Named("nextDueDate") @Optional LocalDate nextDueDate, 
-            @Named("invoicingFrequency") @Optional String invoicingFrequency, 
-            @Named("paymentMethod") @Optional String paymentMethod
-            ) {
+    public void putLeaseItem(@Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("type") @Optional String type, @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("chargeReference") @Optional String chargeReference, @Named("nextDueDate") @Optional LocalDate nextDueDate, @Named("invoicingFrequency") @Optional String invoicingFrequency,
+            @Named("paymentMethod") @Optional String paymentMethod) {
         Lease lease = leases.findByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
@@ -420,8 +368,6 @@ public class Api extends AbstractFactoryAndRepository {
         }
         item.setStartDate(startDate);
         item.setEndDate(endDate);
-        item.setTenancyStartDate(tenancyStartDate);
-        item.setTenancyEndDate(tenancyEndDate);
         item.setType(itemType);
         item.setSequence(sequence);
         item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
@@ -429,40 +375,18 @@ public class Api extends AbstractFactoryAndRepository {
         item.setCharge(charge);
     }
 
-    
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForIndexableRent(
-            //start generic fields
-            @Named("leaseReference") String leaseReference, 
-            @Named("tenantReference") String tenantReference, 
-            @Named("unitReference") @Optional String unitReference, 
-            @Named("itemSequence") BigInteger itemSequence, 
-            @Named("itemType") String itemType,
-            @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence,
-            @Named("startDate") @Optional LocalDate startDate, 
-            @Named("endDate") @Optional LocalDate endDate, 
-            @Named("status") @Optional String status, 
+            // start generic fields
+            @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate,
+            @Named("status") @Optional String status,
             @Named("value") @Optional BigDecimal value,
-            //end generic fields
-            @Named("reviewDate") @Optional LocalDate reviewDate, 
-            @Named("effectiveDate") @Optional LocalDate effectiveDate,
-            @Named("baseValue") @Optional BigDecimal baseValue, 
-            @Named("indexedValue") @Optional BigDecimal indexedValue, 
-            @Named("levellingValue") @Optional BigDecimal levellingValue,
-            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage,
-            @Named("indexReference") @Optional String indexReference,
-            @Named("indexationFrequency") @Optional String indexationFrequency,
-            @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, 
-            @Named("baseIndexReference") @Optional String baseIndexReference, 
-            @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate,
-            @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate, 
-            @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, 
-            @Named("nextIndexReference") @Optional String nextIndexReference, 
-            @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
-            @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate, 
-            @Named("nextIndexValue") @Optional BigDecimal nextIndexValue
-        ){
+            // end generic fields
+            @Named("reviewDate") @Optional LocalDate reviewDate, @Named("effectiveDate") @Optional LocalDate effectiveDate, @Named("baseValue") @Optional BigDecimal baseValue, @Named("indexedValue") @Optional BigDecimal indexedValue, @Named("levellingValue") @Optional BigDecimal levellingValue,
+            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, @Named("indexReference") @Optional String indexReference, @Named("indexationFrequency") @Optional String indexationFrequency, @Named("indexationPercentage") @Optional BigDecimal indexationPercentage,
+            @Named("baseIndexReference") @Optional String baseIndexReference, @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate, @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate, @Named("baseIndexValue") @Optional BigDecimal baseIndexValue,
+            @Named("nextIndexReference") @Optional String nextIndexReference, @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate, @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate, @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
         Index index = indices.findByReference(indexReference);
         LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
@@ -484,23 +408,11 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForTurnoverRent(
-            //start generic fields
-            @Named("leaseReference") String leaseReference, 
-            @Named("tenantReference") String tenantReference, 
-            @Named("unitReference") @Optional String unitReference, 
-            @Named("itemSequence") BigInteger itemSequence, 
-            @Named("itemType") String itemType,
-            @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence,
-            @Named("startDate") @Optional LocalDate startDate, 
-            @Named("endDate") @Optional LocalDate endDate, 
-            @Named("status") @Optional String status, 
-            @Named("value") @Optional BigDecimal value,
-            //end generic fields
-            @Named("turnoverRentPercentage") @Optional BigDecimal turnoverRentPercentage,
-            @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover,
-            @Named("auditedTurnover") @Optional BigDecimal auditedTurnover
-            ){
+            // start generic fields
+            @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status, @Named("value") @Optional BigDecimal value,
+            // end generic fields
+            @Named("turnoverRentPercentage") @Optional BigDecimal turnoverRentPercentage, @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover, @Named("auditedTurnover") @Optional BigDecimal auditedTurnover) {
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
         term.setValue(value);
         term.setBudgetedTurnover(budgetedTurnover);
@@ -510,39 +422,18 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForServiceCharge(
-            //start generic fields
-            @Named("leaseReference") String leaseReference, 
-            @Named("tenantReference") String tenantReference, 
-            @Named("unitReference") @Optional String unitReference, 
-            @Named("itemSequence") BigInteger itemSequence, 
-            @Named("itemType") String itemType,
-            @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence,
-            @Named("startDate") @Optional LocalDate startDate, 
-            @Named("endDate") @Optional LocalDate endDate, 
-            @Named("status") @Optional String status, 
-            @Named("value") @Optional BigDecimal value,
-            //end generic fields
-            @Named("auditedValue") @Optional BigDecimal auditedValue,
-            @Named("budgetedValue") @Optional BigDecimal budgetedValue
-            ){
+            // start generic fields
+            @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status, @Named("value") @Optional BigDecimal value,
+            // end generic fields
+            @Named("auditedValue") @Optional BigDecimal auditedValue, @Named("budgetedValue") @Optional BigDecimal budgetedValue) {
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
         term.setValue(value);
         term.setAuditedValue(auditedValue);
         term.setBudgetedValue(budgetedValue);
     }
 
-    
-    private LeaseTerm putLeaseTerm(
-            String leaseReference, 
-            String unitReference, 
-            BigInteger itemSequence, 
-            String itemType, 
-            LocalDate itemStartDate, 
-            LocalDate startDate, 
-            LocalDate endDate,
-            BigInteger sequence
-            ) {
+    private LeaseTerm putLeaseTerm(String leaseReference, String unitReference, BigInteger itemSequence, String itemType, LocalDate itemStartDate, LocalDate startDate, LocalDate endDate, BigInteger sequence) {
         Lease lease = leases.findByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));
@@ -576,23 +467,16 @@ public class Api extends AbstractFactoryAndRepository {
         // term.setEndDate(endDate);
         return term;
     }
-    
+
     @ActionSemantics(Of.IDEMPOTENT)
     public void putBankAccount(
-            //start generic fields
-            @Named("reference") @Optional String reference, 
-            @Named("name") @Optional String name, 
-            @Named("bankAccountType") @Optional String bankAccountType,
-            @Named("ownerReference") String ownerReference, 
-            @Named("iban") @Optional String iban, 
-            @Named("nationalCheckCode") @Optional String nationalCheckCode,
-            @Named("nationalBankCode") @Optional String nationalBankCode,
-            @Named("branchCode") @Optional String branchCode,
-            @Named("accountNumber") @Optional String accountNumber
-            ){
+            // start generic fields
+            @Named("reference") @Optional String reference, @Named("name") @Optional String name, @Named("bankAccountType") @Optional String bankAccountType, @Named("ownerReference") String ownerReference, @Named("iban") @Optional String iban,
+            @Named("nationalCheckCode") @Optional String nationalCheckCode, @Named("nationalBankCode") @Optional String nationalBankCode, @Named("branchCode") @Optional String branchCode, @Named("accountNumber") @Optional String accountNumber) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findByReference(reference);
         Party owner = parties.findPartyByReference(ownerReference);
-        if (owner==null) return;
+        if (owner == null)
+            return;
         if (bankAccount == null) {
             bankAccount = financialAccounts.newBankAccount(iban);
         }
@@ -603,7 +487,7 @@ public class Api extends AbstractFactoryAndRepository {
         bankAccount.setNationalBankCode(nationalBankCode);
         bankAccount.setNationalCheckCode(nationalCheckCode);
         bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
-    }    
+    }
 
     private Countries countries;
 
@@ -676,15 +560,15 @@ public class Api extends AbstractFactoryAndRepository {
     public void setIndexRepo(final Indices indices) {
         this.indices = indices;
     }
-    
+
     private LeaseUnitReferences leaseUnitReferencesService;
-    
+
     public void setLeaseUnitReferencesService(LeaseUnitReferences leaseUnitReferencesService) {
         this.leaseUnitReferencesService = leaseUnitReferencesService;
     }
-    
+
     private FinancialAccounts financialAccounts;
-    
+
     public void setFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }

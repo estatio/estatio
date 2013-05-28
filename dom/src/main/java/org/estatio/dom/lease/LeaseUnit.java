@@ -107,29 +107,29 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.endDate = endDate;
     }
 
-    private LocalDate tenancyStartDate;
-
-    @Optional
-    @MemberOrder(sequence = "4")
-    public LocalDate getTenancyStartDate() {
-        return tenancyStartDate;
-    }
-
-    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
-        this.tenancyStartDate = tenancyStartDate;
-    }
-
-    private LocalDate tenancyEndDate;
-
-    @Optional
-    @MemberOrder(sequence = "5")
-    public LocalDate getTenancyEndDate() {
-        return tenancyEndDate;
-    }
-
-    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
-        this.tenancyEndDate = tenancyEndDate;
-    }
+//    private LocalDate tenancyStartDate;
+//
+//    @Optional
+//    @MemberOrder(sequence = "4")
+//    public LocalDate getTenancyStartDate() {
+//        return tenancyStartDate;
+//    }
+//
+//    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
+//        this.tenancyStartDate = tenancyStartDate;
+//    }
+//
+//    private LocalDate tenancyEndDate;
+//
+//    @Optional
+//    @MemberOrder(sequence = "5")
+//    public LocalDate getTenancyEndDate() {
+//        return tenancyEndDate;
+//    }
+//
+//    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
+//        this.tenancyEndDate = tenancyEndDate;
+//    }
 
     private LeaseUnitBrand brand;
 

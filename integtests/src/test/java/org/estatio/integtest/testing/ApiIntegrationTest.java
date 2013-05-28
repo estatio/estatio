@@ -1,9 +1,5 @@
 package org.estatio.integtest.testing;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -19,7 +15,6 @@ import org.estatio.jdo.PropertiesJdo;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -80,7 +75,7 @@ public class ApiIntegrationTest {
 
     @Test
     public void t04_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", "RENT", BigInteger.valueOf(1), new LocalDate(2012, 1, 1), new LocalDate(2012, 12, 31), null, null, "APICHARGE", null, "QUARTERLY_IN_ADVANCE", "DIRECT_DEBIT");
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", "RENT", BigInteger.valueOf(1), new LocalDate(2012, 1, 1), new LocalDate(2012, 12, 31), "APICHARGE", null, "QUARTERLY_IN_ADVANCE", "DIRECT_DEBIT");
         Leases leases = getIsft().getService(LeasesJdo.class);
         Assert.assertThat(leases.findByReference("APILEASE").getItems().size(), Is.is(1));
     }
