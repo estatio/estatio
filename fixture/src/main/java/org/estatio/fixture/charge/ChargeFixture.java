@@ -18,6 +18,7 @@ public class ChargeFixture extends AbstractFixture {
     private void createCharges() {
         createChargeAndChargeGroup("RENT", "Rent", "IT-VATSTD");
         createChargeAndChargeGroup("SERVICE_CHARGE", "Service Charge", "IT-VATSTD");
+        createChargeAndChargeGroup("TURNOVER_RENT", "Turnover Rent", "IT-VATSTD");
     }
 
     private void createChargeAndChargeGroup(String reference, String description, String taxReference) {

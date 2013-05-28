@@ -54,6 +54,16 @@ public final class LocalDateInterval {
     }
 
     /**
+     * Does this date contain the specified time interval.
+     * 
+     * @param localDate
+     * @return
+     */
+    public boolean contains(LocalDate localDate) {
+        return asInterval().contains(localDate.toInterval());
+    }
+
+    /**
      * Does this time interval contain the specified time interval.
      * 
      * @param interval

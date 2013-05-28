@@ -4,6 +4,11 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.LocalDateInterval;
+import org.estatio.dom.utils.Orderings;
+import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -13,12 +18,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.DateRange;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -129,7 +128,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         this.endDate = endDate;
     }
 
-    
     // {{ Comparable impl
     /**
      * This is necessary but not sufficient; in
@@ -143,7 +141,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public int compareTo(AgreementRole other) {
         return ORDERING_BY_TYPE.compound(ORDERING_BY_START_DATE).compare(this, other);
     }
-    
+
     public static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
             return AgreementRoleType.ORDERING_BY_TITLE.nullsFirst().compare(p.getType(), q.getType());
@@ -154,6 +152,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
             return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
+
     // }}
 
     public boolean isCurrent() {
@@ -161,16 +160,15 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     }
 
     private boolean isActiveOn(LocalDate localDate) {
-        return new DateRange(getStartDate(), getEndDate()).contains(localDate);
+        return new LocalDateInterval(getStartDate(), getEndDate()).contains(localDate);
     }
-
 
     // {{ injected: ClockService
     private ClockService clockService;
+
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
     // }}
 
-    
 }

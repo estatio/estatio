@@ -92,6 +92,7 @@ public class LocalDateIntervalTest {
         assertEquals(60, interval3.overlap(periodInterval).getDays());
         assertEquals(60, interval4.overlap(periodInterval).getDays());
         assertEquals(29, interval5.overlap(periodInterval).getDays());
+
         assertEquals(60, interval8.overlap(periodInterval).getDays());
         assertEquals(91, interval9.overlap(periodInterval).getDays());
     }

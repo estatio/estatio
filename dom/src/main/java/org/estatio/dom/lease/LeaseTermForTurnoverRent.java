@@ -5,19 +5,17 @@ import java.math.RoundingMode;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.MemberOrder;
-
 import org.estatio.dom.utils.MathUtils;
+
+import org.apache.isis.applib.annotation.MemberOrder;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal turnoverRentPercentage;
 
@@ -30,7 +28,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.turnoverRentPercentage = turnoverRentPercentage;
     }
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedTurnover;
 
@@ -43,7 +40,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.budgetedTurnover = budgetedTurnover;
     }
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedTurnover;
 
@@ -68,7 +64,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.budgetedValue = budgetedValue;
     }
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedValue;
 
