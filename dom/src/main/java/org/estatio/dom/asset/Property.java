@@ -29,7 +29,6 @@ import org.estatio.dom.geography.Country;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(name = "properties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
 @AutoComplete(repository = Properties.class)
-@PublishedObject
 @Bookmarkable
 public class Property extends FixedAsset {
 

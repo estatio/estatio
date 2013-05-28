@@ -270,7 +270,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return this;
     }
 
-    @PublishedAction // (InvoiceAndInvoiceItemPayloadFactory.class)
+    @PublishedAction(InvoiceEagerlyRenderedPayloadFactory.class)
     @Bulk
     @MemberOrder(sequence = "21")
     public Invoice submitToCoda() {

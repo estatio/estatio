@@ -20,6 +20,8 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -38,6 +40,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     private Invoice invoice;
 
+    @Render(Type.EAGERLY)
     @Disabled
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)

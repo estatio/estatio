@@ -23,7 +23,6 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @AutoComplete(repository = Units.class)
-@PublishedObject
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class Unit extends FixedAsset {
 
