@@ -2,6 +2,8 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -12,11 +14,9 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-@Hidden
 @Named("Lease Terms")
 public class LeaseTerms extends AbstractFactoryAndRepository {
 
-    // {{ Id, iconName
     @Override
     public String getId() {
         return "leaseTerms";
@@ -26,9 +26,6 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         return "LeaseTerm";
     }
 
-    // }}
-
-    // {{ newLeaseTerm
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
@@ -48,8 +45,6 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         return leaseTerm;
     }
 
-    // }}
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
@@ -59,23 +54,20 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         return leaseTerm;
     }
 
-    // }}
-
-    // {{ allLeaseTerms
     @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances(LeaseTerm.class);
     }
 
-    // }}
+    public List<LeaseTerm> leaseTermsToBeApproved() {
+        throw new NotImplementedException();
+    }
 
-    // {{ injected
     private IsisJdoSupport isisJdoSupport;
 
     public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
         this.isisJdoSupport = isisJdoSupport;
     }
-    // }}
 
 }

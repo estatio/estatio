@@ -26,6 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
@@ -283,20 +284,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     }
 
     // {{ Actions
+    @Bulk
     @MemberOrder(sequence = "1")
-    public LeaseTerm approve() {
-        setStatus(LeaseTermStatus.APPROVED);
-        return this;
-    }
-
-    public String disableApprove() {
-        return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
-    }
-
-    @MemberOrder(sequence = "2")
     public LeaseTerm verify() {
         update();
-
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
         if (getStartDate() != null && getStartDate().compareTo(clockService.now()) < 0) {
@@ -309,6 +300,20 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return this;
     }
 
+    @Bulk
+    @MemberOrder(sequence = "2")
+    public LeaseTerm approve() {
+        // guard against invalid updates when called as bulk action
+        if (getStatus() == LeaseTermStatus.NEW) {
+            setStatus(LeaseTermStatus.APPROVED);
+        }
+        return this;
+    }
+
+    public String disableApprove() {
+        return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
+    }
+ 
     @MemberOrder(sequence = "3")
     public LeaseTerm createNext() {
         LocalDate newStartDate = getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
@@ -377,7 +382,16 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     @Hidden
     public int compareTo(LeaseTerm o) {
         return ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE).compare(this, o);
+        //return ORDERING_BY_LEASE.compound(ORDERING_BY_CLASS.compound(ORDERING_BY_START_DATE)).compare(this, o);
     }
+    
+    //TODO: [JWA] After running the fixtures ordering by lease throws an error but that seems impossible. Maybe out of sync with JDO? 
+
+//    public static Ordering<LeaseTerm> ORDERING_BY_LEASE = new Ordering<LeaseTerm>() {
+//        public int compare(LeaseTerm p, LeaseTerm q) {
+//            return Ordering.<String> natural().compare(p.getLeaseItem().getLease().getReference(), q.getLeaseItem().getLease().getReference());
+//        }
+//    };
 
     public static Ordering<LeaseTerm> ORDERING_BY_CLASS = new Ordering<LeaseTerm>() {
         public int compare(LeaseTerm p, LeaseTerm q) {
