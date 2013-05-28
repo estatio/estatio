@@ -1,30 +1,23 @@
 package org.estatio.dom.charge;
 
-import javax.jdo.annotations.Extension;
-
 import com.google.common.collect.Ordering;
 
-import org.joda.time.LocalDate;
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.tax.Tax;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.utils.Orderings;
-
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
 public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
 
-    // {{ Reference (property)
     private String reference;
 
-    @Title(sequence="1")
+    @Title(sequence = "1")
     @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
@@ -34,10 +27,6 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
         this.reference = reference;
     }
 
-    // }}
-
-    
-    // {{ Code (property)
     private String code;
 
     @MemberOrder(sequence = "2")
@@ -49,9 +38,6 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
         this.code = code;
     }
 
-    // }}
-
-    // {{ Tax (property)
     private Tax tax;
 
     @MemberOrder(sequence = "3")
@@ -63,9 +49,6 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
         this.tax = tax;
     }
 
-    // }}
-
-    // {{ Description (property)
     private String description;
 
     @MemberOrder(sequence = "4")
@@ -78,9 +61,6 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
         this.description = description;
     }
 
-    // }}
-
-    // {{ Group (property)
     private ChargeGroup group;
 
     @MemberOrder(sequence = "5")
@@ -91,18 +71,17 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
     public void setGroup(final ChargeGroup group) {
         this.group = group;
     }
-    // }}
 
-    // {{ Comparable impl
     @Override
     public int compareTo(Charge other) {
         return ORDERING_BY_CODE.compare(this, other);
     }
+
     // }}
 
     public final static Ordering<Charge> ORDERING_BY_CODE = new Ordering<Charge>() {
         public int compare(Charge p, Charge q) {
-            return Ordering.<String>natural().nullsFirst().compare(p.getCode(), q.getCode());
+            return Ordering.<String> natural().nullsFirst().compare(p.getCode(), q.getCode());
         }
     };
 

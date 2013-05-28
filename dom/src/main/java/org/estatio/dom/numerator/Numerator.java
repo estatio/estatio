@@ -3,23 +3,23 @@ package org.estatio.dom.numerator;
 import java.math.BigInteger;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.VersionStrategy;
+
+import com.google.common.collect.Ordering;
+
+import org.estatio.dom.EstatioTransactionalObject;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioTransactionalObject;
-
 @javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class Numerator extends EstatioTransactionalObject {
+public class Numerator extends EstatioTransactionalObject implements Comparable<Numerator> {
 
-    // {{ Type (property)
     private NumeratorType type;
 
     @MemberOrder(sequence = "1")
@@ -31,9 +31,6 @@ public class Numerator extends EstatioTransactionalObject {
         this.type = type;
     }
 
-    // }}
-
-    // {{ Description (property)
     private String description;
 
     @Title
@@ -46,9 +43,6 @@ public class Numerator extends EstatioTransactionalObject {
         this.description = description;
     }
 
-    // }}
-
-    // {{ LastValue (property)
     @javax.jdo.annotations.Persistent
     private BigInteger lastIncrement;
 
@@ -61,8 +55,6 @@ public class Numerator extends EstatioTransactionalObject {
         this.lastIncrement = lastIncrement;
     }
 
-    // }}
-
     @Hidden
     public BigInteger increment() {
         BigInteger last = getLastIncrement();
@@ -73,4 +65,16 @@ public class Numerator extends EstatioTransactionalObject {
         setLastIncrement(next);
         return next;
     }
+
+    @Override
+    public int compareTo(Numerator o) {
+        return ORDERING_BY_REFERENCE.compare(this, o);
+    }
+
+    public static Ordering<Numerator> ORDERING_BY_REFERENCE = new Ordering<Numerator>() {
+        public int compare(Numerator p, Numerator q) {
+            return Ordering.<String> natural().nullsFirst().compare(p.getDescription(), q.getDescription());
+        }
+    };
+
 }
