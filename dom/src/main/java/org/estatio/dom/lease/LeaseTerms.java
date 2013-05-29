@@ -1,5 +1,6 @@
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -68,6 +69,11 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
 
     public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
         this.isisJdoSupport = isisJdoSupport;
+    }
+
+    @Hidden
+    public LeaseTerm findLeaseTermWithSequence(LeaseItem leaseItem, BigInteger sequence) {
+        throw new NotImplementedException();
     }
 
 }

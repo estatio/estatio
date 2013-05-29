@@ -1,13 +1,10 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-
-import org.estatio.dom.utils.MathUtils;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 
@@ -16,16 +13,22 @@ import org.apache.isis.applib.annotation.MemberOrder;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
-    @javax.jdo.annotations.Column(scale = 2)
-    private BigDecimal turnoverRentPercentage;
+    private String turnoverRentRule;
 
-    @MemberOrder(sequence = "10", name = "Turnover Rent")
-    public BigDecimal getTurnoverRentPercentage() {
-        return turnoverRentPercentage;
+    @MemberOrder(sequence = "10")
+    public String getTurnoverRentRule() {
+        return turnoverRentRule;
     }
 
-    public void setTurnoverRentPercentage(final BigDecimal turnoverRentPercentage) {
-        this.turnoverRentPercentage = turnoverRentPercentage;
+    public void setTurnoverRentRule(final String turnoverRentRule) {
+        this.turnoverRentRule = turnoverRentRule;
+    }
+
+    public String validateTurnoverRentRule(final String rule) {
+        if (rule == null || rule.trim().length() == 0)
+            return null;
+        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper("rule");
+        return helper.isValid() ? null : "This is not a valid rule";
     }
 
     @javax.jdo.annotations.Column(scale = 2)
@@ -50,6 +53,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     public void setAuditedTurnover(final BigDecimal auditedTurnover) {
         this.auditedTurnover = auditedTurnover;
+    }
+
+    public BigDecimal getTurnoverRent() {
+        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
+        return helper.calculateRent(getAuditedTurnover());
     }
 
     private BigDecimal budgetedValue;
@@ -83,13 +91,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         if (rentItem != null) {
             BigDecimal valueOfRent = rentItem.valueForPeriod(getLeaseItem().getInvoicingFrequency(), getStartDate(), getStartDate().plusYears(2));
             setAuditedValue(valueOfRent);
-            if (MathUtils.isZeroOrNull(getTurnoverRentPercentage()) || MathUtils.isZeroOrNull(getAuditedTurnover())) {
-                setValue(BigDecimal.ZERO);
-            } else {
-                BigDecimal turnoverRent = getAuditedTurnover().multiply(getTurnoverRentPercentage()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
-                if (turnoverRent.compareTo(valueOfRent) > 0) {
-                    setValue(turnoverRent.subtract(valueOfRent));
-                }
+            setValue(BigDecimal.ZERO);
+            BigDecimal turnoverRent = getTurnoverRent();
+            if (turnoverRent.compareTo(valueOfRent) > 0) {
+                setValue(turnoverRent.subtract(valueOfRent));
             }
         }
     }

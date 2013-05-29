@@ -47,18 +47,18 @@ public class LeasesFixture extends AbstractFixture {
         Lease lease1 = createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14));
         createLeaseTermForIndexableRent(lease1, BigInteger.valueOf(1), lease1.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1), new LocalDate(2011, 1, 1), new LocalDate(2011, 4, 1));
         createLeaseTermForServiceCharge(lease1, lease1.getStartDate(), null, BigDecimal.valueOf(6000));
-        createLeaseTermForTurnoverRent(lease1, lease1.getStartDate(), null, BigDecimal.valueOf(7));
+        createLeaseTermForTurnoverRent(lease1, lease1.getStartDate(), null, "7");
 
         Lease lease2 = createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31));
         createLeaseTermForIndexableRent(lease2, BigInteger.valueOf(1), lease2.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2008, 1, 1), new LocalDate(2009, 1, 1), new LocalDate(2009, 4, 1));
         createLeaseTermForServiceCharge(lease2, lease2.getStartDate(), null, BigDecimal.valueOf(6000));
-        createLeaseTermForTurnoverRent(lease2, lease2.getStartDate(), null, BigDecimal.valueOf(7));
+        createLeaseTermForTurnoverRent(lease2, lease2.getStartDate(), null, "7");
 
         Lease lease3 = createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31));
         createLeaseTermForIndexableRent(lease3, BigInteger.valueOf(1), lease3.getStartDate(), null, BigDecimal.valueOf(87300), null, null, null);
         createLeaseTermForIndexableRent(lease3, BigInteger.valueOf(2), lease3.getStartDate().plusYears(1), null, BigDecimal.valueOf(87300), new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
         createLeaseTermForServiceCharge(lease3, lease3.getStartDate(), null, BigDecimal.valueOf(12400));
-        createLeaseTermForTurnoverRent(lease3, lease3.getStartDate(), null, BigDecimal.valueOf(6));
+        createLeaseTermForTurnoverRent(lease3, lease3.getStartDate(), null, "7");
 
     }
 
@@ -126,13 +126,13 @@ public class LeasesFixture extends AbstractFixture {
         return leaseTerm;
     }
 
-    private LeaseTerm createLeaseTermForTurnoverRent(Lease lease, LocalDate startDate, LocalDate endDate, BigDecimal turnoverRentPercentage) {
+    private LeaseTerm createLeaseTermForTurnoverRent(Lease lease, LocalDate startDate, LocalDate endDate, String turnoverRentRule) {
         LeaseItem leaseItem = createLeaseItem(lease, LeaseItemType.TURNOVER_RENT, charges.findChargeByReference("TURNOVER_RENT"));
         LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.setStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
-        leaseTerm.setTurnoverRentPercentage(turnoverRentPercentage);
+        leaseTerm.setTurnoverRentRule(turnoverRentRule);
         return leaseTerm;
     }
 

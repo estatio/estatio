@@ -68,10 +68,13 @@ public class LeaseUnitReferences extends AbstractFactoryAndRepository {
     @NotContributed
     @Hidden
     public LeaseUnitReference findOrCreate(LeaseUnitReferenceType type, String reference) {
-        LeaseUnitReference instance = find(type, reference);
-        if (instance == null)
-            instance = newReference(type, reference, null);
-        return instance;
+        if (reference != null && reference.length() > 0) {
+            LeaseUnitReference instance = find(type, reference);
+            if (instance == null)
+                instance = newReference(type, reference, null);
+            return instance;
+        }
+        return null;
     }
 
     @Prototype

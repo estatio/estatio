@@ -425,6 +425,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
+    
     // }}
 
 }

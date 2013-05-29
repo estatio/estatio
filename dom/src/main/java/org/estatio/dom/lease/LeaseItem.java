@@ -39,7 +39,6 @@ import org.estatio.services.clock.ClockService;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem> {
 
-    
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -69,7 +68,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         currentLease.removeFromItems(this);
     }
 
-    
     private BigInteger sequence;
 
     @MemberOrder(sequence = "1")
@@ -94,7 +92,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.type = type;
     }
 
-    
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -107,7 +104,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
-    
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
@@ -124,35 +120,34 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
-    
-//    @javax.jdo.annotations.Persistent
-//    private LocalDate tenancyStartDate;
-//
-//    @Optional
-//    @MemberOrder(sequence = "5")
-//    @Hidden(where = Where.PARENTED_TABLES)
-//    public LocalDate getTenancyStartDate() {
-//        return tenancyStartDate;
-//    }
-//
-//    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
-//        this.tenancyStartDate = tenancyStartDate;
-//    }
-//
-//    
-//    @javax.jdo.annotations.Persistent
-//    private LocalDate tenancyEndDate;
-//
-//    @Optional
-//    @MemberOrder(sequence = "6")
-//    @Hidden(where = Where.PARENTED_TABLES)
-//    public LocalDate getTenancyEndDate() {
-//        return tenancyEndDate;
-//    }
-//
-//    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
-//        this.tenancyEndDate = tenancyEndDate;
-//    }
+    // @javax.jdo.annotations.Persistent
+    // private LocalDate tenancyStartDate;
+    //
+    // @Optional
+    // @MemberOrder(sequence = "5")
+    // @Hidden(where = Where.PARENTED_TABLES)
+    // public LocalDate getTenancyStartDate() {
+    // return tenancyStartDate;
+    // }
+    //
+    // public void setTenancyStartDate(final LocalDate tenancyStartDate) {
+    // this.tenancyStartDate = tenancyStartDate;
+    // }
+    //
+    //
+    // @javax.jdo.annotations.Persistent
+    // private LocalDate tenancyEndDate;
+    //
+    // @Optional
+    // @MemberOrder(sequence = "6")
+    // @Hidden(where = Where.PARENTED_TABLES)
+    // public LocalDate getTenancyEndDate() {
+    // return tenancyEndDate;
+    // }
+    //
+    // public void setTenancyEndDate(final LocalDate tenancyEndDate) {
+    // this.tenancyEndDate = tenancyEndDate;
+    // }
 
     private InvoicingFrequency invoicingFrequency;
 
@@ -210,8 +205,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return null;
     }
 
-    
-    
     @javax.jdo.annotations.Persistent(mappedBy = "leaseItem")
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
@@ -255,15 +248,16 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     @Hidden
     public LeaseTerm findTermWithSequence(BigInteger sequence) {
-        for (LeaseTerm term : getTerms()) {
-            if (sequence.equals(term.getSequence())) {
-                return term;
-            }
-        }
-        return null;
+//        for (LeaseTerm term : getTerms()) {
+//            if (sequence.equals(term.getSequence())) {
+//                return term;
+//            }
+//        }
+//        return null;
+        //TODO: the code above proved to be very unreliable when using the api. Have to investigate further
+        return leaseTerms.findLeaseTermWithSequence(this, sequence);
     }
 
-    
     @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createInitialTerm() {
         LeaseTerm term = leaseTerms.newLeaseTerm(this);
@@ -274,8 +268,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
-    
-    
     @Hidden
     @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
@@ -310,7 +302,6 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return total;
     }
 
-    
     // {{ Comparable impl
     @Override
     public int compareTo(LeaseItem o) {
@@ -330,21 +321,21 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     };
     // }}
 
-    
     // {{ injected
     private Charges charges;
-    
+
     public void injectCharges(Charges charges) {
         this.charges = charges;
     }
-    
+
     private LeaseTerms leaseTerms;
-    
+
     public void injectLeaseTerms(LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
     }
-    
+
     private ClockService clockService;
+
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }

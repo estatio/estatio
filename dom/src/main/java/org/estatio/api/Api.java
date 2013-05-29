@@ -412,12 +412,12 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
             @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status, @Named("value") @Optional BigDecimal value,
             // end generic fields
-            @Named("turnoverRentPercentage") @Optional BigDecimal turnoverRentPercentage, @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover, @Named("auditedTurnover") @Optional BigDecimal auditedTurnover) {
+            @Named("turnoverRentRule") @Optional String turnoverRentRule, @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover, @Named("auditedTurnover") @Optional BigDecimal auditedTurnover) {
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
         term.setValue(value);
         term.setBudgetedTurnover(budgetedTurnover);
         term.setAuditedTurnover(auditedTurnover);
-        term.setTurnoverRentPercentage(turnoverRentPercentage);
+        term.setTurnoverRentRule(turnoverRentRule);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -453,16 +453,18 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));
         }
-        LeaseTerm term;
-        if (sequence.equals(BigInteger.ONE)) {
-            term = item.createInitialTerm();
-        } else {
-            LeaseTerm currentTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
-            term = item.createNextTerm(currentTerm);
-            if (startDate != null)
-                currentTerm.setEndDate(startDate.minusDays(1));
+        LeaseTerm term = item.findTermWithSequence(sequence);
+        if (term == null) {
+            if (sequence.equals(BigInteger.ONE)) {
+                term = item.createInitialTerm();
+            } else {
+                LeaseTerm currentTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
+                term = item.createNextTerm(currentTerm);
+                if (startDate != null)
+                    currentTerm.setEndDate(startDate.minusDays(1));
+            }
+            term.setSequence(sequence);
         }
-        term.setSequence(sequence);
         term.setStartDate(startDate);
         // term.setEndDate(endDate);
         return term;
