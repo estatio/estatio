@@ -17,11 +17,16 @@
 package org.estatio.dom.communicationchannel;
 
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
+
+import org.estatio.dom.Titled;
+import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.utils.StringUtils;
 
-public enum CommunicationChannelType {
+public enum CommunicationChannelType implements Titled<CommunicationChannelType> {
 
     ACCOUNTING_POSTAL_ADDRESS(PostalAddress.class), 
     POSTAL_ADDRESS(PostalAddress.class), 
@@ -49,5 +54,12 @@ public enum CommunicationChannelType {
     public String title() {
         return StringUtils.enumTitle(this.toString());
     }
+
+    
+    public static Ordering<CommunicationChannelType> ORDERING_BY_TYPE = new Ordering<CommunicationChannelType>() {
+        public int compare(CommunicationChannelType p, CommunicationChannelType q) {
+            return Ordering.<CommunicationChannelType> natural().nullsFirst().compare(p, q);
+        }
+    };
 
 }

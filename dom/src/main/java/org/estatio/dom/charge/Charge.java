@@ -1,19 +1,18 @@
 package org.estatio.dom.charge;
 
-import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.tax.Tax;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithCode;
+import org.estatio.dom.tax.Tax;
+
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
+public class Charge extends EstatioRefDataObject implements WithCode<Charge> {
 
     private String reference;
 
@@ -76,13 +75,7 @@ public class Charge extends EstatioRefDataObject implements Comparable<Charge> {
     public int compareTo(Charge other) {
         return ORDERING_BY_CODE.compare(this, other);
     }
-
     // }}
 
-    public final static Ordering<Charge> ORDERING_BY_CODE = new Ordering<Charge>() {
-        public int compare(Charge p, Charge q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getCode(), q.getCode());
-        }
-    };
 
 }

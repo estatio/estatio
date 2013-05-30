@@ -3,7 +3,7 @@ package org.estatio.dom.event;
 import org.estatio.dom.Titled;
 
 // REVIEW: should this be an entity, for multi-tenancy?
-public enum LeaseEventType implements Titled {
+public enum LeaseEventType implements Titled<LeaseEventType> {
 
     LEASE_BRK_OPT_LNDLRD("Break Option - Landlord"), 
     LEASE_BRK_OPT_MTL("Break Option - Mutual"), 

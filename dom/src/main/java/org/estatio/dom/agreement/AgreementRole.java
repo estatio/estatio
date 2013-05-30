@@ -5,6 +5,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Titled;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.LocalDateInterval;
 import org.estatio.dom.utils.Orderings;
@@ -179,35 +180,3 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     // }}
 
 }
-
-//public class Lease {
-//enum IntervalDistinguisher {
-//    CONTRACT,
-//    TENANCY
-//}
-//
-//   public LocalDateInterval getInterval(IntervalDistinguisher d) {
-//       if (d==IntervalDistinguisher.CONTRACT) {
-//           return new LocalDateInterval(getContractStartDate(), getContractEndDate());
-//       }
-//   }
-//
-//   
-//}
-
-interface Intervalled {
-    LocalDate getStartDate();
-    LocalDate getEndDate();
-    @Programmatic
-    LocalDateInterval getInterval(Object distinguisher);
-}
-
-
-
-//main() {
-//    
-//    
-//    Lease l;
-//    
-//    LocalDateInterval ldi = l.getInterval(CONTRACT);
-//}

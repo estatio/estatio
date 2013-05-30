@@ -3,19 +3,18 @@ package org.estatio.dom.charge;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioRefDataObject;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithReference;
+
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject implements Comparable<ChargeGroup> {
+public class ChargeGroup extends EstatioRefDataObject implements WithReference<ChargeGroup> {
 
     private String reference;
 
@@ -55,13 +54,8 @@ public class ChargeGroup extends EstatioRefDataObject implements Comparable<Char
 
     @Override
     public int compareTo(ChargeGroup other) {
-        return ORDERING_BY_CODE.compare(this, other);
+        return ORDERING_BY_REFERENCE.compare(this, other);
     }
 
-    public final static Ordering<ChargeGroup> ORDERING_BY_CODE = new Ordering<ChargeGroup>() {
-        public int compare(ChargeGroup p, ChargeGroup q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
-        }
-    };
 
 }

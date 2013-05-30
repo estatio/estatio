@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.asset.FixedAssetRoleType;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -88,7 +89,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
     // {{ Comparable impl
     @Hidden
     public int compareTo(CommunicationChannel other) {
-        return this.getClass().getName().compareTo(other.getClass().getName());
+        return CommunicationChannelType.ORDERING_BY_TYPE.compare(this.getType(), other.getType());
     }
     // }}
 

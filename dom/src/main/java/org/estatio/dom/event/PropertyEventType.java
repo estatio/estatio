@@ -2,7 +2,7 @@ package org.estatio.dom.event;
 
 import org.estatio.dom.Titled;
 
-public enum PropertyEventType implements Titled {
+public enum PropertyEventType implements Titled<PropertyEventType> {
 
     PROPERTY_DISRUPTION("Disruption"), 
     PROPERTY_EXTENSION("Extension"), 

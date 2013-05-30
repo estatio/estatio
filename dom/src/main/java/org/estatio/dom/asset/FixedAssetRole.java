@@ -1,6 +1,5 @@
 package org.estatio.dom.asset;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -108,7 +107,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
     @Hidden
     @Override
     public int compareTo(FixedAssetRole o) {
-        return this.getType().compareTo(o.getType());
+        return FixedAssetRoleType.ORDERING_BY_TYPE.compare(this.getType(), o.getType());
     }
     // }}
 

@@ -10,7 +10,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
@@ -25,7 +24,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.InvoiceItem;
+import org.estatio.dom.WithReference;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 
@@ -34,7 +33,7 @@ import org.estatio.dom.utils.ValueUtils;
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
-public abstract class Agreement extends EstatioTransactionalObject implements Comparable<Agreement> {
+public abstract class Agreement extends EstatioTransactionalObject implements WithReference<Agreement> {
 
     // {{ Reference (property)
     private String reference;
@@ -295,12 +294,6 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     public int compareTo(Agreement other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
-    
-    public static Ordering<Agreement> ORDERING_BY_REFERENCE = new Ordering<Agreement>() {
-        public int compare(Agreement p, Agreement q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
-        }
-    };
     // }}
 
     // {{ injected

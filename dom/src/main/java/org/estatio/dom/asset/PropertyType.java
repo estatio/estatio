@@ -1,7 +1,9 @@
 package org.estatio.dom.asset;
 
+import org.estatio.dom.Titled;
 
-public enum PropertyType {
+
+public enum PropertyType implements Titled<PropertyType> {
 
     SHOPPING_CENTER("Shopping Center"), 
     WAREHOUSE("Warehouse"),

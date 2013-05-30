@@ -1,8 +1,9 @@
 package org.estatio.dom.asset;
 
+import org.estatio.dom.Titled;
 import org.estatio.dom.utils.StringUtils;
 
-public enum UnitType {
+public enum UnitType implements Titled<UnitType> {
 
     BOUTIQUE,
     STORAGE,

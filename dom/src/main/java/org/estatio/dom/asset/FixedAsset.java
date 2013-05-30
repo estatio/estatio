@@ -22,12 +22,12 @@ import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithName;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
@@ -37,7 +37,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bookmarkable
-public abstract class FixedAsset extends EstatioTransactionalObject implements Comparable<FixedAsset>, Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject implements WithName<FixedAsset>, Locatable {
 
     private String reference;
 
@@ -185,12 +185,12 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         this.locationLookupService = locationLookupService;
     }
     // }}
-    
+
 
     // {{ Comparable impl
     @Override
     public int compareTo(FixedAsset other) {
-        return this.getName().compareTo(other.getName());
+        return ORDERING_BY_NAME.compare(this, other);
     }
     // }}
 

@@ -16,11 +16,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithTitle;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementType extends EstatioRefDataObject implements Comparable<AgreementType> {
+public class AgreementType extends EstatioRefDataObject implements WithTitle<AgreementType> {
 
     // {{ Title (property)
     private String title;
