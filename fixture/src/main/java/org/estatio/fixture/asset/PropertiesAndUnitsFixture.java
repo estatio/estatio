@@ -81,7 +81,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
 
     private Parties parties;
 
-    public void setpartyRepository(final Parties parties) {
+    public void setPartyRepository(final Parties parties) {
         this.parties = parties;
     }
 

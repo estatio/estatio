@@ -13,14 +13,12 @@ public class TestTimer extends TestWatcher {
     }
 
     @Override
-    protected void starting(
-                            Description description) {
+    protected void starting(Description description) {
         t0 = System.currentTimeMillis();
     }
     
     @Override
-    protected void finished(
-                            Description description) {
+    protected void finished(Description description) {
         t1 = System.currentTimeMillis();
         
         System.out.println(prefix + ": " + description.getDisplayName() + "took: " + (t1-t0) + "millis");
