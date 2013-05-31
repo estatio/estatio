@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
@@ -21,23 +20,26 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem> {
+public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem>, WithInterval {
 
     private Lease lease;
 
@@ -92,6 +94,8 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.type = type;
     }
 
+    
+    // {{ StartDate, EndDate 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -119,6 +123,14 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     public LocalDate calculatedEndDate() {
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
+    
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    // }}
 
     // @javax.jdo.annotations.Persistent
     // private LocalDate tenancyStartDate;

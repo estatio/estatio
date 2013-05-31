@@ -2,11 +2,9 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -20,23 +18,26 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem> {
+public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>, WithInterval {
 
     private Invoice invoice;
 
@@ -188,7 +189,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.dueDate = dueDate;
     }
 
-    
+
+    // {{ StartDate, EndDate
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -213,6 +215,14 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+    
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+    // }}
+
 
 
     /**

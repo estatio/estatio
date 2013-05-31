@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.Extension;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;

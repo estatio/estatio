@@ -1,7 +1,6 @@
 package org.estatio.dom.financial;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;

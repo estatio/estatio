@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.Persistent;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;

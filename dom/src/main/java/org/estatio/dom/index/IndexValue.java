@@ -2,8 +2,6 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.Extension;
-
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;

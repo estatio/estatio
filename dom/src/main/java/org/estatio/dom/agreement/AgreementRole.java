@@ -4,13 +4,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Titled;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.LocalDateInterval;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.utils.LocalDateInterval.IntervalEnding;
-import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -22,10 +15,17 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole> {
+public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole>, WithInterval {
 
     private Agreement agreement;
 
@@ -130,6 +130,13 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+    
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+    
+    // }}
 
     // {{ Comparable impl
     /**
@@ -166,10 +173,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         return getInterval().contains(localDate);
     }
 
-    @Programmatic // excluded form the metamodel
-    public LocalDateInterval getInterval() {
-        return new LocalDateInterval(getStartDate(), getEndDate(), IntervalEnding.INCLUDING_END_DATE);
-    }
 
     // {{ injected: ClockService
     private ClockService clockService;

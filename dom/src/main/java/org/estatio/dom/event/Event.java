@@ -1,21 +1,21 @@
 package org.estatio.dom.event;
 
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.PersistenceCapable;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
 // TODO: instate when want to ...
 //@PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class Event extends EstatioTransactionalObject {
+public class Event extends EstatioTransactionalObject implements WithInterval {
 
-    // {{ StartDate (property)
+    // {{ StartDate, EndDate
     private LocalDate startDate;
 
     @MemberOrder(sequence = "1")
@@ -30,9 +30,7 @@ public class Event extends EstatioTransactionalObject {
     public LocalDate defaultStartDate() {
         return clockService.now();
     }
-    // }}
 
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @MemberOrder(sequence = "1")
@@ -43,6 +41,13 @@ public class Event extends EstatioTransactionalObject {
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+    
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
     // }}
     
     // {{ Description (property)

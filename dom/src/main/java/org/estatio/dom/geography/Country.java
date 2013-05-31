@@ -1,7 +1,6 @@
 package org.estatio.dom.geography;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;

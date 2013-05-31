@@ -1,4 +1,4 @@
-package org.estatio.dom.utils;
+package org.estatio.dom.valuetypes;
 
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -7,18 +7,22 @@ import org.joda.time.PeriodType;
 
 public final class LocalDateInterval {
 
-    public enum IntervalEnding {
+    public static LocalDateInterval excluding(LocalDate startDate, LocalDate endDate) {
+        return new LocalDateInterval(startDate, endDate, IntervalEnding.EXCLUDING_END_DATE);
+    }
+
+    public static LocalDateInterval including(LocalDate startDate, LocalDate endDate) {
+        return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
+    }
+
+    private enum IntervalEnding {
         INCLUDING_END_DATE, EXCLUDING_END_DATE
     }
 
     private long startInstant;
     private long endInstant;
 
-    public LocalDateInterval(LocalDate startDate, LocalDate endDate) {
-        this(startDate, endDate, IntervalEnding.EXCLUDING_END_DATE);
-    }
-
-    public LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
+    private LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
         startInstant = startDate == null ? Long.MIN_VALUE : startDate.toInterval().getStartMillis();
         endInstant = endDate == null ? Long.MAX_VALUE : ending == IntervalEnding.EXCLUDING_END_DATE ? endDate.toInterval().getStartMillis() : endDate.toInterval().getEndMillis();
     }

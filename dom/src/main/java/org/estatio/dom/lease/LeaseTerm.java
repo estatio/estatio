@@ -13,15 +13,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -33,10 +24,23 @@ import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -44,7 +48,7 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm> {
+public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval {
 
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
@@ -93,6 +97,8 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.sequence = sequence;
     }
 
+    
+    // {{ StartDate, EndDate
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -119,6 +125,14 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+    
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    // }}
 
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal value;

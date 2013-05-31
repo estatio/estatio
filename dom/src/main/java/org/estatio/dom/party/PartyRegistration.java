@@ -16,17 +16,20 @@
  */
 package org.estatio.dom.party;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioTransactionalObject;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class PartyRegistration extends EstatioTransactionalObject {
+public class PartyRegistration extends EstatioTransactionalObject implements WithInterval {
 
     // {{ Party (property)
     private Party party;
@@ -57,31 +60,36 @@ public class PartyRegistration extends EstatioTransactionalObject {
 
     // }}
 
-    // {{ StartDateDate (property)
-    private LocalDate startDateDate;
+    // {{ StartDate, EndDate
+    private LocalDate startDate;
 
     @MemberOrder(sequence = "1")
-    public LocalDate getStartDateDate() {
-        return startDateDate;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setStartDateDate(final LocalDate startDateDate) {
-        this.startDateDate = startDateDate;
+    public void setStartDate(final LocalDate startDate) {
+        this.startDate = startDate;
     }
-
-    // }}
-
-    // {{ EndDateDate (property)
-    private LocalDate endDateDate;
+    
+    
+    private LocalDate endDate;
 
     @MemberOrder(sequence = "1")
-    public LocalDate getEndDateDate() {
-        return endDateDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setEndDateDate(final LocalDate endDateDate) {
-        this.endDateDate = endDateDate;
+    public void setEndDate(final LocalDate endDate) {
+        this.endDate = endDate;
     }
+    
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
     // }}
 
 }

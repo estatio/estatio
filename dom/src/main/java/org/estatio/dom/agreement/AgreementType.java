@@ -2,8 +2,6 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import javax.jdo.annotations.Extension;
-
 import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.ApplicationException;

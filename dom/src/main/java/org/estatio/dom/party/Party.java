@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.AutoComplete;

@@ -3,7 +3,6 @@ package org.estatio.dom.tax;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -13,13 +12,16 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate> {
+public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate>, WithInterval {
 
     // {{ Tax (property)
     private Tax tax;
@@ -36,7 +38,7 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
 
     // }}
 
-    // {{ StartDate (property)
+    // {{ StartDate, EndDate
     private LocalDate startDate;
 
     @Persistent
@@ -49,9 +51,6 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @Persistent
@@ -64,6 +63,14 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+    
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    // }}
 
     // {{ Percentage (property)
     private BigDecimal percentage;

@@ -2,6 +2,7 @@ package org.estatio.dom.event;
 
 import org.estatio.dom.Titled;
 
+//TODO: EST-131: convert to entity, since will vary by location
 public enum PropertyEventType implements Titled<PropertyEventType> {
 
     PROPERTY_DISRUPTION("Disruption"), 

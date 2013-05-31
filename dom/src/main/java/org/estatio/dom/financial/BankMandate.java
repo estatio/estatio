@@ -1,7 +1,6 @@
 package org.estatio.dom.financial;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -42,6 +41,7 @@ public class BankMandate extends Agreement {
         return findParty(FinancialConstants.ART_DEBTOR);
     }
     // }}
+
 
 
 }

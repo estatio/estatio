@@ -4,8 +4,6 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -21,7 +19,6 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 

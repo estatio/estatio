@@ -1,7 +1,6 @@
 package org.estatio.dom.lease;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
 @javax.jdo.annotations.PersistenceCapable

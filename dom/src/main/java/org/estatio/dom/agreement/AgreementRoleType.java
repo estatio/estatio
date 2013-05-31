@@ -2,10 +2,6 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import javax.jdo.annotations.Extension;
-
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -13,7 +9,6 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.Titled;
 import org.estatio.dom.WithTitle;
 
 @javax.jdo.annotations.PersistenceCapable

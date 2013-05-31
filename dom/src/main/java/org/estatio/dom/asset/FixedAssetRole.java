@@ -10,16 +10,19 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole> {
+public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole>, WithInterval {
 
     // {{ Property (asset)
     private FixedAsset asset;
@@ -71,7 +74,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
 
     // }}
 
-    // {{ StartDate (asset)
+    // {{ StartDate, EndDate (asset)
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -85,9 +88,6 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (asset)
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
@@ -101,6 +101,11 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
         this.endDate = endDate;
     }
 
+    @Override
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
     // }}
 
     // {{ Comparable impl

@@ -19,21 +19,24 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithReference;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
-public abstract class Agreement extends EstatioTransactionalObject implements WithReference<Agreement> {
+public abstract class Agreement extends EstatioTransactionalObject implements WithReference<Agreement>, WithInterval {
 
     // {{ Reference (property)
     private String reference;
@@ -107,7 +110,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
 
     // }}
 
-    // {{ StartDate (property)
+    // {{ StartDate, EndDate (WithInterval)
     private LocalDate startDate;
 
     @javax.jdo.annotations.Persistent
@@ -120,9 +123,6 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
         this.startDate = startDate;
     }
 
-    // }}
-
-    // {{ EndDate (property)
     private LocalDate endDate;
 
     @javax.jdo.annotations.Persistent
@@ -135,6 +135,10 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
         this.endDate = endDate;
     }
 
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
     // }}
 
     // {{ TerminationDate (property)

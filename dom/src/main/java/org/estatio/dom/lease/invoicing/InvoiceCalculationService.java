@@ -6,19 +6,19 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NotContributed;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.LocalDateInterval;
-import org.estatio.dom.utils.LocalDateInterval.IntervalEnding;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.appsettings.EstatioSettingsService;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
 
 @Hidden
 public class InvoiceCalculationService {
@@ -51,7 +51,7 @@ public class InvoiceCalculationService {
         CalculationResult result = new CalculationResult();
         result.frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, freq.rrule));
         if (result.frequencyInterval.getStartDate() != null) {
-            LocalDateInterval termInterval = new LocalDateInterval(leaseTerm.getStartDate(), leaseTerm.getEndDate(), IntervalEnding.INCLUDING_END_DATE);
+            LocalDateInterval termInterval = LocalDateInterval.including(leaseTerm.getStartDate(), leaseTerm.getEndDate());
             LocalDateInterval overlap = result.frequencyInterval.overlap(termInterval);
             if (overlap != null) {
                 BigDecimal overlapDays = new BigDecimal(overlap.getDays());

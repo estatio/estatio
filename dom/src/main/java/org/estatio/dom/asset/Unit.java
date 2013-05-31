@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -15,7 +14,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.PublishedObject;
 import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
