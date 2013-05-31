@@ -178,7 +178,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Hidden
     public void initialize() {
         super.initialize();
-        setFrequency(LeaseTermFrequency.YEARLY);
         LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
         if (previousTerm != null) {
             LeaseTermFrequency frequency = previousTerm.getFrequency();

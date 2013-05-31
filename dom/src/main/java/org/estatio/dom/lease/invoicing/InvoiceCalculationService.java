@@ -18,6 +18,7 @@ import org.estatio.services.appsettings.EstatioSettingsService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NotContributed;
 
 @Hidden
 public class InvoiceCalculationService {
@@ -35,6 +36,8 @@ public class InvoiceCalculationService {
         }
     }
 
+    //REVIEW: [JWA] Should injected services by default be not contributed? 
+    @NotContributed
     public void calculateAndInvoiceItems(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate, InvoicingFrequency freq) {
         CalculationResult result = calculate(leaseTerm, startDate, dueDate, freq);
         createInvoiceItems(leaseTerm, startDate, dueDate, result, freq);
@@ -80,6 +83,7 @@ public class InvoiceCalculationService {
         return results;
     }
 
+    @NotContributed
     public BigDecimal calculatedValue(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency invoicingFrequency) {
         BigDecimal value = BigDecimal.ZERO;
         List<CalculationResult> results = calculationResults(leaseTerm, periodStartDate, dueDate, invoicingFrequency);

@@ -2,11 +2,11 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NotPersisted;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -15,7 +15,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private String turnoverRentRule;
 
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "10", name = "Turnover Rent")
     public String getTurnoverRentRule() {
         return turnoverRentRule;
     }
@@ -27,7 +27,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public String validateTurnoverRentRule(final String rule) {
         if (rule == null || rule.trim().length() == 0)
             return null;
-        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper("rule");
+        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(rule);
         return helper.isValid() ? null : "This is not a valid rule";
     }
 
@@ -55,47 +55,47 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.auditedTurnover = auditedTurnover;
     }
 
+    @NotPersisted
+    @MemberOrder(sequence = "13", name = "Turnover Rent")
     public BigDecimal getTurnoverRent() {
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         return helper.calculateRent(getAuditedTurnover());
     }
 
-    private BigDecimal budgetedValue;
-
-    @MemberOrder(sequence = "20", name = "Values")
-    @Column(scale = 2)
-    public BigDecimal getBudgetedValue() {
-        return budgetedValue;
-    }
-
-    public void setBudgetedValue(final BigDecimal budgetedValue) {
-        this.budgetedValue = budgetedValue;
-    }
-
     @javax.jdo.annotations.Column(scale = 2)
-    private BigDecimal auditedValue;
+    private BigDecimal contractualRent;
 
-    @MemberOrder(sequence = "21", name = "Values")
-    public BigDecimal getAuditedValue() {
-        return auditedValue;
+    @MemberOrder(sequence = "14", name = "Turnover Rent")
+    public BigDecimal getContractualRent() {
+        return contractualRent;
     }
 
-    public void setAuditedValue(final BigDecimal auditedValue) {
-        this.auditedValue = auditedValue;
+    public void setContractualRent(final BigDecimal contractualRent) {
+        this.contractualRent = contractualRent;
     }
 
-    public void update() {
+    @Override
+    protected void update() {
         LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
         // TODO: Should not be hardcoded searching for rent and should return a
         // collection. Also move the value of rent to a different field
         if (rentItem != null) {
-            BigDecimal valueOfRent = rentItem.valueForPeriod(getLeaseItem().getInvoicingFrequency(), getStartDate(), getStartDate().plusYears(2));
-            setAuditedValue(valueOfRent);
+            BigDecimal contractualRent = rentItem.valueForPeriod(getLeaseItem().getInvoicingFrequency(), getStartDate(), getStartDate().plusYears(2));
+            setContractualRent(contractualRent);
             setValue(BigDecimal.ZERO);
             BigDecimal turnoverRent = getTurnoverRent();
-            if (turnoverRent.compareTo(valueOfRent) > 0) {
-                setValue(turnoverRent.subtract(valueOfRent));
+            if (turnoverRent.compareTo(contractualRent) > 0) {
+                setValue(turnoverRent.subtract(contractualRent));
             }
+        }
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        LeaseTermForTurnoverRent prev = (LeaseTermForTurnoverRent) getPreviousTerm();
+        if (prev != null) {
+            setTurnoverRentRule(prev.getTurnoverRentRule());
         }
     }
 

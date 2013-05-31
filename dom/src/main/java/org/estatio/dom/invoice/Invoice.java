@@ -10,17 +10,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.PublishedAction;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.numerator.Numerator;
@@ -28,18 +17,27 @@ import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.PublishedAction;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
 public class Invoice extends EstatioTransactionalObject implements Comparable<Invoice> {
 
-    
     public String title() {
         return String.format("%08d", Integer.parseInt(getId()));
     }
 
-    // {{ Buyer (property)
     private Party buyer;
 
     @MemberOrder(sequence = "1")
@@ -55,9 +53,6 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return parties.allParties();
     }
 
-    // }}
-
-    // {{ Seller (property)
     private Party seller;
 
     @MemberOrder(sequence = "2")
@@ -73,12 +68,20 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return parties.allParties();
     }
 
-    // }}
-
-    // {{ NumeratorForInvoiceNumber (property)
-    private String invoiceNumber;
+    private String collectionNumber;
 
     @MemberOrder(sequence = "3")
+    public String getCollectionNumber() {
+        return collectionNumber;
+    }
+
+    public void setCollectionNumber(String collectionNumber) {
+        this.collectionNumber = collectionNumber;
+    }
+
+    private String invoiceNumber;
+
+    @MemberOrder(sequence = "4")
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -87,12 +90,9 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.invoiceNumber = invoiceNumber;
     }
 
-    // }}
-
-    // {{ Reference (property)
     private String reference;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "5")
     public String getReference() {
         return reference;
     }
@@ -101,14 +101,10 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.reference = reference;
     }
 
-    // }}
-
-    // {{ InvoiceProvenance (property)
-    @javax.jdo.annotations.Persistent(extensions={
-            @Extension(vendorName="datanucleus", key = "mapping-strategy", value = "per-implementation")})
+    @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
     private InvoiceProvenance provenance;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "6")
     public InvoiceProvenance getProvenance() {
         return provenance;
     }
@@ -117,13 +113,11 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.provenance = provenance;
     }
 
-    // }}
-
-    // {{ InvoiceDate (property)
     @javax.jdo.annotations.Persistent
     private LocalDate invoiceDate;
 
-    @MemberOrder(sequence = "6")
+    @Disabled
+    @MemberOrder(sequence = "7")
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -132,13 +126,10 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.invoiceDate = invoiceDate;
     }
 
-    // }}
-
-    // {{ DueDate (property)
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "8")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -147,12 +138,10 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.dueDate = dueDate;
     }
 
-    // }}
-
-    // {{ Status (property)
     private InvoiceStatus status;
 
-    @MemberOrder(sequence = "8")
+    @Disabled
+    @MemberOrder(sequence = "9")
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -161,12 +150,9 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.status = status;
     }
 
-    // }}
-
-    // {{ Currency (property)
     private Currency currency;
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(sequence = "10")
     public Currency getCurrency() {
         return currency;
     }
@@ -175,12 +161,9 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.currency = currency;
     }
 
-    // }}
-
-    // {{ PaymentMethod (property)
     private PaymentMethod paymentMethod;
 
-    @MemberOrder(sequence = "10")
+    @MemberOrder(sequence = "11")
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
@@ -189,13 +172,10 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.paymentMethod = paymentMethod;
     }
 
-    // }}
-
-    // {{ Items (Collection)
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")
     private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
 
-    @MemberOrder(sequence = "11")
+    @MemberOrder(sequence = "12")
     @Render(Type.EAGERLY)
     public SortedSet<InvoiceItem> getItems() {
         return items;
@@ -206,32 +186,24 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     }
 
     public void addToItems(final InvoiceItem item) {
-        // check for no-op
         if (item == null || getItems().contains(item)) {
             return;
         }
-        // dissociate arg from its current parent (if any).
         item.clearInvoice();
-        // associate arg
         item.setInvoice(this);
         getItems().add(item);
     }
 
     public void removeFromItems(final InvoiceItem item) {
-        // check for no-op
         if (item == null || !getItems().contains(item)) {
             return;
         }
-        // dissociate arg
         item.setInvoice(null);
         getItems().remove(item);
     }
 
-    // }}
-
-    // {{ derived
     @NotPersisted
-    @MemberOrder(sequence = "12")
+    @MemberOrder(name = "Amounts", sequence = "13")
     public BigDecimal getNetAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -241,7 +213,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     }
 
     @NotPersisted
-    @MemberOrder(sequence = "13")
+    @MemberOrder(name = "Amounts", sequence = "14")
     public BigDecimal getVatAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -251,7 +223,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     }
 
     @NotPersisted
-    @MemberOrder(sequence = "14")
+    @MemberOrder(name = "Amounts", sequence = "15")
     public BigDecimal getGrossAmount() {
         BigDecimal total = BigDecimal.ZERO;
         for (InvoiceItem item : getItems()) {
@@ -259,68 +231,57 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         }
         return total;
     }
-    // }}
-
-    // {{ Actions
 
     @Bulk
-    @MemberOrder(sequence = "20")
+    @MemberOrder(sequence = "1")
     public Invoice approve() {
         this.setStatus(InvoiceStatus.APPROVED);
         return this;
     }
 
+    @Bulk
+    @MemberOrder(sequence = "2")
+    public Invoice assignCollectionNumber() {
+        Numerator numerator = numerators.establish(NumeratorType.COLLECTION_NUMBER);
+        if (getInvoiceNumber() != null) {
+            return null;
+        }
+        setInvoiceNumber(String.format("COL-%05d", numerator.increment()));
+        informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
+        this.setStatus(InvoiceStatus.COLLECTED);
+        return this;
+    }
+
     @PublishedAction(InvoiceEagerlyRenderedPayloadFactory.class)
     @Bulk
-    @MemberOrder(sequence = "21")
+    @MemberOrder(sequence = "3")
     public Invoice submitToCoda() {
         assignCollectionNumber();
         return this;
     }
 
-    void assignCollectionNumber() {
-        Numerator numerator = numerators.establish(NumeratorType.COLLECTION_NUMBER);
-        if (assign(this, numerator, "COL-%05d")) {
-            informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
-            this.setStatus(InvoiceStatus.COLLECTED);
-        }
-    }
-
     @Bulk
-    @MemberOrder(sequence = "22")
+    @MemberOrder(sequence = "4")
     public Invoice assignInvoiceNumber() {
         Numerator numerator = numerators.establish(NumeratorType.INVOICE_NUMBER);
-        if (assign(this, numerator, "INV-%05d")) {
-            informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
-            this.setStatus(InvoiceStatus.INVOICED);
+        if (getInvoiceNumber() != null) {
+            return null;
         }
+        setInvoiceNumber(String.format("INV-%05d", numerator.increment()));
+        informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
+        this.setStatus(InvoiceStatus.INVOICED);
         return this;
-    }
-
-    private static boolean assign(Invoice invoice, Numerator numerator, String format) {
-        if (invoice.getInvoiceNumber() != null) {
-            return false;
-        }
-        invoice.setInvoiceNumber(String.format(format, numerator.increment()));
-        return true;
     }
 
     @Prototype
     @Bulk
+    @MemberOrder(sequence = "5")
     public void remove() {
-        // if (!getStatus().equals(InvoiceStatus.NEW)) { 
-        //    return; 
-        // }
         for (InvoiceItem item : getItems()) {
             item.remove();
         }
         getContainer().remove(this);
     }
-
-    // }}
-
-    
-    // {{ Injected services
 
     private Parties parties;
 
@@ -333,7 +294,6 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public void injectNumerators(Numerators numerators) {
         this.numerators = numerators;
     }
-    // }}
 
     @Override
     public int compareTo(Invoice o) {

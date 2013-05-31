@@ -12,6 +12,12 @@ import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithName;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -25,13 +31,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithName;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -88,8 +87,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements W
         return this;
     }
 
-    
-    
     @javax.jdo.annotations.Persistent(mappedBy = "asset")
     private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
 
@@ -116,7 +113,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements W
         return parties.allParties();
     }
 
-    
     @javax.jdo.annotations.Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
     @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
@@ -132,20 +128,16 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements W
     }
 
     public void addToCommunicationChannels(final CommunicationChannel communicationChannel) {
-        // check for no-op
         if (communicationChannel == null || getCommunicationChannels().contains(communicationChannel)) {
             return;
         }
-        // associate new
         getCommunicationChannels().add(communicationChannel);
     }
 
     public void removeFromCommunicationChannels(final CommunicationChannel communicationChannel) {
-        // check for no-op
         if (communicationChannel == null || !getCommunicationChannels().contains(communicationChannel)) {
             return;
         }
-        // dissociate existing
         getCommunicationChannels().remove(communicationChannel);
     }
 
@@ -166,7 +158,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements W
         return null;
     }
 
-    // {{ injected
     private FixedAssetRoles fixedAssetRoles;
 
     public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
@@ -184,14 +175,10 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements W
     public void injectLocationLookupService(LocationLookupService locationLookupService) {
         this.locationLookupService = locationLookupService;
     }
-    // }}
 
-
-    // {{ Comparable impl
     @Override
     public int compareTo(FixedAsset other) {
         return ORDERING_BY_NAME.compare(this, other);
     }
-    // }}
 
 }

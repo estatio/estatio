@@ -3,15 +3,13 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.estatio.dom.utils.MathUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-
-import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -61,12 +59,13 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Override
     @Hidden
     public BigDecimal valueForDueDate(LocalDate dueDate) {
-        // use the audited value after the end of the term and only when its available
+        // use the audited value after the end of the term and only when its
+        // available
         if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
             if (getEndDate() != null) {
                 if (dueDate.compareTo(getEndDate().plusDays(1)) >= 0)
                     return getAuditedValue();
-            } 
+            }
         }
         return getBudgetedValue();
     }
@@ -78,9 +77,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPreviousTerm();
         if (previousTerm != null) {
             this.setBudgetedValue(MathUtils.isNotZeroOrNull(previousTerm.getAuditedValue()) ? previousTerm.getAuditedValue() : previousTerm.getBudgetedValue());
-            this.setFrequency(previousTerm.getFrequency());
         }
-        setFrequency(LeaseTermFrequency.YEARLY);
     }
 
     @Override
@@ -91,9 +88,8 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
             // date from previous term
             if (getPreviousTerm() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
                 if (MathUtils.isNotZeroOrNull(getPreviousTerm().getValue())) {
-                setBudgetedValue(getPreviousTerm().getValue());
+                    setBudgetedValue(getPreviousTerm().getValue());
                 }
-                
             }
             // update itself
             if (MathUtils.isNotZeroOrNull(getAuditedValue())) {

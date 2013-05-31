@@ -347,12 +347,13 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     protected void initialize() {
         setStatus(LeaseTermStatus.NEW);
-        final BigInteger previousTermSequence = previousTermSequence().add(BigInteger.ONE);
-        setSequence(previousTermSequence);
-    }
-
-    private BigInteger previousTermSequence() {
-        return getPreviousTerm() != null ? getPreviousTerm().getSequence() : BigInteger.ZERO;
+        LeaseTerm previousTerm = getPreviousTerm();
+        BigInteger sequence = BigInteger.ONE;
+        if (previousTerm != null){
+            sequence = previousTerm.getSequence().add(BigInteger.ONE);
+        setFrequency(previousTerm.getFrequency());
+        }
+        setSequence(sequence);
     }
 
     protected void update() {

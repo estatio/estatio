@@ -14,6 +14,7 @@ public class TurnoverRentRuleHelperTest {
         Assert.assertFalse(new TurnoverRentRuleHelper(null).isValid());
         Assert.assertFalse(new TurnoverRentRuleHelper("").isValid());
         Assert.assertTrue(new TurnoverRentRuleHelper("5").isValid());
+        Assert.assertTrue(new TurnoverRentRuleHelper("5.00").isValid());
         Assert.assertTrue(new TurnoverRentRuleHelper("50000;5;7").isValid());
     }
 
