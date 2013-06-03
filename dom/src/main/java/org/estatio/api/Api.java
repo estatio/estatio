@@ -323,15 +323,12 @@ public class Api extends AbstractFactoryAndRepository {
             leaseUnit = lease.addUnit(unit);
             leaseUnit.setStartDate(startDate);
         }
-//        LeaseUnitBrand b = (LeaseUnitBrand) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.BRAND, brand);
-//        LeaseUnitSector s = (LeaseUnitSector) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.SECTOR, brand);
-//        LeaseUnitActivity a = (LeaseUnitActivity) leaseUnitReferencesService.findOrCreate(LeaseUnitReferenceType.ACTIVITY, brand);
 
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
-        leaseUnit.updateBrandTag(brand);
-        leaseUnit.updateSectorTag(sector);
-        leaseUnit.updateActivityTag(activity);
+        leaseUnit.setBrand(brand);
+        leaseUnit.setSector(sector);
+        leaseUnit.setActivity(activity);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

@@ -129,115 +129,119 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     // }}
 
 
-    // {{ tags
-    private Tag brand;
+    // {{ Brand
+    private Tag brandTag;
 
-    @Disabled
+    @Hidden
+    public Tag getBrandTag() {
+        return brandTag;
+    }
+
+    public void setBrandTag(final Tag brand) {
+        this.brandTag = brand;
+    }
+    
     @MemberOrder(sequence = "6")
     @Optional
-    public Tag getBrand() {
-        return brand;
+    public String getBrand() {
+        final Tag existingTag = getBrandTag();
+        return existingTag!=null? existingTag.getValue(): null;
     }
 
-    public void setBrand(final Tag brand) {
-        this.brand = brand;
+    public void setBrand(final String brand) {
+        final Tag existingTag = getBrandTag();
+        Tag tag = tags.tagFor(existingTag, this, "brand", brand);
+        setBrandTag(tag);
     }
-    @Named("Update")
-    @MemberOrder(name="brand", sequence = "6.1")
-    public LeaseUnit updateBrandTag(@Named("Tag") final String tagValue) {
-        final Tag existingTag = getBrand();
-        Tag tag = tags.tagFor(existingTag, this, "brand", tagValue);
-        setBrand(tag);
-        return this;
-    }
-    public String default0UpdateBrandTag() {
-        final Tag existingTag = getBrand();
-        return existingTag != null? existingTag.getValue(): null;
-    }
-    public List<String> choices0UpdateBrandTag() {
+    public List<String> choicesBrand() {
         return tags.choices(this, "brand");
     }
-    @Named("New")
-    @MemberOrder(name="brand", sequence = "6.2")
-    public LeaseUnit newBrandTag(@Named("Tag") final String tagValue) {
-        return updateBrandTag(tagValue);
-    }
-    public String default0NewBrandTag() {
-        return default0UpdateBrandTag();
-    }
-    
-    
-    private Tag sector;
 
-    @Disabled
-    @MemberOrder(sequence = "7")
-    @Optional
-    public Tag getSector() {
-        return sector;
-    }
-
-    public void setSector(final Tag sector) {
-        this.sector = sector;
-    }
-    @Named("Update")
-    @MemberOrder(name="sector", sequence = "7.1")
-    public LeaseUnit updateSectorTag(@Named("Tag") final String tagValue) {
-        final Tag existingTag = getSector();
-        Tag tag = tags.tagFor(existingTag, this, "sector", tagValue);
-        setSector(tag);
+    @MemberOrder(name="Brand", sequence = "6.1")
+    public LeaseUnit newBrand(@Named("Tag") @Optional final String brand) {
+        setBrand(brand);
         return this;
     }
-    public String default0UpdateSectorTag() {
-        final Tag existingTag = getSector();
-        return existingTag != null? existingTag.getValue(): null;
+    public String default0NewBrand() {
+        return getBrand();
     }
-    public List<String> choices0UpdateSectorTag() {
+    // }}
+    
+    
+    // {{ Sector
+    private Tag sectorTag;
+
+    @Hidden
+    public Tag getSectorTag() {
+        return sectorTag;
+    }
+
+    public void setSectorTag(final Tag sector) {
+        this.sectorTag = sector;
+    }
+    
+    @MemberOrder(sequence = "6")
+    @Optional
+    public String getSector() {
+        final Tag existingTag = getSectorTag();
+        return existingTag!=null? existingTag.getValue(): null;
+    }
+
+    public void setSector(final String sector) {
+        final Tag existingTag = getSectorTag();
+        Tag tag = tags.tagFor(existingTag, this, "sector", sector);
+        setSectorTag(tag);
+    }
+    public List<String> choicesSector() {
         return tags.choices(this, "sector");
     }
-    @Named("New")
-    @MemberOrder(name="sector", sequence = "7.2")
-    public LeaseUnit newSectorTag(@Named("Tag") final String tagValue) {
-        return updateSectorTag(tagValue);
-    }
-    public String default0NewSectorTag() {
-        return default0UpdateSectorTag();
-    }
 
-    
-    private Tag activity;
-
-    @Disabled
-    @MemberOrder(sequence = "8")
-    @Optional
-    public Tag getActivity() {
-        return activity;
-    }
-
-    public void setActivity(final Tag activity) {
-        this.activity = activity;
-    }
-    @Named("Update")
-    @MemberOrder(name="activity", sequence = "7.1")
-    public LeaseUnit updateActivityTag(@Named("Tag") final String tagValue) {
-        final Tag existingTag = getSector();
-        Tag tag = tags.tagFor(existingTag, this, "activity", tagValue);
-        setActivity(tag);
+    @MemberOrder(name="Sector", sequence = "6.1")
+    public LeaseUnit newSector(@Named("Tag") @Optional final String sector) {
+        setSector(sector);
         return this;
     }
-    public String default0UpdateActivityTag() {
-        final Tag existingTag = getActivity();
-        return existingTag != null? existingTag.getValue(): null;
+    public String default0NewSector() {
+        return getSector();
     }
-    public List<String> choices0UpdateActivityTag() {
+    // }}
+
+    
+    // {{ Activity
+    private Tag activityTag;
+
+    @Hidden
+    public Tag getActivityTag() {
+        return activityTag;
+    }
+
+    public void setActivityTag(final Tag activity) {
+        this.activityTag = activity;
+    }
+    
+    @MemberOrder(sequence = "6")
+    @Optional
+    public String getActivity() {
+        final Tag existingTag = getActivityTag();
+        return existingTag!=null? existingTag.getValue(): null;
+    }
+
+    public void setActivity(final String activity) {
+        final Tag existingTag = getActivityTag();
+        Tag tag = tags.tagFor(existingTag, this, "activity", activity);
+        setActivityTag(tag);
+    }
+    public List<String> choicesActivity() {
         return tags.choices(this, "activity");
     }
-    @Named("New")
-    @MemberOrder(name="activity", sequence = "8.2")
-    public LeaseUnit newActivityTag(@Named("Tag") final String tagValue) {
-        return updateActivityTag(tagValue);
+
+    @MemberOrder(name="Activity", sequence = "6.1")
+    public LeaseUnit newActivity(@Named("Tag") @Optional final String activity) {
+        setActivity(activity);
+        return this;
     }
-    public String default0NewActivityTag() {
-        return default0UpdateActivityTag();
+    public String default0NewActivity() {
+        return getActivity();
     }
     // }}
 

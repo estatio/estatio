@@ -63,12 +63,10 @@ public class LeasesFixture extends AbstractFixture {
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         lease.addRole(manager, agreementRoleTypes.find(LeaseConstants.ART_MANAGER), null, null);
         LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
-//        lu.setBrand((LeaseUnitBrand) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.BRAND, tenantReference));
-//        lu.setActivity((LeaseUnitActivity) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.ACTIVITY, "OTHER"));
-//        lu.setSector((LeaseUnitSector) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.SECTOR, "OTHER"));
-        lu.updateBrandTag(tenantReference);
-        lu.updateActivityTag("OTHER");
-        lu.updateSectorTag("OTHER");
+
+        lu.setBrand(tenantReference);
+        lu.setActivity("OTHER");
+        lu.setSector("OTHER");
         
         if (leases.findByReference(reference) == null) {
             new RuntimeException();
