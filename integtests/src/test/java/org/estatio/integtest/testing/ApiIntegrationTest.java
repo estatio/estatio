@@ -19,7 +19,7 @@ import org.estatio.jdo.PartiesJdo;
 import org.estatio.jdo.PropertiesJdo;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ApiIntegrationTest extends AbstractIntegrationTest {
+public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t00_refData() throws Exception {

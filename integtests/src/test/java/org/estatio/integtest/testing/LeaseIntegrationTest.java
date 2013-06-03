@@ -30,7 +30,7 @@ import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.party.Party;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LeaseIntegrationTest extends AbstractIntegrationTest {
+public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     private Lease lease;
 

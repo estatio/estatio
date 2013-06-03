@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 
-public class NumeratorIntegrationTest extends AbstractIntegrationTest {
+public class NumeratorIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {

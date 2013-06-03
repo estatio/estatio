@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-public class GeographyIntegrationTest extends AbstractIntegrationTest {
+public class GeographyIntegrationTest extends AbstractEstatioIntegrationTest {
 
 
 

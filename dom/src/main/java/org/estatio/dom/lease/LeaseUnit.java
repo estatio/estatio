@@ -1,13 +1,17 @@
 package org.estatio.dom.lease;
 
+import java.util.List;
+
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -15,12 +19,8 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.lease.tags.LeaseUnitActivity;
-import org.estatio.dom.lease.tags.LeaseUnitBrand;
-import org.estatio.dom.lease.tags.LeaseUnitSector;
+import org.estatio.dom.tag.Tag;
+import org.estatio.dom.tag.Tags;
 import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -130,40 +130,114 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
 
     // {{ tags
-    private LeaseUnitBrand brand;
+    private Tag brand;
 
+    @Disabled
     @MemberOrder(sequence = "6")
     @Optional
-    public LeaseUnitBrand getBrand() {
+    public Tag getBrand() {
         return brand;
     }
 
-    public void setBrand(final LeaseUnitBrand brand) {
+    public void setBrand(final Tag brand) {
         this.brand = brand;
     }
+    @Named("Update")
+    @MemberOrder(name="brand", sequence = "6.1")
+    public LeaseUnit updateBrandTag(@Named("Tag") final String tagValue) {
+        final Tag existingTag = getBrand();
+        Tag tag = tags.tagFor(existingTag, this, "brand", tagValue);
+        setBrand(tag);
+        return this;
+    }
+    public String default0UpdateBrandTag() {
+        final Tag existingTag = getBrand();
+        return existingTag != null? existingTag.getValue(): null;
+    }
+    public List<String> choices0UpdateBrandTag() {
+        return tags.choices(this, "brand");
+    }
+    @Named("New")
+    @MemberOrder(name="brand", sequence = "6.2")
+    public LeaseUnit newBrandTag(@Named("Tag") final String tagValue) {
+        return updateBrandTag(tagValue);
+    }
+    public String default0NewBrandTag() {
+        return default0UpdateBrandTag();
+    }
+    
+    
+    private Tag sector;
 
-    private LeaseUnitSector sector;
-
+    @Disabled
     @MemberOrder(sequence = "7")
     @Optional
-    public LeaseUnitSector getSector() {
+    public Tag getSector() {
         return sector;
     }
 
-    public void setSector(final LeaseUnitSector sector) {
+    public void setSector(final Tag sector) {
         this.sector = sector;
     }
+    @Named("Update")
+    @MemberOrder(name="sector", sequence = "7.1")
+    public LeaseUnit updateSectorTag(@Named("Tag") final String tagValue) {
+        final Tag existingTag = getSector();
+        Tag tag = tags.tagFor(existingTag, this, "sector", tagValue);
+        setSector(tag);
+        return this;
+    }
+    public String default0UpdateSectorTag() {
+        final Tag existingTag = getSector();
+        return existingTag != null? existingTag.getValue(): null;
+    }
+    public List<String> choices0UpdateSectorTag() {
+        return tags.choices(this, "sector");
+    }
+    @Named("New")
+    @MemberOrder(name="sector", sequence = "7.2")
+    public LeaseUnit newSectorTag(@Named("Tag") final String tagValue) {
+        return updateSectorTag(tagValue);
+    }
+    public String default0NewSectorTag() {
+        return default0UpdateSectorTag();
+    }
 
-    private LeaseUnitActivity activity;
+    
+    private Tag activity;
 
+    @Disabled
     @MemberOrder(sequence = "8")
     @Optional
-    public LeaseUnitActivity getActivity() {
+    public Tag getActivity() {
         return activity;
     }
 
-    public void setActivity(final LeaseUnitActivity activity) {
+    public void setActivity(final Tag activity) {
         this.activity = activity;
+    }
+    @Named("Update")
+    @MemberOrder(name="activity", sequence = "7.1")
+    public LeaseUnit updateActivityTag(@Named("Tag") final String tagValue) {
+        final Tag existingTag = getSector();
+        Tag tag = tags.tagFor(existingTag, this, "activity", tagValue);
+        setActivity(tag);
+        return this;
+    }
+    public String default0UpdateActivityTag() {
+        final Tag existingTag = getActivity();
+        return existingTag != null? existingTag.getValue(): null;
+    }
+    public List<String> choices0UpdateActivityTag() {
+        return tags.choices(this, "activity");
+    }
+    @Named("New")
+    @MemberOrder(name="activity", sequence = "8.2")
+    public LeaseUnit newActivityTag(@Named("Tag") final String tagValue) {
+        return updateActivityTag(tagValue);
+    }
+    public String default0NewActivityTag() {
+        return default0UpdateActivityTag();
     }
     // }}
 
@@ -191,4 +265,15 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
     };
     // }}
+    
+    
+    // {{ injected: Tags
+    private Tags tags;
+
+    public void setTags(final Tags tags) {
+        this.tags = tags;
+    }
+    // }}
+
+
 }

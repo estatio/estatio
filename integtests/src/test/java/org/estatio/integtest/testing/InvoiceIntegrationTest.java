@@ -16,7 +16,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.fixture.invoice.InvoiceFixture;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class InvoiceIntegrationTest extends AbstractIntegrationTest {
+public class InvoiceIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t1_chargeCanBeFound() throws Exception {

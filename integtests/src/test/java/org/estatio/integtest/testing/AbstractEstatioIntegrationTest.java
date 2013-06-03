@@ -41,6 +41,7 @@ import org.estatio.dom.lease.contributed.LeaseTermContributedActions;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Parties;
+import org.estatio.dom.tag.Tags;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.jdo.AgreementRolesJdo;
 import org.estatio.jdo.AgreementsJdo;
@@ -55,19 +56,20 @@ import org.estatio.jdo.IndicesJdo;
 import org.estatio.jdo.InvoicesForLeaseJdo;
 import org.estatio.jdo.LeaseItemsJdo;
 import org.estatio.jdo.LeaseTermsJdo;
-import org.estatio.jdo.LeaseUnitReferencesJdo;
 import org.estatio.jdo.LeaseUnitsJdo;
 import org.estatio.jdo.LeasesJdo;
 import org.estatio.jdo.NumeratorsJdo;
 import org.estatio.jdo.PartiesJdo;
 import org.estatio.jdo.PropertiesJdo;
 import org.estatio.jdo.StatesJdo;
+import org.estatio.jdo.TagsJdo;
 import org.estatio.jdo.TaxesJdo;
 import org.estatio.jdo.UnitsJdo;
 import org.estatio.services.appsettings.EstatioSettingsService;
+import org.estatio.services.bookmarks.EstatioBookmarkService;
 import org.estatio.services.clock.ClockService;
 
-public abstract class AbstractIntegrationTest {
+public abstract class AbstractEstatioIntegrationTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -113,6 +115,8 @@ public abstract class AbstractIntegrationTest {
     protected Leases leases;
     protected LeaseTerms leaseTerms;
     protected InvoicesForLease invoices;
+    
+    protected Tags tags;
 
     protected EstatioSettingsService settings;
     
@@ -144,6 +148,8 @@ public abstract class AbstractIntegrationTest {
         leases = getIsft().getService(LeasesJdo.class);
         leaseTerms = getIsft().getService(LeaseTermsJdo.class);
         invoices = getIsft().getService(InvoicesForLease.class);
+        
+        tags = getIsft().getService(TagsJdo.class);
         
         settings = getIsft().getService(EstatioSettingsService.class);
     }
@@ -241,10 +247,11 @@ public abstract class AbstractIntegrationTest {
                     new LeaseTermsJdo(),
                     new LeaseItemsJdo(),
                     new LeaseUnitsJdo(),
-                    new LeaseUnitReferencesJdo(),
                     new InvoicesForLeaseJdo(),
                     new CommunicationChannelsJdo(),
                     new TaxesJdo(),
+                    new TagsJdo(),
+                    new EstatioBookmarkService(),
                     new ChargesJdo(),
                     new ChargeGroupsJdo(),
                     new FinancialAccountsJdo(),

@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.party.Party;
 
-public class PartyIntegrationTest extends AbstractIntegrationTest {
+public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
 
 
     @Test

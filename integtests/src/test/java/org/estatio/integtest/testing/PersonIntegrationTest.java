@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import org.estatio.dom.party.Person;
 
-public class PersonIntegrationTest extends AbstractIntegrationTest {
+public class PersonIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void cannotModifyName() throws Exception {

@@ -24,11 +24,6 @@ import org.estatio.dom.lease.LeaseUnit;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitForLease;
-import org.estatio.dom.lease.tags.LeaseUnitActivity;
-import org.estatio.dom.lease.tags.LeaseUnitBrand;
-import org.estatio.dom.lease.tags.LeaseUnitReferenceType;
-import org.estatio.dom.lease.tags.LeaseUnitReferences;
-import org.estatio.dom.lease.tags.LeaseUnitSector;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
@@ -61,16 +56,20 @@ public class LeasesFixture extends AbstractFixture {
 
     }
 
-    private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tentantReference, LocalDate startDate, LocalDate endDate) {
+    private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tenantReference, LocalDate startDate, LocalDate endDate) {
         Party landlord = parties.findPartyByReference(landlordReference);
-        Party tenant = parties.findPartyByReference(tentantReference);
+        Party tenant = parties.findPartyByReference(tenantReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         lease.addRole(manager, agreementRoleTypes.find(LeaseConstants.ART_MANAGER), null, null);
         LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
-        lu.setBrand((LeaseUnitBrand) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.BRAND, tentantReference));
-        lu.setActivity((LeaseUnitActivity) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.ACTIVITY, "OTHER"));
-        lu.setSector((LeaseUnitSector) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.SECTOR, "OTHER"));
+//        lu.setBrand((LeaseUnitBrand) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.BRAND, tenantReference));
+//        lu.setActivity((LeaseUnitActivity) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.ACTIVITY, "OTHER"));
+//        lu.setSector((LeaseUnitSector) leaseUnitReferences.findOrCreate(LeaseUnitReferenceType.SECTOR, "OTHER"));
+        lu.updateBrandTag(tenantReference);
+        lu.updateActivityTag("OTHER");
+        lu.updateSectorTag("OTHER");
+        
         if (leases.findByReference(reference) == null) {
             new RuntimeException();
         }
@@ -157,12 +156,6 @@ public class LeasesFixture extends AbstractFixture {
 
     public void injectLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
-    }
-
-    private LeaseUnitReferences leaseUnitReferences;
-
-    public void injectLeaseUnitReferences(LeaseUnitReferences leaseUnitReferences) {
-        this.leaseUnitReferences = leaseUnitReferences;
     }
 
     private LeaseTerms leaseTerms;

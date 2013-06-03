@@ -16,7 +16,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.party.Party;
 
-public class AssetIntegrationTest extends AbstractIntegrationTest {
+public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void propertyCanBeFound() throws Exception {
