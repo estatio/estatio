@@ -1,13 +1,15 @@
-package org.estatio.dom.lease;
+package org.estatio.dom.lease.tags;
 
 import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
+import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.StringUtils;
 
-public enum LeaseUnitReferenceType {
+public enum LeaseUnitReferenceType implements PowerType<LeaseUnitReference> {
+    
     BRAND(LeaseUnitBrand.class), 
     SECTOR(LeaseUnitSector.class), 
     ACTIVITY(LeaseUnitActivity.class);
@@ -31,4 +33,8 @@ public enum LeaseUnitReferenceType {
             throw new ApplicationException(ex);
         }
     }
+    
+    public static Ordering<LeaseUnitReferenceType> ORDERING_BY_TYPE = 
+            Ordering.<LeaseUnitReferenceType> natural().nullsFirst();
+
 }

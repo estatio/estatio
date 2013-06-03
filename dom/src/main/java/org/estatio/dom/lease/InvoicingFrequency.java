@@ -2,6 +2,8 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
+import com.google.common.collect.Ordering;
+
 public enum InvoicingFrequency {
 
     WEEKLY_IN_ADVANCE("Weekly","RRULE:FREQ=WEEKLY;INTERVAL=1", true, BigDecimal.valueOf(7), BigDecimal.valueOf(365.25)),
@@ -32,7 +34,7 @@ public enum InvoicingFrequency {
     private final BigDecimal denominator;
     
     
-    // REVIEW: is this needed?
+    // REVIEW: does not seem to be used?
     public String title() {
         return title;
     }
@@ -51,4 +53,6 @@ public enum InvoicingFrequency {
         return denominator;
     }
 
+    public static Ordering<InvoicingFrequency> ORDERING_BY_TYPE = 
+            Ordering.<InvoicingFrequency> natural().nullsFirst();
 }

@@ -16,8 +16,6 @@
  */
 package org.estatio.dom.party;
 
-import javax.jdo.annotations.Extension;
-
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
@@ -51,6 +49,9 @@ public class Person extends Party {
 
     public void setFirstName(final String firstName) {
         this.firstName = firstName;
+    }
+    public String disableFirstName() {
+        return "Derived from firstName, lastName and middle initial";
     }
 
     // }}

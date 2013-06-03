@@ -408,11 +408,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 //        }
 //    };
 
-    public static Ordering<LeaseTerm> ORDERING_BY_CLASS = new Ordering<LeaseTerm>() {
-        public int compare(LeaseTerm p, LeaseTerm q) {
-            return Ordering.<String> natural().compare(p.getClass().toString(), q.getClass().toString());
-        }
-    };
+    public static Ordering<LeaseTerm> ORDERING_BY_CLASS = Orderings.classCanonicalName();
 
     public final static Ordering<LeaseTerm> ORDERING_BY_START_DATE = new Ordering<LeaseTerm>() {
         public int compare(LeaseTerm p, LeaseTerm q) {

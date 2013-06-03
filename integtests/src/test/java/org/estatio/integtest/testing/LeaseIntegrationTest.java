@@ -9,10 +9,16 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.List;
 
+import org.hamcrest.core.Is;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
@@ -21,61 +27,16 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.integtest.IntegrationSystemForTestRule;
-import org.estatio.jdo.LeaseTermsJdo;
-import org.estatio.jdo.LeasesJdo;
-import org.estatio.jdo.PartiesJdo;
-import org.estatio.services.appsettings.EstatioSettingsService;
-
-import org.hamcrest.core.Is;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LeaseIntegrationTest {
+public class LeaseIntegrationTest extends AbstractIntegrationTest {
 
-    private Leases leases;
-    private LeaseTerms leaseTerms;
     private Lease lease;
-    private Parties parties;
-    private AgreementRoleTypes agreementRoleTypes;
-    private EstatioSettingsService settings;
-
-    @Rule
-    public IntegrationSystemForTestRule isisSystemRule = new IntegrationSystemForTestRule();
-
-    public IsisSystemForTest getIsft() {
-        return isisSystemRule.getIsisSystemForTest();
-    }
 
     @Before
     public void setup() {
-        leases = getIsft().getService(LeasesJdo.class);
-        leaseTerms = getIsft().getService(LeaseTermsJdo.class);
-        parties = getIsft().getService(PartiesJdo.class);
-        settings = getIsft().getService(EstatioSettingsService.class);
-        agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
         lease = leases.findByReference("OXF-TOPMODEL-001");
-    }
-
-    @BeforeClass
-    public static void setUpLogging() throws Exception {
-        // PropertyConfigurator.configure(Resources.getResource(LeaseIntegrationTest.class,
-        // "logging.properties"));
     }
 
     @Test

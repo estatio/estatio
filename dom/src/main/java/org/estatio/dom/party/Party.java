@@ -15,6 +15,8 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithName;
+import org.estatio.dom.WithReference;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -22,7 +24,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @AutoComplete(repository = Parties.class)
-public abstract class Party extends EstatioTransactionalObject {
+public abstract class Party extends EstatioTransactionalObject implements WithName<Party>{
 
     // {{ Reference (attribute)
     private String reference;
@@ -153,6 +155,14 @@ public abstract class Party extends EstatioTransactionalObject {
         return this;
     }
 
+    // }}
+
+
+    // {{ Comparable impl
+    @Override
+    public int compareTo(Party other) {
+        return ORDERING_BY_NAME.compare(this, other);
+    }
     // }}
 
     

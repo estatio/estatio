@@ -2,6 +2,8 @@ package org.estatio.dom.lease;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -13,7 +15,13 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.lease.tags.LeaseUnitActivity;
+import org.estatio.dom.lease.tags.LeaseUnitBrand;
+import org.estatio.dom.lease.tags.LeaseUnitSector;
+import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -21,6 +29,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit>, WithInterval {
 
     
+    // {{ lease, unit
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
@@ -78,6 +87,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         currentUnit.removeFromLeases(this);
     }
+    // }}
 
     
     
@@ -118,30 +128,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     
     // }}
 
-//    private LocalDate tenancyStartDate;
-//
-//    @Optional
-//    @MemberOrder(sequence = "4")
-//    public LocalDate getTenancyStartDate() {
-//        return tenancyStartDate;
-//    }
-//
-//    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
-//        this.tenancyStartDate = tenancyStartDate;
-//    }
-//
-//    private LocalDate tenancyEndDate;
-//
-//    @Optional
-//    @MemberOrder(sequence = "5")
-//    public LocalDate getTenancyEndDate() {
-//        return tenancyEndDate;
-//    }
-//
-//    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
-//        this.tenancyEndDate = tenancyEndDate;
-//    }
 
+    // {{ tags
     private LeaseUnitBrand brand;
 
     @MemberOrder(sequence = "6")
@@ -177,21 +165,30 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setActivity(final LeaseUnitActivity activity) {
         this.activity = activity;
     }
+    // }}
 
     
     // {{ Comparable impl
     @Override
     @Hidden
-    public int compareTo(LeaseUnit o) {
-        Unit thisUnit = this.getUnit();
-        Unit otherUnit = o.getUnit();
-        if (thisUnit == null && otherUnit == null)
-            return 0;
-        if (thisUnit == null)
-            return 1;
-        if (otherUnit == null)
-            return -1;
-        return thisUnit.getReference().compareTo(otherUnit.getReference());
+    public int compareTo(LeaseUnit other) {
+        return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE).compare(this, other);
     }
+
+    public static Ordering<LeaseUnit> ORDERING_BY_LEASE = new Ordering<LeaseUnit>() {
+        public int compare(LeaseUnit p, LeaseUnit q) {
+            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
+        }
+    };
+    public static Ordering<LeaseUnit> ORDERING_BY_UNIT = new Ordering<LeaseUnit>() {
+        public int compare(LeaseUnit p, LeaseUnit q) {
+            return Ordering.natural().nullsFirst().compare(p.getUnit(), q.getUnit());
+        }
+    };
+    public static Ordering<LeaseUnit> ORDERING_BY_START_DATE = new Ordering<LeaseUnit>() {
+        public int compare(LeaseUnit p, LeaseUnit q) {
+            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+        }
+    };
     // }}
 }

@@ -7,47 +7,16 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.FixedAssetRole;
-import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.FixedAssetRoles;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
-import org.estatio.dom.lease.UnitForLease;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
-import org.estatio.integtest.IntegrationSystemForTestRule;
-import org.estatio.jdo.PartiesJdo;
-import org.estatio.jdo.PropertiesJdo;
-import org.estatio.jdo.FixedAssetRolesJdo;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
-public class AssetIntegrationTest {
+import org.estatio.dom.asset.FixedAssetRole;
+import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.party.Party;
 
-    private Properties properties;
-    private FixedAssetRoles actors;
-    private Parties parties;
-    private Units units;
-    
-    @Rule
-    public IntegrationSystemForTestRule webServerRule = new IntegrationSystemForTestRule();
-
-    public IsisSystemForTest getIsft() {
-        return webServerRule.getIsisSystemForTest();
-    }
-
-    @Before
-    public void init() {
-        properties = getIsft().getService(PropertiesJdo.class);
-        actors = getIsft().getService(FixedAssetRolesJdo.class);
-        parties = getIsft().getService(PartiesJdo.class);
-        units = getIsft().getService(Units.class);
-    }
+public class AssetIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void propertyCanBeFound() throws Exception {

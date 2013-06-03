@@ -1,4 +1,4 @@
-package org.estatio.dom.lease;
+package org.estatio.dom.lease.tags;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Extension;

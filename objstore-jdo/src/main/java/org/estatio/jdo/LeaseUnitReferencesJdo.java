@@ -1,8 +1,8 @@
 package org.estatio.jdo;
 
-import org.estatio.dom.lease.LeaseUnitReference;
-import org.estatio.dom.lease.LeaseUnitReferenceType;
-import org.estatio.dom.lease.LeaseUnitReferences;
+import org.estatio.dom.lease.tags.LeaseUnitReference;
+import org.estatio.dom.lease.tags.LeaseUnitReferenceType;
+import org.estatio.dom.lease.tags.LeaseUnitReferences;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;

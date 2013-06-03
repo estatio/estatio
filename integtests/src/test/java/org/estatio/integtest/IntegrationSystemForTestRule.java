@@ -25,7 +25,7 @@ import org.junit.runners.model.Statement;
 
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
-public class IntegrationSystemForTestRule implements MethodRule {
+class IntegrationSystemForTestRule implements MethodRule {
 
     private static ThreadLocal<IsisSystemForTest> ISFT = new ThreadLocal<IsisSystemForTest>() {
         @Override

@@ -9,6 +9,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithDescription;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -18,7 +19,7 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class Numerator extends EstatioTransactionalObject implements Comparable<Numerator> {
+public class Numerator extends EstatioTransactionalObject implements WithDescription<Numerator> {
 
     private NumeratorType type;
 
@@ -68,13 +69,7 @@ public class Numerator extends EstatioTransactionalObject implements Comparable<
 
     @Override
     public int compareTo(Numerator o) {
-        return ORDERING_BY_REFERENCE.compare(this, o);
+        return ORDERING_BY_DESCRIPTION.compare(this, o);
     }
-
-    public static Ordering<Numerator> ORDERING_BY_REFERENCE = new Ordering<Numerator>() {
-        public int compare(Numerator p, Numerator q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getDescription(), q.getDescription());
-        }
-    };
 
 }

@@ -6,30 +6,16 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.integtest.IntegrationSystemForTestRule;
-import org.estatio.jdo.NumeratorsJdo;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorType;
 
-public class NumeratorIntegrationTest {
-
-    @Rule
-    public IntegrationSystemForTestRule integrationTestRule = new IntegrationSystemForTestRule();
-    private NumeratorsJdo numerators;
-
-    public IsisSystemForTest getIsft() {
-        return integrationTestRule.getIsisSystemForTest();
-    }
+public class NumeratorIntegrationTest extends AbstractIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        numerators = getIsft().getService(NumeratorsJdo.class);
         numerators.establish(NumeratorType.INVOICE_NUMBER);
     }
 
