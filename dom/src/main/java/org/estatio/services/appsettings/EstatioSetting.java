@@ -1,7 +1,5 @@
 package org.estatio.services.appsettings;
 
-import javax.jdo.annotations.Extension;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;

@@ -16,6 +16,7 @@ import org.estatio.dom.party.Party;
 
 public class PartyIntegrationTest extends AbstractIntegrationTest {
 
+
     @Test
     public void partyCanBeFound() throws Exception {
         Assert.assertEquals(parties.findPartyByReference("HELLOWORLD").getReference(), "HELLOWORLD");
@@ -60,5 +61,6 @@ public class PartyIntegrationTest extends AbstractIntegrationTest {
         
         Assert.assertThat(partyAccounts.size(), is(1));
     }
+
 
 }

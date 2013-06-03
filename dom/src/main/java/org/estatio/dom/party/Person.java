@@ -38,6 +38,14 @@ public class Person extends Party {
 
     // }}
 
+    
+    // {{ Name (property)
+    @Override
+    public String disableName() {
+        return "Cannot be updated directly; derived from first and last names";
+    }
+    // }}
+
     // {{ FirstName (attribute, title)
     private String firstName;
 
@@ -49,9 +57,6 @@ public class Person extends Party {
 
     public void setFirstName(final String firstName) {
         this.firstName = firstName;
-    }
-    public String disableFirstName() {
-        return "Derived from firstName, lastName and middle initial";
     }
 
     // }}

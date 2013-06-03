@@ -1,17 +1,17 @@
 package org.estatio.dom.party;
 
+import com.google.common.collect.Ordering;
+
+import org.estatio.dom.utils.StringUtils;
+
 public enum PartyRegistrationType {
 
-    VAT("VAT"), CHAMBER_OF_COMMERCE("Chamber of Commerce");
-
-    private final String title;
-
-    PartyRegistrationType(String title) {
-        this.title = title;
-    }
+    VAT, CHAMBER_OF_COMMERCE;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(name());
     }
+
+    public static Ordering<PartyRegistrationType> ORDERING_BY_TYPE = Ordering.<PartyRegistrationType> natural().nullsFirst();
 
 }

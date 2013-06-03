@@ -14,10 +14,6 @@ public enum LeaseAssignmentType {
         return StringUtils.enumTitle(this.toString());
     }
     
-    public static Ordering<LeaseAssignmentType> ORDERING_BY_TYPE = new Ordering<LeaseAssignmentType>() {
-        public int compare(LeaseAssignmentType p, LeaseAssignmentType q) {
-            return Ordering.<LeaseAssignmentType> natural().nullsFirst().compare(p, q);
-        }
-    };
+    public static Ordering<LeaseAssignmentType> ORDERING_BY_TYPE = Ordering.<LeaseAssignmentType> natural().nullsFirst();
 
 }

@@ -53,6 +53,9 @@ public abstract class Party extends EstatioTransactionalObject implements WithNa
     public void setName(final String name) {
         this.name = name;
     }
+    public String disableName() {
+        return null;
+    }
 
     // }}
 

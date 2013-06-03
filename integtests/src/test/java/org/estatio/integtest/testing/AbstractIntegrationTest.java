@@ -1,7 +1,9 @@
 package org.estatio.integtest.testing;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.MethodRule;
@@ -156,16 +158,28 @@ public abstract class AbstractIntegrationTest {
 
     
     
-    ////////////////////////////////////////////////////////////
-    
+    ////////////////////////////////////////////////////////////////
+    // Boilerplate
+    ////////////////////////////////////////////////////////////////
+
+    static InstallableFixture newFixture() {
+        return new EstatioFixture();
+    };
+
+    @BeforeClass
+    public static void initClass() {
+        PropertyConfigurator.configure("logging.properties");
+    }
+
     private static class BootstrapIsisRule implements MethodRule {
 
         private static ThreadLocal<IsisSystemForTest> ISFT = new ThreadLocal<IsisSystemForTest>() {
             @Override
             protected IsisSystemForTest initialValue() {
-                final IsisSystemForTest isft = EstatioIntegTestBuilder2.builderWith(new EstatioFixture()).build().setUpSystem();
+                final IsisSystemForTest isft = EstatioIntegTestBuilder.builderWith(newFixture()).build().setUpSystem();
                 return isft;
-            };
+            }
+
         };
 
         public IsisSystemForTest getIsisSystemForTest() {
@@ -192,20 +206,20 @@ public abstract class AbstractIntegrationTest {
     }
 
     
-    private static class EstatioIntegTestBuilder2 extends IsisSystemForTest.Builder {
+    private static class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
-        public static EstatioIntegTestBuilder2 builder() {
+        public static EstatioIntegTestBuilder builder() {
             return builderWith(new EstatioFixture());
         }
 
-        public static EstatioIntegTestBuilder2 builderWith(InstallableFixture... fixtures) {
-            EstatioIntegTestBuilder2 builder = new EstatioIntegTestBuilder2();
+        public static EstatioIntegTestBuilder builderWith(InstallableFixture... fixtures) {
+            EstatioIntegTestBuilder builder = new EstatioIntegTestBuilder();
             builder.withFixtures(fixtures);
             builder.withLoggingAt(Level.INFO);
             return builder;
         }
 
-        private EstatioIntegTestBuilder2() {
+        private EstatioIntegTestBuilder() {
             with(testConfiguration());
             with(new DataNucleusPersistenceMechanismInstaller());
             withServices(
