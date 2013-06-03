@@ -2,15 +2,13 @@ package org.estatio.dom;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 public abstract class WithTitleContractTest_compareTo<T extends WithTitle<T>> extends ComparableContractTest_compareTo<T>{
 
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<T>> orderedTuples() {
-        return Lists.<List<T>>newArrayList(
-                Lists.newArrayList(
+        return listOf(
+                listOf(
                         newWithTitle(null), 
                         newWithTitle("ABC"), 
                         newWithTitle("ABC"), 

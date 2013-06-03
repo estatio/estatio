@@ -1,17 +1,16 @@
 package org.estatio.dom.currency;
 
-import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioRefDataObject;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithReference;
+
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
-public class Currency extends EstatioRefDataObject implements Comparable<Currency> {
+public class Currency extends EstatioRefDataObject implements WithReference<Currency> {
 
     private String reference;
 
@@ -39,11 +38,5 @@ public class Currency extends EstatioRefDataObject implements Comparable<Currenc
     public int compareTo(Currency o) {
         return ORDERING_BY_REFERENCE.compare(this, o);
     }
-
-    public final static Ordering<Currency> ORDERING_BY_REFERENCE = new Ordering<Currency>() {
-        public int compare(Currency p, Currency q) {
-            return Ordering.<String>natural().nullsFirst().compare(p.getReference(), q.getReference());
-        }
-    };
 
 }

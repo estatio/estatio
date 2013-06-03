@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 public final class Orderings {
     
     public static final Ordering<LocalDate> LOCAL_DATE_NATURAL_NULLS_FIRST = Ordering.<LocalDate>natural().nullsFirst();
+    public static final Ordering<LocalDate> LOCAL_DATE_NATURAL_REVERSED = Ordering.<LocalDate>natural().reverse();
 
     private Orderings(){}
 

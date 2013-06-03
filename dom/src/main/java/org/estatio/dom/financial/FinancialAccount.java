@@ -5,6 +5,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
@@ -17,7 +19,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>{
+public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount> {
 
     
     // {{ Reference (property)
@@ -79,9 +81,22 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
     
     // {{ Comparable impl
     @Override
-    public int compareTo(FinancialAccount o) {
-        return getName().compareTo(o.getName());
+    public int compareTo(FinancialAccount other) {
+        return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
     }
+
+    public static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {
+        public int compare(FinancialAccount p, FinancialAccount q) {
+            return FinancialAccountType.ORDERING_BY_TYPE.compare(p.getType(), q.getType());
+        }
+    };
+    public static Ordering<FinancialAccount> ORDERING_BY_REFERENCE = new Ordering<FinancialAccount>() {
+        public int compare(FinancialAccount p, FinancialAccount q) {
+            return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
+        }
+    };
     // }}
+
+    
 
 }

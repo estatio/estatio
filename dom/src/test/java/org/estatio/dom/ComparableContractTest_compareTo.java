@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -39,7 +41,11 @@ public abstract class ComparableContractTest_compareTo<T extends Comparable<T>> 
         }
     }
 
-    
-    
+    /**
+     * Syntax sugar to remove boilerplate from subclasses.
+     */
+    protected <E> List<E> listOf(E... elements) {
+        return Lists.newArrayList(elements);
+    }
 
 }

@@ -1,5 +1,7 @@
 package org.estatio.dom.asset;
 
+import com.google.common.collect.Ordering;
+
 import org.estatio.dom.Titled;
 import org.estatio.dom.utils.StringUtils;
 
@@ -18,5 +20,8 @@ public enum UnitType implements Titled<UnitType> {
     public String title() {
         return StringUtils.enumTitle(name());
     }
+
+    public static Ordering<UnitType> ORDERING_BY_TYPE = 
+            Ordering.<UnitType> natural().nullsFirst();
 
 }

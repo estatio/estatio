@@ -1,5 +1,7 @@
 package org.estatio.dom.lease;
 
+import com.google.common.collect.Ordering;
+
 
 // REVIEW: this needs to be made into an entity, so can make into a multi-tenanted entity:
 //@javax.jdo.annotations.PersistenceCapable
@@ -33,4 +35,7 @@ public enum LeaseType {
     //TODO: Handle localised titles. 
     // 2013-04-13: still not need
     
+    public static Ordering<LeaseType> ORDERING_BY_TYPE = 
+            Ordering.<LeaseType> natural().nullsFirst();
+
 }

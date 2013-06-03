@@ -16,7 +16,7 @@ public class FinancialAccountContributedActions extends AbstractContainedObject 
     @NotInServiceMenu
     @MemberOrder(sequence = "13")
     public FinancialAccount addAccount(final Party owner, final FinancialAccountType financialAccountType) {
-        FinancialAccount financialAccount = financialAccountType.createAccount(getContainer());
+        FinancialAccount financialAccount = financialAccountType.create(getContainer());
         financialAccount.setOwner(owner);
         return financialAccount;
     }

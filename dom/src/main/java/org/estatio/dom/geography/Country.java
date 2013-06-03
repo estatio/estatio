@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bounded
-public class Country extends Geography implements Comparable<Country> {
+public class Country extends Geography {
 
     private String alpha2Code;
 
@@ -24,13 +24,5 @@ public class Country extends Geography implements Comparable<Country> {
     public void setAlpha2Code(final String alpha2Code) {
         this.alpha2Code = alpha2Code;
     }
-
-    
-    // {{ Comparable impl
-    @Override
-    public int compareTo(Country o) {
-        return getName().compareTo(o.getName());
-    }
-    // }}
 
 }

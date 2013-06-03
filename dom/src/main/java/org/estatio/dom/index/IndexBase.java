@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.utils.Orderings;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
@@ -159,7 +160,7 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     // {{ Comparable impl
     @Override
     public int compareTo(IndexBase o) {
-        return o.getStartDate().compareTo(this.getStartDate());
+        return Orderings.LOCAL_DATE_NATURAL_REVERSED.compare(this.getStartDate(), o.getStartDate());
     }
     // }}
 

@@ -129,37 +129,8 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-
     // }}
 
-    // @javax.jdo.annotations.Persistent
-    // private LocalDate tenancyStartDate;
-    //
-    // @Optional
-    // @MemberOrder(sequence = "5")
-    // @Hidden(where = Where.PARENTED_TABLES)
-    // public LocalDate getTenancyStartDate() {
-    // return tenancyStartDate;
-    // }
-    //
-    // public void setTenancyStartDate(final LocalDate tenancyStartDate) {
-    // this.tenancyStartDate = tenancyStartDate;
-    // }
-    //
-    //
-    // @javax.jdo.annotations.Persistent
-    // private LocalDate tenancyEndDate;
-    //
-    // @Optional
-    // @MemberOrder(sequence = "6")
-    // @Hidden(where = Where.PARENTED_TABLES)
-    // public LocalDate getTenancyEndDate() {
-    // return tenancyEndDate;
-    // }
-    //
-    // public void setTenancyEndDate(final LocalDate tenancyEndDate) {
-    // this.tenancyEndDate = tenancyEndDate;
-    // }
 
     private InvoicingFrequency invoicingFrequency;
 
@@ -322,7 +293,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     public static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
-            return LeaseItemType.ORDERING_NATURAL.compare(p.getType(), q.getType());
+            return LeaseItemType.ORDERING_BY_TYPE.compare(p.getType(), q.getType());
         }
     };
 

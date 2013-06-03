@@ -14,12 +14,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitle;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementType extends EstatioRefDataObject implements WithTitle<AgreementType> {
+public class AgreementType extends EstatioRefDataObject implements WithTitle<AgreementType>, PowerType<Agreement> {
 
     // {{ Title (property)
     private String title;

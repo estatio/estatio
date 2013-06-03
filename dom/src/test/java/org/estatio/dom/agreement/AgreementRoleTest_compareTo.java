@@ -2,8 +2,6 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 
@@ -25,13 +23,13 @@ public class AgreementRoleTest_compareTo extends ComparableContractTest_compareT
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<AgreementRole>> orderedTuples() {
-        return Lists.<List<AgreementRole>>newArrayList(
-                    Lists.newArrayList(
+        return listOf(
+                    listOf(
                             newAgreementRole(null, null), 
                             newAgreementRole(type1, null), 
                             newAgreementRole(type1, null), 
                             newAgreementRole(type2, null)), 
-                    Lists.newArrayList(
+                    listOf(
                             newAgreementRole(type1, null), 
                             newAgreementRole(type1, new LocalDate(2013,4,1)), 
                             newAgreementRole(type1, new LocalDate(2013,4,1)), 
@@ -45,5 +43,6 @@ public class AgreementRoleTest_compareTo extends ComparableContractTest_compareT
         ar.setStartDate(date);
         return ar;
     }
+
 
 }

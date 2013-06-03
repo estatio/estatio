@@ -1,4 +1,4 @@
-package org.estatio.dom.invoice;
+package org.estatio.dom.invoice.publishing;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.services.publish.EventPayloadForActionInvocation;
+
+import org.estatio.dom.invoice.Invoice;
 
 public class InvoiceEagerlyRenderedPayload extends EventPayloadForActionInvocation<Invoice> {
 

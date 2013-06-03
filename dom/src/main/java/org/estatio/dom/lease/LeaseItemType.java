@@ -5,28 +5,32 @@ import com.google.common.collect.Ordering;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
+import org.estatio.dom.PowerType;
+import org.estatio.dom.utils.StringUtils;
 
-public enum LeaseItemType {
 
-    RENT("Rent", LeaseTermForIndexableRent.class), 
-    TURNOVER_RENT("Turnover Rent", LeaseTermForTurnoverRent.class),
-    SERVICE_CHARGE("Service Charge", LeaseTermForServiceCharge.class);
+public enum LeaseItemType implements PowerType<LeaseTerm>{
 
-    //DISCOUNT("Discount", LeaseTerm.class) 
-    private final String title;
+    RENT(LeaseTermForIndexableRent.class), 
+    TURNOVER_RENT(LeaseTermForTurnoverRent.class),
+    SERVICE_CHARGE(LeaseTermForServiceCharge.class);
+    //DISCOUNT("Discount", LeaseTerm.class);
+
     private final Class<? extends LeaseTerm> clss;
-    public static final Ordering<LeaseItemType> ORDERING_NATURAL = Ordering.<LeaseItemType>natural().nullsFirst();
 
-    private LeaseItemType(String title, Class<? extends LeaseTerm> clss) {
-        this.title = title;
+    private LeaseItemType(Class<? extends LeaseTerm> clss) {
         this.clss = clss;
     }
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.name());
     }
 
-    public LeaseTerm createLeaseTerm(DomainObjectContainer container){ 
+    public static final Ordering<LeaseItemType> ORDERING_BY_TYPE = 
+            Ordering.<LeaseItemType>natural().nullsFirst();
+
+    
+    public LeaseTerm create(DomainObjectContainer container){ 
         try {
             LeaseTerm term = container.newTransientInstance(clss);
             return term;

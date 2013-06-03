@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bounded
-public class State extends Geography implements Comparable<State> {
+public class State extends Geography {
 
     private Country country;
 
@@ -22,17 +22,5 @@ public class State extends Geography implements Comparable<State> {
     public void setCountry(final Country country) {
         this.country = country;
     }
-
-    
-    // {{ Comparable impl
-    @Override
-    public int compareTo(State o) {
-        int result = getCountry().compareTo(o.getCountry());
-        if (result == 0) {
-            result = getName().compareTo(o.getName());
-        }
-        return result;
-    }
-    // }}
 
 }

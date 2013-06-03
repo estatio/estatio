@@ -12,6 +12,7 @@ import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;

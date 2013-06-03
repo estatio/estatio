@@ -1,25 +1,25 @@
 package org.estatio.dom.asset;
 
+import com.google.common.collect.Ordering;
+
 import org.estatio.dom.Titled;
+import org.estatio.dom.utils.StringUtils;
 
 
 public enum PropertyType implements Titled<PropertyType> {
 
-    SHOPPING_CENTER("Shopping Center"), 
-    WAREHOUSE("Warehouse"),
-    RESIDENTIAL("Residential"),
-    RETAIL_PARK("Retail Park"),
-    MIXED("Mixed"),
-    CINEMA("Cinema");
+    SHOPPING_CENTER, 
+    WAREHOUSE,
+    RESIDENTIAL,
+    RETAIL_PARK,
+    MIXED,
+    CINEMA;
     
-    private final String title;
-
-    private PropertyType(String title) {
-        this.title = title;
-    }
-
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.toString());
     }
+    
+    public static Ordering<PropertyType> ORDERING_BY_TYPE = 
+            Ordering.<PropertyType> natural().nullsFirst();
 
 }

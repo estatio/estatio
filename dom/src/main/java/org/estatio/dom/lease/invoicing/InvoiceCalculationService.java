@@ -49,7 +49,7 @@ public class InvoiceCalculationService {
 
     private CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
         CalculationResult result = new CalculationResult();
-        result.frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, freq.rrule));
+        result.frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, freq.getRrule()));
         if (result.frequencyInterval.getStartDate() != null) {
             LocalDateInterval termInterval = LocalDateInterval.including(leaseTerm.getStartDate(), leaseTerm.getEndDate());
             LocalDateInterval overlap = result.frequencyInterval.overlap(termInterval);
@@ -57,7 +57,7 @@ public class InvoiceCalculationService {
                 BigDecimal overlapDays = new BigDecimal(overlap.getDays());
                 BigDecimal frequencyDays = new BigDecimal(result.frequencyInterval.getDays());
                 BigDecimal rangeFactor = overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
-                BigDecimal freqFactor = freq.numerator.divide(freq.denominator, MathContext.DECIMAL64);
+                BigDecimal freqFactor = freq.getNumerator().divide(freq.getDenominator(), MathContext.DECIMAL64);
                 BigDecimal currentValue = leaseTerm.valueForDueDate(dueDate);
                 if (currentValue != null && freqFactor != null && rangeFactor != null) {
                     result.value = currentValue.multiply(freqFactor).multiply(rangeFactor).setScale(2, RoundingMode.HALF_UP);
@@ -70,7 +70,7 @@ public class InvoiceCalculationService {
     List<CalculationResult> calculationResults(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency invoicingFrequency) {
         List<CalculationResult> results = new ArrayList<CalculationResult>();
         LocalDate intervalStartDate = periodStartDate;
-        LocalDateInterval frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(intervalStartDate, invoicingFrequency.rrule));
+        LocalDateInterval frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(intervalStartDate, invoicingFrequency.getRrule()));
         CalculationResult result;
         do {
             result = calculate(leaseTerm, intervalStartDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());

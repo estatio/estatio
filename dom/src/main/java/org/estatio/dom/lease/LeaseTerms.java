@@ -32,7 +32,7 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @NotContributed
     @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
-        LeaseTerm leaseTerm = leaseItem.getType().createLeaseTerm(getContainer());
+        LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         persist(leaseTerm);
         leaseTerm.modifyLeaseItem(leaseItem);
         if (previous != null) {
