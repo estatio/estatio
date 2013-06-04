@@ -38,6 +38,7 @@ import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_INDEX_IDX", members = { "lease", "type", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_INDEX2_IDX", members = { "lease", "type", "startDate" }) })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem>, WithInterval {
 
@@ -94,8 +95,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         this.type = type;
     }
 
-    
-    // {{ StartDate, EndDate 
+    // {{ StartDate, EndDate
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -123,14 +123,14 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     public LocalDate calculatedEndDate() {
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
-    
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    // }}
 
+    // }}
 
     private InvoicingFrequency invoicingFrequency;
 
@@ -231,13 +231,14 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     @Hidden
     public LeaseTerm findTermWithSequence(BigInteger sequence) {
-//        for (LeaseTerm term : getTerms()) {
-//            if (sequence.equals(term.getSequence())) {
-//                return term;
-//            }
-//        }
-//        return null;
-        //TODO: the code above proved to be very unreliable when using the api. Have to investigate further
+        // for (LeaseTerm term : getTerms()) {
+        // if (sequence.equals(term.getSequence())) {
+        // return term;
+        // }
+        // }
+        // return null;
+        // TODO: the code above proved to be very unreliable when using the api.
+        // Have to investigate further
         return leaseTerms.findLeaseTermWithSequence(this, sequence);
     }
 

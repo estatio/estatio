@@ -11,6 +11,12 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithReference;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -24,13 +30,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithReference;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
@@ -38,7 +37,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable
 public abstract class Agreement extends EstatioTransactionalObject implements WithReference<Agreement>, WithInterval {
 
-    // {{ Reference (property)
+
+    @javax.jdo.annotations.Unique(name="AGREEMENT_REFERENCE_IDX")
     private String reference;
 
     @MemberOrder(sequence = "1")

@@ -6,9 +6,14 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.tag.Tag;
+import org.estatio.dom.tag.Tags;
+import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -17,19 +22,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.tag.Tag;
-import org.estatio.dom.tag.Tags;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Index(name = "LEASE_UNIT_IDX", members = { "lease", "unit", "startDate" })
+@javax.jdo.annotations.Unique(name = "LEASE_UNIT_IDX2", members = { "lease", "unit", "startDate" })
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "leaseUnit_find", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseUnit WHERE lease == :lease && unit == :unit && startDate == :startDate") })
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit>, WithInterval {
 
-    
-    // {{ lease, unit
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
@@ -87,11 +86,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         currentUnit.removeFromLeases(this);
     }
-    // }}
 
-    
-    
-    // {{ StartDate, EndDate
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -105,7 +100,6 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         this.startDate = startDate;
     }
 
-    
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
@@ -118,18 +112,13 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-    
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    
-    // }}
-
-
-    // {{ Brand
     private Tag brandTag;
 
     @Hidden
@@ -140,12 +129,12 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setBrandTag(final Tag brand) {
         this.brandTag = brand;
     }
-    
+
     @MemberOrder(sequence = "6")
     @Optional
     public String getBrand() {
         final Tag existingTag = getBrandTag();
-        return existingTag!=null? existingTag.getValue(): null;
+        return existingTag != null ? existingTag.getValue() : null;
     }
 
     public void setBrand(final String brand) {
@@ -153,22 +142,21 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         Tag tag = tags.tagFor(existingTag, this, "brand", brand);
         setBrandTag(tag);
     }
+
     public List<String> choicesBrand() {
         return tags.choices(this, "brand");
     }
 
-    @MemberOrder(name="Brand", sequence = "6.1")
+    @MemberOrder(name = "Brand", sequence = "6.1")
     public LeaseUnit newBrand(@Named("Tag") @Optional final String brand) {
         setBrand(brand);
         return this;
     }
+
     public String default0NewBrand() {
         return getBrand();
     }
-    // }}
-    
-    
-    // {{ Sector
+
     private Tag sectorTag;
 
     @Hidden
@@ -179,12 +167,12 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setSectorTag(final Tag sector) {
         this.sectorTag = sector;
     }
-    
-    @MemberOrder(sequence = "6")
+
+    @MemberOrder(sequence = "7")
     @Optional
     public String getSector() {
         final Tag existingTag = getSectorTag();
-        return existingTag!=null? existingTag.getValue(): null;
+        return existingTag != null ? existingTag.getValue() : null;
     }
 
     public void setSector(final String sector) {
@@ -192,22 +180,21 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         Tag tag = tags.tagFor(existingTag, this, "sector", sector);
         setSectorTag(tag);
     }
+
     public List<String> choicesSector() {
         return tags.choices(this, "sector");
     }
 
-    @MemberOrder(name="Sector", sequence = "6.1")
+    @MemberOrder(name = "Sector", sequence = "7.1")
     public LeaseUnit newSector(@Named("Tag") @Optional final String sector) {
         setSector(sector);
         return this;
     }
+
     public String default0NewSector() {
         return getSector();
     }
-    // }}
 
-    
-    // {{ Activity
     private Tag activityTag;
 
     @Hidden
@@ -218,12 +205,12 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public void setActivityTag(final Tag activity) {
         this.activityTag = activity;
     }
-    
-    @MemberOrder(sequence = "6")
+
+    @MemberOrder(sequence = "8")
     @Optional
     public String getActivity() {
         final Tag existingTag = getActivityTag();
-        return existingTag!=null? existingTag.getValue(): null;
+        return existingTag != null ? existingTag.getValue() : null;
     }
 
     public void setActivity(final String activity) {
@@ -231,22 +218,21 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         Tag tag = tags.tagFor(existingTag, this, "activity", activity);
         setActivityTag(tag);
     }
+
     public List<String> choicesActivity() {
         return tags.choices(this, "activity");
     }
 
-    @MemberOrder(name="Activity", sequence = "6.1")
+    @MemberOrder(name = "Activity", sequence = "8.1")
     public LeaseUnit newActivity(@Named("Tag") @Optional final String activity) {
         setActivity(activity);
         return this;
     }
+
     public String default0NewActivity() {
         return getActivity();
     }
-    // }}
 
-    
-    // {{ Comparable impl
     @Override
     @Hidden
     public int compareTo(LeaseUnit other) {
@@ -268,16 +254,11 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
             return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
         }
     };
-    // }}
-    
-    
-    // {{ injected: Tags
+
     private Tags tags;
 
     public void setTags(final Tags tags) {
         this.tags = tags;
     }
-    // }}
-
 
 }

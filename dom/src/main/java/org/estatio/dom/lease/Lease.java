@@ -21,7 +21,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -30,21 +29,6 @@ import org.apache.isis.applib.annotation.Title;
 @Bookmarkable
 public class Lease extends Agreement implements InvoiceProvenance {
 
-    private String reference;
-
-    @MemberOrder(sequence = "1")
-    @Title()
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
-    // }}
-
-    
-    // {{ Derived attribute (overridden)
     @NotPersisted
     @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
@@ -56,9 +40,7 @@ public class Lease extends Agreement implements InvoiceProvenance {
     public Party getSecondaryParty() {
         return findParty(LeaseConstants.ART_TENANT);
     }
-    // }}
 
-    // {{ Type (property)
     private LeaseType type;
 
     @MemberOrder(sequence = "8")
@@ -70,9 +52,6 @@ public class Lease extends Agreement implements InvoiceProvenance {
         this.type = type;
     }
 
-    // }}
-
-    // {{ Units (Collection)
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
@@ -110,9 +89,6 @@ public class Lease extends Agreement implements InvoiceProvenance {
         return leaseUnit;
     }
 
-    // }}
-
-    // {{ Items (Collection)
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
@@ -133,23 +109,18 @@ public class Lease extends Agreement implements InvoiceProvenance {
     }
 
     public void addToItems(final LeaseItem leaseItem) {
-        // check for no-op
         if (leaseItem == null || getItems().contains(leaseItem)) {
             return;
         }
-        // dissociate arg from its current parent (if any).
         leaseItem.clearLease();
-        // associate arg
         leaseItem.setLease(this);
         getItems().add(leaseItem);
     }
 
     public void removeFromItems(final LeaseItem leaseItem) {
-        // check for no-op
         if (leaseItem == null || !getItems().contains(leaseItem)) {
             return;
         }
-        // dissociate arg
         leaseItem.setLease(null);
         getItems().remove(leaseItem);
     }
@@ -177,9 +148,6 @@ public class Lease extends Agreement implements InvoiceProvenance {
         return null;
     }
 
-    // }}
-
-    // {{ Actions
     @Bulk
     public Lease verify() {
         for (LeaseItem item : getItems()) {
@@ -198,9 +166,6 @@ public class Lease extends Agreement implements InvoiceProvenance {
         return this;
     }
 
-    // }}
-
-    // {{ injected
     private LeaseItems leaseItems;
 
     public void injectLeaseItems(final LeaseItems leaseItems) {
@@ -212,7 +177,5 @@ public class Lease extends Agreement implements InvoiceProvenance {
     public void injectLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
-
-    // }}
 
 }

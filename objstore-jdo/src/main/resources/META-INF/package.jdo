@@ -27,20 +27,6 @@
             ]]></query>
 		</class>
 	</package>
-	<package name="org.estatio.dom.party">
-		<class name="Party">
-			<query name="parties_findPartyByReference" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.party.Party 
-             WHERE reference.matches(:reference)
-            ]]></query>
-			<query name="parties_findParties" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.party.Party 
-             WHERE reference.toLowerCase().matches(:searchPattern.toLowerCase()) || name.toLowerCase().matches(:searchPattern.toLowerCase())
-            ]]></query>
-		</class>
-	</package>
     <package name="org.estatio.dom.lease">
         <class name="Lease">
             <query name="lease_findLeaseByReference" language="JDOQL"><![CDATA[
@@ -54,15 +40,6 @@
             SELECT 
               FROM org.estatio.dom.lease.UnitForLease 
              WHERE reference.matches(:r)
-            ]]></query>
-        </class>
-        <class name="LeaseUnit">
-            <query name="leaseUnit_find" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.lease.LeaseUnit 
-             WHERE lease == :lease &&
-                   unit == :unit &&
-                   startDate == :startDate
             ]]></query>
         </class>
     </package>

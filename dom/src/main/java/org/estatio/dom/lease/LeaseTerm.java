@@ -47,6 +47,8 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_TERM_IDX", members = { "leaseItem", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_TERM2_IDX", members = { "leaseItem", "startDate" }) })
+
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval {
 
