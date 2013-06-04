@@ -2,9 +2,18 @@ package org.estatio.dom;
 
 import java.util.List;
 
+import org.junit.Test;
 
-public abstract class WithReferenceContractTest_compareTo<T extends WithReference<T>> extends ComparableContractTest_compareTo<T>{
 
+public class WithReferenceContractTest_compareTo<T extends WithReference<T>> extends ComparableContractTest_compareTo<T>{
+
+    private Class<T> cls;
+
+    public WithReferenceContractTest_compareTo<T> with(Class<T> cls) {
+        this.cls = cls;
+        return this;
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<T>> orderedTuples() {
@@ -22,6 +31,20 @@ public abstract class WithReferenceContractTest_compareTo<T extends WithReferenc
         return wr;
     }
 
-    protected abstract T newWithReference();
+    @Test
+    public void compareAllOrderedTuples() {
+        if(cls == null) {
+            return;
+        }
+        super.compareAllOrderedTuples();
+    }
+    
+    protected T newWithReference() {
+        try {
+            return cls.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
