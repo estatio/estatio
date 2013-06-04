@@ -6,7 +6,7 @@ import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 public abstract class EstatioDomainObject extends AbstractDomainObject {
 
     protected IsisJdoSupport isisJdoSupport;
-    public void setIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
         this.isisJdoSupport = isisJdoSupport;
     }
     

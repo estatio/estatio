@@ -34,7 +34,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     public List<Index> choicesIndex() {
-        return indexService.allIndices();
+        return indices.allIndices();
     }
 
     @javax.jdo.annotations.Persistent
@@ -234,9 +234,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         return getBaseValue();
     }
 
-    private Indices indexService;
+    
+    // {{ injected services
+    private Indices indices;
 
-    public void setIndixService(Indices indexes) {
-        this.indexService = indexes;
+    public void injectIndices(Indices indexes) {
+        this.indices = indexes;
     }
+    // }}
 }

@@ -1,16 +1,15 @@
 package org.estatio.dom.geography;
 
-import org.estatio.dom.geography.Country;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class CountryTest_beanProperties {
+public class CountryTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new Country(), FilterSet.excluding("container",  "isisJdoSupport"));
+		newPojoTester()
+		    .exercise(new Country());
 	}
 
 }

@@ -1,37 +1,20 @@
 package org.estatio.dom.asset;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
 
 import org.junit.Test;
 
-import org.estatio.dom.FixtureDatumFactoriesForJoda;
-import org.estatio.dom.geography.FixtureDatumFactoriesForGeography;
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.geography.Country;
 
-public class PropertyTest_beanProperties {
+public class PropertyTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester()
-		    .withFixture(FixtureDatumFactoriesForFixedAssets.properties())
-		    .withFixture(FixtureDatumFactoriesForFixedAssets.units())
-		    .withFixture(FixtureDatumFactoriesForFixedAssets.propertyActors())
-		    .withFixture(FixtureDatumFactoriesForFixedAssets.locations())
-			.withFixture(FixtureDatumFactoriesForJoda.dates())
-			.withFixture(FixtureDatumFactoriesForGeography.countries())
-			.exercise(new Property(), FilterSet.excluding(
-			        "container", 
-			        "isisJdoSupport", 
-			        "units",
-			        "fixedAssetRolesService", 
-			        "properties", 
-			        "unitsRepo", 
-			        "actors", 
-			        "parties", 
-			        "communicationChannels", 
-			        "locationLookupService",
-			        "partiesService",
-			        "roles" ));
+	    newPojoTester()
+		    .withFixture(pojos(Country.class))
+		    .withFixture(pojos(Location.class))
+			.exercise(new Property());
 	}
 
 }

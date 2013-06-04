@@ -2,7 +2,7 @@ package org.estatio.dom;
 
 import org.apache.isis.applib.value.Date;
 
-import com.danhaywood.testsupport.coverage.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class FixtureDatumFactoriesForApplib {
 

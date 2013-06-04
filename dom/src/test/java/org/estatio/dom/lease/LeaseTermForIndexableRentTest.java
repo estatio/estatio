@@ -2,12 +2,6 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.index.Indices;
-import org.estatio.services.clock.ClockService;
-
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -17,8 +11,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.IndexBase;
+import org.estatio.dom.index.IndexValue;
+import org.estatio.dom.index.Indices;
+import org.estatio.services.clock.ClockService;
 
 public class LeaseTermForIndexableRentTest {
 

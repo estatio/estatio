@@ -126,8 +126,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         return brandTag;
     }
 
-    public void setBrandTag(final Tag brand) {
-        this.brandTag = brand;
+    public void setBrandTag(final Tag brandTag) {
+        this.brandTag = brandTag;
     }
 
     @MemberOrder(sequence = "6")
@@ -164,8 +164,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         return sectorTag;
     }
 
-    public void setSectorTag(final Tag sector) {
-        this.sectorTag = sector;
+    public void setSectorTag(final Tag sectorTag) {
+        this.sectorTag = sectorTag;
     }
 
     @MemberOrder(sequence = "7")
@@ -202,8 +202,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         return activityTag;
     }
 
-    public void setActivityTag(final Tag activity) {
-        this.activityTag = activity;
+    public void setActivityTag(final Tag activityTag) {
+        this.activityTag = activityTag;
     }
 
     @MemberOrder(sequence = "8")
@@ -257,7 +257,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
     private Tags tags;
 
-    public void setTags(final Tags tags) {
+    public void injectTags(final Tags tags) {
         this.tags = tags;
     }
 

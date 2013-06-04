@@ -1,16 +1,16 @@
 package org.estatio.dom.geography;
 
-import org.estatio.dom.geography.State;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class StateTest_beanProperties {
+public class StateTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester().withFixture(FixtureDatumFactoriesForGeography.countries()).exercise(new State(), FilterSet.excluding("container", "isisJdoSupport"));
+	    newPojoTester()
+	        .withFixture(pojos(Country.class))
+	        .exercise(new State());
 	}
 
 

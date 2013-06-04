@@ -1,16 +1,15 @@
 package org.estatio.dom.party;
 
-import org.estatio.dom.party.Person;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class PersonTest_beanProperties {
+public class PersonTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new Person(), FilterSet.excluding("container", "isisJdoSupport", "roles", "registrations", "communicationChannels", "accounts"));
+	    newPojoTester()
+	        .exercise(new Person());
 	}
 
 }

@@ -25,10 +25,7 @@ public abstract class EstatioTransactionalObject extends EstatioDomainObject {
 
 
     // {{ ID (derived property)
-    @Hidden()
-    @Disabled
-    @MemberOrder(name="Detail", sequence = "100")
-    @Named("Id")
+    @Hidden
     public String getId() {
         final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
         return id;
@@ -36,10 +33,7 @@ public abstract class EstatioTransactionalObject extends EstatioDomainObject {
     // }}
 
     // {{ Version (derived property)
-    @Hidden()
-    @Disabled
-    @MemberOrder(name="Detail", sequence = "101")
-    @Named("Version")
+    @Hidden
     public Long getVersionSequence() {
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;

@@ -155,7 +155,7 @@ public class PostalAddress extends CommunicationChannel {
     // {{ injected dependencies
     private States states;
 
-    public void setStates(final States states) {
+    public void injectStates(final States states) {
         this.states = states;
     }
 
@@ -163,7 +163,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private Countries countries;
 
-    public void setCountries(Countries countries) {
+    public void injectCountries(Countries countries) {
         this.countries = countries;
     }
 

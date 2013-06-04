@@ -4,9 +4,6 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
-
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -15,6 +12,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;

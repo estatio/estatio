@@ -2,9 +2,6 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
 import org.hamcrest.core.Is;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -13,8 +10,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.IndexBase;
+import org.estatio.dom.index.IndexValue;
 
 public class LeaseTermForServiceChargeTest {
 

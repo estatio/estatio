@@ -1,16 +1,15 @@
 package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.communicationchannel.EmailAddress;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class EmailAddressTest_beanProperties {
+public class EmailAddressTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new EmailAddress(), FilterSet.excluding("container", "isisJdoSupport"));
+	    newPojoTester()
+	        .exercise(new EmailAddress());
 	}
 
 }

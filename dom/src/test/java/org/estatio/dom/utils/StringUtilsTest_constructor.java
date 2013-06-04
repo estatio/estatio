@@ -1,9 +1,8 @@
 package org.estatio.dom.utils;
 
-import org.estatio.dom.utils.StringUtils;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PrivateConstructorTester;
+import org.estatio.dom.PrivateConstructorTester;
 
 public class StringUtilsTest_constructor {
 

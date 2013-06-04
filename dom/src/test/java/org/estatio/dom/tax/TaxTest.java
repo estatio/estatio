@@ -20,12 +20,11 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.ClassUnderTest;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 public class TaxTest {
 
@@ -35,7 +34,6 @@ public class TaxTest {
     @Mock
     private DomainObjectContainer mockContainer;
 
-    @ClassUnderTest
     private Tax tax;
 
     @Rule

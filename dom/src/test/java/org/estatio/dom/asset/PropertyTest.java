@@ -2,17 +2,16 @@ package org.estatio.dom.asset;
 
 import junit.framework.Assert;
 
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.PostalAddress;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
-import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.PostalAddress;
 
 public class PropertyTest {
 

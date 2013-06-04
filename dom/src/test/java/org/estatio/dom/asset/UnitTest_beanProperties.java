@@ -1,17 +1,19 @@
 package org.estatio.dom.asset;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
 
 import org.junit.Test;
 
-public class UnitTest_beanProperties {
+import org.estatio.dom.AbstractBeanPropertiesTest;
+
+public class UnitTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester()
-			.withFixture(FixtureDatumFactoriesForFixedAssets.properties())
-			.exercise(new Unit(), FilterSet.excluding("container", "isisJdoSupport", "leases", "communicationChannels", "countries", "locationLookupService", "location", "fixedAssetRolesService", "roles", "partiesService"));
+	    newPojoTester()
+			.withFixture(pojos(Property.class))
+			.withFixture(pojos(Location.class))
+			.exercise(new Unit());
 	}
 
 }

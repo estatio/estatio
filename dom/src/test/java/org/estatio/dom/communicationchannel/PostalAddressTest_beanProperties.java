@@ -1,20 +1,19 @@
 package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.communicationchannel.PostalAddress;
-import org.estatio.dom.geography.FixtureDatumFactoriesForGeography;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
 
-public class PostalAddressTest_beanProperties {
+public class PostalAddressTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester()
-			.withFixture(FixtureDatumFactoriesForGeography.countries())
-			.withFixture(FixtureDatumFactoriesForGeography.states())
-			.exercise(new PostalAddress(), FilterSet.excluding("container", "isisJdoSupport", "states", "countries"));
+	    newPojoTester()
+			.withFixture(pojos(Country.class))
+			.withFixture(pojos(State.class))
+			.exercise(new PostalAddress());
 	}
 
 }

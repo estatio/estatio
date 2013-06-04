@@ -1,16 +1,15 @@
 package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.communicationchannel.FaxNumber;
 import org.junit.Test;
 
-import com.danhaywood.testsupport.coverage.PojoTester;
-import com.danhaywood.testsupport.coverage.PojoTester.FilterSet;
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class FaxNumberTest_beanProperties {
+public class FaxNumberTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
-		new PojoTester().exercise(new FaxNumber(), FilterSet.excluding("container", "isisJdoSupport"));
+	    newPojoTester()
+	        .exercise(new FaxNumber());
 	}
 
 }
