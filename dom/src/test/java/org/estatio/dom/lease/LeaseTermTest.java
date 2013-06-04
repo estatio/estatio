@@ -62,7 +62,7 @@ public class LeaseTermTest {
     }
 
     @Test
-    public void testCreateOrUpdateNext() {
+    public void createNext_ok() {
         context.checking(new Expectations() {
             {
                 oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
@@ -76,7 +76,7 @@ public class LeaseTermTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void update_ok() {
         LeaseTerm nextTerm = new LeaseTerm();
         nextTerm.setStartDate(new LocalDate(2013, 1, 1));
         term.modifyNextTerm(nextTerm);
@@ -85,7 +85,7 @@ public class LeaseTermTest {
     }
 
     @Test
-    public void testVerify() {
+    public void verify_ok() {
         context.checking(new Expectations() {
             {
                 oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
@@ -105,7 +105,7 @@ public class LeaseTermTest {
     }
 
     @Test
-    public void invoicedAmount() throws Exception {
+    public void invoicedValueFor_ok() throws Exception {
         LocalDate date = new LocalDate(2012, 1, 1);
         LeaseTerm term = new LeaseTerm();
         Invoice invoice = new Invoice();

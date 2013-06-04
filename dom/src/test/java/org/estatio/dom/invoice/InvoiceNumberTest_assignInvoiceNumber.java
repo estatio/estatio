@@ -19,7 +19,7 @@ import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 
 
-public class InvoiceNumberTest {
+public class InvoiceNumberTest_assignInvoiceNumber {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -43,7 +43,7 @@ public class InvoiceNumberTest {
     }
 
     @Test
-    public void test() {
+    public void happyCase() {
         context.checking(new Expectations() {
             {
                 allowing(mockNumerators).establish(NumeratorType.INVOICE_NUMBER);

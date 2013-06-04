@@ -17,7 +17,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-public class AgreementRoleTypeTest {
+public class AgreementRoleTypeTest_applicableTo {
 
     private AgreementRoleType art;
     private AgreementType at;
@@ -39,7 +39,7 @@ public class AgreementRoleTypeTest {
     
 
     @Test
-    public void test() {
+    public void delegatesToService() {
         context.checking(new Expectations() {
             {
                 oneOf(mockAgreementRoleTypes).applicableTo(at);

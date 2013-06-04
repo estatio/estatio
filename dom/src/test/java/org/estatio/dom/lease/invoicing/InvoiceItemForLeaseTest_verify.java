@@ -1,5 +1,8 @@
 package org.estatio.dom.lease.invoicing;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 
 import org.jmock.Expectations;
@@ -18,7 +21,7 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
 
-public class InvoiceItemForLeaseTest {
+public class InvoiceItemForLeaseTest_verify {
 
     private Charge charge;
     private Tax tax;
@@ -36,19 +39,22 @@ public class InvoiceItemForLeaseTest {
         charge = new Charge();
         tax = new Tax();
         tax.injectTaxes(mockTaxes);
+        
         rate = new TaxRate();
         rate.setPercentage(BigDecimal.valueOf(21));
+        
         item = new InvoiceItemForLease();
-        item.setDueDate(new LocalDate(2012, 1, 1));
+        
         item.setCharge(charge);
         item.setTax(tax);
+        item.setDueDate(new LocalDate(2012, 1, 1));
         item.setNetAmount(BigDecimal.ZERO);
         item.setVatAmount(BigDecimal.ZERO);
         item.setGrossAmount(BigDecimal.ZERO);
     }
 
     @Test
-    public void testVerify() {
+    public void happyCase() {
         context.checking(new Expectations() {
             {
                 allowing(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
@@ -57,8 +63,8 @@ public class InvoiceItemForLeaseTest {
         });
         item.setNetAmount(BigDecimal.valueOf(12.34));
         item.verify();
-        Assert.assertEquals(item.getVatAmount(), BigDecimal.valueOf(2.59));
-        Assert.assertEquals(item.getGrossAmount(), BigDecimal.valueOf(14.93));
+        assertThat(item.getVatAmount(), is(BigDecimal.valueOf(2.59)));
+        assertThat(item.getGrossAmount(), is(BigDecimal.valueOf(14.93)));
     }
 
 }

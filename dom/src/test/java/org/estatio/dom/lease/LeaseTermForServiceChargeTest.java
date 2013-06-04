@@ -1,11 +1,13 @@
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 
 import org.hamcrest.core.Is;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,8 +16,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
 
 public class LeaseTermForServiceChargeTest {
 
@@ -23,11 +23,6 @@ public class LeaseTermForServiceChargeTest {
     private LeaseTermForServiceCharge term;
 
     public Index i;
-
-    private IndexBase ib1;
-    private IndexBase ib2;
-    private IndexValue iv1;
-    private IndexValue iv2;
 
     @Mock
     LeaseTerms mockLeaseTerms;
@@ -50,7 +45,7 @@ public class LeaseTermForServiceChargeTest {
     }
 
     @Test
-    public void testUpdate() {
+    public void update_ok() {
 //        context.checking(new Expectations() {
 //            {
 //                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
@@ -59,25 +54,30 @@ public class LeaseTermForServiceChargeTest {
 //        });
 //        term.createNext();
         term.update();
-        Assert.assertThat(term.getValue(), Is.is(term.getBudgetedValue()));
+        assertThat(term.getValue(), Is.is(term.getBudgetedValue()));
+        
         LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
         nextTerm.setPreviousTerm(term);
         nextTerm.initialize();
         nextTerm.update();
-        Assert.assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
-        Assert.assertThat(nextTerm.getValue(), Is.is(term.getValue()));
+        
+        assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
+        assertThat(nextTerm.getValue(), Is.is(term.getValue()));
     }
     
     @Test
-    public void testValueForDueDate() throws Exception {
+    public void valueForDueDate_ok() throws Exception {
+        
         LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
+        
         term.setEndDate(new LocalDate(2011, 12, 31));
         term.setBudgetedValue(BigDecimal.valueOf(6000));
         term.setAuditedValue(BigDecimal.valueOf(6600));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), Is.is(BigDecimal.valueOf(6000)));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), Is.is(BigDecimal.valueOf(6000)));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 1, 1)), Is.is(BigDecimal.valueOf(6600)));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), Is.is(BigDecimal.valueOf(6600)));
+        
+        assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(6000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 1, 1)), is(BigDecimal.valueOf(6600)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(6600)));
     }
 
 }

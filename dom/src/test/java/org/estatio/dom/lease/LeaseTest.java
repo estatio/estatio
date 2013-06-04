@@ -43,13 +43,13 @@ public class LeaseTest {
 
     @Ignore
     @Test
-    public void findActorIsNotNull() {
+    public void findRole() {
         Assert.assertNotNull(lease.findRole(org, tenantArt, new LocalDate(2000,1,1)));
     }
     
     @Ignore
     @Test
-    public void addActorIsIdempotent() {
+    public void addRoleIsIdempotent() {
         lease.addRole(org, tenantArt, new LocalDate(2000,1,1), null);
         Assert.assertEquals(1, lease.getRoles().size());
     }

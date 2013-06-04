@@ -36,8 +36,8 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         return agreement;
     }
 
-    public void setAgreement(final Agreement lease) {
-        this.agreement = lease;
+    public void setAgreement(final Agreement agreement) {
+        this.agreement = agreement;
     }
 
     public void modifyAgreement(final Agreement agreement) {

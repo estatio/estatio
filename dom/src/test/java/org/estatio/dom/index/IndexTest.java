@@ -20,6 +20,8 @@ public class IndexTest {
 
     private LocalDate baseDate;
     private LocalDate nextDate;
+    
+    @SuppressWarnings("unused")
     private BigDecimal result;
 
     private Index index;

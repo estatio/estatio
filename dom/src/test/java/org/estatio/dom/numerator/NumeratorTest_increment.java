@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NumeratorTest {
+public class NumeratorTest_increment {
 
     private Numerator numerator;
     
@@ -18,7 +18,7 @@ public class NumeratorTest {
     }
 
     @Test
-    public void incrementsSuccesful() {
+    public void happyCase() {
         assertEquals(BigInteger.ONE, numerator.increment());
         assertEquals(BigInteger.ONE, numerator.getLastIncrement());
     }

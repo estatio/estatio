@@ -1,5 +1,8 @@
 package org.estatio.dom.index;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 
 import org.jmock.Expectations;
@@ -13,7 +16,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-public class IndexationCalculatorTest {
+public class IndexationCalculatorTest_calculate {
 
     private IndexationCalculator indexCalculator;
 
@@ -32,29 +35,19 @@ public class IndexationCalculatorTest {
     }
 
     @Test
-    public void testIndexationPercentage() {
+    public void happyCase() {
         context.checking(new Expectations() {
             {
                 oneOf(mockIndex).initialize(with(equal(indexCalculator)), with(equal(new LocalDate(2010, 1, 1))), with(equal(new LocalDate(2011, 1, 1))));
             }
         });
         indexCalculator.calculate();
-        Assert.assertEquals(BigDecimal.valueOf(12.2), indexCalculator.getIndexationPercentage());
+        assertThat(indexCalculator.getIndexationPercentage(), is(BigDecimal.valueOf(12.2)));
+        assertThat(indexCalculator.getIndexedValue(), is(BigDecimal.valueOf(280500).setScale(4)));
     }
 
     @Test
-    public void testIndexedValue() {
-        context.checking(new Expectations() {
-            {
-                oneOf(mockIndex).initialize(with(equal(indexCalculator)), with(equal(new LocalDate(2010, 1, 1))), with(equal(new LocalDate(2011, 1, 1))));
-            }
-        });
-        indexCalculator.calculate();
-        Assert.assertEquals(BigDecimal.valueOf(280500).setScale(4), indexCalculator.getIndexedValue());
-    }
-
-    @Test
-    public void testWithNulls() {
+    public void withNulls() {
         context.checking(new Expectations() {
             {
                 oneOf(mockIndex).initialize(with(any(IndexationCalculator.class)), with(aNull(LocalDate.class)), with(aNull(LocalDate.class)));
@@ -62,6 +55,6 @@ public class IndexationCalculatorTest {
         });
         IndexationCalculator indexCalculator = new IndexationCalculator(mockIndex, null, null, new BigDecimal(250000));
         indexCalculator.calculate();
-        Assert.assertNull(indexCalculator.getIndexedValue());
+        assertThat(indexCalculator.getIndexedValue(), is(nullValue()));
     }
 }

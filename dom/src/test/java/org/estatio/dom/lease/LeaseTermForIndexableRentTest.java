@@ -1,5 +1,8 @@
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 
 import org.hamcrest.core.Is;
@@ -8,6 +11,7 @@ import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -50,7 +54,6 @@ public class LeaseTermForIndexableRentTest {
     @Before
     public void setup() {
 
-        // i = context.getClassUnderTest();
         i = new Index();
 
         i.injectIndices(mockIndices);
@@ -108,7 +111,7 @@ public class LeaseTermForIndexableRentTest {
     }
 
     @Test
-    public void updateRunsWell() {
+    public void update_ok() {
         context.checking(new Expectations() {
             {
                 allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
@@ -122,7 +125,7 @@ public class LeaseTermForIndexableRentTest {
     }
 
     @Test
-    public void updateRunsWellWithEmptyIndex() {
+    public void update_whenEmptyIndex_ok() {
         context.checking(new Expectations() {
             {
                 allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
@@ -136,7 +139,7 @@ public class LeaseTermForIndexableRentTest {
     }
 
     @Test
-    public void createNextRunsWell() {
+    public void createNext_ok() {
         context.checking(new Expectations() {
             {
                 allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
@@ -146,31 +149,33 @@ public class LeaseTermForIndexableRentTest {
         LeaseTermForIndexableRent newTerm = (LeaseTermForIndexableRent) term.createNext();
         newTerm.setPreviousTerm(term);
         newTerm.initialize();
-        Assert.assertThat(newTerm.getStartDate(), Is.is(term.getEndDate().plusDays(1)));
-        Assert.assertThat(newTerm.getIndex(), Is.is(term.getIndex()));
+        assertThat(newTerm.getStartDate(), is(term.getEndDate().plusDays(1)));
+        assertThat(newTerm.getIndex(), is(term.getIndex()));
     }
 
     @Test
-    public void testValueForDueDate() throws Exception {
+    public void valueForDueDate_ok() throws Exception {
         LeaseTermForIndexableRent term = new LeaseTermForIndexableRent();
         term.setEffectiveDate(new LocalDate(2012, 4, 1));
         term.setBaseValue(BigDecimal.valueOf(20000));
         term.setIndexedValue(BigDecimal.valueOf(30000));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), Is.is(BigDecimal.valueOf(20000)));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), Is.is(BigDecimal.valueOf(20000)));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), Is.is(BigDecimal.valueOf(30000)));
-        Assert.assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), Is.is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
     }
 
-    public void testInitialize() throws Exception {
+    @Ignore // incomplete, null pointer exception
+    @Test
+    public void initialize_ok() throws Exception {
         LeaseTermForIndexableRent nextTerm = new LeaseTermForIndexableRent();
         term.modifyNextTerm(nextTerm);
+        
         nextTerm.initialize();
         
-        Assert.assertThat(nextTerm.getBaseIndexStartDate(), Is.is(term.getNextIndexStartDate()));
-        Assert.assertThat(nextTerm.getNextIndexStartDate(), Is.is(term.getNextIndexStartDate().plusYears(1)));
-        Assert.assertThat(nextTerm.getEffectiveDate(), Is.is(term.getEffectiveDate().plusYears(1)));
-        
+        assertThat(nextTerm.getBaseIndexStartDate(), is(term.getNextIndexStartDate()));
+        assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));
+        assertThat(nextTerm.getEffectiveDate(), is(term.getEffectiveDate().plusYears(1)));
         
     }
 }

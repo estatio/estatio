@@ -32,7 +32,6 @@ public class InvoiceTest_assignInvoiceNumber {
     @Mock
     DomainObjectContainer mockContainer;
 
-    @ClassUnderTest
     private Invoice invoice;
 
     private Numerator inn;
@@ -45,22 +44,21 @@ public class InvoiceTest_assignInvoiceNumber {
 
         invoice = new Invoice();
         
-//        invoice = context.getClassUnderTest();
-        invoice.setContainer(mockContainer);// to fix
-        invoice.injectNumerators(mockNumerators); // to fix
+        invoice.setContainer(mockContainer);
+        invoice.injectNumerators(mockNumerators);
 
         allowingMockNumeratorsRepoToReturn(inn);
     }
 
     @Test
-    public void hasNoInvoiceNumber() {
+    public void whenNoInvoiceNumberPreviouslyAssigned() {
         invoice.assignInvoiceNumber();
         assertThat(invoice.getInvoiceNumber(), is("INV-00011"));
     }
 
 
     @Test
-    public void hasInvoiceNumberAlreadyAssigned() {
+    public void whenInvoiceNumberAlreadyAssigned() {
         invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
         invoice.assignInvoiceNumber();
         assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
