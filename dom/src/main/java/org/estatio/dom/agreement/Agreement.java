@@ -78,17 +78,14 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
 
     protected Party findParty(final String agreementRoleTypeTitle) {
         final AgreementRoleType art = agreementRoleTypes.find(agreementRoleTypeTitle);
-        final Predicate<AgreementRole> currentAgreementRoleOfType = currentAgreementRoleOfType(art);
-        final Iterable<Party> parties = Iterables.transform(
-                Iterables.filter(
-                        getRoles(), currentAgreementRoleOfType), partyOfAgreementRole());
-        return ValueUtils.firstElseNull(parties);
+        return findParty(art);
     }
 
     protected Party findParty(AgreementRoleType agreementRoleType) {
-        Iterable<Party> parties = Iterables.transform(
+        final Predicate<AgreementRole> currentAgreementRoleOfType = currentAgreementRoleOfType(agreementRoleType);
+        final Iterable<Party> parties = Iterables.transform(
                 Iterables.filter(
-                        getRoles(), currentAgreementRoleOfType(agreementRoleType)), partyOfAgreementRole());
+                        getRoles(), currentAgreementRoleOfType), partyOfAgreementRole());
         return ValueUtils.firstElseNull(parties);
     }
 
@@ -100,10 +97,10 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
         };
     }
 
-    private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType lat) {
+    private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType art) {
         return new Predicate<AgreementRole>() {
             public boolean apply(AgreementRole candidate) {
-                return candidate.getType() == lat && candidate.isCurrent();
+                return candidate.getType() == art && candidate.isCurrent();
             }
         };
     }
@@ -259,6 +256,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
         }
         // associate new
         getRoles().add(agreementRole);
+        agreementRole.setAgreement(this);
     }
 
     public void removeFromRoles(final AgreementRole agreementRole) {
@@ -268,6 +266,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Wi
         }
         // dissociate existing
         getRoles().remove(agreementRole);
+        agreementRole.setAgreement(null);
     }
 
     @MemberOrder(name = "Roles", sequence = "11")

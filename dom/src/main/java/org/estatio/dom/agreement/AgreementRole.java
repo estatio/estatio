@@ -47,6 +47,9 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
             return;
         }
         // delegate to parent to associate
+        if(currentAgreement != null) {
+            currentAgreement.removeFromRoles(this);
+        }
         agreement.addToRoles(this);
     }
 
