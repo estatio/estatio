@@ -8,7 +8,7 @@ import java.util.TreeSet;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithName;
+import org.estatio.dom.ComparableByName;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.Title;
     @javax.jdo.annotations.Query(name = "parties_findParties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.toLowerCase().matches(:searchPattern.toLowerCase()) || name.toLowerCase().matches(:searchPattern.toLowerCase())") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = {"reference", "name"})
 @AutoComplete(repository = Parties.class)
-public abstract class Party extends EstatioTransactionalObject implements WithName<Party> {
+public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party> {
 
     @javax.jdo.annotations.Unique
     private String reference;

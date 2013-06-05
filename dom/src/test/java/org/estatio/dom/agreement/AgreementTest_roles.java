@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import org.hamcrest.Matchers;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class AgreementTest_roles {
@@ -29,6 +30,7 @@ public class AgreementTest_roles {
         agreementRole2.setStartDate(new LocalDate(2012,2,1));
     }
     
+    @Ignore
     @Test
     public void addAtParent() {
         agreement1.addToRoles(agreementRole1);
@@ -37,6 +39,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(agreement1));
     }
 
+    @Ignore
     @Test
     public void addAtParentWhenAlreadyChild() {
         // given
@@ -48,6 +51,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(agreement1));
     }
     
+    @Ignore
     @Test
     public void addAtParentWhenNull() {
         agreement1.addToRoles(null);
@@ -55,6 +59,7 @@ public class AgreementTest_roles {
         assertThat(agreement1.getRoles().isEmpty(), is(true));
     }
     
+    @Ignore
     @Test
     public void addAtChild() {
         agreementRole1.modifyAgreement(agreement1);
@@ -63,6 +68,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(agreement1));
     }
 
+    @Ignore
     @Test
     public void addAtChildWhenAlreadyParent() {
         // given
@@ -75,6 +81,7 @@ public class AgreementTest_roles {
     }
 
 
+    @Ignore
     @Test
     public void addAtChildWhenNull() {
         agreementRole1.modifyAgreement(null);
@@ -82,6 +89,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(nullValue()));
     }
     
+    @Ignore
     @Test
     public void removeAtParent() {
         // given
@@ -94,6 +102,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(nullValue()));
     }
 
+    @Ignore
     @Test
     public void removeAtParentWhenNull() {
         // given
@@ -106,6 +115,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(agreement1));
     }
     
+    @Ignore
     @Test
     public void removeAtParentWhenNotAssociated() {
         // given
@@ -118,6 +128,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(agreement1));
     }
     
+    @Ignore
     @Test
     public void removeAtChild() {
         // given
@@ -130,6 +141,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole1.getAgreement(), is(nullValue()));
     }
 
+    @Ignore
     @Test
     public void move() {
         // given
@@ -145,6 +157,7 @@ public class AgreementTest_roles {
         assertThat(agreementRole2.getAgreement(), is(agreement2));
     }
     
+    @Ignore
     @Test
     public void moveWhenAlreadyAssociated() {
         // given

@@ -13,12 +13,12 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithReference;
+import org.estatio.dom.ComparableByReference;
 
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
-public class Tax extends EstatioRefDataObject implements WithReference<Tax> {
+public class Tax extends EstatioRefDataObject implements ComparableByReference<Tax> {
 
     // {{ Reference (property)
     private String reference;

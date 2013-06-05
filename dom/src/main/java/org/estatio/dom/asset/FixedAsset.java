@@ -13,7 +13,7 @@ import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithName;
+import org.estatio.dom.ComparableByName;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
@@ -36,7 +36,7 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bookmarkable
-public abstract class FixedAsset extends EstatioTransactionalObject implements WithName<FixedAsset>, Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject implements ComparableByName<FixedAsset>, Locatable {
 
     private String reference;
 

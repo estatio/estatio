@@ -9,11 +9,11 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithTitle;
+import org.estatio.dom.ComparableByTitle;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementRoleType extends EstatioRefDataObject implements WithTitle<AgreementRoleType>  {
+public class AgreementRoleType extends EstatioRefDataObject implements ComparableByTitle<AgreementRoleType>  {
 
     // {{ Title (property)
     private String title;

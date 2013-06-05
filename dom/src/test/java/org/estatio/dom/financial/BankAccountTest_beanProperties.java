@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyTest_beanProperties.PartyForTesting;
+import org.estatio.dom.party.PartyForTesting;
 
 public class BankAccountTest_beanProperties extends AbstractBeanPropertiesTest {
 

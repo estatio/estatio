@@ -14,11 +14,12 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithStartDate;
 import org.estatio.dom.utils.Orderings;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase> {
+public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase>, WithStartDate {
 
     private Index index;
 

@@ -13,7 +13,7 @@ import com.google.common.collect.Iterables;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithReference;
+import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -35,7 +35,7 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
-public abstract class Agreement extends EstatioTransactionalObject implements WithReference<Agreement>, WithInterval {
+public abstract class Agreement extends EstatioTransactionalObject implements ComparableByReference<Agreement>, WithInterval {
 
 
     @javax.jdo.annotations.Unique(name="AGREEMENT_REFERENCE_IDX")

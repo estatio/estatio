@@ -6,13 +6,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithCode;
+import org.estatio.dom.ComparableByCode;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject implements WithCode<Charge> {
+public class Charge extends EstatioRefDataObject implements ComparableByCode<Charge> {
 
     private String reference;
 

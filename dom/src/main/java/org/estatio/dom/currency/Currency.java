@@ -5,12 +5,12 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithReference;
+import org.estatio.dom.ComparableByReference;
 
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
-public class Currency extends EstatioRefDataObject implements WithReference<Currency> {
+public class Currency extends EstatioRefDataObject implements ComparableByReference<Currency> {
 
     private String reference;
 

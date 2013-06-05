@@ -9,7 +9,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithDescription;
+import org.estatio.dom.ComparableByDescription;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -19,7 +19,7 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class Numerator extends EstatioTransactionalObject implements WithDescription<Numerator> {
+public class Numerator extends EstatioTransactionalObject implements ComparableByDescription<Numerator> {
 
     private NumeratorType type;
 

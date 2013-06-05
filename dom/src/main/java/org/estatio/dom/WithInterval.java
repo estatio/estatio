@@ -6,10 +6,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-public interface WithInterval {
+public interface WithInterval extends WithStartDate {
 
-    public LocalDate getStartDate();
-    public void setStartDate(LocalDate localDate);
     public LocalDate getEndDate();
     public void setEndDate(LocalDate localDate);
     

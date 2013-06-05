@@ -12,11 +12,11 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithReference;
+import org.estatio.dom.ComparableByReference;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class Index extends EstatioRefDataObject implements WithReference<Index> {
+public class Index extends EstatioRefDataObject implements ComparableByReference<Index> {
 
     private String reference;
 

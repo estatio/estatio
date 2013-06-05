@@ -47,6 +47,9 @@ public class InvoiceItemForLease extends InvoiceItem  {
         if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
             return;
         }
+        if(currentLeaseTerm != null) {
+            currentLeaseTerm.removeFromInvoiceItems(this);
+        }
         leaseTerm.addToInvoiceItems(this);
     }
 

@@ -6,11 +6,11 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithReference;
+import org.estatio.dom.ComparableByReference;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-public abstract class Geography extends EstatioRefDataObject implements WithReference<Geography> {
+public abstract class Geography extends EstatioRefDataObject implements ComparableByReference<Geography> {
 
     private String reference;
 

@@ -9,12 +9,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithReference;
+import org.estatio.dom.ComparableByReference;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject implements WithReference<ChargeGroup> {
+public class ChargeGroup extends EstatioRefDataObject implements ComparableByReference<ChargeGroup> {
 
     private String reference;
 
