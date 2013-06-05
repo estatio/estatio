@@ -9,11 +9,22 @@ public class WithReferenceContractTest_compareTo<T extends WithReference<T>> ext
 
     private Class<T> cls;
 
+    /**
+     * For {@link WithReferenceContractAutoTest_compareTo auto-testing}.
+     */
     public WithReferenceContractTest_compareTo<T> with(Class<T> cls) {
         this.cls = cls;
         return this;
     }
-    
+
+    @Test
+    public void compareAllOrderedTuples() {
+        if(cls == null) {
+            return;
+        }
+        super.compareAllOrderedTuples();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<T>> orderedTuples() {
@@ -31,14 +42,9 @@ public class WithReferenceContractTest_compareTo<T extends WithReference<T>> ext
         return wr;
     }
 
-    @Test
-    public void compareAllOrderedTuples() {
-        if(cls == null) {
-            return;
-        }
-        super.compareAllOrderedTuples();
-    }
-    
+    /**
+     * Manual tests should override this method.
+     */
     protected T newWithReference() {
         try {
             return cls.newInstance();

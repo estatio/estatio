@@ -3,7 +3,7 @@ package org.estatio.dom.event;
 import org.estatio.dom.Titled;
 
 // TODO: EST-130: convert to entity, since will vary by location
-public enum LeaseEventType implements Titled<LeaseEventType> {
+public enum LeaseEventType implements Titled {
 
     LEASE_BRK_OPT_LNDLRD("Break Option - Landlord"), 
     LEASE_BRK_OPT_MTL("Break Option - Mutual"), 

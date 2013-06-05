@@ -2,10 +2,10 @@ package org.estatio.dom.asset;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.Titled;
+import org.estatio.dom.TitledEnum;
 import org.estatio.dom.utils.StringUtils;
 
-public enum UnitType implements Titled<UnitType> {
+public enum UnitType implements TitledEnum {
 
     BOUTIQUE,
     STORAGE,

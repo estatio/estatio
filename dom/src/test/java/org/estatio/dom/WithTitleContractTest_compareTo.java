@@ -2,7 +2,27 @@ package org.estatio.dom;
 
 import java.util.List;
 
-public abstract class WithTitleContractTest_compareTo<T extends WithTitle<T>> extends ComparableContractTest_compareTo<T>{
+import org.junit.Test;
+
+public class WithTitleContractTest_compareTo<T extends WithTitle<T>> extends ComparableContractTest_compareTo<T>{
+
+    private Class<T> cls;
+
+    /**
+     * For {@link WithTitleContractAutoTest_compareTo auto-testing}.
+     */
+    public WithTitleContractTest_compareTo<T> with(Class<T> cls) {
+        this.cls = cls;
+        return this;
+    }
+
+    @Test
+    public void compareAllOrderedTuples() {
+        if(cls == null) {
+            return;
+        }
+        super.compareAllOrderedTuples();
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -22,6 +42,15 @@ public abstract class WithTitleContractTest_compareTo<T extends WithTitle<T>> ex
         return wt;
     }
 
-    protected abstract T newWithTitle();
+    /**
+     * Manual tests should override this method.
+     */
+    protected T newWithTitle() {
+        try {
+            return cls.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

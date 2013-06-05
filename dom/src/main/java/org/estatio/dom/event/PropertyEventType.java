@@ -1,23 +1,19 @@
 package org.estatio.dom.event;
 
-import org.estatio.dom.Titled;
+import org.estatio.dom.TitledEnum;
+import org.estatio.dom.utils.StringUtils;
 
 //TODO: EST-131: convert to entity, since will vary by location
-public enum PropertyEventType implements Titled<PropertyEventType> {
+public enum PropertyEventType implements TitledEnum {
 
-    PROPERTY_DISRUPTION("Disruption"), 
-    PROPERTY_EXTENSION("Extension"), 
-    PROPERTY_REFURBISHMENT("Extension"), 
-    PROPERTY_EVENT("Event"), 
-    PROPERTY_TASK("Task");
-
-    private String title;
-
-    private PropertyEventType(String title) {
-        this.title = title;
-    }
+    DISRUPTION, 
+    EXTENSION, 
+    REFURBISHMENT, 
+    EVENT, 
+    TASK;
 
     public String title() {
-        return title;
+        return StringUtils.enumTitle(this.toString());
     }
+
 }

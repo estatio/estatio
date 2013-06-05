@@ -6,10 +6,10 @@ import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
 import org.estatio.dom.PowerType;
-import org.estatio.dom.Titled;
+import org.estatio.dom.TitledEnum;
 import org.estatio.dom.utils.StringUtils;
 
-public enum CommunicationChannelType implements Titled<CommunicationChannelType>, PowerType<CommunicationChannel> {
+public enum CommunicationChannelType implements TitledEnum, PowerType<CommunicationChannel> {
 
     ACCOUNTING_POSTAL_ADDRESS(PostalAddress.class), 
     POSTAL_ADDRESS(PostalAddress.class), 
