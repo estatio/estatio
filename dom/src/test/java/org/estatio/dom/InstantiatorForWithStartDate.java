@@ -18,6 +18,8 @@ package org.estatio.dom;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.core.unittestsupport.bidir.Instantiator;
+
 public class InstantiatorForWithStartDate implements Instantiator {
 
     public final Class<? extends WithStartDate> cls;

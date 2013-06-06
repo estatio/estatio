@@ -16,6 +16,8 @@
  */
 package org.estatio.dom;
 
+import org.apache.isis.core.unittestsupport.bidir.Instantiator;
+
 public class InstantiatorForComparableByName implements Instantiator {
 
     public final Class<? extends ComparableByName<?>> cls;

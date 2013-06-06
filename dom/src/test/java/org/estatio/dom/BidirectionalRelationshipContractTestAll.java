@@ -2,6 +2,10 @@ package org.estatio.dom;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.apache.isis.core.unittestsupport.bidir.BidirectionalRelationshipContractTestAbstract;
+import org.apache.isis.core.unittestsupport.bidir.Instantiator;
+import org.apache.isis.core.unittestsupport.bidir.InstantiatorSimple;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.asset.FixedAsset;
