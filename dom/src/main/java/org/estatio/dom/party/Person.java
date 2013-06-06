@@ -23,7 +23,8 @@ import org.apache.isis.applib.util.TitleBuffer;
 @javax.jdo.annotations.PersistenceCapable
 public class Person extends Party {
 
-    // {{ Initials (attribute, title)
+    
+    // {{ initials 
     private String initials;
 
     @MemberOrder(sequence = "3")
@@ -39,14 +40,15 @@ public class Person extends Party {
     // }}
 
     
-    // {{ Name (property)
+    // {{ name
     @Override
     public String disableName() {
         return "Cannot be updated directly; derived from first and last names";
     }
     // }}
 
-    // {{ FirstName (attribute, title)
+    
+    // {{ firstName 
     private String firstName;
 
     @MemberOrder(sequence = "3")
@@ -61,7 +63,8 @@ public class Person extends Party {
 
     // }}
 
-    // {{ LastName (attribute, title)
+    
+    // {{ lastName 
     private String lastName;
 
     @MemberOrder(sequence = "4")
@@ -75,7 +78,7 @@ public class Person extends Party {
 
     // }}
 
-    // {{ Gender (attribute)
+    // {{ gender
     private PersonGenderType gender;
 
     @MemberOrder(sequence = "5")
@@ -93,6 +96,7 @@ public class Person extends Party {
 
     // }}
 
+    
     // {{ Lifecycle methods
     public String validate() {
         return getFirstName().isEmpty() || getInitials().isEmpty() ? "At least the first name or initials have to be filled in" : null;

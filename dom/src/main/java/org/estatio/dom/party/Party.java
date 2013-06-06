@@ -29,6 +29,8 @@ import org.apache.isis.applib.annotation.Title;
 @AutoComplete(repository = Parties.class)
 public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party> {
 
+    
+    // {{ reference
     @javax.jdo.annotations.Unique
     private String reference;
 
@@ -42,7 +44,10 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     public void setReference(final String reference) {
         this.reference = reference;
     }
+    // }}
 
+    
+    // {{ name
     private String name;
 
     @MemberOrder(sequence = "2")
@@ -54,11 +59,17 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     public void setName(final String name) {
         this.name = name;
     }
-
+    
+    /**
+     * Provided so that subclasses can override and disable.
+     */
     public String disableName() {
         return null;
     }
+    // }}
 
+    
+    // {{ communicationChannels
     @javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey = "false")
     @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
@@ -93,17 +104,20 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
         addToCommunicationChannels(communicationChannel);
         return communicationChannel;
     }
+    // }}
 
+    
+    // {{ agreements
     @javax.jdo.annotations.Persistent(mappedBy = "party")
-    private Set<AgreementRole> agreements = new LinkedHashSet<AgreementRole>();
+    private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 
     @MemberOrder(name = "Agreements", sequence = "11")
     @Render(Type.EAGERLY)
-    public Set<AgreementRole> getAgreements() {
+    public SortedSet<AgreementRole> getAgreements() {
         return agreements;
     }
 
-    public void setAgreements(final Set<AgreementRole> agreements) {
+    public void setAgreements(final SortedSet<AgreementRole> agreements) {
         this.agreements = agreements;
     }
 
@@ -123,7 +137,12 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
         agreementRole.setParty(null);
         getAgreements().remove(agreementRole);
     }
+    // }}
 
+    
+    // {{ registrations
+    
+    // REVIEW: is this in scope, or can we remove?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
@@ -141,10 +160,15 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     public Party addRegistration() {
         return this;
     }
+    // }}
 
+    
+    
+    // {{ Comparable impl
     @Override
     public int compareTo(Party other) {
         return ORDERING_BY_NAME.compare(this, other);
     }
+    // }}
 
 }

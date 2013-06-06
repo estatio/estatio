@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -52,6 +54,8 @@ import org.estatio.services.clock.ClockService;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval {
 
+    
+    // {{ leaseItem
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
@@ -86,7 +90,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         // delegate to parent to dissociate
         currentLeaseItem.removeFromTerms(this);
     }
-
+    // }}
+    
+    
+    // {{ sequence
     private BigInteger sequence;
 
     @Hidden
@@ -98,9 +105,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setSequence(final BigInteger sequence) {
         this.sequence = sequence;
     }
+    // }}
 
     
-    // {{ StartDate, EndDate
+    // {{ withInterval
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -133,9 +141,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-
     // }}
 
+    
+    // {{ value
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal value;
 
@@ -148,11 +157,16 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setValue(final BigDecimal value) {
         this.value = value;
     }
-
+    // }}
+    
+    
+    // {{ status
     private LeaseTermStatus status;
 
+    /**
+     * Disabled, is maintained through LeaseTermContributedActions
+     */
     @Disabled
-    // maintained through LeaseTermContributedActions
     @MemberOrder(sequence = "5")
     public LeaseTermStatus getStatus() {
         return status;
@@ -161,7 +175,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setStatus(final LeaseTermStatus status) {
         this.status = status;
     }
-
+    // }}
+    
+    
+    // {{ frequency
     private LeaseTermFrequency frequency;
 
     @MemberOrder(sequence = "6")
@@ -172,8 +189,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setFrequency(final LeaseTermFrequency frequency) {
         this.frequency = frequency;
     }
+    // }}
 
     
+    // {{ previousTerm
     @javax.jdo.annotations.Persistent(mappedBy = "nextTerm")
     private LeaseTerm previousTerm;
 
@@ -210,8 +229,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         currentPreviousTerm.setNextTerm(null);
         setPreviousTerm(null);
     }
+    // }}
 
 
+    // {{ nextTerm
     private LeaseTerm nextTerm;
 
     @MemberOrder(sequence = "7")
@@ -247,18 +268,20 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         // delegate to parent to dissociate
         currentNextTerm.clearPreviousTerm();
     }
+    // }}
     
 
+    // {{ invoiceItems
     @Persistent(mappedBy = "leaseTerm")
-    private Set<InvoiceItemForLease> invoiceItems = new LinkedHashSet<InvoiceItemForLease>();
+    private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<InvoiceItemForLease>();
 
     @MemberOrder(sequence = "1")
     @Render(Type.EAGERLY)
-    public Set<InvoiceItemForLease> getInvoiceItems() {
+    public SortedSet<InvoiceItemForLease> getInvoiceItems() {
         return invoiceItems;
     }
 
-    public void setInvoiceItems(final Set<InvoiceItemForLease> invoiceItems) {
+    public void setInvoiceItems(final SortedSet<InvoiceItemForLease> invoiceItems) {
         this.invoiceItems = invoiceItems;
     }
 
@@ -278,8 +301,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         invoiceItem.setLeaseTerm(null);
         getInvoiceItems().remove(invoiceItem);
     }
+    // }}
 
-    @Hidden
+    
+    // {{ helpers
+    @Programmatic
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate, LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
@@ -291,8 +317,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
             }
         }
     }
+    // }}
 
-    @Hidden
+    
+    // {{ helpers
+    @Programmatic
     public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
         InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
@@ -302,7 +331,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return ii;
     }
 
-    @Hidden
+    @Programmatic
     public InvoiceItemForLease findUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
@@ -313,7 +342,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return null;
     }
 
-    @Hidden
+    @Programmatic
     public BigDecimal invoicedValueFor(LocalDate startDate) {
         BigDecimal invoicedValue = new BigDecimal(0);
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
@@ -326,6 +355,8 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         return invoicedValue;
     }
 
+    
+    // {{ action: calculate
     @MemberOrder(name = "invoiceItems", sequence = "2")
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
         if (getStatus() == LeaseTermStatus.APPROVED) {
@@ -334,8 +365,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
         return this;
     }
+    // }}
 
-    // {{ Actions
+    
+    // {{ bulk action: verify
     @Bulk
     @MemberOrder(sequence = "1")
     public LeaseTerm verify() {
@@ -351,7 +384,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
         return this;
     }
+    // }}
 
+    
+    // {{ bulk action: approve
     @Bulk
     @MemberOrder(sequence = "2")
     public LeaseTerm approve() {
@@ -365,7 +401,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public String disableApprove() {
         return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
     }
- 
+    // }}
+    
+
+    // {{ action: createNext
     @MemberOrder(sequence = "3")
     public LeaseTerm createNext() {
         LocalDate newStartDate = getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
@@ -396,7 +435,10 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.setEndDate(nextStartDate.minusDays(1));
         return term;
     }
+    // }}
 
+    
+    // {{ more helpers
     protected void initialize() {
         setStatus(LeaseTermStatus.NEW);
         LeaseTerm previousTerm = getPreviousTerm();
@@ -416,12 +458,13 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
     }
 
-    @Hidden
+    
+    @Programmatic
     public BigDecimal valueForDueDate(LocalDate dueDate) {
         return getValue();
     }
 
-    @Hidden
+    @Programmatic
     BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
         if (getStatus() == LeaseTermStatus.APPROVED) {
             BigDecimal value = invoiceCalculationService.calculatedValue(this, periodStartDate, dueDate, frequency);
@@ -429,6 +472,9 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         }
         return BigDecimal.ZERO;
     }
+    // }}
+    
+    
 
     // {{ CompareTo
     @Override
@@ -458,23 +504,19 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
 
     // {{ Injected services
     private InvoicesForLease invoices;
-
     public void injectInvoices(InvoicesForLease invoices) {
         this.invoices = invoices;
     }
 
     private InvoiceCalculationService invoiceCalculationService;
-
     public void injectInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
 
     private ClockService clockService;
-
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
-    
     // }}
 
 }

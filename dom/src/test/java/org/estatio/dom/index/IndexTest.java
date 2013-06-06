@@ -72,8 +72,8 @@ public class IndexTest {
 
     @Test
     public void testGetFactorForDate() {
-        assertEquals(ib2010.getFactorForDate(baseDate), new BigDecimal("1.234"));
-        assertEquals(new BigDecimal("1.659730"), ib2010.getFactorForDate(new LocalDate(1999, 1, 1)));
+        assertEquals(ib2010.factorForDate(baseDate), new BigDecimal("1.234"));
+        assertEquals(new BigDecimal("1.659730"), ib2010.factorForDate(new LocalDate(1999, 1, 1)));
     }
 
     @Test

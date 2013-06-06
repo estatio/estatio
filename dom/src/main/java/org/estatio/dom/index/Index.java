@@ -3,6 +3,10 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
@@ -43,14 +47,14 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
 
     
     @javax.jdo.annotations.Persistent(mappedBy = "index")
-    private List<IndexBase> indexBases = new ArrayList<IndexBase>();
+    private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
     @MemberOrder(name = "Bases", sequence = "3")
-    public List<IndexBase> getIndexBases() {
+    public SortedSet<IndexBase> getIndexBases() {
         return indexBases;
     }
 
-    public void setIndexBases(final List<IndexBase> indexBases) {
+    public void setIndexBases(final SortedSet<IndexBase> indexBases) {
         this.indexBases = indexBases;
     }
 
@@ -87,7 +91,7 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
         // TODO: check efficiency.. seems to retrieve every single index value
         // for the last 15 years...
         if (nextIndexValue != null) {
-            BigDecimal rebaseFactor = nextIndexValue.getIndexBase().getFactorForDate(baseIndexStartDate);
+            BigDecimal rebaseFactor = nextIndexValue.getIndexBase().factorForDate(baseIndexStartDate);
             return rebaseFactor;
         }
         return null;

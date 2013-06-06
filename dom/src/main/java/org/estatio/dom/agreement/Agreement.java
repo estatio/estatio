@@ -32,13 +32,12 @@ import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
 public abstract class Agreement extends EstatioTransactionalObject implements ComparableByReference<Agreement>, WithInterval {
 
-
-    @javax.jdo.annotations.Unique(name="AGREEMENT_REFERENCE_IDX")
+    @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_IDX")
     private String reference;
 
     @MemberOrder(sequence = "1")
@@ -51,9 +50,8 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         this.reference = reference;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Name (property)
     private String name;
 
     @MemberOrder(sequence = "2")
@@ -66,15 +64,15 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         this.name = name;
     }
 
-    // }}
-
-    // {{ Derived attribute
+    // //////////////////////////////////////
 
     @MemberOrder(sequence = "3")
     public abstract Party getPrimaryParty();
 
     @MemberOrder(sequence = "4")
     public abstract Party getSecondaryParty();
+
+    // //////////////////////////////////////
 
     protected Party findParty(final String agreementRoleTypeTitle) {
         final AgreementRoleType art = agreementRoleTypes.find(agreementRoleTypeTitle);
@@ -83,9 +81,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
 
     protected Party findParty(AgreementRoleType agreementRoleType) {
         final Predicate<AgreementRole> currentAgreementRoleOfType = currentAgreementRoleOfType(agreementRoleType);
-        final Iterable<Party> parties = Iterables.transform(
-                Iterables.filter(
-                        getRoles(), currentAgreementRoleOfType), partyOfAgreementRole());
+        final Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType), partyOfAgreementRole());
         return ValueUtils.firstElseNull(parties);
     }
 
@@ -105,9 +101,8 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         };
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ StartDate, EndDate (WithInterval)
     private LocalDate startDate;
 
     @javax.jdo.annotations.Persistent
@@ -136,9 +131,9 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    // }}
 
-    // {{ TerminationDate (property)
+    // //////////////////////////////////////
+
     private LocalDate terminationDate;
 
     @javax.jdo.annotations.Persistent
@@ -152,9 +147,8 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         this.terminationDate = terminationDate;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Type (property)
     private AgreementType agreementType;
 
     @MemberOrder(sequence = "8")
@@ -166,9 +160,9 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         this.agreementType = type;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ PreviousAgreement (property)
+    @javax.jdo.annotations.Persistent(mappedBy = "nextAgreement")
     private Agreement previousAgreement;
 
     @Disabled
@@ -187,10 +181,11 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         if (previousAgreement == null || previousAgreement.equals(currentPreviousAgreement)) {
             return;
         }
+        // dissociate existing
+        clearPreviousAgreement();
         // associate new
+        previousAgreement.setNextAgreement(this);
         setPreviousAgreement(previousAgreement);
-        // additional business logic
-        onModifyPreviousAgreement(currentPreviousAgreement, previousAgreement);
     }
 
     public void clearPreviousAgreement() {
@@ -200,27 +195,12 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
             return;
         }
         // dissociate existing
+        currentPreviousAgreement.setNextAgreement(null);
         setPreviousAgreement(null);
-        // additional business logic
-        onClearPreviousAgreement(currentPreviousAgreement);
     }
 
-    protected void onModifyPreviousAgreement(final Agreement oldPreviousAgreement, final Agreement newPreviousAgreement) {
-        if (oldPreviousAgreement != null) {
-            oldPreviousAgreement.setNextAgreement(null);
-        }
-        if (newPreviousAgreement != null) {
-            newPreviousAgreement.setNextAgreement(this);
-        }
-    }
+    // //////////////////////////////////////
 
-    protected void onClearPreviousAgreement(final Agreement oldPreviousAgreement) {
-        oldPreviousAgreement.setNextAgreement(null);
-    }
-
-    // }}
-
-    // {{ NextAgreement (property)
     private Agreement nextAgreement;
 
     @Disabled
@@ -233,9 +213,31 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         this.nextAgreement = nextAgreement;
     }
 
-    // }}
+    public void modifyNextAgreement(final Agreement nextAgreement) {
+        Agreement currentNextAgreement = getNextAgreement();
+        // check for no-op
+        if (nextAgreement == null || nextAgreement.equals(currentNextAgreement)) {
+            return;
+        }
+        // delegate to parent(s) to (re-)associate
+        if (currentNextAgreement != null) {
+            currentNextAgreement.clearPreviousAgreement();
+        }
+        nextAgreement.modifyPreviousAgreement(this);
+    }
 
-    // {{ Roles (Collection)
+    public void clearNextAgreement() {
+        Agreement currentNextAgreement = getNextAgreement();
+        // check for no-op
+        if (currentNextAgreement == null) {
+            return;
+        }
+        // delegate to parent to dissociate
+        currentNextAgreement.clearPreviousAgreement();
+    }
+
+    // /////////////////////////////////////////////////////////
+
     @javax.jdo.annotations.Persistent(mappedBy = "agreement")
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
@@ -291,20 +293,23 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
     }
 
-
     // {{ Comparable impl
     @Override
     public int compareTo(Agreement other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
+
     // }}
 
     // {{ injected
     private AgreementRoles agreementRoles;
+
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
+
     private AgreementRoleTypes agreementRoleTypes;
+
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
