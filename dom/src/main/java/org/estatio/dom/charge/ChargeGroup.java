@@ -3,6 +3,8 @@ package org.estatio.dom.charge;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.google.common.base.Objects;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -51,6 +53,17 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
     public void setCharges(final SortedSet<Charge> charges) {
         this.charges = charges;
     }
+
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("reference", getReference())
+                .toString();
+    }
+    
+    // //////////////////////////////////////
 
     @Override
     public int compareTo(ChargeGroup other) {

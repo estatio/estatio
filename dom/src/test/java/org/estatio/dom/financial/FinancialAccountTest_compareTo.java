@@ -2,7 +2,7 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
-import org.estatio.dom.ComparableContractTest_compareTo;
+import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 
 public class FinancialAccountTest_compareTo extends ComparableContractTest_compareTo<FinancialAccount> {

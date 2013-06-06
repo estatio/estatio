@@ -1,8 +1,8 @@
 package org.estatio.dom.asset;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import junit.framework.Assert;
 
 import org.jmock.auto.Mock;
 import org.junit.Before;

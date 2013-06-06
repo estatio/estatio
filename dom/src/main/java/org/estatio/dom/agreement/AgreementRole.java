@@ -2,6 +2,7 @@ package org.estatio.dom.agreement;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
@@ -63,6 +64,8 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         currentAgreement.removeFromRoles(this);
     }
 
+    // //////////////////////////////////////
+
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
@@ -96,6 +99,8 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         currentParty.removeFromAgreements(this);
     }
 
+    // //////////////////////////////////////
+
     private AgreementRoleType type;
 
     @Title(sequence = "1")
@@ -107,6 +112,8 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setType(final AgreementRoleType type) {
         this.type = type;
     }
+
+    // //////////////////////////////////////
 
     private LocalDate startDate;
 
@@ -120,7 +127,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-
+    
     private LocalDate endDate;
 
     @MemberOrder(sequence = "5")
@@ -138,10 +145,21 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    
-    // }}
 
-    // {{ Comparable impl
+    // //////////////////////////////////////
+
+    @MemberOrder(sequence = "6")
+    public boolean isCurrent() {
+        return isActiveOn(clockService.now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
+
+
+    // //////////////////////////////////////
+
     /**
      * This is necessary but not sufficient; in
      * {@link Agreement#addRole(Party, AgreementRoleType, LocalDate, LocalDate)}
@@ -152,37 +170,52 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
      */
     @Override
     public int compareTo(AgreementRole other) {
-        return ORDERING_BY_TYPE.compound(ORDERING_BY_START_DATE).compare(this, other);
+        return ORDERING_BY_AGREEMENT
+                .compound(ORDERING_BY_PARTY)
+                .compound(ORDERING_BY_START_DATE_DESC)
+                .compound(ORDERING_BY_TYPE)
+                .compare(this, other);
     }
 
+    public static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
+        public int compare(AgreementRole p, AgreementRole q) {
+            return Ordering.natural().nullsFirst().compare(p.getAgreement(), q.getAgreement());
+        }
+    };
+    public static Ordering<AgreementRole> ORDERING_BY_PARTY = new Ordering<AgreementRole>() {
+        public int compare(AgreementRole p, AgreementRole q) {
+            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
+        }
+    };
+    public static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
+        public int compare(AgreementRole p, AgreementRole q) {
+            return Ordering.<LocalDate>natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+        }
+    };
     public static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
-            return AgreementRoleType.ORDERING_BY_TITLE.nullsFirst().compare(p.getType(), q.getType());
-        }
-    };
-    public static Ordering<AgreementRole> ORDERING_BY_START_DATE = new Ordering<AgreementRole>() {
-        public int compare(AgreementRole p, AgreementRole q) {
-            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
         }
     };
 
-    // }}
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("agreement", getAgreement())
+            .add("party", getParty())
+            .add("startDate", getStartDate())
+            .add("type", getType())
+            .toString();
+    };
+    
+    // //////////////////////////////////////
 
-    public boolean isCurrent() {
-        return isActiveOn(clockService.now());
-    }
-
-    private boolean isActiveOn(LocalDate localDate) {
-        return getInterval().contains(localDate);
-    }
-
-
-    // {{ injected: ClockService
     private ClockService clockService;
 
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
-    // }}
 
 }

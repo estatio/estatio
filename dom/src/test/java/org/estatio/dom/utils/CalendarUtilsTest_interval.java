@@ -1,13 +1,12 @@
 package org.estatio.dom.utils;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 
-import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.MathUtils;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;

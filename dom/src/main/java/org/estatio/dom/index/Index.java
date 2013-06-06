@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
@@ -13,6 +14,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -76,7 +78,9 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
         getIndexBases().remove(indexBase);
     }
 
-    @Hidden
+    // //////////////////////////////////////
+
+    @Programmatic
     public BigDecimal getIndexValueForDate(LocalDate date) {
         if (date != null) {
             IndexValue indexValue = indices.findIndexValueForDate(this, date);
@@ -85,7 +89,7 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
         return null;
     }
 
-    @Hidden
+    @Programmatic
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
         IndexValue nextIndexValue = indices.findIndexValueForDate(this, nextIndexStartDate);
         // TODO: check efficiency.. seems to retrieve every single index value
@@ -97,28 +101,35 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
         return null;
     }
 
-    @Hidden
+    @Programmatic
     public void initialize(IndexationCalculator indexationCalculator, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
         indexationCalculator.setBaseIndexValue(getIndexValueForDate(baseIndexStartDate));
         indexationCalculator.setNextIndexValue(getIndexValueForDate(nextIndexStartDate));
         indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
     }
 
+    // //////////////////////////////////////
     
-    // {{ injected
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("reference", getReference())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    public int compareTo(Index other) {
+        return ORDERING_BY_REFERENCE.compare(this, other);
+    }
+
+    // //////////////////////////////////////
+
     private Indices indices;
 
     public void injectIndices(Indices indices) {
         this.indices = indices;
     }
-    // }}
-
-    
-    // {{ Comparable impl
-    @Override
-    public int compareTo(Index other) {
-        return ORDERING_BY_REFERENCE.compare(this, other);
-    }
-    // }}
 
 }

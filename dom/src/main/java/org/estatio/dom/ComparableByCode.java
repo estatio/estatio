@@ -24,6 +24,8 @@ public interface ComparableByCode<T extends ComparableByCode<T>> extends Compara
     String getCode();
     void setCode(String code);
     
+    abstract String toString();
+
     public static Ordering<ComparableByCode<?>> ORDERING_BY_CODE = new Ordering<ComparableByCode<?>>() {
         public int compare(ComparableByCode<?> p, ComparableByCode<?> q) {
             return Ordering.<String> natural().nullsFirst().compare(p.getCode(), q.getCode());

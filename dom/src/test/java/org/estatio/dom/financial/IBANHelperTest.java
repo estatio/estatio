@@ -1,12 +1,11 @@
 package org.estatio.dom.financial;
 
-import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.utils.IBANHelper;
-
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.estatio.dom.financial.utils.IBANHelper;
 
 public class IBANHelperTest {
 

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.google.common.base.Objects;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
@@ -82,23 +84,28 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
     // }}
 
 
-    // {{ Comparable impl
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("reference", getReference())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+    
     @Override
     public int compareTo(Tax other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
-    // }}
     
-    
-    // {{ injected
+    // //////////////////////////////////////
+
     private Taxes taxes;
 
     public void injectTaxes(Taxes taxes) {
         this.taxes = taxes;
     }
 
-
-    // }}
-    
-    
 }

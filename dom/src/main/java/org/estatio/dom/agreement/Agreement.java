@@ -8,20 +8,14 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.ComparableByReference;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -29,6 +23,13 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -236,7 +237,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         currentNextAgreement.clearPreviousAgreement();
     }
 
-    // /////////////////////////////////////////////////////////
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "agreement")
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
@@ -281,27 +282,36 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
         return agreementRole;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public AgreementRole findRole(Party party, AgreementRoleType type, LocalDate startDate) {
         return agreementRoles.findAgreementRole(this, party, type, startDate);
     }
 
-    @Hidden
+    @Programmatic
     public AgreementRole findRoleWithType(AgreementRoleType agreementRoleType, LocalDate date) {
         return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
     }
 
-    // {{ Comparable impl
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("reference", getReference())
+                .toString();
+    }
+    
+    // //////////////////////////////////////
+
     @Override
     public int compareTo(Agreement other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ injected
     private AgreementRoles agreementRoles;
 
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.estatio.dom.ComparableContractTest_compareTo;
+import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 
 public class LeaseTermTest_compareTo extends ComparableContractTest_compareTo<LeaseTerm> {

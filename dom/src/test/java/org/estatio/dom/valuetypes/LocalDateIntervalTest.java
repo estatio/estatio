@@ -8,8 +8,6 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 public class LocalDateIntervalTest {
 
     private LocalDateInterval periodInterval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));

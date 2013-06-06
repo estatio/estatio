@@ -7,6 +7,9 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.ComparableByName;
 import org.estatio.dom.agreement.AgreementRole;
@@ -29,8 +32,9 @@ import org.apache.isis.applib.annotation.Title;
 @AutoComplete(repository = Parties.class)
 public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party> {
 
-    
-    // {{ reference
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Unique
     private String reference;
 
@@ -44,10 +48,9 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     public void setReference(final String reference) {
         this.reference = reference;
     }
-    // }}
 
+    // //////////////////////////////////////
     
-    // {{ name
     private String name;
 
     @MemberOrder(sequence = "2")
@@ -66,10 +69,9 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     public String disableName() {
         return null;
     }
-    // }}
 
-    
-    // {{ communicationChannels
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey = "false")
     @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
@@ -104,10 +106,9 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
         addToCommunicationChannels(communicationChannel);
         return communicationChannel;
     }
-    // }}
 
-    
-    // {{ agreements
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 
@@ -137,10 +138,8 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
         agreementRole.setParty(null);
         getAgreements().remove(agreementRole);
     }
-    // }}
 
-    
-    // {{ registrations
+    // //////////////////////////////////////
     
     // REVIEW: is this in scope, or can we remove?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
@@ -160,15 +159,21 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     public Party addRegistration() {
         return this;
     }
-    // }}
 
+    // //////////////////////////////////////
     
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("name", getName())
+                .toString();
+    }
     
-    // {{ Comparable impl
+    // //////////////////////////////////////
+    
     @Override
     public int compareTo(Party other) {
         return ORDERING_BY_NAME.compare(this, other);
     }
-    // }}
 
 }

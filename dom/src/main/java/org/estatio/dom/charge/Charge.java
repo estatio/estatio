@@ -1,5 +1,7 @@
 package org.estatio.dom.charge;
 
+import com.google.common.base.Objects;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -14,6 +16,7 @@ import org.estatio.dom.tax.Tax;
 @Immutable
 public class Charge extends EstatioRefDataObject implements ComparableByCode<Charge> {
 
+    
     private String reference;
 
     @Title(sequence = "1")
@@ -26,6 +29,8 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.reference = reference;
     }
 
+    // //////////////////////////////////////
+
     private String code;
 
     @MemberOrder(sequence = "2")
@@ -37,6 +42,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.code = code;
     }
 
+    // //////////////////////////////////////
     private Tax tax;
 
     @MemberOrder(sequence = "3")
@@ -48,6 +54,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.tax = tax;
     }
 
+    // //////////////////////////////////////
     private String description;
 
     @MemberOrder(sequence = "4")
@@ -60,6 +67,8 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.description = description;
     }
 
+    // //////////////////////////////////////
+    
     private ChargeGroup group;
 
     @MemberOrder(sequence = "5")
@@ -71,11 +80,22 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.group = group;
     }
 
+    
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("code", getCode())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+    
     @Override
     public int compareTo(Charge other) {
         return ORDERING_BY_CODE.compare(this, other);
     }
-    // }}
 
 
 }

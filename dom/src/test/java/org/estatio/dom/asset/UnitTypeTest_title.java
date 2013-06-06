@@ -3,7 +3,6 @@ package org.estatio.dom.asset;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.estatio.dom.asset.UnitType;
 import org.junit.Test;
 
 

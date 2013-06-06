@@ -1,8 +1,14 @@
 package org.estatio.dom;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
+
+import org.apache.isis.core.unittestsupport.comparable.ComparableContractTester;
 
 
 public class ComparableByCodeContractTester<T extends ComparableByCode<T>> {
@@ -16,6 +22,18 @@ public class ComparableByCodeContractTester<T extends ComparableByCode<T>> {
     public void test() {
         System.out.println("ComparableByCodeContractTester: " + cls.getName());
         new ComparableContractTester<T>(orderedTuples()).test();
+
+        testToString();
+        
+    }
+
+    protected void testToString() {
+        final String str = "ABC";
+        
+        final T withCode = newWithCode(str);
+        String expectedToString = Objects.toStringHelper(withCode).add("code", "ABC").toString();
+        
+        assertThat(withCode.toString(), is(expectedToString));
     }
 
     @SuppressWarnings("unchecked")

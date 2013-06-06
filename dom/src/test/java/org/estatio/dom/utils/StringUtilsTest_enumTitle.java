@@ -3,7 +3,6 @@ package org.estatio.dom.utils;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.estatio.dom.utils.StringUtils;
 import org.junit.Test;
 
 public class StringUtilsTest_enumTitle {

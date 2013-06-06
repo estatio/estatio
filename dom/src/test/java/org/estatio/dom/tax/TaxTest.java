@@ -5,11 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.Taxes;
 import org.hamcrest.Description;
-import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.api.Action;
 import org.jmock.api.Invocation;
@@ -19,7 +15,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.commons.matchers.IsisMatchers;

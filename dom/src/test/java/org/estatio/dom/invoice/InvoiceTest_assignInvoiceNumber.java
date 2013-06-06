@@ -5,9 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.dom.numerator.Numerators;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
@@ -16,9 +13,12 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorType;
+import org.estatio.dom.numerator.Numerators;
 
 public class InvoiceTest_assignInvoiceNumber {
 

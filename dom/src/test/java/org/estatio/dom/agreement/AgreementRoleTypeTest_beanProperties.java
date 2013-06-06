@@ -2,7 +2,6 @@ package org.estatio.dom.agreement;
 
 import org.junit.Test;
 
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 
 public class AgreementRoleTypeTest_beanProperties extends AbstractBeanPropertiesTest {

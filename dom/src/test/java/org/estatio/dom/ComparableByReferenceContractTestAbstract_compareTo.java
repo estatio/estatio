@@ -8,11 +8,6 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementForTesting;
-import org.estatio.dom.geography.Geography;
-import org.estatio.dom.geography.GeographyForTesting;
-
 
 /**
  * Automatically tests all domain objects implementing {@link ComparableByReference}.

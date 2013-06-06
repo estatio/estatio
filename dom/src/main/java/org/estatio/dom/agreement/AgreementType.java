@@ -2,6 +2,7 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.ApplicationException;
@@ -22,7 +23,6 @@ import org.estatio.dom.utils.ClassUtils;
 @Immutable
 public class AgreementType extends EstatioRefDataObject implements ComparableByTitle<AgreementType>, PowerType<Agreement> {
 
-    // {{ Title (property)
     private String title;
 
     @MemberOrder(sequence = "1")
@@ -34,11 +34,9 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
     public void setTitle(final String title) {
         this.title = title;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    
-    // {{ ImplementationClassName (property)
     private String implementationClassName;
 
     @Hidden
@@ -50,14 +48,18 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
     public void setImplementationClassName(final String implementationClassName) {
         this.implementationClassName = implementationClassName;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    @NotPersisted // else Isis tries to persist graph when setting up fixture data.
+    @NotPersisted
+    // else Isis tries to persist graph when setting up fixture data.
     public List<AgreementRoleType> getRoles() {
         return AgreementRoleType.applicableTo(this);
     }
 
+    // //////////////////////////////////////
+
+    @Programmatic
     public Agreement create(DomainObjectContainer container) {
         try {
             Class<? extends Agreement> cls = ClassUtils.load(implementationClassName, Agreement.class);
@@ -69,38 +71,52 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
         }
     }
 
-    
+    // //////////////////////////////////////
+
     @Programmatic
     @NotPersisted
     public List<AgreementRoleType> getApplicableTo() {
         return agreementRoleTypes.applicableTo(this);
     }
 
+    // //////////////////////////////////////
 
-    // {{ Comparable impl
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("title", getTitle()).toString();
+    }
+
+    // //////////////////////////////////////
+
     @Override
     public int compareTo(AgreementType other) {
         return ORDERING_BY_TITLE.compare(this, other);
     }
-    
+
     public static Ordering<AgreementType> ORDERING_BY_TITLE = new Ordering<AgreementType>() {
         public int compare(AgreementType p, AgreementType q) {
             return Ordering.<String> natural().nullsFirst().compare(p.getTitle(), q.getTitle());
         }
     };
-    // }}
 
+    // //////////////////////////////////////
 
-
-    // {{ injected
     private AgreementRoleTypes agreementRoleTypes;
+
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
-    // }}
 
-    
-    // {{ for fixtures
+    // //////////////////////////////////////
+
+    /**
+     * For fixtures
+     * 
+     * @param title
+     * @param implementationClassName
+     * @param container
+     * @return
+     */
     public static AgreementType create(final String title, final String implementationClassName, final DomainObjectContainer container) {
         final AgreementType agreementType = container.newTransientInstance(AgreementType.class);
         agreementType.setTitle(title);
@@ -108,6 +124,5 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
         container.persist(agreementType);
         return agreementType;
     }
-    // }}
 
 }

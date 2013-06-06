@@ -11,6 +11,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+import com.google.common.base.Objects;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.ComparableByName;
@@ -28,6 +29,7 @@ import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -148,7 +150,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         return communicationChannel;
     }
 
-    @Hidden
+    @Programmatic
     public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
         for (CommunicationChannel c : communicationChannels) {
             if (c.getType().equals(type)) {
@@ -157,6 +159,25 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         }
         return null;
     }
+
+    
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("name", getName())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    public int compareTo(FixedAsset other) {
+        return ORDERING_BY_NAME.compare(this, other);
+    }
+
+    // //////////////////////////////////////
 
     private FixedAssetRoles fixedAssetRoles;
 
@@ -176,9 +197,5 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         this.locationLookupService = locationLookupService;
     }
 
-    @Override
-    public int compareTo(FixedAsset other) {
-        return ORDERING_BY_NAME.compare(this, other);
-    }
 
 }
