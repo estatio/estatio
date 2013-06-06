@@ -173,6 +173,7 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.frequency = frequency;
     }
 
+    
     @javax.jdo.annotations.Persistent(mappedBy = "nextTerm")
     private LeaseTerm previousTerm;
 
@@ -186,6 +187,30 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setPreviousTerm(final LeaseTerm previousTerm) {
         this.previousTerm = previousTerm;
     }
+    public void modifyPreviousTerm(final LeaseTerm previousTerm) {
+        LeaseTerm currentPreviousTerm = getPreviousTerm();
+        // check for no-op
+        if (previousTerm == null || previousTerm.equals(currentPreviousTerm)) {
+            return;
+        }
+        // dissociate existing
+        clearPreviousTerm();
+        // associate new
+        previousTerm.setNextTerm(this);
+        setPreviousTerm(previousTerm);
+    }
+
+    public void clearPreviousTerm() {
+        LeaseTerm currentPreviousTerm = getPreviousTerm();
+        // check for no-op
+        if (currentPreviousTerm == null) {
+            return;
+        }
+        // dissociate existing
+        currentPreviousTerm.setNextTerm(null);
+        setPreviousTerm(null);
+    }
+
 
     private LeaseTerm nextTerm;
 
@@ -200,18 +225,29 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
         this.nextTerm = nextTerm;
     }
 
-    public void modifyNextTerm(LeaseTerm term) {
-        this.setNextTerm(term);
-        term.setPreviousTerm(this);
+    public void modifyNextTerm(final LeaseTerm nextTerm) {
+        LeaseTerm currentNextTerm = getNextTerm();
+        // check for no-op
+        if (nextTerm == null || nextTerm.equals(currentNextTerm)) {
+            return;
+        }
+        // delegate to parent to associate
+        if(currentNextTerm != null) {
+            currentNextTerm.clearPreviousTerm();
+        }
+        nextTerm.modifyPreviousTerm(this);
     }
 
     public void clearNextTerm() {
-        LeaseTerm nextTerm = getNextTerm();
-        if (nextTerm != null) {
-            nextTerm.setPreviousTerm(null);
-            setNextTerm(null);
+        LeaseTerm currentNextTerm = getNextTerm();
+        // check for no-op
+        if (currentNextTerm == null) {
+            return;
         }
+        // delegate to parent to dissociate
+        currentNextTerm.clearPreviousTerm();
     }
+    
 
     @Persistent(mappedBy = "leaseTerm")
     private Set<InvoiceItemForLease> invoiceItems = new LinkedHashSet<InvoiceItemForLease>();
