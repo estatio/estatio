@@ -6,12 +6,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.tag.Tag;
-import org.estatio.dom.tag.Tags;
-import org.estatio.dom.utils.Orderings;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -21,6 +15,12 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.tag.Tag;
+import org.estatio.dom.tag.Tags;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -58,6 +58,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         currentLease.removeFromUnits(this);
     }
 
+    // //////////////////////////////////////
+
     private UnitForLease unit;
 
     @Title(sequence = "2", append = ":")
@@ -86,6 +88,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         }
         currentUnit.removeFromLeases(this);
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
@@ -118,6 +122,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
+
+    // //////////////////////////////////////
 
     private Tag brandTag;
 
@@ -157,6 +163,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         return getBrand();
     }
 
+    // //////////////////////////////////////
+
     private Tag sectorTag;
 
     @Hidden
@@ -194,6 +202,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     public String default0NewSector() {
         return getSector();
     }
+
+    // //////////////////////////////////////
 
     private Tag activityTag;
 
@@ -233,6 +243,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         return getActivity();
     }
 
+    // //////////////////////////////////////
+
     @Override
     @Hidden
     public int compareTo(LeaseUnit other) {
@@ -254,6 +266,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
             return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
         }
     };
+
+    // //////////////////////////////////////
 
     private Tags tags;
 

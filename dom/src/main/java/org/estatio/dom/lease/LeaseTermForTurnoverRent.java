@@ -31,6 +31,8 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         return helper.isValid() ? null : "This is not a valid rule";
     }
 
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedTurnover;
 
@@ -42,6 +44,8 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public void setBudgetedTurnover(final BigDecimal budgetedTurnover) {
         this.budgetedTurnover = budgetedTurnover;
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedTurnover;
@@ -55,12 +59,16 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         this.auditedTurnover = auditedTurnover;
     }
 
+    // //////////////////////////////////////
+
     @NotPersisted
     @MemberOrder(sequence = "13", name = "Turnover Rent")
     public BigDecimal getTurnoverRent() {
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         return helper.calculateRent(getAuditedTurnover());
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal contractualRent;
@@ -73,6 +81,8 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public void setContractualRent(final BigDecimal contractualRent) {
         this.contractualRent = contractualRent;
     }
+
+    // //////////////////////////////////////
 
     @Override
     protected void update() {

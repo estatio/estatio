@@ -1,6 +1,5 @@
 package org.estatio.dom.communicationchannel;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -14,14 +13,15 @@ import org.apache.isis.applib.annotation.Title;
 public class FaxNumber extends CommunicationChannel {
 
     @Override
+    @Title
     public String getName() {
         return "Fax ".concat(getFaxNumber());
     }
 
-    // {{ Number (title, attribute)
+    // //////////////////////////////////////
+
     private String faxNumber;
 
-    @Title(prepend = "Fax ", sequence = "1")
     @MemberOrder(sequence = "1")
     public String getFaxNumber() {
         return faxNumber;
@@ -30,6 +30,5 @@ public class FaxNumber extends CommunicationChannel {
     public void setFaxNumber(final String number) {
         this.faxNumber = number;
     }
-    // }}
 
 }

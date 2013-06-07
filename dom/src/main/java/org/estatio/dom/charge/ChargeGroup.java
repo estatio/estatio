@@ -3,15 +3,13 @@ package org.estatio.dom.charge;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.google.common.base.Objects;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
@@ -30,6 +28,8 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
         this.reference = reference;
     }
 
+    // //////////////////////////////////////
+
     private String description;
 
     @Title(sequence = "2", prepend = "-")
@@ -41,6 +41,8 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
     public void setDescription(final String description) {
         this.description = description;
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "group")
     private SortedSet<Charge> charges = new TreeSet<Charge>();
@@ -58,9 +60,7 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("reference", getReference())
-                .toString();
+        return ToString.of(this);
     }
     
     // //////////////////////////////////////

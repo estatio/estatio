@@ -1,6 +1,5 @@
 package org.estatio.dom.communicationchannel;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -14,15 +13,16 @@ import org.apache.isis.applib.util.TitleBuffer;
 @ObjectType("PHON")
 public class PhoneNumber extends CommunicationChannel {
 
+    @Title
     @Override
     public String getName() {
         return new TitleBuffer("Phone").append(getPhoneNumber()).toString();
     }
 
-    // {{ Number (attribute)
+    // //////////////////////////////////////
+
     private String phoneNumber;
 
-    @Title(sequence = "1", prepend = "Phone ")
     @MemberOrder(sequence = "1")
     public String getPhoneNumber() {
         return phoneNumber;
@@ -31,6 +31,5 @@ public class PhoneNumber extends CommunicationChannel {
     public void setPhoneNumber(final String number) {
         this.phoneNumber = number;
     }
-    // }}
 
 }

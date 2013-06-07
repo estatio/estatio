@@ -8,7 +8,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -298,9 +297,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("reference", getReference())
-                .toString();
+        return ToString.of(this);
     }
     
     // //////////////////////////////////////

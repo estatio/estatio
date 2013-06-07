@@ -19,7 +19,6 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 

@@ -3,7 +3,6 @@ package org.estatio.dom.agreement;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -13,6 +12,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
+
+import org.estatio.dom.party.Party;
 
 @Named("Agreement Roles")
 @Hidden

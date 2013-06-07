@@ -2,6 +2,7 @@ package org.estatio.dom.event;
 
 import org.estatio.dom.Titled;
 
+// REVIEW: is this in scope?
 // TODO: EST-130: convert to entity, since will vary by location
 public enum LeaseEventType implements Titled {
 

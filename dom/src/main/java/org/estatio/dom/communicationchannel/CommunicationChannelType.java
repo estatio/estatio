@@ -1,7 +1,5 @@
 package org.estatio.dom.communicationchannel;
 
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 
@@ -37,8 +35,5 @@ public enum CommunicationChannelType implements TitledEnum, PowerType<Communicat
     public String title() {
         return StringUtils.enumTitle(this.toString());
     }
-
-    public static Ordering<CommunicationChannelType> ORDERING_BY_TYPE = 
-        Ordering.<CommunicationChannelType> natural().nullsFirst();
 
 }

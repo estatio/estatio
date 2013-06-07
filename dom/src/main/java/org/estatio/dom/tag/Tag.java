@@ -1,6 +1,7 @@
 package org.estatio.dom.tag;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -32,8 +33,8 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
         }
     };
     
-    
-    // {{ objectType (property)
+    // //////////////////////////////////////
+
     private String objectType;
 
     /**
@@ -48,10 +49,9 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
     public void setObjectType(final String objectType) {
         this.objectType = objectType;
     }
-    // }}
 
-    
-    // {{ Name (property)
+    // //////////////////////////////////////
+
     private String name;
 
     /**
@@ -70,10 +70,9 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
     public void setName(final String tagName) {
         this.name = tagName;
     }
-    // }}
+    
+    // //////////////////////////////////////
 
-
-    // {{ ObjectIdentifier (property)
     private String objectIdentifier;
 
     /**
@@ -92,12 +91,9 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
     public void setObjectIdentifier(final String bookmark) {
         this.objectIdentifier = bookmark;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-
-    
-    // {{ Value (property)
     private String value;
 
     @Title
@@ -109,8 +105,8 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
     public void setValue(final String value) {
         this.value = value;
     }
-    // }}
 
+    // //////////////////////////////////////
     
     @Programmatic
     public Bookmark asBookmark() {
@@ -118,12 +114,24 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
     }
 
 
-    // {{ Comparable impl
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("objectType", getObjectType())
+                .add("name", getName())
+                .add("objectIdentifier", getObjectIdentifier())
+                .add("value", getValue())
+                .toString();
+    }
+    
+    // //////////////////////////////////////
+
     @Override
     public int compareTo(Tag other) {
         return ORDERING_BY_OBJECT_TYPE.compound(ORDERING_BY_NAME).compare(this, other);
     }
-    // }}
 
     public static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {
         public int compare(Tag p, Tag q) {
@@ -136,7 +144,5 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
         }
     };
 
-
-    
     
 }

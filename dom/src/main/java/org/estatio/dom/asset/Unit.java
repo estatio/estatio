@@ -40,7 +40,8 @@ public class Unit extends FixedAsset {
     }
 
     
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
@@ -53,7 +54,8 @@ public class Unit extends FixedAsset {
         this.area = area;
     }
 
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal storageArea;
 
@@ -68,7 +70,8 @@ public class Unit extends FixedAsset {
     }
 
     
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal salesArea;
 
@@ -82,7 +85,8 @@ public class Unit extends FixedAsset {
         this.salesArea = salesArea;
     }
 
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal mezzanineArea;
 
@@ -97,7 +101,8 @@ public class Unit extends FixedAsset {
     }
 
     
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal terraceArea;
 
@@ -111,7 +116,8 @@ public class Unit extends FixedAsset {
         this.terraceArea = terraceArea;
     }
 
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(name = "PROPERTY_ID")
     private Property property;
 

@@ -24,7 +24,6 @@ import org.estatio.dom.utils.MathUtils;
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     
-    
     private Index index;
 
     @MemberOrder(sequence = "10", name = "Indexable Rent")

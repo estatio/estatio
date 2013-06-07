@@ -6,8 +6,6 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.StringUtils;
 
-import com.google.common.collect.Ordering;
-
 public enum FinancialAccountType implements PowerType<FinancialAccount> {
 
     BANK_ACCOUNT(BankAccount.class);
@@ -22,8 +20,7 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
         return StringUtils.enumTitle(this.name());
     }
 
-    public static final Ordering<FinancialAccountType> ORDERING_BY_TYPE = 
-            Ordering.<FinancialAccountType>natural().nullsFirst();
+    // //////////////////////////////////////
 
     public FinancialAccount create(DomainObjectContainer container){ 
         try {

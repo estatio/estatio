@@ -1,28 +1,23 @@
 package org.estatio.dom.index;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class Index extends EstatioRefDataObject implements ComparableByReference<Index> {
+public class Index extends EstatioRefDataObject implements ComparableByReference<Index>, WithNameGetter {
 
     private String reference;
 
@@ -34,6 +29,8 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
     public void setReference(final String reference) {
         this.reference = reference;
     }
+
+    // //////////////////////////////////////
 
     private String name;
 
@@ -47,6 +44,7 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
         this.name = name;
     }
 
+    // //////////////////////////////////////
     
     @javax.jdo.annotations.Persistent(mappedBy = "index")
     private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
@@ -112,9 +110,7 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("reference", getReference())
-                .toString();
+        return ComparableByReference.ToString.of(this);
     }
 
     // //////////////////////////////////////

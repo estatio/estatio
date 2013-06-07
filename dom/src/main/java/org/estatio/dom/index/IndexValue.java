@@ -2,6 +2,7 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
@@ -14,7 +15,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
-import org.estatio.dom.utils.Orderings;
 
 @javax.jdo.annotations.PersistenceCapable
 public class IndexValue extends EstatioRefDataObject implements Comparable<IndexValue>, WithStartDate {
@@ -31,6 +31,8 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+
+    // //////////////////////////////////////
 
     private IndexBase indexBase;
 
@@ -83,10 +85,21 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
     }
 
     // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("indexBase", getIndexBase())
+                .add("startDate", getStartDate())
+                .toString();
+    }
+    
+    // //////////////////////////////////////
 
     @Override
     public int compareTo(IndexValue o) {
-        return ORDERING_BY_INDEX_BASE.compound(ORDERING_BY_START_DATE_DESC).compare(this, o);
+        return ORDERING_BY_INDEX_BASE
+                .compound(ORDERING_BY_START_DATE_DESC).compare(this, o);
     }
 
     public final static Ordering<IndexValue> ORDERING_BY_INDEX_BASE = new Ordering<IndexValue>() {

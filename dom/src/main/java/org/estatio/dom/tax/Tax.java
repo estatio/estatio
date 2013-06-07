@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.google.common.base.Objects;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
@@ -15,13 +13,14 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
 @Immutable
-public class Tax extends EstatioRefDataObject implements ComparableByReference<Tax> {
+public class Tax extends EstatioRefDataObject implements ComparableByReference<Tax>, WithNameGetter {
 
     private String reference;
 
@@ -83,9 +82,7 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("reference", getReference())
-                .toString();
+        return ComparableByReference.ToString.of(this);
     }
 
     // //////////////////////////////////////

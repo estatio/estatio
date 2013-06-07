@@ -7,12 +7,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.lease.Lease;
 
-//TODO: to complete
+//REVIEW: is this in scope?
 //@javax.jdo.annotations.PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class LeaseAssignment extends EstatioTransactionalObject {
 
-    // {{ previousLease (property)
+    // REVIEW: should this be mappedBy?
     private Lease previousLease;
 
     @MemberOrder(sequence = "1")
@@ -24,9 +24,8 @@ public class LeaseAssignment extends EstatioTransactionalObject {
         this.previousLease = previousLease;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ NextLease (property)
     private Lease nextLease;
 
     @MemberOrder(sequence = "1")
@@ -38,9 +37,8 @@ public class LeaseAssignment extends EstatioTransactionalObject {
         this.nextLease = nextLease;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ AssignmentDate (property)
     private LocalDate assignmentDate;
 
     @MemberOrder(sequence = "1")
@@ -52,9 +50,8 @@ public class LeaseAssignment extends EstatioTransactionalObject {
         this.assignmentDate = assignmentDate;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ AssignmentType (property)
     private LeaseAssignmentType assignmentType;
 
     @MemberOrder(sequence = "1")
@@ -65,8 +62,6 @@ public class LeaseAssignment extends EstatioTransactionalObject {
     public void setAssignmentType(final LeaseAssignmentType assignmentType) {
         this.assignmentType = assignmentType;
     }
-
-    // }}
 
 
 }

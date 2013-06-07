@@ -6,6 +6,7 @@ import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 

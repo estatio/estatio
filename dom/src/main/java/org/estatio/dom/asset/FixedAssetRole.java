@@ -2,6 +2,9 @@ package org.estatio.dom.asset;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Ordering;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -24,7 +27,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole>, WithInterval {
 
-    // {{ Property (asset)
     private FixedAsset asset;
 
     @Title(sequence = "3", prepend = ":")
@@ -39,9 +41,8 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
         this.asset = asset;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Party (asset)
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
@@ -56,9 +57,8 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
         this.party = party;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Type (asset)
     private FixedAssetRoleType type;
 
     @Disabled
@@ -72,10 +72,8 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
         this.type = type;
     }
 
-    // }}
-
-    // {{ StartDate, EndDate (asset)
-    @javax.jdo.annotations.Persistent
+    // //////////////////////////////////////
+    
     private LocalDate startDate;
 
     @MemberOrder(sequence = "4")
@@ -106,14 +104,45 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    // }}
+    
+    // //////////////////////////////////////
 
-    // {{ Comparable impl
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("asset", getAsset()!=null?getAsset().getReference():null)
+                .add("party", getParty()!=null?getParty().getName():null)
+                .add("startDate", getStartDate())
+                .add("type", getType())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+
     @Hidden
     @Override
     public int compareTo(FixedAssetRole o) {
-        return FixedAssetRoleType.ORDERING_BY_TYPE.compare(this.getType(), o.getType());
+        return ORDERING_BY_ASSET
+                .compound(ORDERING_BY_PARTY)
+                .compound(ORDERING_BY_START_DATE_DESC)
+                .compound(ORDERING_BY_TYPE)
+                .compare(this,o);
     }
-    // }}
+    
+    public final static Ordering<FixedAssetRole> ORDERING_BY_ASSET = new Ordering<FixedAssetRole>() {
+        public int compare(FixedAssetRole p, FixedAssetRole q) {
+            return Ordering.natural().nullsFirst().compare(p.getAsset(), q.getAsset());
+        }
+    };
+    public final static Ordering<FixedAssetRole> ORDERING_BY_PARTY = new Ordering<FixedAssetRole>() {
+        public int compare(FixedAssetRole p, FixedAssetRole q) {
+            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
+        }
+    };
+    public final static Ordering<FixedAssetRole> ORDERING_BY_TYPE = new Ordering<FixedAssetRole>() {
+        public int compare(FixedAssetRole p, FixedAssetRole q) {
+            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
+        }
+    };
 
 }

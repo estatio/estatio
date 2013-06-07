@@ -12,6 +12,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -19,10 +21,9 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount> {
+public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>, WithReferenceGetter, WithNameGetter {
 
     
-    // {{ Reference (property)
     private String reference;
 
     @MemberOrder(sequence = "1")
@@ -34,9 +35,8 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
         this.reference = reference;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Name (property)
     private String name;
 
     @Title
@@ -49,9 +49,8 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
         this.name = name;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Type (property)
     private FinancialAccountType type;
     
     @Hidden
@@ -63,9 +62,9 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
     public void setType(final FinancialAccountType type) {
         this.type = type;
     }
-    // }}
     
-    // {{ Owner (property)
+    // //////////////////////////////////////
+
     private Party owner;
 
     @MemberOrder(sequence = "1")
@@ -76,10 +75,17 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
     public void setOwner(final Party owner) {
         this.owner = owner;
     }
-    // }}
 
+
+    // //////////////////////////////////////
     
-    // {{ Comparable impl
+    @Override
+    public String toString() {
+        return org.estatio.dom.WithReferenceGetter.ToString.of(this);
+    }
+    
+    // //////////////////////////////////////
+
     @Override
     public int compareTo(FinancialAccount other) {
         return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
@@ -87,7 +93,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
 
     public static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {
         public int compare(FinancialAccount p, FinancialAccount q) {
-            return FinancialAccountType.ORDERING_BY_TYPE.compare(p.getType(), q.getType());
+            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
         }
     };
     public static Ordering<FinancialAccount> ORDERING_BY_REFERENCE = new Ordering<FinancialAccount>() {
@@ -95,8 +101,5 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
             return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
         }
     };
-    // }}
-
-    
 
 }

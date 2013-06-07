@@ -35,7 +35,5 @@ public enum LeaseType {
     //TODO: Handle localised titles. 
     // 2013-04-13: still not need
     
-    public static Ordering<LeaseType> ORDERING_BY_TYPE = 
-            Ordering.<LeaseType> natural().nullsFirst();
 
 }

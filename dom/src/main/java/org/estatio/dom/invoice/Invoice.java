@@ -11,14 +11,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -31,14 +23,26 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorType;
+import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject implements Comparable<Invoice> {
+public class Invoice extends EstatioTransactionalObject implements Comparable<Invoice>, WithReferenceGetter {
 
     public String title() {
         return String.format("%08d", Integer.parseInt(getId()));
     }
+    
+    // //////////////////////////////////////
 
     private Party buyer;
 
@@ -55,6 +59,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return parties.allParties();
     }
 
+    // //////////////////////////////////////
+
     private Party seller;
 
     @MemberOrder(sequence = "2")
@@ -70,6 +76,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return parties.allParties();
     }
 
+    // //////////////////////////////////////
+
     private String collectionNumber;
 
     @MemberOrder(sequence = "3")
@@ -80,6 +88,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public void setCollectionNumber(String collectionNumber) {
         this.collectionNumber = collectionNumber;
     }
+
+    // //////////////////////////////////////
 
     private String invoiceNumber;
 
@@ -92,6 +102,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.invoiceNumber = invoiceNumber;
     }
 
+    // //////////////////////////////////////
+
     private String reference;
 
     @MemberOrder(sequence = "5")
@@ -103,7 +115,11 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.reference = reference;
     }
 
-    @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent(extensions = 
+        { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") 
+    })
     private InvoiceProvenance provenance;
 
     @MemberOrder(sequence = "6")
@@ -114,6 +130,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public void setProvenance(final InvoiceProvenance provenance) {
         this.provenance = provenance;
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate invoiceDate;
@@ -128,6 +146,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.invoiceDate = invoiceDate;
     }
 
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
@@ -139,6 +159,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public void setDueDate(final LocalDate dueDate) {
         this.dueDate = dueDate;
     }
+
+    // //////////////////////////////////////
 
     private InvoiceStatus status;
 
@@ -152,6 +174,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.status = status;
     }
 
+    // //////////////////////////////////////
+
     private Currency currency;
 
     @MemberOrder(sequence = "10")
@@ -163,6 +187,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.currency = currency;
     }
 
+    // //////////////////////////////////////
+
     private PaymentMethod paymentMethod;
 
     @MemberOrder(sequence = "11")
@@ -173,6 +199,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "invoice")
     private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
@@ -204,6 +232,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         getItems().remove(item);
     }
 
+    // //////////////////////////////////////
+
     @NotPersisted
     @MemberOrder(name = "Amounts", sequence = "13")
     public BigDecimal getNetAmount() {
@@ -233,6 +263,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         }
         return total;
     }
+
+    // //////////////////////////////////////
 
     @Bulk
     @MemberOrder(sequence = "1")
@@ -274,6 +306,8 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.setStatus(InvoiceStatus.INVOICED);
         return this;
     }
+
+    // //////////////////////////////////////
 
     @Prototype
     @Bulk

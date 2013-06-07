@@ -2,17 +2,17 @@ package org.estatio.dom.geography;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 
-import com.google.common.base.Objects;
-
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-public abstract class Geography extends EstatioRefDataObject implements ComparableByReference<Geography> {
+public abstract class Geography extends EstatioRefDataObject implements ComparableByReference<Geography>, WithNameGetter {
 
     private String reference;
 
@@ -29,8 +29,8 @@ public abstract class Geography extends EstatioRefDataObject implements Comparab
         this.reference = reference;
     }
 
-    
-    
+    // //////////////////////////////////////
+
     private String name;
 
     @Title
@@ -48,9 +48,7 @@ public abstract class Geography extends EstatioRefDataObject implements Comparab
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("reference", getReference())
-                .toString();
+        return WithReferenceGetter.ToString.of(this);
     }
     
 

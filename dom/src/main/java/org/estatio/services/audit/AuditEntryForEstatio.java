@@ -1,6 +1,5 @@
 package org.estatio.services.audit;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Hidden;

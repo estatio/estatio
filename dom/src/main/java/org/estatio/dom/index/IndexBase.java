@@ -1,16 +1,14 @@
 package org.estatio.dom.index;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -19,13 +17,11 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
-import org.estatio.dom.utils.Orderings;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
 public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase>, WithStartDate {
 
-    // {{ index
     private Index index;
     
     @Title(sequence = "1", append = ", ")
@@ -53,11 +49,9 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         }
         currentIndex.removeFromIndexBases(this);
     }
-    // }}
     
-    
-    
-    // {{ startDate
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -70,11 +64,9 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    
-    // {{ factor
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(scale = 4)
     private BigDecimal factor;
@@ -92,14 +84,15 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     public String validateFactor(final BigDecimal factor) {
         return (getPreviousBase() == null) ? null : (factor == null || factor.compareTo(BigDecimal.ZERO) == 0) ? "Factor is mandatory when there is a previous base" : null;
     }
-    // }}
 
-    
-    
-    // {{ previousBase
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent(mappedBy = "nextBase")
     private IndexBase previousBase;
 
+    /**
+     * @see #getNextBase()
+     */
     @Optional
     @MemberOrder(sequence = "3")
     public IndexBase getPreviousBase() {
@@ -115,12 +108,14 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         if (previous != null)
             previous.setNextBase(this);
     }
-    // }}
 
-    
-    // {{ nextBase
+    // //////////////////////////////////////
+
     private IndexBase nextBase;
 
+    /**
+     * @see #getPreviousBase()
+     */
     @Optional
     @MemberOrder(sequence = "5")
     public IndexBase getNextBase() {
@@ -130,12 +125,9 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     public void setNextBase(final IndexBase nextBase) {
         this.nextBase = nextBase;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    
-    
-    // {{ values
     @javax.jdo.annotations.Persistent(mappedBy = "indexBase")
     private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
 
@@ -165,10 +157,10 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         value.setIndexBase(null);
         getValues().remove(value);
     }
-    // }}
 
-    
-    // {{ action: factorForDate
+
+    // //////////////////////////////////////
+
     @Named("Get Factor For Date") // avoiding the 'get' prefix
     public BigDecimal factorForDate(@Named("Date") LocalDate date) {
         if (date.isBefore(getStartDate())) {
@@ -176,10 +168,19 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
         }
         return BigDecimal.ONE;
     }
-    // }}
 
+    // //////////////////////////////////////
     
-    // {{ Comparable impl
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("index", getIndex()!=null?getIndex().getReference():null)
+                .add("startDate", getStartDate())
+                .toString();
+    }
+    
+    // //////////////////////////////////////
+
     @Override
     public int compareTo(IndexBase other) {
         return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
@@ -194,6 +195,5 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private final static Ordering<IndexBase> ORDERING_BY_START_DATE_DESC = (Ordering)WithStartDate.ORDERING_BY_START_DATE_DESC;
 
-    // }}
 
 }

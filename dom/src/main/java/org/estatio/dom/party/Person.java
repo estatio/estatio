@@ -24,7 +24,6 @@ import org.apache.isis.applib.util.TitleBuffer;
 public class Person extends Party {
 
     
-    // {{ initials 
     private String initials;
 
     @MemberOrder(sequence = "3")
@@ -37,18 +36,17 @@ public class Person extends Party {
         this.initials = initials;
     }
 
-    // }}
 
-    
-    // {{ name
+    // //////////////////////////////////////
+
     @Override
     public String disableName() {
         return "Cannot be updated directly; derived from first and last names";
     }
-    // }}
+
+    // //////////////////////////////////////
 
     
-    // {{ firstName 
     private String firstName;
 
     @MemberOrder(sequence = "3")
@@ -61,10 +59,8 @@ public class Person extends Party {
         this.firstName = firstName;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    
-    // {{ lastName 
     private String lastName;
 
     @MemberOrder(sequence = "4")
@@ -76,9 +72,9 @@ public class Person extends Party {
         this.lastName = lastName;
     }
 
-    // }}
 
-    // {{ gender
+    // //////////////////////////////////////
+
     private PersonGenderType gender;
 
     @MemberOrder(sequence = "5")
@@ -94,10 +90,8 @@ public class Person extends Party {
         return PersonGenderType.UNKNOWN;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    
-    // {{ Lifecycle methods
     public String validate() {
         return getFirstName().isEmpty() || getInitials().isEmpty() ? "At least the first name or initials have to be filled in" : null;
     }
@@ -107,6 +101,5 @@ public class Person extends Party {
         setName(tb.append(getLastName()).append(",", getFirstName()).toString());
     }
 
-    // }}
 
 }

@@ -1,13 +1,11 @@
 package org.estatio.dom.currency;
 
-import com.google.common.base.Objects;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
 @Bounded
@@ -40,9 +38,7 @@ public class Currency extends EstatioRefDataObject implements ComparableByRefere
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("reference", getReference())
-                .toString();
+        return ToString.of(this);
     }
 
     // //////////////////////////////////////

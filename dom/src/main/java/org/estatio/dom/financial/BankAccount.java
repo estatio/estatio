@@ -23,7 +23,7 @@ public class BankAccount extends FinancialAccount {
 
     private Party bank;
 
-    @Optional
+    @Optional // REVIEW: really?
     @MemberOrder(name = "Account Details", sequence = "9")
     public Party getBank() {
         return bank;
@@ -33,7 +33,8 @@ public class BankAccount extends FinancialAccount {
         this.bank = bank;
     }
 
-    // {{ BankAccountType (property)
+    // //////////////////////////////////////
+
     private BankAccountType bankAccountType;
 
     @MemberOrder(name = "Account Details", sequence = "10")
@@ -45,7 +46,8 @@ public class BankAccount extends FinancialAccount {
         this.bankAccountType = bankAccountType;
     }
 
-    // }}
+
+    // //////////////////////////////////////
 
     private Country country;
 
@@ -58,6 +60,8 @@ public class BankAccount extends FinancialAccount {
         this.country = country;
     }
 
+    // //////////////////////////////////////
+
     private String IBAN;
 
     @MemberOrder(name = "Account Details", sequence = "12")
@@ -69,7 +73,13 @@ public class BankAccount extends FinancialAccount {
         this.IBAN = IBAN;
     }
 
+    @MemberOrder(name="IBAN", sequence="1")
+    public void checkAccount() {
+        IBANHelper ibanHelper = new IBANHelper(getIBAN());
+        ibanHelper.update(this);
+    }
     
+    // //////////////////////////////////////
     
     private String nationalCheckCode;
 
@@ -83,7 +93,8 @@ public class BankAccount extends FinancialAccount {
     }
 
     
-    
+    // //////////////////////////////////////
+
     private String nationalBankCode;
 
     @MemberOrder(name = "Account Details", sequence = "14")
@@ -95,7 +106,8 @@ public class BankAccount extends FinancialAccount {
         this.nationalBankCode = nationalBankCode;
     }
 
-    
+    // //////////////////////////////////////
+
     private String branchCode;
 
     @MemberOrder(name = "Account Details", sequence = "15")
@@ -108,7 +120,8 @@ public class BankAccount extends FinancialAccount {
     }
 
     
-    
+    // //////////////////////////////////////
+
     private String accountNumber;
 
     @MemberOrder(name = "Account Details", sequence = "16")
@@ -120,9 +133,5 @@ public class BankAccount extends FinancialAccount {
         this.accountNumber = accountNumber;
     }
 
-    public void checkAccount() {
-        IBANHelper ibanHelper = new IBANHelper(getIBAN());
-        ibanHelper.update(this);
-    }
 
 }

@@ -2,16 +2,14 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import com.google.common.base.Objects;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.filter.Filter;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByTitle;
+import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
@@ -62,7 +60,7 @@ public class AgreementRoleType extends EstatioRefDataObject implements Comparabl
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("title", getTitle()).toString();
+        return ToString.of(this);
     }
 
     // //////////////////////////////////////

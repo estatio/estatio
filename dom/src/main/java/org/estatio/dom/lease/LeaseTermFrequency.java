@@ -1,11 +1,9 @@
 package org.estatio.dom.lease;
 
-import com.google.common.collect.Ordering;
+import org.joda.time.LocalDate;
 
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.StringUtils;
-
-import org.joda.time.LocalDate;
 
 
 public enum LeaseTermFrequency {
@@ -28,11 +26,11 @@ public enum LeaseTermFrequency {
         return rrule;
     }
 
+    // //////////////////////////////////////
+
     public LocalDate nextDate(LocalDate date) {
         return CalendarUtils.nextDate(date, this.rrule);
     }
     
-    public static Ordering<LeaseTermFrequency> ORDERING_BY_TYPE = 
-            Ordering.<LeaseTermFrequency> natural().nullsFirst();
 
 }

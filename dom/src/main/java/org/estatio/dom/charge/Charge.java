@@ -1,14 +1,12 @@
 package org.estatio.dom.charge;
 
-import com.google.common.base.Objects;
-
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.ComparableByCode;
+import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -43,6 +41,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
     }
 
     // //////////////////////////////////////
+
     private Tax tax;
 
     @MemberOrder(sequence = "3")
@@ -55,6 +54,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
     }
 
     // //////////////////////////////////////
+    
     private String description;
 
     @MemberOrder(sequence = "4")
@@ -85,9 +85,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("code", getCode())
-                .toString();
+        return ToString.of(this);
     }
 
     // //////////////////////////////////////

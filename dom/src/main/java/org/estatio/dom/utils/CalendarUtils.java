@@ -6,8 +6,6 @@ import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-import org.estatio.services.appsettings.EstatioSettingsService;
-
 public class CalendarUtils {
 
     /**

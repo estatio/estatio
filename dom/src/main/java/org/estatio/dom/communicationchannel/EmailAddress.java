@@ -1,6 +1,5 @@
 package org.estatio.dom.communicationchannel;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -13,15 +12,16 @@ import org.apache.isis.applib.annotation.Title;
 @ObjectType("EMAI")
 public class EmailAddress extends CommunicationChannel {
 
+    @Title
     @Override
     public String getName() {
         return getAddress();
     }
 
-    // {{ EmailAddress (attribute)
+    // //////////////////////////////////////
+
     private String address;
 
-    @Title
     @MemberOrder(sequence = "1")
     public String getAddress() {
         return address;
@@ -30,6 +30,5 @@ public class EmailAddress extends CommunicationChannel {
     public void setAddress(final String address) {
         this.address = address;
     }
-    // }}
 
 }

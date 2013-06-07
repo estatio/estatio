@@ -19,9 +19,8 @@ package org.estatio.dom;
 import com.google.common.collect.Ordering;
 
 
-public interface ComparableByTitle<T extends ComparableByTitle<T>> extends Comparable<T> {
+public interface ComparableByTitle<T extends ComparableByTitle<T>> extends Comparable<T>, WithTitleGetter {
     
-    String getTitle();
     void setTitle(String title);
 
     abstract String toString();
@@ -31,6 +30,5 @@ public interface ComparableByTitle<T extends ComparableByTitle<T>> extends Compa
             return Ordering.<String> natural().nullsFirst().compare(p.getTitle(), q.getTitle());
         }
     };
-
 
 }

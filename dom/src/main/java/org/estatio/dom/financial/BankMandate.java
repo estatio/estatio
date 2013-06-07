@@ -15,8 +15,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class BankMandate extends Agreement {
     
-    
-    // {{ BankAccount (property)
+
     private FinancialAccount bankAccount;
 
     @MemberOrder(name = "Details", sequence = "11")
@@ -27,10 +26,10 @@ public class BankMandate extends Agreement {
     public void setBankAccount(final FinancialAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
-    // }}
     
-    
-    // {{ Derived attribute (overridden)
+
+    // //////////////////////////////////////
+
     @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
         return findParty(FinancialConstants.ART_CREDITOR);
@@ -40,8 +39,6 @@ public class BankMandate extends Agreement {
     public Party getSecondaryParty() {
         return findParty(FinancialConstants.ART_DEBTOR);
     }
-    // }}
-
 
 
 }

@@ -5,18 +5,19 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.utils.MathUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-    // {{ BudgetedValue (property)
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedValue;
 
@@ -29,9 +30,8 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         this.budgetedValue = budgetedValue;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ AuditedValue (property)
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedValue;
 
@@ -44,7 +44,8 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         this.auditedValue = auditedValue;
     }
 
-    // }}
+
+    // //////////////////////////////////////
 
     @Override
     public LeaseTerm approve() {
@@ -56,8 +57,10 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
     }
 
+    // //////////////////////////////////////
+
     @Override
-    @Hidden
+    @Programmatic
     public BigDecimal valueForDueDate(LocalDate dueDate) {
         // use the audited value after the end of the term and only when its
         // available
@@ -70,8 +73,10 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         return getBudgetedValue();
     }
 
+    // //////////////////////////////////////
+
     @Override
-    @Hidden
+    @Programmatic
     public void initialize() {
         super.initialize();
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPreviousTerm();
@@ -81,7 +86,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     }
 
     @Override
-    @Hidden
+    @Programmatic
     public void update() {
         super.update();
         if (getStatus() == LeaseTermStatus.NEW) {

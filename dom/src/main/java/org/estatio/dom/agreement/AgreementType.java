@@ -14,9 +14,9 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.ComparableByTitle;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
-import org.estatio.dom.ComparableByTitle;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -93,11 +93,8 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
         return ORDERING_BY_TITLE.compare(this, other);
     }
 
-    public static Ordering<AgreementType> ORDERING_BY_TITLE = new Ordering<AgreementType>() {
-        public int compare(AgreementType p, AgreementType q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getTitle(), q.getTitle());
-        }
-    };
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static Ordering<AgreementType> ORDERING_BY_TITLE = (Ordering)ComparableByTitle.ORDERING_BY_TITLE;
 
     // //////////////////////////////////////
 
@@ -111,11 +108,6 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
 
     /**
      * For fixtures
-     * 
-     * @param title
-     * @param implementationClassName
-     * @param container
-     * @return
      */
     public static AgreementType create(final String title, final String implementationClassName, final DomainObjectContainer container) {
         final AgreementType agreementType = container.newTransientInstance(AgreementType.class);

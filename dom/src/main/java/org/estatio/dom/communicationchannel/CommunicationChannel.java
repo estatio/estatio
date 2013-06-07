@@ -4,6 +4,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
@@ -12,6 +14,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -19,9 +22,8 @@ import org.estatio.dom.EstatioTransactionalObject;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @ObjectType("CCHN")
-public abstract class CommunicationChannel extends EstatioTransactionalObject implements Comparable<CommunicationChannel> {
+public abstract class CommunicationChannel extends EstatioTransactionalObject implements Comparable<CommunicationChannel>, WithNameGetter {
 
-    // {{ Type (attribute)
     private CommunicationChannelType type;
 
     @Hidden
@@ -33,9 +35,8 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
         this.type = type;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Reference (property)
     private String reference;
 
     @Hidden
@@ -48,14 +49,15 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
         this.reference = referencen;
     }
 
-    // }}
+    // //////////////////////////////////////
 
     @Title
     @MemberOrder(sequence="1")
     @Hidden(where=Where.OBJECT_FORMS)
     public abstract String getName();
 
-    // {{ Description (property)
+    // //////////////////////////////////////
+
     private String description;
 
     @Optional
@@ -68,27 +70,32 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
         this.description = description;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Legal (property)
-    private boolean Legal;
+    private boolean legal;
 
     @MemberOrder(sequence = "10")
     public boolean isLegal() {
-        return Legal;
+        return legal;
     }
 
     public void setLegal(final boolean Legal) {
-        this.Legal = Legal;
+        this.legal = Legal;
     }
-    // }}
     
 
-    // {{ Comparable impl
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return ToString.of(this);
+    }
+    
+    // //////////////////////////////////////
+
     @Hidden
     public int compareTo(CommunicationChannel other) {
-        return CommunicationChannelType.ORDERING_BY_TYPE.compare(this.getType(), other.getType());
+        return Ordering.natural().nullsFirst().compare(this.getType(), other.getType());
     }
-    // }}
 
 }

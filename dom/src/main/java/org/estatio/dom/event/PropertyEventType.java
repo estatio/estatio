@@ -3,6 +3,7 @@ package org.estatio.dom.event;
 import org.estatio.dom.TitledEnum;
 import org.estatio.dom.utils.StringUtils;
 
+//REVIEW: is this in scope?
 //TODO: EST-131: convert to entity, since will vary by location
 public enum PropertyEventType implements TitledEnum {
 

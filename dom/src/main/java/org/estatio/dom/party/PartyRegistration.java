@@ -27,11 +27,11 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+// REVIEW: is this in scope?
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class PartyRegistration extends EstatioTransactionalObject implements WithInterval {
 
-    // {{ Party (property)
     private Party party;
 
     //@javax.jdo.annotations.Column(name = "PARTY_ID")
@@ -44,9 +44,8 @@ public class PartyRegistration extends EstatioTransactionalObject implements Wit
         this.party = party;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ PartyRegistrationType (property)
     private PartyRegistrationType partyRegistrationType;
 
     @MemberOrder(sequence = "1")
@@ -58,9 +57,9 @@ public class PartyRegistration extends EstatioTransactionalObject implements Wit
         this.partyRegistrationType = partyRegistrationType;
     }
 
-    // }}
 
-    // {{ StartDate, EndDate
+    // //////////////////////////////////////
+
     private LocalDate startDate;
 
     @MemberOrder(sequence = "1")
@@ -90,6 +89,5 @@ public class PartyRegistration extends EstatioTransactionalObject implements Wit
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    // }}
 
 }

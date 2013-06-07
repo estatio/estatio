@@ -30,8 +30,9 @@ import org.estatio.dom.geography.Country;
 @Bookmarkable
 public class Property extends FixedAsset {
 
-    
-    // {{ Type (attribute)
+
+    // //////////////////////////////////////
+
     private PropertyType propertyType;
 
     @MemberOrder(sequence = "1.3")
@@ -43,9 +44,8 @@ public class Property extends FixedAsset {
         this.propertyType = type;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ OpeningDate (attribute)
     @javax.jdo.annotations.Persistent
     private LocalDate openingDate;
 
@@ -58,9 +58,8 @@ public class Property extends FixedAsset {
         this.openingDate = openingDate;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ AcquireDate (attribute)
     @javax.jdo.annotations.Persistent
     private LocalDate acquireDate;
 
@@ -74,9 +73,8 @@ public class Property extends FixedAsset {
         this.acquireDate = acquireDate;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Disposal LocalDate (attribute)
     private LocalDate disposalDate;
 
     @javax.jdo.annotations.Persistent
@@ -90,9 +88,8 @@ public class Property extends FixedAsset {
         this.disposalDate = disposalDate;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Area (attribute)
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
@@ -105,9 +102,8 @@ public class Property extends FixedAsset {
         this.area = area;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ City (property)
     private String city;
 
     @MemberOrder(sequence = "1.8")
@@ -119,9 +115,8 @@ public class Property extends FixedAsset {
         this.city = propertyName;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Country (property)
     private Country country;
 
     @MemberOrder(sequence = "1.9")
@@ -133,9 +128,8 @@ public class Property extends FixedAsset {
         this.country = country;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Units (set, bidir)
     @javax.jdo.annotations.Persistent(mappedBy = "property")
     private SortedSet<Unit> units = new TreeSet<Unit>();
 
@@ -149,9 +143,8 @@ public class Property extends FixedAsset {
         this.units = units;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ NewUnit (action)
     @PublishedAction
     @MemberOrder(name = "Units", sequence = "1")
     public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
@@ -159,16 +152,13 @@ public class Property extends FixedAsset {
         unit.setProperty(this);
         return unit;
     }
-
-    // }}
-
-    // {{ injected services
+    
+    // //////////////////////////////////////
 
     private Units unitsRepo;
-    public void injectUnitsRepo(final Units unitsRepo) {
+    public void injectUnits(final Units unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
 
-    // }}
 
 }

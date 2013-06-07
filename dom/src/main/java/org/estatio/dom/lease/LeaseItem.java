@@ -29,11 +29,11 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.utils.CalendarUtils;
-import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
@@ -41,7 +41,7 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_INDEX_IDX", members = { "lease", "type", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_INDEX2_IDX", members = { "lease", "type", "startDate" }) })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem>, WithInterval {
+public class LeaseItem extends EstatioTransactionalObject implements Comparable<LeaseItem>, WithInterval, WithSequence {
 
     private Lease lease;
 
@@ -340,11 +340,8 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         }
     };
 
-    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = new Ordering<LeaseItem>() {
-        public int compare(LeaseItem p, LeaseItem q) {
-            return Ordering.natural().nullsLast().reverse().compare(p.getSequence(), q.getSequence());
-        }
-    };
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = (Ordering)WithSequence.ORDERING_BY_SEQUENCE_DESC;;
 
     @SuppressWarnings("unused")
     private final static Ordering<LeaseItem> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseItem>() {

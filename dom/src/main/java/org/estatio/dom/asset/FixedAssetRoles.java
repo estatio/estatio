@@ -2,6 +2,10 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
+import com.google.common.base.Objects;
+
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -11,11 +15,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+
 import org.estatio.dom.party.Party;
-
-import org.joda.time.LocalDate;
-
-import com.google.common.base.Objects;
 
 @Hidden
 @Named("Asset Roles")

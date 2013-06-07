@@ -5,26 +5,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
-import com.google.common.base.Objects;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.ComparableByName;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -34,16 +25,23 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.ComparableByName;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @Bookmarkable
 public abstract class FixedAsset extends EstatioTransactionalObject implements ComparableByName<FixedAsset>, Locatable {
 
+    @javax.jdo.annotations.Unique(name = "REFERENCE_IDX")
     private String reference;
 
     @DescribedAs("Unique reference code for this property")
-    @Unique(name = "REFERENCE_IDX")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @MemberOrder(sequence = "1.1")
     @Mask("AAAAAAAA")
@@ -51,10 +49,14 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         return reference;
     }
 
-    public void setReference(final String code) {
-        this.reference = code;
+    public void setReference(final String reference) {
+        this.reference = reference;
     }
+    
+    // //////////////////////////////////////
 
+    // REVIEW: when I added this annotation, per the @DescribedAs, then the fixtures failed to load...
+    // @javax.jdo.annotations.Unique(name = "NAME_IDX")
     private String name;
 
     @DescribedAs("Unique reference code for this property")
@@ -68,9 +70,11 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         this.name = name;
     }
 
-    private Location location;
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
+    private Location location;
+
     @Override
     @Disabled
     @Optional
@@ -83,11 +87,13 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         this.location = location;
     }
 
-    @MemberOrder(sequence = "1.9")
-    public FixedAsset lookupLocation(@Named("Address") String address) {
+    @MemberOrder(name="location", sequence = "1.9")
+    public FixedAsset lookup(@Named("Address") String address) {
         setLocation(locationLookupService.lookup(address));
         return this;
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "asset")
     private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
@@ -114,6 +120,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
     public List<Party> choices0AddRole() {
         return parties.allParties();
     }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
     @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
@@ -165,9 +173,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("name", getName())
-                .toString();
+        return ToString.of(this);
     }
 
     // //////////////////////////////////////

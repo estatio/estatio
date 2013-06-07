@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -37,7 +38,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>, WithInterval {
+public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>, WithInterval, WithDescriptionGetter {
 
     private Invoice invoice;
 

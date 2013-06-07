@@ -6,16 +6,12 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.ComparableByDescription;
-
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.ComparableByDescription;
+import org.estatio.dom.EstatioTransactionalObject;
 
 @javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
@@ -80,9 +76,7 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("description", getDescription())
-                .toString();
+        return ToString.of(this);
     }
 
     // //////////////////////////////////////

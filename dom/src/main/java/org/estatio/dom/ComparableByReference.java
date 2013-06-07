@@ -19,9 +19,8 @@ package org.estatio.dom;
 import com.google.common.collect.Ordering;
 
 
-public interface ComparableByReference<T extends ComparableByReference<T>> extends Comparable<T> {
+public interface ComparableByReference<T extends ComparableByReference<T>> extends Comparable<T>, WithReferenceGetter {
     
-    String getReference();
     void setReference(String reference);
 
     abstract String toString();

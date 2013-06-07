@@ -10,12 +10,12 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
-// TODO: instate when want to ...
+// REVIEW: is this in scope?
+
 //@PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public class Event extends EstatioTransactionalObject implements WithInterval {
 
-    // {{ StartDate, EndDate
     private LocalDate startDate;
 
     @MemberOrder(sequence = "1")
@@ -48,9 +48,8 @@ public class Event extends EstatioTransactionalObject implements WithInterval {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    // }}
-    
-    // {{ Description (property)
+    // //////////////////////////////////////
+
     private String description;
 
     @MemberOrder(sequence = "1")
@@ -61,16 +60,13 @@ public class Event extends EstatioTransactionalObject implements WithInterval {
     public void setDescription(final String description) {
         this.description = description;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    
-    // {{ injected: ClockService
     private ClockService clockService;
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
-    // }}
 
 
 }

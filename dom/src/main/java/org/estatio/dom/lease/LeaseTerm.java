@@ -33,12 +33,13 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.WithStartDate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
@@ -53,10 +54,8 @@ import org.estatio.services.clock.ClockService;
     @javax.jdo.annotations.Index(name = "LEASE_TERM2_IDX", members = { "leaseItem", "startDate" }) 
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval {
+public class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval, WithSequence {
 
-    
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
@@ -106,7 +105,6 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     public void setSequence(final BigInteger sequence) {
         this.sequence = sequence;
     }
-
 
     // //////////////////////////////////////
 
@@ -493,18 +491,11 @@ public class LeaseTerm extends EstatioTransactionalObject implements Comparable<
     };
 
     // REVIEW: the integration tests fail if this is made DESCending.
-    public final static Ordering<LeaseTerm> ORDERING_BY_SEQUENCE_ASC = new Ordering<LeaseTerm>() {
-        public int compare(LeaseTerm p, LeaseTerm q) {
-            return Ordering.natural().nullsFirst().compare(p.getSequence(), q.getSequence());
-        }
-    };
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public final static Ordering<LeaseTerm> ORDERING_BY_SEQUENCE_ASC = (Ordering)WithSequence.ORDERING_BY_SEQUENCE_ASC;
 
-    @SuppressWarnings("unused")
-    private final static Ordering<LeaseTerm> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseTerm>() {
-        public int compare(LeaseTerm p, LeaseTerm q) {
-            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-        }
-    };
+    @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+    private final static Ordering<LeaseTerm> ORDERING_BY_START_DATE_DESC = (Ordering)WithStartDate.ORDERING_BY_START_DATE_DESC;
 
     // //////////////////////////////////////
 

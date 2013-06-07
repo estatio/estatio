@@ -1,20 +1,9 @@
 package org.estatio.dom.party;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Strings;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.ComparableByName;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;
@@ -23,6 +12,13 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.ComparableByName;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({ 
@@ -30,10 +26,8 @@ import org.apache.isis.applib.annotation.Title;
     @javax.jdo.annotations.Query(name = "parties_findParties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.toLowerCase().matches(:searchPattern.toLowerCase()) || name.toLowerCase().matches(:searchPattern.toLowerCase())") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = {"reference", "name"})
 @AutoComplete(repository = Parties.class)
-public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party> {
+public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party>, WithReferenceGetter {
 
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique
     private String reference;
@@ -142,6 +136,7 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     // //////////////////////////////////////
     
     // REVIEW: is this in scope, or can we remove?
+    // REVIEW: if in scope, is it a bidir requiring mappedBy?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
@@ -164,9 +159,7 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("name", getName())
-                .toString();
+        return ComparableByName.ToString.of(this);
     }
     
     // //////////////////////////////////////

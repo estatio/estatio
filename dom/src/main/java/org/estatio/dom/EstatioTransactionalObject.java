@@ -2,11 +2,7 @@ package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
 
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Where;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over time,

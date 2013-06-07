@@ -60,7 +60,8 @@ public class InvoiceItemForLease extends InvoiceItem  {
         }
         currentLeaseTerm.removeFromInvoiceItems(this);
     }
-
+    
+    // //////////////////////////////////////
     
     @Hidden
     public void attachToInvoice() {
@@ -88,6 +89,8 @@ public class InvoiceItemForLease extends InvoiceItem  {
     }
 
     
+    // //////////////////////////////////////
+
     @Hidden
     public void remove() {
         // no safeguard, assuming being called with precaution
@@ -96,8 +99,8 @@ public class InvoiceItemForLease extends InvoiceItem  {
     }
 
     
-    
-    // {{ injected
+    // //////////////////////////////////////
+
     protected AgreementTypes agreementTypes;
     public void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
@@ -113,7 +116,6 @@ public class InvoiceItemForLease extends InvoiceItem  {
     public void injectInvoices(InvoicesForLease invoices) {
         this.invoices = invoices;
     }
-    // }}
 
 
 }
