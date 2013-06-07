@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -284,6 +285,31 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         getContainer().remove(this);
     }
 
+
+    // //////////////////////////////////////
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("invoiceNumber", getInvoiceNumber())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+    
+    @Override
+    public int compareTo(Invoice o) {
+        return ORDERING_BY_INVOICE_NUMBER.compare(this, o);
+    }
+
+    public static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
+        public int compare(Invoice p, Invoice q) {
+            return Ordering.natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
+        }
+    };
+
+    // //////////////////////////////////////
+    
     private Parties parties;
 
     public void injectParties(Parties parties) {
@@ -295,16 +321,5 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public void injectNumerators(Numerators numerators) {
         this.numerators = numerators;
     }
-
-    @Override
-    public int compareTo(Invoice o) {
-        return ORDERING_BY_NUMBER.compare(this, o);
-    }
-
-    public static Ordering<Invoice> ORDERING_BY_NUMBER = new Ordering<Invoice>() {
-        public int compare(Invoice p, Invoice q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
-        }
-    };
 
 }

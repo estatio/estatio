@@ -1,64 +1,52 @@
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
 import java.util.List;
 
-import org.joda.time.LocalDate;
+import org.junit.Before;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 
 public class LeaseTermTest_compareTo extends ComparableContractTest_compareTo<LeaseTerm> {
 
+    private LeaseItem leaseItem1;
+    private LeaseItem leaseItem2;
+    
+    @Before
+    public void setUp() throws Exception {
+        leaseItem1 = new LeaseItem();
+        leaseItem2 = new LeaseItem();
+        
+        leaseItem1.setType(LeaseItemType.RENT);
+        leaseItem2.setType(LeaseItemType.SERVICE_CHARGE);
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<LeaseTerm>> orderedTuples() {
         return listOf(
                 listOf(
-                        newLeaseTermForIndexableRent(null),
-                        newLeaseTermForServiceCharge(null),
-                        newLeaseTermForServiceCharge(null),
-                        newLeaseTermForTurnoverRent(null)
+                        newLeaseTerm(null, null),
+                        newLeaseTerm(leaseItem1, null),
+                        newLeaseTerm(leaseItem1, null),
+                        newLeaseTerm(leaseItem2, null)
                         ),
                 listOf(
-                        newLeaseTermForIndexableRent(null),
-                        newLeaseTermForIndexableRent(new LocalDate(2012,3,1)),
-                        newLeaseTermForIndexableRent(new LocalDate(2012,3,1)),
-                        newLeaseTermForIndexableRent(new LocalDate(2012,3,2))
-                        ),
-                listOf(
-                        newLeaseTermForServiceCharge(null),
-                        newLeaseTermForServiceCharge(new LocalDate(2012,3,1)),
-                        newLeaseTermForServiceCharge(new LocalDate(2012,3,1)),
-                        newLeaseTermForServiceCharge(new LocalDate(2012,3,2))
-                        ),
-                listOf(
-                        newLeaseTermForTurnoverRent(null),
-                        newLeaseTermForTurnoverRent(new LocalDate(2012,3,1)),
-                        newLeaseTermForTurnoverRent(new LocalDate(2012,3,1)),
-                        newLeaseTermForTurnoverRent(new LocalDate(2012,3,2))
+                        newLeaseTerm(leaseItem1, null),
+                        newLeaseTerm(leaseItem1, 1),
+                        newLeaseTerm(leaseItem1, 1),
+                        newLeaseTerm(leaseItem1, 2)
                         )
                 );
     }
 
-    private LeaseTerm newLeaseTermForIndexableRent(
-            LocalDate startDate) {
-        final LeaseTerm lt = new LeaseTermForIndexableRent();
-        lt.setStartDate(startDate);
+    private LeaseTerm newLeaseTerm(
+            LeaseItem leaseItem, Integer sequence) {
+        final LeaseTerm lt = new LeaseTerm();
+        lt.setLeaseItem(leaseItem);
+        lt.setSequence(sequence != null? BigInteger.valueOf(sequence.longValue()): null);
         return lt;
     }
     
-    private LeaseTerm newLeaseTermForServiceCharge(
-            LocalDate startDate) {
-        final LeaseTerm lt = new LeaseTermForServiceCharge();
-        lt.setStartDate(startDate);
-        return lt;
-    }
-
-    private LeaseTerm newLeaseTermForTurnoverRent(
-            LocalDate startDate) {
-        final LeaseTerm lt = new LeaseTermForTurnoverRent();
-        lt.setStartDate(startDate);
-        return lt;
-    }
-
 }

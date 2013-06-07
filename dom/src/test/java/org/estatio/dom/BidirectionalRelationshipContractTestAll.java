@@ -12,6 +12,8 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.geography.Geography;
 import org.estatio.dom.geography.GeographyForTesting;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -19,12 +21,15 @@ public class BidirectionalRelationshipContractTestAll extends BidirectionalRelat
 
     public BidirectionalRelationshipContractTestAll() {
         super(Constants.packagePrefix, 
-                ImmutableMap.<Class<?>,Instantiator>of(
-                    Agreement.class, new InstantiatorSimple(AgreementForTesting.class),
-                    FixedAsset.class, new InstantiatorSimple(FixedAssetForTesting.class),
-                    Party.class, new InstantiatorSimple(PartyForTesting.class),
-                    Geography.class, new InstantiatorSimple(GeographyForTesting.class)
-                ));
+                ImmutableMap.<Class<?>,Instantiator>builder()
+                    .put(Agreement.class, new InstantiatorSimple(AgreementForTesting.class))
+                    .put(FixedAsset.class, new InstantiatorSimple(FixedAssetForTesting.class))
+                    .put(Party.class, new InstantiatorSimple(PartyForTesting.class))
+                    .put(Geography.class, new InstantiatorSimple(GeographyForTesting.class))
+                    .put(LeaseItem.class, new InstantiatorForLeaseItem())
+                    .put(LeaseTerm.class, new InstantiatorForLeaseTerm())
+                    .build()
+                );
         withLoggingTo(System.out);
     }
 

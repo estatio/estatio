@@ -8,6 +8,7 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
@@ -29,7 +30,6 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.utils.Orderings;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -70,9 +70,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         currentInvoice.removeFromItems(this);
     }
 
-    
-    
-    
+    // //////////////////////////////////////
+
     private Charge charge;
 
     @Title(sequence = "2")
@@ -90,7 +89,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     }
 
-    
+    // //////////////////////////////////////
+
     
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal quantity;
@@ -104,7 +104,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.quantity = quantity;
     }
 
-    
+    // //////////////////////////////////////
+
     
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
@@ -122,7 +123,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         return BigDecimal.ZERO;
     }
 
-    
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal vatAmount;
 
@@ -136,7 +138,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.vatAmount = vatAmount;
     }
 
-    
+    // //////////////////////////////////////
+
     
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
@@ -150,7 +153,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.grossAmount = grossAmount;
     }
 
-    
+    // //////////////////////////////////////
+
     
     private Tax tax;
 
@@ -163,6 +167,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     public void setTax(final Tax tax) {
         this.tax = tax;
     }
+
+    // //////////////////////////////////////
 
     private String description;
 
@@ -177,6 +183,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     }
 
     
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
@@ -189,8 +197,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.dueDate = dueDate;
     }
 
+    // //////////////////////////////////////
 
-    // {{ StartDate, EndDate
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -221,8 +229,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    // }}
 
+
+    // //////////////////////////////////////
 
 
     /**
@@ -231,13 +240,17 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
      */
     public abstract void attachToInvoice();
 
+    // //////////////////////////////////////
+
     @Bulk
     public InvoiceItem verify() {
-        calulateTax();
+        calculateTax();
         return this;
     }
 
-    @Hidden
+    // //////////////////////////////////////
+
+    @Programmatic
     public void remove() {
         // no safeguard, assuming being called with precaution
         clearInvoice();
@@ -245,8 +258,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         getContainer().remove(this);
     }
 
-    @Hidden
-    private void calulateTax() {
+    @Programmatic
+    private void calculateTax() {
         BigDecimal vatAmount = BigDecimal.ZERO;
         if (getTax() != null) {
             BigDecimal percentage = tax.percentageFor(getDueDate());
@@ -262,11 +275,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         }
     }
 
-    public void created() {
-        initialize();
-    }
-
-    @Hidden
+    @Programmatic
     public void initialize() {
         // set defaults
         setVatAmount(BigDecimal.ZERO);
@@ -274,14 +283,36 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         setNetAmount(BigDecimal.ZERO);
     }
 
+    // //////////////////////////////////////
 
-    // {{ Comparable impl
+    /**
+     * Lifecycle
+     */
+    public void created() {
+        initialize();
+    }
+
+
+    // //////////////////////////////////////
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("invoice", getInvoice())
+                .add("charge", getCharge())
+                .add("startDate", getStartDate())
+                .add("dueDate", getDueDate())
+                .toString();
+    }
+
+    // //////////////////////////////////////
+
     @Override
     public int compareTo(InvoiceItem o) {
         return ORDERING_BY_INVOICE
-                .compound(ORDERING_BY_START_DATE)
-                .compound(ORDERING_BY_DUE_DATE)
-                .compound(ORDERING_BY_DESC)
+                .compound(ORDERING_BY_START_DATE_DESC)
+                .compound(ORDERING_BY_CHARGE)
+                .compound(ORDERING_BY_DESCRIPTION)
                 .compare(this, o);
     }
 
@@ -291,32 +322,30 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         }
     };
 
-    public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE = new Ordering<InvoiceItem>() {
+    public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE_DESC = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
-            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
         }
     };
 
-    public final static Ordering<InvoiceItem> ORDERING_BY_DUE_DATE = new Ordering<InvoiceItem>() {
+    public final static Ordering<InvoiceItem> ORDERING_BY_CHARGE = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
-            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getDueDate(), q.getDueDate());
+            return Ordering.natural().nullsFirst().compare(p.getCharge(), q.getCharge());
         }
     };
 
-    public static Ordering<InvoiceItem> ORDERING_BY_DESC = new Ordering<InvoiceItem>() {
+    public static Ordering<InvoiceItem> ORDERING_BY_DESCRIPTION = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getDescription(), q.getDescription());
+            return Ordering.natural().nullsFirst().compare(p.getDescription(), q.getDescription());
         }
     };
 
-    // }}
 
-    
-    // {{ injected
+    // //////////////////////////////////////
+
     private Charges charges;
-    public void injectChargesService(Charges charges) {
+    public void injectCharges(Charges charges) {
         this.charges = charges;
     }
-    // }}
 
 }

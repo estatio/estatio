@@ -15,9 +15,9 @@ public class TaxRateTest_compareTo extends ComparableContractTest_compareTo<TaxR
         return listOf(
                 listOf(
                         newTaxRate(null),
-                        newTaxRate(new LocalDate(2012,3,1)),
-                        newTaxRate(new LocalDate(2012,3,1)),
-                        newTaxRate(new LocalDate(2012,3,2))
+                        newTaxRate(new LocalDate(2012,4,2)),
+                        newTaxRate(new LocalDate(2012,4,2)),
+                        newTaxRate(new LocalDate(2012,3,1))
                         )
                 );
     }

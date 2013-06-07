@@ -49,9 +49,9 @@ public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<Le
                         ),
                 listOf(
                         newLeaseUnit(lease1, unit1, null),
-                        newLeaseUnit(lease1, unit1, new LocalDate(2012,3,1)),
-                        newLeaseUnit(lease1, unit1, new LocalDate(2012,3,1)),
-                        newLeaseUnit(lease1, unit1, new LocalDate(2012,3,2))
+                        newLeaseUnit(lease1, unit1, new LocalDate(2012,4,1)),
+                        newLeaseUnit(lease1, unit1, new LocalDate(2012,4,1)),
+                        newLeaseUnit(lease1, unit1, new LocalDate(2012,3,1))
                         )
                 );
     }

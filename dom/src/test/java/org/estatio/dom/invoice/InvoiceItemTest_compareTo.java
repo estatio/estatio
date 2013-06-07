@@ -7,19 +7,30 @@ import org.junit.Before;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
+import org.estatio.dom.charge.Charge;
+
 
 public class InvoiceItemTest_compareTo extends ComparableContractTest_compareTo<InvoiceItem> {
 
-    private Invoice inv;
+    private Invoice inv1;
     private Invoice inv2;
+
+    private Charge chg1;
+    private Charge chg2;
 
     @Before
     public void setUpParentInvoices() throws Exception {
-        inv = new Invoice();
-        inv.setInvoiceNumber("000001");
-        
+        inv1 = new Invoice();
         inv2 = new Invoice();
+        
+        inv1.setInvoiceNumber("000001");
         inv2.setInvoiceNumber("000002");
+        
+        chg1 = new Charge();
+        chg2 = new Charge();
+        
+        chg1.setCode("ABC");
+        chg2.setCode("DEF");
     }
     
     @SuppressWarnings("unchecked")
@@ -28,27 +39,27 @@ public class InvoiceItemTest_compareTo extends ComparableContractTest_compareTo<
         return listOf(
                 listOf(
                         newInvoiceItem(null, null, null, null),
-                        newInvoiceItem(inv, null, null, null),
-                        newInvoiceItem(inv, null, null, null),
+                        newInvoiceItem(inv1, null, null, null),
+                        newInvoiceItem(inv1, null, null, null),
                         newInvoiceItem(inv2, null, null, null)
                         ),
                 listOf(
-                        newInvoiceItem(inv, null, null, null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), null, null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), null, null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,2), null, null)
+                        newInvoiceItem(inv1, null, null, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,4,2), null, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,4,2), null, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), null, null)
                         ),
                 listOf(
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), null, null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,1), null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,1), null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,2), null)
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), null, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg1, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg1, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg2, null)
                         ),
                 listOf(
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,1), null),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,1), "ABC"),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,1), "ABC"),
-                        newInvoiceItem(inv, new LocalDate(2012,3,1), new LocalDate(2012,4,1), "DEF")
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg1, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg1, "ABC"),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg1, "ABC"),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), chg1, "DEF")
                         )
                 );
     }
@@ -56,18 +67,14 @@ public class InvoiceItemTest_compareTo extends ComparableContractTest_compareTo<
     private InvoiceItem newInvoiceItem(
             Invoice invoice,
             LocalDate startDate,
-            LocalDate dueDate,
+            Charge charge,
             String description) {
-        final InvoiceItem ib = new InvoiceItem(){
-            @Override
-            public void attachToInvoice() {
-            }
-        };
-        ib.setInvoice(invoice);
-        ib.setStartDate(startDate);
-        ib.setDueDate(dueDate);
-        ib.setDescription(description);
-        return ib;
+        final InvoiceItem ii = new InvoiceItemForTesting();
+        ii.setInvoice(invoice);
+        ii.setStartDate(startDate);
+        ii.setCharge(charge);
+        ii.setDescription(description);
+        return ii;
     }
 
 }

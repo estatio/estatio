@@ -236,7 +236,7 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     @Override
     @Hidden
     public int compareTo(LeaseUnit other) {
-        return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE).compare(this, other);
+        return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
     }
 
     public static Ordering<LeaseUnit> ORDERING_BY_LEASE = new Ordering<LeaseUnit>() {
@@ -249,9 +249,9 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
             return Ordering.natural().nullsFirst().compare(p.getUnit(), q.getUnit());
         }
     };
-    public static Ordering<LeaseUnit> ORDERING_BY_START_DATE = new Ordering<LeaseUnit>() {
+    public static Ordering<LeaseUnit> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseUnit>() {
         public int compare(LeaseUnit p, LeaseUnit q) {
-            return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(p.getStartDate(), q.getStartDate());
+            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
         }
     };
 

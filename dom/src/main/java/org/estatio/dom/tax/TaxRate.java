@@ -6,6 +6,9 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Ordering;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -17,14 +20,13 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.utils.Orderings;
+import org.estatio.dom.WithStartDate;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate>, WithInterval {
 
-    // {{ Tax (property)
     private Tax tax;
 
     @Title
@@ -37,9 +39,8 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         this.tax = tax;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ StartDate, EndDate
     private LocalDate startDate;
 
     @Persistent
@@ -73,7 +74,8 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
 
     // }}
 
-    // {{ Percentage (property)
+    // //////////////////////////////////////
+
     private BigDecimal percentage;
 
     @Title
@@ -87,9 +89,8 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         this.percentage = percentage;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ PreviousRate (property)
     private TaxRate propertyName;
 
     @Hidden
@@ -102,9 +103,8 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         this.propertyName = propertyName;
     }
 
-    // }}
-
-    // {{ NextRate (property)
+    // //////////////////////////////////////
+    
     private TaxRate nextRate;
 
     @Hidden
@@ -117,9 +117,8 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         this.nextRate = nextRate;
     }
 
-    // }}
-
-    // {{ NewRate (action)
+    // //////////////////////////////////////
+    
     public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
         TaxRate rate = this.getTax().newRate(startDate, percentage);
         setNextRate(rate);
@@ -127,10 +126,27 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         return rate;
     }
 
-    // }}
+    // //////////////////////////////////////
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("tax", getTax()!=null?getTax().getReference():null)
+                .add("startDate", getStartDate())
+                .toString();
+    }
+
+    // //////////////////////////////////////
 
     @Override
     public int compareTo(TaxRate other) {
-        return Orderings.LOCAL_DATE_NATURAL_NULLS_FIRST.compare(this.getStartDate(), other.getStartDate());
+        return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
     }
+
+    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>(){
+        public int compare(TaxRate p, TaxRate q) {
+            return Ordering.natural().nullsFirst().compare(p.getTax(), q.getTax());
+        }
+    };
+
 }

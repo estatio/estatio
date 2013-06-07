@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -22,7 +23,6 @@ import org.estatio.dom.ComparableByReference;
 @Immutable
 public class Tax extends EstatioRefDataObject implements ComparableByReference<Tax> {
 
-    // {{ Reference (property)
     private String reference;
 
     @Title
@@ -35,9 +35,8 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
         this.reference = reference;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ Name (property)
     private String name;
 
     @MemberOrder(sequence = "2")
@@ -49,9 +48,8 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
         this.name = name;
     }
 
-    // }}
-
-    // {{ Rates (Collection)
+    // //////////////////////////////////////
+    
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
@@ -64,16 +62,15 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
         this.rates = rates;
     }
 
-    // }}
-
-    // {{ NewRate (action)
+    // //////////////////////////////////////
+    
     public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
         return taxes.newRate(this, startDate, percentage);
     }
 
-    // }}
-
-    // {{ getPercentageForDate
+    // //////////////////////////////////////
+    
+    @Programmatic
     public BigDecimal percentageFor(LocalDate date) {
         TaxRate rate = taxes.findTaxRateForDate(this, date);
         if (rate == null) {
@@ -81,11 +78,9 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
         }
         return rate.getPercentage();
     }
-    // }}
-
 
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
