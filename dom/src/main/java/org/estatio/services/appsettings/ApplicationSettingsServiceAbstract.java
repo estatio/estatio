@@ -30,12 +30,12 @@ public abstract class ApplicationSettingsServiceAbstract<T> {
         return setting;
     }
 
-    // {{ injected: DomainObjectContainer
+    // //////////////////////////////////////
+
     private DomainObjectContainer container;
 
     public void setDomainObjectContainer(final DomainObjectContainer container) {
         this.container = container;
     }
-    // }}
 
 }

@@ -462,6 +462,13 @@
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <type>test-jar</type>
+            </dependency>
+
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>estatio-fixture</artifactId>
@@ -517,6 +524,12 @@
                 <version>4.11</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.junit.extensions</groupId>
+                <artifactId>cpsuite</artifactId>
+                <version>1.2.6</version>
+            </dependency>
+    
             <dependency>
                 <groupId>org.jmock</groupId>
                 <artifactId>jmock</artifactId>
@@ -800,6 +813,7 @@
 	            <activeByDefault>true</activeByDefault>
 	        </activation>
 	        <modules>
+                <module>cpsuite</module>
 		        <module>dom</module>
 		        <module>fixture</module>
 		        <module>objstore-jdo</module>
@@ -818,6 +832,7 @@
                </property>
            </activation>
            <modules>
+                <module>cpsuite</module>
                 <module>dom</module>
                 <module>fixture</module>
                 <module>objstore-jdo</module>
