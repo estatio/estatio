@@ -48,7 +48,7 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
@@ -62,16 +62,24 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
     }
 
     // //////////////////////////////////////
-    
+
     public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
         return taxes.newRate(this, startDate, percentage);
     }
 
     // //////////////////////////////////////
-    
+
+    @Programmatic
+    public TaxRate taxRateFor(LocalDate date) {
+        TaxRate rate = taxes.findTaxRateForDate(this, date);
+        return rate;
+    }
+
+    // //////////////////////////////////////
+
     @Programmatic
     public BigDecimal percentageFor(LocalDate date) {
-        TaxRate rate = taxes.findTaxRateForDate(this, date);
+        TaxRate rate = taxRateFor(date);
         if (rate == null) {
             return null;
         }
@@ -86,12 +94,12 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public int compareTo(Tax other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
-    
+
     // //////////////////////////////////////
 
     private Taxes taxes;

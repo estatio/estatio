@@ -19,15 +19,6 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
@@ -72,6 +63,14 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 
 //@Hidden
 public class Api extends AbstractFactoryAndRepository {
@@ -111,22 +110,13 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putTax(@Named("reference") String reference, @Named("name") String name) {
+    public void putTax(@Named("reference") String reference, @Named("name") String name, @Named("description") String decription, @Named("percentage") BigDecimal percentage, @Named("startDate") LocalDate startDate) {
         Tax tax = taxes.findTaxByReference(reference);
         if (tax == null) {
             tax = taxes.newTax(reference);
+            tax.setName(name);
         }
-        tax.setName(name);
-    }
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putTaxRate(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name) {
-        Country country = countries.findByReference(code);
-        if (country == null) {
-            country = countries.newCountry(code, name);
-        }
-        country.setName(name);
-        country.setAlpha2Code(alpha2Code);
+        tax.newRate(startDate, percentage);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

@@ -40,7 +40,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t00_refData() throws Exception {
         api.putCountry("NLD", "NL", "Netherlands");
-        api.putTax("APITAX", "APITAX");
+        api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980,1,1));
         api.putCharge("APICHARGE", "APICHARGE", "API CHARGE", "APITAX");
     }
 

@@ -52,11 +52,22 @@ public class Taxes extends AbstractFactoryAndRepository {
 
     @Hidden
     public TaxRate newRate(@Named("Tax") Tax tax, @Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
-        TaxRate rate = newTransientInstance(TaxRate.class);
-        rate.setTax(tax);
-        rate.setStartDate(startDate);
+        TaxRate currentRate = tax.taxRateFor(startDate);
+        TaxRate rate;
+        if (currentRate == null || !startDate.equals(currentRate.getStartDate())) {
+            rate = newTransientInstance(TaxRate.class);
+            rate.setTax(tax);
+            rate.setStartDate(startDate);
+            persist(rate);
+        } else {
+            rate = currentRate;
+        }
         rate.setPercentage(percentage);
-        persist(rate);
+        if (currentRate != null) {
+            TaxRate currentNextRate = currentRate.getNextRate();
+            currentRate.modifyNextRate(rate);
+            rate.modifyNextRate(currentNextRate);
+        }
         return rate;
     }
 

@@ -64,7 +64,7 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-    
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
@@ -94,6 +94,7 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
 
     @Hidden
     @MemberOrder(sequence = "1")
+    @Persistent(mappedBy = "nextRate")
     public TaxRate getPreviousRate() {
         return propertyName;
     }
@@ -103,7 +104,7 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
     }
 
     // //////////////////////////////////////
-    
+
     private TaxRate nextRate;
 
     @Hidden
@@ -116,8 +117,27 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
         this.nextRate = nextRate;
     }
 
+    public void modifyNextRate(final TaxRate nextRate) {
+        TaxRate currentNextRate = getNextRate();
+        if (nextRate == null || nextRate.equals(currentNextRate)) {
+            return;
+        }
+        clearNextRate();
+        nextRate.setPreviousRate(this);
+        setNextRate(nextRate);
+    }
+
+    public void clearNextRate() {
+        TaxRate currentNextRate = getNextRate();
+        if (currentNextRate == null) {
+            return;
+        }
+        currentNextRate.setPreviousRate(null);
+        setNextRate(null);
+    }
+
     // //////////////////////////////////////
-    
+
     public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
         TaxRate rate = this.getTax().newRate(startDate, percentage);
         setNextRate(rate);
@@ -129,22 +149,17 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("tax", getTax()!=null?getTax().getReference():null)
-                .add("startDate", getStartDate())
-                .toString();
+        return Objects.toStringHelper(this).add("tax", getTax() != null ? getTax().getReference() : null).add("startDate", getStartDate()).toString();
     }
 
     // //////////////////////////////////////
 
     @Override
     public int compareTo(TaxRate other) {
-        return ORDERING_BY_TAX
-                .compound(ORDERING_BY_START_DATE_DESC)
-                .compare(this, other);
+        return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
     }
 
-    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>(){
+    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>() {
         public int compare(TaxRate p, TaxRate q) {
             return Ordering.natural().nullsFirst().compare(p.getTax(), q.getTax());
         }
