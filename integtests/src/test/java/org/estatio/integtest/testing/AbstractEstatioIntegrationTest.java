@@ -19,6 +19,7 @@ import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.apache.isis.core.wrapper.WrapperFactoryDefault;
+import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
@@ -50,6 +51,7 @@ import org.estatio.jdo.ChargesJdo;
 import org.estatio.jdo.CommunicationChannelsJdo;
 import org.estatio.jdo.CountriesJdo;
 import org.estatio.jdo.CurrenciesJdo;
+import org.estatio.jdo.EstatioSettingsServiceJdo;
 import org.estatio.jdo.FinancialAccountsJdo;
 import org.estatio.jdo.FixedAssetRolesJdo;
 import org.estatio.jdo.IndicesJdo;
@@ -260,7 +262,8 @@ public abstract class AbstractEstatioIntegrationTest {
                     new Api(),
                     new IsisJdoSupportImpl(),
                     new InvoiceCalculationService(),
-                    new EstatioSettingsService(),
+                    new ApplicationSettingsServiceJdo(),
+                    new EstatioSettingsServiceJdo(),
                     new FinancialAccountContributedActions(),
                     new LeaseTermContributedActions()
                     );

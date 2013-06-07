@@ -1,18 +1,17 @@
 package org.estatio.viewer.wicket.app.administration;
 
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
+
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.index.IndexFixture;
 import org.estatio.fixturescripts.FixtureScript;
-import org.estatio.services.appsettings.EstatioSetting;
 import org.estatio.services.appsettings.EstatioSettingsService;
 import org.estatio.viewer.wicket.app.scheduler.EstatioSchedulerService;
-
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
 
 @Named("Administration")
 public class EstatioAdministrationService {
@@ -56,9 +55,6 @@ public class EstatioAdministrationService {
         return FixtureScript.GenerateTopModelInvoice;
     }
 
-    public EstatioSetting applicationSettings() {
-        return settingsService.fetchSetting();
-    }
 
     private DomainObjectContainer container;
 
