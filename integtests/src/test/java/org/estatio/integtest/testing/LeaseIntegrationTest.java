@@ -144,7 +144,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6600).setScale(2)));
+        assertThat(item.getTerms().last().getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         leaseMediax.verify();
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getValue(), is(BigDecimal.valueOf(6600).setScale(2)));
+        assertThat(item.getTerms().last().getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
 
     }
 
@@ -163,7 +163,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
         term.approve();
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
-        assertThat(term.getValue(), is(BigDecimal.valueOf(20200).setScale(2)));
+        assertThat(term.getApprovedValue(), is(BigDecimal.valueOf(20200).setScale(2)));
     }
 
     @Test
@@ -173,7 +173,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         // first term
         LeaseTerm term = (LeaseTerm) item.getTerms().first();
         //partial period
-        term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
+        term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
         //full term
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
@@ -208,7 +208,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         term.approve();
         //partial period
-        term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1));
+        term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
         //full period
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
@@ -229,7 +229,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         // call calulate on lease
-        lease.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
+        lease.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), false);
         assertThat(term.getInvoiceItems().size(), is(2)); // the previous test
                                                           // already supplied
                                                           // one

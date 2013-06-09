@@ -41,39 +41,26 @@ public class LeaseTermForServiceChargeTest {
         term.initialize();
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.setBudgetedValue(BigDecimal.valueOf(6000).setScale(4));
-        
+
     }
 
     @Test
     public void update_ok() {
-//        context.checking(new Expectations() {
-//            {
-//                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-//                will(returnValue(new LeaseTermForServiceCharge()));
-//            }
-//        });
-//        term.createNext();
         term.update();
-        assertThat(term.getValue(), Is.is(term.getBudgetedValue()));
-        
+        assertThat(term.getTrialValue(), Is.is(term.getBudgetedValue()));
         LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
         nextTerm.setPreviousTerm(term);
         nextTerm.initialize();
         nextTerm.update();
-        
         assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
-        assertThat(nextTerm.getValue(), Is.is(term.getValue()));
     }
-    
+
     @Test
     public void valueForDueDate_ok() throws Exception {
-        
         LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
-        
         term.setEndDate(new LocalDate(2011, 12, 31));
         term.setBudgetedValue(BigDecimal.valueOf(6000));
         term.setAuditedValue(BigDecimal.valueOf(6600));
-        
         assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
         assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(6000)));
         assertThat(term.valueForDueDate(new LocalDate(2012, 1, 1)), is(BigDecimal.valueOf(6600)));

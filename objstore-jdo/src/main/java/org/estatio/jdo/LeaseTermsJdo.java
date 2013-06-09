@@ -7,6 +7,7 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.query.QueryDefault;
@@ -25,12 +26,12 @@ public class LeaseTermsJdo extends LeaseTerms {
     }
 
     @Override
-    public List<LeaseTerm> leaseTermsToBeApproved() {
-        return allMatches(queryForLeaseTermsWithStatus(LeaseTermStatus.NEW));
+    public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
+        return allMatches(queryForLeaseTermsWithStatus(LeaseTermStatus.NEW, date));
     }
 
-    private static QueryDefault<LeaseTerm> queryForLeaseTermsWithStatus(LeaseTermStatus status) {
-        return new QueryDefault<LeaseTerm>(LeaseTerm.class, "leaseTerm_findLeaseTermsWithStatus", "status", status);
+    private static QueryDefault<LeaseTerm> queryForLeaseTermsWithStatus(LeaseTermStatus status, LocalDate date) {
+        return new QueryDefault<LeaseTerm>(LeaseTerm.class, "leaseTerm_findLeaseTermsWithStatus", "status", status, "date", date);
     }
 
     @Override 

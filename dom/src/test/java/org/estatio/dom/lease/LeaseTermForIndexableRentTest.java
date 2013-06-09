@@ -162,6 +162,11 @@ public class LeaseTermForIndexableRentTest {
         assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));
         assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
         assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+        term.setSettledValue(BigDecimal.valueOf(31000));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(31000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(31000)));
     }
 
     @Ignore // incomplete, null pointer exception

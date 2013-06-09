@@ -362,61 +362,67 @@ public class Api extends AbstractFactoryAndRepository {
     public void putLeaseTermForIndexableRent(
             // start generic fields
             @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate,
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
             @Named("status") @Optional String status,
-            @Named("value") @Optional BigDecimal value,
             // end generic fields
-            @Named("reviewDate") @Optional LocalDate reviewDate, @Named("effectiveDate") @Optional LocalDate effectiveDate, @Named("baseValue") @Optional BigDecimal baseValue, @Named("indexedValue") @Optional BigDecimal indexedValue, @Named("levellingValue") @Optional BigDecimal levellingValue,
-            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, @Named("indexReference") @Optional String indexReference, @Named("indexationFrequency") @Optional String indexationFrequency, @Named("indexationPercentage") @Optional BigDecimal indexationPercentage,
-            @Named("baseIndexReference") @Optional String baseIndexReference, @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate, @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate, @Named("baseIndexValue") @Optional BigDecimal baseIndexValue,
-            @Named("nextIndexReference") @Optional String nextIndexReference, @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate, @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate, @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
-        Index index = indices.findByReference(indexReference);
-        LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
-        term.setIndex(index);
-        term.setFrequency(indexationFreq);
-        term.setValue(value);
-        term.setEffectiveDate(effectiveDate);
-        term.setBaseValue(baseValue);
-        term.setIndexedValue(indexedValue);
-        term.setBaseIndexStartDate(baseIndexStartDate);
-        term.setBaseIndexValue(baseIndexValue);
-        term.setNextIndexStartDate(nextIndexStartDate);
-        term.setNextIndexValue(nextIndexValue);
-        term.setIndexationPercentage(indexationPercentage);
-        term.setLevellingValue(levellingValue);
-        term.setLevellingPercentage(levellingPercentage);
-        term.setStatus(LeaseTermStatus.valueOf(status));
+            @Named("reviewDate") @Optional LocalDate reviewDate, @Named("effectiveDate") @Optional LocalDate effectiveDate, @Named("baseValue") @Optional BigDecimal baseValue, @Named("indexedValue") @Optional BigDecimal indexedValue, @Named("settledValue") @Optional BigDecimal settledValue,
+            @Named("levellingValue") @Optional BigDecimal levellingValue, @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, @Named("indexReference") @Optional String indexReference, @Named("indexationFrequency") @Optional String indexationFrequency,
+            @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, @Named("baseIndexReference") @Optional String baseIndexReference, @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate, @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate,
+            @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, @Named("nextIndexReference") @Optional String nextIndexReference, @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate, @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
+            @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
+        if (term != null) {
+            Index index = indices.findByReference(indexReference);
+            LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
+            term.setIndex(index);
+            term.setFrequency(indexationFreq);
+            term.setEffectiveDate(effectiveDate);
+            term.setBaseValue(baseValue);
+            term.setIndexedValue(indexedValue);
+            term.setSettledValue(settledValue);
+            term.setBaseIndexStartDate(baseIndexStartDate);
+            term.setBaseIndexValue(baseIndexValue);
+            term.setNextIndexStartDate(nextIndexStartDate);
+            term.setNextIndexValue(nextIndexValue);
+            term.setIndexationPercentage(indexationPercentage);
+            term.setLevellingValue(levellingValue);
+            term.setLevellingPercentage(levellingPercentage);
+        }
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForTurnoverRent(
             // start generic fields
             @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status, @Named("value") @Optional BigDecimal value,
+            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status,
             // end generic fields
-            @Named("turnoverRentRule") @Optional String turnoverRentRule, @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover, @Named("auditedTurnover") @Optional BigDecimal auditedTurnover) {
-        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
-        term.setValue(value);
-        term.setBudgetedTurnover(budgetedTurnover);
-        term.setAuditedTurnover(auditedTurnover);
-        term.setTurnoverRentRule(turnoverRentRule);
+            @Named("turnoverRentRule") @Optional String turnoverRentRule, @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover, @Named("auditedTurnover") @Optional BigDecimal auditedTurnover, @Named("turnoverRentValue") @Optional BigDecimal turnoverRentValue) {
+        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
+        if (term != null) {
+            term.setTurnoverRentValue(turnoverRentValue);
+            term.setBudgetedTurnover(budgetedTurnover);
+            term.setAuditedTurnover(auditedTurnover);
+            term.setTurnoverRentRule(turnoverRentRule);
+        }
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForServiceCharge(
             // start generic fields
             @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status, @Named("value") @Optional BigDecimal value,
+            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status,
             // end generic fields
             @Named("auditedValue") @Optional BigDecimal auditedValue, @Named("budgetedValue") @Optional BigDecimal budgetedValue) {
-        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence);
-        term.setValue(value);
-        term.setAuditedValue(auditedValue);
-        term.setBudgetedValue(budgetedValue);
+        LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
+        if (term != null) {
+            term.setAuditedValue(auditedValue);
+            term.setBudgetedValue(budgetedValue);
+        }
     }
 
-    private LeaseTerm putLeaseTerm(String leaseReference, String unitReference, BigInteger itemSequence, String itemType, LocalDate itemStartDate, LocalDate startDate, LocalDate endDate, BigInteger sequence) {
+    private LeaseTerm putLeaseTerm(String leaseReference, String unitReference, BigInteger itemSequence, String itemType, LocalDate itemStartDate, LocalDate startDate, LocalDate endDate, BigInteger sequence, String status) {
         Lease lease = leases.findByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));
@@ -436,21 +442,27 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));
         }
-        LeaseTerm term = item.findTermWithSequence(sequence);
-        if (term == null) {
-            if (sequence.equals(BigInteger.ONE)) {
-                term = item.createInitialTerm();
-            } else {
-                LeaseTerm currentTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
-                term = item.createNextTerm(currentTerm);
-                if (startDate != null)
-                    currentTerm.setEndDate(startDate.minusDays(1));
+        // check if the date is within range of lease
+        if (lease.getTerminationDate() == null || lease.getTerminationDate().compareTo(startDate) >= 0) {
+            LeaseTerm term = item.findTermWithSequence(sequence);
+            if (term == null) {
+                if (sequence.equals(BigInteger.ONE)) {
+                    term = item.createInitialTerm();
+                } else {
+                    LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
+                    term = item.createNextTerm(previousTerm);
+                    if (startDate != null)
+                        previousTerm.setEndDate(startDate.minusDays(1));
+                }
+                term.setSequence(sequence);
             }
-            term.setSequence(sequence);
+            term.setStatus(LeaseTermStatus.valueOf(status));
+            term.setStartDate(startDate);
+            // will be overwritten if there is a next term
+            term.setEndDate(lease.getTerminationDate());
+            return term;
         }
-        term.setStartDate(startDate);
-        // term.setEndDate(endDate);
-        return term;
+        return null;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

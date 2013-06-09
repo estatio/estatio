@@ -14,7 +14,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
-
 @Named("Parties")
 public class Parties extends AbstractFactoryAndRepository {
 
@@ -30,10 +29,7 @@ public class Parties extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Person newPerson(
-            final @Named("initials") @Optional String initials, 
-            final @Named("firstName") @Optional String firstName, 
-            final @Named("lastName") String lastName) {
+    public Person newPerson(final @Named("initials") @Optional String initials, final @Named("firstName") @Optional String firstName, final @Named("lastName") String lastName) {
         final Person person = newTransientInstance(Person.class);
         person.setInitials(initials);
         person.setLastName(lastName);
@@ -45,9 +41,7 @@ public class Parties extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
-    public Organisation newOrganisation(
-            final @Named("Reference") String reference, 
-            final @Named("Name") String name) {
+    public Organisation newOrganisation(final @Named("Reference") String reference, final @Named("Name") String name) {
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setReference(reference);
         organisation.setName(name);
@@ -57,8 +51,7 @@ public class Parties extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public Organisation findOrganisationByReference(
-            @Named("Reference") final String reference) {
+    public Organisation findOrganisationByReference(@Named("Reference") final String reference) {
         return firstMatch(Organisation.class, new Filter<Organisation>() {
             @Override
             public boolean accept(final Organisation organisation) {
@@ -69,8 +62,7 @@ public class Parties extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
-    public Organisation findOrganisationByName(
-            @Named("Name") final String name){
+    public Organisation findOrganisationByName(@Named("Name") final String name) {
         return firstMatch(Organisation.class, new Filter<Organisation>() {
             @Override
             public boolean accept(final Organisation organisation) {
@@ -85,12 +77,11 @@ public class Parties extends AbstractFactoryAndRepository {
     public List<Party> findPartiesByReference(@Named("Reference") final String reference) {
         throw new NotImplementedException();
     }
- 
+
     @Hidden
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public Party findPartyByReference(
-            @Named("Reference") final String reference) {
+    public Party findPartyByReference(@Named("Reference") final String reference) {
         return firstMatch(Party.class, new Filter<Party>() {
             @Override
             public boolean accept(final Party party) {
@@ -105,21 +96,18 @@ public class Parties extends AbstractFactoryAndRepository {
         throw new NotImplementedException();
     }
 
-    // {{ allParties
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "7")
     public List<Party> allParties() {
         return allInstances(Party.class);
     }
-    // }}
 
-    // {{ autoComplete (hidden)
     @Hidden
     public List<Party> autoComplete(String searchPhrase) {
-        return findParties("*".concat(searchPhrase).concat("*"));
+        if (searchPhrase.length()>2)
+            return findParties("*"+searchPhrase+"*");
+        return null;
     }
-    // }}
-    
- 
+
 }

@@ -58,7 +58,6 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
     private String description;
 
     @MemberOrder(sequence = "4")
-    @Title(sequence = "2", prepend = "-")
     public String getDescription() {
         return description;
     }

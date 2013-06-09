@@ -5,13 +5,12 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.estatio.dom.utils.MathUtils;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
-
-import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -44,6 +43,26 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         this.auditedValue = auditedValue;
     }
 
+    // //////////////////////////////////////
+
+    @Override
+    @Mask("")
+    public BigDecimal getApprovedValue() {
+        if (getStatus() == LeaseTermStatus.APPROVED)
+            return getTrialValue();
+        return null;
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    @Mask("")
+    public BigDecimal getTrialValue() {
+        if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
+            return getAuditedValue();
+        }
+        return getBudgetedValue();
+    }
 
     // //////////////////////////////////////
 
@@ -92,18 +111,11 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         if (getStatus() == LeaseTermStatus.NEW) {
             // date from previous term
             if (getPreviousTerm() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
-                if (MathUtils.isNotZeroOrNull(getPreviousTerm().getValue())) {
-                    setBudgetedValue(getPreviousTerm().getValue());
+                if (MathUtils.isNotZeroOrNull(getPreviousTerm().getTrialValue())) {
+                    setBudgetedValue(getPreviousTerm().getTrialValue());
                 }
             }
-            // update itself
-            if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
-                setValue(getAuditedValue());
-            } else {
-                if (MathUtils.isNotZeroOrNull(getBudgetedValue())) {
-                    setValue(getBudgetedValue());
-                }
-            }
+
         }
     }
 

@@ -40,7 +40,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t00_refData() throws Exception {
         api.putCountry("NLD", "NL", "Netherlands");
-        api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980,1,1));
+        api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
         api.putCharge("APICHARGE", "APICHARGE", "API CHARGE", "APITAX");
     }
 
@@ -82,10 +82,10 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t05_putLeaseTermWorks() throws Exception {
-        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "NEW", BigDecimal.valueOf(12345), null, null, BigDecimal.valueOf(12345), null, null,
-                null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
-        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", BigDecimal.valueOf(12345), null, null, BigDecimal.valueOf(12345), null, null,
-                null, "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
+        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", "YEARLY",
+                null, null, null, null, null, null, null, null, null);
+        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null,
+                "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
         Lease lease = leases.findByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
     }

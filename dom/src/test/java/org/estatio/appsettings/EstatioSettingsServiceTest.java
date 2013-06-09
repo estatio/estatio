@@ -69,7 +69,7 @@ public class EstatioSettingsServiceTest {
     
     @Test
     public void happyCase() {
-        final LocalDate date = new LocalDate(2012,4,1);
+        final LocalDate date = new LocalDate(2013,4,1);
         context.checking(new Expectations() {
             {
                 oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);

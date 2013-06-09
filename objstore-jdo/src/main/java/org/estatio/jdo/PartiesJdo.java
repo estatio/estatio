@@ -17,17 +17,19 @@ public class PartiesJdo extends Parties {
     }
 
     @Override
-    public List<Party> findPartiesByReference(@Named("searchPattern") final String reference) {
-        return allMatches(queryForFindPartyByReference(reference));
+    public List<Party> findPartiesByReference(@Named("searchPattern") final String searchPattern) {
+        return allMatches(queryForFindPartyByReference(searchPattern));
     }
     
     @Override
-    public Party findPartyByReference(final String reference) {
-        return firstMatch(queryForFindPartyByReference(reference));
+    public Party findPartyByReference(@Named("searchPattern") final String searchPattern) {
+        return firstMatch(queryForFindPartyByReference(searchPattern));
     }
     
-    private static QueryDefault<Party> queryForFindPartyByReference(String reference) {
-        return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "reference", StringUtils.wildcardToRegex(reference));
+    // //////////////////////////////////////
+    
+    private static QueryDefault<Party> queryForFindPartyByReference(String searchPattern) {
+        return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "searchPattern", StringUtils.wildcardToRegex(searchPattern));
     }
 
     private static QueryDefault<Party> queryForFindParties(String searchPattern) {

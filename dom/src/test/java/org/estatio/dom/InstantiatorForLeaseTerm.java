@@ -18,9 +18,10 @@ package org.estatio.dom;
 
 import java.math.BigInteger;
 
-import org.apache.isis.core.unittestsupport.bidir.Instantiator;
-
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermImpl;
+
+import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 
 public class InstantiatorForLeaseTerm implements Instantiator {
 
@@ -28,7 +29,7 @@ public class InstantiatorForLeaseTerm implements Instantiator {
     
     @Override
     public Object instantiate() {
-        final LeaseTerm lt = new LeaseTerm();
+        final LeaseTerm lt = new LeaseTermImpl();
         lt.setSequence(BigInteger.valueOf(sequence++));
         return lt;
     }

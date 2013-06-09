@@ -23,7 +23,7 @@ import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {
 
-    private LeaseTerm term;
+    private LeaseTermImpl term;
     private LeaseItem item;
 
     @Rule
@@ -53,7 +53,7 @@ public class LeaseTermTest {
         item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
 
-        term = new LeaseTerm();
+        term = new LeaseTermImpl();
         term.modifyLeaseItem(item);
         term.setStartDate(new LocalDate(2012, 1, 1));
         // term.setEndDate(new LocalDate(2999, 9, 9));
@@ -66,10 +66,10 @@ public class LeaseTermTest {
         context.checking(new Expectations() {
             {
                 oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnValue(new LeaseTerm()));
+                will(returnValue(new LeaseTermImpl()));
             }
         });
-        LeaseTerm next = term.createNext(new LocalDate(2013, 1, 1));
+        LeaseTermImpl next = (LeaseTermImpl) term.createNext(new LocalDate(2013, 1, 1));
         Assert.assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
         Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
         Assert.assertNull(next.getEndDate());
@@ -77,7 +77,7 @@ public class LeaseTermTest {
 
     @Test
     public void update_ok() {
-        LeaseTerm nextTerm = new LeaseTerm();
+        LeaseTermImpl nextTerm = new LeaseTermImpl();
         nextTerm.setStartDate(new LocalDate(2013, 1, 1));
         term.modifyNextTerm(nextTerm);
         term.update();
@@ -89,11 +89,11 @@ public class LeaseTermTest {
         context.checking(new Expectations() {
             {
                 oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnValue(new LeaseTerm()));
+                will(returnValue(new LeaseTermImpl()));
             }
         });
-        LeaseTerm term = new LeaseTerm();
-        term = new LeaseTerm();
+        LeaseTerm term = new LeaseTermImpl();
+        term = new LeaseTermImpl();
         term.injectClockService(mockClockService);
 
         term.modifyLeaseItem(item);
@@ -107,7 +107,7 @@ public class LeaseTermTest {
     @Test
     public void invoicedValueFor_ok() throws Exception {
         LocalDate date = new LocalDate(2012, 1, 1);
-        LeaseTerm term = new LeaseTerm();
+        LeaseTermImpl term = new LeaseTermImpl();
         Invoice invoice = new Invoice();
         invoice.setStatus(InvoiceStatus.APPROVED);
         InvoiceItemForLease item1 = new InvoiceItemForLease();

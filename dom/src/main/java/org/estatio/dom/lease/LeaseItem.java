@@ -100,7 +100,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     // //////////////////////////////////////
-    
+
     private LeaseItemType type;
 
     @Title(sequence = "2")
@@ -114,7 +114,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
@@ -149,7 +149,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     public LocalDate calculatedEndDate() {
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
-    
+
     // //////////////////////////////////////
 
     private InvoicingFrequency invoicingFrequency;
@@ -165,7 +165,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     // //////////////////////////////////////
-    
+
     private PaymentMethod paymentMethod;
 
     @MemberOrder(sequence = "13")
@@ -179,7 +179,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     // //////////////////////////////////////
-    
+
     private Charge charge;
 
     @MemberOrder(sequence = "14")
@@ -196,26 +196,43 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     // //////////////////////////////////////
-    
+
     @Disabled
     @Optional
-    // TODO: Wicket still marks disabled fields a mandatory... it shouldn't.
-    public BigDecimal getCurrentValue() {
-        return valueForDate(clockService.now());
+    @MemberOrder(sequence = "15", name = "Current Value") 
+    public BigDecimal getTrialValue() {
+        LeaseTerm currentTerm = currentTerm(clockService.now());
+        if (currentTerm != null)
+            return currentTerm.getTrialValue();
+        return null;
     }
 
+    // //////////////////////////////////////
+
+    @Disabled
+    @Optional
+    @MemberOrder(sequence = "16", name = "Current Value") 
+       public BigDecimal getApprovedValue() {
+        LeaseTerm currentTerm = currentTerm(clockService.now());
+        if (currentTerm != null)
+            return currentTerm.getApprovedValue();
+        return null;
+    }
+
+    // //////////////////////////////////////
+
     @Programmatic
-    public BigDecimal valueForDate(LocalDate date) {
+    public LeaseTerm currentTerm(LocalDate date) {
         for (LeaseTerm term : getTerms()) {
             if (CalendarUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
-                return term.getValue();
+                return term;
             }
         }
         return null;
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent(mappedBy = "leaseItem")
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
@@ -270,13 +287,13 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
         LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm);
         return term;
     }
-    
+
     // //////////////////////////////////////
 
     public LeaseItem verify() {
@@ -289,12 +306,12 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         }
         return this;
     }
-    
+
     // //////////////////////////////////////
 
-    public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate) {
+    public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, boolean retroRun) {
         for (LeaseTerm term : getTerms()) {
-            term.calculate(startDate, dueDate);
+            term.calculate(startDate, dueDate, retroRun);
         }
         return this;
     }
@@ -311,21 +328,14 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("lease", getLease()!=null?getLease().getReference():null)
-                .add("type", getType())
-                .add("sequence", getSequence())
-                .toString();
+        return Objects.toStringHelper(this).add("lease", getLease() != null ? getLease().getReference() : null).add("type", getType()).add("sequence", getSequence()).toString();
     }
 
     // //////////////////////////////////////
 
     @Override
     public int compareTo(LeaseItem o) {
-        return ORDERING_BY_LEASE
-                .compound(ORDERING_BY_TYPE)
-                .compound(ORDERING_BY_SEQUENCE_DESC)
-                .compare(this, o);
+        return ORDERING_BY_LEASE.compound(ORDERING_BY_TYPE).compound(ORDERING_BY_SEQUENCE_DESC).compare(this, o);
     }
 
     public static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {
@@ -336,12 +346,12 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     public static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
-            return Ordering.<LeaseItemType>natural().nullsFirst().compare(p.getType(), q.getType());
+            return Ordering.<LeaseItemType> natural().nullsFirst().compare(p.getType(), q.getType());
         }
     };
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = (Ordering)WithSequence.ORDERING_BY_SEQUENCE_DESC;;
+    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = (Ordering) WithSequence.ORDERING_BY_SEQUENCE_DESC;;
 
     @SuppressWarnings("unused")
     private final static Ordering<LeaseItem> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseItem>() {

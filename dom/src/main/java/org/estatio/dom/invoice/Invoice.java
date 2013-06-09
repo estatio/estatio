@@ -1,7 +1,6 @@
 package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -11,6 +10,14 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorType;
+import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -23,16 +30,6 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithReferenceGetter;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Party;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
@@ -41,7 +38,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     public String title() {
         return String.format("%08d", Integer.parseInt(getId()));
     }
-    
+
     // //////////////////////////////////////
 
     private Party buyer;
@@ -55,10 +52,6 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         this.buyer = buyer;
     }
 
-    public List<Party> choicesBuyer() {
-        return parties.allParties();
-    }
-
     // //////////////////////////////////////
 
     private Party seller;
@@ -70,10 +63,6 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
 
     public void setSeller(final Party seller) {
         this.seller = seller;
-    }
-
-    public List<Party> choicesSeller() {
-        return parties.allParties();
     }
 
     // //////////////////////////////////////
@@ -117,9 +106,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(extensions = 
-        { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") 
-    })
+    @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
     private InvoiceProvenance provenance;
 
     @MemberOrder(sequence = "6")
@@ -319,18 +306,15 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         getContainer().remove(this);
     }
 
-
     // //////////////////////////////////////
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("invoiceNumber", getInvoiceNumber())
-                .toString();
+        return Objects.toStringHelper(this).add("invoiceNumber", getInvoiceNumber()).toString();
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public int compareTo(Invoice o) {
         return ORDERING_BY_INVOICE_NUMBER.compare(this, o);
@@ -343,12 +327,6 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     };
 
     // //////////////////////////////////////
-    
-    private Parties parties;
-
-    public void injectParties(Parties parties) {
-        this.parties = parties;
-    }
 
     private Numerators numerators;
 

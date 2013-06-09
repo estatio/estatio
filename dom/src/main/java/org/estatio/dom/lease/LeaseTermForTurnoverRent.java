@@ -6,7 +6,6 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotPersisted;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -61,15 +60,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    @NotPersisted
-    @MemberOrder(sequence = "13", name = "Turnover Rent")
-    public BigDecimal getTurnoverRent() {
-        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
-        return helper.calculateRent(getAuditedTurnover());
-    }
-
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal contractualRent;
 
@@ -84,6 +74,40 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(scale = 2)
+    private BigDecimal turnoverRentValue;
+
+    @MemberOrder(sequence = "15", name = "Turnover Rent")
+    public BigDecimal getTurnoverRentValue() {
+        return turnoverRentValue;
+    }
+
+    public void setTurnoverRentValue(final BigDecimal turnoverRentValue) {
+        this.turnoverRentValue = turnoverRentValue;
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    public BigDecimal getApprovedValue() {
+        if (getStatus() == LeaseTermStatus.APPROVED)
+            return getTurnoverRentValue();
+        return null;
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    public BigDecimal getTrialValue() {
+        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
+        BigDecimal calculatedTurnoverRent = helper.calculateRent(getAuditedTurnover());
+        if (calculatedTurnoverRent.compareTo(contractualRent) > 0)
+            return calculatedTurnoverRent.subtract(contractualRent);
+        return BigDecimal.ZERO;
+    }
+
+    // //////////////////////////////////////
+
     @Override
     protected void update() {
         LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
@@ -92,11 +116,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         if (rentItem != null) {
             BigDecimal contractualRent = rentItem.valueForPeriod(getLeaseItem().getInvoicingFrequency(), getStartDate(), getStartDate().plusYears(2));
             setContractualRent(contractualRent);
-            setValue(BigDecimal.ZERO);
-            BigDecimal turnoverRent = getTurnoverRent();
-            if (turnoverRent.compareTo(contractualRent) > 0) {
-                setValue(turnoverRent.subtract(contractualRent));
-            }
         }
     }
 
@@ -107,6 +126,14 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         if (prev != null) {
             setTurnoverRentRule(prev.getTurnoverRentRule());
         }
+    }
+    
+    @Override
+    public LeaseTerm approve() {
+        super.approve();
+        setTurnoverRentValue(getTrialValue());
+        return this;
+
     }
 
 }
