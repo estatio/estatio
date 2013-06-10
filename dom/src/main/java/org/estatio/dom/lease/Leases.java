@@ -28,6 +28,10 @@ import org.estatio.dom.utils.DateTimeUtils;
 @Named("Leases")
 public class Leases extends AbstractFactoryAndRepository {
 
+    public enum InvoiceRunType {
+        NORMAL_RUN, RETRO_RUN;
+    }
+    
     // {{ Id, iconName
     @Override
     public String getId() {
@@ -42,8 +46,14 @@ public class Leases extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Lease newLease(final @Named("Reference") String reference, final @Named("Name") String name, final @Named("Start Date") LocalDate startDate, final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, final @Optional @Named("Landlord") Party landlord, final @Optional @Named("Tentant") Party tenant) {
+    public Lease newLease(
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, 
+            final @Optional @Named("Landlord") Party landlord, 
+            final @Optional @Named("Tentant") Party tenant) {
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
             Period p = DateTimeUtils.stringToPeriod(duration);
@@ -89,10 +99,10 @@ public class Leases extends AbstractFactoryAndRepository {
      * {@link Lease}s matched by the provided <tt>leaseReference</tt> and the
      * other parameters.
      */
-    public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, @Named("Retro Run") @Optional boolean retroRun) {
+    public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, final  @Named("Run Type") InvoiceRunType runType) {
         List<Lease> leases = findLeasesByReference(leaseReference);
         for (Lease lease : leases) {
-            lease.calculate(startDate, dueDate, retroRun);
+            lease.calculate(startDate, dueDate, runType.equals(InvoiceRunType.RETRO_RUN));
         }
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the

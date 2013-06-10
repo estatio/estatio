@@ -49,12 +49,8 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_TERM_IDX", members = { "leaseItem", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_TERM2_IDX", members = { "leaseItem", "startDate" }) })
-@javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(name="leaseTerm_findLeaseTermsWithStatus",language="JDOQL", value="SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE status == :status && startDate <= :date && (endDate == null || endDate >= :date)"),
-    @javax.jdo.annotations.Query(name="leaseTerm_findLeaseTermsWithSequence", language="JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE leaseItem == :leaseItem && sequence == :sequence")
-})
-
-
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithStatus", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE status == :status && startDate <= :date && (endDate == null || endDate >= :date)"),
+        @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithSequence", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE leaseItem == :leaseItem && sequence == :sequence") })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval, WithSequence {
 
@@ -297,8 +293,8 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     }
 
     @Programmatic
-    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
-        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
+    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
+        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(leaseTerm, startDate, dueDate);
         if (ii == null) {
             ii = invoices.newInvoiceItem();
             ii.modifyLeaseTerm(this);
@@ -307,10 +303,10 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     }
 
     @Programmatic
-    public InvoiceItemForLease findUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+    public InvoiceItemForLease findUnapprovedInvoiceItemFor(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && leaseTerm.equals(invoiceItem.getLeaseTerm()) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
                 return invoiceItem;
             }
         }
@@ -331,13 +327,13 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     }
 
     // //////////////////////////////////////
-    
+
     @Deprecated
     @Hidden
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
         return calculate(startDate, dueDate, false);
     }
-    
+
     @MemberOrder(name = "invoiceItems", sequence = "2")
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate, @Named("Retro Run") boolean retroRun) {
         if (getStatus() == LeaseTermStatus.APPROVED) {
@@ -392,7 +388,10 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
         if (getNextTerm() != null) {
             return null;
         }
-
+        LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
+        if (terminationDate != null && terminationDate.isBefore(nextStartDate))
+            return null;
+        
         final LocalDate endDate = getLeaseItem().calculatedEndDate();
         final LocalDate oneYearFromNow = clockService.now().plusYears(1);
         final LocalDate maxEndDate = ValueUtils.coalesce(endDate, oneYearFromNow);
@@ -429,9 +428,15 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     protected void update() {
         // check endDate and startDate relationship
         final LeaseTerm nextTerm = getNextTerm();
-        if (nextTerm != null && nextTerm.getStartDate() != null && (getEndDate() == null || nextTerm.getStartDate().compareTo(getEndDate().plusDays(1)) != 1)) {
-            setEndDate(nextTerm.getStartDate().minusDays(1));
-        }
+        if (nextTerm != null && nextTerm.getStartDate() != null)
+            if (getEndDate() == null || nextTerm.getStartDate().compareTo(getEndDate().plusDays(1)) != 1) {
+                setEndDate(nextTerm.getStartDate().minusDays(1));
+            }
+        // terminate the last term
+        LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
+        if (terminationDate != null && nextTerm == null)
+            if (getEndDate() == null || getEndDate().compareTo(terminationDate) > 0)
+                setEndDate(terminationDate);
     }
 
     // //////////////////////////////////////

@@ -173,22 +173,22 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         // unapproved doesn't work
         LeaseTerm term = (LeaseTerm) item.getTerms().first();
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
-        Assert.assertNull(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)));
+        Assert.assertNull(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)));
         // let's approve
         term.approve();
         // partial period
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
         // full term
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(5000.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(5000.00).setScale(2, RoundingMode.HALF_UP)));
         // invoice after effective date
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(5050.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(5050.00).setScale(2, RoundingMode.HALF_UP)));
         // invoice after effective date with mock
         settings.updateEpochDate(new LocalDate(2011, 1, 1));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
         // remove
         term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         settings.updateEpochDate(null);
@@ -213,17 +213,17 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         term.approve();
         // partial period
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
         // full period
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(1500.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(1500.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile without mock
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile with mock date
         settings.updateEpochDate(new LocalDate(2011, 10, 1));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
-        assertThat(term.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
         settings.updateEpochDate(null);
     }
 
