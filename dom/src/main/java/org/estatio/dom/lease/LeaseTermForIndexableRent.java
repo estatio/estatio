@@ -277,12 +277,13 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Programmatic
     public BigDecimal valueForDueDate(LocalDate dueDate) {
         // use the indexed value on or after the effective date, use the base
-        // value otherwise. If effective date is empty use a date two months
-        // after next index date
+        // otherwise
         if (getEffectiveDate() == null)
             return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
+        if (getStartDate().compareTo(getEffectiveDate()) == 0)
+            return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
         if (dueDate.compareTo(getEffectiveDate()) >= 0)
-                    return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
+            return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
         return firstValue(getBaseValue(), getSettledValue());
     }
 

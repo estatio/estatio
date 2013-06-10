@@ -238,6 +238,38 @@ public class InvoiceCalculationServiceTest {
     }
 
     @Test
+    public void testFullCalulationResults2() {
+        LocalDate startDate = new LocalDate(2012, 2, 1);
+        LocalDate endDate = new LocalDate(2013, 1, 31);
+        BigDecimal value = BigDecimal.valueOf(20000);
+        List<CalculationResult> results = testWith(startDate, endDate, null, value);
+        Assert.assertThat(results.get(0).getCalculatedValue(), Is.is(BigDecimal.valueOf(3296.70).setScale(2)));
+        Assert.assertThat(results.get(1).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
+        Assert.assertThat(results.get(2).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
+        Assert.assertThat(results.get(3).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
+        Assert.assertThat(results.get(4).getCalculatedValue(), Is.is(BigDecimal.valueOf(1722.22).setScale(2)));
+        // TODO: Since 2012 is a leap year, the sum of the invoices is greater
+        // than the value of the term.....
+    }
+
+    private List<CalculationResult> testWith(LocalDate startDate, LocalDate endDate, LocalDate effectiveDate, BigDecimal value) {
+        li = new LeaseItem();
+        li.setStartDate(START_DATE);
+        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        li.modifyLease(l);
+        lt = new LeaseTermImpl();
+        lt.setStartDate(startDate);
+        lt.setEndDate(endDate);
+        lt.setValue(value);
+        lt.modifyLeaseItem(li);
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        List<CalculationResult> results = ic.fullCalculationResults(lt, new LocalDate(2013, 4, 1));
+        return results;
+    }
+    
+    
+
+    @Test
     public void testCreateInvoiceItem() {
         li = new LeaseItem();
         li.setStartDate(START_DATE);

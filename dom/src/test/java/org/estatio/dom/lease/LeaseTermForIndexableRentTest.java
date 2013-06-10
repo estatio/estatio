@@ -155,13 +155,31 @@ public class LeaseTermForIndexableRentTest {
     @Test
     public void valueForDueDate_ok() throws Exception {
         LeaseTermForIndexableRent term = new LeaseTermForIndexableRent();
-        term.setEffectiveDate(new LocalDate(2012, 4, 1));
+        term.setStartDate(new LocalDate(2011,1,1));
         term.setBaseValue(BigDecimal.valueOf(20000));
         term.setIndexedValue(BigDecimal.valueOf(30000));
+        term.setEffectiveDate(null);
+        assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+
+        term.setStartDate(new LocalDate(2011, 2, 1));
+        term.setEffectiveDate(new LocalDate(2011, 2, 1));
+        
+        assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
+        assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+
+        term.setStartDate(new LocalDate(2011, 1, 1));
+        term.setEffectiveDate(new LocalDate(2012, 4, 1));
+        
         assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
         assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));
         assertThat(term.valueForDueDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(30000)));
         assertThat(term.valueForDueDate(new LocalDate(2012, 7, 31)), is(BigDecimal.valueOf(30000)));
+        
         term.setSettledValue(BigDecimal.valueOf(31000));
         assertThat(term.valueForDueDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(20000)));
         assertThat(term.valueForDueDate(new LocalDate(2011, 12, 31)), is(BigDecimal.valueOf(20000)));

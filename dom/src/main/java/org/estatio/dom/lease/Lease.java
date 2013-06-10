@@ -8,6 +8,9 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.invoice.InvoiceProvenance;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -16,12 +19,9 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.invoice.InvoiceProvenance;
-import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -41,7 +41,7 @@ public class Lease extends Agreement implements InvoiceProvenance {
     public Party getSecondaryParty() {
         return findParty(LeaseConstants.ART_TENANT);
     }
-    
+
     // //////////////////////////////////////
 
     private LeaseType type;
@@ -125,13 +125,12 @@ public class Lease extends Agreement implements InvoiceProvenance {
         leaseItem.setLease(null);
         getItems().remove(leaseItem);
     }
-    
+
     @MemberOrder(name = "Items", sequence = "31")
     public LeaseItem newItem(LeaseItemType type) {
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
         return leaseItem;
     }
-
 
     @Hidden
     public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
@@ -159,6 +158,17 @@ public class Lease extends Agreement implements InvoiceProvenance {
     // //////////////////////////////////////
 
     @Bulk
+    @Prototype
+    public Lease approveAllTermsOfThisLease() {
+        for (LeaseItem item : getItems()) {
+            for (LeaseTerm term : item.getTerms()) {
+                term.approve();
+            }
+        }
+        return this;
+    }
+
+    @Bulk
     public Lease verify() {
         for (LeaseItem item : getItems()) {
             item.verify();
@@ -167,7 +177,7 @@ public class Lease extends Agreement implements InvoiceProvenance {
     }
 
     @Bulk
-    public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, boolean retroRun) {
+    public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Retro Run") boolean retroRun) {
         // TODO: I know that bulk actions only appear whith a no-arg but why
         // not?
         for (LeaseItem item : getItems()) {

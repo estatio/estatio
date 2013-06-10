@@ -26,13 +26,8 @@ public abstract class EstatioSettingsService {
 
     @MemberOrder(sequence = "1")
     public LocalDate fetchEpochDate() {
-        // final ApplicationSetting epochDate =
-        // applicationSettings.find(EPOCH_DATE_KEY);
-        // return epochDate!=null?epochDate.valueAsLocalDate():null;
-        // FIXME: This
-        // "org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingJdo"
-        // is not persistable is driving me crazy
-        return new LocalDate(2013, 4, 1);
+        final ApplicationSetting epochDate = applicationSettings.find(EPOCH_DATE_KEY);
+        return epochDate != null ? epochDate.valueAsLocalDate() : null;
     }
 
     public abstract void updateEpochDate(LocalDate epochDate);

@@ -70,20 +70,6 @@
             ]]></query>
         </class>
     </package>
-    <package name="org.estatio.dom.lease">
-        <class name="LeaseTerm">
-            <query name="leaseTerm_findLeaseTermsWithStatus" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.agreement.LeaseTerm 
-             WHERE status == :status
-            ]]></query>
-            <query name="leaseTerm_findLeaseTermsWithSequence" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.agreement.LeaseTerm 
-             WHERE leaseItem == :leaseItem && sequence == :sequence
-            ]]></query>
-        </class>
-    </package>
     <package name="org.estatio.dom.charge">
         <class name="Charge">
             <query name="charge_findChargeByReference" language="JDOQL"><![CDATA[

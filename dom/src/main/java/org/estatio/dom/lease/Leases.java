@@ -89,7 +89,7 @@ public class Leases extends AbstractFactoryAndRepository {
      * {@link Lease}s matched by the provided <tt>leaseReference</tt> and the
      * other parameters.
      */
-    public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, boolean retroRun) {
+    public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, @Named("Retro Run") @Optional boolean retroRun) {
         List<Lease> leases = findLeasesByReference(leaseReference);
         for (Lease lease : leases) {
             lease.calculate(startDate, dueDate, retroRun);

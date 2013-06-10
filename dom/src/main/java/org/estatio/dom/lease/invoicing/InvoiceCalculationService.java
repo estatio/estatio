@@ -50,15 +50,13 @@ public class InvoiceCalculationService {
     // REVIEW: [JWA] Should injected services by default be not contributed?
     @NotContributed
     public void calculateAndInvoice(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency invoicingFrequency, boolean retroRun) {
-        if (retroRun){
-        List<CalculationResult> results = fullCalculationResults(leaseTerm, dueDate);
-        createInvoiceItems(leaseTerm, dueDate, results);
-        }else
-        {
+        if (retroRun) {
+            List<CalculationResult> results = fullCalculationResults(leaseTerm, dueDate);
+            createInvoiceItems(leaseTerm, dueDate, results);
+        } else {
             CalculationResult result = calculate(leaseTerm, periodStartDate, dueDate, invoicingFrequency);
             createInvoiceItem(leaseTerm, dueDate, result, invoicingFrequency);
         }
-
     }
 
     // //////////////////////////////////////
@@ -145,7 +143,7 @@ public class InvoiceCalculationService {
         if (calculationResult.value != null) {
             BigDecimal invoicedValue;
             LocalDate epochDate = estatioSettingsService.fetchEpochDate();
-            
+
             if (epochDate != null && calculationResult.frequencyInterval.getStartDate().compareTo(epochDate) < 0) {
                 CalculationResult mockResult = calculate(leaseTerm, calculationResult.frequencyInterval.getStartDate(), calculationResult.frequencyInterval.getStartDate(), invoicingFrequency);
                 invoicedValue = mockResult.getCalculatedValue();

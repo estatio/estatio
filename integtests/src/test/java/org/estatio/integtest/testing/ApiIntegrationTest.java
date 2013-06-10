@@ -61,7 +61,10 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t03_putLeaseWorks() throws Exception {
         api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", null, START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
-        Assert.assertNotNull(leases.findByReference("APILEASE"));
+        Lease lease = leases.findByReference("APILEASE");
+        Assert.assertNotNull(lease);
+        Assert.assertThat(lease.getRoles().size(), Is.is(2));
+        
     }
 
     @Test
