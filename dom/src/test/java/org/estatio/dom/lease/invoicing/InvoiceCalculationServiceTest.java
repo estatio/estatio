@@ -18,6 +18,7 @@ import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTermImpl;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
@@ -266,8 +267,6 @@ public class InvoiceCalculationServiceTest {
         List<CalculationResult> results = ic.fullCalculationResults(lt, new LocalDate(2013, 4, 1));
         return results;
     }
-    
-    
 
     @Test
     public void testCreateInvoiceItem() {
@@ -308,7 +307,7 @@ public class InvoiceCalculationServiceTest {
 
         InvoiceCalculationService ic = new InvoiceCalculationService();
         ic.setEstatioSettings(mockSettings);
-        ic.calculateAndInvoice(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), lt.getLeaseItem().getInvoicingFrequency(), false);
+        ic.calculateAndInvoice(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), lt.getLeaseItem().getInvoicingFrequency(), InvoiceRunType.NORMAL_RUN);
 
         InvoiceItemForLease invoiceItem = lt.getInvoiceItems().iterator().next();
 

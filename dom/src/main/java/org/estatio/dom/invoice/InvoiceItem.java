@@ -324,12 +324,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         }
     };
 
-    public static Ordering<InvoiceItem> ORDERING_BY_BLA = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.<InvoiceItem> natural().nullsFirst().compare(p, q);
-        }
-    };
-
     public static Ordering<InvoiceItem> ORDERING_BY_OBJECTID = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
             return Ordering.<String> natural().nullsFirst().compare(p.getId(), q.getId());

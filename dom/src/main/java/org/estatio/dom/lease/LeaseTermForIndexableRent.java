@@ -219,20 +219,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // ///////////////////////////////////////////
 
     @Override
-    public LeaseTerm approve() {
-        super.approve();
-        if (MathUtils.isZeroOrNull(getSettledValue()))
-            setSettledValue(getTrialValue());
-        return this;
-    }
-
-    public String disableApprove() {
-        return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
-    }
-
-    // ///////////////////////////////////////////
-
-    @Override
     @Programmatic
     public void initialize() {
         super.initialize();

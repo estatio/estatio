@@ -20,6 +20,7 @@ import org.estatio.dom.WithSequence;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoicesForLease;
@@ -331,14 +332,12 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     @Deprecated
     @Hidden
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
-        return calculate(startDate, dueDate, false);
+        return calculate(startDate, dueDate, InvoiceRunType.NORMAL_RUN);
     }
 
     @MemberOrder(name = "invoiceItems", sequence = "2")
-    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate, @Named("Retro Run") boolean retroRun) {
-        if (getStatus() == LeaseTermStatus.APPROVED) {
-            invoiceCalculationService.calculateAndInvoice(this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), retroRun);
-        }
+    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
+        invoiceCalculationService.calculateAndInvoice(this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
         return this;
     }
 
@@ -391,7 +390,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
         if (terminationDate != null && terminationDate.isBefore(nextStartDate))
             return null;
-        
+
         final LocalDate endDate = getLeaseItem().calculatedEndDate();
         final LocalDate oneYearFromNow = clockService.now().plusYears(1);
         final LocalDate maxEndDate = ValueUtils.coalesce(endDate, oneYearFromNow);

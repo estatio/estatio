@@ -50,7 +50,7 @@ public class EstatioAdministrationService {
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public String installConstants() {
         AgreementTypeFixture fixture = container.newTransientInstance(AgreementTypeFixture.class);
         fixture.install();
@@ -58,6 +58,7 @@ public class EstatioAdministrationService {
     }
 
     @Prototype
+    @MemberOrder(sequence = "5")
     public void setEpochDate(@Named("Epoch Date") LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
     }

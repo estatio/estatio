@@ -15,6 +15,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -49,8 +50,8 @@ public class InvoiceCalculationService {
 
     // REVIEW: [JWA] Should injected services by default be not contributed?
     @NotContributed
-    public void calculateAndInvoice(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency invoicingFrequency, boolean retroRun) {
-        if (retroRun) {
+    public void calculateAndInvoice(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency invoicingFrequency, InvoiceRunType runType) {
+        if (runType.equals(InvoiceRunType.RETRO_RUN)) {
             List<CalculationResult> results = fullCalculationResults(leaseTerm, dueDate);
             createInvoiceItems(leaseTerm, dueDate, results);
         } else {

@@ -3,6 +3,7 @@ package org.estatio.integtest.testing;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.Lease;
@@ -64,7 +65,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
         Lease lease = leases.findByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
-        
+        // Assert.assertThat(lease.getRoles().first().getType(), Is.is();
     }
 
     @Test

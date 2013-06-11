@@ -10,6 +10,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.invoice.InvoiceProvenance;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
@@ -27,6 +28,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "lease_findLeaseByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:r) && (terminationDate == null || terminationDate >= :date)") })
 @Bookmarkable
 public class Lease extends Agreement implements InvoiceProvenance {
 
@@ -177,11 +179,11 @@ public class Lease extends Agreement implements InvoiceProvenance {
     }
 
     @Bulk
-    public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Retro Run") boolean retroRun) {
+    public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
         // TODO: I know that bulk actions only appear whith a no-arg but why
         // not?
         for (LeaseItem item : getItems()) {
-            item.calculate(startDate, dueDate, retroRun);
+            item.calculate(startDate, dueDate, runType);
         }
         return this;
     }

@@ -102,7 +102,7 @@ public class Leases extends AbstractFactoryAndRepository {
     public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, final  @Named("Run Type") InvoiceRunType runType) {
         List<Lease> leases = findLeasesByReference(leaseReference);
         for (Lease lease : leases) {
-            lease.calculate(startDate, dueDate, runType.equals(InvoiceRunType.RETRO_RUN));
+            lease.calculate(startDate, dueDate, runType);
         }
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the

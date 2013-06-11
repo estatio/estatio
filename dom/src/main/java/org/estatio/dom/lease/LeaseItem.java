@@ -33,6 +33,7 @@ import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
@@ -309,9 +310,9 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
 
     // //////////////////////////////////////
 
-    public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Retro Run") boolean retroRun) {
+    public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
         for (LeaseTerm term : getTerms()) {
-            term.calculate(startDate, dueDate, retroRun);
+            term.calculate(startDate, dueDate, runType);
         }
         return this;
     }

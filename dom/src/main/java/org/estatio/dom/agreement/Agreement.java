@@ -166,6 +166,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     private Agreement previousAgreement;
 
     @Disabled
+    @Optional
     @MemberOrder(sequence = "9")
     public Agreement getPreviousAgreement() {
         return previousAgreement;
@@ -204,6 +205,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     private Agreement nextAgreement;
 
     @Disabled
+    @Optional
     @MemberOrder(sequence = "10")
     public Agreement getNextAgreement() {
         return nextAgreement;

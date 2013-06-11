@@ -27,6 +27,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -233,7 +234,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         // call calulate on lease
-        lease.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), false);
+        lease.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), InvoiceRunType.NORMAL_RUN);
         assertThat(term.getInvoiceItems().size(), is(2)); // the previous test
                                                           // already supplied
                                                           // one

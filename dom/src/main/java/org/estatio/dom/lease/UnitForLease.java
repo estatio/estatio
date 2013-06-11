@@ -17,6 +17,7 @@ import org.estatio.dom.asset.Unit;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "units_findUnitsByReference", language = "JDOQL", value = "SELECT  FROM org.estatio.dom.lease.UnitForLease WHERE reference.matches(:r)") })
 public class UnitForLease extends Unit {
 
     @javax.jdo.annotations.Persistent(mappedBy = "unit", defaultFetchGroup = "false")
