@@ -205,7 +205,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Override
     public BigDecimal getApprovedValue() {
         if (getStatus() == LeaseTermStatus.APPROVED)
-            return getSettledValue();
+            return getTrialValue();
         return null;
     }
 
@@ -248,15 +248,17 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Override
     public void update() {
         super.update();
-        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
-        if (previousTerm != null) {
-            BigDecimal newBaseValue = firstValue(previousTerm.getApprovedValue(), previousTerm.getIndexedValue(), previousTerm.getBaseValue());
-            if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
-                setBaseValue(newBaseValue);
+        if (getStatus().equals(LeaseTermStatus.NEW)) {
+            LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
+            if (previousTerm != null) {
+                BigDecimal newBaseValue = firstValue(previousTerm.getTrialValue(), previousTerm.getIndexedValue(), previousTerm.getBaseValue());
+                if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
+                    setBaseValue(newBaseValue);
+                }
             }
+            IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
+            calculator.calculate(this);
         }
-        IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
-        calculator.calculate(this);
     }
 
     @Override

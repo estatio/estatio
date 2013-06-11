@@ -442,7 +442,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
 
     @Programmatic
     public BigDecimal valueForDueDate(LocalDate dueDate) {
-        return getApprovedValue();
+        return getTrialValue();
     }
 
     @Programmatic

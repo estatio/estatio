@@ -20,6 +20,7 @@ import org.apache.isis.applib.filter.Filter;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Party;
@@ -53,7 +54,8 @@ public class Leases extends AbstractFactoryAndRepository {
             final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
             final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, 
             final @Optional @Named("Landlord") Party landlord, 
-            final @Optional @Named("Tentant") Party tenant) {
+            final @Optional @Named("Tentant") Party tenant
+            ) {
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
             Period p = DateTimeUtils.stringToPeriod(duration);
@@ -133,6 +135,11 @@ public class Leases extends AbstractFactoryAndRepository {
         this.agreementRoleTypes = agreementRoleTypes;
     }
     // }}
+
+    public List<Lease> findLeases(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active on Date") LocalDate activeOnDate) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
 }

@@ -28,7 +28,8 @@ import org.apache.isis.applib.annotation.Render.Type;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "lease_findLeaseByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:r) && (terminationDate == null || terminationDate >= :date)") })
+@javax.jdo.annotations.Queries({ 
+    @javax.jdo.annotations.Query(name = "findLeasesByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:r)")})
 @Bookmarkable
 public class Lease extends Agreement implements InvoiceProvenance {
 
