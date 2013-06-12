@@ -2,9 +2,10 @@ package org.estatio.fixture.invoice;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoicesForLease;
@@ -15,10 +16,10 @@ import org.apache.isis.applib.fixtures.AbstractFixture;
 
 public class InvoiceFixture extends AbstractFixture {
 
-    public static final LocalDate DATE = new LocalDate(2012, 1, 1);
-    public static final String LEASE = "OXF-MEDIAX-002";
+    public static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
+    public static final String LEASE = "OXF-POISON-003";
     public static final String SELLER_PARTY = "ACME";
-    public static final String BUYER_PARTY = "MEDIAX";
+    public static final String BUYER_PARTY = "POISON";
 
     @Override
     public void install() {
@@ -33,16 +34,17 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setStatus(InvoiceStatus.NEW);
         Lease lease = leases.findByReference(LEASE);
         invoice.setProvenance(lease);
-        invoice.setDueDate(DATE);
-        invoice.setInvoiceDate(DATE);
+        invoice.setDueDate(START_DATE);
+        invoice.setInvoiceDate(START_DATE);
 
-        InvoiceItemForLease item = invoices.newInvoiceItem();
-        item.modifyInvoice(invoice);
-        item.setDueDate(DATE);
-        item.setStartDate(DATE);
         // quick n dirty, just need some link
-        item.modifyLeaseTerm(lease.getItems().first().getTerms().first());
-
+        for (LeaseTerm term : lease.findFirstItemOfType(LeaseItemType.RENT).getTerms()){
+            InvoiceItemForLease item = invoices.newInvoiceItem();
+            item.modifyInvoice(invoice);
+            item.setDueDate(START_DATE);
+            item.setStartDate(START_DATE);
+            item.modifyLeaseTerm(term);
+        }
     }
 
     private Parties parties;
