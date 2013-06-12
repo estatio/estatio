@@ -28,8 +28,8 @@ public class WithIntervalContractTester<T extends WithInterval> {
         t.setEndDate(endDateInclusive);
         
         final LocalDateInterval interval = t.getInterval();
-        assertThat(interval.getStartDate(), is(startDate));
-        assertThat(interval.getEndDate(), is(endDateInclusive.plusDays(1)));
+        assertThat(interval.startDate(), is(startDate));
+        assertThat(interval.endDateExcluding(), is(endDateInclusive.plusDays(1)));
     }
     
     private T newWithInterval() {

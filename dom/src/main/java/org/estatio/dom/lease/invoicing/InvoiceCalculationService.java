@@ -80,7 +80,7 @@ public class InvoiceCalculationService {
 
     CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
         LocalDateInterval frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, freq.getRrule()));
-        if (frequencyInterval.getStartDate() != null) {
+        if (frequencyInterval.startDate() != null) {
             LocalDateInterval termInterval = LocalDateInterval.including(leaseTerm.getStartDate(), leaseTerm.getEndDate());
             LocalDateInterval overlap = frequencyInterval.overlap(termInterval);
             if (overlap != null) {
@@ -108,8 +108,8 @@ public class InvoiceCalculationService {
         do {
             result = calculate(leaseTerm, intervalStartDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
             results.add(result);
-            intervalStartDate = result.getFrequencyInterval().getEndDate();
-        } while (result.getFrequencyInterval().getEndDate().isBefore(frequencyInterval.getEndDate()));
+            intervalStartDate = result.getFrequencyInterval().endDateExcluding();
+        } while (result.getFrequencyInterval().endDateExcluding().isBefore(frequencyInterval.endDateExcluding()));
 
         return results;
     }
@@ -121,11 +121,11 @@ public class InvoiceCalculationService {
         CalculationResult result;
         LocalDateInterval frequencyInterval = new LocalDateInterval(CalendarUtils.intervalContaining(leaseTerm.getStartDate(), leaseTerm.getLeaseItem().getInvoicingFrequency().getRrule()));
         if (frequencyInterval != null) {
-            LocalDate intervalStartDate = frequencyInterval.getStartDate();
+            LocalDate intervalStartDate = frequencyInterval.startDate();
             do {
                 result = calculate(leaseTerm, intervalStartDate, dueDate);
                 results.add(result);
-                intervalStartDate = result.getFrequencyInterval().getEndDate();
+                intervalStartDate = result.getFrequencyInterval().endDateExcluding();
             } while (intervalStartDate.compareTo(dueDate) < 0);
 
         }
@@ -145,15 +145,15 @@ public class InvoiceCalculationService {
             BigDecimal invoicedValue;
             LocalDate epochDate = estatioSettingsService.fetchEpochDate();
 
-            if (epochDate != null && calculationResult.frequencyInterval.getStartDate().compareTo(epochDate) < 0) {
-                CalculationResult mockResult = calculate(leaseTerm, calculationResult.frequencyInterval.getStartDate(), calculationResult.frequencyInterval.getStartDate(), invoicingFrequency);
+            if (epochDate != null && calculationResult.frequencyInterval.startDate().compareTo(epochDate) < 0) {
+                CalculationResult mockResult = calculate(leaseTerm, calculationResult.frequencyInterval.startDate(), calculationResult.frequencyInterval.startDate(), invoicingFrequency);
                 invoicedValue = mockResult.getCalculatedValue();
             } else {
-                invoicedValue = leaseTerm.invoicedValueFor(calculationResult.frequencyInterval.getStartDate());
+                invoicedValue = leaseTerm.invoicedValueFor(calculationResult.frequencyInterval.startDate());
             }
             BigDecimal newValue = calculationResult.value.subtract(invoicedValue);
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                InvoiceItemForLease invoiceItem = leaseTerm.findOrCreateUnapprovedInvoiceItemFor(leaseTerm, calculationResult.frequencyInterval.getStartDate(), dueDate);
+                InvoiceItemForLease invoiceItem = leaseTerm.findOrCreateUnapprovedInvoiceItemFor(leaseTerm, calculationResult.frequencyInterval.startDate(), dueDate);
                 invoiceItem.setNetAmount(newValue);
                 invoiceItem.setQuantity(BigDecimal.ONE);
                 LeaseItem leaseItem = leaseTerm.getLeaseItem();
@@ -161,8 +161,8 @@ public class InvoiceCalculationService {
                 invoiceItem.setCharge(charge);
                 invoiceItem.setDescription(charge.getDescription());
                 invoiceItem.setDueDate(dueDate);
-                invoiceItem.setStartDate(calculationResult.frequencyInterval.getStartDate());
-                invoiceItem.setEndDate(calculationResult.frequencyInterval.getEndDate());
+                invoiceItem.setStartDate(calculationResult.frequencyInterval.startDate());
+                invoiceItem.setEndDate(calculationResult.frequencyInterval.endDateExcluding());
                 Tax tax = charge.getTax();
                 invoiceItem.setTax(tax);
                 invoiceItem.attachToInvoice();
