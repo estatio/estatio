@@ -314,19 +314,12 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
                 .compound(ORDERING_BY_START_DATE_DESC)
                 .compound(ORDERING_BY_CHARGE)
                 .compound(ORDERING_BY_DESCRIPTION)
-                .compound(ORDERING_BY_OBJECTID)
                 .compare(this, o);
     }
 
     public static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
             return Ordering.<Invoice> natural().nullsFirst().compare(p.getInvoice(), q.getInvoice());
-        }
-    };
-
-    public static Ordering<InvoiceItem> ORDERING_BY_OBJECTID = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getId(), q.getId());
         }
     };
 

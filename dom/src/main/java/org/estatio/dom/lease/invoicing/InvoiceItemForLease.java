@@ -4,6 +4,8 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Ordering;
+
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -22,12 +24,11 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-public class InvoiceItemForLease extends InvoiceItem  {
+public class InvoiceItemForLease extends InvoiceItem {
 
     private LeaseTerm leaseTerm;
 
@@ -47,7 +48,7 @@ public class InvoiceItemForLease extends InvoiceItem  {
         if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
             return;
         }
-        if(currentLeaseTerm != null) {
+        if (currentLeaseTerm != null) {
             currentLeaseTerm.removeFromInvoiceItems(this);
         }
         leaseTerm.addToInvoiceItems(this);
@@ -60,16 +61,16 @@ public class InvoiceItemForLease extends InvoiceItem  {
         }
         currentLeaseTerm.removeFromInvoiceItems(this);
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Hidden
     public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
             final AgreementRoleType landlord = agreementRoleTypes.find(LeaseConstants.ART_LANDLORD);
             final AgreementRoleType tenant = agreementRoleTypes.find(LeaseConstants.ART_TENANT);
-            
+
             AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
             Party seller = role.getParty();
             Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
@@ -88,7 +89,6 @@ public class InvoiceItemForLease extends InvoiceItem  {
         }
     }
 
-    
     // //////////////////////////////////////
 
     @Hidden
@@ -98,24 +98,42 @@ public class InvoiceItemForLease extends InvoiceItem  {
         super.remove();
     }
 
-    
     // //////////////////////////////////////
 
     protected AgreementTypes agreementTypes;
+
     public void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
 
     protected AgreementRoleTypes agreementRoleTypes;
+
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
     private InvoicesForLease invoices;
+
     @Hidden
     public void injectInvoices(InvoicesForLease invoices) {
         this.invoices = invoices;
     }
 
+    // //////////////////////////////////////
+
+    @Override
+    public int compareTo(InvoiceItem o) {
+        int compare = super.compareTo(o);
+        if (compare == 0) {
+            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) o);
+        }
+        return compare;
+    }
+
+    public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
+        public int compare(InvoiceItemForLease p, InvoiceItemForLease q) {
+            return Ordering.natural().nullsFirst().compare(p.getLeaseTerm(), q.getLeaseTerm());
+        }
+    };
 
 }
