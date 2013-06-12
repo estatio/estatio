@@ -115,6 +115,23 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
         this.startDate = startDate;
     }
 
+    public void modifyStartDate(final LocalDate startDate) {
+        LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+        onModifyStartDate(currentStartDate, startDate);
+    }
+
+    protected void onModifyStartDate(final LocalDate oldStartDate, final LocalDate newStartDate) {
+        if(getPreviousTerm() !=null){
+            getPreviousTerm().modifyEndDate(getInterval().endDateFromstartDate());
+        }
+    }
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
@@ -128,6 +145,16 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
+    public void modifyEndDate(final LocalDate endDate) {
+        LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    // //////////////////////////////////////
 
     @Override
     @Programmatic

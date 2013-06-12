@@ -137,20 +137,6 @@ public class LeaseTermForIndexableRentTest {
         Assert.assertEquals(new BigDecimal("23691.3500"), term.getIndexedValue());
     }
 
-    @Test
-    public void createNext_ok() {
-        context.checking(new Expectations() {
-            {
-                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnValue(new LeaseTermForIndexableRent()));
-            }
-        });
-        LeaseTermForIndexableRent newTerm = (LeaseTermForIndexableRent) term.createNext();
-        newTerm.setPreviousTerm(term);
-        newTerm.initialize();
-        assertThat(newTerm.getStartDate(), is(term.getEndDate().plusDays(1)));
-        assertThat(newTerm.getIndex(), is(term.getIndex()));
-    }
 
     @Test
     public void valueForDueDate_ok() throws Exception {

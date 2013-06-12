@@ -23,6 +23,7 @@ import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {
 
+    private Lease lease;
     private LeaseTermImpl term;
     private LeaseItem item;
 
@@ -48,7 +49,9 @@ public class LeaseTermTest {
             }
         });
 
+        lease = new Lease();
         item = new LeaseItem();
+        item.modifyLease(lease);
         item.setEndDate(new LocalDate(2013, 6, 30));
         item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
@@ -63,10 +66,12 @@ public class LeaseTermTest {
 
     @Test
     public void createNext_ok() {
+        final LeaseTermImpl mockTerm = new LeaseTermImpl();
+        mockTerm.modifyLeaseItem(item);
         context.checking(new Expectations() {
             {
                 oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnValue(new LeaseTermImpl()));
+                will(returnValue(mockTerm));
             }
         });
         LeaseTermImpl next = (LeaseTermImpl) term.createNext(new LocalDate(2013, 1, 1));
@@ -86,22 +91,21 @@ public class LeaseTermTest {
 
     @Test
     public void verify_ok() {
+        final LeaseTermImpl mockTerm = new LeaseTermImpl();
+        mockTerm.modifyLeaseItem(item);
         context.checking(new Expectations() {
             {
                 oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnValue(new LeaseTermImpl()));
+                will(returnValue(mockTerm));
             }
         });
-        LeaseTerm term = new LeaseTermImpl();
-        term = new LeaseTermImpl();
-        term.injectClockService(mockClockService);
-
-        term.modifyLeaseItem(item);
-        term.setStartDate(new LocalDate(2012, 1, 1));
-        // term.setEndDate(new LocalDate(2999, 9, 9));
-        term.setFrequency(LeaseTermFrequency.YEARLY);
-        term.verify();
-        assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
+        LeaseTerm newTerm = new LeaseTermImpl();
+        newTerm.injectClockService(mockClockService);
+        newTerm.modifyLeaseItem(item);
+        newTerm.setStartDate(new LocalDate(2012, 1, 1));
+        newTerm.setFrequency(LeaseTermFrequency.YEARLY);
+        newTerm.verify();
+        assertThat(newTerm.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
     }
 
     @Test
