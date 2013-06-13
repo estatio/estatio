@@ -1,5 +1,7 @@
 package org.estatio.viewer.wicket.app.administration;
 
+import java.util.List;
+
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioFixture;
@@ -14,6 +16,8 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.services.settings.ApplicationSetting;
+import org.apache.isis.applib.services.settings.ApplicationSettingsService;
 
 @Named("Administration")
 public class EstatioAdministrationService {
@@ -44,7 +48,7 @@ public class EstatioAdministrationService {
     }
 
     public String disableInstallIndexFixture() {
-        return !indexRepo.allIndices().isEmpty() ? "Index fixture already installed" : null;
+        return !indices.allIndices().isEmpty() ? "Index fixture already installed" : null;
     }
 
     // //////////////////////////////////////
@@ -59,7 +63,7 @@ public class EstatioAdministrationService {
 
     @Prototype
     @MemberOrder(sequence = "5")
-    public void setEpochDate(@Named("Epoch Date") LocalDate epochDate) {
+    public void updateEpochDate(@Named("Epoch Date") LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
     }
 
@@ -73,6 +77,13 @@ public class EstatioAdministrationService {
         return FixtureScript.GenerateTopModelInvoice;
     }
 
+    
+    public List<ApplicationSetting> listAllSettings() {
+        return applicationSettingsService.listAll();
+    }
+    
+    // //////////////////////////////////////
+    
     private DomainObjectContainer container;
 
     public void setContainer(DomainObjectContainer container) {
@@ -81,26 +92,31 @@ public class EstatioAdministrationService {
 
     private EstatioSchedulerService scheduler;
 
-    public void setSchedulerService(EstatioSchedulerService scheduler) {
+    public void injectSchedulerService(EstatioSchedulerService scheduler) {
         this.scheduler = scheduler;
     }
 
-    private Indices indexRepo;
+    private Indices indices;
 
-    public void setIndexRepo(Indices indices) {
-        this.indexRepo = indices;
+    public void injectIndices(Indices indices) {
+        this.indices = indices;
     }
 
     private Properties propertiesService;
 
-    public void setPropertiesService(Properties propertiesService) {
+    public void injectProperties(Properties propertiesService) {
         this.propertiesService = propertiesService;
     }
 
     private EstatioSettingsService settingsService;
 
-    public void setSettingsService(EstatioSettingsService settingsService) {
+    public void injectSettingsService(EstatioSettingsService settingsService) {
         this.settingsService = settingsService;
+    }
+    
+    private ApplicationSettingsService applicationSettingsService;
+    public void injectApplicationSettingsService(ApplicationSettingsService applicationSettingsService) {
+        this.applicationSettingsService = applicationSettingsService;
     }
 
     // }}

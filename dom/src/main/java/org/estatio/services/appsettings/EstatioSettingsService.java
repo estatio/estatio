@@ -7,7 +7,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsService;
 
-@Hidden
 public abstract class EstatioSettingsService {
 
     /**
@@ -24,13 +23,15 @@ public abstract class EstatioSettingsService {
      */
     public final static String EPOCH_DATE_KEY = "epochDate";
 
-    @MemberOrder(sequence = "1")
+    @Hidden
     public LocalDate fetchEpochDate() {
         final ApplicationSetting epochDate = applicationSettings.find(EPOCH_DATE_KEY);
         return epochDate != null ? epochDate.valueAsLocalDate() : null;
     }
 
     public abstract void updateEpochDate(LocalDate epochDate);
+    
+
 
     // //////////////////////////////////////
 
