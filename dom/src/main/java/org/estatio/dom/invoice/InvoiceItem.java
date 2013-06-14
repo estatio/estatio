@@ -35,7 +35,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>, WithInterval, WithDescriptionGetter {
@@ -92,7 +92,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     // //////////////////////////////////////
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal quantity;
 
@@ -107,7 +106,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     // //////////////////////////////////////
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
 
@@ -141,7 +139,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     // //////////////////////////////////////
 
-    
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
 
@@ -156,7 +153,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     // //////////////////////////////////////
 
-    
     private Tax tax;
 
     @MemberOrder(sequence = "7")
@@ -183,7 +179,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.description = description;
     }
 
-    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
@@ -212,7 +207,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         this.startDate = startDate;
     }
 
-    
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
@@ -224,16 +218,14 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-    
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-
     // //////////////////////////////////////
-
 
     /**
      * Attaches this item to an invoice with similar attributes. Creates a new
@@ -293,28 +285,18 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         initialize();
     }
 
-
     // //////////////////////////////////////
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("invoice", getInvoice())
-                .add("charge", getCharge())
-                .add("startDate", getStartDate())
-                .add("dueDate", getDueDate())
-                .toString();
+        return Objects.toStringHelper(this).add("invoice", getInvoice()).add("charge", getCharge()).add("startDate", getStartDate()).add("dueDate", getDueDate()).toString();
     }
 
     // //////////////////////////////////////
 
     @Override
     public int compareTo(InvoiceItem o) {
-        return ORDERING_BY_INVOICE
-                .compound(ORDERING_BY_START_DATE_DESC)
-                .compound(ORDERING_BY_CHARGE)
-                .compound(ORDERING_BY_DESCRIPTION)
-                .compare(this, o);
+        return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compare(this, o);
     }
 
     public static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
@@ -341,10 +323,10 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
         }
     };
 
-
     // //////////////////////////////////////
 
     private Charges charges;
+
     public void injectCharges(Charges charges) {
         this.charges = charges;
     }

@@ -24,7 +24,7 @@ public class LeaseItemTest_getCurrentValue {
 
     private LeaseItem leaseItem;
 
-    private LeaseTermImpl leaseTerm;
+    private LeaseTermForTesting leaseTerm;
 
     private LocalDate getCurrentValueDateArgument;
 
@@ -43,7 +43,7 @@ public class LeaseItemTest_getCurrentValue {
             }
         });
 
-        leaseTerm = new LeaseTermImpl();
+        leaseTerm = new LeaseTermForTesting();
         leaseTerm.setValue(BigDecimal.TEN);
 
         leaseItem = new LeaseItem() {

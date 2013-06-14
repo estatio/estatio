@@ -1,6 +1,11 @@
 package org.estatio.dom.lease;
 
+import java.util.Collections;
 import java.util.List;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
@@ -16,11 +21,14 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Party;
@@ -137,9 +145,30 @@ public class Leases extends AbstractFactoryAndRepository {
     // }}
 
     public List<Lease> findLeases(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active on Date") LocalDate activeOnDate) {
-        // TODO Auto-generated method stub
-        return null;
+        return getContainer().allMatches(new QueryDefault(Lease.class, "findLeases", "fixedAsset", fixedAsset));
     }
 
+
+    public List<FixedAsset> autoComplete0FindLeases(final String searchArg) {
+        final List<FixedAsset> fixedAssets = Lists.newArrayList();
+        fixedAssets.addAll(properties.allProperties());
+        fixedAssets.addAll(units.allUnits());
+        final Predicate<FixedAsset> predicate = new Predicate<FixedAsset>(){
+            @Override
+            public boolean apply(FixedAsset arg0) {
+                return arg0.getReference().contains(searchArg);
+            }};
+        return Lists.newArrayList(Iterables.filter(fixedAssets, predicate));
+    }
+
+    
+    private Properties properties;
+    public void injectProperties(Properties properties) {
+        this.properties = properties;
+    }
+    private Units units;
+    public void injectUnits(Units units) {
+        this.units = units;
+    }
 
 }

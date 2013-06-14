@@ -12,8 +12,8 @@ public class LeaseTermTest_beanProperties extends AbstractBeanPropertiesTest {
 	public void test() {
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
-	        .withFixture(pojos(LeaseTermImpl.class))
-	        .exercise(new LeaseTermImpl());
+	        .withFixture(pojos(LeaseTermForTesting.class))
+	        .exercise(new LeaseTermForTesting());
 	}
 
 

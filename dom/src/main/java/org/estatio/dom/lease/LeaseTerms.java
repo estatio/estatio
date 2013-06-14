@@ -39,9 +39,8 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         persist(leaseTerm);
         leaseTerm.modifyLeaseItem(leaseItem);
-        if (previous != null) {
-            previous.modifyNextTerm(leaseTerm);
-        }
+        leaseTerm.modifyPreviousTerm(previous);
+
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated
         getContainer().flush();

@@ -12,7 +12,7 @@ public class LeaseTermForServiceChargeTest_beanProperties extends AbstractBeanPr
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
             .withFixture(pojos(LeaseTerm.class))
-	        .withFixture(pojos(LeaseTermImpl.class))
+	        .withFixture(pojos(LeaseTermForTesting.class))
 	        .exercise(new LeaseTermForServiceCharge());
 	}
 

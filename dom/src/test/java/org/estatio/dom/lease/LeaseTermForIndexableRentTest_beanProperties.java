@@ -13,7 +13,7 @@ public class LeaseTermForIndexableRentTest_beanProperties extends AbstractBeanPr
 	public void test() {
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
-	        .withFixture(pojos(LeaseTermImpl.class))
+	        .withFixture(pojos(LeaseTermForTesting.class))
 	        .withFixture(pojos(Index.class))
 	        .exercise(new LeaseTermForIndexableRent(),
 	                // TODO: bug in PojoTester; claims there's interference between 

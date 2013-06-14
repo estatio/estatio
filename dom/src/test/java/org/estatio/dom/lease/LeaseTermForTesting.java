@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-public class LeaseTermImpl extends LeaseTerm {
+public class LeaseTermForTesting extends LeaseTerm {
 
     @Override
     @MemberOrder(sequence = "4")

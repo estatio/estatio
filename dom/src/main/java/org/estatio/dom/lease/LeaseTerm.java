@@ -125,7 +125,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     }
 
     protected void onModifyStartDate(final LocalDate oldStartDate, final LocalDate newStartDate) {
-        if(getPreviousTerm() !=null){
+        if (getPreviousTerm() != null) {
             getPreviousTerm().modifyEndDate(getInterval().endDateFromstartDate());
         }
     }
@@ -432,9 +432,8 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
         }
 
         // new start Date
-        term.setStartDate(nextStartDate);
+        term.modifyStartDate(nextStartDate);
         term.update();
-        this.setEndDate(nextStartDate.minusDays(1));
         return term;
     }
 
@@ -452,12 +451,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     }
 
     protected void update() {
-        // check endDate and startDate relationship
-        final LeaseTerm nextTerm = getNextTerm();
-        if (nextTerm != null && nextTerm.getStartDate() != null)
-            if (getEndDate() == null || nextTerm.getStartDate().compareTo(getEndDate().plusDays(1)) != 1) {
-                setEndDate(nextTerm.getStartDate().minusDays(1));
-            }
         // terminate the last term
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
         if (terminationDate != null && nextTerm == null)
@@ -480,8 +473,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
         }
         return BigDecimal.ZERO;
     }
-
-    // }}
 
     // //////////////////////////////////////
 

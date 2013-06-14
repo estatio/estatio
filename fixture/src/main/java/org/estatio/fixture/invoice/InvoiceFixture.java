@@ -37,7 +37,6 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setDueDate(START_DATE);
         invoice.setInvoiceDate(START_DATE);
 
-        // quick n dirty, just need some link
         for (LeaseTerm term : lease.findFirstItemOfType(LeaseItemType.RENT).getTerms()){
             InvoiceItemForLease item = invoices.newInvoiceItem();
             item.modifyInvoice(invoice);

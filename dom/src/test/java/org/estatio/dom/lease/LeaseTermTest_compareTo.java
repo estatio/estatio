@@ -43,7 +43,7 @@ public class LeaseTermTest_compareTo extends ComparableContractTest_compareTo<Le
 
     private LeaseTerm newLeaseTerm(
             LeaseItem leaseItem, Integer sequence) {
-        final LeaseTerm lt = new LeaseTermImpl();
+        final LeaseTerm lt = new LeaseTermForTesting();
         lt.setLeaseItem(leaseItem);
         lt.setSequence(sequence != null? BigInteger.valueOf(sequence.longValue()): null);
         return lt;

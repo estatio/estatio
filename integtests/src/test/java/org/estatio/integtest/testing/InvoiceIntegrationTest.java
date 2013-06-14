@@ -26,7 +26,7 @@ public class InvoiceIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t2_invoiceCanBeFound() throws Exception {
-        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE).get(0);
+        Invoice invoice = invoices.findMatchingInvoice(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE);
         Assert.assertNotNull(invoice);
     }
 

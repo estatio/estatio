@@ -91,21 +91,6 @@
             ]]></query>
         </class>
     </package>
-    <package name="org.estatio.dom.invoice">
-        <class name="Invoice">
-            <query name="invoice_findMatchingInvoices" language="JDOQL"><![CDATA[
-            SELECT 
-              FROM org.estatio.dom.invoice.Invoice 
-            WHERE 
-                provenance == :provenance &&
-                seller == :seller &&
-                buyer == :buyer &&
-                paymentMethod == :paymentMethod &&
-                status == :status &&
-                dueDate == :dueDate
-            ]]></query>
-        </class>
-    </package>
     <package name="org.estatio.dom.geography">
         <class name="State">
             <query name="state_findStatesByCountry" language="JDOQL"><![CDATA[
