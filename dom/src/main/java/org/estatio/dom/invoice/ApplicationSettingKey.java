@@ -1,9 +1,10 @@
 package org.estatio.dom.invoice;
 
-import org.estatio.dom.ApplicationSettingCreator;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
+
+import org.estatio.dom.ApplicationSettingCreator;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
     foo(LocalDate.class, "Invoice's foo", new LocalDate(2013,4,1));
@@ -18,8 +19,15 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
         this.defaultValue = defaultValue;
     }
     public void create(ApplicationSettingsServiceRW appSettings) {
-        if(dataType == LocalDate.class) {
-            appSettings.newLocalDate(this.getClass().getPackage().getName()+"."+name(), description, (LocalDate)defaultValue);
-        }
+        Helper.create(this, appSettings);
+    }
+    public Class<?> getDataType() {
+        return dataType;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public Object getDefaultValue() {
+        return defaultValue;
     }
 }

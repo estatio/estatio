@@ -17,8 +17,15 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
         this.defaultValue = defaultValue;
     }
     public void create(ApplicationSettingsServiceRW appSettings) {
-        if(dataType == LocalDate.class) {
-            appSettings.newLocalDate(this.getClass().getPackage().getName()+"."+name(), description, (LocalDate)defaultValue);
-        }
+        Helper.create(this, appSettings);
+    }
+    public Class<?> getDataType() {
+        return dataType;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public Object getDefaultValue() {
+        return defaultValue;
     }
 }

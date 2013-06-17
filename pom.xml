@@ -95,10 +95,9 @@
 					<configuration>
                         <includes>
 							<include>**/*Test.java</include>
-							<include>**/*Test_*.java</include>
+							<include>**/*Test*_*.java</include>
                         </includes>
 						<excludes>
-							<exclude>**/Test*.java</exclude>
 							<exclude>**/*ForTesting.java</exclude>
 						</excludes>
 						<useFile>true</useFile>
