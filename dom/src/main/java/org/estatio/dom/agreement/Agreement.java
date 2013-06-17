@@ -34,6 +34,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Query(name = "agreement_findAgreementByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:r)")
 @Bookmarkable
 public abstract class Agreement extends EstatioTransactionalObject implements ComparableByReference<Agreement>, WithInterval {
 
@@ -296,12 +297,12 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return ToString.of(this);
     }
-    
+
     // //////////////////////////////////////
 
     @Override

@@ -1,9 +1,5 @@
-package org.estatio.jdo;
+package org.estatio.dom.agreement;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 

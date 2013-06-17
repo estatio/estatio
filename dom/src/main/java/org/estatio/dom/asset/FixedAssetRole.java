@@ -24,6 +24,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Query(name = "fixedAssetRole_findByAssetParty", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAssetRole WHERE asset == :asset && party == :party && type == :type")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole>, WithInterval {
 
@@ -73,7 +74,7 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
     }
 
     // //////////////////////////////////////
-    
+
     private LocalDate startDate;
 
     @MemberOrder(sequence = "4")
@@ -104,17 +105,12 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    
+
     // //////////////////////////////////////
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("asset", getAsset()!=null?getAsset().getReference():null)
-                .add("party", getParty()!=null?getParty().getName():null)
-                .add("startDate", getStartDate())
-                .add("type", getType())
-                .toString();
+        return Objects.toStringHelper(this).add("asset", getAsset() != null ? getAsset().getReference() : null).add("party", getParty() != null ? getParty().getName() : null).add("startDate", getStartDate()).add("type", getType()).toString();
     }
 
     // //////////////////////////////////////
@@ -122,13 +118,9 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
     @Hidden
     @Override
     public int compareTo(FixedAssetRole o) {
-        return ORDERING_BY_ASSET
-                .compound(ORDERING_BY_PARTY)
-                .compound(ORDERING_BY_START_DATE_DESC)
-                .compound(ORDERING_BY_TYPE)
-                .compare(this,o);
+        return ORDERING_BY_ASSET.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, o);
     }
-    
+
     public final static Ordering<FixedAssetRole> ORDERING_BY_ASSET = new Ordering<FixedAssetRole>() {
         public int compare(FixedAssetRole p, FixedAssetRole q) {
             return Ordering.natural().nullsFirst().compare(p.getAsset(), q.getAsset());

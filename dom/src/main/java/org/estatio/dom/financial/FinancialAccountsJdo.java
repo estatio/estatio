@@ -1,12 +1,10 @@
-package org.estatio.jdo;
+package org.estatio.dom.financial;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.query.QueryDefault;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.utils.StringUtils;
 
 public class FinancialAccountsJdo extends FinancialAccounts {

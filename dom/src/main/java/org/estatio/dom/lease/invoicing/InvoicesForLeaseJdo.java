@@ -1,4 +1,4 @@
-package org.estatio.jdo;
+package org.estatio.dom.lease.invoicing;
 
 import java.util.List;
 
@@ -6,8 +6,6 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceProvenance;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 import org.joda.time.LocalDate;

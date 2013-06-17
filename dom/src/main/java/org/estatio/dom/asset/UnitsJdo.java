@@ -1,11 +1,9 @@
-package org.estatio.jdo;
+package org.estatio.dom.asset;
 
 import java.util.List;
 
 import org.apache.isis.applib.query.QueryDefault;
 
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.utils.StringUtils;
 

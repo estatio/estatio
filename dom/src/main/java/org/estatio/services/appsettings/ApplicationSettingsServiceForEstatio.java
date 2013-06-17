@@ -1,4 +1,4 @@
-package org.estatio.jdo;
+package org.estatio.services.appsettings;
 
 import java.util.List;
 

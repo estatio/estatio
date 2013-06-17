@@ -1,8 +1,6 @@
-package org.estatio.jdo;
+package org.estatio.dom.currency;
 
 
-import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.currency.Currency;
 import org.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.annotation.ActionSemantics;

@@ -1,7 +1,5 @@
-package org.estatio.jdo;
+package org.estatio.dom.agreement;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.annotation.ActionSemantics;

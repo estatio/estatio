@@ -1,9 +1,5 @@
-package org.estatio.jdo;
+package org.estatio.dom.asset;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRole;
-import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 

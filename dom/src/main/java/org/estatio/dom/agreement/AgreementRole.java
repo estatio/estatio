@@ -24,6 +24,7 @@ import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Query(name = "agreementRole_find", language = "JDOQL", value = "SELECT FROM org.estatio.dom.agreement.AgreementRole party == :party && type == :type && startDate == :startDate")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole>, WithInterval {
 
@@ -47,7 +48,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
             return;
         }
         // delegate to parent to associate
-        if(currentAgreement != null) {
+        if (currentAgreement != null) {
             currentAgreement.removeFromRoles(this);
         }
         agreement.addToRoles(this);
@@ -126,7 +127,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-    
+
     private LocalDate endDate;
 
     @MemberOrder(sequence = "5")
@@ -139,7 +140,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-    
+
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
@@ -156,7 +157,6 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         return getInterval().contains(localDate);
     }
 
-
     // //////////////////////////////////////
 
     /**
@@ -169,11 +169,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
      */
     @Override
     public int compareTo(AgreementRole other) {
-        return ORDERING_BY_AGREEMENT
-                .compound(ORDERING_BY_PARTY)
-                .compound(ORDERING_BY_START_DATE_DESC)
-                .compound(ORDERING_BY_TYPE)
-                .compare(this, other);
+        return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
     }
 
     public static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
@@ -188,7 +184,7 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     };
     public static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
-            return Ordering.<LocalDate>natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+            return Ordering.<LocalDate> natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
         }
     };
     public static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
@@ -198,17 +194,12 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
     };
 
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-            .add("agreement", getAgreement())
-            .add("party", getParty())
-            .add("startDate", getStartDate())
-            .add("type", getType())
-            .toString();
+        return Objects.toStringHelper(this).add("agreement", getAgreement()).add("party", getParty()).add("startDate", getStartDate()).add("type", getType()).toString();
     };
-    
+
     // //////////////////////////////////////
 
     private ClockService clockService;
