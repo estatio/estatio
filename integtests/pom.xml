@@ -34,7 +34,7 @@
                 <version>0.6.3.201306030806</version>
                 <configuration>
                     <includes>
-                        <include>org.estatio.dom.*</include>
+                        <include>org/estatio/dom/**</include>
                     </includes>
                 </configuration>
                 <executions>
@@ -44,7 +44,6 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-                    <!-- 
                     <execution>
                         <id>jacoco-site</id>
                         <phase>package</phase>
@@ -52,7 +51,6 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-                     -->
                 </executions>
             </plugin>
         </plugins>
