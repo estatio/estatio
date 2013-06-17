@@ -29,6 +29,7 @@ import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAssetRoles;
+import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charges;
@@ -75,7 +76,7 @@ public abstract class AbstractEstatioIntegrationTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
-    
+
     @Rule
     public BootstrapIsisRule bootstrapIsis = new BootstrapIsisRule();
 
@@ -83,7 +84,8 @@ public abstract class AbstractEstatioIntegrationTest {
     public ExpectedException expectedExceptions = ExpectedException.none();
 
     /**
-     * Same running system returned for all tests, set up with {@link ToDoItemsFixture}.
+     * Same running system returned for all tests, set up with
+     * {@link ToDoItemsFixture}.
      * 
      * <p>
      * The database is NOT reset between tests.
@@ -96,32 +98,32 @@ public abstract class AbstractEstatioIntegrationTest {
     protected DomainObjectContainer container;
 
     protected Api api;
-    
+
     protected Countries countries;
     protected States states;
-    
+
     protected Charges charges;
 
     protected NumeratorsJdo numerators;
-    
+
     protected AgreementRoleTypes agreementRoleTypes;
-    
+
+    protected FixedAssets fixedAssets;
     protected Properties properties;
     protected FixedAssetRoles actors;
     protected Units units;
-    
+
     protected FinancialAccounts financialAccounts;
-    
+
     protected Parties parties;
-    
+
     protected Leases leases;
     protected LeaseTerms leaseTerms;
     protected InvoicesForLease invoices;
-    
+
     protected Tags tags;
 
     protected EstatioSettingsService settings;
-    
 
     @Before
     public void init() {
@@ -129,30 +131,31 @@ public abstract class AbstractEstatioIntegrationTest {
         container = getIsft().container;
 
         api = getIsft().getService(Api.class);
-        
+
         charges = getIsft().getService(ChargesJdo.class);
 
         countries = getIsft().getService(Countries.class);
         states = getIsft().getService(States.class);
 
         numerators = getIsft().getService(NumeratorsJdo.class);
-        
+
         agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
-        
+
+        fixedAssets = getIsft().getService(FixedAssets.class);
         properties = getIsft().getService(PropertiesJdo.class);
         actors = getIsft().getService(FixedAssetRolesJdo.class);
         units = getIsft().getService(Units.class);
-        
+
         financialAccounts = getIsft().getService(FinancialAccountsJdo.class);
-        
+
         parties = getIsft().getService(PartiesJdo.class);
-        
+
         leases = getIsft().getService(LeasesJdo.class);
         leaseTerms = getIsft().getService(LeaseTermsJdo.class);
         invoices = getIsft().getService(InvoicesForLease.class);
-        
+
         tags = getIsft().getService(TagsJdo.class);
-        
+
         settings = getIsft().getService(EstatioSettingsService.class);
     }
 
@@ -164,11 +167,9 @@ public abstract class AbstractEstatioIntegrationTest {
         return wrapperFactory.unwrap(obj);
     }
 
-    
-    
-    ////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////
     // Boilerplate
-    ////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////
 
     static InstallableFixture newFixture() {
         return new EstatioFixture();
@@ -196,15 +197,21 @@ public abstract class AbstractEstatioIntegrationTest {
 
         @Override
         public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
-            final IsisSystemForTest isft = getIsisSystemForTest(); // creates and starts running if required
+            final IsisSystemForTest isft = getIsisSystemForTest(); // creates
+                                                                   // and starts
+                                                                   // running if
+                                                                   // required
             return new Statement() {
                 @Override
                 public void evaluate() throws Throwable {
                     isft.beginTran();
                     base.evaluate();
-                    // if an exception is thrown by any test, then we don't attempt to cleanup (eg by calling bounceSystem)#
-                    // because - in any case - we only ever install the fixtures once for ALL of the tests.
-                    // therefore, just fix the first test that fails and don't worry about any other test failures beyond that
+                    // if an exception is thrown by any test, then we don't
+                    // attempt to cleanup (eg by calling bounceSystem)#
+                    // because - in any case - we only ever install the fixtures
+                    // once for ALL of the tests.
+                    // therefore, just fix the first test that fails and don't
+                    // worry about any other test failures beyond that
                     // (fix them up one by one)
                     isft.commitTran();
                 }
@@ -213,7 +220,6 @@ public abstract class AbstractEstatioIntegrationTest {
 
     }
 
-    
     private static class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
         public static EstatioIntegTestBuilder builder() {
@@ -231,66 +237,42 @@ public abstract class AbstractEstatioIntegrationTest {
             with(testConfiguration());
             with(new DataNucleusPersistenceMechanismInstaller());
             withServices(
-                    new RegisterEntities(),
-                    new WrapperFactoryDefault(),
-                    new CountriesJdo(),
-                    new StatesJdo(),
-                    new CurrenciesJdo(),
-                    new IndicesJdo(),
-                    new PropertiesJdo(),
-                    new FixedAssetRolesJdo(),
-                    new UnitsJdo(),
-                    new PartiesJdo(),
-                    new AgreementsJdo(),
-                    new AgreementTypes(),
-                    new AgreementRoleTypes(),
-                    new AgreementRolesJdo(),
-                    new LeasesJdo(),
-                    new LeaseTermsJdo(),
-                    new LeaseItemsJdo(),
-                    new LeaseUnitsJdo(),
-                    new InvoicesForLeaseJdo(),
-                    new CommunicationChannelsJdo(),
-                    new TaxesJdo(),
-                    new TagsJdo(),
-                    new EstatioBookmarkService(),
-                    new ChargesJdo(),
-                    new ChargeGroupsJdo(),
-                    new FinancialAccountsJdo(),
-                    new NumeratorsJdo(),
-                    new ClockService(),
-                    new Api(),
-                    new IsisJdoSupportImpl(),
-                    new InvoiceCalculationService(),
-                    new ApplicationSettingsServiceJdo(),
-                    new EstatioSettingsServiceJdo(),
-                    new FinancialAccountContributedActions(),
-                    new LeaseTermContributedActions()
-                    );
+                    new RegisterEntities(), 
+                    new WrapperFactoryDefault(), 
+                    new CountriesJdo(), new StatesJdo(), new CurrenciesJdo(), new IndicesJdo(), new FixedAssets(), new PropertiesJdo(), new FixedAssetRolesJdo(), new UnitsJdo(), new PartiesJdo(), new AgreementsJdo(), new AgreementTypes(),
+                    new AgreementRoleTypes(), new AgreementRolesJdo(), new LeasesJdo(), new LeaseTermsJdo(), new LeaseItemsJdo(), new LeaseUnitsJdo(), new InvoicesForLeaseJdo(), new CommunicationChannelsJdo(), new TaxesJdo(), new TagsJdo(), new EstatioBookmarkService(), new ChargesJdo(),
+                    new ChargeGroupsJdo(), new FinancialAccountsJdo(), new NumeratorsJdo(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
+                    new LeaseTermContributedActions());
         }
 
         private IsisConfiguration testConfiguration() {
             final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
 
             testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
-            //testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); // use log4jdbc instead
-            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test;sqllog=3"); //disable default sqlloq
-            
-            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
-            testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY , "true");
-            
-            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.cache.level2.type","none");
-            // TODO: this is a (temporary?) work-around for NumeratorIntegrationTest failing if do a find prior to create and then a find; 
-            // believe that the second find fails to work due to original find caching an incorrect query compilation plan
-            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.query.compilation.cached","false");
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+            // "net.sf.log4jdbc.DriverSpy"); // use log4jdbc instead
+            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test;sqllog=3"); // disable
+                                                                                                                                      // default
+                                                                                                                                      // sqlloq
 
-     
-            // adding this is meant to be all that is required for across-the-board multi-tenancy support
+            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
+            testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
+
+            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.cache.level2.type", "none");
+            // TODO: this is a (temporary?) work-around for
+            // NumeratorIntegrationTest failing if do a find prior to create and
+            // then a find;
+            // believe that the second find fails to work due to original find
+            // caching an incorrect query compilation plan
+            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.query.compilation.cached", "false");
+
+            // adding this is meant to be all that is required for
+            // across-the-board multi-tenancy support
             // however, it causes DN to throw a NullPointerException...
-            //testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.tenantId","DEV1");
+            // testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.tenantId","DEV1");
 
             return testConfiguration;
         }
-    }    
-    
+    }
+
 }

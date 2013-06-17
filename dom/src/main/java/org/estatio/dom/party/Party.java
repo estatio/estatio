@@ -23,7 +23,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({ 
     @javax.jdo.annotations.Query(name = "parties_findPartyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern)"),
-    @javax.jdo.annotations.Query(name = "parties_findParties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.toLowerCase().matches(:searchPattern.toLowerCase()) || name.toLowerCase().matches(:searchPattern.toLowerCase())") })
+    @javax.jdo.annotations.Query(name = "parties_findParties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern) || name.matches(:searchPattern)") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = {"reference", "name"})
 @AutoComplete(repository = Parties.class, action="autoComplete")
 public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party>, WithReferenceGetter {

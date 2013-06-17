@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 import java.util.Set;
 
+import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,6 +18,11 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.party.Party;
 
 public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
+
+    @Test
+    public void fixedAssetSearchWorks() throws Exception {
+        Assert.assertThat(fixedAssets.search("(?i).*mall.*").size(), Is.is(1));
+    }
 
     @Test
     public void propertyCanBeFound() throws Exception {

@@ -13,6 +13,7 @@ import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
@@ -35,7 +36,9 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Query(name = "search", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:regex) || name.matches(:regex)")
 @Bookmarkable
+@AutoComplete(repository = FixedAssets.class)
 public abstract class FixedAsset extends EstatioTransactionalObject implements ComparableByName<FixedAsset>, Locatable {
 
     @javax.jdo.annotations.Unique(name = "REFERENCE_IDX")
@@ -52,10 +55,11 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
     public void setReference(final String reference) {
         this.reference = reference;
     }
-    
+
     // //////////////////////////////////////
 
-    // REVIEW: when I added this annotation, per the @DescribedAs, then the fixtures failed to load...
+    // REVIEW: when I added this annotation, per the @DescribedAs, then the
+    // fixtures failed to load...
     // @javax.jdo.annotations.Unique(name = "NAME_IDX")
     private String name;
 
@@ -87,7 +91,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         this.location = location;
     }
 
-    @MemberOrder(name="location", sequence = "1.9")
+    @MemberOrder(name = "location", sequence = "1.9")
     public FixedAsset lookup(@Named("Address") String address) {
         setLocation(locationLookupService.lookup(address));
         return this;
@@ -168,9 +172,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
         return null;
     }
 
-    
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return ToString.of(this);
@@ -202,6 +205,5 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
     public void injectLocationLookupService(LocationLookupService locationLookupService) {
         this.locationLookupService = locationLookupService;
     }
-
 
 }

@@ -6,9 +6,10 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
 public class StringUtils {
-	
-	private StringUtils() {}
-	
+
+    private StringUtils() {
+    }
+
     private static Function<String, String> LOWER_CASE_THEN_CAPITALIZE = new Function<String, String>() {
         @Override
         public String apply(String input) {
@@ -23,7 +24,6 @@ public class StringUtils {
         }
     };
 
-	
     public static String enumTitle(String string) {
         return Joiner.on(" ").join(Iterables.transform(Splitter.on("_").split(string), LOWER_CASE_THEN_CAPITALIZE));
     }
@@ -32,10 +32,13 @@ public class StringUtils {
         return Joiner.on("_").join(Iterables.transform(Splitter.on(" ").split(string), UPPER_CASE));
     }
 
-    public static String wildcardToRegex(String pattern)
-    {
+    public static String wildcardToCaseInsensitiveRegex(String pattern) {
+        return "(?i)".concat(wildcardToRegex(pattern));
+    }
+
+    public static String wildcardToRegex(String pattern) {
         return pattern.replace("*", ".*").replace("?", ".");
-    }    
+    }
 
     private static String capitalize(final String str) {
         if (str == null || str.length() == 0) {
@@ -46,6 +49,5 @@ public class StringUtils {
         }
         return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
-
 
 }

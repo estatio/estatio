@@ -3,6 +3,7 @@ package org.estatio.dom.party;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -13,6 +14,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.QueryDefault;
 
 @Named("Parties")
 public class Parties extends AbstractFactoryAndRepository {
@@ -74,26 +76,21 @@ public class Parties extends AbstractFactoryAndRepository {
     @Hidden
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Party> findPartiesByReference(@Named("Reference") final String reference) {
-        throw new NotImplementedException();
+    public List<Party> findPartiesByReference(@Named("searchPattern") final String searchPattern) {
+        return allMatches(queryForFindPartyByReference(StringUtils.wildcardToRegex(searchPattern)));
     }
 
     @Hidden
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public Party findPartyByReference(@Named("Reference") final String reference) {
-        return firstMatch(Party.class, new Filter<Party>() {
-            @Override
-            public boolean accept(final Party party) {
-                return reference.contains(party.getReference());
-            }
-        });
+    public Party findPartyByReference(@Named("searchPattern") final String searchPattern) {
+        return firstMatch(queryForFindPartyByReference(StringUtils.wildcardToRegex(searchPattern)));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Party> findParties(@Named("searchPattern") String searchPattern) {
-        throw new NotImplementedException();
+    public List<Party> findParties(@Named("searchPattern") final String searchPattern) {
+        return allMatches(queryForFindParties(StringUtils.wildcardToCaseInsensitiveRegex(searchPattern)));
     }
 
     @Prototype
@@ -110,4 +107,15 @@ public class Parties extends AbstractFactoryAndRepository {
         return null;
     }
 
+    // //////////////////////////////////////
+    
+    private static QueryDefault<Party> queryForFindPartyByReference(String searchPattern) {
+        return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "searchPattern", searchPattern);
+    }
+
+    private static QueryDefault<Party> queryForFindParties(String searchPattern) {
+        return new QueryDefault<Party>(Party.class, "parties_findParties", "searchPattern", searchPattern);
+    }
+
+    
 }
