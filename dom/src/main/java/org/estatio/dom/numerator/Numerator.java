@@ -17,6 +17,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Query(name = "numerator_find", language = "JDOQL", value = "SELECT FROM org.estatio.dom.numerator.Numerator WHERE type == :type")
 public class Numerator extends EstatioTransactionalObject implements ComparableByDescription<Numerator> {
 
     private NumeratorType type;
@@ -31,7 +32,7 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
     }
 
     // //////////////////////////////////////
-    
+
     private String description;
 
     @Title
@@ -45,7 +46,7 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent
     private BigInteger lastIncrement;
 
@@ -59,7 +60,7 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public BigInteger increment() {
         BigInteger last = getLastIncrement();
@@ -71,16 +72,15 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
         return next;
     }
 
-    
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return ToString.of(this);
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public int compareTo(Numerator o) {
         return ORDERING_BY_DESCRIPTION.compare(this, o);

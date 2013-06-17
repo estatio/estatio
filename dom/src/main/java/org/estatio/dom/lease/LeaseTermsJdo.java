@@ -1,12 +1,8 @@
-package org.estatio.jdo;
+package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;

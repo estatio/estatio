@@ -1,4 +1,4 @@
-package org.estatio.jdo;
+package org.estatio.dom.lease;
 
 import org.joda.time.LocalDate;
 
@@ -10,9 +10,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.asset.Unit;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseUnit;
-import org.estatio.dom.lease.LeaseUnits;
 
 public class LeaseUnitsJdo extends LeaseUnits {
 

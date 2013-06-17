@@ -10,11 +10,11 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Query(name = "charge_findChargeByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.charge.Charge WHERE reference.matches(:r)")
 @Bounded
 @Immutable
 public class Charge extends EstatioRefDataObject implements ComparableByCode<Charge> {
 
-    
     private String reference;
 
     @Title(sequence = "1")
@@ -54,7 +54,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
     }
 
     // //////////////////////////////////////
-    
+
     private String description;
 
     @MemberOrder(sequence = "4")
@@ -67,7 +67,7 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
     }
 
     // //////////////////////////////////////
-    
+
     private ChargeGroup group;
 
     @MemberOrder(sequence = "5")
@@ -79,20 +79,18 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.group = group;
     }
 
-    
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return ToString.of(this);
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public int compareTo(Charge other) {
         return ORDERING_BY_CODE.compare(this, other);
     }
-
 
 }

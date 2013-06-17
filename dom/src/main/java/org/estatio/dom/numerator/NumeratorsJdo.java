@@ -1,8 +1,5 @@
-package org.estatio.jdo;
+package org.estatio.dom.numerator;
 
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.dom.numerator.Numerators;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;

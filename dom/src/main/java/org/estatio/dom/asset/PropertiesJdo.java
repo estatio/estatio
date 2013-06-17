@@ -1,9 +1,7 @@
-package org.estatio.jdo;
+package org.estatio.dom.asset;
 
 import java.util.List;
 
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.annotation.ActionSemantics;

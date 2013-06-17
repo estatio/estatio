@@ -1,8 +1,6 @@
-package org.estatio.jdo;
+package org.estatio.dom.charge;
 
 
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.utils.StringUtils;
 
 import org.apache.isis.applib.annotation.ActionSemantics;

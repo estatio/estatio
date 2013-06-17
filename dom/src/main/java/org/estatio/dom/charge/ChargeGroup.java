@@ -12,6 +12,7 @@ import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Query(name = "charge_findChargeGroupByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.charge.ChargeGroup WHERE reference.mathes(:r)")
 @Immutable
 @Bounded
 public class ChargeGroup extends EstatioRefDataObject implements ComparableByReference<ChargeGroup> {
@@ -57,18 +58,17 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return ToString.of(this);
     }
-    
+
     // //////////////////////////////////////
 
     @Override
     public int compareTo(ChargeGroup other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
-
 
 }

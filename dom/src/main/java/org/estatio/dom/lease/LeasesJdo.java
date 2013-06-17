@@ -1,10 +1,8 @@
-package org.estatio.jdo;
+package org.estatio.dom.lease;
 
 import java.util.List;
 
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
