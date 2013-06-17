@@ -11,7 +11,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.query.QueryDefault;
 
 @Named("States")
-public class States extends AbstractFactoryAndRepository {
+public class Geographies extends AbstractFactoryAndRepository {
 
     @Override
     public String getId() {

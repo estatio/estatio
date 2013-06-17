@@ -2,6 +2,8 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -9,9 +11,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.filter.Filter;
-
-import org.estatio.dom.utils.StringUtils;
 
 @Named("Accounts")
 public class FinancialAccounts extends AbstractFactoryAndRepository {
@@ -34,17 +33,11 @@ public class FinancialAccounts extends AbstractFactoryAndRepository {
         persist(ba);
         return ba;
     }
-    
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public FinancialAccount findByReference(@Named("Reference") String reference) {
-        final String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch(FinancialAccount.class, new Filter<FinancialAccount>() {
-            @Override
-            public boolean accept(final FinancialAccount account) {
-                return account.getReference().matches(regex);
-            }
-        });
+        throw new NotImplementedException();
     }
 
     @Prototype

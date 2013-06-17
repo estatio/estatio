@@ -6,13 +6,14 @@ import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.QueryDefault;
 
 @Named("Numerators")
 public class Numerators extends AbstractFactoryAndRepository {
 
-    // {{ Id, iconName
     @Override
     public String getId() {
         return "numerators";
@@ -22,26 +23,24 @@ public class Numerators extends AbstractFactoryAndRepository {
         return "Numerator";
     }
 
-    // }}
-
+    // //////////////////////////////////////
 
     @Hidden
     public Numerator create(NumeratorType type) {
-        Numerator numerator =  newTransientInstance(Numerator.class);
+        Numerator numerator = newTransientInstance(Numerator.class);
         numerator.setType(type);
         persist(numerator);
         return numerator;
     }
 
-    // for subclasses to override
-    protected Numerator find(final NumeratorType type) {
-        Numerator numerator = firstMatch(Numerator.class, new Filter<Numerator>() {
-            @Override
-            public boolean accept(final Numerator n) {
-                return n.getType().equals(type);
-            }
-        });
-        return numerator;
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "2")
+    public Numerator find(final @Named("Numerator Type") NumeratorType type) {
+        return firstMatch(queryForFind(type));
+    }
+
+    private static QueryDefault<Numerator> queryForFind(NumeratorType type) {
+        return new QueryDefault<Numerator>(Numerator.class, "numerator_find", "type", type);
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
@@ -50,12 +49,10 @@ public class Numerators extends AbstractFactoryAndRepository {
         return numerator == null ? create(type) : numerator;
     }
 
-    // {{ allNumerators
     @ActionSemantics(Of.SAFE)
     public List<Numerator> allNumerators() {
         List<Numerator> allInstances = allInstances(Numerator.class);
         return allInstances;
     }
-    // }}
 
 }

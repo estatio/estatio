@@ -3,6 +3,7 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -11,12 +12,11 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.QueryDefault;
 
 @Named("Indices")
 public class Indices extends AbstractFactoryAndRepository {
 
-    // {{ Id, iconName
     @Override
     public String getId() {
         return "indices";
@@ -26,9 +26,8 @@ public class Indices extends AbstractFactoryAndRepository {
         return "Index";
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ newIndex
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Index newIndex(final @Named("Reference") String reference, final @Named("Name") String name) {
@@ -39,9 +38,8 @@ public class Indices extends AbstractFactoryAndRepository {
         return index;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ newIndexBase
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
     public IndexBase newIndexBase(final @Named("Index") Index index, final @Named("Previous Base") IndexBase previousBase, final @Named("Start Date") LocalDate startDate, final @Named("Factor") BigDecimal factor) {
@@ -54,9 +52,6 @@ public class Indices extends AbstractFactoryAndRepository {
         return indexBase;
     }
 
-    // }}
-
-    // {{ newIndexValue
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "3")
     public IndexValue newIndexValue(final @Named("Index Base") IndexBase indexBase, final @Named("Start Date") LocalDate startDate, final @Named("Value") BigDecimal value) {
@@ -68,47 +63,23 @@ public class Indices extends AbstractFactoryAndRepository {
         return indexValue;
     }
 
-    // }}
-
-    // {{ findByReference
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public Index findByReference(final @Named("Reference") String reference) {
-        return firstMatch(Index.class, new Filter<Index>() {
-            @Override
-            public boolean accept(final Index index) {
-                return reference.equals(index.getReference());
-            }
-        });
+        return firstMatch(new QueryDefault<Index>(Index.class, "findByReference", "reference", reference));
     }
 
-    // }}
-
-    // {{ allIndices
-    // (not a prototype, bounded)
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
     public List<Index> allIndices() {
         return allInstances(Index.class);
     }
 
-    // }}
-
-    // {{ findIndexValueForDate
-    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "6")
     public IndexValue findIndexValueForDate(final Index index, final @Named("Start Date") LocalDate startDate) {
-        return startDate == null ? null : firstMatch(IndexValue.class, new Filter<IndexValue>() {
-            @Override
-            public boolean accept(final IndexValue indexValue) {
-                return startDate.equals(indexValue.getStartDate()) && index.equals(indexValue.getIndexBase().getIndex());
-            }
-        });
+        return firstMatch(new QueryDefault<IndexValue>(IndexValue.class, "findForDate", "index", index, "date", startDate));
     }
 
-    // }}
-
-    // {{ allIndexBases
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "7")
@@ -116,15 +87,11 @@ public class Indices extends AbstractFactoryAndRepository {
         return allInstances(IndexBase.class);
     }
 
-    // }}
-
-    // {{ allIndexValues
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "8")
     public List<IndexValue> allIndexValues() {
         return allInstances(IndexValue.class);
     }
-    // }}
 
 }

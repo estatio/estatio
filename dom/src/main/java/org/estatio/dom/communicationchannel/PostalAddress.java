@@ -4,22 +4,19 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.TitleBuffer;
-
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
+
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator("POST") // required since subtypes are rolling-up
-@ObjectType("POST")
 public class PostalAddress extends CommunicationChannel {
 
     /**

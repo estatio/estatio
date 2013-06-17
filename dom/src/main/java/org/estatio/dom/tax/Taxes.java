@@ -12,9 +12,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.filter.Filter;
-
-import org.estatio.dom.utils.StringUtils;
+import org.apache.isis.applib.query.QueryDefault;
 
 @Named("Taxes")
 public class Taxes extends AbstractFactoryAndRepository {
@@ -73,22 +71,11 @@ public class Taxes extends AbstractFactoryAndRepository {
 
     @Hidden
     public Tax findTaxByReference(final String reference) {
-        final String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch(Tax.class, new Filter<Tax>() {
-            @Override
-            public boolean accept(final Tax tax) {
-                return (tax.getReference().matches(regex));
-            }
-        });
+        return firstMatch(new QueryDefault<Tax>(Tax.class, "findByReference", "reference", reference));
     }
 
     @Hidden
     public TaxRate findTaxRateForDate(final @Named("Tax") Tax tax, final @Named("Date") LocalDate date) {
-        return firstMatch(TaxRate.class, new Filter<TaxRate>() {
-            @Override
-            public boolean accept(final TaxRate rate) {
-                return tax.equals(rate.getTax()) && date.compareTo(rate.getStartDate()) >= 0 && (rate.getEndDate() == null || date.compareTo(rate.getEndDate()) <= 0);
-            }
-        });
+        return firstMatch(new QueryDefault<TaxRate>(TaxRate.class, "findForDate", "tax", tax, "date", date));
     }
 }

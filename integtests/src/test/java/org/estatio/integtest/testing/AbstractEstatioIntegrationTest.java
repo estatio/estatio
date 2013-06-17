@@ -2,29 +2,6 @@ package org.estatio.integtest.testing;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
-
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.fixtures.InstallableFixture;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
-import org.apache.isis.core.commons.config.IsisConfiguration;
-import org.apache.isis.core.commons.config.IsisConfigurationDefault;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-import org.apache.isis.core.wrapper.WrapperFactoryDefault;
-import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
-import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
-
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRolesJdo;
@@ -48,7 +25,6 @@ import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.CountriesJdo;
 import org.estatio.dom.geography.States;
-import org.estatio.dom.geography.StatesJdo;
 import org.estatio.dom.index.IndicesJdo;
 import org.estatio.dom.lease.LeaseItemsJdo;
 import org.estatio.dom.lease.LeaseTerms;
@@ -71,6 +47,28 @@ import org.estatio.services.appsettings.EstatioSettingsService;
 import org.estatio.services.appsettings.EstatioSettingsServiceJdo;
 import org.estatio.services.bookmarks.EstatioBookmarkService;
 import org.estatio.services.clock.ClockService;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.MethodRule;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.Statement;
+
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.fixtures.InstallableFixture;
+import org.apache.isis.applib.services.wrapper.WrapperFactory;
+import org.apache.isis.core.commons.config.IsisConfiguration;
+import org.apache.isis.core.commons.config.IsisConfigurationDefault;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+import org.apache.isis.core.wrapper.WrapperFactoryDefault;
+import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 public abstract class AbstractEstatioIntegrationTest {
 
@@ -239,7 +237,7 @@ public abstract class AbstractEstatioIntegrationTest {
             withServices(
                     new RegisterEntities(), 
                     new WrapperFactoryDefault(), 
-                    new CountriesJdo(), new StatesJdo(), new CurrenciesJdo(), new IndicesJdo(), new FixedAssets(), new PropertiesJdo(), new FixedAssetRolesJdo(), new UnitsJdo(), new PartiesJdo(), new AgreementsJdo(), new AgreementTypes(),
+                    new CountriesJdo(), new States(), new CurrenciesJdo(), new IndicesJdo(), new FixedAssets(), new PropertiesJdo(), new FixedAssetRolesJdo(), new UnitsJdo(), new PartiesJdo(), new AgreementsJdo(), new AgreementTypes(),
                     new AgreementRoleTypes(), new AgreementRolesJdo(), new LeasesJdo(), new LeaseTermsJdo(), new LeaseItemsJdo(), new LeaseUnitsJdo(), new InvoicesForLeaseJdo(), new CommunicationChannelsJdo(), new TaxesJdo(), new TagsJdo(), new EstatioBookmarkService(), new ChargesJdo(),
                     new ChargeGroupsJdo(), new FinancialAccountsJdo(), new NumeratorsJdo(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
                     new LeaseTermContributedActions());

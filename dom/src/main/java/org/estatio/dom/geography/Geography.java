@@ -12,13 +12,17 @@ import org.estatio.dom.WithReferenceGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
 public abstract class Geography extends EstatioRefDataObject implements ComparableByReference<Geography>, WithNameGetter {
 
     private String reference;
 
     /**
-     * As per ISO standards for <a href="http://www.commondatahub.com/live/geography/country/iso_3166_country_codes">countries</a> and
-     * <a href="http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes">states</a>.
+     * As per ISO standards for <a href=
+     * "http://www.commondatahub.com/live/geography/country/iso_3166_country_codes"
+     * >countries</a> and <a href=
+     * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
+     * >states</a>.
      */
     @MemberOrder(sequence = "1")
     public String getReference() {
@@ -43,14 +47,12 @@ public abstract class Geography extends EstatioRefDataObject implements Comparab
         this.name = name;
     }
 
-    
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return WithReferenceGetter.ToString.of(this);
     }
-    
 
     // //////////////////////////////////////
 
@@ -58,5 +60,5 @@ public abstract class Geography extends EstatioRefDataObject implements Comparab
     public int compareTo(Geography other) {
         return ORDERING_BY_REFERENCE.compare(this, other);
     }
-    
+
 }

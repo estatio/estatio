@@ -11,7 +11,7 @@ public class CountriesJdo extends Countries {
     @Override
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public Country findByReference(@Named("Reference") String reference) {
+    public Country findByReference(String reference) {
         if (reference == null)
             return null;
         return firstMatch(queryForFindCountryByReference(reference));

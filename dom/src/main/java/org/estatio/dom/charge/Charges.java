@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.estatio.dom.utils.StringUtils;
 
 @Named("Charges")
@@ -35,17 +36,11 @@ public class Charges extends AbstractFactoryAndRepository {
         }
         return charge;
     }
-    
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Charge findChargeByReference(final String reference) {
-        final String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch(Charge.class, new Filter<Charge>() {
-            @Override
-            public boolean accept(final Charge charge) {
-                return charge.getReference().matches(regex);
-            }
-        });
+        throw new NotImplementedException();
     }
 
     @Prototype

@@ -16,6 +16,7 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.Index WHERE reference == :reference")
 @Immutable
 public class Index extends EstatioRefDataObject implements ComparableByReference<Index>, WithNameGetter {
 
@@ -45,7 +46,7 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent(mappedBy = "index")
     private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
@@ -89,6 +90,8 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
 
     @Programmatic
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
+        if (baseIndexStartDate == null || nextIndexStartDate == null)
+            return null;
         IndexValue nextIndexValue = indices.findIndexValueForDate(this, nextIndexStartDate);
         // TODO: check efficiency.. seems to retrieve every single index value
         // for the last 15 years...
@@ -107,7 +110,7 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
     }
 
     // //////////////////////////////////////
-    
+
     @Override
     public String toString() {
         return ComparableByReference.ToString.of(this);

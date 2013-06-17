@@ -21,11 +21,16 @@ public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
     }
 
     @Test
+    public void partyCanNotBeFound() throws Exception {
+        Assert.assertNull(parties.findPartyByReference("HELLO"));
+    }
+
+    @Test
     public void partyHasFourCommunicationChannels() throws Exception {
         Party party = parties.findPartyByReference("HELLOWORLD");
         Assert.assertThat(party.getCommunicationChannels().size(), is(4));
     }
-    
+
     @Test
     public void partyHasOneFinancialAccount() throws Exception {
         final Party party = parties.findPartyByReference("HELLOWORLD");
@@ -37,7 +42,7 @@ public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
         }));
         Assert.assertThat(partyAccounts.size(), is(1));
     }
-    
+
     @Test
     public void partyCanBeFoundOnPartialReference() {
         Assert.assertThat(parties.findParties("*LLOWOR*").size(), is(1));
