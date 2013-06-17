@@ -26,31 +26,6 @@
         <siteBaseDir>..</siteBaseDir>
     </properties>
 
-<!-- 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>org/estatio/dom/**</include>
-                    </includes>
-                    <destFile>${trunkBaseDir}/jacoco.exec</destFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
- -->
-
     <dependencies>
 
         <!-- this project's dependencies -->

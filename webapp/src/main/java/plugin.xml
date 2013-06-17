@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<plugin id="mydomain" name="DataNucleus plug-ins" provider-name="My Company">
+    <extension point="org.datanucleus.store_identifierfactory">
+        <identifierfactory name="estatio" 
+            class-name="org.estatio.objectstore.jdo.EstatioIdentifierFactory"/>
+    </extension>
+</plugin>

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: estatioIdentifierFactory
+Bundle-SymbolicName: org.estatio.objectstore.jdo.EstatioIdentifierFactory
+Bundle-Version: 1.0.0
+Bundle-Vendor: EuroCommercial Properties NV
+
