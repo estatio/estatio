@@ -24,7 +24,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "fixedAssetRole_findByAssetParty", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAssetRole WHERE asset == :asset && party == :party && type == :type")
+@javax.jdo.annotations.Query(
+        name = "fixedAssetRole_findByAssetParty", language = "JDOQL", 
+        value = "SELECT " +
+        		"FROM org.estatio.dom.asset.FixedAssetRole " +
+        		"WHERE asset == :asset " +
+        		"&& party == :party " +
+        		"&& type == :type")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole extends EstatioTransactionalObject implements Comparable<FixedAssetRole>, WithInterval {
 

@@ -24,7 +24,24 @@ import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "agreementRole_find", language = "JDOQL", value = "SELECT FROM org.estatio.dom.agreement.AgreementRole party == :party && type == :type && startDate == :startDate")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+        name = "agreementRole_find", language = "JDOQL", 
+        value = "SELECT " +
+        		"FROM org.estatio.dom.agreement.AgreementRole " +
+        		"WHERE agreement == :agreement " +
+        		"&& party == :party " +
+        		"&& type == :type " +
+        		"&& startDate == :startDate"),
+	@javax.jdo.annotations.Query(
+        name = "agreementRole_findWithType", language = "JDOQL", 
+        value = "SELECT " +
+                "FROM org.estatio.dom.agreement.AgreementRole " +
+                "WHERE agreement == :agreement " +
+                "&& type == :type "+ 
+                "&& (startDate == null | startDate < :date) "+
+                "&& (endDate == null | endDate > :date) ")
+})
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole>, WithInterval {
 

@@ -28,7 +28,13 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "invoiceItem_findItems", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) && dueDate == :dueDate && startDate == :startDate")
+@javax.jdo.annotations.Query(
+        name = "invoiceItem_findItems", language = "JDOQL", 
+        value = "SELECT " +
+        		"FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+        		"WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " +
+        		"&& dueDate == :dueDate " +
+        		"&& startDate == :startDate")
 public class InvoiceItemForLease extends InvoiceItem {
 
     private LeaseTerm leaseTerm;

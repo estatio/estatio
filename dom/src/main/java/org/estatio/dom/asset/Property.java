@@ -25,7 +25,11 @@ import org.estatio.dom.geography.Country;
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "properties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.Property WHERE reference.matches(:r)")
+@javax.jdo.annotations.Query(
+        name = "properties_findPropertiesByReference", language = "JDOQL", 
+        value = "SELECT " +
+        		"FROM org.estatio.dom.asset.Property " +
+        		"WHERE reference.matches(:r)")
 @AutoComplete(repository = Properties.class)
 @Bookmarkable
 public class Property extends FixedAsset {

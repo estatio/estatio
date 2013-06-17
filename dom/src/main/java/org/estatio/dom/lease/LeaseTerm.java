@@ -50,8 +50,20 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_TERM_IDX", members = { "leaseItem", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_TERM2_IDX", members = { "leaseItem", "startDate" }) })
-@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithStatus", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE status == :status && startDate <= :date && (endDate == null || endDate >= :date)"),
-        @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithSequence", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE leaseItem == :leaseItem && sequence == :sequence") })
+@javax.jdo.annotations.Queries({ 
+    @javax.jdo.annotations.Query(
+            name = "leaseTerm_findLeaseTermsWithStatus", language = "JDOQL", 
+            value = "SELECT " +
+            		"FROM org.estatio.dom.lease.LeaseTerm " +
+            		"WHERE status == :status " +
+            		"&& startDate <= :date && " +
+            		"(endDate == null || endDate >= :date)"),
+        @javax.jdo.annotations.Query(
+                name = "leaseTerm_findLeaseTermsWithSequence", language = "JDOQL", 
+                value = "SELECT FROM " +
+                		"org.estatio.dom.lease.LeaseTerm " +
+                		"WHERE leaseItem == :leaseItem " +
+                		"&& sequence == :sequence") })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval, WithSequence {
 

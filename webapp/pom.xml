@@ -102,23 +102,6 @@
                 <artifactId>maven-jetty-plugin</artifactId>
             </plugin>
 
-            <!-- mvn package -->
-            <plugin>
-                <groupId>org.simplericity.jettyconsole</groupId>
-                <artifactId>jetty-console-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>createconsole</goal>
-                        </goals>
-                        <configuration>
-                            <backgroundImage>${basedir}/src/main/jettyconsole/isis-banner.png</backgroundImage>
-                        </configuration>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- prereqs: mvn package -->
             <!-- mvn antrun:run -->
             <plugin>
@@ -136,17 +119,6 @@
 		</plugins>
  	</build>
 
-    <!--
-	<dependencyManagement>
-		<dependencies>
-	        <dependency>
-			  <groupId>commons-codec</groupId>
-			  <artifactId>commons-codec</artifactId>
-			  <version>1.6</version>
-	        </dependency>
-		</dependencies>
-	</dependencyManagement>
-    -->
 	
 	<dependencies>
 	
@@ -158,10 +130,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>estatio-objstore-jdo</artifactId>
         </dependency>
         
 
@@ -218,7 +186,9 @@
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
         </dependency>
+
 <!-- 
+ -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>jdbc</artifactId>
@@ -227,7 +197,7 @@
             <optional>true</optional>
             <systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
         </dependency>
- -->
+
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -284,9 +254,35 @@
             <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
         </dependency>
          -->
-        
-        
 
 	</dependencies>
+    <profiles>
+        <profile>
+            <id>jetty-console</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- mvn package -->
+                    <plugin>
+                        <groupId>org.simplericity.jettyconsole</groupId>
+                        <artifactId>jetty-console-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>createconsole</goal>
+                                </goals>
+                                <configuration>
+                                    <backgroundImage>${basedir}/src/main/jettyconsole/isis-banner.png</backgroundImage>
+                                </configuration>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

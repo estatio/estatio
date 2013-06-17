@@ -10,7 +10,11 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(name = "charge_findChargeByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.charge.Charge WHERE reference.matches(:r)")
+@javax.jdo.annotations.Query(
+        name = "charge_findChargeByReference", language = "JDOQL", 
+        value = "SELECT " +
+        		"FROM org.estatio.dom.charge.Charge " +
+        		"WHERE reference.matches(:r)")
 @Bounded
 @Immutable
 public class Charge extends EstatioRefDataObject implements ComparableByCode<Charge> {

@@ -26,7 +26,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Index(name = "LEASE_UNIT_IDX", members = { "lease", "unit", "startDate" })
 @javax.jdo.annotations.Unique(name = "LEASE_UNIT_IDX2", members = { "lease", "unit", "startDate" })
-@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "leaseUnit_find", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseUnit WHERE lease == :lease && unit == :unit && startDate == :startDate") })
+@javax.jdo.annotations.Queries({ 
+    @javax.jdo.annotations.Query(
+            name = "leaseUnit_find", language = "JDOQL", 
+            value = "SELECT " +
+            		"FROM org.estatio.dom.lease.LeaseUnit " +
+            		"WHERE lease == :lease " +
+            		"&& unit == :unit " +
+            		"&& startDate == :startDate") })
 public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit>, WithInterval {
 
     private Lease lease;
