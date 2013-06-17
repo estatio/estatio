@@ -812,9 +812,16 @@
         </site>
     </distributionManagement>
 
+   <modules>
+        <module>cpsuite</module>
+        <module>dom</module>
+        <module>fixture</module>
+        <module>integtests</module>
+        <module>webapp</module>
+   </modules>
 
     <profiles>
-    	<!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->
+        <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->
         <profile>
             <id>m2e</id>
             <activation>
@@ -827,38 +834,6 @@
             </build>
         </profile>
 
-	    <profile>
-	        <id>default-set-of-modules</id>
-	        <activation>
-	            <activeByDefault>true</activeByDefault>
-	        </activation>
-	        <modules>
-                <module>cpsuite</module>
-		        <module>dom</module>
-		        <module>fixture</module>
-		        <module>integtests</module>
-		        <module>webapp</module>
-		    </modules>
-	    </profile>
-    
-       <profile>
-           <id>modules-site</id>
-           <activation>
-               <!--  mvn site-deploy -D modules=site -->
-               <property>
-                   <name>modules</name>
-                   <value>site</value>
-               </property>
-           </activation>
-           <modules>
-                <module>cpsuite</module>
-                <module>dom</module>
-                <module>fixture</module>
-                <module>integtests</module>
-                <module>webapp</module>
-           </modules>
-       </profile>
-
 		<!-- stuff to perform only if running under jenkins -->
 		<!-- 
 		<profile>
@@ -870,7 +845,7 @@
             </activation>
         </profile>
 		-->
-        
+
         <profile>
             <id>metrics-on</id>
             <activation>

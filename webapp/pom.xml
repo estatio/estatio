@@ -187,16 +187,6 @@
             <artifactId>hsqldb</artifactId>
         </dependency>
 
-<!-- 
- -->
-        <dependency>
-            <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>jdbc</artifactId>
-            <version>4.0</version>
-            <scope>system</scope>
-            <optional>true</optional>
-            <systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
-        </dependency>
 
         <dependency>
             <groupId>postgresql</groupId>
@@ -256,6 +246,7 @@
          -->
 
 	</dependencies>
+    
     <profiles>
         <profile>
             <id>jetty-console</id>
@@ -285,6 +276,26 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        
+        <profile>
+            <id>m2e</id>
+            <activation>
+                <!-- 
+                if running in Eclipse, this profile makes the SQL Server JDBC available on classpath 
+                (nb: driver must be manually installed to local repo manually using mvn install-file)
+                 -->
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.microsoft.sqlserver</groupId>
+                    <artifactId>jdbc</artifactId>
+                    <version>4.0</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
