@@ -91,12 +91,12 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
         return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
     }
 
-    public static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {
+    public final static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {
         public int compare(FinancialAccount p, FinancialAccount q) {
             return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
         }
     };
-    public static Ordering<FinancialAccount> ORDERING_BY_REFERENCE = new Ordering<FinancialAccount>() {
+    public final static Ordering<FinancialAccount> ORDERING_BY_REFERENCE = new Ordering<FinancialAccount>() {
         public int compare(FinancialAccount p, FinancialAccount q) {
             return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
         }

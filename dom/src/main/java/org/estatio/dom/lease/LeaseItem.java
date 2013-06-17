@@ -339,13 +339,13 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
         return ORDERING_BY_LEASE.compound(ORDERING_BY_TYPE).compound(ORDERING_BY_SEQUENCE_DESC).compare(this, o);
     }
 
-    public static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {
+    public final static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
             return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
         }
     };
 
-    public static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
+    public final static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
         public int compare(LeaseItem p, LeaseItem q) {
             return Ordering.<LeaseItemType> natural().nullsFirst().compare(p.getType(), q.getType());
         }

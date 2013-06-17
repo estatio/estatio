@@ -501,10 +501,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
         return ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this, o);
     }
 
-    // TODO: [JWA] After running the fixtures ordering by lease throws an error
-    // but that seems impossible. Maybe out of sync with JDO?
-
-    public static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new Ordering<LeaseTerm>() {
+    public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new Ordering<LeaseTerm>() {
         public int compare(LeaseTerm p, LeaseTerm q) {
             return Ordering.natural().nullsFirst().compare(p.getLeaseItem(), q.getLeaseItem());
         }

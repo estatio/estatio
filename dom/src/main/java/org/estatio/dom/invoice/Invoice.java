@@ -331,7 +331,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         return ORDERING_BY_INVOICE_NUMBER.compare(this, o);
     }
 
-    public static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
+    public final static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
         public int compare(Invoice p, Invoice q) {
             return Ordering.natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
         }

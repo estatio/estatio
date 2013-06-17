@@ -94,7 +94,7 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static Ordering<AgreementType> ORDERING_BY_TITLE = (Ordering)ComparableByTitle.ORDERING_BY_TITLE;
+    public final static Ordering<AgreementType> ORDERING_BY_TITLE = (Ordering)ComparableByTitle.ORDERING_BY_TITLE;
 
     // //////////////////////////////////////
 

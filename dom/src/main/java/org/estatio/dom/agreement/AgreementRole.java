@@ -189,22 +189,22 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
         return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
     }
 
-    public static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
+    public final static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
             return Ordering.natural().nullsFirst().compare(p.getAgreement(), q.getAgreement());
         }
     };
-    public static Ordering<AgreementRole> ORDERING_BY_PARTY = new Ordering<AgreementRole>() {
+    public final static Ordering<AgreementRole> ORDERING_BY_PARTY = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
             return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
         }
     };
-    public static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
+    public final static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
             return Ordering.<LocalDate> natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
         }
     };
-    public static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
+    public final static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
         public int compare(AgreementRole p, AgreementRole q) {
             return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
         }

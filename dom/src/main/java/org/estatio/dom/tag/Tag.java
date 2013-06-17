@@ -133,12 +133,12 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
         return ORDERING_BY_OBJECT_TYPE.compound(ORDERING_BY_NAME).compare(this, other);
     }
 
-    public static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {
+    public final static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {
         public int compare(Tag p, Tag q) {
             return Ordering.natural().nullsFirst().compare(p.getObjectType(), q.getObjectType());
         }
     };
-    public static Ordering<Tag> ORDERING_BY_NAME = new Ordering<Tag>() {
+    public final static Ordering<Tag> ORDERING_BY_NAME = new Ordering<Tag>() {
         public int compare(Tag p, Tag q) {
             return Ordering.natural().nullsFirst().compare(p.getName(), q.getName());
         }

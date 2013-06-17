@@ -53,6 +53,6 @@ public enum InvoicingFrequency {
         return denominator;
     }
 
-    public static Ordering<InvoicingFrequency> ORDERING_BY_TYPE = 
+    public final static Ordering<InvoicingFrequency> ORDERING_BY_TYPE = 
             Ordering.<InvoicingFrequency> natural().nullsFirst();
 }

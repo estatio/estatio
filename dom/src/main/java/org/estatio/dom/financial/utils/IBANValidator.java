@@ -35,10 +35,14 @@ public class IBANValidator {
     }
 
     public boolean valid(String iban) {
-		if (iban == null || iban.length() < 15 || iban.length() > 32 )
-			return false;
-		String countryCode = iban.substring(0, 2);
+		if (iban == null || iban.length() < 15 || iban.length() > 32 ) {
+            return false;
+        }
+		
+	    @SuppressWarnings({"unused"})
+	    String countryCode = iban.substring(0, 2);
 		//TODO validate country
+	    
 		int checksum = checksum(iban);
 		return (checksum == 1);
 	}
