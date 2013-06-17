@@ -31,24 +31,18 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.6.3.201306030806</version>
                 <configuration>
                     <includes>
                         <include>org/estatio/dom/**</include>
                     </includes>
+                    <destFile>${trunkBaseDir}/jacoco.exec</destFile>
+                    <append>true</append>
                 </configuration>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>
                         <goals>
                             <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>

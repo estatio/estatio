@@ -176,7 +176,11 @@
                     <version>3.0</version>
                 </plugin>
 
-
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.6.3.201306030806</version>
+                </plugin>
 
 
 				<plugin>
@@ -838,7 +842,6 @@
                 <module>cpsuite</module>
 		        <module>dom</module>
 		        <module>fixture</module>
-		        <module>objstore-jdo</module>
 		        <module>integtests</module>
 		        <module>webapp</module>
 		    </modules>
@@ -857,7 +860,6 @@
                 <module>cpsuite</module>
                 <module>dom</module>
                 <module>fixture</module>
-                <module>objstore-jdo</module>
                 <module>integtests</module>
                 <module>webapp</module>
            </modules>
