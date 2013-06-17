@@ -260,7 +260,10 @@
         <profile>
             <id>jetty-console</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>console</name>
+                    <value>true</value>
+                </property>
             </activation>
             <build>
                 <plugins>

@@ -26,6 +26,7 @@
         <siteBaseDir>..</siteBaseDir>
     </properties>
 
+<!-- 
     <build>
         <plugins>
             <plugin>
@@ -36,7 +37,6 @@
                         <include>org/estatio/dom/**</include>
                     </includes>
                     <destFile>${trunkBaseDir}/jacoco.exec</destFile>
-                    <append>true</append>
                 </configuration>
                 <executions>
                     <execution>
@@ -49,6 +49,7 @@
             </plugin>
         </plugins>
     </build>
+ -->
 
     <dependencies>
 
