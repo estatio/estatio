@@ -2,9 +2,6 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
-import org.estatio.dom.utils.StringUtils;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -13,17 +10,15 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.query.QueryDefault;
 
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
+
 @Named("Fixed Assets")
 @Hidden
-public class FixedAssets extends AbstractFactoryAndRepository {
+public class FixedAssets extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "fixedAssets";
-    }
-
-    public String iconName() {
-        return "FixedAsset";
+    public FixedAssets() {
+        super(FixedAssets.class, FixedAsset.class);
     }
 
     // //////////////////////////////////////

@@ -11,18 +11,17 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Countries")
-public class Countries extends AbstractFactoryAndRepository {
+public class Countries extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "countries";
+    public Countries() {
+        super(Countries.class, Country.class);
     }
 
-    public String iconName() {
-        return "Country";
-    }
-
+    // //////////////////////////////////////
+    
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Country newCountry(final @Named("Reference") String reference, final @Named("Name") String name) {
@@ -33,6 +32,8 @@ public class Countries extends AbstractFactoryAndRepository {
         return country;
     }
 
+    // //////////////////////////////////////
+
     /**
      * Returns the Country with given reference
      */
@@ -42,11 +43,13 @@ public class Countries extends AbstractFactoryAndRepository {
         throw new NotImplementedException();
     }
 
+    
+    // //////////////////////////////////////
+
     @Prototype
     @ActionSemantics(Of.SAFE)
     public List<Country> allCountries() {
         return allInstances(Country.class);
     }
-    // }}
 
 }

@@ -2,7 +2,6 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -11,22 +10,18 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Lease Items")
 @Hidden
-public class LeaseItems extends AbstractFactoryAndRepository {
+public class LeaseItems extends EstatioDomainService {
 
-    // {{ Id, iconName
-    @Override
-    public String getId() {
-        return "leaseitems";
+    public LeaseItems() {
+        super(LeaseItems.class, LeaseItem.class);
     }
 
-    public String iconName() {
-        return "LeaseItem";
-    }
-    // }}
+    // //////////////////////////////////////
 
-    // {{ newLeaseItem
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     @NotContributed
@@ -37,14 +32,13 @@ public class LeaseItems extends AbstractFactoryAndRepository {
         leaseItem.setType(type);
         return leaseItem;
     }
-    // }}
 
-    // {{ allLeaseItems
+    // //////////////////////////////////////
+
     @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseItem> allLeaseItems() {
         return allInstances(LeaseItem.class);
     }
-    // }}
 
 }

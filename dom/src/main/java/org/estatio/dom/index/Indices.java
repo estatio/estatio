@@ -3,10 +3,8 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -14,16 +12,13 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.query.QueryDefault;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Indices")
-public class Indices extends AbstractFactoryAndRepository {
+public class Indices extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "indices";
-    }
-
-    public String iconName() {
-        return "Index";
+    public Indices() {
+        super(Indices.class, Index.class);
     }
 
     // //////////////////////////////////////
@@ -37,8 +32,6 @@ public class Indices extends AbstractFactoryAndRepository {
         persist(index);
         return index;
     }
-
-    // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "2")
@@ -62,6 +55,8 @@ public class Indices extends AbstractFactoryAndRepository {
         indexBase.addToValues(indexValue);
         return indexValue;
     }
+    
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
@@ -79,6 +74,8 @@ public class Indices extends AbstractFactoryAndRepository {
     public IndexValue findIndexValueForDate(final Index index, final @Named("Start Date") LocalDate startDate) {
         return firstMatch(new QueryDefault<IndexValue>(IndexValue.class, "findForDate", "index", index, "date", startDate));
     }
+
+    // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)

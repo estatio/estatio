@@ -8,16 +8,16 @@ import org.apache.isis.applib.query.QueryDefault;
 
 public class FixedAssetRolesJdo extends FixedAssetRoles {
 
-    // {{ findPropertyActor
+    // //////////////////////////////////////
+
     @Override
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         // TODO: need to also search by dates
         return firstMatch(queryForFindByPropertyParty(asset, party, type));
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ findPropertyActor
     @Override
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type) {
         return firstMatch(queryForFindByPropertyParty(asset, party, type));

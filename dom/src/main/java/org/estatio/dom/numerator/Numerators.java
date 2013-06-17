@@ -2,25 +2,20 @@ package org.estatio.dom.numerator;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.filter.Filter;
 import org.apache.isis.applib.query.QueryDefault;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Numerators")
-public class Numerators extends AbstractFactoryAndRepository {
+public class Numerators extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "numerators";
-    }
-
-    public String iconName() {
-        return "Numerator";
+    public Numerators() {
+        super(Numerators.class, Numerator.class);
     }
 
     // //////////////////////////////////////

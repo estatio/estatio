@@ -4,10 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -17,16 +15,14 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.services.clock.ClockService;
+
 @Named("Lease Terms")
-public class LeaseTerms extends AbstractFactoryAndRepository {
+public class LeaseTerms extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "leaseTerms";
-    }
-
-    public String iconName() {
-        return "LeaseTerm";
+    public LeaseTerms() {
+        super(LeaseTerms.class, LeaseTerm.class);
     }
 
     // //////////////////////////////////////
@@ -58,13 +54,6 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
         return leaseTerm;
     }
 
-    // //////////////////////////////////////
-
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    public List<LeaseTerm> allLeaseTerms() {
-        return allInstances(LeaseTerm.class);
-    }
 
     // //////////////////////////////////////
 
@@ -82,6 +71,14 @@ public class LeaseTerms extends AbstractFactoryAndRepository {
     @Hidden
     public LeaseTerm findLeaseTermWithSequence(LeaseItem leaseItem, BigInteger sequence) {
         throw new NotImplementedException();
+    }
+
+    // //////////////////////////////////////
+
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    public List<LeaseTerm> allLeaseTerms() {
+        return allInstances(LeaseTerm.class);
     }
 
     // //////////////////////////////////////

@@ -19,10 +19,10 @@ public class LeaseUnitsJdo extends LeaseUnits {
     @Hidden
     public LeaseUnit find(Lease lease, Unit unit, LocalDate startDate) {
          return firstMatch(queryForFind(lease, unit, startDate));
-     }
+    }
      
-     private static QueryDefault<LeaseUnit> queryForFind(Lease lease, Unit unit, LocalDate startDate) {
-         return new QueryDefault<LeaseUnit>(LeaseUnit.class, "leaseUnit_find", "lease", lease, "unit", unit, "startDate", startDate);
-     }
+    private static QueryDefault<LeaseUnit> queryForFind(Lease lease, Unit unit, LocalDate startDate) {
+        return new QueryDefault<LeaseUnit>(LeaseUnit.class, "leaseUnit_find", "lease", lease, "unit", unit, "startDate", startDate);
+    }
 
 }

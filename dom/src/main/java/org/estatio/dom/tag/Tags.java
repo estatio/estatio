@@ -9,7 +9,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.filter.Filter;
@@ -17,22 +16,18 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.EstatioDomainService;
 
 
 @Named("Tags")
-public class Tags extends AbstractFactoryAndRepository {
+public class Tags extends EstatioDomainService {
 
-    // {{ Id, iconName
-    @Override
-    public String getId() {
-        return "tags";
+    public Tags() {
+        super(Tags.class, Tag.class);
     }
 
-    public String iconName() {
-        return "Tag";
-    }
+    // //////////////////////////////////////
 
-    
     @Programmatic
     public List<String> choices(EstatioDomainObject domainObject, String tagName) {
         final List<Tag> tags = doChoices(domainObject, tagName);
@@ -77,14 +72,14 @@ public class Tags extends AbstractFactoryAndRepository {
         return tag;
     }
 
-    
-    // {{ injected: BookmarkService
+
+    // //////////////////////////////////////
+
     private BookmarkService bookmarkService;
 
-    public void setBookmarkService(final BookmarkService bookmarkService) {
+    public void injectBookmarkService(final BookmarkService bookmarkService) {
         this.bookmarkService = bookmarkService;
     }
-    // }}
 
 
  

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -12,22 +11,17 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Units")
-public class Units extends AbstractFactoryAndRepository {
+
+public abstract class Units extends EstatioDomainService {
 
     private final Class<? extends Unit> unitClass;
     
     public Units(Class<? extends Unit> unitClass) {
+        super(Units.class, Unit.class);
         this.unitClass = unitClass;
-    }
-    
-    @Override
-    public String getId() {
-        return "units";
-    }
-
-    public String iconName() {
-        return "Unit";
     }
 
     @ActionSemantics(Of.SAFE)

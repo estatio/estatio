@@ -2,6 +2,19 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.query.QueryDefault;
+
+import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
@@ -13,37 +26,19 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.query.QueryDefault;
 
 @Named("Leases")
-public class Leases extends AbstractFactoryAndRepository {
+public class Leases extends EstatioDomainService {
 
     public enum InvoiceRunType {
         NORMAL_RUN, RETRO_RUN;
     }
-
-    // {{ Id, iconName
-    @Override
-    public String getId() {
-        return "leases";
+    
+    public Leases() {
+        super(Leases.class, Lease.class);
     }
 
-    public String iconName() {
-        return "Lease";
-    }
-
-    // }}
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -70,6 +65,7 @@ public class Leases extends AbstractFactoryAndRepository {
         return lease;
     }
 
+    
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Lease findByReference(@Named("Reference") String reference) {
@@ -86,13 +82,6 @@ public class Leases extends AbstractFactoryAndRepository {
     @MemberOrder(sequence = "4")
     public List<Lease> findLeases(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches(queryForFind(fixedAsset, activeOnDate));
-    }
-
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "5")
-    public List<Lease> allLeases() {
-        return allInstances(Lease.class);
     }
 
     /**
@@ -126,13 +115,24 @@ public class Leases extends AbstractFactoryAndRepository {
         return new QueryDefault<Lease>(Lease.class, "findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
-    ClockService clockService;
+    // //////////////////////////////////////
+    
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "5")
+    public List<Lease> allLeases() {
+        return allInstances(Lease.class);
+    }
 
-    public void setClockService(ClockService clockService) {
+
+    // //////////////////////////////////////
+    
+    private ClockService clockService;
+
+    public void injectClockService(ClockService clockService) {
         this.clockService = clockService;
     }
 
-    // //////////////////////////////////////
 
     private InvoicesForLease invoices;
 

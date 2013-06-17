@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -13,19 +12,15 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
 @Named("Agreement Roles")
 @Hidden
-public class AgreementRoles extends AbstractFactoryAndRepository {
+public class AgreementRoles extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "agreementRoles";
-    }
-
-    public String iconName() {
-        return "AgreementRole";
+    protected AgreementRoles() {
+        super(AgreementRoles.class, AgreementRole.class);
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)

@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 public class LeaseTermsJdo extends LeaseTerms {
 
@@ -15,6 +16,8 @@ public class LeaseTermsJdo extends LeaseTerms {
      * table intermixed with DML, and so hit a deadlock in the driver.
      * 
      * HSQLDB 1.8.10 didn't have this problem.
+     * 
+     * REVIEW: this might not be needed now that we have {@link RegisterEntities}.
      */
     @Hidden
     public LeaseTerm dummy() {

@@ -2,7 +2,6 @@ package org.estatio.dom.party;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -13,20 +12,17 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 import org.apache.isis.applib.query.QueryDefault;
 
+import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
 @Named("Parties")
-public class Parties extends AbstractFactoryAndRepository {
+public class Parties extends EstatioDomainService {
 
-    // {{ Id, iconName
-    @Override
-    public String getId() {
-        return "parties";
+    public Parties() {
+        super(Parties.class, Party.class);
     }
 
-    public String iconName() {
-        return "Party";
-    }
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -92,18 +88,22 @@ public class Parties extends AbstractFactoryAndRepository {
         return allMatches(queryForFindParties(StringUtils.wildcardToCaseInsensitiveRegex(searchPattern)));
     }
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "7")
-    public List<Party> allParties() {
-        return allInstances(Party.class);
-    }
+    // //////////////////////////////////////
 
     @Hidden
     public List<Party> autoComplete(String searchPhrase) {
         if (searchPhrase.length()>2)
             return findParties("*"+searchPhrase+"*");
         return null;
+    }
+
+    // //////////////////////////////////////
+
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "7")
+    public List<Party> allParties() {
+        return allInstances(Party.class);
     }
 
     // //////////////////////////////////////

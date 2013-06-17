@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -14,17 +13,16 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.query.QueryDefault;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Taxes")
-public class Taxes extends AbstractFactoryAndRepository {
+public class Taxes extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "taxes";
+    public Taxes() {
+        super(Taxes.class, Tax.class);
     }
 
-    public String iconName() {
-        return "Tax";
-    }
+    // //////////////////////////////////////
 
     @MemberOrder(sequence = "1")
     @ActionSemantics(Of.NON_IDEMPOTENT)

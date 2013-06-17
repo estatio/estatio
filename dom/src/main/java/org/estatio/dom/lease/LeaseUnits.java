@@ -14,25 +14,19 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
+import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
 
 @Named("LeaseUnits")
 @Hidden
-public class LeaseUnits extends AbstractFactoryAndRepository {
+public class LeaseUnits extends EstatioDomainService {
 
-    // {{ Id, iconName
-    @Override
-    public String getId() {
-        return "leasesUnit";
+    public LeaseUnits() {
+        super(LeaseUnits.class, LeaseUnit.class);
     }
 
-    public String iconName() {
-        return "LeaseUnit";
-    }
+    // //////////////////////////////////////
 
-    // }}
-
-    // {{ newLeaseUnit
     // @Hidden
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
@@ -45,9 +39,8 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
         return lu;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ find
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     @Hidden
@@ -60,13 +53,11 @@ public class LeaseUnits extends AbstractFactoryAndRepository {
         });
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ allLeaseUnits
     @Prototype
     @ActionSemantics(Of.SAFE)
     public List<LeaseUnit> allLeaseUnits() {
         return allInstances(LeaseUnit.class);
     }
-    // }}
 }

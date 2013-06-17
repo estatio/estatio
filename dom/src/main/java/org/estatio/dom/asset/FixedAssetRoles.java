@@ -6,7 +6,6 @@ import com.google.common.base.Objects;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -16,19 +15,15 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.filter.Filter;
 
+import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
 @Hidden
 @Named("Asset Roles")
-public class FixedAssetRoles extends AbstractFactoryAndRepository {
+public class FixedAssetRoles extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "fixedAssetRoles";
-    }
-
-    public String iconName() {
-        return "FixedAssetRole";
+    public FixedAssetRoles() {
+        super(FixedAssetRoles.class, FixedAssetRole.class);
     }
 
     @ActionSemantics(Of.SAFE)

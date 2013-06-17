@@ -16,7 +16,8 @@ import org.apache.isis.applib.value.DateTime;
 @Immutable
 public class AuditEntryForEstatio {
 
-    // {{ TimestampUtc (property)
+    // //////////////////////////////////////
+
     private Long timestampEpoch;
 
     @Hidden
@@ -27,20 +28,17 @@ public class AuditEntryForEstatio {
     public void setTimestampEpoch(final Long timestampEpoch) {
         this.timestampEpoch = timestampEpoch;
     }
-    // }}
 
-    
-    // {{ Timestamp (property)
+    // //////////////////////////////////////
+
     @Title(sequence="1")
     @MemberOrder(sequence = "1")
     public DateTime getTimestamp() {
         return timestampEpoch != null? new DateTime(timestampEpoch): null;
     }
 
-    // }}
-
+    // //////////////////////////////////////
     
-    // {{ User (property)
     private String user;
 
     @MemberOrder(sequence = "2")
@@ -51,12 +49,9 @@ public class AuditEntryForEstatio {
     public void setUser(final String user) {
         this.user = user;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    
-
-    // {{ ObjectType (property)
     private String objectType;
 
     @Title(sequence="3", prepend=":")
@@ -68,9 +63,9 @@ public class AuditEntryForEstatio {
     public void setObjectType(final String objectType) {
         this.objectType = objectType;
     }
-    // }}
+    
+    // //////////////////////////////////////
 
-    // {{ Identifier (property)
     private String identifier;
 
     @MemberOrder(sequence = "4")
@@ -81,10 +76,9 @@ public class AuditEntryForEstatio {
     public void setIdentifier(final String identifier) {
         this.identifier = identifier;
     }
-    // }}
 
+    // //////////////////////////////////////
     
-    // {{ PreValue (property)
     private String preValue;
 
     @MemberOrder(sequence = "5")
@@ -95,10 +89,9 @@ public class AuditEntryForEstatio {
     public void setPreValue(final String preValue) {
         this.preValue = preValue;
     }
-    // }}
 
+    // //////////////////////////////////////
 
-    // {{ PostValue (property)
     private String postValue;
 
     @MemberOrder(sequence = "6")
@@ -109,6 +102,5 @@ public class AuditEntryForEstatio {
     public void setPostValue(final String postValue) {
         this.postValue = postValue;
     }
-    // }}
 
 }

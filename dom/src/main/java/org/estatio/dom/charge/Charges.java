@@ -2,29 +2,23 @@ package org.estatio.dom.charge;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.commons.lang.NotImplementedException;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.filter.Filter;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.EstatioDomainService;
 
 @Named("Charges")
-public class Charges extends AbstractFactoryAndRepository {
+public class Charges extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "charges";
+    public Charges() {
+        super(Charges.class, Charge.class);
     }
-
-    public String iconName() {
-        return "Charge";
-    }
-
+    
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Charge newCharge(String reference) {

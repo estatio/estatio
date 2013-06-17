@@ -4,23 +4,19 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Currencies")
-public class Currencies extends AbstractFactoryAndRepository {
+public class Currencies extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "currencies";
-    }
-
-    public String iconName() {
-        return "Currency";
+    public Currencies() {
+        super(Currencies.class, Currency.class);
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)

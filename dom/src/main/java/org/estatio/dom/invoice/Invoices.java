@@ -2,26 +2,23 @@ package org.estatio.dom.invoice;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Invoices")
-public class Invoices extends AbstractFactoryAndRepository {
+public class Invoices extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "invoices";
+    public Invoices() {
+        super(Invoices.class, Invoice.class);
     }
 
-    public String iconName() {
-        return "Invoice";
-    }
+    // //////////////////////////////////////
 
-    // {{ newInvoice
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Invoice newInvoice() {
@@ -30,9 +27,8 @@ public class Invoices extends AbstractFactoryAndRepository {
         return invoice;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ allInvoices
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
@@ -40,17 +36,12 @@ public class Invoices extends AbstractFactoryAndRepository {
         return allInstances(Invoice.class);
     }
 
-    // }}
-
-    // {{ allInvoiceItems
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<InvoiceItem> allInvoiceItems() {
         return allInstances(InvoiceItem.class);
     }
-
-    // }}
 
 
 }

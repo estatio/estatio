@@ -2,31 +2,24 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
 @Named("Communication Channels")
 @Hidden
-public class CommunicationChannels extends AbstractFactoryAndRepository {
+public class CommunicationChannels extends EstatioDomainService {
 
-    // {{ Id, iconName
-    @Override
-    public String getId() {
-        return "communicationchannels";
+    public CommunicationChannels() {
+        super(CommunicationChannels.class, CommunicationChannel.class);
     }
+    
+    // //////////////////////////////////////
 
-    public String iconName() {
-        return "CommunicationChannel";
-    }
-
-    // }}
-
-    // {{ newPostalAddress
     @Hidden
     public PostalAddress newPostalAddress(final @Named("Address 1") String address1, final @Named("Address 2") String address2, final @Named("Postal Code") String postalCode, final @Named("City") String city, final State state, final Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
@@ -41,9 +34,6 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
         return pa;
     }
 
-    // }}
-
-    // {{ newEmailAddress
     @Hidden
     public EmailAddress newEmailAddress(final @Named("Address") String address) {
         final EmailAddress ea = newTransientInstance(EmailAddress.class);
@@ -53,9 +43,6 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
         return ea;
     }
 
-    // }}
-
-    // {{ newPhoneNumber
     @Hidden
     public PhoneNumber newPhoneNumber(final @Named("Number") String number) {
         final PhoneNumber pn = newTransientInstance(PhoneNumber.class);
@@ -65,9 +52,6 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
         return pn;
     }
 
-    // }}
-
-    // {{ newFaxNumber
     @Hidden
     public FaxNumber newFaxNumber(final @Named("Number") String number) {
         final FaxNumber fn = newTransientInstance(FaxNumber.class);
@@ -77,13 +61,11 @@ public class CommunicationChannels extends AbstractFactoryAndRepository {
         return fn;
     }
 
-    // }}
+    // //////////////////////////////////////
 
-    // {{ AllCommunicationChannel
     @Prototype
     public List<CommunicationChannel> allCommunicationChannels() {
         return allInstances(CommunicationChannel.class);
     }
-    // }}
 
 }

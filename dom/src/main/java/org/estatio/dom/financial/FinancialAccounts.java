@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -12,16 +11,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("Accounts")
-public class FinancialAccounts extends AbstractFactoryAndRepository {
+public class FinancialAccounts extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "financialAccounts";
-    }
-
-    public String iconName() {
-        return "FinancialAccount";
+    public FinancialAccounts() {
+        super(FinancialAccounts.class, FinancialAccount.class);
     }
 
     @Hidden

@@ -2,7 +2,6 @@ package org.estatio.dom.geography;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -10,17 +9,17 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.query.QueryDefault;
 
+import org.estatio.dom.EstatioDomainService;
+
 @Named("States")
-public class States extends AbstractFactoryAndRepository {
+public class States extends EstatioDomainService {
 
-    @Override
-    public String getId() {
-        return "states";
+    public States() {
+        super(States.class, State.class);
     }
+    
 
-    public String iconName() {
-        return "State";
-    }
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
@@ -32,6 +31,8 @@ public class States extends AbstractFactoryAndRepository {
         persist(state);
         return state;
     }
+
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
