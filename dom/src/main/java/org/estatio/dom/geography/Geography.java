@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -58,7 +59,8 @@ public abstract class Geography extends EstatioRefDataObject implements Comparab
 
     @Override
     public int compareTo(Geography other) {
-        return ORDERING_BY_REFERENCE.compare(this, other);
+        //return ORDERING_BY_REFERENCE.compare(this, other);
+        return Comparisons.compare(this, other, "reference");
     }
 
 }

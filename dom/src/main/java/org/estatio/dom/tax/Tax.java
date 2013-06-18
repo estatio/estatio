@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
@@ -98,7 +99,8 @@ public class Tax extends EstatioRefDataObject implements ComparableByReference<T
 
     @Override
     public int compareTo(Tax other) {
-        return ORDERING_BY_REFERENCE.compare(this, other);
+        //return ORDERING_BY_REFERENCE.compare(this, other);
+        return Comparisons.compare(this, other, "reference");
     }
 
     // //////////////////////////////////////

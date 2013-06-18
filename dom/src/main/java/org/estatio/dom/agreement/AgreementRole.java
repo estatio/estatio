@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
@@ -186,29 +187,30 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
      */
     @Override
     public int compareTo(AgreementRole other) {
-        return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
+        //return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
+        return Comparisons.compare(this, other, "agreement, party, startDate desc, type");
     }
 
-    public final static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
-        public int compare(AgreementRole p, AgreementRole q) {
-            return Ordering.natural().nullsFirst().compare(p.getAgreement(), q.getAgreement());
-        }
-    };
-    public final static Ordering<AgreementRole> ORDERING_BY_PARTY = new Ordering<AgreementRole>() {
-        public int compare(AgreementRole p, AgreementRole q) {
-            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
-        }
-    };
-    public final static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
-        public int compare(AgreementRole p, AgreementRole q) {
-            return Ordering.<LocalDate> natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-        }
-    };
-    public final static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
-        public int compare(AgreementRole p, AgreementRole q) {
-            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
-        }
-    };
+//    public final static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
+//        public int compare(AgreementRole p, AgreementRole q) {
+//            return Ordering.natural().nullsFirst().compare(p.getAgreement(), q.getAgreement());
+//        }
+//    };
+//    public final static Ordering<AgreementRole> ORDERING_BY_PARTY = new Ordering<AgreementRole>() {
+//        public int compare(AgreementRole p, AgreementRole q) {
+//            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
+//        }
+//    };
+//    public final static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
+//        public int compare(AgreementRole p, AgreementRole q) {
+//            return Ordering.<LocalDate> natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+//        }
+//    };
+//    public final static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
+//        public int compare(AgreementRole p, AgreementRole q) {
+//            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
+//        }
+//    };
 
     // //////////////////////////////////////
 

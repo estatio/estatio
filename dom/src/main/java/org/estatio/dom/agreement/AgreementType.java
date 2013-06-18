@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByTitle;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.ClassUtils;
@@ -90,7 +91,8 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
 
     @Override
     public int compareTo(AgreementType other) {
-        return ORDERING_BY_TITLE.compare(this, other);
+        return Comparisons.compare(this, other, "title");
+        //return ORDERING_BY_TITLE.compare(this, other);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

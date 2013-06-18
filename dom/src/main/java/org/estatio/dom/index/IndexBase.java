@@ -5,7 +5,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
 
@@ -15,6 +14,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
@@ -183,17 +183,18 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
 
     @Override
     public int compareTo(IndexBase other) {
-        return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        //return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        return Comparisons.compare(this, other, "index, startDate desc");
     }
     
-    private final static Ordering<IndexBase> ORDERING_BY_INDEX = new Ordering<IndexBase>() {
-        public int compare(IndexBase left, IndexBase right) {
-            return Ordering.natural().nullsFirst().compare(left.getIndex(), right.getIndex());
-        };
-    }.nullsFirst();
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private final static Ordering<IndexBase> ORDERING_BY_START_DATE_DESC = (Ordering)WithStartDate.ORDERING_BY_START_DATE_DESC;
+//    private final static Ordering<IndexBase> ORDERING_BY_INDEX = new Ordering<IndexBase>() {
+//        public int compare(IndexBase left, IndexBase right) {
+//            return Ordering.natural().nullsFirst().compare(left.getIndex(), right.getIndex());
+//        };
+//    }.nullsFirst();
+//    
+//    @SuppressWarnings({ "unchecked", "rawtypes" })
+//    private final static Ordering<IndexBase> ORDERING_BY_START_DATE_DESC = (Ordering)WithStartDate.ORDERING_BY_START_DATE_DESC;
 
 
 }

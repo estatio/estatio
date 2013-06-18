@@ -313,6 +313,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
 
     @Override
     public int compareTo(Agreement other) {
+        //return ORDERING_BY_REFERENCE.compare(this, other);
         return Comparisons.compare(this, other, "reference");
     }
 

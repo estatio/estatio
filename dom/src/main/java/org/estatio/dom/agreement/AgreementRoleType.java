@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.ComparableByTitle;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -67,7 +68,8 @@ public class AgreementRoleType extends EstatioRefDataObject implements Comparabl
 
     @Override
     public int compareTo(AgreementRoleType other) {
-        return ORDERING_BY_TITLE.compare(this, other);
+        return Comparisons.compare(this, other, "title");
+        //return ORDERING_BY_TITLE.compare(this, other);
     }
 
     // //////////////////////////////////////

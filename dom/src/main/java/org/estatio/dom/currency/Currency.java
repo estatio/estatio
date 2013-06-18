@@ -5,6 +5,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -49,8 +50,9 @@ public class Currency extends EstatioRefDataObject implements ComparableByRefere
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(Currency o) {
-        return ORDERING_BY_REFERENCE.compare(this, o);
+    public int compareTo(Currency other) {
+        //return ORDERING_BY_REFERENCE.compare(this, other);
+        return Comparisons.compare(this, other, "reference");
     }
 
 }

@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -157,13 +158,14 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
 
     @Override
     public int compareTo(TaxRate other) {
-        return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        //return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        return Comparisons.compare(this, other, "tax, startDate desc");
     }
 
-    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>() {
-        public int compare(TaxRate p, TaxRate q) {
-            return Ordering.natural().nullsFirst().compare(p.getTax(), q.getTax());
-        }
-    };
+//    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>() {
+//        public int compare(TaxRate p, TaxRate q) {
+//            return Ordering.natural().nullsFirst().compare(p.getTax(), q.getTax());
+//        }
+//    };
 
 }

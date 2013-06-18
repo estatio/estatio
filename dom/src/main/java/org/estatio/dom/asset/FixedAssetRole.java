@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
@@ -123,24 +124,25 @@ public class FixedAssetRole extends EstatioTransactionalObject implements Compar
 
     @Hidden
     @Override
-    public int compareTo(FixedAssetRole o) {
-        return ORDERING_BY_ASSET.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, o);
+    public int compareTo(FixedAssetRole other) {
+        //return ORDERING_BY_ASSET.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
+        return Comparisons.compare(this, other, "asset, party, startDate desc, type");
     }
 
-    public final static Ordering<FixedAssetRole> ORDERING_BY_ASSET = new Ordering<FixedAssetRole>() {
-        public int compare(FixedAssetRole p, FixedAssetRole q) {
-            return Ordering.natural().nullsFirst().compare(p.getAsset(), q.getAsset());
-        }
-    };
-    public final static Ordering<FixedAssetRole> ORDERING_BY_PARTY = new Ordering<FixedAssetRole>() {
-        public int compare(FixedAssetRole p, FixedAssetRole q) {
-            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
-        }
-    };
-    public final static Ordering<FixedAssetRole> ORDERING_BY_TYPE = new Ordering<FixedAssetRole>() {
-        public int compare(FixedAssetRole p, FixedAssetRole q) {
-            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
-        }
-    };
+//    public final static Ordering<FixedAssetRole> ORDERING_BY_ASSET = new Ordering<FixedAssetRole>() {
+//        public int compare(FixedAssetRole p, FixedAssetRole q) {
+//            return Ordering.natural().nullsFirst().compare(p.getAsset(), q.getAsset());
+//        }
+//    };
+//    public final static Ordering<FixedAssetRole> ORDERING_BY_PARTY = new Ordering<FixedAssetRole>() {
+//        public int compare(FixedAssetRole p, FixedAssetRole q) {
+//            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
+//        }
+//    };
+//    public final static Ordering<FixedAssetRole> ORDERING_BY_TYPE = new Ordering<FixedAssetRole>() {
+//        public int compare(FixedAssetRole p, FixedAssetRole q) {
+//            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
+//        }
+//    };
 
 }

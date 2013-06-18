@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByName;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -188,7 +189,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
 
     @Override
     public int compareTo(FixedAsset other) {
-        return ORDERING_BY_NAME.compare(this, other);
+        return Comparisons.compare(this, other, "name");
+        //return ORDERING_BY_NAME.compare(this, other);
     }
 
     // //////////////////////////////////////

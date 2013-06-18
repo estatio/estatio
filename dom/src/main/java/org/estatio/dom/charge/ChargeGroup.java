@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -72,7 +73,8 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
 
     @Override
     public int compareTo(ChargeGroup other) {
-        return ORDERING_BY_REFERENCE.compare(this, other);
+        //return ORDERING_BY_REFERENCE.compare(this, other);
+        return Comparisons.compare(this, other, "reference");
     }
 
 }

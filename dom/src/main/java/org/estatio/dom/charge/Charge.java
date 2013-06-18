@@ -6,6 +6,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByCode;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
@@ -94,7 +95,8 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
 
     @Override
     public int compareTo(Charge other) {
-        return ORDERING_BY_CODE.compare(this, other);
+        return Comparisons.compare(this, other, "code");
+        //return ORDERING_BY_CODE.compare(this, other);
     }
 
 }

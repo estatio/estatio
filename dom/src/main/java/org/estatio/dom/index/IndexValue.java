@@ -13,6 +13,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
@@ -95,20 +96,21 @@ public class IndexValue extends EstatioRefDataObject implements Comparable<Index
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(IndexValue o) {
-        return ORDERING_BY_INDEX_BASE.compound(ORDERING_BY_START_DATE_DESC).compare(this, o);
+    public int compareTo(IndexValue other) {
+        //return ORDERING_BY_INDEX_BASE.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        return Comparisons.compare(this, other, "indexBase, startDate desc");
     }
 
-    public final static Ordering<IndexValue> ORDERING_BY_INDEX_BASE = new Ordering<IndexValue>() {
-        public int compare(IndexValue p, IndexValue q) {
-            return Ordering.natural().nullsFirst().compare(p.getIndexBase(), q.getIndexBase());
-        }
-    };
-
-    public final static Ordering<IndexValue> ORDERING_BY_START_DATE_DESC = new Ordering<IndexValue>() {
-        public int compare(IndexValue p, IndexValue q) {
-            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-        }
-    };
+//    public final static Ordering<IndexValue> ORDERING_BY_INDEX_BASE = new Ordering<IndexValue>() {
+//        public int compare(IndexValue p, IndexValue q) {
+//            return Ordering.natural().nullsFirst().compare(p.getIndexBase(), q.getIndexBase());
+//        }
+//    };
+//
+//    public final static Ordering<IndexValue> ORDERING_BY_START_DATE_DESC = new Ordering<IndexValue>() {
+//        public int compare(IndexValue p, IndexValue q) {
+//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+//        }
+//    };
 
 }

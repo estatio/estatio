@@ -12,6 +12,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.currency.Currency;
@@ -340,15 +341,16 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(Invoice o) {
-        return ORDERING_BY_INVOICE_NUMBER.compare(this, o);
+    public int compareTo(Invoice other) {
+        //return ORDERING_BY_INVOICE_NUMBER.compare(this, other);
+        return Comparisons.compare(this, other, "invoiceNumber");
     }
 
-    public final static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
-        public int compare(Invoice p, Invoice q) {
-            return Ordering.natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
-        }
-    };
+//    public final static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
+//        public int compare(Invoice p, Invoice q) {
+//            return Ordering.natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
+//        }
+//    };
 
     // //////////////////////////////////////
 

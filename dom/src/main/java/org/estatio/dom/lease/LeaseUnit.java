@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.tag.Tag;
@@ -267,7 +268,8 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
     @Override
     @Hidden
     public int compareTo(LeaseUnit other) {
-        return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        //return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+        return Comparisons.compare(this, other, "lease, unit, startDate desc");
     }
 
     public final static Ordering<LeaseUnit> ORDERING_BY_LEASE = new Ordering<LeaseUnit>() {

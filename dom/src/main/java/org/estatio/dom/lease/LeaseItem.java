@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithSequence;
@@ -335,31 +336,32 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(LeaseItem o) {
-        return ORDERING_BY_LEASE.compound(ORDERING_BY_TYPE).compound(ORDERING_BY_SEQUENCE_DESC).compare(this, o);
+    public int compareTo(LeaseItem other) {
+        //return ORDERING_BY_LEASE.compound(ORDERING_BY_TYPE).compound(ORDERING_BY_SEQUENCE_DESC).compare(this, other);
+        return Comparisons.compare(this, other, "lease, type, sequence desc");
     }
 
-    public final static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {
-        public int compare(LeaseItem p, LeaseItem q) {
-            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
-        }
-    };
-
-    public final static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
-        public int compare(LeaseItem p, LeaseItem q) {
-            return Ordering.<LeaseItemType> natural().nullsFirst().compare(p.getType(), q.getType());
-        }
-    };
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = (Ordering) WithSequence.ORDERING_BY_SEQUENCE_DESC;;
-
-    @SuppressWarnings("unused")
-    private final static Ordering<LeaseItem> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseItem>() {
-        public int compare(LeaseItem p, LeaseItem q) {
-            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-        }
-    };
+//    public final static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {
+//        public int compare(LeaseItem p, LeaseItem q) {
+//            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
+//        }
+//    };
+//
+//    public final static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
+//        public int compare(LeaseItem p, LeaseItem q) {
+//            return Ordering.<LeaseItemType> natural().nullsFirst().compare(p.getType(), q.getType());
+//        }
+//    };
+//
+//    @SuppressWarnings({ "unchecked", "rawtypes" })
+//    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = (Ordering) WithSequence.ORDERING_BY_SEQUENCE_DESC;;
+//
+//    @SuppressWarnings("unused")
+//    private final static Ordering<LeaseItem> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseItem>() {
+//        public int compare(LeaseItem p, LeaseItem q) {
+//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+//        }
+//    };
 
     // //////////////////////////////////////
 

@@ -128,15 +128,15 @@ public class InvoiceItemForLease extends InvoiceItem {
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(InvoiceItem o) {
-        int compare = super.compareTo(o);
+    public int compareTo(InvoiceItem other) {
+        int compare = super.compareTo(other);
         if(compare != 0) {
             return compare;
         }
-        if(o instanceof InvoiceItemForLease) {
-            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) o);
+        if(other instanceof InvoiceItemForLease) {
+            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) other);
         } 
-        return getClass().getName().compareTo(o.getClass().getName());
+        return getClass().getName().compareTo(other.getClass().getName());
     }
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {

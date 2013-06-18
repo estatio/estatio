@@ -11,7 +11,6 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithDescriptionGetter;
@@ -33,6 +32,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.Comparisons;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -310,39 +311,40 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(InvoiceItem o) {
-        return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, o);
+    public int compareTo(InvoiceItem other) {
+        //return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, other);
+        return Comparisons.compare(this, other, "invoice, startDate desc, charge, description, sequence");
     }
 
-    public final static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.<Invoice> natural().nullsFirst().compare(p.getInvoice(), q.getInvoice());
-        }
-    };
-
-    public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE_DESC = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-        }
-    };
-
-    public final static Ordering<InvoiceItem> ORDERING_BY_CHARGE = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.natural().nullsFirst().compare(p.getCharge(), q.getCharge());
-        }
-    };
-
-    public static Ordering<InvoiceItem> ORDERING_BY_DESCRIPTION = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.natural().nullsFirst().compare(p.getDescription(), q.getDescription());
-        }
-    };
-
-    public static Ordering<InvoiceItem> ORDERING_BY_SEQUENCE = new Ordering<InvoiceItem>() {
-        public int compare(InvoiceItem p, InvoiceItem q) {
-            return Ordering.<BigInteger> natural().nullsFirst().compare(p.getSequence(), q.getSequence());
-        }
-    };
+//    public final static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
+//        public int compare(InvoiceItem p, InvoiceItem q) {
+//            return Ordering.<Invoice> natural().nullsFirst().compare(p.getInvoice(), q.getInvoice());
+//        }
+//    };
+//
+//    public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE_DESC = new Ordering<InvoiceItem>() {
+//        public int compare(InvoiceItem p, InvoiceItem q) {
+//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+//        }
+//    };
+//
+//    public final static Ordering<InvoiceItem> ORDERING_BY_CHARGE = new Ordering<InvoiceItem>() {
+//        public int compare(InvoiceItem p, InvoiceItem q) {
+//            return Ordering.natural().nullsFirst().compare(p.getCharge(), q.getCharge());
+//        }
+//    };
+//
+//    public static Ordering<InvoiceItem> ORDERING_BY_DESCRIPTION = new Ordering<InvoiceItem>() {
+//        public int compare(InvoiceItem p, InvoiceItem q) {
+//            return Ordering.natural().nullsFirst().compare(p.getDescription(), q.getDescription());
+//        }
+//    };
+//    
+//    public static Ordering<InvoiceItem> ORDERING_BY_SEQUENCE = new Ordering<InvoiceItem>() {
+//        public int compare(InvoiceItem p, InvoiceItem q) {
+//            return Ordering.<BigInteger> natural().nullsFirst().compare(p.getSequence(), q.getSequence());
+//        }
+//    };
 
     // //////////////////////////////////////
 
