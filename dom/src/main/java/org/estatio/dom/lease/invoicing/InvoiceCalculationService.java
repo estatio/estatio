@@ -94,8 +94,9 @@ public class InvoiceCalculationService {
                     return new CalculationResult(frequencyInterval, value);
                 }
             }
+            return new CalculationResult(frequencyInterval, BigDecimal.ZERO.setScale(2));
         }
-        return new CalculationResult(frequencyInterval, BigDecimal.ZERO.setScale(2));
+        return null;
     }
 
     // //////////////////////////////////////
@@ -141,7 +142,7 @@ public class InvoiceCalculationService {
     }
 
     void createInvoiceItem(LeaseTerm leaseTerm, LocalDate dueDate, CalculationResult calculationResult, InvoicingFrequency invoicingFrequency) {
-        if (calculationResult.value != null) {
+        if (calculationResult != null) {
             BigDecimal invoicedValue;
             LocalDate epochDate = estatioSettingsService.fetchEpochDate();
 

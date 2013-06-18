@@ -41,7 +41,7 @@ public final class LocalDateInterval {
     }
 
     public LocalDate startDate() {
-        return new LocalDate(startInstant);
+        return startInstant == 0 ? null : new LocalDate(startInstant);
     }
 
     public LocalDate endDate() {

@@ -368,7 +368,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
 
     // //////////////////////////////////////
 
-    @Deprecated
     @Hidden
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
         return calculate(startDate, dueDate, InvoiceRunType.NORMAL_RUN);

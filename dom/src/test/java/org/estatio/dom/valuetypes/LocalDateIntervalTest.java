@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.hamcrest.core.Is;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,13 +104,24 @@ public class LocalDateIntervalTest {
 
     @Test
     public void testContains() {
-        assertTrue(periodInterval.contains(new LocalDate(2012,1,1)));
-        assertTrue(periodInterval.contains(new LocalDate(2012,3,31)));
-        assertFalse(periodInterval.contains(new LocalDate(2012,4,1)));
+        assertTrue(periodInterval.contains(new LocalDate(2012, 1, 1)));
+        assertTrue(periodInterval.contains(new LocalDate(2012, 3, 31)));
+        assertFalse(periodInterval.contains(new LocalDate(2012, 4, 1)));
     }
 
-    @Test 
-    public void test2() {
+    @Test
+    public void testEndDateFromStartDate() {
         Assert.assertThat(interval1.endDateFromstartDate(), Is.is(interval1.startDate().minusDays(1)));
     }
+
+    @Test
+    public void testEmptyInterval() {
+        LocalDateInterval myInterval = new LocalDateInterval(emptyInterval());
+        Assert.assertNull(myInterval.startDate());
+    }
+    
+    private static Interval emptyInterval() {
+        return null;
+    }
+
 }

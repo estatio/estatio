@@ -193,7 +193,7 @@ public class InvoiceCalculationServiceTest {
         lt.modifyLeaseItem(li);
         InvoiceCalculationService ic = new InvoiceCalculationService();
         CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
-        Assert.assertThat(result.getCalculatedValue(), Is.is(BigDecimal.ZERO.setScale(2)));
+        Assert.assertNull(result);
     }
 
     @Test

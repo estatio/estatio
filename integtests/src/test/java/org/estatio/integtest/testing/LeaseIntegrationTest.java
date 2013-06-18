@@ -33,28 +33,28 @@ import org.estatio.dom.party.Party;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
-    private Lease lease;
+    private Lease leaseTopModel;
 
     @Before
     public void setup() {
-        lease = leases.findByReference("OXF-TOPMODEL-001");
+        leaseTopModel = leases.findByReference("OXF-TOPMODEL-001");
     }
 
     @Test
     public void t01_numberOfLeaseActorsIs3() throws Exception {
-        assertThat(lease.getRoles().size(), is(3));
+        assertThat(leaseTopModel.getRoles().size(), is(3));
     }
 
     @Test
     public void t02_leaseRoleCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("TOPMODEL");
-        AgreementRole role = lease.findRole(party, agreementRoleTypes.find(LeaseConstants.ART_TENANT), null);
+        AgreementRole role = leaseTopModel.findRole(party, agreementRoleTypes.find(LeaseConstants.ART_TENANT), null);
         Assert.assertNotNull(role);
     }
 
     @Test
     public void t02b_numberOfleaseActorsIs3() throws Exception {
-        assertThat(lease.getRoles().size(), is(3));
+        assertThat(leaseTopModel.getRoles().size(), is(3));
     }
 
     @Test
@@ -83,18 +83,18 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t07_leaseHasXItems() throws Exception {
-        assertThat(lease.getItems().size(), is(3));
+        assertThat(leaseTopModel.getItems().size(), is(3));
     }
 
     @Test
     public void t08_leaseItemCanBeFound() throws Exception {
-        LeaseItem rentItem = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem rentItem = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         Assert.assertNotNull(rentItem);
     }
 
     @Test
     public void t09_leaseTermForRentCanBeFound() throws Exception {
-        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) item.findTerm(new LocalDate(2010, 7, 15));
         Assert.assertNotNull(leaseTerm);
         BigDecimal baseValue = leaseTerm.getBaseValue();
@@ -103,7 +103,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t09_leaseTermForServiceChargeCanBeFound() throws Exception {
-        LeaseItem item = (LeaseItem) lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = (LeaseItem) leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         Assert.assertThat(item.getTerms().size(), Is.is(1));
         LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) item.findTerm(new LocalDate(2010, 7, 15));
         Assert.assertThat(leaseTerm.getBudgetedValue(), Is.is(new BigDecimal("6000.00")));
@@ -111,7 +111,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t10_leaseTermForIndexableRentVerifiedCorrectly() throws Exception {
-        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) item.getTerms().first();
         term.verify();
         assertThat(term.getBaseIndexValue(), is(BigDecimal.valueOf(137.6).setScale(4)));
@@ -122,7 +122,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t10_leaseTermForServiceChargeVerifiedCorrectly() throws Exception {
-        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertThat(item.getTerms().size(), is(1));
         LeaseTerm term = item.getTerms().first();
         term.verify();
@@ -131,10 +131,10 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t11_leaseVerifiesWell() throws Exception {
-        lease.verify();
-        LeaseItem item1 = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        leaseTopModel.verify();
+        LeaseItem item1 = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         assertNotNull(item1.findTerm(new LocalDate(2012, 7, 15)));
-        LeaseItem item2 = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item2 = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         item2.verify();
         assertNotNull(item2.findTerm(new LocalDate(2012, 7, 15)));
     }
@@ -143,24 +143,33 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
     public void t12_leaseVerifiesWell() throws Exception {
         Lease leaseMediax = leases.findByReference("OXF-MEDIAX-002");
         leaseMediax.verify();
-        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
+        LeaseItem item = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2008, 1, 1), BigInteger.valueOf(1));
+        assertNotNull(item.findTerm(new LocalDate(2008, 1, 1)));
         assertThat(item.getTerms().last().getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
     }
 
     @Test
-    public void t12b_leaseVerifiesWell() throws Exception {
+    public void t12b_thereAreTwoLeaseTems() throws Exception {
         Lease leaseMediax = leases.findByReference("OXF-POISON-003");
-        leaseMediax.verify();
-        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
-        assertNotNull(item.findTerm(new LocalDate(2012, 7, 15)));
-        assertThat(item.getTerms().last().getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
+        LeaseItem item = leaseMediax.findItem(LeaseItemType.RENT, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
+        assertThat(item.getTerms().size(), is(4));
+        assertNotNull(item.findTerm(new LocalDate(2011, 1, 1)));
+
+    }
+
+    @Test
+    public void t12b_leaseVerifiesWell() throws Exception {
+        Lease leasePoison = leases.findByReference("OXF-POISON-003");
+        leasePoison.verify();
+        LeaseItem item = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
+        assertNotNull(item.findTerm(new LocalDate(2011, 1, 1)));
+        assertThat(item.getTerms().last().getTrialValue(), is(BigDecimal.valueOf(13640).setScale(2)));
 
     }
 
     @Test
     public void t13_leaseTermApprovesWell() throws Exception {
-        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
         term.approve();
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
@@ -168,9 +177,18 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
     }
 
     @Test
-    public void t14_invoiceItemsForRentCreated() throws Exception {
+    public void t141a_invoiceItemsNotCreated() throws Exception {
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.ONE);
+        LeaseTerm term = item.findTerm(new LocalDate(2010, 7, 15));
+        term.verify();
+        term.calculate(new LocalDate(2010, 7, 2), new LocalDate(2010, 7, 1));
+        assertThat(term.getInvoiceItems().size(), is(0));
+    }
+
+    @Test
+    public void t14b_invoiceItemsForRentCreated() throws Exception {
         settings.updateEpochDate(null);
-        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         // unapproved doesn't work
         LeaseTerm term = (LeaseTerm) item.getTerms().first();
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
@@ -196,20 +214,11 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         assertThat(term.getInvoiceItems().size(), is(2));
     }
 
-    @Test
-    public void t14b_invoiceItemsNotCreated() throws Exception {
-        Lease lease = leases.findByReference("OXF-POISON-003");
-        LeaseItem item = lease.findItem(LeaseItemType.RENT, new LocalDate(2011, 1, 1), BigInteger.ONE);
-        LeaseTerm term = item.getTerms().first();
-        term.verify();
-        term.calculate(new LocalDate(2011, 1, 2), new LocalDate(2011, 1, 1));
-        assertThat(term.getInvoiceItems().size(), is(0));
-    }
 
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
         settings.updateEpochDate(null);
-        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         term.approve();
         // partial period
@@ -231,10 +240,10 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
     @Ignore
     @Test
     public void t16_bulkLeaseCalculate() throws Exception {
-        LeaseItem item = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
+        LeaseItem item = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
-        // call calulate on lease
-        lease.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), InvoiceRunType.NORMAL_RUN);
+        // call calulate on leaseTopModel
+        leaseTopModel.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), InvoiceRunType.NORMAL_RUN);
         assertThat(term.getInvoiceItems().size(), is(2)); // the previous test
                                                           // already supplied
                                                           // one

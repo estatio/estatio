@@ -1,5 +1,7 @@
 package org.estatio.fixture.invoice;
 
+import java.util.SortedSet;
+
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -37,12 +39,17 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setDueDate(START_DATE);
         invoice.setInvoiceDate(START_DATE);
 
-        for (LeaseTerm term : lease.findFirstItemOfType(LeaseItemType.RENT).getTerms()){
+        int count = 0;
+        SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
+        int size = terms.size();
+        for (LeaseTerm term : terms) {
             InvoiceItemForLease item = invoices.newInvoiceItem();
             item.modifyInvoice(invoice);
             item.setDueDate(START_DATE);
             item.setStartDate(START_DATE);
             item.modifyLeaseTerm(term);
+            item.setSequence(invoice.nextItemSequence());
+            count++;
         }
     }
 

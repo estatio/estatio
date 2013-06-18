@@ -24,6 +24,7 @@ public class Invoices extends EstatioDomainService {
     public Invoice newInvoice() {
         Invoice invoice = newTransientInstance(Invoice.class);
         persist(invoice);
+        getContainer().flush();
         return invoice;
     }
 

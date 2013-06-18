@@ -1,6 +1,7 @@
 package org.estatio.dom.lease.invoicing;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.estatio.dom.invoice.Invoice;
@@ -19,6 +20,7 @@ import org.apache.isis.applib.annotation.Named;
 @Named("Invoices")
 public class InvoicesForLease extends Invoices {
 
+    
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
     public InvoiceItemForLease newInvoiceItem() {
@@ -44,4 +46,6 @@ public class InvoicesForLease extends Invoices {
     public List<InvoiceItemForLease> findItems(String leaseReference, LocalDate startDate, LocalDate dueDate) {
         throw new NotImplementedException();
     }
+    
+
 }

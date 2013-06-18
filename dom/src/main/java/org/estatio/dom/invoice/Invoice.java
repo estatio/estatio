@@ -1,10 +1,12 @@
 package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Objects;
@@ -23,6 +25,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Prototype;
@@ -32,17 +35,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Queries(
-        { @javax.jdo.annotations.Query(
-                name = "invoice_findMatchingInvoices", language = "JDOQL", 
-                value = "SELECT " +
-                		"FROM org.estatio.dom.invoice.Invoice " +
-                		"WHERE provenance == :provenance " +
-                		"&& seller == :seller " +
-                		"&& buyer == :buyer " +
-                		"&& paymentMethod == :paymentMethod " +
-                		"&& status == :status " +
-                		"&& dueDate == :dueDate") })
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "invoice_findMatchingInvoices", language = "JDOQL", value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE provenance == :provenance && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate") })
 @Bookmarkable
 public class Invoice extends EstatioTransactionalObject implements Comparable<Invoice>, WithReferenceGetter {
 
@@ -228,6 +221,26 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
         }
         item.setInvoice(null);
         getItems().remove(item);
+    }
+
+    // //////////////////////////////////////
+
+    @Persistent
+    private BigInteger lastItemSequence;
+
+    @Hidden
+    public BigInteger getLastItemSequence() {
+        return lastItemSequence;
+    }
+
+    public void setLastItemSequence(BigInteger lastItemSequence) {
+        this.lastItemSequence = lastItemSequence;
+    }
+
+    public BigInteger nextItemSequence() {
+        BigInteger nextItemSequence = getLastItemSequence() == null ? BigInteger.ONE : getLastItemSequence().add(BigInteger.ONE);
+        setLastItemSequence(nextItemSequence);
+        return nextItemSequence;
     }
 
     // //////////////////////////////////////

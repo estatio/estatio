@@ -1,16 +1,25 @@
 package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -25,20 +34,25 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithDescriptionGetter;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>, WithInterval, WithDescriptionGetter {
+
+    private BigInteger sequence;
+
+    @Hidden
+    public BigInteger getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(BigInteger sequence) {
+        this.sequence = sequence;
+    }
+
+    // //////////////////////////////////////
 
     private Invoice invoice;
 
@@ -211,6 +225,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     private LocalDate endDate;
 
     @MemberOrder(sequence = "11")
+    @Persistent
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -296,7 +311,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     @Override
     public int compareTo(InvoiceItem o) {
-        return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compare(this, o);
+        return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, o);
     }
 
     public final static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
@@ -320,6 +335,12 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     public static Ordering<InvoiceItem> ORDERING_BY_DESCRIPTION = new Ordering<InvoiceItem>() {
         public int compare(InvoiceItem p, InvoiceItem q) {
             return Ordering.natural().nullsFirst().compare(p.getDescription(), q.getDescription());
+        }
+    };
+
+    public static Ordering<InvoiceItem> ORDERING_BY_SEQUENCE = new Ordering<InvoiceItem>() {
+        public int compare(InvoiceItem p, InvoiceItem q) {
+            return Ordering.<BigInteger> natural().nullsFirst().compare(p.getSequence(), q.getSequence());
         }
     };
 
