@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
 import org.joda.time.LocalDate;
@@ -250,6 +251,17 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
         return getActivity();
     }
 
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+            .add("lease", getLease()!=null?getLease().getReference():null)
+            .add("unit", getUnit()!=null?getUnit().getReference():null)
+            .add("startDate", getStartDate())
+            .toString();
+    }
+    
     // //////////////////////////////////////
 
     @Override

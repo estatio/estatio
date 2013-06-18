@@ -9,6 +9,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Iterables;
 
 import org.joda.time.LocalDate;
@@ -24,6 +25,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
@@ -311,7 +313,7 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
 
     @Override
     public int compareTo(Agreement other) {
-        return ORDERING_BY_REFERENCE.compare(this, other);
+        return Comparisons.compare(this, other, "reference");
     }
 
     // //////////////////////////////////////

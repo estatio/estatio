@@ -131,10 +131,13 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Override
     public int compareTo(InvoiceItem o) {
         int compare = super.compareTo(o);
-        if (compare == 0) {
-            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) o);
+        if(compare != 0) {
+            return compare;
         }
-        return compare;
+        if(o instanceof InvoiceItemForLease) {
+            return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) o);
+        } 
+        return getClass().getName().compareTo(o.getClass().getName());
     }
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
