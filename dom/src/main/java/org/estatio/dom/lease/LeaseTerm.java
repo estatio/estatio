@@ -51,20 +51,8 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_TERM_IDX", members = { "leaseItem", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_TERM2_IDX", members = { "leaseItem", "startDate" }) })
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(
-            name = "leaseTerm_findLeaseTermsWithStatus", language = "JDOQL", 
-            value = "SELECT " +
-            		"FROM org.estatio.dom.lease.LeaseTerm " +
-            		"WHERE status == :status " +
-            		"&& startDate <= :date && " +
-            		"(endDate == null || endDate >= :date)"),
-        @javax.jdo.annotations.Query(
-                name = "leaseTerm_findLeaseTermsWithSequence", language = "JDOQL", 
-                value = "SELECT FROM " +
-                		"org.estatio.dom.lease.LeaseTerm " +
-                		"WHERE leaseItem == :leaseItem " +
-                		"&& sequence == :sequence") })
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithStatus", language = "JDOQL", value = "SELECT " + "FROM org.estatio.dom.lease.LeaseTerm " + "WHERE status == :status " + "&& startDate <= :date && " + "(endDate == null || endDate >= :date)"),
+        @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithSequence", language = "JDOQL", value = "SELECT FROM " + "org.estatio.dom.lease.LeaseTerm " + "WHERE leaseItem == :leaseItem " + "&& sequence == :sequence") })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval, WithSequence {
 
@@ -173,6 +161,14 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
+        Lease lease = getLeaseItem().getLease();
+        return LocalDateInterval.including(getStartDate(), getEndDate()).overlap(lease.getEffectiveInterval());
     }
 
     // //////////////////////////////////////
@@ -319,6 +315,22 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     }
 
     // //////////////////////////////////////
+
+    @Programmatic
+    @Hidden
+    public void remove() {
+        if (getNextTerm() != null) {
+            getNextTerm().remove();
+        }
+        if (this.getInvoiceItems().size() > 0) {
+            // TODO: this term is outside the scope of the lease termination
+            // date and there are invoice items related to it so the amount
+            // should be credited
+        } else {
+            this.modifyPreviousTerm(null);
+            this.modifyLeaseItem(null);
+        }
+    }
 
     @Programmatic
     public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate, LocalDate dueDate) {
@@ -498,24 +510,31 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
     @Override
     @Hidden
     public int compareTo(LeaseTerm other) {
-        //return ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this, other);
-        
-        // REVIEW: the integration tests fail if this sequence is made DESCending.
+        // return
+        // ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this,
+        // other);
+
+        // REVIEW: the integration tests fail if this sequence is made
+        // DESCending.
         return Comparisons.compare(this, other, "leaseItem, sequence");
     }
 
-//    public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new Ordering<LeaseTerm>() {
-//        public int compare(LeaseTerm p, LeaseTerm q) {
-//            return Ordering.natural().nullsFirst().compare(p.getLeaseItem(), q.getLeaseItem());
-//        }
-//    };
-//
-//    // REVIEW: the integration tests fail if this is made DESCending.
-//    @SuppressWarnings({ "rawtypes", "unchecked" })
-//    public final static Ordering<LeaseTerm> ORDERING_BY_SEQUENCE_ASC = (Ordering) WithSequence.ORDERING_BY_SEQUENCE_ASC;
-//
-//    @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
-//    private final static Ordering<LeaseTerm> ORDERING_BY_START_DATE_DESC = (Ordering) WithStartDate.ORDERING_BY_START_DATE_DESC;
+    // public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new
+    // Ordering<LeaseTerm>() {
+    // public int compare(LeaseTerm p, LeaseTerm q) {
+    // return Ordering.natural().nullsFirst().compare(p.getLeaseItem(),
+    // q.getLeaseItem());
+    // }
+    // };
+    //
+    // // REVIEW: the integration tests fail if this is made DESCending.
+    // @SuppressWarnings({ "rawtypes", "unchecked" })
+    // public final static Ordering<LeaseTerm> ORDERING_BY_SEQUENCE_ASC =
+    // (Ordering) WithSequence.ORDERING_BY_SEQUENCE_ASC;
+    //
+    // @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+    // private final static Ordering<LeaseTerm> ORDERING_BY_START_DATE_DESC =
+    // (Ordering) WithStartDate.ORDERING_BY_START_DATE_DESC;
 
     // //////////////////////////////////////
 

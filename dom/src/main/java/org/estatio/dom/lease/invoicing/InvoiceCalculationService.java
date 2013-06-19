@@ -81,11 +81,11 @@ public class InvoiceCalculationService {
     CalculationResult calculate(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency freq) {
         LocalDateInterval frequencyInterval = new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, freq.getRrule()));
         if (frequencyInterval.startDate() != null) {
-            LocalDateInterval termInterval = LocalDateInterval.including(leaseTerm.getStartDate(), leaseTerm.getEndDate());
+            LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
             LocalDateInterval overlap = frequencyInterval.overlap(termInterval);
             if (overlap != null) {
-                BigDecimal overlapDays = new BigDecimal(overlap.getDays());
-                BigDecimal frequencyDays = new BigDecimal(frequencyInterval.getDays());
+                BigDecimal overlapDays = new BigDecimal(overlap.days());
+                BigDecimal frequencyDays = new BigDecimal(frequencyInterval.days());
                 BigDecimal rangeFactor = overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
                 BigDecimal freqFactor = freq.getNumerator().divide(freq.getDenominator(), MathContext.DECIMAL64);
                 BigDecimal currentValue = leaseTerm.valueForDueDate(dueDate);

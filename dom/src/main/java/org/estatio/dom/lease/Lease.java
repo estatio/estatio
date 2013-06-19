@@ -29,19 +29,8 @@ import org.apache.isis.applib.annotation.Render.Type;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
-                name = "findLeasesByReference", language = "JDOQL", 
-                value = "SELECT " +
-                		"FROM org.estatio.dom.lease.Lease " +
-                		"WHERE reference.matches(:r)"),
-        @javax.jdo.annotations.Query(
-                name = "findLeases", language = "JDOQL", 
-                value = "SELECT " +
-                		"FROM org.estatio.dom.lease.Lease " +
-                		"WHERE units.contains(lu) " +
-                		"&& (terminationDate == null || terminationDate <= :activeOnDate) " +
-                		"&& (lu.unit == :fixedAsset || lu.unit.property == :fixedAsset) " +
-                		"VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
+        @javax.jdo.annotations.Query(name = "findLeasesByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:r)"),
+        @javax.jdo.annotations.Query(name = "findLeases", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE units.contains(lu) && (terminationDate == null || terminationDate <= :activeOnDate) && (lu.unit == :fixedAsset || lu.unit.property == :fixedAsset) VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
 @Bookmarkable
 public class Lease extends Agreement implements InvoiceProvenance {
 
@@ -197,6 +186,20 @@ public class Lease extends Agreement implements InvoiceProvenance {
         // not?
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, dueDate, runType);
+        }
+        return this;
+    }
+
+    public Lease terminate(@Named("Termination Date") LocalDate terminationDate, @Named("Are you sure?") boolean confirm) {
+        for (LeaseItem item : getItems()) {
+            LeaseTerm term = item.currentTerm(terminationDate);
+            if (term == null)
+                term = item.getTerms().last();
+            if (term != null){
+                term.modifyEndDate(terminationDate);
+                if (term.getNextTerm() !=null)
+                    term.getNextTerm().remove();
+            }
         }
         return this;
     }

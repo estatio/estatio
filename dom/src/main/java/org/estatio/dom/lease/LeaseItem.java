@@ -226,7 +226,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     @Programmatic
     public LeaseTerm currentTerm(LocalDate date) {
         for (LeaseTerm term : getTerms()) {
-            if (CalendarUtils.isBetween(date, term.getStartDate(), term.getEndDate())) {
+            if (term.getInterval().contains(date)) {
                 return term;
             }
         }

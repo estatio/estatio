@@ -4,6 +4,10 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.services.clock.ClockService;
 import org.hamcrest.Description;
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
@@ -18,11 +22,6 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {
 
@@ -43,15 +42,18 @@ public class LeaseTermTest {
 
     @Before
     public void setUp() throws Exception {
-
         context.checking(new Expectations() {
             {
                 allowing(mockClockService).now();
                 will(returnValue(now));
+                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
+                will(returnLeaseTerm());
             }
         });
 
         lease = new Lease();
+        lease.setStartDate(new LocalDate(2012, 1, 1));
+
         item = new LeaseItem();
         item.modifyLease(lease);
         item.setEndDate(new LocalDate(2013, 6, 30));
@@ -61,7 +63,6 @@ public class LeaseTermTest {
         term = new LeaseTermForTesting();
         term.modifyLeaseItem(item);
         term.setStartDate(new LocalDate(2012, 1, 1));
-        // term.setEndDate(new LocalDate(2999, 9, 9));
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.injectClockService(mockClockService);
         term.initialize();
@@ -71,12 +72,6 @@ public class LeaseTermTest {
     public void createNext_ok() {
         final LeaseTermForTesting mockTerm = new LeaseTermForTesting();
         mockTerm.modifyLeaseItem(item);
-        context.checking(new Expectations() {
-            {
-                oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnLeaseTerm());
-            }
-        });
         LeaseTermForTesting next = (LeaseTermForTesting) term.createNext(new LocalDate(2013, 1, 1));
         Assert.assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
         Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
@@ -94,12 +89,6 @@ public class LeaseTermTest {
 
     @Test
     public void verify_ok() {
-        context.checking(new Expectations() {
-            {
-                oneOf(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
-                will(returnLeaseTerm());
-            }
-        });
         LeaseTerm newTerm = new LeaseTermForTesting();
         newTerm.injectClockService(mockClockService);
         newTerm.modifyLeaseItem(item);
@@ -130,6 +119,14 @@ public class LeaseTermTest {
         Assert.assertThat(term.invoicedValueFor(date), Is.is(new BigDecimal("2468.90")));
     }
 
+    @Test
+    public void effectiveInterval() throws Exception {
+        term.verify();
+        assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 12, 31)));
+        lease.setTerminationDate(new LocalDate(2012, 3, 31));
+        assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 3, 31)));
+    }
+
     // //////////////////////////////////////
 
     public static Action returnLeaseTerm() {
@@ -152,4 +149,5 @@ public class LeaseTermTest {
             }
         };
     }
+
 }

@@ -7,6 +7,16 @@ import org.joda.time.PeriodType;
 
 public final class LocalDateInterval {
 
+    private static final long OPEN_START_INSTANT = Long.MIN_VALUE;
+    private static final long OPEN_END_INSTANT = Long.MAX_VALUE;
+    private long startInstant;
+    private long endInstant;
+    private IntervalEnding ending = IntervalEnding.INCLUDING_END_DATE;
+
+    private enum IntervalEnding {
+        INCLUDING_END_DATE, EXCLUDING_END_DATE
+    }
+
     public static LocalDateInterval excluding(LocalDate startDate, LocalDate endDate) {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.EXCLUDING_END_DATE);
     }
@@ -15,18 +25,10 @@ public final class LocalDateInterval {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
     }
 
-    private enum IntervalEnding {
-        INCLUDING_END_DATE, EXCLUDING_END_DATE
-    }
-
-    private long startInstant;
-    private long endInstant;
-    private IntervalEnding ending = IntervalEnding.INCLUDING_END_DATE;
-
     private LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
         this.ending = ending;
-        startInstant = startDate == null ? Long.MIN_VALUE : startDate.toInterval().getStartMillis();
-        endInstant = endDate == null ? Long.MAX_VALUE : ending == IntervalEnding.EXCLUDING_END_DATE ? endDate.toInterval().getStartMillis() : endDate.toInterval().getEndMillis();
+        startInstant = startDate == null ? OPEN_START_INSTANT : startDate.toInterval().getStartMillis();
+        endInstant = endDate == null ? OPEN_END_INSTANT : ending == IntervalEnding.EXCLUDING_END_DATE ? endDate.toInterval().getStartMillis() : endDate.toInterval().getEndMillis();
     }
 
     public LocalDateInterval(Interval interval) {
@@ -41,7 +43,9 @@ public final class LocalDateInterval {
     }
 
     public LocalDate startDate() {
-        return startInstant == 0 ? null : new LocalDate(startInstant);
+        if (startInstant == OPEN_START_INSTANT || startInstant == 0)
+            return null;
+        return new LocalDate(startInstant);
     }
 
     public LocalDate endDate() {
@@ -49,6 +53,8 @@ public final class LocalDateInterval {
     }
 
     public LocalDate endDate(IntervalEnding ending) {
+        if (endInstant == OPEN_END_INSTANT || startInstant == 0)
+            return null;
         LocalDate date = new LocalDate(endInstant);
         return adjustDate(date, ending);
     }
@@ -119,7 +125,7 @@ public final class LocalDateInterval {
         return interval.asInterval().contains(asInterval());
     }
 
-    public int getDays() {
+    public int days() {
         Period p = new Period(asInterval(), PeriodType.days());
         return p.getDays();
     }

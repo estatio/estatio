@@ -65,20 +65,19 @@ public class LocalDateIntervalTest {
     }
 
     @Test
-    public void testGetActualStartDate() {
+    public void startDate() {
         assertEquals(new LocalDate(2012, 1, 1), interval1.overlap(periodInterval).startDate());
         assertEquals(new LocalDate(2012, 1, 1), interval2.overlap(periodInterval).startDate());
         assertEquals(new LocalDate(2012, 1, 1), interval3.overlap(periodInterval).startDate());
         assertEquals(new LocalDate(2012, 2, 1), interval4.overlap(periodInterval).startDate());
         assertEquals(new LocalDate(2012, 2, 1), interval5.overlap(periodInterval).startDate());
-        assertEquals(null, interval6.overlap(periodInterval));
-        assertEquals(null, interval7.overlap(periodInterval));
+
         assertEquals(new LocalDate(2012, 2, 1), interval8.overlap(periodInterval).startDate());
         assertEquals(new LocalDate(2012, 1, 1), interval9.overlap(periodInterval).startDate());
     }
 
     @Test
-    public void testGetActualEndDate() {
+    public void endDateExcluding() {
         assertEquals(new LocalDate(2012, 4, 1), interval1.overlap(periodInterval).endDateExcluding());
         assertEquals(new LocalDate(2012, 4, 1), interval2.overlap(periodInterval).endDateExcluding());
         assertEquals(new LocalDate(2012, 3, 1), interval3.overlap(periodInterval).endDateExcluding());
@@ -91,15 +90,16 @@ public class LocalDateIntervalTest {
     }
 
     @Test
-    public void testGetDays() {
-        assertEquals(91, interval1.overlap(periodInterval).getDays());
-        assertEquals(91, interval2.overlap(periodInterval).getDays());
-        assertEquals(60, interval3.overlap(periodInterval).getDays());
-        assertEquals(60, interval4.overlap(periodInterval).getDays());
-        assertEquals(29, interval5.overlap(periodInterval).getDays());
-
-        assertEquals(60, interval8.overlap(periodInterval).getDays());
-        assertEquals(91, interval9.overlap(periodInterval).getDays());
+    public void days() {
+        assertEquals(91, interval1.overlap(periodInterval).days());
+        assertEquals(91, interval2.overlap(periodInterval).days());
+        assertEquals(60, interval3.overlap(periodInterval).days());
+        assertEquals(60, interval4.overlap(periodInterval).days());
+        assertEquals(29, interval5.overlap(periodInterval).days());
+        assertEquals(null, interval6.overlap(periodInterval));
+        assertEquals(null, interval7.overlap(periodInterval));
+        assertEquals(60, interval8.overlap(periodInterval).days());
+        assertEquals(91, interval9.overlap(periodInterval).days());
     }
 
     @Test
@@ -118,6 +118,7 @@ public class LocalDateIntervalTest {
     public void testEmptyInterval() {
         LocalDateInterval myInterval = new LocalDateInterval(emptyInterval());
         Assert.assertNull(myInterval.startDate());
+        Assert.assertNull(myInterval.endDate());
     }
     
     private static Interval emptyInterval() {
