@@ -1,8 +1,9 @@
-package org.estatio.objectstore.jdo;
+package org.estatio.dnplugins;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.estatio.dnplugins.EstatioIdentifierFactory;
 import org.junit.Test;
 
 public class EstatioIdentifierFactoryTest_stripOidSuffixIfPresent {

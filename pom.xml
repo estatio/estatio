@@ -487,6 +487,12 @@
 			<!-- this project's own modules -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>estatio-dnplugins</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>estatio-dom</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
@@ -818,6 +824,7 @@
 
    <modules>
         <module>cpsuite</module>
+        <module>dnplugins</module>
         <module>dom</module>
         <module>fixture</module>
         <module>integtests</module>

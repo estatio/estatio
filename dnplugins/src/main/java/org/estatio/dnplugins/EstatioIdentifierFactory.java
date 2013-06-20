@@ -1,4 +1,4 @@
-package org.estatio.objectstore.jdo;
+package org.estatio.dnplugins;
 
 import java.util.Map;
 
