@@ -20,7 +20,7 @@ import org.estatio.dom.EstatioRefDataObject;
         		"WHERE reference.mathes(:r)")
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> /* implements ComparableByReference<ChargeGroup> */ {
+public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements ComparableByReference<ChargeGroup> {
 
 
     public ChargeGroup() {

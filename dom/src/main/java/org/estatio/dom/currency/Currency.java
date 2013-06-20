@@ -4,6 +4,7 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
+import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -14,7 +15,7 @@ import org.estatio.dom.EstatioRefDataObject;
         		"WHERE reference.matches(:r)")
 @Bounded
 @Immutable
-public class Currency extends EstatioRefDataObject<Currency> /* implements ComparableByReference<Currency> */ {
+public class Currency extends EstatioRefDataObject<Currency> implements ComparableByReference<Currency> {
 
     public Currency() {
         super("reference");

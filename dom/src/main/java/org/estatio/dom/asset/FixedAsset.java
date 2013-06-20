@@ -45,7 +45,7 @@ import org.estatio.dom.party.Party;
         		"|| name.matches(:regex)")
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class)
-public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements /* ComparableByName<FixedAsset>, */ Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements ComparableByName<FixedAsset>, Locatable {
 
     public FixedAsset() {
         super("name");

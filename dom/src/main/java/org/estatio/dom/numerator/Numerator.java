@@ -23,7 +23,7 @@ import org.estatio.dom.EstatioTransactionalObject;
         value = "SELECT " +
         		"FROM org.estatio.dom.numerator.Numerator " +
         		"WHERE type == :type")
-public class Numerator extends EstatioTransactionalObject<Numerator> /* implements ComparableByDescription<Numerator> */ {
+public class Numerator extends EstatioTransactionalObject<Numerator> implements ComparableByDescription<Numerator> {
 
     public Numerator() {
         super("description");

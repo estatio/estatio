@@ -11,13 +11,14 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.ComparableByTitle;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementType extends EstatioRefDataObject<AgreementType> implements /*ComparableByTitle<AgreementType>,*/ PowerType<Agreement> {
+public class AgreementType extends EstatioRefDataObject<AgreementType> implements ComparableByTitle<AgreementType>, PowerType<Agreement> {
 
     public AgreementType() {
         super("title");

@@ -14,7 +14,7 @@ import org.estatio.dom.WithReferenceGetter;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
-public abstract class Geography extends EstatioRefDataObject<Geography> implements /*ComparableByReference<Geography>, */ WithNameGetter {
+public abstract class Geography extends EstatioRefDataObject<Geography> implements ComparableByReference<Geography>, WithNameGetter {
 
     public Geography() {
         super("reference");

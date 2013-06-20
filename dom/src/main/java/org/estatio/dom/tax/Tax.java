@@ -22,7 +22,7 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.Tax WHERE reference == :reference")
 @Bounded
 @Immutable
-public class Tax extends EstatioRefDataObject<Tax> implements /*ComparableByReference<Tax>, */ WithNameGetter {
+public class Tax extends EstatioRefDataObject<Tax> implements ComparableByReference<Tax>, WithNameGetter {
 
     public Tax() {
         super("reference");
