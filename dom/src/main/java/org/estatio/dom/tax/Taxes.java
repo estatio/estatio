@@ -10,13 +10,11 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 
-@Named("Taxes")
-public class Taxes extends EstatioDomainService {
+public class Taxes extends EstatioDomainService<Tax> {
 
     public Taxes() {
         super(Taxes.class, Tax.class);
@@ -26,9 +24,8 @@ public class Taxes extends EstatioDomainService {
 
     @MemberOrder(sequence = "1")
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @NotContributed
     public Tax newTax(final @Named("Reference") String reference) {
-        final Tax tax = newTransientInstance(Tax.class);
+        final Tax tax = newTransientInstance();
         tax.setReference(reference);
         persist(tax);
         return tax;
@@ -51,7 +48,7 @@ public class Taxes extends EstatioDomainService {
     // //////////////////////////////////////
     
     @Hidden
-    public TaxRate newRate(@Named("Tax") Tax tax, @Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
+    public TaxRate newRate(final Tax tax, final LocalDate startDate, final BigDecimal percentage) {
         TaxRate currentRate = tax.taxRateFor(startDate);
         TaxRate rate;
         if (currentRate == null || !startDate.equals(currentRate.getStartDate())) {
@@ -75,11 +72,11 @@ public class Taxes extends EstatioDomainService {
 
     @Hidden
     public Tax findTaxByReference(final String reference) {
-        return firstMatch(new QueryDefault<Tax>(Tax.class, "findByReference", "reference", reference));
+        return firstMatch("findByReference", "reference", reference);
     }
 
     @Hidden
-    public TaxRate findTaxRateForDate(final @Named("Tax") Tax tax, final @Named("Date") LocalDate date) {
+    public TaxRate findTaxRateForDate(final Tax tax, final LocalDate date) {
         return firstMatch(new QueryDefault<TaxRate>(TaxRate.class, "findForDate", "tax", tax, "date", date));
     }
 }

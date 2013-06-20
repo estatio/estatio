@@ -8,13 +8,12 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
 @Named("Accounts")
-public class FinancialAccounts extends EstatioDomainService {
+public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     public FinancialAccounts() {
         super(FinancialAccounts.class, FinancialAccount.class);
@@ -37,19 +36,18 @@ public class FinancialAccounts extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public FinancialAccount findByReference(@Named("Reference") String reference) {
-        String rexeg = StringUtils.wildcardToRegex(reference);
-        return firstMatch(queryForFindFinancialAccountByReference(rexeg));
+        String regex = StringUtils.wildcardToRegex(reference);
+        return firstMatch("charge_findFinancialAccountByReference", "r", regex);
     }
     
-    private static QueryDefault<FinancialAccount> queryForFindFinancialAccountByReference(String pattern) {
-        return new QueryDefault<FinancialAccount>(FinancialAccount.class, "charge_findFinancialAccountByReference", "r", pattern);
-    }
-
     // //////////////////////////////////////
 
+    
+    @ActionSemantics(Of.SAFE)
     @Prototype
+    @MemberOrder(sequence = "99")
     public List<FinancialAccount> allAccounts() {
-        return allInstances(FinancialAccount.class);
+        return allInstances();
     }
     
 }

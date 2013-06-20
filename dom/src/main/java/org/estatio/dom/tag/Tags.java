@@ -9,7 +9,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.filter.Filter;
 import org.apache.isis.applib.services.bookmark.Bookmark;
@@ -18,9 +17,7 @@ import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.EstatioDomainService;
 
-
-@Named("Tags")
-public class Tags extends EstatioDomainService {
+public class Tags extends EstatioDomainService<Tag> {
 
     public Tags() {
         super(Tags.class, Tag.class);
@@ -29,18 +26,18 @@ public class Tags extends EstatioDomainService {
     // //////////////////////////////////////
 
     @Programmatic
-    public List<String> choices(EstatioDomainObject domainObject, String tagName) {
+    public List<String> choices(EstatioDomainObject<?> domainObject, String tagName) {
         final List<Tag> tags = doChoices(domainObject, tagName);
         final Iterable<String> tagNames = Iterables.transform(tags, Tag.GET_VALUE);
         final TreeSet<String> uniqueSortedTagNames = Sets.newTreeSet(tagNames);
         return Lists.newArrayList(uniqueSortedTagNames);
     }
 
-    protected List<Tag> doChoices(EstatioDomainObject domainObject, String tagName) {
+    protected List<Tag> doChoices(EstatioDomainObject<?> domainObject, String tagName) {
         return allMatches(Tag.class, appliesTo(domainObject, tagName));
     }
 
-    private Filter<Tag> appliesTo(final EstatioDomainObject domainObject, final String tagName) {
+    private Filter<Tag> appliesTo(final EstatioDomainObject<?> domainObject, final String tagName) {
         return new Filter<Tag>(){
             @Override
             public boolean accept(Tag t) {
@@ -52,7 +49,7 @@ public class Tags extends EstatioDomainService {
     }
 
     @Programmatic
-    public Tag tagFor(Tag tag, final EstatioDomainObject domainObject, final String tagName, final String tagValue) {
+    public Tag tagFor(Tag tag, final EstatioDomainObject<?> domainObject, final String tagName, final String tagValue) {
         if(Strings.isNullOrEmpty(tagValue)) {
             if(tag != null) {
                 remove(tag);
@@ -61,7 +58,7 @@ public class Tags extends EstatioDomainService {
         } else {
             if(tag == null) {
                 final Bookmark bookmark = bookmarkService.bookmarkFor(domainObject);
-                tag = newTransientInstance(Tag.class);
+                tag = newTransientInstance();
                 tag.setObjectType(bookmark.getObjectType());
                 tag.setObjectIdentifier(bookmark.getIdentifier());
                 tag.setName(tagName);
@@ -80,7 +77,5 @@ public class Tags extends EstatioDomainService {
     public void injectBookmarkService(final BookmarkService bookmarkService) {
         this.bookmarkService = bookmarkService;
     }
-
-
  
 }

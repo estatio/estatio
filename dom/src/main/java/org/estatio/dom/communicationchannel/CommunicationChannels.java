@@ -1,18 +1,13 @@
 package org.estatio.dom.communicationchannel;
 
-import java.util.List;
-
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
-@Named("Communication Channels")
 @Hidden
-public class CommunicationChannels extends EstatioDomainService {
+public class CommunicationChannels extends EstatioDomainService<CommunicationChannel> {
 
     public CommunicationChannels() {
         super(CommunicationChannels.class, CommunicationChannel.class);
@@ -21,7 +16,7 @@ public class CommunicationChannels extends EstatioDomainService {
     // //////////////////////////////////////
 
     @Hidden
-    public PostalAddress newPostalAddress(final @Named("Address 1") String address1, final @Named("Address 2") String address2, final @Named("Postal Code") String postalCode, final @Named("City") String city, final State state, final Country country) {
+    public PostalAddress newPostalAddress(final String address1, final String address2, final String postalCode, final String city, final State state, final Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
         pa.setType(CommunicationChannelType.POSTAL_ADDRESS);
         pa.setAddress1(address1);
@@ -35,7 +30,7 @@ public class CommunicationChannels extends EstatioDomainService {
     }
 
     @Hidden
-    public EmailAddress newEmailAddress(final @Named("Address") String address) {
+    public EmailAddress newEmailAddress(final String address) {
         final EmailAddress ea = newTransientInstance(EmailAddress.class);
         ea.setType(CommunicationChannelType.EMAIL_ADDRESS);
         ea.setAddress(address);
@@ -44,7 +39,7 @@ public class CommunicationChannels extends EstatioDomainService {
     }
 
     @Hidden
-    public PhoneNumber newPhoneNumber(final @Named("Number") String number) {
+    public PhoneNumber newPhoneNumber(final String number) {
         final PhoneNumber pn = newTransientInstance(PhoneNumber.class);
         pn.setType(CommunicationChannelType.PHONE_NUMBER);
         pn.setPhoneNumber(number);
@@ -53,7 +48,7 @@ public class CommunicationChannels extends EstatioDomainService {
     }
 
     @Hidden
-    public FaxNumber newFaxNumber(final @Named("Number") String number) {
+    public FaxNumber newFaxNumber(final String number) {
         final FaxNumber fn = newTransientInstance(FaxNumber.class);
         fn.setType(CommunicationChannelType.FAX_NUMBER);
         fn.setFaxNumber(number);
@@ -61,11 +56,5 @@ public class CommunicationChannels extends EstatioDomainService {
         return fn;
     }
 
-    // //////////////////////////////////////
-
-    @Prototype
-    public List<CommunicationChannel> allCommunicationChannels() {
-        return allInstances(CommunicationChannel.class);
-    }
 
 }

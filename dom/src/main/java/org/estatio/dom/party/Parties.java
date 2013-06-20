@@ -15,8 +15,7 @@ import org.apache.isis.applib.query.QueryDefault;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-@Named("Parties")
-public class Parties extends EstatioDomainService {
+public class Parties extends EstatioDomainService<Party> {
 
     public Parties() {
         super(Parties.class, Party.class);
@@ -48,6 +47,7 @@ public class Parties extends EstatioDomainService {
 
     // //////////////////////////////////////
 
+    // TODO: naive implementation
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public Organisation findOrganisationByReference(@Named("Reference") final String reference) {
@@ -61,6 +61,7 @@ public class Parties extends EstatioDomainService {
     
     // //////////////////////////////////////
 
+    // TODO: naive implementation
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
     public Organisation findOrganisationByName(@Named("Name") final String name) {
@@ -78,50 +79,41 @@ public class Parties extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Party> findPartiesByReference(@Named("searchPattern") final String searchPattern) {
-        return allMatches(queryForFindPartyByReference(StringUtils.wildcardToRegex(searchPattern)));
+        return allMatches("parties_findPartyByReference", "searchPattern", StringUtils.wildcardToRegex(searchPattern));
     }
 
     @Hidden
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public Party findPartyByReference(@Named("searchPattern") final String searchPattern) {
-        return firstMatch(queryForFindPartyByReference(StringUtils.wildcardToRegex(searchPattern)));
+        return firstMatch("parties_findPartyByReference", "searchPattern", StringUtils.wildcardToRegex(searchPattern));
     }
 
-    private static QueryDefault<Party> queryForFindPartyByReference(String searchPattern) {
-        return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "searchPattern", searchPattern);
-    }
 
     // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "5")
     public List<Party> findParties(@Named("searchPattern") final String searchPattern) {
-        return allMatches(queryForFindParties(StringUtils.wildcardToCaseInsensitiveRegex(searchPattern)));
-    }
-
-    private static QueryDefault<Party> queryForFindParties(String searchPattern) {
-        return new QueryDefault<Party>(Party.class, "parties_findParties", "searchPattern", searchPattern);
+        return allMatches("parties_findParties", "searchPattern", StringUtils.wildcardToCaseInsensitiveRegex(searchPattern));
     }
 
     // //////////////////////////////////////
 
     @Hidden
     public List<Party> autoComplete(String searchPhrase) {
-        if (searchPhrase.length()>2)
-            return findParties("*"+searchPhrase+"*");
-        return null;
+        return searchPhrase.length()>2 
+                ? findParties("*"+searchPhrase+"*") 
+                : null;
     }
 
     // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "7")
+    @MemberOrder(sequence = "99")
     public List<Party> allParties() {
-        return allInstances(Party.class);
+        return allInstances();
     }
 
-
-    
 }

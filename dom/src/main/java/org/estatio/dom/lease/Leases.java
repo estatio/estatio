@@ -12,7 +12,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -26,8 +25,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
 
-@Named("Leases")
-public class Leases extends EstatioDomainService {
+public class Leases extends EstatioDomainService<Lease> {
 
     public enum InvoiceRunType {
         NORMAL_RUN, RETRO_RUN;
@@ -51,18 +49,19 @@ public class Leases extends EstatioDomainService {
             final @Optional @Named("Tentant") Party tenant) {
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
-            Period p = DateTimeUtils.stringToPeriod(duration);
+            final Period p = DateTimeUtils.stringToPeriod(duration);
             if (p != null) {
                 calculatedEndDate = startDate.plus(p).minusDays(1);
             }
         }
-        Lease lease = newTransientInstance(Lease.class);
+        Lease lease = newTransientInstance();
         lease.setAgreementType(agreementTypes.find(LeaseConstants.AT_LEASE));
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);
         lease.setEndDate(calculatedEndDate);
         persistIfNotAlready(lease);
+        
         final AgreementRoleType artTenant = agreementRoleTypes.find(LeaseConstants.ART_TENANT);
         lease.addRole(tenant, artTenant, null, null);
         final AgreementRoleType artLandlord = agreementRoleTypes.find(LeaseConstants.ART_LANDLORD);
@@ -76,30 +75,24 @@ public class Leases extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Lease findByReference(@Named("Reference") String reference) {
-        return firstMatch(queryForFindByReference(reference));
+        return firstMatch("findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeasesByReference(@Named("Reference") String reference) {
-        return allMatches(queryForFindByReference(reference));
+        return allMatches("findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
-    private static QueryDefault<Lease> queryForFindByReference(String reference) {
-        return new QueryDefault<Lease>(Lease.class, "findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
-    }
 
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeases(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
-        return allMatches(queryForFind(fixedAsset, activeOnDate));
+        return allMatches("findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
-    private static QueryDefault<Lease> queryForFind(FixedAsset fixedAsset, LocalDate activeOnDate) {
-        return new QueryDefault<Lease>(Lease.class, "findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
-    }
 
     // //////////////////////////////////////
 
@@ -133,9 +126,9 @@ public class Leases extends EstatioDomainService {
     
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "99")
     public List<Lease> allLeases() {
-        return allInstances(Lease.class);
+        return allInstances();
     }
 
 

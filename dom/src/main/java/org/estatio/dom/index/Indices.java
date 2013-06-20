@@ -14,8 +14,7 @@ import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 
-@Named("Indices")
-public class Indices extends EstatioDomainService {
+public class Indices extends EstatioDomainService<Index> {
 
     public Indices() {
         super(Indices.class, Index.class);
@@ -26,7 +25,7 @@ public class Indices extends EstatioDomainService {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Index newIndex(final @Named("Reference") String reference, final @Named("Name") String name) {
-        final Index index = newTransientInstance(Index.class);
+        final Index index = newTransientInstance();
         index.setReference(reference);
         index.setName(name);
         persist(index);
@@ -61,13 +60,15 @@ public class Indices extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public Index findByReference(final @Named("Reference") String reference) {
-        return firstMatch(new QueryDefault<Index>(Index.class, "findByReference", "reference", reference));
+        return firstMatch("findByReference", "reference", reference);
     }
+
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
     public List<Index> allIndices() {
-        return allInstances(Index.class);
+        return allInstances();
     }
 
     @MemberOrder(sequence = "6")

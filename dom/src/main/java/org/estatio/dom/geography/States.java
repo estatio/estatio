@@ -11,8 +11,7 @@ import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 
-@Named("States")
-public class States extends EstatioDomainService {
+public class States extends EstatioDomainService<State> {
 
     public States() {
         super(States.class, State.class);
@@ -24,7 +23,7 @@ public class States extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public State newState(final @Named("Reference") String reference, final @Named("Name") String name, final Country country) {
-        final State state = newTransientInstance(State.class);
+        final State state = newTransientInstance();
         state.setReference(reference);
         state.setName(name);
         state.setCountry(country);
@@ -37,7 +36,12 @@ public class States extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public State findByReference(final @Named("Reference") String reference) {
-        return (State) firstMatch(new QueryDefault<Geography>(Geography.class, "findByReference", "reference", reference));
+        final Geography firstMatch = firstMatch(new QueryDefault<Geography>(Geography.class, "findByReference", "reference", reference));
+        if (firstMatch instanceof State) {
+            return (State) firstMatch;
+        } else {
+            return null;
+        }
     }
 
     @ActionSemantics(Of.SAFE)
@@ -50,8 +54,9 @@ public class States extends EstatioDomainService {
 
     @ActionSemantics(Of.SAFE)
     @Prototype
+    @MemberOrder(sequence = "99")
     public List<State> allStates() {
-        return allInstances(State.class);
+        return allInstances();
     }
 
 }

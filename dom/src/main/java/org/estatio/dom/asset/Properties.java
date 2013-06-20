@@ -8,13 +8,11 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-@Named("Properties")
-public class Properties extends EstatioDomainService {
+public class Properties extends EstatioDomainService<Property> {
 
     public Properties() {
         super(Properties.class, Property.class);
@@ -31,7 +29,7 @@ public class Properties extends EstatioDomainService {
 
     @Hidden
     public Property newProperty(final String reference, final String name, final PropertyType propertyType) {
-        final Property property = newTransientInstance(Property.class);
+        final Property property = newTransientInstance();
         property.setReference(reference);
         property.setName(name);
         property.setPropertyType(propertyType);
@@ -44,17 +42,12 @@ public class Properties extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Property> findPropertiesByReference(final @Named("Reference") String reference) {
-        return allMatches(queryForFindPropertiesByReference(reference));
+        return allMatches("properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
-    
     @Hidden
     public Property findPropertyByReference(final String reference) {
-        return firstMatch(queryForFindPropertiesByReference(reference));
-    }
-
-    private static QueryDefault<Property> queryForFindPropertiesByReference(String reference) {
-        return new QueryDefault<Property>(Property.class, "properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
+        return firstMatch("properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
     // //////////////////////////////////////
@@ -68,9 +61,9 @@ public class Properties extends EstatioDomainService {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "99")
     public List<Property> allProperties() {
-        return allInstances(Property.class);
+        return allInstances();
     }
 
 }

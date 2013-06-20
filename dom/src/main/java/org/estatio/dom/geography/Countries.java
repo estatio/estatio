@@ -2,8 +2,6 @@ package org.estatio.dom.geography;
 
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -13,8 +11,7 @@ import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 
-@Named("Countries")
-public class Countries extends EstatioDomainService {
+public class Countries extends EstatioDomainService<Country> {
 
     public Countries() {
         super(Countries.class, Country.class);
@@ -25,7 +22,7 @@ public class Countries extends EstatioDomainService {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Country newCountry(final @Named("Reference") String reference, final @Named("Name") String name) {
-        final Country country = newTransientInstance(Country.class);
+        final Country country = newTransientInstance();
         country.setReference(reference);
         country.setName(name);
         persist(country);
@@ -40,15 +37,10 @@ public class Countries extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Country findByReference(@Named("Reference") String reference) {
-        if (reference == null)
+        if (reference == null) {
             return null;
-        return firstMatch(queryForFindCountryByReference(reference));
-    }
-
-    private static QueryDefault<Country> queryForFindCountryByReference(String reference) {
-        if (reference == null)
-            return null;
-        return new QueryDefault<Country>(Country.class, "countries_findCountryByReference", "r", reference);
+        }
+        return firstMatch("countries_findCountryByReference", "r", reference);
     }
 
     
@@ -56,8 +48,9 @@ public class Countries extends EstatioDomainService {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "99")
     public List<Country> allCountries() {
-        return allInstances(Country.class);
+        return allInstances();
     }
 
 }

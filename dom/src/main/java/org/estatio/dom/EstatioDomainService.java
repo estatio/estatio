@@ -1,14 +1,24 @@
 package org.estatio.dom;
 
+import java.util.List;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.lang.StringUtils;
 
-public abstract class EstatioDomainService extends AbstractFactoryAndRepository {
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.services.audit.AuditEntryForEstatio;
 
-    private final Class<? extends EstatioDomainService> serviceType;
-    private final Class<?> entityType;
+public abstract class EstatioDomainService<T> extends AbstractFactoryAndRepository {
 
-    protected EstatioDomainService(Class<? extends EstatioDomainService> serviceType, Class<?> objectType) {
+    private final Class<? extends EstatioDomainService<T>> serviceType;
+    private final Class<T> entityType;
+
+    protected EstatioDomainService(Class<? extends EstatioDomainService<T>> serviceType, Class<T> objectType) {
         this.serviceType = serviceType;
         this.entityType = objectType;
     }
@@ -24,12 +34,36 @@ public abstract class EstatioDomainService extends AbstractFactoryAndRepository 
         return entityType.getSimpleName();
     }
 
-    protected Class<? extends EstatioDomainService> getServiceType() {
+    // //////////////////////////////////////
+
+    protected Class<? extends EstatioDomainService<T>> getServiceType() {
         return serviceType;
     }
     
-    protected Class<?> getEntityType() {
+    protected Class<T> getEntityType() {
         return entityType;
     }
     
+    protected QueryDefault<T> newQueryDefault(final String queryName, final Object... paramArgs) {
+        return new QueryDefault<T>(getEntityType(), queryName, paramArgs);
+    }
+    
+    // //////////////////////////////////////
+
+    protected T newTransientInstance() {
+        return newTransientInstance(getEntityType());
+    }
+    
+    protected T firstMatch(final String queryName, final Object... paramArgs) {
+        return firstMatch(newQueryDefault(queryName, paramArgs));
+    }
+    
+    protected List<T> allMatches(final String queryName, final Object... paramArgs) {
+        return allMatches(newQueryDefault(queryName, paramArgs));
+    }
+
+    protected List<T> allInstances() {
+        return allInstances(getEntityType());
+    }
+
 }

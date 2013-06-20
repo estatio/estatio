@@ -3,14 +3,12 @@ package org.estatio.dom.lease;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.query.QueryDefault;
@@ -20,8 +18,7 @@ import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.services.clock.ClockService;
 
-@Named("Lease Terms")
-public class LeaseTerms extends EstatioDomainService {
+public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     public LeaseTerms() {
         super(LeaseTerms.class, LeaseTerm.class);
@@ -30,8 +27,6 @@ public class LeaseTerms extends EstatioDomainService {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    @NotContributed
     @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
@@ -48,12 +43,9 @@ public class LeaseTerms extends EstatioDomainService {
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
-    @NotContributed
     @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
-        LeaseTerm leaseTerm = newLeaseTerm(leaseItem, null);
-        return leaseTerm;
+        return newLeaseTerm(leaseItem, null);
     }
 
 
@@ -61,15 +53,11 @@ public class LeaseTerms extends EstatioDomainService {
 
     @ActionSemantics(Of.SAFE)
     public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
-        return allMatches(queryForLeaseTermsWithStatus(LeaseTermStatus.NEW, date));
+        return allMatches("leaseTerm_findLeaseTermsWithStatus", "status", LeaseTermStatus.NEW, "date", date);
     }
 
     public LocalDate default0LeaseTermsToBeApproved() {
         return clockService.now();
-    }
-
-    private static QueryDefault<LeaseTerm> queryForLeaseTermsWithStatus(LeaseTermStatus status, LocalDate date) {
-        return new QueryDefault<LeaseTerm>(LeaseTerm.class, "leaseTerm_findLeaseTermsWithStatus", "status", status, "date", date);
     }
 
 
@@ -77,39 +65,20 @@ public class LeaseTerms extends EstatioDomainService {
 
     @Hidden
     public LeaseTerm findLeaseTermWithSequence(LeaseItem leaseItem, BigInteger sequence) {
-        return firstMatch(queryForLeaseTermsWithSequence(leaseItem, sequence));
-    }
-
-    private static QueryDefault<LeaseTerm> queryForLeaseTermsWithSequence(LeaseItem leaseItem, BigInteger sequence) {
-        return new QueryDefault<LeaseTerm>(LeaseTerm.class, "leaseTerm_findLeaseTermsWithSequence", "leaseItem", leaseItem, "sequence", sequence);
+        return firstMatch(newQueryDefault("leaseTerm_findLeaseTermsWithSequence", "leaseItem", leaseItem, "sequence", sequence));
     }
 
     // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence="99")
     public List<LeaseTerm> allLeaseTerms() {
-        return allInstances(LeaseTerm.class);
+        return allInstances();
     }
 
     // //////////////////////////////////////
 
-    private IsisJdoSupport isisJdoSupport;
-
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
-    }
-
-    private ClockService clockService;
-
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
-
-    
-    
-    
-    
     /**
      * Horrid hack... without this hsqldb was attempting to do the DDL for the
      * table intermixed with DML, and so hit a deadlock in the driver.
@@ -124,4 +93,18 @@ public class LeaseTerms extends EstatioDomainService {
     }
 
     
+    // //////////////////////////////////////
+
+    private IsisJdoSupport isisJdoSupport;
+
+    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+        this.isisJdoSupport = isisJdoSupport;
+    }
+
+    private ClockService clockService;
+
+    public void injectClockService(final ClockService clockService) {
+        this.clockService = clockService;
+    }
+
 }

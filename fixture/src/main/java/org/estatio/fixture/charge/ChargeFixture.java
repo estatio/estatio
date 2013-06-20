@@ -27,9 +27,7 @@ public class ChargeFixture extends AbstractFixture {
     }
 
     private ChargeGroup createChargeGroup(String reference, String description) {
-        ChargeGroup cg = chargeGroups.newChargeGroup();
-        cg.setDescription(description);
-        cg.setReference(reference);
+        ChargeGroup cg = chargeGroups.newChargeGroup(reference, description);
         return cg;
     }
 

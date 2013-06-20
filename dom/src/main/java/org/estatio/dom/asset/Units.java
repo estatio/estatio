@@ -2,8 +2,6 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -16,9 +14,7 @@ import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.utils.StringUtils;
 
-@Named("Units")
-
-public class Units extends EstatioDomainService {
+public class Units extends EstatioDomainService<Unit> {
 
     private final Class<? extends Unit> unitClass;
     
@@ -51,16 +47,18 @@ public class Units extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Unit> findUnitsByReference(final @Named("Reference") String reference) {
-        return (List)allMatches(queryForFindByReference(reference));
+        // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
+        return (List)allMatches(queryForFindUnitsForLeaseByReference(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public Unit findUnitByReference(final @Named("Reference") String reference) {
-        return firstMatch(queryForFindByReference(reference));
+    public Unit findUnitByReference(final String reference) {
+        // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
+        return firstMatch(queryForFindUnitsForLeaseByReference(reference));
     }
 
-    private static QueryDefault<UnitForLease> queryForFindByReference(String reference) {
+    private QueryDefault<UnitForLease> queryForFindUnitsForLeaseByReference(String reference) {
         return new QueryDefault<UnitForLease>(UnitForLease.class, "units_findUnitsByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
@@ -75,9 +73,9 @@ public class Units extends EstatioDomainService {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "99")
     public List<Unit> allUnits() {
-        return allInstances(Unit.class);
+        return allInstances();
     }
 
 }

@@ -11,8 +11,7 @@ import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 
-@Named("Numerators")
-public class Numerators extends EstatioDomainService {
+public class Numerators extends EstatioDomainService<Numerator> {
 
     public Numerators() {
         super(Numerators.class, Numerator.class);
@@ -21,8 +20,8 @@ public class Numerators extends EstatioDomainService {
     // //////////////////////////////////////
 
     @Hidden
-    public Numerator create(NumeratorType type) {
-        Numerator numerator = newTransientInstance(Numerator.class);
+    public Numerator create(final NumeratorType type) {
+        Numerator numerator = newTransientInstance();
         numerator.setType(type);
         persist(numerator);
         return numerator;
@@ -33,16 +32,15 @@ public class Numerators extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Numerator find(final @Named("Numerator Type") NumeratorType type) {
-        return firstMatch(queryForFind(type));
+        return firstMatch("numerator_find", "type", type);
     }
 
-    private static QueryDefault<Numerator> queryForFind(NumeratorType type) {
-        return new QueryDefault<Numerator>(Numerator.class, "numerator_find", "type", type);
-    }
     
     // //////////////////////////////////////
 
+    // TODO: this is actually idempotent?
     @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "3")
     public Numerator establish(NumeratorType type) {
         Numerator numerator = find(type);
         return numerator == null ? create(type) : numerator;
@@ -51,9 +49,9 @@ public class Numerators extends EstatioDomainService {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "4")
     public List<Numerator> allNumerators() {
-        List<Numerator> allInstances = allInstances(Numerator.class);
-        return allInstances;
+        return allInstances();
     }
 
 }

@@ -7,13 +7,13 @@ import org.junit.Test;
 
 public class EstatioDomainServiceTest_getId_and_iconName {
 
-    static class SomeDomainObject extends EstatioDomainObject {
+    static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
         public SomeDomainObject() {
             super(null);
         }
     }
 
-    static class SomeDomainService extends EstatioDomainService {
+    static class SomeDomainService extends EstatioDomainService<SomeDomainObject> {
         protected SomeDomainService() {
             super(SomeDomainService.class, SomeDomainObject.class);
         }

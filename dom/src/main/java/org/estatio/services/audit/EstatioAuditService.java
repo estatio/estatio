@@ -12,20 +12,20 @@ import org.estatio.dom.EstatioDomainService;
 
 @Named("Audit")
 @Hidden
-public class EstatioAuditService extends EstatioDomainService implements AuditingService {
+public class EstatioAuditService extends EstatioDomainService<AuditEntryForEstatio> implements AuditingService {
 
     public EstatioAuditService() {
         super(EstatioAuditService.class, AuditEntryForEstatio.class);
     }
     
     public List<AuditEntryForEstatio> list() {
-        return allInstances(AuditEntryForEstatio.class);
+        return allInstances();
     }
 
     @Override
     @Programmatic
     public void audit(String user, long currentTimestampEpoch, String objectType, String identifier, String preValue, String postValue) {
-        AuditEntryForEstatio auditEntry = newTransientInstance(AuditEntryForEstatio.class);
+        AuditEntryForEstatio auditEntry = newTransientInstance();
         auditEntry.setTimestampEpoch(currentTimestampEpoch);
         auditEntry.setUser(user);
         auditEntry.setObjectType(objectType);
