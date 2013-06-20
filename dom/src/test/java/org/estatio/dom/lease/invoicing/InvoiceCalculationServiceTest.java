@@ -197,6 +197,23 @@ public class InvoiceCalculationServiceTest {
     }
 
     @Test
+    public void testwithTerminationDate() {
+        li = new LeaseItem();
+        li.setStartDate(START_DATE);
+        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        li.modifyLease(l);
+        lt = new LeaseTermForTesting();
+        lt.setStartDate(new LocalDate(2012, 1, 1));
+        lt.setEndDate(new LocalDate(2012, 3, 31));
+        lt.setValue(BigDecimal.valueOf(20000));
+        lt.modifyLeaseItem(li);
+        l.setTerminationDate(new LocalDate(2012, 1, 31));
+        InvoiceCalculationService ic = new InvoiceCalculationService();
+        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        Assert.assertEquals(BigDecimal.valueOf(1703.30).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
+    }
+
+    @Test
     public void testCalulationResults() {
         li = new LeaseItem();
         li.setStartDate(START_DATE);
