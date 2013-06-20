@@ -17,23 +17,32 @@ import org.apache.isis.applib.annotation.Hidden;
  * }
  * </pre>
  */
-public abstract class EstatioTransactionalObject extends EstatioDomainObject {
+public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>> extends EstatioDomainObject<T> {
 
+    public EstatioTransactionalObject(String keyProperties) {
+        super(keyProperties);
+    }
 
-    // {{ ID (derived property)
+    /**
+     * For unit testing purposes only (is called reflectively).
+     */
+    private String id;
+    
     @Hidden
     public String getId() {
+        if(this.id != null) {
+            return id;
+        }
         final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
         return id;
     }
-    // }}
 
-    // {{ Version (derived property)
+    // //////////////////////////////////////
+
     @Hidden
     public Long getVersionSequence() {
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;
     }
-    // }}
 
 }

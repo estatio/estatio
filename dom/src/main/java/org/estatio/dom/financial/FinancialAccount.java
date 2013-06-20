@@ -10,8 +10,8 @@ import com.google.common.collect.Ordering;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -90,7 +90,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
     @Override
     public int compareTo(FinancialAccount other) {
         //return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
-        return Comparisons.compare(this, other, "type, reference");
+        return ObjectContracts.compare(this, other, "type, reference");
     }
 
 //    public final static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {

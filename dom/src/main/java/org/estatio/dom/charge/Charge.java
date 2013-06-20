@@ -4,9 +4,9 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByCode;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 
@@ -18,7 +18,13 @@ import org.estatio.dom.tax.Tax;
         		"WHERE reference.matches(:r)")
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject implements ComparableByCode<Charge> {
+public class Charge extends EstatioRefDataObject<Charge> {
+
+    public Charge() {
+        super("code");
+    }
+
+    // //////////////////////////////////////
 
     private String reference;
 
@@ -84,19 +90,5 @@ public class Charge extends EstatioRefDataObject implements ComparableByCode<Cha
         this.group = group;
     }
 
-    // //////////////////////////////////////
-
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    public int compareTo(Charge other) {
-        return Comparisons.compare(this, other, "code");
-        //return ORDERING_BY_CODE.compare(this, other);
-    }
 
 }

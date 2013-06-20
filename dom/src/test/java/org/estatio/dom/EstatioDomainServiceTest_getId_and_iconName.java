@@ -8,6 +8,9 @@ import org.junit.Test;
 public class EstatioDomainServiceTest_getId_and_iconName {
 
     static class SomeDomainObject extends EstatioDomainObject {
+        public SomeDomainObject() {
+            super(null);
+        }
     }
 
     static class SomeDomainService extends EstatioDomainService {

@@ -13,8 +13,8 @@ import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
 
@@ -98,7 +98,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
     @Hidden
     public int compareTo(CommunicationChannel other) {
         //return Ordering.natural().nullsFirst().compare(this.getType(), other.getType());
-        return Comparisons.compare(this, other, "type, description");
+        return ObjectContracts.compare(this, other, "type, description");
     }
 
 }

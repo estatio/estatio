@@ -3,9 +3,9 @@ package org.estatio.dom.currency;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByReference;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -52,7 +52,7 @@ public class Currency extends EstatioRefDataObject implements ComparableByRefere
     @Override
     public int compareTo(Currency other) {
         //return ORDERING_BY_REFERENCE.compare(this, other);
-        return Comparisons.compare(this, other, "reference");
+        return ObjectContracts.compare(this, other, "reference");
     }
 
 }

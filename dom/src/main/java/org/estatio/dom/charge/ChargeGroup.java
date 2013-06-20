@@ -7,9 +7,9 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByReference;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -20,7 +20,14 @@ import org.estatio.dom.EstatioRefDataObject;
         		"WHERE reference.mathes(:r)")
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject implements ComparableByReference<ChargeGroup> {
+public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> /* implements ComparableByReference<ChargeGroup> */ {
+
+
+    public ChargeGroup() {
+        super("reference");
+    }
+    
+    // //////////////////////////////////////
 
     private String reference;
 
@@ -64,17 +71,17 @@ public class ChargeGroup extends EstatioRefDataObject implements ComparableByRef
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(ChargeGroup other) {
-        //return ORDERING_BY_REFERENCE.compare(this, other);
-        return Comparisons.compare(this, other, "reference");
-    }
+//    @Override
+//    public int compareTo(ChargeGroup other) {
+//        //return ORDERING_BY_REFERENCE.compare(this, other);
+//        return ObjectContracts.compare(this, other, "reference");
+//    }
 
 }

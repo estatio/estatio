@@ -25,9 +25,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByName;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -45,7 +45,14 @@ import org.estatio.dom.party.Party;
         		"|| name.matches(:regex)")
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class)
-public abstract class FixedAsset extends EstatioTransactionalObject implements ComparableByName<FixedAsset>, Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements /* ComparableByName<FixedAsset>, */ Locatable {
+
+    public FixedAsset() {
+        super("name");
+    }
+    
+    // //////////////////////////////////////
+
 
     @javax.jdo.annotations.Unique(name = "REFERENCE_IDX")
     private String reference;
@@ -180,18 +187,18 @@ public abstract class FixedAsset extends EstatioTransactionalObject implements C
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(FixedAsset other) {
-        return Comparisons.compare(this, other, "name");
-        //return ORDERING_BY_NAME.compare(this, other);
-    }
+//    @Override
+//    public int compareTo(FixedAsset other) {
+//        return ObjectContracts.compare(this, other, "name");
+//        //return ORDERING_BY_NAME.compare(this, other);
+//    }
 
     // //////////////////////////////////////
 

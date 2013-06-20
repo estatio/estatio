@@ -2,9 +2,6 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Hidden;
@@ -14,15 +11,20 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByTitle;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementType extends EstatioRefDataObject implements ComparableByTitle<AgreementType>, PowerType<Agreement> {
+public class AgreementType extends EstatioRefDataObject<AgreementType> implements /*ComparableByTitle<AgreementType>,*/ PowerType<Agreement> {
+
+    public AgreementType() {
+        super("title");
+    }
+    
+    // //////////////////////////////////////
+
 
     private String title;
 
@@ -80,23 +82,17 @@ public class AgreementType extends EstatioRefDataObject implements ComparableByT
         return agreementRoleTypes.applicableTo(this);
     }
 
-    // //////////////////////////////////////
-
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("title", getTitle()).toString();
-    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(AgreementType other) {
-        return Comparisons.compare(this, other, "title");
-        //return ORDERING_BY_TITLE.compare(this, other);
-    }
+//    @Override
+//    public int compareTo(AgreementType other) {
+//        return compareKeyPropertiesTo(other);
+//        //return ORDERING_BY_TITLE.compare(this, other);
+//    }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public final static Ordering<AgreementType> ORDERING_BY_TITLE = (Ordering)ComparableByTitle.ORDERING_BY_TITLE;
+//    @SuppressWarnings({ "rawtypes", "unchecked" })
+//    private final static Ordering<AgreementType> ORDERING_BY_TITLE = (Ordering)ComparableByTitle.ORDERING_BY_TITLE;
 
     // //////////////////////////////////////
 

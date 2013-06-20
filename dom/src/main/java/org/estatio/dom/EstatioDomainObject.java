@@ -1,13 +1,30 @@
 package org.estatio.dom;
 
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+import org.apache.isis.applib.util.ObjectContracts;
 
-public abstract class EstatioDomainObject extends AbstractDomainObject {
+public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> extends AbstractDomainObject implements Comparable<T> {
 
-    protected IsisJdoSupport isisJdoSupport;
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
+    private final String keyProperties;
+
+    public EstatioDomainObject(String keyProperties) {
+        this.keyProperties = keyProperties;
     }
-    
+
+    protected String keyProperties() {
+        return keyProperties;
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    public String toString() {
+        return ObjectContracts.toString(this, keyProperties());
+    }
+
+    @Override
+    public int compareTo(T other) {
+        return ObjectContracts.compare(this, other, keyProperties);
+    }
+
 }

@@ -12,7 +12,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.currency.Currency;
@@ -33,6 +32,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.util.ObjectContracts;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -343,7 +343,7 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
     @Override
     public int compareTo(Invoice other) {
         //return ORDERING_BY_INVOICE_NUMBER.compare(this, other);
-        return Comparisons.compare(this, other, "invoiceNumber");
+        return ObjectContracts.compare(this, other, "invoiceNumber");
     }
 
 //    public final static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {

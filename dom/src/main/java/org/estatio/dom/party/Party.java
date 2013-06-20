@@ -11,9 +11,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByName;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.agreement.AgreementRole;
@@ -176,7 +176,7 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
     
     @Override
     public int compareTo(Party other) {
-        return Comparisons.compare(this, other, "name");
+        return ObjectContracts.compare(this, other, "name");
         //return ORDERING_BY_NAME.compare(this, other);
     }
 

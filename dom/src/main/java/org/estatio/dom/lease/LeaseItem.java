@@ -26,8 +26,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithSequence;
@@ -338,7 +338,7 @@ public class LeaseItem extends EstatioTransactionalObject implements Comparable<
     @Override
     public int compareTo(LeaseItem other) {
         //return ORDERING_BY_LEASE.compound(ORDERING_BY_TYPE).compound(ORDERING_BY_SEQUENCE_DESC).compare(this, other);
-        return Comparisons.compare(this, other, "lease, type, sequence desc");
+        return ObjectContracts.compare(this, other, "lease, type, sequence desc");
     }
 
 //    public final static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {

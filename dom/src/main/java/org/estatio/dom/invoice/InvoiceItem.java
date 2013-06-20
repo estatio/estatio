@@ -32,8 +32,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.Comparisons;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -313,7 +313,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
     @Override
     public int compareTo(InvoiceItem other) {
         //return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, other);
-        return Comparisons.compare(this, other, "invoice, startDate desc, charge, description, sequence");
+        return ObjectContracts.compare(this, other, "invoice, startDate desc, charge, description, sequence");
     }
 
 //    public final static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {

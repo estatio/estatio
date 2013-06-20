@@ -9,9 +9,9 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByDescription;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 
 @javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
@@ -88,7 +88,7 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
 
     @Override
     public int compareTo(Numerator other) {
-        return Comparisons.compare(this, other, "description");
+        return ObjectContracts.compare(this, other, "description");
         //return ORDERING_BY_DESCRIPTION.compare(this, other);
     }
 

@@ -2,9 +2,6 @@ package org.estatio.dom.agreement;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -16,7 +13,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
@@ -44,7 +40,13 @@ import org.estatio.services.clock.ClockService;
                 "&& (endDate == null | endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioTransactionalObject implements Comparable<AgreementRole>, WithInterval {
+public class AgreementRole extends EstatioTransactionalObject<AgreementRole> implements /*Comparable<AgreementRole>, */WithInterval {
+
+    public AgreementRole() {
+        super("agreement, party, startDate desc, type");
+    }
+
+    // //////////////////////////////////////
 
     private Agreement agreement;
 
@@ -185,11 +187,11 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
      * 
      * TODO: need to implement the above statement!!!
      */
-    @Override
-    public int compareTo(AgreementRole other) {
-        //return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
-        return Comparisons.compare(this, other, "agreement, party, startDate desc, type");
-    }
+//    @Override
+//    public int compareTo(AgreementRole other) {
+//        //return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
+//        return ObjectContracts.compare(this, other, "agreement, party, startDate desc, type");
+//    }
 
 //    public final static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
 //        public int compare(AgreementRole p, AgreementRole q) {
@@ -214,10 +216,10 @@ public class AgreementRole extends EstatioTransactionalObject implements Compara
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("agreement", getAgreement()).add("party", getParty()).add("startDate", getStartDate()).add("type", getType()).toString();
-    };
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this).add("agreement", getAgreement()).add("party", getParty()).add("startDate", getStartDate()).add("type", getType()).toString();
+//    };
 
     // //////////////////////////////////////
 

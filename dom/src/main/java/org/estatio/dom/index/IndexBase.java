@@ -13,8 +13,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
@@ -184,7 +184,7 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
     @Override
     public int compareTo(IndexBase other) {
         //return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-        return Comparisons.compare(this, other, "index, startDate desc");
+        return ObjectContracts.compare(this, other, "index, startDate desc");
     }
     
 //    private final static Ordering<IndexBase> ORDERING_BY_INDEX = new Ordering<IndexBase>() {

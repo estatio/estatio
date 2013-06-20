@@ -10,8 +10,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 
@@ -132,7 +132,7 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
     @Override
     public int compareTo(Tag other) {
         //return ORDERING_BY_OBJECT_TYPE.compound(ORDERING_BY_NAME).compare(this, other);
-        return Comparisons.compare(this, other, "objectType, name");
+        return ObjectContracts.compare(this, other, "objectType, name");
     }
 
     public final static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {

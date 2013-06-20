@@ -23,9 +23,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByReference;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
@@ -38,7 +38,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(name = "agreement_findAgreementByReference", language = "JDOQL", value = "SELECT " + "FROM org.estatio.dom.agreement.Agreement " + "WHERE reference.matches(:r)")
 @Bookmarkable
-public abstract class Agreement extends EstatioTransactionalObject implements ComparableByReference<Agreement>, WithInterval {
+public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements/*ComparableByReference<Agreement>,*/ WithInterval {
+
+    public Agreement() {
+        super("reference");
+    }
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_IDX")
     private String reference;
@@ -305,18 +311,17 @@ public abstract class Agreement extends EstatioTransactionalObject implements Co
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(Agreement other) {
-        // return ORDERING_BY_REFERENCE.compare(this, other);
-        return Comparisons.compare(this, other, "reference");
-    }
+//    @Override
+//    public int compareTo(Agreement other) {
+//        return ObjectContracts.compare(this, other, "reference");
+//    }
 
     // //////////////////////////////////////
 

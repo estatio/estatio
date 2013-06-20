@@ -8,13 +8,17 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.filter.Filter;
 
-import org.estatio.dom.ComparableByTitle;
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementRoleType extends EstatioRefDataObject implements ComparableByTitle<AgreementRoleType> {
+public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
+
+    public AgreementRoleType() {
+        super("title");
+    }
+
+    // //////////////////////////////////////
 
     private String title;
 
@@ -59,18 +63,18 @@ public class AgreementRoleType extends EstatioRefDataObject implements Comparabl
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(AgreementRoleType other) {
-        return Comparisons.compare(this, other, "title");
-        //return ORDERING_BY_TITLE.compare(this, other);
-    }
+//    @Override
+//    public int compareTo(AgreementRoleType other) {
+//        return ObjectContracts.compare(this, other, "title");
+//        //return ORDERING_BY_TITLE.compare(this, other);
+//    }
 
     // //////////////////////////////////////
 

@@ -14,7 +14,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Objects;
 import com.google.common.collect.Ordering;
 
-import org.estatio.dom.Comparisons;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithSequence;
@@ -44,6 +43,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.ObjectContracts;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -54,7 +54,14 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithStatus", language = "JDOQL", value = "SELECT " + "FROM org.estatio.dom.lease.LeaseTerm " + "WHERE status == :status " + "&& startDate <= :date && " + "(endDate == null || endDate >= :date)"),
         @javax.jdo.annotations.Query(name = "leaseTerm_findLeaseTermsWithSequence", language = "JDOQL", value = "SELECT FROM " + "org.estatio.dom.lease.LeaseTerm " + "WHERE leaseItem == :leaseItem " + "&& sequence == :sequence") })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class LeaseTerm extends EstatioTransactionalObject implements Comparable<LeaseTerm>, WithInterval, WithSequence {
+public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*Comparable<LeaseTerm>, */ WithInterval, WithSequence {
+
+
+    public LeaseTerm() {
+        super("leaseItem, sequence");
+    }
+    
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
@@ -507,17 +514,24 @@ public abstract class LeaseTerm extends EstatioTransactionalObject implements Co
 
     // //////////////////////////////////////
 
-    @Override
-    @Hidden
-    public int compareTo(LeaseTerm other) {
-        // return
-        // ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this,
-        // other);
-
-        // REVIEW: the integration tests fail if this sequence is made
-        // DESCending.
-        return Comparisons.compare(this, other, "leaseItem, sequence");
-    }
+//    @Override
+//    @Hidden
+//    public int compareTo(LeaseTerm other) {
+//<<<<<<< HEAD
+//        // return
+//        // ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this,
+//        // other);
+//
+//        // REVIEW: the integration tests fail if this sequence is made
+//        // DESCending.
+//        return Comparisons.compare(this, other, "leaseItem, sequence");
+//=======
+//        //return ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this, other);
+//        
+//        // REVIEW: the integration tests fail if this sequence is made DESCending.
+//        return ObjectContracts.compare(this, other, "leaseItem, sequence");
+//>>>>>>> refactoring to use ObjectContracts
+//    }
 
     // public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new
     // Ordering<LeaseTerm>() {
