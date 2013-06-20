@@ -503,49 +503,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("leaseItem", getLeaseItem()).add("sequence", getSequence()).toString();
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    @Hidden
-//    public int compareTo(LeaseTerm other) {
-//        // return
-//        // ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this,
-//        // other);
-//        //return ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this, other);
-//        // REVIEW: the integration tests fail if this sequence is made DESCending.
-//        return Comparisons.compare(this, other, "leaseItem, sequence");
-//    }
-//
-//    public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new Ordering<LeaseTerm>() {
-//        public int compare(LeaseTerm p, LeaseTerm q) {
-//            return Ordering.natural().nullsFirst().compare(p.getLeaseItem(), q.getLeaseItem());
-//        }
-//    };
-//
-
-    // public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new
-    // Ordering<LeaseTerm>() {
-    // public int compare(LeaseTerm p, LeaseTerm q) {
-    // return Ordering.natural().nullsFirst().compare(p.getLeaseItem(),
-    // q.getLeaseItem());
-    // }
-    // };
-    //
-    // // REVIEW: the integration tests fail if this is made DESCending.
-    // @SuppressWarnings({ "rawtypes", "unchecked" })
-    // public final static Ordering<LeaseTerm> ORDERING_BY_SEQUENCE_ASC =
-    // (Ordering) WithSequence.ORDERING_BY_SEQUENCE_ASC;
-    //
-    // @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
-    // private final static Ordering<LeaseTerm> ORDERING_BY_START_DATE_DESC =
-    // (Ordering) WithStartDate.ORDERING_BY_START_DATE_DESC;
-
-    // //////////////////////////////////////
 
     private InvoicesForLease invoices;
 

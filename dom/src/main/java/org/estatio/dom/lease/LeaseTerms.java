@@ -13,7 +13,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.services.clock.ClockService;
@@ -59,18 +61,27 @@ public class LeaseTerms extends EstatioDomainService {
 
     @ActionSemantics(Of.SAFE)
     public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
-        throw new NotImplementedException();
+        return allMatches(queryForLeaseTermsWithStatus(LeaseTermStatus.NEW, date));
     }
 
     public LocalDate default0LeaseTermsToBeApproved() {
         return clockService.now();
     }
 
+    private static QueryDefault<LeaseTerm> queryForLeaseTermsWithStatus(LeaseTermStatus status, LocalDate date) {
+        return new QueryDefault<LeaseTerm>(LeaseTerm.class, "leaseTerm_findLeaseTermsWithStatus", "status", status, "date", date);
+    }
+
+
     // //////////////////////////////////////
 
     @Hidden
     public LeaseTerm findLeaseTermWithSequence(LeaseItem leaseItem, BigInteger sequence) {
-        throw new NotImplementedException();
+        return firstMatch(queryForLeaseTermsWithSequence(leaseItem, sequence));
+    }
+
+    private static QueryDefault<LeaseTerm> queryForLeaseTermsWithSequence(LeaseItem leaseItem, BigInteger sequence) {
+        return new QueryDefault<LeaseTerm>(LeaseTerm.class, "leaseTerm_findLeaseTermsWithSequence", "leaseItem", leaseItem, "sequence", sequence);
     }
 
     // //////////////////////////////////////
@@ -95,4 +106,22 @@ public class LeaseTerms extends EstatioDomainService {
         this.clockService = clockService;
     }
 
+    
+    
+    
+    
+    /**
+     * Horrid hack... without this hsqldb was attempting to do the DDL for the
+     * table intermixed with DML, and so hit a deadlock in the driver.
+     * 
+     * HSQLDB 1.8.10 didn't have this problem.
+     * 
+     * REVIEW: this might not be needed now that we have {@link RegisterEntities}.
+     */
+    @Hidden
+    public LeaseTerm dummy() {
+        return null;
+    }
+
+    
 }

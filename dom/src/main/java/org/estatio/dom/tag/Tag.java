@@ -23,7 +23,7 @@ import org.estatio.dom.EstatioRefDataObject;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Unique(name="tag_bookmark_and_name", members={"objectType","name","objectIdentifier"})
 @Immutable
-public class Tag extends EstatioRefDataObject<Tag> /*implements Comparable<Tag>*/ {
+public class Tag extends EstatioRefDataObject<Tag> {
 
     public Tag() {
         super("objectType, name, objectIdentifier, value");
@@ -118,36 +118,4 @@ public class Tag extends EstatioRefDataObject<Tag> /*implements Comparable<Tag>*
     }
 
 
-    // //////////////////////////////////////
-    
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this)
-//                .add("objectType", getObjectType())
-//                .add("name", getName())
-//                .add("objectIdentifier", getObjectIdentifier())
-//                .add("value", getValue())
-//                .toString();
-//    }
-    
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Tag other) {
-//        //return ORDERING_BY_OBJECT_TYPE.compound(ORDERING_BY_NAME).compare(this, other);
-//        return ObjectContracts.compare(this, other, "objectType, name");
-//    }
-
-//    public final static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {
-//        public int compare(Tag p, Tag q) {
-//            return Ordering.natural().nullsFirst().compare(p.getObjectType(), q.getObjectType());
-//        }
-//    };
-//    public final static Ordering<Tag> ORDERING_BY_NAME = new Ordering<Tag>() {
-//        public int compare(Tag p, Tag q) {
-//            return Ordering.natural().nullsFirst().compare(p.getName(), q.getName());
-//        }
-//    };
-
-    
 }

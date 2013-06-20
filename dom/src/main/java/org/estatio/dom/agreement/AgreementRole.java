@@ -177,49 +177,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
         return getInterval().contains(localDate);
     }
 
-    // //////////////////////////////////////
-
-    /**
-     * This is necessary but not sufficient; in
-     * {@link Agreement#addRole(Party, AgreementRoleType, LocalDate, LocalDate)}
-     * there is logic to ensure that there cannot be two {@link AgreementRole
-     * actor}s of the same type at the same point in time.
-     * 
-     * TODO: need to implement the above statement!!!
-     */
-//    @Override
-//    public int compareTo(AgreementRole other) {
-//        //return ORDERING_BY_AGREEMENT.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
-//        return ObjectContracts.compare(this, other, "agreement, party, startDate desc, type");
-//    }
-
-//    public final static Ordering<AgreementRole> ORDERING_BY_AGREEMENT = new Ordering<AgreementRole>() {
-//        public int compare(AgreementRole p, AgreementRole q) {
-//            return Ordering.natural().nullsFirst().compare(p.getAgreement(), q.getAgreement());
-//        }
-//    };
-//    public final static Ordering<AgreementRole> ORDERING_BY_PARTY = new Ordering<AgreementRole>() {
-//        public int compare(AgreementRole p, AgreementRole q) {
-//            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
-//        }
-//    };
-//    public final static Ordering<AgreementRole> ORDERING_BY_START_DATE_DESC = new Ordering<AgreementRole>() {
-//        public int compare(AgreementRole p, AgreementRole q) {
-//            return Ordering.<LocalDate> natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-//        }
-//    };
-//    public final static Ordering<AgreementRole> ORDERING_BY_TYPE = new Ordering<AgreementRole>() {
-//        public int compare(AgreementRole p, AgreementRole q) {
-//            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
-//        }
-//    };
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("agreement", getAgreement()).add("party", getParty()).add("startDate", getStartDate()).add("type", getType()).toString();
-//    };
 
     // //////////////////////////////////////
 

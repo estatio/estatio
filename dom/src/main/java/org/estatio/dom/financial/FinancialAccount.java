@@ -5,12 +5,9 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
@@ -82,31 +79,5 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
         this.owner = owner;
     }
 
-
-    // //////////////////////////////////////
-    
-//    @Override
-//    public String toString() {
-//        return org.estatio.dom.WithReferenceGetter.ToString.of(this);
-//    }
-    
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(FinancialAccount other) {
-//        //return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
-//        return ObjectContracts.compare(this, other, "type, reference");
-//    }
-
-//    public final static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {
-//        public int compare(FinancialAccount p, FinancialAccount q) {
-//            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
-//        }
-//    };
-//    public final static Ordering<FinancialAccount> ORDERING_BY_REFERENCE = new Ordering<FinancialAccount>() {
-//        public int compare(FinancialAccount p, FinancialAccount q) {
-//            return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
-//        }
-//    };
 
 }

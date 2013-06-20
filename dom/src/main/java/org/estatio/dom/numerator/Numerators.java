@@ -27,6 +27,8 @@ public class Numerators extends EstatioDomainService {
         persist(numerator);
         return numerator;
     }
+    
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
@@ -37,12 +39,16 @@ public class Numerators extends EstatioDomainService {
     private static QueryDefault<Numerator> queryForFind(NumeratorType type) {
         return new QueryDefault<Numerator>(Numerator.class, "numerator_find", "type", type);
     }
+    
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     public Numerator establish(NumeratorType type) {
         Numerator numerator = find(type);
         return numerator == null ? create(type) : numerator;
     }
+    
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     public List<Numerator> allNumerators() {

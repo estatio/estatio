@@ -36,6 +36,8 @@ public class Event extends EstatioTransactionalObject<Event> implements WithInte
     public LocalDate defaultStartDate() {
         return clockService.now();
     }
+    
+    // //////////////////////////////////////
 
     private LocalDate endDate;
 

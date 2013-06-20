@@ -25,7 +25,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByName;
 import org.estatio.dom.EstatioTransactionalObject;
@@ -184,21 +183,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
         }
         return null;
     }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(FixedAsset other) {
-//        return ObjectContracts.compare(this, other, "name");
-//        //return ORDERING_BY_NAME.compare(this, other);
-//    }
 
     // //////////////////////////////////////
 

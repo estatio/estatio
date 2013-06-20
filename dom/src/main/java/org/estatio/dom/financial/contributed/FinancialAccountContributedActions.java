@@ -21,6 +21,8 @@ public class FinancialAccountContributedActions extends AbstractContainedObject 
         return financialAccount;
     }
     
+    // //////////////////////////////////////
+    
     @NotInServiceMenu
     @MemberOrder(sequence = "13.5")
     public List<FinancialAccount> listAccounts(final Party owner) {

@@ -4,12 +4,10 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
@@ -54,19 +52,5 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
         this.name = name;
     }
 
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return WithReferenceGetter.ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Geography other) {
-//        //return ORDERING_BY_REFERENCE.compare(this, other);
-//        return ObjectContracts.compare(this, other, "reference");
-//    }
 
 }

@@ -9,7 +9,6 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByDescription;
 import org.estatio.dom.EstatioTransactionalObject;
@@ -83,19 +82,5 @@ public class Numerator extends EstatioTransactionalObject<Numerator> implements 
         return next;
     }
 
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Numerator other) {
-//        return ObjectContracts.compare(this, other, "description");
-//        //return ORDERING_BY_DESCRIPTION.compare(this, other);
-//    }
 
 }

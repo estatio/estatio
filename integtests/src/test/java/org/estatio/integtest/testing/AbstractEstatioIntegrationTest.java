@@ -2,51 +2,6 @@ package org.estatio.integtest.testing;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
-import org.estatio.api.Api;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRolesJdo;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.AgreementsJdo;
-import org.estatio.dom.asset.FixedAssetRoles;
-import org.estatio.dom.asset.FixedAssetRolesJdo;
-import org.estatio.dom.asset.FixedAssets;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.PropertiesJdo;
-import org.estatio.dom.asset.Units;
-import org.estatio.dom.asset.UnitsJdo;
-import org.estatio.dom.charge.ChargeGroupsJdo;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.charge.ChargesJdo;
-import org.estatio.dom.communicationchannel.CommunicationChannelsJdo;
-import org.estatio.dom.currency.CurrenciesJdo;
-import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.financial.FinancialAccountsJdo;
-import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.CountriesJdo;
-import org.estatio.dom.geography.States;
-import org.estatio.dom.index.IndicesJdo;
-import org.estatio.dom.lease.LeaseItemsJdo;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.LeaseTermsJdo;
-import org.estatio.dom.lease.LeaseUnitsJdo;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.LeasesJdo;
-import org.estatio.dom.lease.contributed.LeaseTermContributedActions;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLeaseJdo;
-import org.estatio.dom.numerator.NumeratorsJdo;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.PartiesJdo;
-import org.estatio.dom.tag.Tags;
-import org.estatio.dom.tag.TagsJdo;
-import org.estatio.dom.tax.TaxesJdo;
-import org.estatio.fixture.EstatioFixture;
-import org.estatio.services.appsettings.EstatioSettingsService;
-import org.estatio.services.appsettings.EstatioSettingsServiceJdo;
-import org.estatio.services.bookmarks.EstatioBookmarkService;
-import org.estatio.services.clock.ClockService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -69,6 +24,41 @@ import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
+
+import org.estatio.api.Api;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.asset.FixedAssetRoles;
+import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Units;
+import org.estatio.dom.charge.ChargeGroups;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.States;
+import org.estatio.dom.index.Indices;
+import org.estatio.dom.lease.LeaseItems;
+import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.contributed.LeaseTermContributedActions;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.tag.Tags;
+import org.estatio.dom.tax.Taxes;
+import org.estatio.fixture.EstatioFixture;
+import org.estatio.services.appsettings.EstatioSettingsService;
+import org.estatio.services.appsettings.EstatioSettingsServiceJdo;
+import org.estatio.services.bookmarks.EstatioBookmarkService;
+import org.estatio.services.clock.ClockService;
 
 public abstract class AbstractEstatioIntegrationTest {
 
@@ -102,7 +92,7 @@ public abstract class AbstractEstatioIntegrationTest {
 
     protected Charges charges;
 
-    protected NumeratorsJdo numerators;
+    protected Numerators numerators;
 
     protected AgreementRoleTypes agreementRoleTypes;
 
@@ -130,29 +120,29 @@ public abstract class AbstractEstatioIntegrationTest {
 
         api = getIsft().getService(Api.class);
 
-        charges = getIsft().getService(ChargesJdo.class);
+        charges = getIsft().getService(Charges.class);
 
         countries = getIsft().getService(Countries.class);
         states = getIsft().getService(States.class);
 
-        numerators = getIsft().getService(NumeratorsJdo.class);
+        numerators = getIsft().getService(Numerators.class);
 
         agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
 
         fixedAssets = getIsft().getService(FixedAssets.class);
-        properties = getIsft().getService(PropertiesJdo.class);
-        actors = getIsft().getService(FixedAssetRolesJdo.class);
+        properties = getIsft().getService(Properties.class);
+        actors = getIsft().getService(FixedAssetRoles.class);
         units = getIsft().getService(Units.class);
 
-        financialAccounts = getIsft().getService(FinancialAccountsJdo.class);
+        financialAccounts = getIsft().getService(FinancialAccounts.class);
 
-        parties = getIsft().getService(PartiesJdo.class);
+        parties = getIsft().getService(Parties.class);
 
-        leases = getIsft().getService(LeasesJdo.class);
-        leaseTerms = getIsft().getService(LeaseTermsJdo.class);
+        leases = getIsft().getService(Leases.class);
+        leaseTerms = getIsft().getService(LeaseTerms.class);
         invoices = getIsft().getService(InvoicesForLease.class);
 
-        tags = getIsft().getService(TagsJdo.class);
+        tags = getIsft().getService(Tags.class);
 
         settings = getIsft().getService(EstatioSettingsService.class);
     }
@@ -220,6 +210,7 @@ public abstract class AbstractEstatioIntegrationTest {
 
     private static class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
+        @SuppressWarnings("unused")
         public static EstatioIntegTestBuilder builder() {
             return builderWith(new EstatioFixture());
         }
@@ -237,9 +228,9 @@ public abstract class AbstractEstatioIntegrationTest {
             withServices(
                     new RegisterEntities(), 
                     new WrapperFactoryDefault(), 
-                    new CountriesJdo(), new States(), new CurrenciesJdo(), new IndicesJdo(), new FixedAssets(), new PropertiesJdo(), new FixedAssetRolesJdo(), new UnitsJdo(), new PartiesJdo(), new AgreementsJdo(), new AgreementTypes(),
-                    new AgreementRoleTypes(), new AgreementRolesJdo(), new LeasesJdo(), new LeaseTermsJdo(), new LeaseItemsJdo(), new LeaseUnitsJdo(), new InvoicesForLeaseJdo(), new CommunicationChannelsJdo(), new TaxesJdo(), new TagsJdo(), new EstatioBookmarkService(), new ChargesJdo(),
-                    new ChargeGroupsJdo(), new FinancialAccountsJdo(), new NumeratorsJdo(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
+                    new Countries(), new States(), new Currencies(), new Indices(), new FixedAssets(), new Properties(), new FixedAssetRoles(), new Units(), new Parties(), new Agreements(), new AgreementTypes(),
+                    new AgreementRoleTypes(), new AgreementRoles(), new Leases(), new LeaseTerms(), new LeaseItems(), new LeaseUnits(), new InvoicesForLease(), new CommunicationChannels(), new Taxes(), new Tags(), new EstatioBookmarkService(), new Charges(),
+                    new ChargeGroups(), new FinancialAccounts(), new Numerators(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
                     new LeaseTermContributedActions());
         }
 

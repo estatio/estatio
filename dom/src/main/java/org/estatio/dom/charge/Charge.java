@@ -4,9 +4,7 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.ComparableByCode;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.tax.Tax;
 

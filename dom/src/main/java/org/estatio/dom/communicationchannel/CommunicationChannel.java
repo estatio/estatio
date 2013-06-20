@@ -91,19 +91,4 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     }
     
 
-    // //////////////////////////////////////
-    
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-    
-    // //////////////////////////////////////
-
-//    @Hidden
-//    public int compareTo(CommunicationChannel other) {
-//        //return Ordering.natural().nullsFirst().compare(this.getType(), other.getType());
-//        return ObjectContracts.compare(this, other, "type, description");
-//    }
-
 }

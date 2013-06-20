@@ -9,7 +9,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Iterables;
 
 import org.joda.time.LocalDate;
@@ -23,7 +22,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioTransactionalObject;
@@ -287,6 +285,10 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         agreementRole.setAgreement(null);
     }
 
+    /**
+     * TODO: need logic ensure that there cannot be two {@link AgreementRole}s 
+     * of the same type at the same point in time.
+     */
     @MemberOrder(name = "Roles", sequence = "11")
     public AgreementRole addRole(@Named("party") Party party, @Named("agreementType") AgreementRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         AgreementRole agreementRole = findRole(party, type, startDate);
@@ -311,20 +313,6 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Agreement other) {
-//        return ObjectContracts.compare(this, other, "reference");
-//    }
-
-    // //////////////////////////////////////
-
     private AgreementRoles agreementRoles;
 
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {
@@ -337,5 +325,4 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    // }}
 }

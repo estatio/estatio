@@ -96,5 +96,6 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-
+    // //////////////////////////////////////
+    
 }

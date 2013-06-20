@@ -86,17 +86,6 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     // //////////////////////////////////////
 
-//    @Override
-//    public int compareTo(AgreementType other) {
-//        return compareKeyPropertiesTo(other);
-//        //return ORDERING_BY_TITLE.compare(this, other);
-//    }
-
-//    @SuppressWarnings({ "rawtypes", "unchecked" })
-//    private final static Ordering<AgreementType> ORDERING_BY_TITLE = (Ordering)ComparableByTitle.ORDERING_BY_TITLE;
-
-    // //////////////////////////////////////
-
     private AgreementRoleTypes agreementRoleTypes;
 
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {

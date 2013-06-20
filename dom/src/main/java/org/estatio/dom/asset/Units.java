@@ -10,19 +10,24 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.lease.UnitForLease;
+import org.estatio.dom.utils.StringUtils;
 
 @Named("Units")
 
-public abstract class Units extends EstatioDomainService {
+public class Units extends EstatioDomainService {
 
     private final Class<? extends Unit> unitClass;
     
-    public Units(Class<? extends Unit> unitClass) {
+    public Units() {
         super(Units.class, Unit.class);
-        this.unitClass = unitClass;
+        this.unitClass = UnitForLease.class;
     }
+
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
@@ -40,29 +45,39 @@ public abstract class Units extends EstatioDomainService {
         return unit;
     }
 
+    // //////////////////////////////////////
     
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Unit> findUnitsByReference(final @Named("Reference") String reference) {
-        throw new NotImplementedException();
+        return (List)allMatches(queryForFindByReference(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
     public Unit findUnitByReference(final @Named("Reference") String reference) {
-        throw new NotImplementedException();
+        return firstMatch(queryForFindByReference(reference));
     }
+
+    private static QueryDefault<UnitForLease> queryForFindByReference(String reference) {
+        return new QueryDefault<UnitForLease>(UnitForLease.class, "units_findUnitsByReference", "r", StringUtils.wildcardToRegex(reference));
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public List<Unit> autoComplete(String searchPhrase) {
+        return findUnitsByReference("*".concat(searchPhrase).concat("*"));
+    }
+    
+    // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Unit> allUnits() {
         return allInstances(Unit.class);
-    }
-
-    @Hidden
-    public List<Unit> autoComplete(String searchPhrase) {
-        return findUnitsByReference("*".concat(searchPhrase).concat("*"));
     }
 
 }

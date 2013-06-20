@@ -25,7 +25,6 @@ import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.services.clock.ClockService;
 
 @Named("Leases")
 public class Leases extends EstatioDomainService {
@@ -42,8 +41,14 @@ public class Leases extends EstatioDomainService {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Lease newLease(final @Named("Reference") String reference, final @Named("Name") String name, final @Named("Start Date") LocalDate startDate, final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, final @Optional @Named("Landlord") Party landlord, final @Optional @Named("Tentant") Party tenant) {
+    public Lease newLease(
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, 
+            final @Optional @Named("Landlord") Party landlord, 
+            final @Optional @Named("Tentant") Party tenant) {
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
             Period p = DateTimeUtils.stringToPeriod(duration);
@@ -65,6 +70,8 @@ public class Leases extends EstatioDomainService {
         return lease;
     }
 
+    // //////////////////////////////////////
+
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
@@ -78,12 +85,25 @@ public class Leases extends EstatioDomainService {
         return allMatches(queryForFindByReference(reference));
     }
 
+    private static QueryDefault<Lease> queryForFindByReference(String reference) {
+        return new QueryDefault<Lease>(Lease.class, "findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
+    }
+
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeases(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches(queryForFind(fixedAsset, activeOnDate));
     }
 
+    private static QueryDefault<Lease> queryForFind(FixedAsset fixedAsset, LocalDate activeOnDate) {
+        return new QueryDefault<Lease>(Lease.class, "findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
+    }
+
+    // //////////////////////////////////////
+
+    
     /**
      * Returns the {@link InvoiceItemForLease}s that are newly
      * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
@@ -107,13 +127,7 @@ public class Leases extends EstatioDomainService {
         return fixedAssets.search(searchPhrase);
     }
 
-    private static QueryDefault<Lease> queryForFindByReference(String reference) {
-        return new QueryDefault<Lease>(Lease.class, "findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
-    }
 
-    private static QueryDefault<Lease> queryForFind(FixedAsset fixedAsset, LocalDate activeOnDate) {
-        return new QueryDefault<Lease>(Lease.class, "findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
-    }
 
     // //////////////////////////////////////
     
@@ -126,13 +140,6 @@ public class Leases extends EstatioDomainService {
 
 
     // //////////////////////////////////////
-    
-    private ClockService clockService;
-
-    public void injectClockService(ClockService clockService) {
-        this.clockService = clockService;
-    }
-
 
     private InvoicesForLease invoices;
 

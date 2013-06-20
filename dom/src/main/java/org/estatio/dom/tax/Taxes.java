@@ -34,6 +34,8 @@ public class Taxes extends EstatioDomainService {
         return tax;
     }
 
+    // //////////////////////////////////////
+    
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Tax> allTaxes() {
@@ -46,6 +48,8 @@ public class Taxes extends EstatioDomainService {
         return allInstances(TaxRate.class);
     }
 
+    // //////////////////////////////////////
+    
     @Hidden
     public TaxRate newRate(@Named("Tax") Tax tax, @Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
         TaxRate currentRate = tax.taxRateFor(startDate);
@@ -66,6 +70,8 @@ public class Taxes extends EstatioDomainService {
         }
         return rate;
     }
+
+    // //////////////////////////////////////
 
     @Hidden
     public Tax findTaxByReference(final String reference) {

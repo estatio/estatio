@@ -46,6 +46,8 @@ public class Parties extends EstatioDomainService {
         return organisation;
     }
 
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public Organisation findOrganisationByReference(@Named("Reference") final String reference) {
@@ -56,6 +58,8 @@ public class Parties extends EstatioDomainService {
             }
         });
     }
+    
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
@@ -67,6 +71,8 @@ public class Parties extends EstatioDomainService {
             }
         });
     }
+    
+    // //////////////////////////////////////
 
     @Hidden
     @ActionSemantics(Of.SAFE)
@@ -82,10 +88,20 @@ public class Parties extends EstatioDomainService {
         return firstMatch(queryForFindPartyByReference(StringUtils.wildcardToRegex(searchPattern)));
     }
 
+    private static QueryDefault<Party> queryForFindPartyByReference(String searchPattern) {
+        return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "searchPattern", searchPattern);
+    }
+
+    // //////////////////////////////////////
+    
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Party> findParties(@Named("searchPattern") final String searchPattern) {
         return allMatches(queryForFindParties(StringUtils.wildcardToCaseInsensitiveRegex(searchPattern)));
+    }
+
+    private static QueryDefault<Party> queryForFindParties(String searchPattern) {
+        return new QueryDefault<Party>(Party.class, "parties_findParties", "searchPattern", searchPattern);
     }
 
     // //////////////////////////////////////
@@ -106,15 +122,6 @@ public class Parties extends EstatioDomainService {
         return allInstances(Party.class);
     }
 
-    // //////////////////////////////////////
-    
-    private static QueryDefault<Party> queryForFindPartyByReference(String searchPattern) {
-        return new QueryDefault<Party>(Party.class, "parties_findPartyByReference", "searchPattern", searchPattern);
-    }
-
-    private static QueryDefault<Party> queryForFindParties(String searchPattern) {
-        return new QueryDefault<Party>(Party.class, "parties_findParties", "searchPattern", searchPattern);
-    }
 
     
 }

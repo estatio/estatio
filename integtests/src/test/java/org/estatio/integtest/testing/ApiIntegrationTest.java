@@ -3,16 +3,6 @@ package org.estatio.integtest.testing;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.PropertiesJdo;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseUnits;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.LeasesJdo;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.PartiesJdo;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -20,6 +10,13 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
@@ -32,9 +29,9 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Before
     public void setup() {
-        leases = getIsft().getService(LeasesJdo.class);
-        properties = getIsft().getService(PropertiesJdo.class);
-        parties = getIsft().getService(PartiesJdo.class);
+        leases = getIsft().getService(Leases.class);
+        properties = getIsft().getService(Properties.class);
+        parties = getIsft().getService(Parties.class);
         leaseUnits = getIsft().getService(LeaseUnits.class);
     }
 

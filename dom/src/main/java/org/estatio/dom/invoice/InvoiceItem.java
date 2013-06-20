@@ -10,15 +10,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithDescriptionGetter;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -32,7 +23,14 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.ObjectContracts;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 
 @javax.jdo.annotations.PersistenceCapable
@@ -307,50 +305,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         initialize();
     }
 
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("invoice", getInvoice()).add("charge", getCharge()).add("startDate", getStartDate()).add("dueDate", getDueDate()).toString();
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(InvoiceItem other) {
-//        //return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, other);
-//        return ObjectContracts.compare(this, other, "invoice, startDate desc, charge, description, sequence");
-//    }
-
-//    public final static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
-//        public int compare(InvoiceItem p, InvoiceItem q) {
-//            return Ordering.<Invoice> natural().nullsFirst().compare(p.getInvoice(), q.getInvoice());
-//        }
-//    };
-//
-//    public final static Ordering<InvoiceItem> ORDERING_BY_START_DATE_DESC = new Ordering<InvoiceItem>() {
-//        public int compare(InvoiceItem p, InvoiceItem q) {
-//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-//        }
-//    };
-//
-//    public final static Ordering<InvoiceItem> ORDERING_BY_CHARGE = new Ordering<InvoiceItem>() {
-//        public int compare(InvoiceItem p, InvoiceItem q) {
-//            return Ordering.natural().nullsFirst().compare(p.getCharge(), q.getCharge());
-//        }
-//    };
-//
-//    public static Ordering<InvoiceItem> ORDERING_BY_DESCRIPTION = new Ordering<InvoiceItem>() {
-//        public int compare(InvoiceItem p, InvoiceItem q) {
-//            return Ordering.natural().nullsFirst().compare(p.getDescription(), q.getDescription());
-//        }
-//    };
-//    
-//    public static Ordering<InvoiceItem> ORDERING_BY_SEQUENCE = new Ordering<InvoiceItem>() {
-//        public int compare(InvoiceItem p, InvoiceItem q) {
-//            return Ordering.<BigInteger> natural().nullsFirst().compare(p.getSequence(), q.getSequence());
-//        }
-//    };
 
     // //////////////////////////////////////
 

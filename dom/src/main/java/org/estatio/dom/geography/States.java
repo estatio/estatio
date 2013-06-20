@@ -46,6 +46,8 @@ public class States extends EstatioDomainService {
         return allMatches(new QueryDefault<State>(State.class, "findByCountry", "country", country));
     }
 
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.SAFE)
     @Prototype
     public List<State> allStates() {

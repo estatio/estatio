@@ -115,36 +115,4 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("asset", getAsset() != null ? getAsset().getReference() : null).add("party", getParty() != null ? getParty().getName() : null).add("startDate", getStartDate()).add("type", getType()).toString();
-//    }
-
-    // //////////////////////////////////////
-
-//    @Hidden
-//    @Override
-//    public int compareTo(FixedAssetRole other) {
-//        //return ORDERING_BY_ASSET.compound(ORDERING_BY_PARTY).compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_TYPE).compare(this, other);
-//        return ObjectContracts.compare(this, other, "asset, party, startDate desc, type");
-//    }
-
-//    public final static Ordering<FixedAssetRole> ORDERING_BY_ASSET = new Ordering<FixedAssetRole>() {
-//        public int compare(FixedAssetRole p, FixedAssetRole q) {
-//            return Ordering.natural().nullsFirst().compare(p.getAsset(), q.getAsset());
-//        }
-//    };
-//    public final static Ordering<FixedAssetRole> ORDERING_BY_PARTY = new Ordering<FixedAssetRole>() {
-//        public int compare(FixedAssetRole p, FixedAssetRole q) {
-//            return Ordering.natural().nullsFirst().compare(p.getParty(), q.getParty());
-//        }
-//    };
-//    public final static Ordering<FixedAssetRole> ORDERING_BY_TYPE = new Ordering<FixedAssetRole>() {
-//        public int compare(FixedAssetRole p, FixedAssetRole q) {
-//            return Ordering.natural().nullsFirst().compare(p.getType(), q.getType());
-//        }
-//    };
-
 }

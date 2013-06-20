@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -40,7 +40,15 @@ public class Countries extends EstatioDomainService {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Country findByReference(@Named("Reference") String reference) {
-        throw new NotImplementedException();
+        if (reference == null)
+            return null;
+        return firstMatch(queryForFindCountryByReference(reference));
+    }
+
+    private static QueryDefault<Country> queryForFindCountryByReference(String reference) {
+        if (reference == null)
+            return null;
+        return new QueryDefault<Country>(Country.class, "countries_findCountryByReference", "r", reference);
     }
 
     

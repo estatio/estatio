@@ -33,6 +33,8 @@ public class Currency extends EstatioRefDataObject<Currency> implements Comparab
     public void setReference(final String reference) {
         this.reference = reference;
     }
+    
+    // //////////////////////////////////////
 
     private String description;
 
@@ -44,20 +46,5 @@ public class Currency extends EstatioRefDataObject<Currency> implements Comparab
     public void setDescription(final String despription) {
         this.description = despription;
     }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Currency other) {
-//        //return ORDERING_BY_REFERENCE.compare(this, other);
-//        return ObjectContracts.compare(this, other, "reference");
-//    }
 
 }

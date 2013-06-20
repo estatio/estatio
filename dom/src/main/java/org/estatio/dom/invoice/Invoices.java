@@ -5,12 +5,10 @@ import java.util.List;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 
-@Named("Invoices")
 public class Invoices extends EstatioDomainService {
 
     public Invoices() {

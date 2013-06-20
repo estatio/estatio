@@ -8,9 +8,6 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -26,7 +23,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
@@ -35,7 +31,6 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
@@ -43,7 +38,7 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_INDEX_IDX", members = { "lease", "type", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_INDEX2_IDX", members = { "lease", "type", "startDate" }) })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements /*Comparable<LeaseItem>, */ WithInterval, WithSequence {
+public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements WithInterval, WithSequence {
 
     public LeaseItem() {
         super("lease, type, sequence desc");
@@ -331,43 +326,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
         }
         return total;
     }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("lease", getLease() != null ? getLease().getReference() : null).add("type", getType()).add("sequence", getSequence()).toString();
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(LeaseItem other) {
-//        //return ORDERING_BY_LEASE.compound(ORDERING_BY_TYPE).compound(ORDERING_BY_SEQUENCE_DESC).compare(this, other);
-//        return ObjectContracts.compare(this, other, "lease, type, sequence desc");
-//    }
-
-//    public final static Ordering<LeaseItem> ORDERING_BY_LEASE = new Ordering<LeaseItem>() {
-//        public int compare(LeaseItem p, LeaseItem q) {
-//            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
-//        }
-//    };
-//
-//    public final static Ordering<LeaseItem> ORDERING_BY_TYPE = new Ordering<LeaseItem>() {
-//        public int compare(LeaseItem p, LeaseItem q) {
-//            return Ordering.<LeaseItemType> natural().nullsFirst().compare(p.getType(), q.getType());
-//        }
-//    };
-//
-//    @SuppressWarnings({ "unchecked", "rawtypes" })
-//    public final static Ordering<LeaseItem> ORDERING_BY_SEQUENCE_DESC = (Ordering) WithSequence.ORDERING_BY_SEQUENCE_DESC;;
-//
-//    @SuppressWarnings("unused")
-//    private final static Ordering<LeaseItem> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseItem>() {
-//        public int compare(LeaseItem p, LeaseItem q) {
-//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-//        }
-//    };
 
     // //////////////////////////////////////
 

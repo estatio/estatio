@@ -24,5 +24,12 @@ public abstract class EstatioDomainService extends AbstractFactoryAndRepository 
         return entityType.getSimpleName();
     }
 
+    protected Class<? extends EstatioDomainService> getServiceType() {
+        return serviceType;
+    }
+    
+    protected Class<?> getEntityType() {
+        return entityType;
+    }
     
 }

@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.google.common.base.Objects;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
@@ -13,14 +11,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class IndexBase extends EstatioRefDataObject<IndexBase> implements /*Comparable<IndexBase>, */ WithStartDate {
+public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithStartDate {
 
     public IndexBase() {
         super("index, startDate desc");
@@ -174,33 +171,5 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements /*Comp
         }
         return BigDecimal.ONE;
     }
-
-    // //////////////////////////////////////
-    
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this)
-//                .add("index", getIndex()!=null?getIndex().getReference():null)
-//                .add("startDate", getStartDate())
-//                .toString();
-//    }
-    
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(IndexBase other) {
-//        //return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-//        return ObjectContracts.compare(this, other, "index, startDate desc");
-//    }
-    
-//    private final static Ordering<IndexBase> ORDERING_BY_INDEX = new Ordering<IndexBase>() {
-//        public int compare(IndexBase left, IndexBase right) {
-//            return Ordering.natural().nullsFirst().compare(left.getIndex(), right.getIndex());
-//        };
-//    }.nullsFirst();
-//    
-//    @SuppressWarnings({ "unchecked", "rawtypes" })
-//    private final static Ordering<IndexBase> ORDERING_BY_START_DATE_DESC = (Ordering)WithStartDate.ORDERING_BY_START_DATE_DESC;
-
 
 }

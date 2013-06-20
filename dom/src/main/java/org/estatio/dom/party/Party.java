@@ -170,19 +170,5 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
         return this;
     }
 
-    // //////////////////////////////////////
-    
-//    @Override
-//    public String toString() {
-//        return ComparableByName.ToString.of(this);
-//    }
-    
-    // //////////////////////////////////////
-    
-//    @Override
-//    public int compareTo(Party other) {
-//        return ObjectContracts.compare(this, other, "name");
-//        //return ORDERING_BY_NAME.compare(this, other);
-//    }
 
 }

@@ -7,7 +7,6 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
@@ -68,20 +67,5 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Co
     public void setCharges(final SortedSet<Charge> charges) {
         this.charges = charges;
     }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(ChargeGroup other) {
-//        //return ORDERING_BY_REFERENCE.compare(this, other);
-//        return ObjectContracts.compare(this, other, "reference");
-//    }
 
 }

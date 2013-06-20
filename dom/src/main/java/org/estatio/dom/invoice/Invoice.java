@@ -9,17 +9,6 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithReferenceGetter;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -32,7 +21,15 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.util.ObjectContracts;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.NumeratorType;
+import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -340,26 +337,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements /*Co
 
     // //////////////////////////////////////
 
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("invoiceNumber", getInvoiceNumber()).toString();
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Invoice other) {
-//        //return ORDERING_BY_INVOICE_NUMBER.compare(this, other);
-//        return ObjectContracts.compare(this, other, "invoiceNumber");
-//    }
-
-//    public final static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
-//        public int compare(Invoice p, Invoice q) {
-//            return Ordering.natural().nullsFirst().compare(p.getInvoiceNumber(), q.getInvoiceNumber());
-//        }
-//    };
-
-    // //////////////////////////////////////
 
     private Numerators numerators;
 

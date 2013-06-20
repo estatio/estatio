@@ -171,6 +171,8 @@ public class Lease extends Agreement implements InvoiceProvenance {
         }
         return this;
     }
+    
+    // //////////////////////////////////////
 
     @Bulk
     public Lease verify() {
@@ -180,6 +182,8 @@ public class Lease extends Agreement implements InvoiceProvenance {
         return this;
     }
 
+    // //////////////////////////////////////
+    
     @Bulk
     public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
         // TODO: I know that bulk actions only appear whith a no-arg but why
@@ -190,6 +194,8 @@ public class Lease extends Agreement implements InvoiceProvenance {
         return this;
     }
 
+    // //////////////////////////////////////
+    
     public Lease terminate(@Named("Termination Date") LocalDate terminationDate, @Named("Are you sure?") boolean confirm) {
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);

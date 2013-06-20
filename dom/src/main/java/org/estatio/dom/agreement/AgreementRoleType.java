@@ -63,21 +63,6 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
 
     // //////////////////////////////////////
 
-//    @Override
-//    public String toString() {
-//        return ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(AgreementRoleType other) {
-//        return ObjectContracts.compare(this, other, "title");
-//        //return ORDERING_BY_TITLE.compare(this, other);
-//    }
-
-    // //////////////////////////////////////
-
     /**
      * For fixtures
      */

@@ -6,9 +6,6 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -17,7 +14,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
@@ -152,26 +148,5 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements /* C
         rate.setPreviousRate(this);
         return rate;
     }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this).add("tax", getTax() != null ? getTax().getReference() : null).add("startDate", getStartDate()).toString();
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(TaxRate other) {
-//        //return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-//        return ObjectContracts.compare(this, other, "tax, startDate desc");
-//    }
-
-//    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>() {
-//        public int compare(TaxRate p, TaxRate q) {
-//            return Ordering.natural().nullsFirst().compare(p.getTax(), q.getTax());
-//        }
-//    };
 
 }

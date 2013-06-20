@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -12,7 +11,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
@@ -45,12 +44,11 @@ public class LeaseUnits extends EstatioDomainService {
     @MemberOrder(sequence = "2")
     @Hidden
     public LeaseUnit find(final Lease lease, final Unit unit, LocalDate startDate) {
-        return firstMatch(LeaseUnit.class, new Filter<LeaseUnit>() {
-            @Override
-            public boolean accept(final LeaseUnit leaseUnit) {
-                return leaseUnit.getLease().equals(lease) && leaseUnit.getUnit().equals(unit);
-            }
-        });
+         return firstMatch(queryForFind(lease, unit, startDate));
+    }
+     
+    private static QueryDefault<LeaseUnit> queryForFind(Lease lease, Unit unit, LocalDate startDate) {
+        return new QueryDefault<LeaseUnit>(LeaseUnit.class, "leaseUnit_find", "lease", lease, "unit", unit, "startDate", startDate);
     }
 
     // //////////////////////////////////////

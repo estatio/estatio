@@ -2,16 +2,16 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
 @Named("Properties")
 public class Properties extends EstatioDomainService {
@@ -20,6 +20,9 @@ public class Properties extends EstatioDomainService {
         super(Properties.class, Property.class);
     }
 
+    // //////////////////////////////////////
+
+    
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public Property newProperty(final @Named("Reference") String reference, final @Named("Name") String name) {
@@ -36,16 +39,32 @@ public class Properties extends EstatioDomainService {
         return property;
     }
 
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public List<Property> findPropertiesByReference(final @Named("Reference") String reference) {
-        throw new NotImplementedException();
+        return allMatches(queryForFindPropertiesByReference(reference));
     }
 
+    
     @Hidden
     public Property findPropertyByReference(final String reference) {
-        throw new NotImplementedException();
+        return firstMatch(queryForFindPropertiesByReference(reference));
     }
+
+    private static QueryDefault<Property> queryForFindPropertiesByReference(String reference) {
+        return new QueryDefault<Property>(Property.class, "properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public List<Property> autoComplete(String searchPhrase) {
+        return findPropertiesByReference("*".concat(searchPhrase).concat("*"));
+    }
+
+    // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
@@ -54,8 +73,4 @@ public class Properties extends EstatioDomainService {
         return allInstances(Property.class);
     }
 
-    @Hidden
-    public List<Property> autoComplete(String searchPhrase) {
-        return findPropertiesByReference("*".concat(searchPhrase).concat("*"));
-    }
 }

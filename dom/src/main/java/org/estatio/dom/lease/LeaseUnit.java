@@ -4,9 +4,6 @@ import java.util.List;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -16,7 +13,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
@@ -257,42 +253,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     public String default0NewActivity() {
         return getActivity();
     }
-
-    // //////////////////////////////////////
-    
-//    @Override
-//    public String toString() {
-//        return Objects.toStringHelper(this)
-//            .add("lease", getLease()!=null?getLease().getReference():null)
-//            .add("unit", getUnit()!=null?getUnit().getReference():null)
-//            .add("startDate", getStartDate())
-//            .toString();
-//    }
-    
-    // //////////////////////////////////////
-
-//    @Override
-//    @Hidden
-//    public int compareTo(LeaseUnit other) {
-//        //return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-//        return ObjectContracts.compare(this, other, "lease, unit, startDate desc");
-//    }
-
-//    public final static Ordering<LeaseUnit> ORDERING_BY_LEASE = new Ordering<LeaseUnit>() {
-//        public int compare(LeaseUnit p, LeaseUnit q) {
-//            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
-//        }
-//    };
-//    public final static Ordering<LeaseUnit> ORDERING_BY_UNIT = new Ordering<LeaseUnit>() {
-//        public int compare(LeaseUnit p, LeaseUnit q) {
-//            return Ordering.natural().nullsFirst().compare(p.getUnit(), q.getUnit());
-//        }
-//    };
-//    public final static Ordering<LeaseUnit> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseUnit>() {
-//        public int compare(LeaseUnit p, LeaseUnit q) {
-//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-//        }
-//    };
 
     // //////////////////////////////////////
 

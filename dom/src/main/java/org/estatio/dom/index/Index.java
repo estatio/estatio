@@ -117,20 +117,6 @@ public class Index extends EstatioRefDataObject<Index> implements ComparableByRe
 
     // //////////////////////////////////////
 
-//    @Override
-//    public String toString() {
-//        return ComparableByReference.ToString.of(this);
-//    }
-
-    // //////////////////////////////////////
-
-//    @Override
-//    public int compareTo(Index other) {
-//        //return ORDERING_BY_REFERENCE.compare(this, other);
-//        return ObjectContracts.compare(this, other, "reference");
-//    }
-
-    // //////////////////////////////////////
 
     private Indices indices;
 
