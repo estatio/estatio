@@ -38,7 +38,14 @@ import org.apache.isis.applib.util.ObjectContracts;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "invoice_findMatchingInvoices", language = "JDOQL", value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE provenance == :provenance && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate") })
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject implements Comparable<Invoice>, WithReferenceGetter {
+public class Invoice extends EstatioTransactionalObject<Invoice> implements /*Comparable<Invoice>, */ WithReferenceGetter {
+
+
+    public Invoice() {
+        super("invoiceNumber");
+    }
+    
+    // //////////////////////////////////////
 
     public String title() {
         return String.format("%08d", Integer.parseInt(getId()));
@@ -333,18 +340,18 @@ public class Invoice extends EstatioTransactionalObject implements Comparable<In
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("invoiceNumber", getInvoiceNumber()).toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this).add("invoiceNumber", getInvoiceNumber()).toString();
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(Invoice other) {
-        //return ORDERING_BY_INVOICE_NUMBER.compare(this, other);
-        return ObjectContracts.compare(this, other, "invoiceNumber");
-    }
+//    @Override
+//    public int compareTo(Invoice other) {
+//        //return ORDERING_BY_INVOICE_NUMBER.compare(this, other);
+//        return ObjectContracts.compare(this, other, "invoiceNumber");
+//    }
 
 //    public final static Ordering<Invoice> ORDERING_BY_INVOICE_NUMBER = new Ordering<Invoice>() {
 //        public int compare(Invoice p, Invoice q) {

@@ -1,8 +1,6 @@
 package org.estatio.dom.tag;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Immutable;
@@ -10,7 +8,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioRefDataObject;
 
@@ -26,7 +23,13 @@ import org.estatio.dom.EstatioRefDataObject;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Unique(name="tag_bookmark_and_name", members={"objectType","name","objectIdentifier"})
 @Immutable
-public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
+public class Tag extends EstatioRefDataObject<Tag> /*implements Comparable<Tag>*/ {
+
+    public Tag() {
+        super("objectType, name, objectIdentifier, value");
+    }
+    
+    // //////////////////////////////////////
 
     public static final Function<Tag, String> GET_VALUE = new Function<Tag, String>() {
         public String apply(Tag tag) {
@@ -117,34 +120,34 @@ public class Tag extends EstatioRefDataObject implements Comparable<Tag> {
 
     // //////////////////////////////////////
     
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("objectType", getObjectType())
-                .add("name", getName())
-                .add("objectIdentifier", getObjectIdentifier())
-                .add("value", getValue())
-                .toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this)
+//                .add("objectType", getObjectType())
+//                .add("name", getName())
+//                .add("objectIdentifier", getObjectIdentifier())
+//                .add("value", getValue())
+//                .toString();
+//    }
     
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(Tag other) {
-        //return ORDERING_BY_OBJECT_TYPE.compound(ORDERING_BY_NAME).compare(this, other);
-        return ObjectContracts.compare(this, other, "objectType, name");
-    }
+//    @Override
+//    public int compareTo(Tag other) {
+//        //return ORDERING_BY_OBJECT_TYPE.compound(ORDERING_BY_NAME).compare(this, other);
+//        return ObjectContracts.compare(this, other, "objectType, name");
+//    }
 
-    public final static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {
-        public int compare(Tag p, Tag q) {
-            return Ordering.natural().nullsFirst().compare(p.getObjectType(), q.getObjectType());
-        }
-    };
-    public final static Ordering<Tag> ORDERING_BY_NAME = new Ordering<Tag>() {
-        public int compare(Tag p, Tag q) {
-            return Ordering.natural().nullsFirst().compare(p.getName(), q.getName());
-        }
-    };
+//    public final static Ordering<Tag> ORDERING_BY_OBJECT_TYPE = new Ordering<Tag>() {
+//        public int compare(Tag p, Tag q) {
+//            return Ordering.natural().nullsFirst().compare(p.getObjectType(), q.getObjectType());
+//        }
+//    };
+//    public final static Ordering<Tag> ORDERING_BY_NAME = new Ordering<Tag>() {
+//        public int compare(Tag p, Tag q) {
+//            return Ordering.natural().nullsFirst().compare(p.getName(), q.getName());
+//        }
+//    };
 
     
 }

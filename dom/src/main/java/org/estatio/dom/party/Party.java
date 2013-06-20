@@ -11,7 +11,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.ComparableByName;
 import org.estatio.dom.EstatioTransactionalObject;
@@ -36,8 +35,14 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
             		"|| name.matches(:searchPattern)") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = {"reference", "name"})
 @AutoComplete(repository = Parties.class, action="autoComplete")
-public abstract class Party extends EstatioTransactionalObject implements ComparableByName<Party>, WithReferenceGetter {
+public abstract class Party extends EstatioTransactionalObject<Party> implements ComparableByName<Party>, WithReferenceGetter {
 
+
+    public Party() {
+        super("name");
+    }
+    
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique
     private String reference;
@@ -167,17 +172,17 @@ public abstract class Party extends EstatioTransactionalObject implements Compar
 
     // //////////////////////////////////////
     
-    @Override
-    public String toString() {
-        return ComparableByName.ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ComparableByName.ToString.of(this);
+//    }
     
     // //////////////////////////////////////
     
-    @Override
-    public int compareTo(Party other) {
-        return ObjectContracts.compare(this, other, "name");
-        //return ORDERING_BY_NAME.compare(this, other);
-    }
+//    @Override
+//    public int compareTo(Party other) {
+//        return ObjectContracts.compare(this, other, "name");
+//        //return ORDERING_BY_NAME.compare(this, other);
+//    }
 
 }

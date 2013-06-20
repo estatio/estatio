@@ -11,22 +11,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Ordering;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithSequence;
-import org.estatio.dom.WithStartDate;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -43,7 +27,19 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.ObjectContracts;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -56,8 +52,8 @@ import org.apache.isis.applib.util.ObjectContracts;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*Comparable<LeaseTerm>, */ WithInterval, WithSequence {
 
-
     public LeaseTerm() {
+        // REVIEW: the integration tests fail if this is made DESCending.
         super("leaseItem, sequence");
     }
     
@@ -507,31 +503,30 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("leaseItem", getLeaseItem()).add("sequence", getSequence()).toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this).add("leaseItem", getLeaseItem()).add("sequence", getSequence()).toString();
+//    }
 
     // //////////////////////////////////////
 
 //    @Override
 //    @Hidden
 //    public int compareTo(LeaseTerm other) {
-//<<<<<<< HEAD
 //        // return
 //        // ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this,
 //        // other);
-//
-//        // REVIEW: the integration tests fail if this sequence is made
-//        // DESCending.
-//        return Comparisons.compare(this, other, "leaseItem, sequence");
-//=======
 //        //return ORDERING_BY_LEASE_ITEM.compound(ORDERING_BY_SEQUENCE_ASC).compare(this, other);
-//        
 //        // REVIEW: the integration tests fail if this sequence is made DESCending.
-//        return ObjectContracts.compare(this, other, "leaseItem, sequence");
-//>>>>>>> refactoring to use ObjectContracts
+//        return Comparisons.compare(this, other, "leaseItem, sequence");
 //    }
+//
+//    public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new Ordering<LeaseTerm>() {
+//        public int compare(LeaseTerm p, LeaseTerm q) {
+//            return Ordering.natural().nullsFirst().compare(p.getLeaseItem(), q.getLeaseItem());
+//        }
+//    };
+//
 
     // public final static Ordering<LeaseTerm> ORDERING_BY_LEASE_ITEM = new
     // Ordering<LeaseTerm>() {

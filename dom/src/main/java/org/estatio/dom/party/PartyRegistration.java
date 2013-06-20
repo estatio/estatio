@@ -30,7 +30,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 // REVIEW: is this in scope?
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class PartyRegistration extends EstatioTransactionalObject implements WithInterval {
+public class PartyRegistration extends EstatioTransactionalObject<PartyRegistration> implements WithInterval {
+
+    public PartyRegistration() {
+        // REVIEW: I made this up...
+        super("party, startDate desc");
+    }
+    
+    // //////////////////////////////////////
 
     private Party party;
 

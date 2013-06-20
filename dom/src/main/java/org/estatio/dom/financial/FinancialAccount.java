@@ -22,9 +22,14 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject implements Comparable<FinancialAccount>, WithReferenceGetter, WithNameGetter {
+public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount> implements /*Comparable<FinancialAccount>,*/ WithReferenceGetter, WithNameGetter {
 
+    public FinancialAccount() {
+        super("type, reference");
+    }
     
+    // //////////////////////////////////////
+
     private String reference;
 
     @MemberOrder(sequence = "1")
@@ -80,18 +85,18 @@ public abstract class FinancialAccount extends EstatioTransactionalObject implem
 
     // //////////////////////////////////////
     
-    @Override
-    public String toString() {
-        return org.estatio.dom.WithReferenceGetter.ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return org.estatio.dom.WithReferenceGetter.ToString.of(this);
+//    }
     
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(FinancialAccount other) {
-        //return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
-        return ObjectContracts.compare(this, other, "type, reference");
-    }
+//    @Override
+//    public int compareTo(FinancialAccount other) {
+//        //return ORDERING_BY_TYPE.compound(ORDERING_BY_REFERENCE).compare(this, other);
+//        return ObjectContracts.compare(this, other, "type, reference");
+//    }
 
 //    public final static Ordering<FinancialAccount> ORDERING_BY_TYPE = new Ordering<FinancialAccount>() {
 //        public int compare(FinancialAccount p, FinancialAccount q) {

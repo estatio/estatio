@@ -1,7 +1,5 @@
 package org.estatio.dom.lease.invoicing;
 
-import java.math.BigInteger;
-
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;

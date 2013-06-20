@@ -20,7 +20,13 @@ import org.estatio.dom.WithStartDate;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class IndexBase extends EstatioRefDataObject implements Comparable<IndexBase>, WithStartDate {
+public class IndexBase extends EstatioRefDataObject<IndexBase> implements /*Comparable<IndexBase>, */ WithStartDate {
+
+    public IndexBase() {
+        super("index, startDate desc");
+    }
+    
+    // //////////////////////////////////////
 
     private Index index;
     
@@ -171,21 +177,21 @@ public class IndexBase extends EstatioRefDataObject implements Comparable<IndexB
 
     // //////////////////////////////////////
     
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("index", getIndex()!=null?getIndex().getReference():null)
-                .add("startDate", getStartDate())
-                .toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this)
+//                .add("index", getIndex()!=null?getIndex().getReference():null)
+//                .add("startDate", getStartDate())
+//                .toString();
+//    }
     
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(IndexBase other) {
-        //return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-        return ObjectContracts.compare(this, other, "index, startDate desc");
-    }
+//    @Override
+//    public int compareTo(IndexBase other) {
+//        //return ORDERING_BY_INDEX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+//        return ObjectContracts.compare(this, other, "index, startDate desc");
+//    }
     
 //    private final static Ordering<IndexBase> ORDERING_BY_INDEX = new Ordering<IndexBase>() {
 //        public int compare(IndexBase left, IndexBase right) {

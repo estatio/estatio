@@ -5,15 +5,12 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.collect.Ordering;
-
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ObjectType;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
@@ -24,7 +21,15 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @ObjectType("CCHN")
-public abstract class CommunicationChannel extends EstatioTransactionalObject implements Comparable<CommunicationChannel>, WithNameGetter {
+public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements /*Comparable<CommunicationChannel>,*/ WithNameGetter {
+
+
+    public CommunicationChannel() {
+        super("type, description");
+    }
+    
+    
+    // //////////////////////////////////////
 
     private CommunicationChannelType type;
 
@@ -88,17 +93,17 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject im
 
     // //////////////////////////////////////
     
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
     
     // //////////////////////////////////////
 
-    @Hidden
-    public int compareTo(CommunicationChannel other) {
-        //return Ordering.natural().nullsFirst().compare(this.getType(), other.getType());
-        return ObjectContracts.compare(this, other, "type, description");
-    }
+//    @Hidden
+//    public int compareTo(CommunicationChannel other) {
+//        //return Ordering.natural().nullsFirst().compare(this.getType(), other.getType());
+//        return ObjectContracts.compare(this, other, "type, description");
+//    }
 
 }

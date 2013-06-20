@@ -26,7 +26,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(name = "findForDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.TaxRate WHERE tax == :tax  && startDate >= :date && (endDate == null || endDate <= :date)")
-public class TaxRate extends EstatioTransactionalObject implements Comparable<TaxRate>, WithInterval {
+public class TaxRate extends EstatioTransactionalObject<TaxRate> implements /* Comparable<TaxRate>, */ WithInterval {
+
+    public TaxRate() {
+        super("tax, startDate desc");
+    }
+    
+    // //////////////////////////////////////
 
     private Tax tax;
 
@@ -149,18 +155,18 @@ public class TaxRate extends EstatioTransactionalObject implements Comparable<Ta
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("tax", getTax() != null ? getTax().getReference() : null).add("startDate", getStartDate()).toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this).add("tax", getTax() != null ? getTax().getReference() : null).add("startDate", getStartDate()).toString();
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(TaxRate other) {
-        //return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-        return ObjectContracts.compare(this, other, "tax, startDate desc");
-    }
+//    @Override
+//    public int compareTo(TaxRate other) {
+//        //return ORDERING_BY_TAX.compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+//        return ObjectContracts.compare(this, other, "tax, startDate desc");
+//    }
 
 //    private final static Ordering<TaxRate> ORDERING_BY_TAX = new Ordering<TaxRate>() {
 //        public int compare(TaxRate p, TaxRate q) {

@@ -10,7 +10,15 @@ import org.estatio.dom.lease.Lease;
 //REVIEW: is this in scope?
 //@javax.jdo.annotations.PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class LeaseAssignment extends EstatioTransactionalObject {
+public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment> {
+
+    
+    public LeaseAssignment() {
+        // REVIEW: I made this up...
+        super("nextLease,assignmentDate");
+    }
+    
+    // //////////////////////////////////////
 
     // REVIEW: should this be mappedBy?
     private Lease previousLease;

@@ -23,7 +23,13 @@ import org.estatio.dom.EstatioTransactionalObject;
         value = "SELECT " +
         		"FROM org.estatio.dom.numerator.Numerator " +
         		"WHERE type == :type")
-public class Numerator extends EstatioTransactionalObject implements ComparableByDescription<Numerator> {
+public class Numerator extends EstatioTransactionalObject<Numerator> /* implements ComparableByDescription<Numerator> */ {
+
+    public Numerator() {
+        super("description");
+    }
+    
+    // //////////////////////////////////////
 
     private NumeratorType type;
 
@@ -79,17 +85,17 @@ public class Numerator extends EstatioTransactionalObject implements ComparableB
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(Numerator other) {
-        return ObjectContracts.compare(this, other, "description");
-        //return ORDERING_BY_DESCRIPTION.compare(this, other);
-    }
+//    @Override
+//    public int compareTo(Numerator other) {
+//        return ObjectContracts.compare(this, other, "description");
+//        //return ORDERING_BY_DESCRIPTION.compare(this, other);
+//    }
 
 }

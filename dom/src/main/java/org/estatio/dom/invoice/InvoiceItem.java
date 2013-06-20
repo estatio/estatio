@@ -40,7 +40,13 @@ import org.apache.isis.applib.util.ObjectContracts;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem extends EstatioTransactionalObject implements Comparable<InvoiceItem>, WithInterval, WithDescriptionGetter {
+public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem> implements /*Comparable<InvoiceItem>, */ WithInterval, WithDescriptionGetter {
+
+    public InvoiceItem() {
+        super("invoice, startDate desc, charge, description, sequence");
+    }
+    
+    // //////////////////////////////////////
 
     private BigInteger sequence;
 
@@ -303,18 +309,18 @@ public abstract class InvoiceItem extends EstatioTransactionalObject implements 
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("invoice", getInvoice()).add("charge", getCharge()).add("startDate", getStartDate()).add("dueDate", getDueDate()).toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this).add("invoice", getInvoice()).add("charge", getCharge()).add("startDate", getStartDate()).add("dueDate", getDueDate()).toString();
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(InvoiceItem other) {
-        //return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, other);
-        return ObjectContracts.compare(this, other, "invoice, startDate desc, charge, description, sequence");
-    }
+//    @Override
+//    public int compareTo(InvoiceItem other) {
+//        //return ORDERING_BY_INVOICE.compound(ORDERING_BY_START_DATE_DESC).compound(ORDERING_BY_CHARGE).compound(ORDERING_BY_DESCRIPTION).compound(ORDERING_BY_SEQUENCE).compare(this, other);
+//        return ObjectContracts.compare(this, other, "invoice, startDate desc, charge, description, sequence");
+//    }
 
 //    public final static Ordering<InvoiceItem> ORDERING_BY_INVOICE = new Ordering<InvoiceItem>() {
 //        public int compare(InvoiceItem p, InvoiceItem q) {

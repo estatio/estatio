@@ -36,7 +36,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
             		"WHERE lease == :lease " +
             		"&& unit == :unit " +
             		"&& startDate == :startDate") })
-public class LeaseUnit extends EstatioTransactionalObject implements Comparable<LeaseUnit>, WithInterval {
+public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements /*Comparable<LeaseUnit>, */ WithInterval {
+
+    public LeaseUnit() {
+        super("lease, unit, startDate desc");
+    }
+    
+    // //////////////////////////////////////
 
     private Lease lease;
 
@@ -254,39 +260,39 @@ public class LeaseUnit extends EstatioTransactionalObject implements Comparable<
 
     // //////////////////////////////////////
     
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-            .add("lease", getLease()!=null?getLease().getReference():null)
-            .add("unit", getUnit()!=null?getUnit().getReference():null)
-            .add("startDate", getStartDate())
-            .toString();
-    }
+//    @Override
+//    public String toString() {
+//        return Objects.toStringHelper(this)
+//            .add("lease", getLease()!=null?getLease().getReference():null)
+//            .add("unit", getUnit()!=null?getUnit().getReference():null)
+//            .add("startDate", getStartDate())
+//            .toString();
+//    }
     
     // //////////////////////////////////////
 
-    @Override
-    @Hidden
-    public int compareTo(LeaseUnit other) {
-        //return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
-        return ObjectContracts.compare(this, other, "lease, unit, startDate desc");
-    }
+//    @Override
+//    @Hidden
+//    public int compareTo(LeaseUnit other) {
+//        //return ORDERING_BY_LEASE.compound(ORDERING_BY_UNIT).compound(ORDERING_BY_START_DATE_DESC).compare(this, other);
+//        return ObjectContracts.compare(this, other, "lease, unit, startDate desc");
+//    }
 
-    public final static Ordering<LeaseUnit> ORDERING_BY_LEASE = new Ordering<LeaseUnit>() {
-        public int compare(LeaseUnit p, LeaseUnit q) {
-            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
-        }
-    };
-    public final static Ordering<LeaseUnit> ORDERING_BY_UNIT = new Ordering<LeaseUnit>() {
-        public int compare(LeaseUnit p, LeaseUnit q) {
-            return Ordering.natural().nullsFirst().compare(p.getUnit(), q.getUnit());
-        }
-    };
-    public final static Ordering<LeaseUnit> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseUnit>() {
-        public int compare(LeaseUnit p, LeaseUnit q) {
-            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
-        }
-    };
+//    public final static Ordering<LeaseUnit> ORDERING_BY_LEASE = new Ordering<LeaseUnit>() {
+//        public int compare(LeaseUnit p, LeaseUnit q) {
+//            return Ordering.natural().nullsFirst().compare(p.getLease(), q.getLease());
+//        }
+//    };
+//    public final static Ordering<LeaseUnit> ORDERING_BY_UNIT = new Ordering<LeaseUnit>() {
+//        public int compare(LeaseUnit p, LeaseUnit q) {
+//            return Ordering.natural().nullsFirst().compare(p.getUnit(), q.getUnit());
+//        }
+//    };
+//    public final static Ordering<LeaseUnit> ORDERING_BY_START_DATE_DESC = new Ordering<LeaseUnit>() {
+//        public int compare(LeaseUnit p, LeaseUnit q) {
+//            return Ordering.natural().nullsLast().reverse().compare(p.getStartDate(), q.getStartDate());
+//        }
+//    };
 
     // //////////////////////////////////////
 

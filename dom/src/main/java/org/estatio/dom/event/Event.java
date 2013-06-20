@@ -14,7 +14,13 @@ import org.estatio.services.clock.ClockService;
 
 //@PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class Event extends EstatioTransactionalObject implements WithInterval {
+public class Event extends EstatioTransactionalObject<Event> implements WithInterval {
+
+    public Event() {
+        super("startDate desc, id");
+    }
+    
+    // //////////////////////////////////////
 
     private LocalDate startDate;
 

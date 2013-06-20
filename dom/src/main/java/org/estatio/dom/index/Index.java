@@ -10,16 +10,20 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.Index WHERE reference == :reference")
 @Immutable
-public class Index extends EstatioRefDataObject implements ComparableByReference<Index>, WithNameGetter {
+public class Index extends EstatioRefDataObject<Index> implements /*ComparableByReference<Index>, */ WithNameGetter {
+
+    public Index() {
+        super("reference");
+    }
+    
+    // //////////////////////////////////////
 
     private String reference;
 
@@ -112,18 +116,18 @@ public class Index extends EstatioRefDataObject implements ComparableByReference
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ComparableByReference.ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ComparableByReference.ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(Index other) {
-        //return ORDERING_BY_REFERENCE.compare(this, other);
-        return ObjectContracts.compare(this, other, "reference");
-    }
+//    @Override
+//    public int compareTo(Index other) {
+//        //return ORDERING_BY_REFERENCE.compare(this, other);
+//        return ObjectContracts.compare(this, other, "reference");
+//    }
 
     // //////////////////////////////////////
 

@@ -4,7 +4,8 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseStatus {
 
-    APPROVED, NEW;
+    APPROVED,
+    NEW;
 
     public String title() {
         return StringUtils.enumTitle(this.name());

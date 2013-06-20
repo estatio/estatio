@@ -3,9 +3,7 @@ package org.estatio.dom.currency;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -16,7 +14,13 @@ import org.estatio.dom.EstatioRefDataObject;
         		"WHERE reference.matches(:r)")
 @Bounded
 @Immutable
-public class Currency extends EstatioRefDataObject implements ComparableByReference<Currency> {
+public class Currency extends EstatioRefDataObject<Currency> /* implements ComparableByReference<Currency> */ {
+
+    public Currency() {
+        super("reference");
+    }
+    
+    // //////////////////////////////////////
 
     private String reference;
 
@@ -42,17 +46,17 @@ public class Currency extends EstatioRefDataObject implements ComparableByRefere
 
     // //////////////////////////////////////
 
-    @Override
-    public String toString() {
-        return ToString.of(this);
-    }
+//    @Override
+//    public String toString() {
+//        return ToString.of(this);
+//    }
 
     // //////////////////////////////////////
 
-    @Override
-    public int compareTo(Currency other) {
-        //return ORDERING_BY_REFERENCE.compare(this, other);
-        return ObjectContracts.compare(this, other, "reference");
-    }
+//    @Override
+//    public int compareTo(Currency other) {
+//        //return ORDERING_BY_REFERENCE.compare(this, other);
+//        return ObjectContracts.compare(this, other, "reference");
+//    }
 
 }
