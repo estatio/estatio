@@ -1,11 +1,14 @@
 package org.estatio.dom.agreement;
 
+import java.util.List;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 
 @Hidden
@@ -18,16 +21,21 @@ public class Agreements extends EstatioDomainService<Agreement> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    public Agreement newAgreement(@Named("Type") AgreementType agreementType, final @Named("Reference") String reference, final @Named("Name") String name) {
+    public Agreement newAgreement(AgreementType agreementType, final String reference, final String name) {
         return agreementType.create(getContainer());
     }
 
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    public Agreement findByReference(@Named("Reference") String reference) {
+    public Agreement findByReference(String reference) {
         return firstMatch("lease_findLeaseByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public List<Agreement> findByTypeRoleTypeAndParty(AgreementType agreementType, AgreementRoleType agreementRoleType, Party party) {
+        return allMatches("findByAgreementTypeAndRoleTypeAndParty", "agreementType", agreementType, "roleType", agreementRoleType, "party", party);
+    }
 
 }

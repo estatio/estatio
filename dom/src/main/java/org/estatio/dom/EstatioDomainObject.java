@@ -3,6 +3,8 @@ package org.estatio.dom;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.util.ObjectContracts;
 
+import org.estatio.services.clock.ClockService;
+
 public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> extends AbstractDomainObject implements Comparable<T> {
 
     private static ObjectContracts estatioObjectContracts = 
@@ -23,6 +25,16 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
         return keyProperties;
     }
 
+    // //////////////////////////////////////
+    
+    private ClockService clockService;
+    protected ClockService getClockService() {
+        return clockService;
+    }
+    public void injectClockService(ClockService clockService) {
+        this.clockService = clockService;
+    }
+    
     // //////////////////////////////////////
 
     @Override

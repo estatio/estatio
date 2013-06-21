@@ -18,8 +18,16 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByReference", language = "JDOQL", 
+            value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE reference.matches(:r)"),
+    @javax.jdo.annotations.Query(
+            name = "findByTypeAndParty", language = "JDOQL", 
+            value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE type == :type && owner == :owner")
+})
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount> implements /*Comparable<FinancialAccount>,*/ WithReferenceGetter, WithNameGetter {
+public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount> implements WithReferenceGetter, WithNameGetter {
 
     public FinancialAccount() {
         super("type, reference");

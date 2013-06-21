@@ -12,6 +12,8 @@ public class AgreementTypes extends EstatioDomainService<AgreementType> {
         super(AgreementTypes.class, AgreementType.class);
     }
     
+    // //////////////////////////////////////
+
     // TODO: naive implementation.
     public AgreementType find(final String title) {
         return getContainer().firstMatch(AgreementType.class, new Filter<AgreementType>(){

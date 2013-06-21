@@ -2,24 +2,22 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.filter.Filter;
 
-@Named("Agreement Role Types")
+import org.estatio.dom.EstatioDomainService;
+
 @Hidden
-public class AgreementRoleTypes extends AbstractFactoryAndRepository {
+public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> {
 
-    @Override
-    public String getId() {
-        return "agreementRoleTypes";
+    public AgreementRoleTypes() {
+        super(AgreementRoleTypes.class, AgreementRoleType.class);
     }
+    
+    // //////////////////////////////////////
 
-    public String iconName() {
-        return "AgreementRoleTypes";
-    }
 
+    // TODO: naive implementation
     public AgreementRoleType find(final String title) {
         return getContainer().firstMatch(AgreementRoleType.class, new Filter<AgreementRoleType>(){
             @Override
@@ -29,8 +27,9 @@ public class AgreementRoleTypes extends AbstractFactoryAndRepository {
         });
     }
 
+    // TODO: naive implementation
     public List<AgreementRoleType> applicableTo(AgreementType agreementType) {
-        return getContainer().allMatches(AgreementRoleType.class, artAppliesTo(agreementType));
+        return allMatches(AgreementRoleType.class, artAppliesTo(agreementType));
     }
 
 

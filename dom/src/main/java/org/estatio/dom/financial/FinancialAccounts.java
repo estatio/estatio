@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 
 @Named("Accounts")
@@ -37,11 +38,18 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     @MemberOrder(sequence = "2")
     public FinancialAccount findByReference(@Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch("charge_findFinancialAccountByReference", "r", regex);
+        return firstMatch("findByReference", "r", regex);
     }
     
     // //////////////////////////////////////
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Hidden
+    public List<BankAccount> findBankAccountsFor(Party party) {
+        return (List)allMatches("findByTypeAndParty", "type", FinancialAccountType.BANK_ACCOUNT, "owner", party);
+    }
 
+    // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
     @Prototype
@@ -49,5 +57,6 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     public List<FinancialAccount> allAccounts() {
         return allInstances();
     }
+
     
 }

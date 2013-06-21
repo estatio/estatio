@@ -3,6 +3,7 @@ package org.estatio.dom.lease;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 
@@ -20,6 +21,7 @@ public class LeaseUnits extends EstatioDomainService<LeaseUnit> {
 
     // @Hidden
     @ActionSemantics(Of.NON_IDEMPOTENT)
+    @NotContributed
     public LeaseUnit newLeaseUnit(Lease lease, UnitForLease unit) {
         LeaseUnit lu = newTransientInstance(LeaseUnit.class);
         persist(lu);

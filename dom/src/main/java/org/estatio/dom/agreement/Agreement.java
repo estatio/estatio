@@ -15,6 +15,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -34,8 +35,22 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "agreement_findAgreementByReference", language = "JDOQL", value = "SELECT " + "FROM org.estatio.dom.agreement.Agreement " + "WHERE reference.matches(:r)")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+            name = "agreement_findAgreementByReference", language = "JDOQL", 
+            value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:r)"),
+        @javax.jdo.annotations.Query(
+            name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL", 
+            value = "SELECT " + 
+                    "FROM org.estatio.dom.agreement.Agreement " + 
+                    "WHERE agreementType == :agreementType" +
+                    " && roles.contains(role)" +
+                    " && role.type == :roleType" +
+                    " && role.party == :party" +
+                    " VARIABLES org.estatio.dom.agreement.AgreementRole role")
+})
 @Bookmarkable
+@MemberGroups({"General", "Dates", "Related"})
 public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements ComparableByReference<Agreement>, WithInterval {
 
     public Agreement() {
@@ -113,7 +128,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     private LocalDate startDate;
 
     @javax.jdo.annotations.Persistent
-    @MemberOrder(sequence = "5")
+    @MemberOrder(name="Dates", sequence = "5")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -125,7 +140,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     private LocalDate endDate;
 
     @javax.jdo.annotations.Persistent
-    @MemberOrder(sequence = "6")
+    @MemberOrder(name="Dates", sequence = "6")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -144,7 +159,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     private LocalDate terminationDate;
 
     @javax.jdo.annotations.Persistent
-    @MemberOrder(sequence = "7")
+    @MemberOrder(name="Dates", sequence = "7")
     @Optional
     public LocalDate getTerminationDate() {
         return terminationDate;
@@ -179,7 +194,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "9")
+    @MemberOrder(name="Related", sequence = "9")
     public Agreement getPreviousAgreement() {
         return previousAgreement;
     }
@@ -218,7 +233,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "10")
+    @MemberOrder(name="Related", sequence = "10")
     public Agreement getNextAgreement() {
         return nextAgreement;
     }
@@ -313,16 +328,23 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
-    private AgreementRoles agreementRoles;
-
+    protected Agreements agreements;
+    public void injectAgreements(Agreements agreements) {
+        this.agreements = agreements;
+    }
+    protected AgreementRoles agreementRoles;
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
 
-    private AgreementRoleTypes agreementRoleTypes;
-
+    protected AgreementRoleTypes agreementRoleTypes;
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
+    }
+
+    protected AgreementTypes agreementTypes;
+    public void injectAgreementTypes(AgreementTypes agreementTypes) {
+        this.agreementTypes = agreementTypes;
     }
 
 }
