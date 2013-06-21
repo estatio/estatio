@@ -208,7 +208,10 @@
                     <configuration>
                        <instrumentation>
                             <ignores>
-                                <ignore>org.estatio.*.jdo*</ignore>
+                                <!-- 
+                                http://jira.codehaus.org/browse/MCOBERTURA-52
+                                 -->
+                                <ignore>org[.]estatio[.].*[.]jdo.*</ignore>
                             </ignores>
                        </instrumentation>
                     </configuration>
