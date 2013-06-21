@@ -3,7 +3,6 @@ package org.estatio.services.appsettings;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsService;
 

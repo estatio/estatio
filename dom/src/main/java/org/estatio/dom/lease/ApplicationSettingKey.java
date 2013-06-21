@@ -1,10 +1,10 @@
 package org.estatio.dom.lease;
 
-import org.estatio.dom.ApplicationSettingCreator;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
+
+import org.estatio.dom.ApplicationSettingCreator;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
     foo(LocalDate.class, "Lease's foo", new LocalDate(2013,4,1));

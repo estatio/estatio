@@ -2,14 +2,13 @@ package org.estatio.services.appsettings;
 
 import java.util.List;
 
-import org.estatio.dom.ApplicationSettingCreator;
-
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingJdo;
 import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
+
+import org.estatio.dom.ApplicationSettingCreator;
 
 @Hidden
 public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsServiceJdo  {

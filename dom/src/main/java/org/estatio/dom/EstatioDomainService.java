@@ -3,15 +3,8 @@ package org.estatio.dom;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.lang.StringUtils;
-
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.services.audit.AuditEntryForEstatio;
 
 public abstract class EstatioDomainService<T> extends AbstractFactoryAndRepository {
 

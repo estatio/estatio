@@ -8,10 +8,6 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.invoice.InvoiceProvenance;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -23,6 +19,11 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.invoice.InvoiceProvenance;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)

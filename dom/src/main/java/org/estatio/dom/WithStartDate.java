@@ -1,7 +1,5 @@
 package org.estatio.dom;
 
-import com.google.common.collect.Ordering;
-
 import org.joda.time.LocalDate;
 
 public interface WithStartDate {

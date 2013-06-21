@@ -4,15 +4,15 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
-
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.util.TitleBuffer;
+
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 
 
 @javax.jdo.annotations.PersistenceCapable

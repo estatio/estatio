@@ -3,8 +3,8 @@ package org.estatio.dom.asset;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;

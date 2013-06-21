@@ -2,8 +2,6 @@ package org.estatio.dom;
 
 import java.math.BigInteger;
 
-import com.google.common.collect.Ordering;
-
 public interface WithSequence {
 
     public BigInteger getSequence();
