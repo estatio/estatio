@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.reflections.Reflections;
 
@@ -29,7 +28,6 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
     }
 
     @Test
-    @Ignore
     public void searchAndTest() {
         Reflections reflections = new Reflections(packagePrefix);
         

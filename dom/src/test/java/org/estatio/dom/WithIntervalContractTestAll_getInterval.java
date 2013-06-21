@@ -6,6 +6,8 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForTesting;
 
 
 /**
@@ -16,7 +18,9 @@ public class WithIntervalContractTestAll_getInterval extends WithIntervalContrac
     public WithIntervalContractTestAll_getInterval() {
         super(Constants.packagePrefix, ImmutableMap.<Class<?>,Class<?>>of(
                 Agreement.class, AgreementForTesting.class,
-                InvoiceItem.class, InvoiceItemForTesting.class));
+                InvoiceItem.class, InvoiceItemForTesting.class,
+                LeaseTerm.class, LeaseTermForTesting.class)
+                );
     }
 
 }
