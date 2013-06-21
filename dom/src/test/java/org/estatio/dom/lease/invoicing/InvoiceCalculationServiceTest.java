@@ -25,6 +25,7 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -41,9 +42,9 @@ import org.estatio.services.appsettings.EstatioSettingsService;
 public class InvoiceCalculationServiceTest {
     private static LocalDate START_DATE = new LocalDate(2011, 11, 1);
 
-    private Lease l;
-    private LeaseItem li;
-    private LeaseTermForTesting lt;
+    private Lease lease;
+    private LeaseItem leaseItem;
+    private LeaseTermForTesting leaseTerm;
 
     private Tax tax;
     private TaxRate taxRate;
@@ -56,8 +57,11 @@ public class InvoiceCalculationServiceTest {
     private TaxRates mockTaxRates;
 
     @Mock
-    private InvoicesForLease mockInvoices;
+    private Invoices mockInvoices;
 
+    @Mock
+    private InvoiceItemsForLease mockInvoiceItemsForLease;
+    
     @Mock
     private AgreementRoles mockAgreementRoles;
 
@@ -73,6 +77,10 @@ public class InvoiceCalculationServiceTest {
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
+    private InvoiceCalculationService ic;
+
+    private InvoiceItemForLease invoiceItemForLease;
+
     @Before
     public void setup() {
         artLandlord = new AgreementRoleType();
@@ -80,18 +88,6 @@ public class InvoiceCalculationServiceTest {
 
         artTenant = new AgreementRoleType();
         artTenant.setTitle("Tenant");
-
-        l = new Lease();
-        l.injectAgreementRoles(mockAgreementRoles);
-        l.setStartDate(START_DATE);
-        l.setEndDate(START_DATE.plusYears(1).minusDays(1));
-        tax = new Tax();
-        tax.setReference("VAT");
-        taxRate = new TaxRate();
-        taxRate.setPercentage(BigDecimal.valueOf(21));
-        charge = new Charge();
-        charge.setReference("RENT");
-        charge.setTax(tax);
 
         context.checking(new Expectations() {
             {
@@ -101,152 +97,140 @@ public class InvoiceCalculationServiceTest {
                 will(returnValue(artTenant));
             }
         });
+
+        lease = new Lease();
+        lease.injectAgreementRoles(mockAgreementRoles);
+        lease.setStartDate(START_DATE);
+        lease.setEndDate(START_DATE.plusYears(1).minusDays(1));
+        
+        leaseItem = new LeaseItem();
+        leaseItem.setStartDate(START_DATE);
+        leaseItem.modifyLease(lease);
+        leaseItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        
+        leaseTerm = new LeaseTermForTesting();
+        leaseTerm.injectInvoiceItemsForLease(mockInvoiceItemsForLease);
+        leaseTerm.modifyLeaseItem(leaseItem);
+        
+        tax = new Tax();
+        tax.injectTaxRates(mockTaxRates);
+        tax.setReference("VAT");
+        
+        taxRate = new TaxRate();
+        taxRate.setPercentage(BigDecimal.valueOf(21));
+        
+        charge = new Charge();
+        charge.setReference("RENT");
+        charge.setTax(tax);
+
+        invoiceItemForLease = new InvoiceItemForLease();
+        invoiceItemForLease.injectInvoices(mockInvoices);
+        invoiceItemForLease.injectInvoiceItemsForLease(mockInvoiceItemsForLease);
+        invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypes);
+        invoiceItemForLease.injectAgreementTypes(mockAgreementTypes);
+        
+        ic = new InvoiceCalculationService();
     }
 
     @Test
     public void testCalculateFullQuarter() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(START_DATE);
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        
+        leaseTerm.setStartDate(START_DATE);
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        CalculationResult result = ic.calculate(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
     public void testValueForPeriod() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.modifyLease(l);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(START_DATE);
-        lt.setValue(BigDecimal.valueOf(10000.22));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        BigDecimal result = ic.calculatedValue(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ADVANCE);
+        
+        leaseTerm.setStartDate(START_DATE);
+        leaseTerm.setValue(BigDecimal.valueOf(10000.22));
+        
+        BigDecimal result = ic.calculatedValue(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ADVANCE);
         Assert.assertThat(result, Is.is(BigDecimal.valueOf(10000.24).setScale(2, RoundingMode.HALF_UP)));
     }
 
     @Test
     public void testCalculateExactPeriod() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2012, 1, 1));
-        lt.setEndDate(new LocalDate(2012, 3, 31));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        
+        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
+        leaseTerm.setEndDate(new LocalDate(2012, 3, 31));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        CalculationResult result = ic.calculate(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
     public void testCalculateSingleMonth() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2012, 2, 1));
-        lt.setEndDate(new LocalDate(2012, 2, 29));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        
+        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
+        leaseTerm.setEndDate(new LocalDate(2012, 2, 29));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        CalculationResult result = ic.calculate(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         Assert.assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
     public void testCalculateNothing() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2013, 1, 1));
-        lt.setEndDate(new LocalDate(2013, 3, 1));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        
+        leaseTerm.setStartDate(new LocalDate(2013, 1, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 3, 1));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        CalculationResult result = ic.calculate(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         Assert.assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
     public void testWithNonMatchingStartDate() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2013, 1, 1));
-        lt.setEndDate(new LocalDate(2013, 3, 1));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
+        
+        leaseTerm.setStartDate(new LocalDate(2013, 1, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 3, 1));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        CalculationResult result = ic.calculate(leaseTerm, new LocalDate(2012, 1, 2), new LocalDate(2012, 1, 1));
         Assert.assertNull(result);
     }
 
     @Test
     public void testwithTerminationDate() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2012, 1, 1));
-        lt.setEndDate(new LocalDate(2012, 3, 31));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        l.setTerminationDate(new LocalDate(2012, 1, 31));
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        CalculationResult result = ic.calculate(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
+        
+        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
+        leaseTerm.setEndDate(new LocalDate(2012, 3, 31));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        lease.setTerminationDate(new LocalDate(2012, 1, 31));
+        
+        CalculationResult result = ic.calculate(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         Assert.assertEquals(BigDecimal.valueOf(1703.30).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
 
     @Test
-    public void testCalulationResults() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2012, 2, 1));
-        lt.setEndDate(new LocalDate(2013, 1, 1));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        List<CalculationResult> results = ic.calculationResults(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS);
+    public void testCalculationResults() {
+        
+        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 1, 1));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        List<CalculationResult> results = ic.calculationResults(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS);
         Assert.assertThat(results.get(0).getCalculatedValue(), Is.is(BigDecimal.valueOf(3296.70).setScale(2)));
         Assert.assertThat(results.get(1).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
         Assert.assertThat(results.get(2).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
         Assert.assertThat(results.get(3).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
-        Assert.assertThat(ic.calculatedValue(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS), Is.is(BigDecimal.valueOf(18296.70).setScale(2)));
+        Assert.assertThat(ic.calculatedValue(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS), Is.is(BigDecimal.valueOf(18296.70).setScale(2)));
     }
 
     @Test
-    public void testFullCalulationResults() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(new LocalDate(2012, 2, 1));
-        lt.setEndDate(new LocalDate(2013, 1, 31));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        List<CalculationResult> results = ic.fullCalculationResults(lt, new LocalDate(2013, 4, 1));
+    public void testFullCalculationResults() {
+        
+        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        
+        List<CalculationResult> results = ic.fullCalculationResults(leaseTerm, new LocalDate(2013, 4, 1));
         Assert.assertThat(results.get(0).getCalculatedValue(), Is.is(BigDecimal.valueOf(3296.70).setScale(2)));
         Assert.assertThat(results.get(1).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
         Assert.assertThat(results.get(2).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
@@ -261,7 +245,13 @@ public class InvoiceCalculationServiceTest {
         LocalDate startDate = new LocalDate(2012, 2, 1);
         LocalDate endDate = new LocalDate(2013, 1, 31);
         BigDecimal value = BigDecimal.valueOf(20000);
-        List<CalculationResult> results = testWith(startDate, endDate, null, value);
+        
+        leaseTerm.setStartDate(startDate);
+        leaseTerm.setEndDate(endDate);
+        leaseTerm.setValue(value);
+        
+        List<CalculationResult> results = ic.fullCalculationResults(leaseTerm, new LocalDate(2013, 4, 1));
+        
         Assert.assertThat(results.get(0).getCalculatedValue(), Is.is(BigDecimal.valueOf(3296.70).setScale(2)));
         Assert.assertThat(results.get(1).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
         Assert.assertThat(results.get(2).getCalculatedValue(), Is.is(BigDecimal.valueOf(5000).setScale(2)));
@@ -271,47 +261,20 @@ public class InvoiceCalculationServiceTest {
         // than the value of the term.....
     }
 
-    private List<CalculationResult> testWith(LocalDate startDate, LocalDate endDate, LocalDate effectiveDate, BigDecimal value) {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.modifyLease(l);
-        lt = new LeaseTermForTesting();
-        lt.setStartDate(startDate);
-        lt.setEndDate(endDate);
-        lt.setValue(value);
-        lt.modifyLeaseItem(li);
-        InvoiceCalculationService ic = new InvoiceCalculationService();
-        List<CalculationResult> results = ic.fullCalculationResults(lt, new LocalDate(2013, 4, 1));
-        return results;
-    }
 
     @Test
     public void testCreateInvoiceItem() {
-        li = new LeaseItem();
-        li.setStartDate(START_DATE);
-        li.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        li.setCharge(charge);
-        li.modifyLease(l);
+        
+        leaseItem.setCharge(charge);
 
-        lt = new LeaseTermForTesting();
-        lt.injectInvoices(mockInvoices);
-        lt.setStartDate(new LocalDate(2012, 1, 1));
-        lt.setEndDate(new LocalDate(2013, 1, 1));
-        lt.setValue(BigDecimal.valueOf(20000));
-        lt.modifyLeaseItem(li);
-        li.getTerms().add(lt);
-
-        tax.injectTaxRates(mockTaxRates);
-        final InvoiceItemForLease ii = new InvoiceItemForLease();
-        ii.injectInvoices(mockInvoices);
-        ii.injectAgreementRoleTypes(mockAgreementRoleTypes);
-        ii.injectAgreementTypes(mockAgreementTypes);
+        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 1, 1));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
 
         context.checking(new Expectations() {
             {
-                oneOf(mockInvoices).newInvoiceItem();
-                will(returnValue(ii));
+                oneOf(mockInvoiceItemsForLease).newInvoiceItem();
+                will(returnValue(invoiceItemForLease));
                 oneOf(mockTaxRates).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(taxRate));
                 exactly(2).of(mockAgreementRoles).findAgreementRoleWithType(with(any(Agreement.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
@@ -323,11 +286,10 @@ public class InvoiceCalculationServiceTest {
             }
         });
 
-        InvoiceCalculationService ic = new InvoiceCalculationService();
         ic.setEstatioSettings(mockSettings);
-        ic.calculateAndInvoice(lt, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), lt.getLeaseItem().getInvoicingFrequency(), InvoiceRunType.NORMAL_RUN);
+        ic.calculateAndInvoice(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency(), InvoiceRunType.NORMAL_RUN);
 
-        InvoiceItemForLease invoiceItem = lt.getInvoiceItems().iterator().next();
+        InvoiceItemForLease invoiceItem = leaseTerm.getInvoiceItems().iterator().next();
 
         Assert.assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), invoiceItem.getNetAmount());
         Assert.assertEquals(new LocalDate(2012, 1, 1), invoiceItem.getStartDate());

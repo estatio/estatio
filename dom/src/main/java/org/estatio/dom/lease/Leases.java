@@ -19,8 +19,9 @@ import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
@@ -113,7 +114,7 @@ public class Leases extends EstatioDomainService<Lease> {
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
-        return invoices.findInvoiceItemsByLease(leaseReference, startDate, dueDate);
+        return invoiceItemsForLease.findInvoiceItemsByLease(leaseReference, startDate, dueDate);
     }
 
 
@@ -131,10 +132,16 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    private InvoicesForLease invoices;
+    private Invoices invoices;
 
-    public void injectInvoicesService(final InvoicesForLease invoices) {
+    public void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
+    }
+    
+    private InvoiceItemsForLease invoiceItemsForLease;
+    
+    public void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
+        this.invoiceItemsForLease = invoiceItemsForLease;
     }
 
     private FixedAssets fixedAssets;

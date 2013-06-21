@@ -33,9 +33,9 @@ import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "invoice_findMatchingInvoices", language = "JDOQL", value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE provenance == :provenance && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate") })
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "invoice_findMatchingInvoices", language = "JDOQL", value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE source == :source && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate") })
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject<Invoice> implements /*Comparable<Invoice>, */ WithReferenceGetter {
+public class Invoice extends EstatioTransactionalObject<Invoice> implements WithReferenceGetter {
 
 
     public Invoice() {
@@ -116,15 +116,18 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements /*Co
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
-    private InvoiceProvenance provenance;
+    private InvoiceSource source;
 
+    /**
+     * Polymorphic association to (any implementation of) {@link InvoiceSource}.
+     */
     @MemberOrder(sequence = "6")
-    public InvoiceProvenance getProvenance() {
-        return provenance;
+    public InvoiceSource getSource() {
+        return source;
     }
 
-    public void setProvenance(final InvoiceProvenance provenance) {
-        this.provenance = provenance;
+    public void setSource(final InvoiceSource source) {
+        this.source = source;
     }
 
     // //////////////////////////////////////

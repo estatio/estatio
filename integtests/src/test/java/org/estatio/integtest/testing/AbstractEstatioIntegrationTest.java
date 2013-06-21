@@ -45,13 +45,14 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.contributed.LeaseTermContributedActions;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.tag.Tags;
@@ -110,7 +111,8 @@ public abstract class AbstractEstatioIntegrationTest {
 
     protected Leases leases;
     protected LeaseTerms leaseTerms;
-    protected InvoicesForLease invoices;
+    protected Invoices invoices;
+    protected InvoiceItemsForLease invoiceItemsForLease;
 
     protected Tags tags;
 
@@ -143,7 +145,8 @@ public abstract class AbstractEstatioIntegrationTest {
 
         leases = getIsft().getService(Leases.class);
         leaseTerms = getIsft().getService(LeaseTerms.class);
-        invoices = getIsft().getService(InvoicesForLease.class);
+        invoices = getIsft().getService(Invoices.class);
+        invoiceItemsForLease = getIsft().getService(InvoiceItemsForLease.class);
 
         tags = getIsft().getService(Tags.class);
 
@@ -232,7 +235,7 @@ public abstract class AbstractEstatioIntegrationTest {
                     new RegisterEntities(), 
                     new WrapperFactoryDefault(), 
                     new Countries(), new States(), new Currencies(), new Indices(), new IndexBases(), new IndexValues(), new FixedAssets(), new Properties(), new FixedAssetRoles(), new Units(), new Parties(), new Agreements(), new AgreementTypes(),
-                    new AgreementRoleTypes(), new AgreementRoles(), new Leases(), new LeaseTerms(), new LeaseItems(), new LeaseUnits(), new InvoicesForLease(), new CommunicationChannels(), new Taxes(), new TaxRates(), new Tags(), new EstatioBookmarkService(), new Charges(),
+                    new AgreementRoleTypes(), new AgreementRoles(), new Leases(), new LeaseTerms(), new LeaseItems(), new LeaseUnits(), new Invoices(), new InvoiceItemsForLease(), new CommunicationChannels(), new Taxes(), new TaxRates(), new Tags(), new EstatioBookmarkService(), new Charges(),
                     new ChargeGroups(), new FinancialAccounts(), new Numerators(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
                     new LeaseTermContributedActions());
         }

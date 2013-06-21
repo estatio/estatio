@@ -18,7 +18,7 @@ public class InvoiceTest_beanProperties extends AbstractBeanPropertiesTest {
 	        // it's necessary to use an actual valid concrete class, because having 
 	        // a test class (eg public class InvoiceProvenanceForTesting implements InvoiceProvenance {}) trips up DN.
 	        // the reason is that the DN enhancer doesn't seem to enhance it
-	        .withFixture(pojos(InvoiceProvenance.class, Lease.class))
+	        .withFixture(pojos(InvoiceSource.class, Lease.class))
 	        .exercise(new Invoice());
 	}
 

@@ -21,7 +21,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.invoice.InvoiceProvenance;
+import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
@@ -33,7 +33,7 @@ import org.estatio.dom.party.Party;
         @javax.jdo.annotations.Query(name = "findLeasesByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:r)"),
         @javax.jdo.annotations.Query(name = "findLeases", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE units.contains(lu) && (terminationDate == null || terminationDate <= :activeOnDate) && (lu.unit == :fixedAsset || lu.unit.property == :fixedAsset) VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
 @Bookmarkable
-public class Lease extends Agreement implements InvoiceProvenance {
+public class Lease extends Agreement implements InvoiceSource {
 
     @NotPersisted
     @MemberOrder(sequence = "3")

@@ -4,13 +4,14 @@ import java.util.SortedSet;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.joda.time.LocalDate;
 
@@ -36,13 +37,13 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setStatus(InvoiceStatus.NEW);
         
         final Lease lease = leases.findLeaseByReference(LEASE);
-        invoice.setProvenance(lease);
+        invoice.setSource(lease);
         invoice.setDueDate(START_DATE);
         invoice.setInvoiceDate(START_DATE);
 
         final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoices.newInvoiceItem();
+            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem();
             item.modifyInvoice(invoice);
             item.setDueDate(START_DATE);
             item.setStartDate(START_DATE);
@@ -59,10 +60,16 @@ public class InvoiceFixture extends AbstractFixture {
         this.parties = parties;
     }
 
-    private InvoicesForLease invoices;
+    private Invoices invoices;
 
-    public void injectInvoices(InvoicesForLease invoices) {
+    public void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
+    }
+    
+    private InvoiceItemsForLease invoiceItemsForLease;
+    
+    public void injectInvoiceItemsForLease(InvoiceItemsForLease invoices) {
+        this.invoiceItemsForLease = invoices;
     }
 
     private Leases leases;

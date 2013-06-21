@@ -32,7 +32,7 @@ public class InvoiceIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t3_invoiceItemCanBeFound() throws Exception {
-        List<InvoiceItemForLease> invoiceItems = invoices.findInvoiceItemsByLease(InvoiceFixture.LEASE, InvoiceFixture.START_DATE, InvoiceFixture.START_DATE);
+        List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findInvoiceItemsByLease(InvoiceFixture.LEASE, InvoiceFixture.START_DATE, InvoiceFixture.START_DATE);
         Assert.assertThat(invoiceItems.size(), Is.is(2));
     }
 

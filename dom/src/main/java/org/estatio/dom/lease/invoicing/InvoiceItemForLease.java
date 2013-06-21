@@ -18,6 +18,7 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -81,7 +82,7 @@ public class InvoiceItemForLease extends InvoiceItem {
                 invoice = invoices.newInvoice();
                 invoice.setBuyer(buyer);
                 invoice.setSeller(seller);
-                invoice.setProvenance(lease);
+                invoice.setSource(lease);
                 invoice.setDueDate(getDueDate());
                 invoice.setPaymentMethod(paymentMethod);
                 invoice.setStatus(InvoiceStatus.NEW);
@@ -116,13 +117,19 @@ public class InvoiceItemForLease extends InvoiceItem {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    private InvoicesForLease invoices;
+    private Invoices invoices;
 
-    @Hidden
-    public void injectInvoices(InvoicesForLease invoices) {
+    public void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
     }
 
+    private InvoiceItemsForLease invoiceItemsForLease;
+    
+    @Hidden
+    public void injectInvoiceItemsForLease(InvoiceItemsForLease invoiceItemsForLease) {
+        this.invoiceItemsForLease = invoiceItemsForLease;
+    }
+    
     // //////////////////////////////////////
 
     @Override

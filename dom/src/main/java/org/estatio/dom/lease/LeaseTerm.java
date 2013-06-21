@@ -36,7 +36,7 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoicesForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
@@ -352,7 +352,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
         InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(leaseTerm, startDate, dueDate);
         if (ii == null) {
-            ii = invoices.newInvoiceItem();
+            ii = invoiceItemsForLease.newInvoiceItem();
             ii.modifyLeaseTerm(this);
         }
         return ii;
@@ -504,10 +504,10 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     // //////////////////////////////////////
 
 
-    private InvoicesForLease invoices;
+    private InvoiceItemsForLease invoiceItemsForLease;
 
-    public void injectInvoices(InvoicesForLease invoices) {
-        this.invoices = invoices;
+    public void injectInvoiceItemsForLease(InvoiceItemsForLease invoiceItemsForLease) {
+        this.invoiceItemsForLease = invoiceItemsForLease;
     }
 
     private InvoiceCalculationService invoiceCalculationService;
