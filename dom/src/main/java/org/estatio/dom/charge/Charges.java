@@ -21,7 +21,7 @@ public class Charges extends EstatioDomainService<Charge> {
 
     // TODO: this is actually idempotent?
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.1")
     public Charge newCharge(String reference) {
         Charge charge = findChargeByReference(reference);
         if (charge == null) {
@@ -35,7 +35,7 @@ public class Charges extends EstatioDomainService<Charge> {
     // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.2")
     public Charge findChargeByReference(@Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch("charge_findChargeByReference", "r", regex);
@@ -45,7 +45,7 @@ public class Charges extends EstatioDomainService<Charge> {
     
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.99")
     public List<Charge> allCharges() {
         return allInstances();
     }

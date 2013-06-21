@@ -270,7 +270,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (landlord == null) {
             throw new ApplicationException(String.format("Landlord with reference %s not found.", landlordReference));
         }
-        Lease lease = leases.findByReference(reference);
+        Lease lease = leases.findLeaseByReference(reference);
         if (lease == null) {
             lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         }
@@ -284,14 +284,14 @@ public class Api extends AbstractFactoryAndRepository {
     public void putLeaseLink(@Named("leaseReference") String leaseReference, @Named("previousLeaseReference") String previousLeaseReference) {
         Lease lease = null;
         if (leaseReference != null) {
-            lease = leases.findByReference(leaseReference);
+            lease = leases.findLeaseByReference(leaseReference);
             if (lease == null) {
                 throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
             }
         }
         Lease previousLease = null;
         if (previousLeaseReference != null) {
-            previousLease = leases.findByReference(previousLeaseReference);
+            previousLease = leases.findLeaseByReference(previousLeaseReference);
             if (previousLease == null) {
                 throw new ApplicationException(String.format("Previous lease with reference %s not found.", previousLeaseReference));
             }
@@ -302,7 +302,7 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseUnit(@Named("leaseReference") String leaseReference, @Named("unitReference") @Optional String unitReference, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
             @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate, @Named("brand") @Optional String brand, @Named("sector") @Optional String sector, @Named("activity") @Optional String activity) {
-        Lease lease = leases.findByReference(leaseReference);
+        Lease lease = leases.findLeaseByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
         }
@@ -327,7 +327,7 @@ public class Api extends AbstractFactoryAndRepository {
     public void putLeaseItem(@Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("type") @Optional String type, @Named("sequence") BigInteger sequence,
             @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("chargeReference") @Optional String chargeReference, @Named("nextDueDate") @Optional LocalDate nextDueDate, @Named("invoicingFrequency") @Optional String invoicingFrequency,
             @Named("paymentMethod") @Optional String paymentMethod) {
-        Lease lease = leases.findByReference(leaseReference);
+        Lease lease = leases.findLeaseByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
         }
@@ -375,7 +375,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
-            Index index = indices.findByReference(indexReference);
+            Index index = indices.findIndexByReference(indexReference);
             LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
             term.setIndex(index);
             term.setFrequency(indexationFreq);
@@ -424,7 +424,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private LeaseTerm putLeaseTerm(String leaseReference, String unitReference, BigInteger itemSequence, String itemType, LocalDate itemStartDate, LocalDate startDate, LocalDate endDate, BigInteger sequence, String status) {
-        Lease lease = leases.findByReference(leaseReference);
+        Lease lease = leases.findLeaseByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));
         }

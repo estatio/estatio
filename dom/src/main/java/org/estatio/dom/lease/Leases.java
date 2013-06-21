@@ -74,7 +74,7 @@ public class Leases extends EstatioDomainService<Lease> {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public Lease findByReference(@Named("Reference") String reference) {
+    public Lease findLeaseByReference(@Named("Reference") String reference) {
         return firstMatch("findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
@@ -84,15 +84,15 @@ public class Leases extends EstatioDomainService<Lease> {
         return allMatches("findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
-
-    // //////////////////////////////////////
-
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findLeases(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
+    public List<Lease> findLeasesByAsset(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
+    public List<FixedAsset> autoComplete0FindLeasesByAsset(final String searchPhrase) {
+        return fixedAssets.search(searchPhrase);
+    }
 
     // //////////////////////////////////////
 
@@ -113,12 +113,9 @@ public class Leases extends EstatioDomainService<Lease> {
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
-        return invoices.findItems(leaseReference, startDate, dueDate);
+        return invoices.findInvoiceItemsByLease(leaseReference, startDate, dueDate);
     }
 
-    public List<FixedAsset> autoComplete0FindLeases(final String searchPhrase) {
-        return fixedAssets.search(searchPhrase);
-    }
 
 
 

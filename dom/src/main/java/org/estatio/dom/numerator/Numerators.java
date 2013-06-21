@@ -29,7 +29,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Other", sequence = "numerators.1")
     public Numerator find(final @Named("Numerator Type") NumeratorType type) {
         return firstMatch("numerator_find", "type", type);
     }
@@ -39,7 +39,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
 
     // TODO: this is actually idempotent?
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(name="Other", sequence = "numerators.2")
     public Numerator establish(NumeratorType type) {
         Numerator numerator = find(type);
         return numerator == null ? create(type) : numerator;
@@ -48,7 +48,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Other", sequence = "numerators.3")
     public List<Numerator> allNumerators() {
         return allInstances();
     }

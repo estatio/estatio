@@ -4,6 +4,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import org.hamcrest.core.Is;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -23,19 +35,8 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResu
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRates;
 import org.estatio.services.appsettings.EstatioSettingsService;
-import org.hamcrest.core.Is;
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 public class InvoiceCalculationServiceTest {
     private static LocalDate START_DATE = new LocalDate(2011, 11, 1);
@@ -52,7 +53,7 @@ public class InvoiceCalculationServiceTest {
     private AgreementRoleType artTenant;
 
     @Mock
-    private Taxes mockTaxes;
+    private TaxRates mockTaxRates;
 
     @Mock
     private InvoicesForLease mockInvoices;
@@ -301,7 +302,7 @@ public class InvoiceCalculationServiceTest {
         lt.modifyLeaseItem(li);
         li.getTerms().add(lt);
 
-        tax.injectTaxes(mockTaxes);
+        tax.injectTaxRates(mockTaxRates);
         final InvoiceItemForLease ii = new InvoiceItemForLease();
         ii.injectInvoices(mockInvoices);
         ii.injectAgreementRoleTypes(mockAgreementRoleTypes);
@@ -311,7 +312,7 @@ public class InvoiceCalculationServiceTest {
             {
                 oneOf(mockInvoices).newInvoiceItem();
                 will(returnValue(ii));
-                oneOf(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
+                oneOf(mockTaxRates).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(taxRate));
                 exactly(2).of(mockAgreementRoles).findAgreementRoleWithType(with(any(Agreement.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
                 will(returnValue(new AgreementRole()));

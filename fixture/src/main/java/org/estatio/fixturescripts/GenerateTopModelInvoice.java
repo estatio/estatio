@@ -15,7 +15,7 @@ public class GenerateTopModelInvoice implements Callable<Object> {
     
     @Override
     public Object call() throws Exception {
-        final Lease lease = leases.findByReference("OXF-TOPMODEL-001");
+        final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
         lease.verify();
 
         final SortedSet<LeaseItem> items = lease.getItems();

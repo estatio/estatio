@@ -26,7 +26,7 @@ public class Units extends EstatioDomainService<Unit> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Assets", sequence = "1")
     public Unit newUnit(final @Named("Reference") String reference, final @Named("Name") String name) {
         return newUnit(reference, name, UnitType.BOUTIQUE);
     }
@@ -45,7 +45,7 @@ public class Units extends EstatioDomainService<Unit> {
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Assets", sequence = "2")
     public List<Unit> findUnitsByReference(final @Named("Reference") String reference) {
         // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
         return (List)allMatches(queryForFindUnitsForLeaseByReference(reference));
@@ -73,7 +73,7 @@ public class Units extends EstatioDomainService<Unit> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Assets", sequence = "99")
     public List<Unit> allUnits() {
         return allInstances();
     }

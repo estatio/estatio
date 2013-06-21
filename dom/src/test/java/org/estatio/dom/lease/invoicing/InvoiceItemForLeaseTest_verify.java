@@ -18,7 +18,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
-import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.tax.TaxRates;
 
 public class InvoiceItemForLeaseTest_verify {
 
@@ -28,7 +28,7 @@ public class InvoiceItemForLeaseTest_verify {
     private InvoiceItemForLease item;
 
     @Mock
-    Taxes mockTaxes;
+    TaxRates mockTaxRates;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -37,7 +37,7 @@ public class InvoiceItemForLeaseTest_verify {
     public void setup() {
         charge = new Charge();
         tax = new Tax();
-        tax.injectTaxes(mockTaxes);
+        tax.injectTaxRates(mockTaxRates);
         
         rate = new TaxRate();
         rate.setPercentage(BigDecimal.valueOf(21));
@@ -56,7 +56,7 @@ public class InvoiceItemForLeaseTest_verify {
     public void happyCase() {
         context.checking(new Expectations() {
             {
-                allowing(mockTaxes).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
+                allowing(mockTaxRates).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(rate));
             }
         });

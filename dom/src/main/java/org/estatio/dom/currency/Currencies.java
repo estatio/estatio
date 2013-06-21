@@ -20,7 +20,7 @@ public class Currencies extends EstatioDomainService<Currency> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Other", sequence = "currencies.1")
     public Currency newCurrency(@Named("reference") String reference) {
         final Currency currency = newTransientInstance();
         currency.setReference(reference);
@@ -31,7 +31,7 @@ public class Currencies extends EstatioDomainService<Currency> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Other", sequence = "currencies.2")
     public Currency findCurrencyByReference(@Named("reference") final String reference) {
         String rexeg = StringUtils.wildcardToRegex(reference);
         return firstMatch("currency_findCurrencyByReference", "r", rexeg);
@@ -41,7 +41,7 @@ public class Currencies extends EstatioDomainService<Currency> {
     
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Other", sequence = "currencies.99")
     public List<Currency> allCurrencies() {
         return allInstances();
     }

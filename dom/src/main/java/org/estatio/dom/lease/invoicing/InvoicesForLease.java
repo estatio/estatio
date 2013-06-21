@@ -7,6 +7,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.query.QueryDefault;
 
@@ -54,7 +55,8 @@ public class InvoicesForLease extends Invoices {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    public List<InvoiceItemForLease> findItems(String leaseReference, LocalDate startDate, LocalDate dueDate) {
+    @MemberOrder(sequence="2")
+    public List<InvoiceItemForLease> findInvoiceItemsByLease(String leaseReference, LocalDate startDate, LocalDate dueDate) {
         return allMatches(queryForFindItems(StringUtils.wildcardToRegex(leaseReference), startDate, dueDate));
     }
 

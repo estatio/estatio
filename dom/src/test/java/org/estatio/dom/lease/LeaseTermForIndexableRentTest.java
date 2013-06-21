@@ -20,6 +20,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
+import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.services.clock.ClockService;
 
@@ -45,7 +46,7 @@ public class LeaseTermForIndexableRentTest {
     LeaseTerms mockLeaseTerms;
 
     @Mock
-    Indices mockIndices;
+    IndexValues mockIndexValues;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -55,7 +56,7 @@ public class LeaseTermForIndexableRentTest {
 
         i = new Index();
 
-        i.injectIndices(mockIndices);
+        i.injectIndexValues(mockIndexValues);
 
         ib1 = new IndexBase();
         ib1.setStartDate(new LocalDate(2000, 1, 1));
@@ -113,9 +114,9 @@ public class LeaseTermForIndexableRentTest {
     public void update_ok() {
         context.checking(new Expectations() {
             {
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
+                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
                 will(returnValue(iv1));
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
+                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
                 will(returnValue(iv2));
             }
         });
@@ -127,9 +128,9 @@ public class LeaseTermForIndexableRentTest {
     public void update_whenEmptyIndex_ok() {
         context.checking(new Expectations() {
             {
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
+                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
                 will(returnValue(iv1));
-                allowing(mockIndices).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
+                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
                 will(returnValue(iv2));
             }
         });

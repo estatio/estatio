@@ -5,21 +5,14 @@ import java.math.BigDecimal;
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
+import org.estatio.dom.index.IndexBases;
+import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.joda.time.LocalDate;
 
 
 public class IndexFixture extends AbstractFixture {
 
-    private Indices indices;
-
-    public Indices getIndices() {
-        return indices;
-    }
-
-    public void setIndices(Indices indices) {
-        this.indices = indices;
-    }
 
     @Override
     public void install() {
@@ -64,14 +57,44 @@ public class IndexFixture extends AbstractFixture {
     }
 
     private IndexBase createIndexBase(Index index, IndexBase previousBase, int year, double factor) {
-        return indices.newIndexBase(index, previousBase, new LocalDate(year, 1, 1), BigDecimal.valueOf(factor));
+        return indexBases.newIndexBase(index, previousBase, new LocalDate(year, 1, 1), BigDecimal.valueOf(factor));
     }
 
     private void createIndexValues(IndexBase indexBase, int year, double[] values, double average) {
         int i = 0;
         for (double value : values) {
-            indices.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), BigDecimal.valueOf(value));
+            indexValues.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), BigDecimal.valueOf(value));
             i++;
         }
     }
+    
+    // //////////////////////////////////////
+
+    private Indices indices;
+
+    public Indices getIndices() {
+        return indices;
+    }
+    public void injectIndices(Indices indices) {
+        this.indices = indices;
+    }
+
+    private IndexBases indexBases;
+
+    public void injectIndexBase(final IndexBases indexBases) {
+        this.indexBases = indexBases;
+    }
+
+    private IndexValues indexValues;
+
+    public void injectIndexValues(final IndexValues indexValues) {
+        this.indexValues = indexValues;
+    }
+
+
+
+
+    
+
+
 }

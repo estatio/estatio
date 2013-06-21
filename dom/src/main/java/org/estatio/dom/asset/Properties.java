@@ -22,7 +22,7 @@ public class Properties extends EstatioDomainService<Property> {
 
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Assets", sequence = "1")
     public Property newProperty(final @Named("Reference") String reference, final @Named("Name") String name) {
         return newProperty(reference, name, PropertyType.MIXED);
     }
@@ -40,7 +40,7 @@ public class Properties extends EstatioDomainService<Property> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Assets", sequence = "2")
     public List<Property> findPropertiesByReference(final @Named("Reference") String reference) {
         return allMatches("properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
     }
@@ -61,7 +61,7 @@ public class Properties extends EstatioDomainService<Property> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Assets", sequence = "99")
     public List<Property> allProperties() {
         return allInstances();
     }

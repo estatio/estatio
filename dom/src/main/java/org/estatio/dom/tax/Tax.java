@@ -71,14 +71,14 @@ public class Tax extends EstatioRefDataObject<Tax> implements ComparableByRefere
     // //////////////////////////////////////
 
     public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
-        return taxes.newRate(this, startDate, percentage);
+        return taxRates.newRate(this, startDate, percentage);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public TaxRate taxRateFor(LocalDate date) {
-        TaxRate rate = taxes.findTaxRateForDate(this, date);
+        TaxRate rate = taxRates.findTaxRateForDate(this, date);
         return rate;
     }
 
@@ -96,10 +96,10 @@ public class Tax extends EstatioRefDataObject<Tax> implements ComparableByRefere
     // //////////////////////////////////////
 
 
-    private Taxes taxes;
+    private TaxRates taxRates;
 
-    public void injectTaxes(Taxes taxes) {
-        this.taxes = taxes;
+    public void injectTaxRates(TaxRates taxRates) {
+        this.taxRates = taxRates;
     }
 
 }

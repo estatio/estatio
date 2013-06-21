@@ -24,7 +24,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 public class TaxTest {
 
     @Mock
-    Taxes taxMock;
+    TaxRates mockTaxRates;
 
     @Mock
     private DomainObjectContainer mockContainer;
@@ -94,9 +94,9 @@ public class TaxTest {
 
         context.checking(new Expectations() {
             {
-                oneOf(taxMock).findTaxRateForDate(with(equal(tax)), with(equal(d1)));
+                oneOf(mockTaxRates).findTaxRateForDate(with(equal(tax)), with(equal(d1)));
                 will(returnValue(r1));
-                oneOf(taxMock).findTaxRateForDate(with(equal(tax)), with(equal(d2)));
+                oneOf(mockTaxRates).findTaxRateForDate(with(equal(tax)), with(equal(d2)));
                 will(returnValue(r2));
             }
         });

@@ -59,7 +59,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t03_putLeaseWorks() throws Exception {
         api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", null, START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
-        Lease lease = leases.findByReference("APILEASE");
+        Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
         // Assert.assertThat(lease.getRoles().first().getType(), Is.is();
@@ -68,7 +68,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t04_putLeaseUnitWorks() throws Exception {
         api.putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "ABIBRAND", "APISECTOR", "APIACTIVITY");
-        Lease l = leases.findByReference("APILEASE");
+        Lease l = leases.findLeaseByReference("APILEASE");
         Unit u = units.findUnitByReference("APIUNIT");
         Assert.assertNotNull(leaseUnits.find(l, u, START_DATE));
         Assert.assertNotNull(leaseUnits.find(l, u, START_DATE));
@@ -78,7 +78,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t04_putLeaseItemWorks() throws Exception {
         api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", "RENT", BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGE", null, "QUARTERLY_IN_ADVANCE", "DIRECT_DEBIT");
-        Assert.assertThat(leases.findByReference("APILEASE").getItems().size(), Is.is(1));
+        Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
                 null, null, null, null, null, null, null, null, null);
         api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null,
                 "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
-        Lease lease = leases.findByReference("APILEASE");
+        Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
     }
 

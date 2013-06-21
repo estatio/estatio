@@ -42,6 +42,8 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.States;
+import org.estatio.dom.index.IndexBases;
+import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
@@ -53,6 +55,7 @@ import org.estatio.dom.lease.invoicing.InvoicesForLease;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.tag.Tags;
+import org.estatio.dom.tax.TaxRates;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.services.appsettings.EstatioSettingsService;
@@ -228,8 +231,8 @@ public abstract class AbstractEstatioIntegrationTest {
             withServices(
                     new RegisterEntities(), 
                     new WrapperFactoryDefault(), 
-                    new Countries(), new States(), new Currencies(), new Indices(), new FixedAssets(), new Properties(), new FixedAssetRoles(), new Units(), new Parties(), new Agreements(), new AgreementTypes(),
-                    new AgreementRoleTypes(), new AgreementRoles(), new Leases(), new LeaseTerms(), new LeaseItems(), new LeaseUnits(), new InvoicesForLease(), new CommunicationChannels(), new Taxes(), new Tags(), new EstatioBookmarkService(), new Charges(),
+                    new Countries(), new States(), new Currencies(), new Indices(), new IndexBases(), new IndexValues(), new FixedAssets(), new Properties(), new FixedAssetRoles(), new Units(), new Parties(), new Agreements(), new AgreementTypes(),
+                    new AgreementRoleTypes(), new AgreementRoles(), new Leases(), new LeaseTerms(), new LeaseItems(), new LeaseUnits(), new InvoicesForLease(), new CommunicationChannels(), new Taxes(), new TaxRates(), new Tags(), new EstatioBookmarkService(), new Charges(),
                     new ChargeGroups(), new FinancialAccounts(), new Numerators(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
                     new LeaseTermContributedActions());
         }

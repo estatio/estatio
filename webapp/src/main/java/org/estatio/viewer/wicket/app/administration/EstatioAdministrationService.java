@@ -119,6 +119,4 @@ public class EstatioAdministrationService {
         this.applicationSettingsService = applicationSettingsService;
     }
 
-    // }}
-
 }

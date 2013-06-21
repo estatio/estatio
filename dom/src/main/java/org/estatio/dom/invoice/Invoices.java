@@ -30,14 +30,14 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "98")
     public List<Invoice> allInvoices() {
         return allInstances();
     }
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "99")
     public List<InvoiceItem> allInvoiceItems() {
         return allInstances(InvoiceItem.class);
     }

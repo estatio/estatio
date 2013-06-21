@@ -68,7 +68,7 @@ public class LeasesFixture extends AbstractFixture {
         lu.setActivity("OTHER");
         lu.setSector("OTHER");
         
-        if (leases.findByReference(reference) == null) {
+        if (leases.findLeaseByReference(reference) == null) {
             throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
         return lease;
@@ -106,7 +106,7 @@ public class LeasesFixture extends AbstractFixture {
         leaseTerm.setNextIndexStartDate(nextIndexDate);
         leaseTerm.setEffectiveDate(indexationApplicationDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
-        leaseTerm.setIndex(indices.findByReference("ISTAT-FOI"));
+        leaseTerm.setIndex(indices.findIndexByReference("ISTAT-FOI"));
         leaseTerm.setSequence(sequence);
         return leaseTerm;
     }

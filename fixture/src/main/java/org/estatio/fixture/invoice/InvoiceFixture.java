@@ -35,7 +35,7 @@ public class InvoiceFixture extends AbstractFixture {
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
         
-        final Lease lease = leases.findByReference(LEASE);
+        final Lease lease = leases.findLeaseByReference(LEASE);
         invoice.setProvenance(lease);
         invoice.setDueDate(START_DATE);
         invoice.setInvoiceDate(START_DATE);

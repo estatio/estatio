@@ -50,6 +50,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Leases", sequence="20")
     public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
         return allMatches("leaseTerm_findLeaseTermsWithStatus", "status", LeaseTermStatus.NEW, "date", date);
     }
@@ -70,7 +71,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence="99")
+    @MemberOrder(name="Leases", sequence="99")
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances();
     }

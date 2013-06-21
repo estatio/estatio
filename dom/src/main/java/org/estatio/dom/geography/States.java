@@ -21,7 +21,7 @@ public class States extends EstatioDomainService<State> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Other", sequence = "geography.states.1")
     public State newState(final @Named("Reference") String reference, final @Named("Name") String name, final Country country) {
         final State state = newTransientInstance();
         state.setReference(reference);
@@ -34,7 +34,7 @@ public class States extends EstatioDomainService<State> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Other", sequence = "geography.states.2")
     public State findByReference(final @Named("Reference") String reference) {
         final Geography firstMatch = firstMatch(new QueryDefault<Geography>(Geography.class, "findByReference", "reference", reference));
         if (firstMatch instanceof State) {
@@ -45,7 +45,7 @@ public class States extends EstatioDomainService<State> {
     }
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "3")
+    @MemberOrder(name="Other", sequence = "geography.states.3")
     public List<State> findByCountry(final Country country) {
         return allMatches(new QueryDefault<State>(State.class, "findByCountry", "country", country));
     }
@@ -54,7 +54,7 @@ public class States extends EstatioDomainService<State> {
 
     @ActionSemantics(Of.SAFE)
     @Prototype
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Other", sequence = "geography.states.99")
     public List<State> allStates() {
         return allInstances();
     }

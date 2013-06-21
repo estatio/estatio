@@ -32,7 +32,7 @@ public class IndexTest {
     private IndexValue iv2;
 
     @Mock
-    Indices mockIndices;
+    IndexValues mockIndexValues;
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -42,7 +42,7 @@ public class IndexTest {
         baseDate = new LocalDate(2001, 1, 1);
         nextDate = new LocalDate(2011, 1, 1);
         index = new Index();
-        index.injectIndices(mockIndices);
+        index.injectIndexValues(mockIndexValues);
 
         ib1990 = new IndexBase();
         ib1990.setStartDate(new LocalDate(1990, 1, 1));
@@ -80,9 +80,9 @@ public class IndexTest {
     public void testGetIndexValueForDate() {
         context.checking(new Expectations() {
             {
-                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
                 will(returnValue(iv1));
-                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -99,7 +99,7 @@ public class IndexTest {
     public void testGetRebaseFactor() {
         context.checking(new Expectations() {
             {
-                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -110,7 +110,7 @@ public class IndexTest {
     public void testGetRebaseFactorWithNull() {
         context.checking(new Expectations() {
             {
-                oneOf(mockIndices).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(null));
             }
         });

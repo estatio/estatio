@@ -37,7 +37,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Before
     public void setup() {
-        leaseTopModel = leases.findByReference("OXF-TOPMODEL-001");
+        leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
     }
 
     @Test
@@ -73,7 +73,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t05_leaseCanBeFound() throws Exception {
-        Assert.assertEquals("OXF-TOPMODEL-001", leases.findByReference("OXF-TOPMODEL-001").getReference());
+        Assert.assertEquals("OXF-TOPMODEL-001", leases.findLeaseByReference("OXF-TOPMODEL-001").getReference());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t12_leaseVerifiesWell() throws Exception {
-        Lease leaseMediax = leases.findByReference("OXF-MEDIAX-002");
+        Lease leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
         leaseMediax.verify();
         LeaseItem item = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2008, 1, 1), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2008, 1, 1)));
@@ -150,7 +150,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t12b_thereAreTwoLeaseTems() throws Exception {
-        Lease leaseMediax = leases.findByReference("OXF-POISON-003");
+        Lease leaseMediax = leases.findLeaseByReference("OXF-POISON-003");
         LeaseItem item = leaseMediax.findItem(LeaseItemType.RENT, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
         assertThat(item.getTerms().size(), is(4));
         assertNotNull(item.findTerm(new LocalDate(2011, 1, 1)));
@@ -159,7 +159,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t12b_leaseVerifiesWell() throws Exception {
-        Lease leasePoison = leases.findByReference("OXF-POISON-003");
+        Lease leasePoison = leases.findLeaseByReference("OXF-POISON-003");
         leasePoison.verify();
         LeaseItem item = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2011, 1, 1)));
