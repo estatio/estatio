@@ -14,8 +14,8 @@ public class Util {
     private static final Function<String, String> TRIM = new Function<String,String>() {
 
         @Override
-        public String apply(String arg0) {
-            return arg0.trim();
+        public String apply(String str) {
+            return str!=null?str.trim():null;
         }
     };
 

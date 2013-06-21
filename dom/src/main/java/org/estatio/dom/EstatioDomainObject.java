@@ -5,6 +5,14 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> extends AbstractDomainObject implements Comparable<T> {
 
+    private static ObjectContracts estatioObjectContracts = 
+            new ObjectContracts()
+                .with(WithCodeGetter.ToString.evaluator())
+                .with(WithDescriptionGetter.ToString.evaluator())
+                .with(WithNameGetter.ToString.evaluator())
+                .with(WithReferenceGetter.ToString.evaluator())
+                .with(WithTitleGetter.ToString.evaluator());
+
     private final String keyProperties;
 
     public EstatioDomainObject(String keyProperties) {
@@ -19,7 +27,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
 
     @Override
     public String toString() {
-        return ObjectContracts.toString(this, keyProperties());
+        return estatioObjectContracts.toStringOf(this, keyProperties());
     }
 
     @Override

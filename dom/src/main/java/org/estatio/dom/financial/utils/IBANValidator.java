@@ -39,9 +39,9 @@ public class IBANValidator {
             return false;
         }
 		
-	    @SuppressWarnings({"unused"})
+	    @SuppressWarnings({"unused"}) // findbugs still flags this unused reference...
 	    String countryCode = iban.substring(0, 2);
-		//TODO validate country
+		//TODO validate country; 
 	    
 		int checksum = checksum(iban);
 		return (checksum == 1);

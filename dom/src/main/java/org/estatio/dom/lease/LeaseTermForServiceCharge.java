@@ -74,7 +74,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     }
 
     public String disableApprove() {
-        return getStatus().equals(LeaseItemStatus.APPROVED) ? "Already approved" : null;
+        return getStatus().equals(LeaseTermStatus.APPROVED) ? "Already approved" : null;
     }
 
     // //////////////////////////////////////

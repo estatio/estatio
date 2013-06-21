@@ -139,6 +139,10 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
         public int compare(InvoiceItemForLease p, InvoiceItemForLease q) {
+            // unnecessary, but keeps findbugs happy...
+            if(p == null && q == null) return 0;
+            if(p == null) return -1;
+            if(q == null) return +1;
             return Ordering.natural().nullsFirst().compare(p.getLeaseTerm(), q.getLeaseTerm());
         }
     };

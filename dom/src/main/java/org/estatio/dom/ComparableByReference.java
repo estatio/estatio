@@ -16,20 +16,8 @@
  */
 package org.estatio.dom;
 
-import com.google.common.collect.Ordering;
 
 
 public interface ComparableByReference<T extends ComparableByReference<T>> extends Comparable<T>, WithReferenceGetter {
-    
     void setReference(String reference);
-
-    abstract String toString();
-
-    public static Ordering<ComparableByReference<?>> ORDERING_BY_REFERENCE = new Ordering<ComparableByReference<?>>() {
-        public int compare(ComparableByReference<?> p, ComparableByReference<?> q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getReference(), q.getReference());
-        }
-    };
-
-
 }

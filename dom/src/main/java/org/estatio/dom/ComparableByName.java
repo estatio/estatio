@@ -16,21 +16,9 @@
  */
 package org.estatio.dom;
 
-import com.google.common.collect.Ordering;
 
 
 public interface ComparableByName<T extends ComparableByName<T>> extends Comparable<T>, WithNameGetter {
     
     void setName(String name);
-    
-    abstract String toString();
-    
-    public static Ordering<ComparableByName<?>> ORDERING_BY_NAME = new Ordering<ComparableByName<?>>() {
-        public int compare(ComparableByName<?> p, ComparableByName<?> q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getName(), q.getName());
-        }
-    };
-
-
-
 }

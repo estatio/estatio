@@ -4,10 +4,10 @@ public final class LeaseConstants {
 
     private LeaseConstants() {}
     
-    public static final String AT_LEASE = "Lease";
+    public final static String AT_LEASE = "Lease";
     
-    public static String ART_LANDLORD = "Landlord"; 
-    public static String ART_TENANT = "Tenant";
-    public static String ART_MANAGER = "Manager";
+    public final static String ART_LANDLORD = "Landlord"; 
+    public final static String ART_TENANT = "Tenant";
+    public final static String ART_MANAGER = "Manager";
     
 }

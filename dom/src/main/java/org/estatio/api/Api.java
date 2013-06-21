@@ -228,7 +228,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         FixedAssetRole actor = propertyActors.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
         if (actor == null) {
-            actor = propertyActors.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
+            propertyActors.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
         }
     }
 
@@ -436,7 +436,7 @@ public class Api extends AbstractFactoryAndRepository {
             }
         }
         LeaseItemType leaseItemType = LeaseItemType.valueOf(itemType);
-        if (itemType == null) {
+        if (leaseItemType == null) {
             throw new ApplicationException(String.format("Type with reference %s not found.", itemType));
         }
         LeaseItem item = lease.findItem(leaseItemType, itemStartDate, itemSequence);

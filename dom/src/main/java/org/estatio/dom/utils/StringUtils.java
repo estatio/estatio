@@ -13,14 +13,14 @@ public class StringUtils {
     private static Function<String, String> LOWER_CASE_THEN_CAPITALIZE = new Function<String, String>() {
         @Override
         public String apply(String input) {
-            return StringUtils.capitalize(input.toLowerCase());
+            return input != null? StringUtils.capitalize(input.toLowerCase()): null;
         }
     };
 
     private static Function<String, String> UPPER_CASE = new Function<String, String>() {
         @Override
         public String apply(String input) {
-            return input.toUpperCase();
+            return input != null? input.toUpperCase(): null;
         }
     };
 

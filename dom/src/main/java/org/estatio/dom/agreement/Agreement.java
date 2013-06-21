@@ -95,7 +95,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     private static Function<AgreementRole, Party> partyOfAgreementRole() {
         return new Function<AgreementRole, Party>() {
             public Party apply(AgreementRole agreementRole) {
-                return agreementRole.getParty();
+                return agreementRole != null? agreementRole.getParty(): null;
             }
         };
     }
@@ -103,7 +103,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType art) {
         return new Predicate<AgreementRole>() {
             public boolean apply(AgreementRole candidate) {
-                return candidate.getType() == art && candidate.isCurrent();
+                return candidate != null? candidate.getType() == art && candidate.isCurrent(): false;
             }
         };
     }

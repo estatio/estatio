@@ -26,7 +26,7 @@ public class IBANHelper {
     private String accountNumber;
     private String branchCode;
     private String countryCode;
-    private Boolean isValid = false;
+    private Boolean valid = false;
 
     public IBANHelper(String iban, String format) {
         this.format = format;
@@ -40,7 +40,7 @@ public class IBANHelper {
     }
 
     public boolean isValid() {
-        return isValid();
+        return valid;
     }
 
     private void initialize() {
@@ -50,19 +50,21 @@ public class IBANHelper {
                 countryCode = iban.substring(0, 2);
                 format = IBANFormat.valueOf(countryCode).format();
             }
+            // TODO: findbugs flags an issue here...
+            // what if iban.length() < 2 and format == null; will get NPE
             format = format.replaceAll("\\s", "");
             if (format.length() == iban.length()) {
                 nationalBankCode = partWithCharacter("a");
                 nationalCheckCode = partWithCharacter("x");
                 branchCode = partWithCharacter("b");
                 accountNumber = partWithCharacter("c");
-                isValid = true;
+                valid = true;
             }
         }
     }
 
     public void update(BankAccount account) {
-        if (this.isValid) {
+        if (valid) {
             account.setAccountNumber(accountNumber);
             account.setBranchCode(branchCode);
             account.setNationalBankCode(nationalBankCode);

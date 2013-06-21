@@ -69,7 +69,7 @@ public class LeasesFixture extends AbstractFixture {
         lu.setSector("OTHER");
         
         if (leases.findByReference(reference) == null) {
-            new RuntimeException();
+            throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
         return lease;
     }

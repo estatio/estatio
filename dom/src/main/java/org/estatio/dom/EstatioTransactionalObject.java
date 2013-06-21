@@ -23,9 +23,6 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         super(keyProperties);
     }
 
-    /**
-     * For unit testing purposes only (is called reflectively).
-     */
     private String id;
     
     @Hidden
@@ -35,6 +32,16 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         }
         final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
         return id;
+    }
+
+    /**
+     * For unit testing purposes only (is called reflectively).
+     * 
+     * <p>
+     * We provide a default visibility setter to keep findbugs happy...
+     */
+    void setId(String id) {
+        this.id = id;
     }
 
     // //////////////////////////////////////

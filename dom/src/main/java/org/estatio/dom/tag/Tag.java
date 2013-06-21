@@ -33,7 +33,7 @@ public class Tag extends EstatioRefDataObject<Tag> {
 
     public static final Function<Tag, String> GET_VALUE = new Function<Tag, String>() {
         public String apply(Tag tag) {
-            return tag.getValue();
+            return tag != null? tag.getValue(): null;
         }
     };
     

@@ -16,19 +16,8 @@
  */
 package org.estatio.dom;
 
-import com.google.common.collect.Ordering;
 
 
 public interface ComparableByCode<T extends ComparableByCode<T>> extends Comparable<T>, WithCodeGetter {
-    
     void setCode(String code);
-    
-    abstract String toString();
-
-    public static Ordering<ComparableByCode<?>> ORDERING_BY_CODE = new Ordering<ComparableByCode<?>>() {
-        public int compare(ComparableByCode<?> p, ComparableByCode<?> q) {
-            return Ordering.<String> natural().nullsFirst().compare(p.getCode(), q.getCode());
-        }
-    };
-
 }

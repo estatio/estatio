@@ -29,29 +29,29 @@ public class InvoiceFixture extends AbstractFixture {
     }
 
     private void createInvoices() {
-        Invoice invoice = invoices.newInvoice();
+        final Invoice invoice = invoices.newInvoice();
         invoice.setBuyer(parties.findPartyByReference(BUYER_PARTY));
         invoice.setSeller(parties.findPartyByReference(SELLER_PARTY));
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
-        Lease lease = leases.findByReference(LEASE);
+        
+        final Lease lease = leases.findByReference(LEASE);
         invoice.setProvenance(lease);
         invoice.setDueDate(START_DATE);
         invoice.setInvoiceDate(START_DATE);
 
-        int count = 0;
-        SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
-        int size = terms.size();
-        for (LeaseTerm term : terms) {
+        final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
+        for (final LeaseTerm term : terms) {
             InvoiceItemForLease item = invoices.newInvoiceItem();
             item.modifyInvoice(invoice);
             item.setDueDate(START_DATE);
             item.setStartDate(START_DATE);
             item.modifyLeaseTerm(term);
             item.setSequence(invoice.nextItemSequence());
-            count++;
         }
     }
+
+    // //////////////////////////////////////
 
     private Parties parties;
 
