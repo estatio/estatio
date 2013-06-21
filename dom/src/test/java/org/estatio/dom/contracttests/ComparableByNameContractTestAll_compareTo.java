@@ -1,7 +1,9 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.estatio.dom.ComparableByName;
+import org.estatio.dom.ComparableByNameContractTestAbstract_compareTo;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.party.Party;

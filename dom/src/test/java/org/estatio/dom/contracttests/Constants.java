@@ -1,4 +1,4 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 public final class Constants {
 

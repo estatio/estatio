@@ -1,9 +1,12 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import java.util.Set;
 
 import org.junit.Test;
 import org.reflections.Reflections;
+
+import org.estatio.dom.TitledEnum;
+import org.estatio.dom.TitledEnumContractTester;
 
 
 /**

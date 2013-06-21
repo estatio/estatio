@@ -164,6 +164,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     @Bulk
     @Prototype
+    @MemberOrder(sequence = "1")
     public Lease approveAllTermsOfThisLease() {
         for (LeaseItem item : getItems()) {
             for (LeaseTerm term : item.getTerms()) {
@@ -176,6 +177,7 @@ public class Lease extends Agreement implements InvoiceSource {
     // //////////////////////////////////////
 
     @Bulk
+    @MemberOrder(sequence = "2")
     public Lease verify() {
         for (LeaseItem item : getItems()) {
             item.verify();
@@ -186,6 +188,7 @@ public class Lease extends Agreement implements InvoiceSource {
     // //////////////////////////////////////
     
     @Bulk
+    @MemberOrder(sequence = "3")
     public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
         // TODO: I know that bulk actions only appear whith a no-arg but why
         // not?
@@ -197,6 +200,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     // //////////////////////////////////////
     
+    @MemberOrder(sequence = "4")
     public Lease terminate(@Named("Termination Date") LocalDate terminationDate, @Named("Are you sure?") boolean confirm) {
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);

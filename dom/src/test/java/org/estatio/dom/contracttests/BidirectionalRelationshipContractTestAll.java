@@ -1,4 +1,4 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -6,6 +6,16 @@ import org.apache.isis.core.unittestsupport.bidir.BidirectionalRelationshipContr
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 import org.apache.isis.core.unittestsupport.bidir.InstantiatorSimple;
 
+import org.estatio.dom.ComparableByCode;
+import org.estatio.dom.ComparableByDescription;
+import org.estatio.dom.ComparableByName;
+import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.InstantiatorForComparableByCode;
+import org.estatio.dom.InstantiatorForComparableByDescription;
+import org.estatio.dom.InstantiatorForComparableByName;
+import org.estatio.dom.InstantiatorForComparableByReference;
+import org.estatio.dom.InstantiatorForWithStartDate;
+import org.estatio.dom.WithStartDate;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.asset.FixedAsset;

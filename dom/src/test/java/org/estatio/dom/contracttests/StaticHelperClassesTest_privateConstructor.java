@@ -1,6 +1,16 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import org.junit.Test;
+
+import org.estatio.dom.ApplicationSettingCreator;
+import org.estatio.dom.WithCodeGetter;
+import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithTitleGetter;
+import org.estatio.dom.ApplicationSettingCreator.Helper;
+import org.estatio.dom.WithNameGetter.ToString;
+import org.estatio.dom.utils.PrivateConstructorTester;
 
 public class StaticHelperClassesTest_privateConstructor {
 

@@ -1,6 +1,9 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import com.google.common.collect.ImmutableMap;
+
+import org.estatio.dom.ComparableByCode;
+import org.estatio.dom.ComparableByCodeContractTestAbstract_compareTo;
 
 
 /**

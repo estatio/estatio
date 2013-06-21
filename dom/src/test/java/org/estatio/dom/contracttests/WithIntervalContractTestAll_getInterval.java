@@ -1,7 +1,9 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import com.google.common.collect.ImmutableMap;
 
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalContractTestAbstract_getInterval;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.invoice.InvoiceItem;

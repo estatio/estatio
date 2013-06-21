@@ -27,7 +27,46 @@
               <cell name="lease" pattern="org.estatio.dom.lease.*" vexpanded="false" visibility="public" drill="false" />
             </row>
             <row>
-              <cell name="asset" pattern="org.estatio.dom.asset.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="asset" pattern="org.estatio.dom.asset.?" vexpanded="false" visibility="public" drill="false">
+                <grid>
+                  <row>
+                    <cell name="PropertyTest_findCommunicationChannelForType" pattern="org.estatio.dom.asset.PropertyTest_findCommunicationChannelForType" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="Properties" pattern="org.estatio.dom.asset.Properties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PropertyTest_beanProperties" pattern="org.estatio.dom.asset.PropertyTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="UnitTest_beanProperties" pattern="org.estatio.dom.asset.UnitTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="Property" pattern="org.estatio.dom.asset.Property" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="FixedAssetRoleTest_beanProperties" pattern="org.estatio.dom.asset.FixedAssetRoleTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="FixedAssetRoleTest_compareTo" pattern="org.estatio.dom.asset.FixedAssetRoleTest_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Units" pattern="org.estatio.dom.asset.Units" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="FixedAssetForTesting" pattern="org.estatio.dom.asset.FixedAssetForTesting" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="FixedAssets" pattern="org.estatio.dom.asset.FixedAssets" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Unit" pattern="org.estatio.dom.asset.Unit" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="FixedAsset" pattern="org.estatio.dom.asset.FixedAsset" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="FixedAssetRoles" pattern="org.estatio.dom.asset.FixedAssetRoles" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="FixedAssetRole" pattern="org.estatio.dom.asset.FixedAssetRole" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="UnitTypeTest_title" pattern="org.estatio.dom.asset.UnitTypeTest_title" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="FixedAssetRoleType" pattern="org.estatio.dom.asset.FixedAssetRoleType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PropertyType" pattern="org.estatio.dom.asset.PropertyType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="UnitType" pattern="org.estatio.dom.asset.UnitType" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                </grid>
+              </cell>
               <cell name="financial" pattern="org.estatio.dom.financial.*" vexpanded="false" visibility="public" drill="false" />
               <cell name="invoice" pattern="org.estatio.dom.invoice.?" vexpanded="false" visibility="public" drill="false" />
             </row>
@@ -47,8 +86,106 @@
               <cell name="tax" pattern="org.estatio.dom.tax.?" vexpanded="false" visibility="public" drill="false" />
             </row>
             <row>
-              <cell name="dom" pattern="org.estatio.dom.?" vexpanded="false" visibility="public" drill="false" />
-              <cell name="utils" pattern="org.estatio.dom.utils.?" vexpanded="false" visibility="public" drill="false" />
+              <cell name="dom" pattern="org.estatio.dom.?" vexpanded="false" visibility="public" drill="false">
+                <grid>
+                  <row>
+                    <cell name="ComparableByCodeContractTestAll_compareTo" pattern="org.estatio.dom.ComparableByCodeContractTestAll_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByDescriptionContractTestAll_compareTo" pattern="org.estatio.dom.ComparableByDescriptionContractTestAll_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByNameContractTestAll_compareTo" pattern="org.estatio.dom.ComparableByNameContractTestAll_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByReferenceContractTestAll_compareTo" pattern="org.estatio.dom.ComparableByReferenceContractTestAll_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByTitleContractTestAll_compareTo" pattern="org.estatio.dom.ComparableByTitleContractTestAll_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithIntervalContractTestAll_getInterval" pattern="org.estatio.dom.WithIntervalContractTestAll_getInterval" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="BidirectionalRelationshipContractTestAll" pattern="org.estatio.dom.BidirectionalRelationshipContractTestAll" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByCodeContractTestAbstract_compareTo" pattern="org.estatio.dom.ComparableByCodeContractTestAbstract_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByDescriptionContractTestAbstract_compareTo" pattern="org.estatio.dom.ComparableByDescriptionContractTestAbstract_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByNameContractTestAbstract_compareTo" pattern="org.estatio.dom.ComparableByNameContractTestAbstract_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByReferenceContractTestAbstract_compareTo" pattern="org.estatio.dom.ComparableByReferenceContractTestAbstract_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByTitleContractTestAbstract_compareTo" pattern="org.estatio.dom.ComparableByTitleContractTestAbstract_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="TitledEnumContractTestAll_title" pattern="org.estatio.dom.TitledEnumContractTestAll_title" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithIntervalContractTestAbstract_getInterval" pattern="org.estatio.dom.WithIntervalContractTestAbstract_getInterval" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AbstractBeanPropertiesTest" pattern="org.estatio.dom.AbstractBeanPropertiesTest" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ApplicationSettingKeyCreatorTest_create" pattern="org.estatio.dom.ApplicationSettingKeyCreatorTest_create" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ApplicationSettingKeyCreatorTestEach_create" pattern="org.estatio.dom.ApplicationSettingKeyCreatorTestEach_create" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByCodeContractTester" pattern="org.estatio.dom.ComparableByCodeContractTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByDescriptionContractTester" pattern="org.estatio.dom.ComparableByDescriptionContractTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByNameContractTester" pattern="org.estatio.dom.ComparableByNameContractTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByReferenceContractTester" pattern="org.estatio.dom.ComparableByReferenceContractTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByTitleContractTester" pattern="org.estatio.dom.ComparableByTitleContractTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="EstatioDomainServiceTest_getId_and_iconName" pattern="org.estatio.dom.EstatioDomainServiceTest_getId_and_iconName" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="EstatioRefDataObject" pattern="org.estatio.dom.EstatioRefDataObject" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="EstatioTransactionalObject" pattern="org.estatio.dom.EstatioTransactionalObject" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForComparableByCode" pattern="org.estatio.dom.InstantiatorForComparableByCode" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForComparableByDescription" pattern="org.estatio.dom.InstantiatorForComparableByDescription" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForComparableByName" pattern="org.estatio.dom.InstantiatorForComparableByName" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForComparableByReference" pattern="org.estatio.dom.InstantiatorForComparableByReference" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="TitledEnumContractTester" pattern="org.estatio.dom.TitledEnumContractTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithIntervalContractTester" pattern="org.estatio.dom.WithIntervalContractTester" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="ApplicationSettingCreatorTestAbstract_create" pattern="org.estatio.dom.ApplicationSettingCreatorTestAbstract_create" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ApplicationSettingKey" pattern="org.estatio.dom.ApplicationSettingKey" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByCode" pattern="org.estatio.dom.ComparableByCode" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByDescription" pattern="org.estatio.dom.ComparableByDescription" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByName" pattern="org.estatio.dom.ComparableByName" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByReference" pattern="org.estatio.dom.ComparableByReference" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ComparableByTitle" pattern="org.estatio.dom.ComparableByTitle" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="EstatioDomainObject" pattern="org.estatio.dom.EstatioDomainObject" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="FixtureDatumFactoriesForAnyPojo" pattern="org.estatio.dom.FixtureDatumFactoriesForAnyPojo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="FixtureDatumFactoriesForApplib" pattern="org.estatio.dom.FixtureDatumFactoriesForApplib" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="FixtureDatumFactoriesForJoda" pattern="org.estatio.dom.FixtureDatumFactoriesForJoda" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForWithStartDate" pattern="org.estatio.dom.InstantiatorForWithStartDate" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="StaticHelperClassesTest_privateConstructor" pattern="org.estatio.dom.StaticHelperClassesTest_privateConstructor" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="TitledEnum" pattern="org.estatio.dom.TitledEnum" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithInterval" pattern="org.estatio.dom.WithInterval" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="ApplicationSettingCreator" pattern="org.estatio.dom.ApplicationSettingCreator" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Constants" pattern="org.estatio.dom.Constants" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="EstatioDomainService" pattern="org.estatio.dom.EstatioDomainService" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForLeaseItem" pattern="org.estatio.dom.InstantiatorForLeaseItem" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="InstantiatorForLeaseTerm" pattern="org.estatio.dom.InstantiatorForLeaseTerm" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PojoTester" pattern="org.estatio.dom.PojoTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PowerType" pattern="org.estatio.dom.PowerType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PrivateConstructorTester" pattern="org.estatio.dom.PrivateConstructorTester" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="SortedSetsContractTestAll" pattern="org.estatio.dom.SortedSetsContractTestAll" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Titled" pattern="org.estatio.dom.Titled" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithCodeGetter" pattern="org.estatio.dom.WithCodeGetter" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithDescriptionGetter" pattern="org.estatio.dom.WithDescriptionGetter" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithNameGetter" pattern="org.estatio.dom.WithNameGetter" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithReferenceGetter" pattern="org.estatio.dom.WithReferenceGetter" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithSequence" pattern="org.estatio.dom.WithSequence" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithStartDate" pattern="org.estatio.dom.WithStartDate" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="WithTitleGetter" pattern="org.estatio.dom.WithTitleGetter" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                </grid>
+              </cell>
+              <cell name="utils" pattern="org.estatio.dom.utils.?" vexpanded="false" visibility="public" drill="false">
+                <grid>
+                  <row>
+                    <cell name="CalendarUtilsTest_interval" pattern="org.estatio.dom.utils.CalendarUtilsTest_interval" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ClassUtilsTest_load" pattern="org.estatio.dom.utils.ClassUtilsTest_load" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="DateTimeUtilsTest" pattern="org.estatio.dom.utils.DateTimeUtilsTest" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="MathUtilsTest_isZeroOrNull" pattern="org.estatio.dom.utils.MathUtilsTest_isZeroOrNull" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="MathUtilsTest_round" pattern="org.estatio.dom.utils.MathUtilsTest_round" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="StringUtilsTest_constructor" pattern="org.estatio.dom.utils.StringUtilsTest_constructor" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="StringUtilsTest_enumTitle" pattern="org.estatio.dom.utils.StringUtilsTest_enumTitle" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ValueUtilsTest_coalesce" pattern="org.estatio.dom.utils.ValueUtilsTest_coalesce" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="BankAccountUtils" pattern="org.estatio.dom.utils.BankAccountUtils" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="CalendarUtils" pattern="org.estatio.dom.utils.CalendarUtils" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ClassUtils" pattern="org.estatio.dom.utils.ClassUtils" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="DateTimeUtils" pattern="org.estatio.dom.utils.DateTimeUtils" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="MathUtils" pattern="org.estatio.dom.utils.MathUtils" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="StringUtils" pattern="org.estatio.dom.utils.StringUtils" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="ValueUtils" pattern="org.estatio.dom.utils.ValueUtils" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                </grid>
+              </cell>
             </row>
           </grid>
         </cell>

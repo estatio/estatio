@@ -1,4 +1,4 @@
-package org.estatio.dom;
+package org.estatio.dom.contracttests;
 
 import org.apache.isis.core.unittestsupport.sortedsets.SortedSetsContractTestAbstract;
 
