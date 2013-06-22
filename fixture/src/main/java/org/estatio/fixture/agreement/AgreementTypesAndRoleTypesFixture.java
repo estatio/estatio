@@ -1,6 +1,7 @@
 package org.estatio.fixture.agreement;
 
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -10,7 +11,7 @@ import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 
-public class AgreementTypeFixture extends AbstractFixture {
+public class AgreementTypesAndRoleTypesFixture extends AbstractFixture {
 
     @Override
     public void install() {
@@ -23,16 +24,25 @@ public class AgreementTypeFixture extends AbstractFixture {
         getContainer().flush();
         at = agreementTypes.find(atTitle);
         for(String artTitle: artTitles) {
-            AgreementRoleType.create(artTitle, at, getContainer());
+            create(artTitle, at, getContainer());
         }
     }
-    
-    // {{ injected: AgreementTypes
+
+    private static AgreementRoleType create(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
+        final AgreementRoleType agreementRoleType = container.newTransientInstance(AgreementRoleType.class);
+        agreementRoleType.setTitle(title);
+        agreementRoleType.setAppliesTo(appliesTo);
+        container.persist(agreementRoleType);
+        return agreementRoleType;
+    }
+
+    // //////////////////////////////////////
+
     private AgreementTypes agreementTypes;
     public void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
-    // }}
+
 
 
 

@@ -91,9 +91,9 @@ public class InvoiceCalculationServiceTest {
 
         context.checking(new Expectations() {
             {
-                allowing(mockAgreementRoleTypes).find("Landlord");
+                allowing(mockAgreementRoleTypes).findByTitle("Landlord");
                 will(returnValue(artLandlord));
-                allowing(mockAgreementRoleTypes).find("Tenant");
+                allowing(mockAgreementRoleTypes).findByTitle("Tenant");
                 will(returnValue(artTenant));
             }
         });

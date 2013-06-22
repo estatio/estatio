@@ -70,8 +70,8 @@ public class InvoiceItemForLease extends InvoiceItem {
     public void attachToInvoice() {
         Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease != null) {
-            final AgreementRoleType landlord = agreementRoleTypes.find(LeaseConstants.ART_LANDLORD);
-            final AgreementRoleType tenant = agreementRoleTypes.find(LeaseConstants.ART_TENANT);
+            final AgreementRoleType landlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
+            final AgreementRoleType tenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
             AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
             Party seller = role.getParty();

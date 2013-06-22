@@ -2,15 +2,25 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+        name = "findByTitle", language = "JDOQL", 
+        value = "SELECT " +
+                "FROM org.estatio.dom.agreement.AgreementRoleType " +
+                "WHERE title == :title "),
+    @javax.jdo.annotations.Query(
+            name = "findByAgreementType", language = "JDOQL", 
+            value = "SELECT " +
+                    "FROM org.estatio.dom.agreement.AgreementRoleType " +
+            "WHERE appliesTo == :agreementType ")
+})
 @Immutable
 public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
 
@@ -51,27 +61,5 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
         return at.getApplicableTo();
     }
 
-    public static AgreementRoleType find(final String title, DomainObjectContainer container) {
-        return container.firstMatch(AgreementRoleType.class, new Filter<AgreementRoleType>() {
-
-            @Override
-            public boolean accept(AgreementRoleType t) {
-                return title.equals(t.getTitle());
-            }
-        });
-    }
-
-    // //////////////////////////////////////
-
-    /**
-     * For fixtures
-     */
-    public static AgreementRoleType create(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
-        final AgreementRoleType agreementRoleType = container.newTransientInstance(AgreementRoleType.class);
-        agreementRoleType.setTitle(title);
-        agreementRoleType.setAppliesTo(appliesTo);
-        container.persist(agreementRoleType);
-        return agreementRoleType;
-    }
 
 }

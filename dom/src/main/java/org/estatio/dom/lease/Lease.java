@@ -231,7 +231,7 @@ public class Lease extends Agreement implements InvoiceSource {
             final AgreementType bankMandateAgreementType = bankMandateAgreementType();
             final AgreementRoleType debtorRoleType = debtorRoleType();
             
-            return (List)agreements.findByTypeRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
+            return (List)agreements.findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
         }
         return Collections.emptyList();
     }
@@ -309,7 +309,7 @@ public class Lease extends Agreement implements InvoiceSource {
     }
     
     private AgreementRoleType debtorRoleType() {
-        return agreementRoleTypes.find(FinancialConstants.ART_DEBTOR);
+        return agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
     }
 
     private AgreementType bankMandateAgreementType() {

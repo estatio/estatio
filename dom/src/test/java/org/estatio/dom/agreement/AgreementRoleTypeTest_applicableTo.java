@@ -34,7 +34,7 @@ public class AgreementRoleTypeTest_applicableTo {
     public void delegatesToService() {
         context.checking(new Expectations() {
             {
-                oneOf(mockAgreementRoleTypes).applicableTo(at);
+                oneOf(mockAgreementRoleTypes).findApplicableTo(at);
             }
         }
         );

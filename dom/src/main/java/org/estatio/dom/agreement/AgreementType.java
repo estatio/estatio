@@ -80,7 +80,7 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
     @Programmatic
     @NotPersisted
     public List<AgreementRoleType> getApplicableTo() {
-        return agreementRoleTypes.applicableTo(this);
+        return agreementRoleTypes.findApplicableTo(this);
     }
 
 

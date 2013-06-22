@@ -96,10 +96,10 @@ public class AgreementTest_findParty  {
         
         context.checking(new Expectations() {
             {
-                allowing(mockAgreementRoleTypes).find("Creditor");
+                allowing(mockAgreementRoleTypes).findByTitle("Creditor");
                 will(returnValue(creditorAgreementRoleType));
                 
-                allowing(mockAgreementRoleTypes).find("Debtor");
+                allowing(mockAgreementRoleTypes).findByTitle("Debtor");
                 will(returnValue(creditorAgreementRoleType));
                 
                 allowing(mockClockService).now();

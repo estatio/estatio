@@ -21,6 +21,7 @@ public class Agreements extends EstatioDomainService<Agreement> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
+    @NotContributed
     public Agreement newAgreement(AgreementType agreementType, final String reference, final String name) {
         return agreementType.create(getContainer());
     }
@@ -29,12 +30,12 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
     @ActionSemantics(Of.SAFE)
     public Agreement findByReference(String reference) {
-        return firstMatch("lease_findLeaseByReference", "r", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "r", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public List<Agreement> findByTypeRoleTypeAndParty(AgreementType agreementType, AgreementRoleType agreementRoleType, Party party) {
+    public List<Agreement> findByAgreementTypeAndRoleTypeAndParty(AgreementType agreementType, AgreementRoleType agreementRoleType, Party party) {
         return allMatches("findByAgreementTypeAndRoleTypeAndParty", "agreementType", agreementType, "roleType", agreementRoleType, "party", party);
     }
 

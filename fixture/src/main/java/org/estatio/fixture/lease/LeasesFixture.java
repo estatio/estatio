@@ -61,7 +61,7 @@ public class LeasesFixture extends AbstractFixture {
         Party tenant = parties.findPartyByReference(tenantReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
-        lease.addRole(manager, agreementRoleTypes.find(LeaseConstants.ART_MANAGER), null, null);
+        lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);
         LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
 
         lu.setBrand(tenantReference);

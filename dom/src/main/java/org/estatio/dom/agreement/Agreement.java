@@ -37,7 +37,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-            name = "agreement_findAgreementByReference", language = "JDOQL", 
+            name = "findByReference", language = "JDOQL", 
             value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:r)"),
         @javax.jdo.annotations.Query(
             name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL", 
@@ -97,7 +97,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     // //////////////////////////////////////
 
     protected Party findParty(final String agreementRoleTypeTitle) {
-        final AgreementRoleType art = agreementRoleTypes.find(agreementRoleTypeTitle);
+        final AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleTypeTitle);
         return findParty(art);
     }
 
