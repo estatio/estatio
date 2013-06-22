@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-public class AgreementRoles_getId_and_iconName {
+public class AgreementRolesTest_getId_and_iconName {
 
     @Test
     public void getId() {

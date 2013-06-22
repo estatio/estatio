@@ -50,7 +50,7 @@ public class AgreementTest_addRole {
     public void whenRoleDoesNotYetExist() {
         context.checking(new Expectations() {
             {
-                oneOf(mockAgreementRoles).findAgreementRole(agreement, party, type, startDate);
+                oneOf(mockAgreementRoles).findByAgreementAndPartyAndTypeAndStartDate(agreement, party, type, startDate);
                 will(returnValue(null));
                 
                 oneOf(mockAgreementRoles).newAgreementRole(agreement, party, type, startDate, endDate);
@@ -63,7 +63,7 @@ public class AgreementTest_addRole {
     public void whenRoleDoesExist() {
         context.checking(new Expectations() {
             {
-                oneOf(mockAgreementRoles).findAgreementRole(agreement, party, type, startDate);
+                oneOf(mockAgreementRoles).findByAgreementAndPartyAndTypeAndStartDate(agreement, party, type, startDate);
                 will(returnValue(agreementRole));
                 
                 never(mockAgreementRoles);

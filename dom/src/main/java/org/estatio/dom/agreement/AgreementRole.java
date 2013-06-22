@@ -23,7 +23,7 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
-        name = "agreementRole_find", language = "JDOQL", 
+        name = "findByAgreementAndPartyAndTypeAndStartDate", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.agreement.AgreementRole " +
         		"WHERE agreement == :agreement " +
@@ -31,7 +31,7 @@ import org.estatio.services.clock.ClockService;
         		"&& type == :type " +
         		"&& startDate == :startDate"),
 	@javax.jdo.annotations.Query(
-        name = "agreementRole_findWithType", language = "JDOQL", 
+        name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL", 
         value = "SELECT " +
                 "FROM org.estatio.dom.agreement.AgreementRole " +
                 "WHERE agreement == :agreement " +

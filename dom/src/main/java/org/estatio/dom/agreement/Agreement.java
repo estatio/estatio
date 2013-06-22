@@ -318,12 +318,12 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     @Programmatic
     AgreementRole findRole(Party party, AgreementRoleType type, LocalDate startDate) {
-        return agreementRoles.findAgreementRole(this, party, type, startDate);
+        return agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(this, party, type, startDate);
     }
 
     @Programmatic
     public AgreementRole findRoleWithType(AgreementRoleType agreementRoleType, LocalDate date) {
-        return agreementRoles.findAgreementRoleWithType(this, agreementRoleType, date);
+        return agreementRoles.findByAgreementAndTypeAndContainsDate(this, agreementRoleType, date);
     }
 
     // //////////////////////////////////////
