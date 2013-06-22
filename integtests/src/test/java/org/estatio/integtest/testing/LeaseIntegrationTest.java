@@ -48,7 +48,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t02_leaseRoleCanBeFound() throws Exception {
         Party party = parties.findPartyByReference("TOPMODEL");
-        AgreementRole role = leaseTopModel.findRole(party, agreementRoleTypes.find(LeaseConstants.ART_TENANT), null);
+        AgreementRole role = agreementRoles.findAgreementRole(leaseTopModel, party, agreementRoleTypes.find(LeaseConstants.ART_TENANT), null);
         Assert.assertNotNull(role);
     }
 

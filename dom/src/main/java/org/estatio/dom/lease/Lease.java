@@ -194,7 +194,7 @@ public class Lease extends Agreement implements InvoiceSource {
     
     // //////////////////////////////////////
 
-    @MemberOrder(name="PaidBy", sequence = "1")
+    @MemberOrder(name="paidBy", sequence = "1")
     public Lease paidBy(final BankMandate bankMandate) {
         setPaidBy(bankMandate);
         return this;
@@ -239,7 +239,7 @@ public class Lease extends Agreement implements InvoiceSource {
     
     // //////////////////////////////////////
 
-    @MemberOrder(name="PaidBy", sequence = "2")
+    @MemberOrder(name="paidBy", sequence = "2")
     public Lease newMandate(
             final BankAccount bankAccount, 
             final @Named("Start Date") LocalDate startDate,

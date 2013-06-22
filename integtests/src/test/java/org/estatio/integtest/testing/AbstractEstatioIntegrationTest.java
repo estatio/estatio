@@ -100,6 +100,7 @@ public abstract class AbstractEstatioIntegrationTest {
     protected Numerators numerators;
 
     protected AgreementRoleTypes agreementRoleTypes;
+    protected AgreementRoles agreementRoles;
 
     protected FixedAssets fixedAssets;
     protected Properties properties;
@@ -133,6 +134,7 @@ public abstract class AbstractEstatioIntegrationTest {
 
         numerators = getIsft().getService(Numerators.class);
 
+        agreementRoles = getIsft().getService(AgreementRoles.class);
         agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
 
         fixedAssets = getIsft().getService(FixedAssets.class);

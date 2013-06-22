@@ -1,0 +1,132 @@
+package org.estatio.dom;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+
+public class EstatioDomainServiceTest_allInstances_etc {
+
+    private SomeDomainService someDomainService;
+    static class SomeDomainObject extends EstatioDomainObject<SomeDomainObject> {
+        public SomeDomainObject() {
+            super(null);
+        }
+    }
+
+    static class SomeDomainService extends EstatioDomainService<SomeDomainObject> {
+        Class<?> entityType;
+        
+        private String queryName;
+        private Object[] paramArgs;
+        private QueryDefault<SomeDomainObject> queryToReturn;
+        
+        private Query<?> query;
+
+        protected SomeDomainService() {
+            super(SomeDomainService.class, SomeDomainObject.class);
+        }
+
+        @Override
+        @Hidden
+        protected <T> T newTransientInstance(Class<T> ofType) {
+            entityType = ofType;
+            return null;
+        }
+        
+        @Override
+        protected <T> List<T> allInstances(Class<T> ofType, long... range) {
+            this.entityType = ofType;
+            return null;
+        }
+        
+        @Override
+        protected <T> List<T> allMatches(Query<T> query) {
+            this.query = query;
+            this.entityType = query.getResultType();
+            return null;
+        }
+
+        @Override
+        protected <T> T firstMatch(Query<T> query) {
+            this.query = query;
+            this.entityType = query.getResultType();
+            return null;
+        }
+        
+        @Override
+        protected QueryDefault<SomeDomainObject> newQueryDefault(String queryName, Object... paramArgs) {
+            this.queryName = queryName;
+            this.paramArgs = paramArgs;
+            return queryToReturn;
+        }
+    }
+
+    static class SomeDomainServiceImpl extends SomeDomainService {
+    }
+
+    
+    @Before
+    public void setUp() throws Exception {
+        someDomainService = new SomeDomainService();
+    }
+    
+    @Test
+    public void allInstances() {
+        someDomainService.allInstances();
+        assertEquals(SomeDomainObject.class, someDomainService.entityType);
+    }
+    
+    @Test
+    public void allMatches() {
+        
+        final String queryName = "foo";
+        final QueryDefault<SomeDomainObject> query = new QueryDefault<SomeDomainObject>(SomeDomainObject.class, queryName, "bar", 1);
+        
+        someDomainService.queryToReturn = query;
+        
+        someDomainService.allMatches(queryName, "bar", 1);
+        assertEquals(SomeDomainObject.class, someDomainService.entityType);
+        assertEquals(queryName, someDomainService.queryName);
+        assertEquals("bar", someDomainService.paramArgs[0]);
+        assertEquals(1, someDomainService.paramArgs[1]);
+        assertEquals(query, someDomainService.query);
+    }
+    
+    @Test
+    public void firstMatch() {
+        
+        final String queryName = "foo";
+        final QueryDefault<SomeDomainObject> query = new QueryDefault<SomeDomainObject>(SomeDomainObject.class, queryName, "bar", 1);
+        
+        someDomainService.queryToReturn = query;
+        
+        someDomainService.firstMatch(queryName, "bar", 1);
+        assertEquals(SomeDomainObject.class, someDomainService.entityType);
+        assertEquals(queryName, someDomainService.queryName);
+        assertEquals("bar", someDomainService.paramArgs[0]);
+        assertEquals(1, someDomainService.paramArgs[1]);
+        assertEquals(query, someDomainService.query);
+    }
+
+    @Test
+    public void newTransientInstance() {
+        someDomainService.newTransientInstance();
+        assertEquals(SomeDomainObject.class, someDomainService.entityType);
+    }
+
+}
