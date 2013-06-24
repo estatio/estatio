@@ -11,7 +11,7 @@ import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
+@javax.jdo.annotations.Query(name = "findGeographyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
 public abstract class Geography extends EstatioRefDataObject<Geography> implements ComparableByReference<Geography>, WithNameGetter {
 
     public Geography() {
@@ -20,6 +20,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique
     private String reference;
 
     /**
@@ -40,6 +41,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique
     private String name;
 
     @Title

@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.Title;
 @Bounded
 public class Country extends Geography {
 
+    @javax.jdo.annotations.Unique
     private String alpha2Code;
 
     @Title

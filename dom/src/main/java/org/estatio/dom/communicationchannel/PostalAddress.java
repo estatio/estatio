@@ -141,7 +141,7 @@ public class PostalAddress extends CommunicationChannel {
     }
 
     public List<State> choicesState() {
-        return states.findByCountry(getCountry());
+        return states.findStatesByCountry(getCountry());
     }
 
     // //////////////////////////////////////
