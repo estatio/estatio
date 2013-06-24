@@ -13,6 +13,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.asset.Property;
 
 public class AgreementRoleTypesTest_finders {
 
@@ -31,6 +32,11 @@ public class AgreementRoleTypesTest_finders {
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return null;
+            }
+            @Override
+            protected List<AgreementRoleType> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
 

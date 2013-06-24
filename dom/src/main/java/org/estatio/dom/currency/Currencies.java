@@ -34,7 +34,7 @@ public class Currencies extends EstatioDomainService<Currency> {
     @MemberOrder(name="Other", sequence = "currencies.2")
     public Currency findCurrencyByReference(@Named("reference") final String reference) {
         String rexeg = StringUtils.wildcardToRegex(reference);
-        return firstMatch("currency_findCurrencyByReference", "r", rexeg);
+        return firstMatch("findByReference", "reference", rexeg);
     }
 
     // //////////////////////////////////////

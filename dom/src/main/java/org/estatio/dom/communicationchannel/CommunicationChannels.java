@@ -1,5 +1,8 @@
 package org.estatio.dom.communicationchannel;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 
 import org.estatio.dom.EstatioDomainService;
@@ -58,8 +61,10 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
-    public CommunicationChannel findByReference(String reference, CommunicationChannelType type) {
-        return firstMatch("findByReference", "reference", reference, "type", type);
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public CommunicationChannel findByReferenceAndType(String reference, CommunicationChannelType type) {
+        return firstMatch("findByReferenceAndType", "reference", reference, "type", type);
     }
 
 }

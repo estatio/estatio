@@ -286,7 +286,7 @@ public class Api extends AbstractFactoryAndRepository {
         Party party = fetchParty(partyReference);
         // Address
         if (address1 != null) {
-            CommunicationChannel comm = communicationChannels.findByReference(reference, CommunicationChannelType.POSTAL_ADDRESS);
+            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
             if (comm == null) {
                 comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
                 comm.setReference(reference);
@@ -295,7 +295,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         // Phone
         if (phoneNumber != null) {
-            CommunicationChannel comm = communicationChannels.findByReference(reference, CommunicationChannelType.PHONE_NUMBER);
+            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
             if (comm == null) {
                 comm = communicationChannels.newPhoneNumber(phoneNumber);
                 comm.setReference(reference);
@@ -304,7 +304,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         // Fax
         if (faxNumber != null) {
-            CommunicationChannel comm = communicationChannels.findByReference(reference, CommunicationChannelType.FAX_NUMBER);
+            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
             if (comm == null) {
                 comm = communicationChannels.newFaxNumber(faxNumber);
                 comm.setReference(reference);
@@ -516,7 +516,7 @@ public class Api extends AbstractFactoryAndRepository {
             // start generic fields
             @Named("reference") @Optional String reference, @Named("name") @Optional String name, @Named("bankAccountType") @Optional String bankAccountType, @Named("ownerReference") String ownerReference, @Named("iban") @Optional String iban,
             @Named("nationalCheckCode") @Optional String nationalCheckCode, @Named("nationalBankCode") @Optional String nationalBankCode, @Named("branchCode") @Optional String branchCode, @Named("accountNumber") @Optional String accountNumber) {
-        BankAccount bankAccount = (BankAccount) financialAccounts.findByReference(reference);
+        BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
         Party owner = parties.findPartyByReference(ownerReference);
         if (owner == null)
             return;

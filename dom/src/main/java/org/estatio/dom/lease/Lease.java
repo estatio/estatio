@@ -304,7 +304,7 @@ public class Lease extends Agreement implements InvoiceSource {
     private List<BankAccount> existingBankAccountsForTenant() {
         final Party tenant = getSecondaryParty();
         if(tenant != null) {
-            return financialAccounts.findBankAccountsFor(tenant);
+            return financialAccounts.findBankAccountsByParty(tenant);
         } else {
             return Collections.emptyList();
         }

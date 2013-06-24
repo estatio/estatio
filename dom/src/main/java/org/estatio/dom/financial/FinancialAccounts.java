@@ -36,16 +36,16 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public FinancialAccount findByReference(@Named("Reference") String reference) {
+    public FinancialAccount findAccountByReference(@Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch("findByReference", "r", regex);
+        return firstMatch("findByReference", "reference", regex);
     }
     
     // //////////////////////////////////////
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Hidden
-    public List<BankAccount> findBankAccountsFor(Party party) {
+    public List<BankAccount> findBankAccountsByParty(Party party) {
         return (List)allMatches("findByTypeAndParty", "type", FinancialAccountType.BANK_ACCOUNT, "owner", party);
     }
 

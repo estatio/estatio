@@ -9,10 +9,10 @@ import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(
-        name = "charge_findCurrencyByReference", language = "JDOQL", 
+        name = "findByReference", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.currency.Currency " +
-        		"WHERE reference.matches(:r)")
+        		"WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
 public class Currency extends EstatioRefDataObject<Currency> implements ComparableByReference<Currency> {

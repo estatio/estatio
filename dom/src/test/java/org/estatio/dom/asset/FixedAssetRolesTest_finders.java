@@ -47,6 +47,11 @@ public class FixedAssetRolesTest_finders {
                 return null;
             }
             @Override
+            protected List<FixedAssetRole> allInstances() {
+                finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
+                return null;
+            }
+            @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
                 return null;

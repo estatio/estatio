@@ -20,7 +20,7 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-@javax.jdo.annotations.Query(name="findByReference", language="JDOQL", value="SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
+@javax.jdo.annotations.Query(name="findByReferenceAndType", language="JDOQL", value="SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
 @ObjectType("CCHN")
 public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements /*Comparable<CommunicationChannel>,*/ WithNameGetter {
 

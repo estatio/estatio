@@ -21,7 +21,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
             name = "findByReference", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE reference.matches(:r)"),
+            value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE reference.matches(:reference)"),
     @javax.jdo.annotations.Query(
             name = "findByTypeAndParty", language = "JDOQL", 
             value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE type == :type && owner == :owner")

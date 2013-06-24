@@ -1,4 +1,4 @@
-package org.estatio.dom.charge;
+package org.estatio.dom.communicationchannel;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -9,22 +9,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.asset.Property;
 
-public class ChargesTest_finders {
+public class CommunicationChannelsTest_finders {
 
     private FinderInteraction finderInteraction;
 
-    private Charges charges;
+    private CommunicationChannels communicationChannels;
+
+    private CommunicationChannelType type;
 
     @Before
     public void setup() {
-        charges = new Charges() {
+        
+        type = CommunicationChannelType.EMAIL_ADDRESS;
+        
+        communicationChannels = new CommunicationChannels() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -32,7 +35,7 @@ public class ChargesTest_finders {
                 return null;
             }
             @Override
-            protected List<Charge> allInstances() {
+            protected List<CommunicationChannel> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -46,15 +49,16 @@ public class ChargesTest_finders {
 
     
     @Test
-    public void findByReference() {
+    public void findByReferenceAndType() {
 
-        charges.findChargeByReference("*REF?1*");
+        communicationChannels.findByReferenceAndType("REF-1", type);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Charge.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(CommunicationChannel.class));
+        assertThat(finderInteraction.getQueryName(), is("findByReferenceAndType"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"REF-1"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)type));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
     }
 
 }

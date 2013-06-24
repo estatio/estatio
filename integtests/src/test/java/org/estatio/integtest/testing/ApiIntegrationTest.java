@@ -64,9 +64,9 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     @Test
     public void t03_putPartyCommunicationChannels() {
         api.putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210");
-        Assert.assertNotNull(communicationChannels.findByReference("APITENANT", CommunicationChannelType.POSTAL_ADDRESS));
-        Assert.assertNotNull(communicationChannels.findByReference("APITENANT", CommunicationChannelType.FAX_NUMBER));
-        Assert.assertNotNull(communicationChannels.findByReference("APITENANT", CommunicationChannelType.PHONE_NUMBER));
+        Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.POSTAL_ADDRESS));
+        Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.FAX_NUMBER));
+        Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.PHONE_NUMBER));
     }
 
     @Test
