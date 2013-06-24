@@ -28,6 +28,31 @@
 
 	<build>
 		<plugins>
+            <!-- Test coverage: cobertura -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <inherited>true</inherited>
+                <configuration>
+                   <instrumentation>
+                        <ignores>
+                            <!-- 
+                            http://jira.codehaus.org/browse/MCOBERTURA-52
+                             -->
+                            <ignore>org[.]estatio[.].*[.]jdo.*</ignore>
+                        </ignores>
+                        <excludes>
+                            <exclude>org/estatio/**/*Test*.class</exclude>
+                        </excludes>
+                   </instrumentation>
+                </configuration>
+                <!-- goal:check binds to phase:verify (not currently configured, can 
+                    be used to break build if code coverage < threshold) -->
+                <!-- goal:cobertura is a report so is configured in the reporting section; 
+                    invokes phase:test before running itself -->
+            </plugin>
+
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-maven-plugin</artifactId>
@@ -197,8 +222,115 @@
         </dependency>
         
    	</dependencies>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
    	
    <profiles>
+        <profile>
+            <id>metrics-on</id>
+            <activation>
+               <property>
+                   <name>metrics</name>
+                   <value>on</value>
+               </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <configuration>
+                            <formats>
+                                <format>xml</format>
+                            </formats>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>cobertura</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <configuration>
+                            <configLocation>${checkstyle.configLocation}</configLocation>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                       <groupId>org.codehaus.mojo</groupId>
+                       <artifactId>findbugs-maven-plugin</artifactId>
+                       <inherited>true</inherited>
+                       <configuration>
+                          <findbugsXmlOutput>true</findbugsXmlOutput>
+                          <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+                          <xmlOutput>true</xmlOutput>
+                          <failOnError>false</failOnError>
+                       </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>2.5</version>
+                        <configuration>
+                            <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                            <minimumTokens>100</minimumTokens>
+                            <linkXref>true</linkXref>
+                            <targetJdk>${compileTarget}</targetJdk>
+                            <rulesets>
+                                <ruleset>${pmd.ruleset}</ruleset>
+                            </rulesets>
+                            <excludeRoots>
+                                <excludeRoot>
+                                    ${project.build.directory}/generated-sources/modello
+                                </excludeRoot>
+                                <excludeRoot>
+                                    ${project.build.directory}/generated-sources/plugin
+                                </excludeRoot>
+                            </excludeRoots>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pmd</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>not-m2e</id>
             <activation>
