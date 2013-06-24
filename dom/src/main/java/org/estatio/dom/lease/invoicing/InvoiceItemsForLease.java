@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
@@ -41,6 +42,16 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
             final @Named("Start Date") LocalDate startDate, 
             final @Named("Due Date") LocalDate dueDate) {
         return allMatches("invoiceItem_findItems", "leaseReference", StringUtils.wildcardToRegex(leaseReference), "startDate", startDate, "dueDate", dueDate);
+    }
+
+    
+    // //////////////////////////////////////
+    
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Invoices", sequence = "99")
+    public List<InvoiceItemForLease> allInvoiceItems() {
+        return allInstances();
     }
 
 }

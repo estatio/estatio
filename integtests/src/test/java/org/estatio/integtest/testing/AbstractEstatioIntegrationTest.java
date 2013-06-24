@@ -247,11 +247,12 @@ public abstract class AbstractEstatioIntegrationTest {
             final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
 
             testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
-            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-            // "net.sf.log4jdbc.DriverSpy"); // use log4jdbc instead
-            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test;sqllog=3"); // disable
-                                                                                                                                      // default
-                                                                                                                                      // sqlloq
+            
+            // uncomment to use log4jdbc instead
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); 
+            
+            // disable default sqlloq
+            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test;sqllog=3"); 
 
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
             testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
