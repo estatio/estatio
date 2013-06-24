@@ -34,8 +34,8 @@ public class LeaseUnits extends EstatioDomainService<LeaseUnit> {
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public LeaseUnit find(final Lease lease, final Unit unit, LocalDate startDate) {
-         return firstMatch("leaseUnit_find", "lease", lease, "unit", unit, "startDate", startDate);
+    public LeaseUnit findByLeaseAndUnitAndStartDate(final Lease lease, final Unit unit, LocalDate startDate) {
+         return firstMatch("findByLeaseAndUnitAndStartDate", "lease", lease, "unit", unit, "startDate", startDate);
     }
 
 }

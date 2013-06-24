@@ -364,7 +364,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (unitReference != null && unit == null) {
             throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
         }
-        LeaseUnit leaseUnit = leaseUnits.find(lease, unit, startDate);
+        LeaseUnit leaseUnit = leaseUnits.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
         if (leaseUnit == null) {
             leaseUnit = lease.addUnit(unit);
             leaseUnit.setStartDate(startDate);

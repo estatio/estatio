@@ -83,8 +83,8 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
         api.putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "ABIBRAND", "APISECTOR", "APIACTIVITY");
         Lease l = leases.findLeaseByReference("APILEASE");
         Unit u = units.findUnitByReference("APIUNIT");
-        Assert.assertNotNull(leaseUnits.find(l, u, START_DATE));
-        Assert.assertNotNull(leaseUnits.find(l, u, START_DATE));
+        Assert.assertNotNull(leaseUnits.findByLeaseAndUnitAndStartDate(l, u, START_DATE));
+        Assert.assertNotNull(leaseUnits.findByLeaseAndUnitAndStartDate(l, u, START_DATE));
 
     }
 

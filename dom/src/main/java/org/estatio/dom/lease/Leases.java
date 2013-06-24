@@ -76,19 +76,19 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public Lease findLeaseByReference(@Named("Reference") String reference) {
-        return firstMatch("findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeasesByReference(@Named("Reference") String reference) {
-        return allMatches("findLeasesByReference", "r", StringUtils.wildcardToRegex(reference));
+        return allMatches("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findLeasesByAsset(@Named("Fixed Asset") FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
-        return allMatches("findLeases", "fixedAsset", fixedAsset, "activeOnDate", activeOnDate);
+    public List<Lease> findLeasesByAsset(FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
+        return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
     public List<FixedAsset> autoComplete0FindLeasesByAsset(final String searchPhrase) {

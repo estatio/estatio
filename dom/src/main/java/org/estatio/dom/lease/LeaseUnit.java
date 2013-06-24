@@ -26,12 +26,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Unique(name = "LEASE_UNIT_IDX2", members = { "lease", "unit", "startDate" })
 @javax.jdo.annotations.Queries({ 
     @javax.jdo.annotations.Query(
-            name = "leaseUnit_find", language = "JDOQL", 
-            value = "SELECT " +
-            		"FROM org.estatio.dom.lease.LeaseUnit " +
-            		"WHERE lease == :lease " +
-            		"&& unit == :unit " +
-            		"&& startDate == :startDate") })
+            name = "findByLeaseAndUnitAndStartDate", language = "JDOQL", 
+            value = "SELECT FROM org.estatio.dom.lease.LeaseUnit WHERE lease == :lease && unit == :unit && startDate == :startDate") })
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements /*Comparable<LeaseUnit>, */ WithInterval {
 
     public LeaseUnit() {

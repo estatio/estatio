@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.utils.StringUtils;
 
 public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
@@ -34,14 +35,17 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     // //////////////////////////////////////
 
+    /**
+     * 
+     * @param leaseReference - not a {@link Lease}, because reference supports wildcards; there could be multiple leases to find.
+     */
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Invoices", sequence="2")
     public List<InvoiceItemForLease> findInvoiceItemsByLease(
-            // TODO: should this not take a lease, rather than a leaseReference?
-            final @Named("Lease") String leaseReference, 
+            final @Named("Lease reference") String leaseReference, 
             final @Named("Start Date") LocalDate startDate, 
             final @Named("Due Date") LocalDate dueDate) {
-        return allMatches("invoiceItem_findItems", "leaseReference", StringUtils.wildcardToRegex(leaseReference), "startDate", startDate, "dueDate", dueDate);
+        return allMatches("findByLeaseAndStartDateAndDueDate", "leaseReference", leaseReference, "startDate", startDate, "dueDate", dueDate);
     }
 
     

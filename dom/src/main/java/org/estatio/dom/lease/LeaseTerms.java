@@ -52,7 +52,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Leases", sequence="20")
     public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
-        return allMatches("leaseTerm_findLeaseTermsWithStatus", "status", LeaseTermStatus.NEW, "date", date);
+        return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
     }
 
     public LocalDate default0LeaseTermsToBeApproved() {
@@ -63,8 +63,8 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     // //////////////////////////////////////
 
     @Hidden
-    public LeaseTerm findLeaseTermWithSequence(LeaseItem leaseItem, BigInteger sequence) {
-        return firstMatch(newQueryDefault("leaseTerm_findLeaseTermsWithSequence", "leaseItem", leaseItem, "sequence", sequence));
+    public LeaseTerm findLeaseTermByLeaseItemAndSequence(LeaseItem leaseItem, BigInteger sequence) {
+        return firstMatch("findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence);
     }
 
     // //////////////////////////////////////

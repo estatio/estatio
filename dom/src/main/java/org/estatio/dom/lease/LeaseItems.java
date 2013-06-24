@@ -1,9 +1,13 @@
 package org.estatio.dom.lease;
 
+import java.util.List;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -26,5 +30,13 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
         return leaseItem;
     }
 
+    // //////////////////////////////////////
+    
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "99")
+    public List<LeaseItem> allLeaseItems() {
+        return allInstances();
+    }
 
 }

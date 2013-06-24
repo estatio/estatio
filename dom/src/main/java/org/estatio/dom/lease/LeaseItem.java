@@ -99,7 +99,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
         // return null;
         // TODO: the code above proved to be very unreliable when using the api.
         // Have to investigate further
-        return leaseTerms.findLeaseTermWithSequence(this, sequence);
+        return leaseTerms.findLeaseTermByLeaseItemAndSequence(this, sequence);
     }
 
     // //////////////////////////////////////
