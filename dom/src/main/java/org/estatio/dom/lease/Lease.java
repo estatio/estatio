@@ -51,12 +51,14 @@ import org.estatio.dom.party.Party;
 @MemberGroups({"General", "Dates", "Lease Details", "Related"})
 public class Lease extends Agreement implements InvoiceSource {
 
+    @Override
     @NotPersisted
     @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
         return findParty(LeaseConstants.ART_LANDLORD);
     }
 
+    @Override
     @NotPersisted
     @MemberOrder(sequence = "4")
     public Party getSecondaryParty() {
@@ -330,7 +332,7 @@ public class Lease extends Agreement implements InvoiceSource {
         }
         return this;
     }
-    
+
     // //////////////////////////////////////
 
     @Bulk
@@ -343,12 +345,10 @@ public class Lease extends Agreement implements InvoiceSource {
     }
 
     // //////////////////////////////////////
-    
+
     @Bulk
     @MemberOrder(sequence = "3")
     public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
-        // TODO: I know that bulk actions only appear whith a no-arg but why
-        // not?
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, dueDate, runType);
         }
@@ -363,9 +363,9 @@ public class Lease extends Agreement implements InvoiceSource {
             LeaseTerm term = item.currentTerm(terminationDate);
             if (term == null)
                 term = item.getTerms().last();
-            if (term != null){
+            if (term != null) {
                 term.modifyEndDate(terminationDate);
-                if (term.getNextTerm() !=null)
+                if (term.getNextTerm() != null)
                     term.getNextTerm().remove();
             }
         }

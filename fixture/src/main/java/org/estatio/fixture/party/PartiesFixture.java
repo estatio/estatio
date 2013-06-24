@@ -83,6 +83,7 @@ public class PartiesFixture extends AbstractFixture {
         p.setReference(reference);
         account.setOwner(p);
         for (CommunicationChannel channel : communicationChannels) {
+            channel.setReference(reference);
             p.addToCommunicationChannels(channel);
         }
         return p;

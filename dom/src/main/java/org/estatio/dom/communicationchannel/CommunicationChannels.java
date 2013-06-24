@@ -12,7 +12,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     public CommunicationChannels() {
         super(CommunicationChannels.class, CommunicationChannel.class);
     }
-    
+
     // //////////////////////////////////////
 
     @Hidden
@@ -56,5 +56,10 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
         return fn;
     }
 
+    // //////////////////////////////////////
+
+    public CommunicationChannel findByReference(String reference, CommunicationChannelType type) {
+        return firstMatch("findByReference", "reference", reference, "type", type);
+    }
 
 }

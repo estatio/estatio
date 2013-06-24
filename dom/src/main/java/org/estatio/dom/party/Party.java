@@ -5,13 +5,6 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.ComparableByName;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
@@ -19,29 +12,25 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(
-            name = "parties_findPartyByReference", language = "JDOQL", 
-            value = "SELECT " +
-            		"FROM org.estatio.dom.party.Party " +
-            		"WHERE reference.matches(:searchPattern)"),
-    @javax.jdo.annotations.Query(
-            name = "parties_findParties", language = "JDOQL", 
-            value = "SELECT " +
-            		"FROM org.estatio.dom.party.Party " +
-            		"WHERE reference.matches(:searchPattern) " +
-            		"|| name.matches(:searchPattern)") })
-@javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = {"reference", "name"})
-@AutoComplete(repository = Parties.class, action="autoComplete")
+@javax.jdo.annotations.Queries({ @javax.jdo.annotations.Query(name = "parties_findPartyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern)"),
+        @javax.jdo.annotations.Query(name = "parties_findParties", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern) || name.matches(:searchPattern)") })
+@javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
+@AutoComplete(repository = Parties.class, action = "autoComplete")
 public abstract class Party extends EstatioTransactionalObject<Party> implements ComparableByName<Party>, WithReferenceGetter {
-
 
     public Party() {
         super("name");
     }
-    
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique
@@ -59,7 +48,7 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
     }
 
     // //////////////////////////////////////
-    
+
     private String name;
 
     @MemberOrder(sequence = "2")
@@ -71,7 +60,7 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
     public void setName(final String name) {
         this.name = name;
     }
-    
+
     /**
      * Provided so that subclasses can override and disable.
      */
@@ -149,7 +138,7 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
     }
 
     // //////////////////////////////////////
-    
+
     // REVIEW: is this in scope, or can we remove?
     // REVIEW: if in scope, is it a bidir requiring mappedBy?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
@@ -169,6 +158,5 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
     public Party addRegistration() {
         return this;
     }
-
 
 }

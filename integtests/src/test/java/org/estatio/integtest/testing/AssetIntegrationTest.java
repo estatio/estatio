@@ -21,7 +21,12 @@ public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void fixedAssetSearchWorks() throws Exception {
-        Assert.assertThat(fixedAssets.search("(?i).*mall.*").size(), Is.is(1));
+        Assert.assertThat(fixedAssets.search("*mall*").size(), Is.is(1));
+    }
+
+    @Test
+    public void fixedAssetAutoCompleteWorks() throws Exception {
+        Assert.assertThat(fixedAssets.autoComplete("mall").size(), Is.is(1));
     }
 
     @Test

@@ -98,9 +98,36 @@ public class Api extends AbstractFactoryAndRepository {
         country.setAlpha2Code(alpha2Code);
     }
 
+    private Country fetchCountry(String countryCode) {
+        return fetchCountry(countryCode, true);
+    }
+
+    private Country fetchCountry(String countryCode, boolean exception) {
+        Country country = countries.findByReference(countryCode);
+        if (country == null && exception) {
+            throw new ApplicationException(String.format("Country with code %1$s not found", countryCode));
+        }
+        return country;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putState(@Named("code") String code, @Named("name") String name, @Named("countryCode") String countryCode) {
+        Country country = fetchCountry(countryCode);
+        State state = states.findByReference(countryCode);
+        if (state == null) {
+            state = states.newState(code, name, country);
+        }
+        state.setName(name);
+        state.setCountry(country);
+    }
+
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.IDEMPOTENT)
     public void putCharge(@Named("code") String code, @Named("reference") String reference, @Named("description") String description, @Named("taxReference") String taxReference) {
-        Tax tax = taxes.findTaxByReference(taxReference);
+        Tax tax = fetchTax(taxReference);
         Charge charge = charges.findChargeByReference(reference);
         if (charge == null) {
             charge = charges.newCharge(reference);
@@ -110,9 +137,19 @@ public class Api extends AbstractFactoryAndRepository {
         charge.setTax(tax);
     }
 
+    private Charge fetchCharge(String type, String chargeReference) {
+        Charge charge = charges.findChargeByReference(chargeReference);
+        if (charge == null) {
+            throw new ApplicationException(String.format("Type with reference %s not found.", type));
+        }
+        return charge;
+    }
+
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.IDEMPOTENT)
     public void putTax(@Named("reference") String reference, @Named("name") String name, @Named("description") String decription, @Named("percentage") BigDecimal percentage, @Named("startDate") LocalDate startDate) {
-        Tax tax = taxes.findTaxByReference(reference);
+        Tax tax = fetchTax(reference);
         if (tax == null) {
             tax = taxes.newTax(reference);
             tax.setName(name);
@@ -120,19 +157,18 @@ public class Api extends AbstractFactoryAndRepository {
         tax.newRate(startDate, percentage);
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putState(@Named("code") String code, @Named("name") String name, @Named("countryCode") String countryCode) {
-        Country country = countries.findByReference(countryCode);
-        if (country == null) {
-            throw new ApplicationException(String.format("Country with code %1$s not found", countryCode));
-        }
-        State state = states.findByReference(countryCode);
-        if (state == null) {
-            state = states.newState(code, name, country);
-        }
-        state.setName(name);
-        state.setCountry(country);
+    private Tax fetchTax(String reference) {
+        return fetchTax(reference, false);
     }
+
+    private Tax fetchTax(String reference, boolean exception) {
+        Tax tax = taxes.findTaxByReference(reference);
+        if (tax == null && exception)
+            throw new ApplicationException(String.format("Tax with reference %1$s not found", reference));
+        return tax;
+    }
+
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPerson(@Named("reference") String reference, @Named("initials") @Optional String initials, @Named("firstName") String firstName, @Named("lastName") String lastName) {
@@ -156,17 +192,21 @@ public class Api extends AbstractFactoryAndRepository {
         org.setName(name);
     }
 
+    private Party fetchParty(String reference) {
+        Party party = parties.findPartyByReference(reference);
+        if (party == null) {
+            throw new ApplicationException(String.format("Party with reference %s not found.", reference));
+        }
+        return party;
+    }
+
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.IDEMPOTENT)
     public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional LocalDate acquireDate, @Named("disposalDate") @Optional LocalDate disposalDate, @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference) {
-        Party owner = parties.findOrganisationByReference(ownerReference);
-        if (owner == null) {
-            throw new ApplicationException(String.format("Owner with reference %s not found.", ownerReference));
-        }
-        Property property = properties.findPropertyByReference(reference);
-        if (property == null) {
-            property = properties.newProperty(reference, name);
-        }
+        Party owner = fetchParty(ownerReference);
+        Property property = fetchProperty(reference, true);
         property.setName(name);
         property.setPropertyType(PropertyType.valueOf(type));
         property.setAcquireDate(acquireDate);
@@ -175,71 +215,23 @@ public class Api extends AbstractFactoryAndRepository {
         property.addRole(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
-            @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode) {
-        Property property = properties.findPropertyByReference(propertyReference);
+    private Property fetchProperty(String reference, boolean createIfNotFond) {
+        Property property = properties.findPropertyByReference(reference);
         if (property == null) {
-            throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
+            if (!createIfNotFond)
+                throw new ApplicationException(String.format("Property with reference %s not found.", reference));
+            property = properties.newProperty(reference, null);
         }
-        CommunicationChannel comm = property.findCommunicationChannelForType(null);
-        if (comm == null) {
-            comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
-        }
-        property.getCommunicationChannels().add(comm);
+        return property;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putPartyCommunicationChannels(@Named("partyReference") String partyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode,
-            @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("phoneNumber") @Optional String phoneNumber, @Named("faxNumber") @Optional String faxNumber) {
-        Party party = parties.findPartyByReference(partyReference);
-        if (party == null) {
-            throw new ApplicationException(String.format("Property with reference %s not found.", partyReference));
-        }
-        // TODO: Find if communication channel exists
-        if (address1 != null) {
-            CommunicationChannel comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
-            party.addToCommunicationChannels(comm);
-        }
-        if (phoneNumber != null) {
-            CommunicationChannel comm = communicationChannels.newPhoneNumber(phoneNumber);
-            party.addToCommunicationChannels(comm);
-        }
-        if (faxNumber != null) {
-            CommunicationChannel comm = communicationChannels.newFaxNumber(faxNumber);
-            party.addToCommunicationChannels(comm);
-        }
-    }
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyOwner(@Named("Reference") String reference, @Named("Reference") String ownerReference) {
-        // TODO Auto-generated method stub
-    }
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        Property property = properties.findPropertyByReference(propertyReference);
-        Party party = parties.findPartyByReference(partyReference);
-        if (party == null) {
-            throw new ApplicationException(String.format("Party with reference %s not found.", partyReference));
-        }
-        if (property == null) {
-            throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
-        }
-        FixedAssetRole actor = propertyActors.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
-        if (actor == null) {
-            propertyActors.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
-        }
-    }
+    // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") @Optional String ownerReference, @Named("name") String name, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate, @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
             @Named("terraceArea") @Optional BigDecimal terraceArea, @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode) {
-        Property property = properties.findPropertyByReference(propertyReference);
-        if (property == null) {
-            throw new ApplicationException(String.format("Property with reference %s not found.", ownerReference));
-        }
+        Property property = fetchProperty(propertyReference, false);
         Unit unit = units.findUnitByReference(reference);
         if (unit == null) {
             unit = property.newUnit(reference, name);
@@ -259,17 +251,85 @@ public class Api extends AbstractFactoryAndRepository {
         }
     }
 
+    private Unit fetchUnit(String unitReference) {
+        if (unitReference != null) {
+            Unit unit = units.findUnitByReference(unitReference);
+            if (unit == null) {
+                throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
+            }
+            return unit;
+        }
+        return null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode) {
+        Property property = properties.findPropertyByReference(propertyReference);
+        if (property == null) {
+            throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
+        }
+        CommunicationChannel comm = property.findCommunicationChannelForType(null);
+        if (comm == null) {
+            comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+        }
+        property.getCommunicationChannels().add(comm);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putPartyCommunicationChannels(@Named("partyReference") String partyReference, @Named("reference") @Optional String reference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") @Optional String city,
+            @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("phoneNumber") @Optional String phoneNumber, @Named("faxNumber") @Optional String faxNumber) {
+        Party party = fetchParty(partyReference);
+        // Address
+        if (address1 != null) {
+            CommunicationChannel comm = communicationChannels.findByReference(reference, CommunicationChannelType.POSTAL_ADDRESS);
+            if (comm == null) {
+                comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+                comm.setReference(reference);
+                party.addToCommunicationChannels(comm);
+            }
+        }
+        // Phone
+        if (phoneNumber != null) {
+            CommunicationChannel comm = communicationChannels.findByReference(reference, CommunicationChannelType.PHONE_NUMBER);
+            if (comm == null) {
+                comm = communicationChannels.newPhoneNumber(phoneNumber);
+                comm.setReference(reference);
+                party.addToCommunicationChannels(comm);
+            }
+        }
+        // Fax
+        if (faxNumber != null) {
+            CommunicationChannel comm = communicationChannels.findByReference(reference, CommunicationChannelType.FAX_NUMBER);
+            if (comm == null) {
+                comm = communicationChannels.newFaxNumber(faxNumber);
+                comm.setReference(reference);
+                party.addToCommunicationChannels(comm);
+            }
+        }
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
+        Property property = fetchProperty(propertyReference, false);
+        Party party = fetchParty(partyReference);
+        FixedAssetRole actor = propertyActors.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
+        if (actor == null) {
+            propertyActors.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
+        }
+    }
+
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("type") @Optional String type, @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate, @Named("terminationDate") @Optional LocalDate terminationDate, @Named("propertyReference") @Optional String propertyReference) {
-        Party tenant = parties.findPartyByReference(tenantReference);
-        if (tenant == null) {
-            throw new ApplicationException(String.format("Tenant with reference %s not found.", tenantReference));
-        }
-        Party landlord = parties.findPartyByReference(landlordReference);
-        if (landlord == null) {
-            throw new ApplicationException(String.format("Landlord with reference %s not found.", landlordReference));
-        }
+        Party tenant = fetchParty(tenantReference);
+        Party landlord = fetchParty(landlordReference);
         Lease lease = leases.findLeaseByReference(reference);
         if (lease == null) {
             lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
@@ -280,32 +340,26 @@ public class Api extends AbstractFactoryAndRepository {
         lease.setTerminationDate(terminationDate);
     }
 
+    private Lease fetchLease(String leaseReference) {
+        Lease lease;
+        lease = leases.findLeaseByReference(leaseReference);
+        if (lease == null) {
+            throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
+        }
+        return lease;
+    }
+
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseLink(@Named("leaseReference") String leaseReference, @Named("previousLeaseReference") String previousLeaseReference) {
-        Lease lease = null;
-        if (leaseReference != null) {
-            lease = leases.findLeaseByReference(leaseReference);
-            if (lease == null) {
-                throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
-            }
-        }
-        Lease previousLease = null;
-        if (previousLeaseReference != null) {
-            previousLease = leases.findLeaseByReference(previousLeaseReference);
-            if (previousLease == null) {
-                throw new ApplicationException(String.format("Previous lease with reference %s not found.", previousLeaseReference));
-            }
-        }
+        Lease lease = fetchLease(leaseReference);
+        Lease previousLease = fetchLease(previousLeaseReference);
         lease.modifyPreviousAgreement(previousLease);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseUnit(@Named("leaseReference") String leaseReference, @Named("unitReference") @Optional String unitReference, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
             @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate, @Named("brand") @Optional String brand, @Named("sector") @Optional String sector, @Named("activity") @Optional String activity) {
-        Lease lease = leases.findLeaseByReference(leaseReference);
-        if (lease == null) {
-            throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
-        }
+        Lease lease = fetchLease(leaseReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         if (unitReference != null && unit == null) {
             throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
@@ -327,28 +381,14 @@ public class Api extends AbstractFactoryAndRepository {
     public void putLeaseItem(@Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("type") @Optional String type, @Named("sequence") BigInteger sequence,
             @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("chargeReference") @Optional String chargeReference, @Named("nextDueDate") @Optional LocalDate nextDueDate, @Named("invoicingFrequency") @Optional String invoicingFrequency,
             @Named("paymentMethod") @Optional String paymentMethod) {
-        Lease lease = leases.findLeaseByReference(leaseReference);
-        if (lease == null) {
-            throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
-        }
-        Unit unit;
-        if (unitReference != null) {
-            unit = units.findUnitByReference(unitReference);
-            if (unit == null) {
-                throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
-            }
-        }
-        LeaseItemType itemType = LeaseItemType.valueOf(type);
-        if (itemType == null) {
-            throw new ApplicationException(String.format("Type with reference %s not found.", type));
-        }
+        Lease lease = fetchLease(leaseReference);
+        Unit unit = fetchUnit(unitReference);
+        LeaseItemType itemType = fetchLeaseItemType(type);
+        Charge charge = fetchCharge(type, chargeReference);
+        //
         LeaseItem item = lease.findItem(itemType, startDate, sequence);
         if (item == null) {
             item = lease.newItem(itemType);
-        }
-        Charge charge = charges.findChargeByReference(chargeReference);
-        if (charge == null) {
-            throw new ApplicationException(String.format("Type with reference %s not found.", type));
         }
         item.setStartDate(startDate);
         item.setEndDate(endDate);
@@ -357,6 +397,14 @@ public class Api extends AbstractFactoryAndRepository {
         item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
         item.setPaymentMethod(PaymentMethod.valueOf(paymentMethod));
         item.setCharge(charge);
+    }
+
+    private LeaseItemType fetchLeaseItemType(String type) {
+        LeaseItemType itemType = LeaseItemType.valueOf(type);
+        if (itemType == null) {
+            throw new ApplicationException(String.format("Type with reference %s not found.", type));
+        }
+        return itemType;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -435,10 +483,7 @@ public class Api extends AbstractFactoryAndRepository {
                 throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
             }
         }
-        LeaseItemType leaseItemType = LeaseItemType.valueOf(itemType);
-        if (leaseItemType == null) {
-            throw new ApplicationException(String.format("Type with reference %s not found.", itemType));
-        }
+        LeaseItemType leaseItemType = fetchLeaseItemType(itemType);
         LeaseItem item = lease.findItem(leaseItemType, itemStartDate, itemSequence);
         if (item == null) {
             throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));

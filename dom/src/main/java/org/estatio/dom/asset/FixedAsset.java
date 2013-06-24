@@ -36,22 +36,16 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Query(
-        name = "search", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.asset.FixedAsset " +
-        		"WHERE reference.matches(:regex) " +
-        		"|| name.matches(:regex)")
+@javax.jdo.annotations.Query(name = "search", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE (reference.matches(:regex) || name.matches(:regex))")
 @Bookmarkable
-@AutoComplete(repository = FixedAssets.class)
+@AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements ComparableByName<FixedAsset>, Locatable {
 
     public FixedAsset() {
         super("name");
     }
-    
-    // //////////////////////////////////////
 
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "REFERENCE_IDX")
     private String reference;

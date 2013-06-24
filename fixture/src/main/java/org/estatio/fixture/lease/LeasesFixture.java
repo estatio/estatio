@@ -3,6 +3,7 @@ package org.estatio.fixture.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
@@ -61,7 +62,7 @@ public class LeasesFixture extends AbstractFixture {
         Party tenant = parties.findPartyByReference(tenantReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
-        lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);
+        AgreementRole role = lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);
         LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
 
         lu.setBrand(tenantReference);

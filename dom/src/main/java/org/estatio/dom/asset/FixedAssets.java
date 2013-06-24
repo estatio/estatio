@@ -20,14 +20,14 @@ public class FixedAssets extends EstatioDomainService<FixedAsset> {
 
     @ActionSemantics(Of.SAFE)
     public List<FixedAsset> search(String searchPhrase) {
-        return allMatches("search", "regex", searchPhrase);
+        return allMatches("search", "regex", StringUtils.wildcardToCaseInsensitiveRegex(searchPhrase));
     }
 
     // //////////////////////////////////////
 
     @Hidden
     public List<FixedAsset> autoComplete(String searchPhrase) {
-        return search(StringUtils.wildcardToRegex(searchPhrase));
+        return search("*".concat(searchPhrase).concat("*"));
     }
 
 
