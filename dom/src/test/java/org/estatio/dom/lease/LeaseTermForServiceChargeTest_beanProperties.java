@@ -6,13 +6,11 @@ import org.junit.Test;
 
 public class LeaseTermForServiceChargeTest_beanProperties extends AbstractBeanPropertiesTest {
 
-    @Ignore
 	@Test
 	public void test() {
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
-            .withFixture(pojos(LeaseTerm.class))
-	        .withFixture(pojos(LeaseTermForTesting.class))
+            .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
 	        .exercise(new LeaseTermForServiceCharge());
 	}
 

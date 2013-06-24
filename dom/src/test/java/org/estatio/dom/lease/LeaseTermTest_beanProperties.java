@@ -7,12 +7,10 @@ import org.junit.Test;
 public class LeaseTermTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
-	@Ignore
-	//FIXME: making the LeaseTerm abstract fails the test
 	public void test() {
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
-	        .withFixture(pojos(LeaseTermForTesting.class))
+	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
 	        .exercise(new LeaseTermForTesting());
 	}
 

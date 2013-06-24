@@ -7,11 +7,10 @@ import org.junit.Test;
 public class LeaseTermForTurnoverRentTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
-	@Ignore
 	public void test() {
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
-	        .withFixture(pojos(LeaseTerm.class))
+            .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
 	        .exercise(new LeaseTermForTurnoverRent());
 	}
 

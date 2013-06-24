@@ -9,11 +9,10 @@ import org.junit.Test;
 public class LeaseTermForIndexableRentTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
-	@Ignore
 	public void test() {
 	    newPojoTester()
 	        .withFixture(pojos(LeaseItem.class))
-	        .withFixture(pojos(LeaseTermForTesting.class))
+	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
 	        .withFixture(pojos(Index.class))
 	        .exercise(new LeaseTermForIndexableRent(),
 	                // TODO: bug in PojoTester; claims there's interference between 
