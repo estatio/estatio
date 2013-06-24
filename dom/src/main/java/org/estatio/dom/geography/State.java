@@ -10,8 +10,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(name = "findStatesByCountry", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE country == :country"),
-    @javax.jdo.annotations.Query(name = "findStateByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE reference == :reference") 
+    @javax.jdo.annotations.Query(name = "findByCountry", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE country == :country"),
+    @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE reference == :reference") 
 })
 @Bounded
 public class State extends Geography {

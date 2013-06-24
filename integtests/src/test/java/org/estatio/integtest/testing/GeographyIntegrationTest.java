@@ -16,12 +16,12 @@ public class GeographyIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void countryIsNL() throws Exception {
-        assertThat(countries.findByReference("NLD").getReference(), is("NLD"));
+        assertThat(countries.findCountryByReference("NLD").getReference(), is("NLD"));
     }
 
     @Test
     public void stateCanBeFound() throws Exception {
-        final Country country = countries.findByReference("NLD");
+        final Country country = countries.findCountryByReference("NLD");
         final List<State> statesInCountry = states.findStatesByCountry(country);
         assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
         for (State state : statesInCountry) {

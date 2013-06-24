@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
 public class States extends EstatioDomainService<State> {
 
@@ -33,14 +34,14 @@ public class States extends EstatioDomainService<State> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.2")
-    public State findByReference(final @Named("Reference") String reference) {
-        return firstMatch("findStateByReference", "reference", reference);
+    public State findStateByReference(final @Named("Reference") String reference) {
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.3")
     public List<State> findStatesByCountry(final Country country) {
-        return allMatches("findStatesByCountry", "country", country);
+        return allMatches("findByCountry", "country", country);
     }
 
     // //////////////////////////////////////

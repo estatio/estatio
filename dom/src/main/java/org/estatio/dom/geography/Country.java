@@ -11,10 +11,10 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Query(
-        name = "countries_findCountryByReference", language = "JDOQL", 
+        name = "findByReference", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.geography.Country " +
-        		"WHERE reference.matches(:r)")
+        		"WHERE reference.matches(:reference)")
 @Bounded
 public class Country extends Geography {
 

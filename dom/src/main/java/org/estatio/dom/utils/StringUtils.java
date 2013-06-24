@@ -25,18 +25,30 @@ public class StringUtils {
     };
 
     public static String enumTitle(String string) {
+        if(string == null) {
+            return null;
+        }
         return Joiner.on(" ").join(Iterables.transform(Splitter.on("_").split(string), LOWER_CASE_THEN_CAPITALIZE));
     }
 
     public static String enumDeTitle(String string) {
+        if(string == null) {
+            return null;
+        }
         return Joiner.on("_").join(Iterables.transform(Splitter.on(" ").split(string), UPPER_CASE));
     }
 
     public static String wildcardToCaseInsensitiveRegex(String pattern) {
+        if(pattern == null) {
+            return null;
+        }
         return "(?i)".concat(wildcardToRegex(pattern));
     }
 
     public static String wildcardToRegex(String pattern) {
+        if(pattern == null) {
+            return null;
+        }
         return pattern.replace("*", ".*").replace("?", ".");
     }
 

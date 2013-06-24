@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
 public class Countries extends EstatioDomainService<Country> {
 
@@ -35,11 +36,11 @@ public class Countries extends EstatioDomainService<Country> {
      */
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.countries.2")
-    public Country findByReference(@Named("Reference") String reference) {
+    public Country findCountryByReference(@Named("Reference") String reference) {
         if (reference == null) {
             return null;
         }
-        return firstMatch("countries_findCountryByReference", "r", reference);
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     

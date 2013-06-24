@@ -90,7 +90,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putCountry(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name) {
-        Country country = countries.findByReference(code);
+        Country country = countries.findCountryByReference(code);
         if (country == null) {
             country = countries.newCountry(code, name);
         }
@@ -103,7 +103,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private Country fetchCountry(String countryCode, boolean exception) {
-        Country country = countries.findByReference(countryCode);
+        Country country = countries.findCountryByReference(countryCode);
         if (country == null && exception) {
             throw new ApplicationException(String.format("Country with code %1$s not found", countryCode));
         }
@@ -115,7 +115,7 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putState(@Named("code") String code, @Named("name") String name, @Named("countryCode") String countryCode) {
         Country country = fetchCountry(countryCode);
-        State state = states.findByReference(countryCode);
+        State state = states.findStateByReference(countryCode);
         if (state == null) {
             state = states.newState(code, name, country);
         }
@@ -246,7 +246,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setTerraceArea(terraceArea);
         CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+            cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
             unit.addToCommunicationChannels(cc);
         }
     }
@@ -273,7 +273,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         CommunicationChannel comm = property.findCommunicationChannelForType(null);
         if (comm == null) {
-            comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+            comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
         }
         property.getCommunicationChannels().add(comm);
     }
@@ -288,7 +288,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (address1 != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
             if (comm == null) {
-                comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findByReference(stateCode), countries.findByReference(countryCode));
+                comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
                 comm.setReference(reference);
                 party.addToCommunicationChannels(comm);
             }

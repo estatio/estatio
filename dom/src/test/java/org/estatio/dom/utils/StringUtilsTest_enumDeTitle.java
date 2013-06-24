@@ -1,8 +1,6 @@
 package org.estatio.dom.utils;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,7 +12,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 
 @RunWith(Parameterized.class)
-public class StringUtilsTest_enumTitle {
+public class StringUtilsTest_enumDeTitle {
 
     private String from;
     private String to;
@@ -23,21 +21,21 @@ public class StringUtilsTest_enumTitle {
     public static Collection<Object[]> values() {
         return Arrays.asList(
                 new Object[][]{
-                    {"FOO", "Foo"},
-                    {"FOO_BAR", "Foo Bar"},
+                    {"Foo", "FOO"},
+                    {"Foo Bar", "FOO_BAR"},
                     {null, null},
                 }
             );
     }
     
-    public StringUtilsTest_enumTitle(String from, String to) {
+    public StringUtilsTest_enumDeTitle(String from, String to) {
         this.from = from;
         this.to = to;
     }
     
     @Test
     public void nonNull() throws Exception {
-        assertEquals(to, StringUtils.enumTitle(from));
+        assertEquals(to, StringUtils.enumDeTitle(from));
     }
     
 }
