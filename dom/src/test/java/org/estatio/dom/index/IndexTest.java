@@ -80,9 +80,9 @@ public class IndexTest {
     public void testGetIndexValueForDate() {
         context.checking(new Expectations() {
             {
-                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
                 will(returnValue(iv1));
-                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -99,7 +99,7 @@ public class IndexTest {
     public void testGetRebaseFactor() {
         context.checking(new Expectations() {
             {
-                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(iv2));
             }
         });
@@ -110,7 +110,7 @@ public class IndexTest {
     public void testGetRebaseFactorWithNull() {
         context.checking(new Expectations() {
             {
-                oneOf(mockIndexValues).findIndexValueForDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
                 will(returnValue(null));
             }
         });

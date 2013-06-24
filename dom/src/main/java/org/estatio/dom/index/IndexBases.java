@@ -39,7 +39,7 @@ public class IndexBases extends EstatioDomainService<IndexBase> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Indices", sequence = "7")
     public List<IndexBase> allIndexBases() {
-        return allInstances(IndexBase.class);
+        return allInstances();
     }
 
 

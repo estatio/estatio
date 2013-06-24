@@ -34,8 +34,8 @@ public class IndexValues extends EstatioDomainService<IndexValue> {
     
 
     @MemberOrder(name="Indices", sequence = "6")
-    public IndexValue findIndexValueForDate(final Index index, final @Named("Start Date") LocalDate startDate) {
-        return firstMatch("findForDate", "index", index, "date", startDate);
+    public IndexValue findIndexValueByIndexAndStartDate(final Index index, final @Named("Start Date") LocalDate startDate) {
+        return firstMatch("findByIndexAndStartDate", "index", index, "startDate", startDate);
     }
 
     // //////////////////////////////////////

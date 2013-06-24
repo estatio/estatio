@@ -14,7 +14,7 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(name = "findForDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.IndexValue WHERE indexBase.index == :index && startDate >= :date")
+@javax.jdo.annotations.Query(name = "findByIndexAndStartDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.IndexValue WHERE indexBase.index == :index && startDate >= :startDate")
 public class IndexValue extends EstatioRefDataObject<IndexValue> implements WithStartDate {
 
     public IndexValue() {

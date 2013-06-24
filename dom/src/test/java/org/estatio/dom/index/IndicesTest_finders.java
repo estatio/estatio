@@ -1,6 +1,5 @@
-package org.estatio.dom.geography;
+package org.estatio.dom.index;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -15,16 +14,16 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-public class CountriesTest_finders {
+public class IndicesTest_finders {
 
     private FinderInteraction finderInteraction;
 
-    private Countries countries;
+    private Indices indices;
 
     @Before
     public void setup() {
         
-        countries = new Countries() {
+        indices = new Indices() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -32,7 +31,7 @@ public class CountriesTest_finders {
                 return null;
             }
             @Override
-            protected List<Country> allInstances() {
+            protected List<Index> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -45,29 +44,22 @@ public class CountriesTest_finders {
     }
 
     @Test
-    public void findCountryByReference() {
+    public void findIndexByReference() {
 
-        countries.findCountryByReference("*REF?1*");
+        indices.findIndexByReference("REF-1");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Country.class));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Index.class));
         assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"REF-1"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
 
-    @Test
-    public void findCountryByReference_whenNull() {
-        // TODO: why do the other finders not have a null guard
-        // (or conversely, why does Countries repo?)
-        assertThat(countries.findCountryByReference(null), is(nullValue()));
-        assertThat(finderInteraction, is(nullValue()));
-    }
     
     @Test
-    public void allCountries() {
+    public void allIndices() {
         
-        countries.allCountries();
+        indices.allIndices();
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
     }

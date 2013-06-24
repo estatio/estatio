@@ -88,7 +88,7 @@ public class Index extends EstatioRefDataObject<Index> implements ComparableByRe
     @Programmatic
     public BigDecimal getIndexValueForDate(LocalDate date) {
         if (date != null) {
-            IndexValue indexValue = indexValues.findIndexValueForDate(this, date);
+            IndexValue indexValue = indexValues.findIndexValueByIndexAndStartDate(this, date);
             return indexValue == null ? null : indexValue.getValue();
         }
         return null;
@@ -98,7 +98,7 @@ public class Index extends EstatioRefDataObject<Index> implements ComparableByRe
     public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
         if (baseIndexStartDate == null || nextIndexStartDate == null)
             return null;
-        IndexValue nextIndexValue = indexValues.findIndexValueForDate(this, nextIndexStartDate);
+        IndexValue nextIndexValue = indexValues.findIndexValueByIndexAndStartDate(this, nextIndexStartDate);
         // TODO: check efficiency.. seems to retrieve every single index value
         // for the last 15 years...
         if (nextIndexValue != null) {

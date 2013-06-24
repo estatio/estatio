@@ -114,9 +114,9 @@ public class LeaseTermForIndexableRentTest {
     public void update_ok() {
         context.checking(new Expectations() {
             {
-                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
+                allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2010, 1, 1)));
                 will(returnValue(iv1));
-                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
+                allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2011, 1, 1)));
                 will(returnValue(iv2));
             }
         });
@@ -128,9 +128,9 @@ public class LeaseTermForIndexableRentTest {
     public void update_whenEmptyIndex_ok() {
         context.checking(new Expectations() {
             {
-                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2010, 1, 1)));
+                allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2010, 1, 1)));
                 will(returnValue(iv1));
-                allowing(mockIndexValues).findIndexValueForDate(with(i), with(new LocalDate(2011, 1, 1)));
+                allowing(mockIndexValues).findIndexValueByIndexAndStartDate(with(i), with(new LocalDate(2011, 1, 1)));
                 will(returnValue(iv2));
             }
         });
