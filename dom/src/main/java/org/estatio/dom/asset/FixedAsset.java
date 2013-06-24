@@ -13,6 +13,8 @@ import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -118,6 +120,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
         this.roles = roles;
     }
 
+    @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name = "Roles", sequence = "1")
     public FixedAssetRole addRole(@Named("party") Party party, @Named("type") FixedAssetRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
