@@ -24,14 +24,10 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.clock.Clock;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -112,6 +108,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     @MemberOrder(name = "Units", sequence = "21")
     public LeaseUnit addUnit(@Named("unit") UnitForLease unit) {
+        // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
         units.add(leaseUnit);
         return leaseUnit;
@@ -151,6 +148,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     @MemberOrder(name = "Items", sequence = "31")
     public LeaseItem newItem(LeaseItemType type) {
+        // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
         return leaseItem;
     }

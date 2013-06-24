@@ -24,7 +24,7 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
     @NotContributed
     public LeaseItem newLeaseItem(final Lease lease, final LeaseItemType type) {
         LeaseItem leaseItem = newTransientInstance();
-        persistIfNotAlready(leaseItem);
+        persist(leaseItem);
         lease.addToItems(leaseItem);
         leaseItem.setType(type);
         return leaseItem;

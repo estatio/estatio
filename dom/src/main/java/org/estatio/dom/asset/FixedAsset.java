@@ -99,8 +99,10 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
         this.location = location;
     }
 
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Named("Lookup")
     @MemberOrder(name = "location", sequence = "1.9")
-    public FixedAsset lookup(@Named("Address") String address) {
+    public FixedAsset lookupLocation(@Named("Address") String address) {
         setLocation(locationLookupService.lookup(address));
         return this;
     }
@@ -131,6 +133,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
     }
 
     public List<Party> choices0AddRole() {
+        // TODO: this doesn't look right.  Should we have an autoComplete here instead?
         return parties.allParties();
     }
 
@@ -164,6 +167,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
         getCommunicationChannels().remove(communicationChannel);
     }
 
+    // TODO: this doesn't look correct; the communication channel is never persisted anywhere...
+    @ActionSemantics(Of.NON_IDEMPOTENT) 
     @MemberOrder(name = "CommunicationChannels", sequence = "1")
     public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
         CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());

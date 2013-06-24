@@ -24,9 +24,9 @@ public enum CommunicationChannelType implements TitledEnum, PowerType<Communicat
 
     public CommunicationChannel create(DomainObjectContainer container) {
         try {
-            CommunicationChannel contactMechanism = container.newTransientInstance(cls);
-            contactMechanism.setType(this);
-            return contactMechanism;
+            CommunicationChannel cc = container.newTransientInstance(cls);
+            cc.setType(this);
+            return cc;
         } catch (Exception ex) {
             throw new ApplicationException(ex);
         }

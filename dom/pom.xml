@@ -187,6 +187,13 @@
 			<artifactId>jmock-legacy</artifactId>
 			<scope>test</scope>
 		</dependency>
+        
+        <!-- needed by gmap3/HttpClient; not correctly declared as transitive dependency, it would seem... -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<scope>test</scope>
+		</dependency>
 
         <dependency>
             <groupId>org.picocontainer</groupId>

@@ -7,6 +7,7 @@ import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -47,7 +48,7 @@ public class FixedAssetTest_addRole {
     }
     
     @Test
-    public void whenDoesNotExistAlready() {
+    public void addRole_whenDoesNotExistAlready() {
         context.checking(new Expectations() {
             {
                 oneOf(mockFixedAssetRoles).findRole(fixedAsset, party, type, startDate, endDate);
@@ -63,7 +64,7 @@ public class FixedAssetTest_addRole {
     }
     
     @Test
-    public void whenDoesExist() {
+    public void addRole_whenDoesExist() {
         context.checking(new Expectations() {
             {
                 oneOf(mockFixedAssetRoles).findRole(fixedAsset, party, type, startDate, endDate);
@@ -77,4 +78,9 @@ public class FixedAssetTest_addRole {
         assertThat(addedRole, is(role));
     }
 
+    // behaviour not fully specified; see comments in code
+    @Ignore 
+    @Test
+    public void choices0AddRole() {
+    }
 }
