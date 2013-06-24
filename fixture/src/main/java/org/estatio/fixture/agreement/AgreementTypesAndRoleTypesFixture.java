@@ -20,15 +20,23 @@ public class AgreementTypesAndRoleTypesFixture extends AbstractFixture {
     }
 
     void create(final String atTitle, final String... artTitles) {
-        AgreementType at = AgreementType.create(atTitle, BankMandate.class.getName(), getContainer());
+        AgreementType at = createAgreementType(atTitle, BankMandate.class.getName(), getContainer());
         getContainer().flush();
         at = agreementTypes.find(atTitle);
         for(String artTitle: artTitles) {
-            create(artTitle, at, getContainer());
+            createAgreementRoleType(artTitle, at, getContainer());
         }
     }
 
-    private static AgreementRoleType create(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
+    private static AgreementType createAgreementType(final String title, final String implementationClassName, final DomainObjectContainer container) {
+        final AgreementType agreementType = container.newTransientInstance(AgreementType.class);
+        agreementType.setTitle(title);
+        agreementType.setImplementationClassName(implementationClassName);
+        container.persist(agreementType);
+        return agreementType;
+    }
+    
+    private static AgreementRoleType createAgreementRoleType(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
         final AgreementRoleType agreementRoleType = container.newTransientInstance(AgreementRoleType.class);
         agreementRoleType.setTitle(title);
         agreementRoleType.setAppliesTo(appliesTo);

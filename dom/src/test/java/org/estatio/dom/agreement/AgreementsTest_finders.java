@@ -55,6 +55,19 @@ public class AgreementsTest_finders {
         };
     }
 
+
+    @Test
+    public void findAgreementByReference() {
+
+        agreements.findAgreementByReference("*some?Reference*");
+        
+        // then
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
+        assertThat(finderInteraction.getQueryName(), is("findByReference"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*some.Reference.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+    }
     
     @Test
     public void findByAgreementTypeAndRoleTypeAndParty() {
@@ -71,18 +84,5 @@ public class AgreementsTest_finders {
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
     }
 
-
-    @Test
-    public void findAgreementByReference() {
-
-        agreements.findAgreementByReference("*some?Reference*");
-        
-        // then
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
-        assertThat(finderInteraction.getQueryName(), is("findAgreementByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("r"), is((Object)".*some.Reference.*"));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
-    }
 
 }

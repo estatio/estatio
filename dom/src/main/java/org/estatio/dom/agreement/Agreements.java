@@ -30,7 +30,7 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
     @ActionSemantics(Of.SAFE)
     public Agreement findAgreementByReference(String reference) {
-        return firstMatch("findAgreementByReference", "r", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)

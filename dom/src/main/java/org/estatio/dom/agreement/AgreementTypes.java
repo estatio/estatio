@@ -1,9 +1,11 @@
 package org.estatio.dom.agreement;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
 @Hidden
 public class AgreementTypes extends EstatioDomainService<AgreementType> {
@@ -14,14 +16,9 @@ public class AgreementTypes extends EstatioDomainService<AgreementType> {
     
     // //////////////////////////////////////
 
-    // TODO: naive implementation.
+    @ActionSemantics(Of.SAFE)
     public AgreementType find(final String title) {
-        return getContainer().firstMatch(AgreementType.class, new Filter<AgreementType>(){
-            @Override
-            public boolean accept(AgreementType t) {
-                return title.equals(t.getTitle());
-            }
-        });
+        return firstMatch("findByTitle", "title", StringUtils.wildcardToCaseInsensitiveRegex(title));
     }
 
 }

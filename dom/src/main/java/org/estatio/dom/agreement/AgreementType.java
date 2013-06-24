@@ -16,6 +16,11 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.ClassUtils;
 
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+        name = "findByTitle", language = "JDOQL", 
+        value = "SELECT FROM org.estatio.dom.agreement.AgreementType WHERE title == :title")
+})
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
 public class AgreementType extends EstatioRefDataObject<AgreementType> implements ComparableByTitle<AgreementType>, PowerType<Agreement> {
@@ -92,17 +97,6 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    // //////////////////////////////////////
 
-    /**
-     * For fixtures
-     */
-    public static AgreementType create(final String title, final String implementationClassName, final DomainObjectContainer container) {
-        final AgreementType agreementType = container.newTransientInstance(AgreementType.class);
-        agreementType.setTitle(title);
-        agreementType.setImplementationClassName(implementationClassName);
-        container.persist(agreementType);
-        return agreementType;
-    }
 
 }

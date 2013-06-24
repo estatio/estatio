@@ -37,8 +37,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-            name = "findAgreementByReference", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:r)"),
+            name = "findByReference", language = "JDOQL", 
+            value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(
             name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL", 
             value = "SELECT " + 
