@@ -1,4 +1,4 @@
-package org.estatio.dom.agreement;
+package org.estatio.dom.charge;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -10,15 +10,15 @@ import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
-public class AgreementRoleTypesTest_findByTitle {
+public class ChargeGroupsTest_finders {
 
     private QueryDefault<?> queryDefault;
 
-    private AgreementRoleTypes agreementRoleTypes;
+    private ChargeGroups chargeGroups;
 
     @Before
     public void setup() {
-        agreementRoleTypes = new AgreementRoleTypes() {
+        chargeGroups = new ChargeGroups() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -30,14 +30,13 @@ public class AgreementRoleTypesTest_findByTitle {
 
     
     @Test
-    public void happyCase() {
+    public void findByReference() {
 
-
-        agreementRoleTypes.findByTitle("someTitle");
+        chargeGroups.findChargeGroupByReference("*REF?1*");
         
-        // then
-        assertThat(queryDefault.getResultType(), IsisMatchers.classEqualTo(AgreementRoleType.class));
-        assertThat(queryDefault.getArgumentsByParameterName().get("title"), is((Object)"someTitle"));
+        assertThat(queryDefault.getResultType(), IsisMatchers.classEqualTo(ChargeGroup.class));
+        assertThat(queryDefault.getQueryName(), is("findByReference"));
+        assertThat(queryDefault.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
         assertThat(queryDefault.getArgumentsByParameterName().size(), is(1));
     }
 

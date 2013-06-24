@@ -20,12 +20,12 @@ import org.estatio.dom.party.Party;
 public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
-    public void fixedAssetSearchWorks() throws Exception {
-        Assert.assertThat(fixedAssets.search("*mall*").size(), Is.is(1));
+    public void fixedAssetFindAssetsByReferenceOrName_ok() throws Exception {
+        Assert.assertThat(fixedAssets.findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
     }
 
     @Test
-    public void fixedAssetAutoCompleteWorks() throws Exception {
+    public void fixedAssetAutoComplete_ok() throws Exception {
         Assert.assertThat(fixedAssets.autoComplete("mall").size(), Is.is(1));
     }
 

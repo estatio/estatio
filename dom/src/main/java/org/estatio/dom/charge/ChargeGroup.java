@@ -13,10 +13,10 @@ import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(
-        name = "charge_findChargeGroupByReference", language = "JDOQL", 
+        name = "findByReference", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.charge.ChargeGroup " +
-        		"WHERE reference.mathes(:r)")
+        		"WHERE reference.matches(:reference)")
 @Immutable
 @Bounded
 public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements ComparableByReference<ChargeGroup> {

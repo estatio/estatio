@@ -40,7 +40,7 @@ import org.estatio.services.clock.ClockService;
                 "&& (endDate == null | endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioTransactionalObject<AgreementRole> implements /*Comparable<AgreementRole>, */WithInterval {
+public class AgreementRole extends EstatioTransactionalObject<AgreementRole> implements WithInterval {
 
     public AgreementRole() {
         super("agreement, party, startDate desc, type");

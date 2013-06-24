@@ -38,7 +38,7 @@ public class Charges extends EstatioDomainService<Charge> {
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.2")
     public Charge findChargeByReference(@Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch("charge_findChargeByReference", "r", regex);
+        return firstMatch("findByReference", "reference", regex);
     }
 
     // //////////////////////////////////////

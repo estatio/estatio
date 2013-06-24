@@ -22,7 +22,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(
-        name = "fixedAssetRole_findByAssetParty", language = "JDOQL", 
+        name = "findRoleByAssetAndPartyAndType", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.asset.FixedAssetRole " +
         		"WHERE asset == :asset " +

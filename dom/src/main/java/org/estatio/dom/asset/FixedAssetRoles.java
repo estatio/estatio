@@ -34,13 +34,12 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
 
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type) {
-        return firstMatch(newQueryDefault("fixedAssetRole_findByAssetParty", "asset", asset, "party", party, "type", type));
+        return firstMatch(newQueryDefault("findRoleByAssetAndPartyAndType", "asset", asset, "party", party, "type", type));
     }
 
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type, final LocalDate startDate, final LocalDate endDate) {
-        // TODO: need to also search by dates
-        return firstMatch("fixedAssetRole_findByAssetParty", "asset", asset, "party", party, "type", type);
+        return firstMatch("findRoleByAssetAndPartyAndType", "asset", asset, "party", party, "type", type);
     }
 
 }

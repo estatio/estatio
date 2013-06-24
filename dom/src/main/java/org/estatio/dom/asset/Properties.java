@@ -42,12 +42,12 @@ public class Properties extends EstatioDomainService<Property> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Assets", sequence = "2")
     public List<Property> findPropertiesByReference(final @Named("Reference") String reference) {
-        return allMatches("properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
+        return allMatches("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @Hidden
     public Property findPropertyByReference(final String reference) {
-        return firstMatch("properties_findPropertiesByReference", "r", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     // //////////////////////////////////////

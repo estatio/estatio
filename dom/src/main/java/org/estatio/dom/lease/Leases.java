@@ -92,7 +92,7 @@ public class Leases extends EstatioDomainService<Lease> {
     }
 
     public List<FixedAsset> autoComplete0FindLeasesByAsset(final String searchPhrase) {
-        return fixedAssets.search(searchPhrase);
+        return fixedAssets.findAssetsByReferenceOrName(searchPhrase);
     }
 
     // //////////////////////////////////////

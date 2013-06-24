@@ -10,10 +10,10 @@ import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(
-        name = "charge_findChargeByReference", language = "JDOQL", 
+        name = "findByReference", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.charge.Charge " +
-        		"WHERE reference.matches(:r)")
+        		"WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
 public class Charge extends EstatioRefDataObject<Charge> {

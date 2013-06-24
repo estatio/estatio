@@ -40,22 +40,17 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
 
     // //////////////////////////////////////
     
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Assets", sequence = "2")
     public List<T> findUnitsByReference(final @Named("Reference") String reference) {
         // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
-        return (List)allMatches(queryForFindUnitsForLeaseByReference(reference));
+        return allMatches("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
     public T findUnitByReference(final String reference) {
-        return firstMatch(queryForFindUnitsForLeaseByReference(reference));
-    }
-
-    private QueryDefault<T> queryForFindUnitsForLeaseByReference(String reference) {
-        return newQueryDefault("units_findUnitsByReference", "r", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     // //////////////////////////////////////
