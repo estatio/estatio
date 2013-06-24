@@ -17,23 +17,23 @@ public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void partyCanBeFound() throws Exception {
-        Assert.assertNotNull(parties.findPartyByReference("HELLOWORLD"));
+        Assert.assertNotNull(parties.findPartyByReferenceOrName("HELLOWORLD"));
     }
 
     @Test
     public void partyCanNotBeFound() throws Exception {
-        Assert.assertNull(parties.findPartyByReference("HELLO"));
+        Assert.assertNull(parties.findPartyByReferenceOrName("HELLO"));
     }
 
     @Test
     public void partyHasFourCommunicationChannels() throws Exception {
-        Party party = parties.findPartyByReference("HELLOWORLD");
+        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
         Assert.assertThat(party.getCommunicationChannels().size(), is(4));
     }
 
     @Test
     public void partyHasOneFinancialAccount() throws Exception {
-        final Party party = parties.findPartyByReference("HELLOWORLD");
+        final Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
         List<FinancialAccount> allAccounts = financialAccounts.allAccounts();
         List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
             public boolean apply(FinancialAccount fa) {

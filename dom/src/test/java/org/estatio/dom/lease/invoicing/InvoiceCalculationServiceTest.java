@@ -275,7 +275,7 @@ public class InvoiceCalculationServiceTest {
             {
                 oneOf(mockInvoiceItemsForLease).newInvoiceItem();
                 will(returnValue(invoiceItemForLease));
-                oneOf(mockTaxRates).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
+                oneOf(mockTaxRates).findTaxRateByTaxAndDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(taxRate));
                 exactly(2).of(mockAgreementRoles).findByAgreementAndTypeAndContainsDate(with(any(Agreement.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
                 will(returnValue(new AgreementRole()));

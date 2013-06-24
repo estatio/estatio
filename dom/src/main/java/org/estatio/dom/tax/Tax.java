@@ -18,7 +18,7 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.Tax WHERE reference == :reference")
+@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.Tax WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
 public class Tax extends EstatioRefDataObject<Tax> implements ComparableByReference<Tax>, WithNameGetter {
@@ -78,7 +78,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements ComparableByRefere
 
     @Programmatic
     public TaxRate taxRateFor(LocalDate date) {
-        TaxRate rate = taxRates.findTaxRateForDate(this, date);
+        TaxRate rate = taxRates.findTaxRateByTaxAndDate(this, date);
         return rate;
     }
 

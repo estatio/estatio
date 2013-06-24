@@ -9,6 +9,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
 public class Taxes extends EstatioDomainService<Tax> {
 
@@ -40,7 +41,7 @@ public class Taxes extends EstatioDomainService<Tax> {
 
     @Hidden
     public Tax findTaxByReference(final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
 }

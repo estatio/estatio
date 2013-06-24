@@ -49,7 +49,7 @@ public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void propertyActorCanBeFound() throws Exception {
-        Party party = parties.findPartyByReference("HELLOWORLD");
+        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
         Property property = properties.findPropertyByReference("OXF");
         FixedAssetRole propertyActor = actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
@@ -57,7 +57,7 @@ public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void propertyActorWithoutStartDateCanBeFound() throws Exception {
-        Party party = parties.findPartyByReference("HELLOWORLD");
+        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
         Property property = properties.findPropertyByReference("OXF");
         FixedAssetRole propertyActor = actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);

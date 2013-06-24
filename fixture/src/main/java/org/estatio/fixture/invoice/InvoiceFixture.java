@@ -31,8 +31,8 @@ public class InvoiceFixture extends AbstractFixture {
 
     private void createInvoices() {
         final Invoice invoice = invoices.newInvoice();
-        invoice.setBuyer(parties.findPartyByReference(BUYER_PARTY));
-        invoice.setSeller(parties.findPartyByReference(SELLER_PARTY));
+        invoice.setBuyer(parties.findPartyByReferenceOrName(BUYER_PARTY));
+        invoice.setSeller(parties.findPartyByReferenceOrName(SELLER_PARTY));
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
         

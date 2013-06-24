@@ -30,8 +30,8 @@ public class Numerators extends EstatioDomainService<Numerator> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "numerators.1")
-    public Numerator find(final @Named("Numerator Type") NumeratorType type) {
-        return firstMatch("numerator_find", "type", type);
+    public Numerator findNumeratorByType(final NumeratorType type) {
+        return firstMatch("findByType", "type", type);
     }
 
     
@@ -41,7 +41,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "numerators.2")
     public Numerator establish(NumeratorType type) {
-        Numerator numerator = find(type);
+        Numerator numerator = findNumeratorByType(type);
         return numerator == null ? create(type) : numerator;
     }
     

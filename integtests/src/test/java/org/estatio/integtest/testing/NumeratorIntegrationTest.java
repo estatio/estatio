@@ -21,7 +21,7 @@ public class NumeratorIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t01_numeratorCanBeFound() throws Exception {
-        Numerator numerator = numerators.find(NumeratorType.INVOICE_NUMBER);
+        Numerator numerator = numerators.findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertNotNull(numerator);
     }
 
@@ -32,7 +32,7 @@ public class NumeratorIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t03_numberOfNumeratorsIsOne() throws Exception {
-        Numerator in = numerators.find(NumeratorType.INVOICE_NUMBER);
+        Numerator in = numerators.findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
         assertThat(in.increment(), is(BigInteger.ONE));
         assertThat(in.getLastIncrement(), is(BigInteger.ONE));

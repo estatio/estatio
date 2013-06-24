@@ -67,9 +67,11 @@ import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 
@@ -173,9 +175,9 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPerson(@Named("reference") String reference, @Named("initials") @Optional String initials, @Named("firstName") String firstName, @Named("lastName") String lastName) {
         // TODO Add check for return type
-        Person person = (Person) parties.findPartyByReference(reference);
+        Person person = (Person) parties.findPartyByReferenceOrName(reference);
         if (person == null) {
-            person = parties.newPerson(initials, firstName, lastName);
+            person = persons.newPerson(initials, firstName, lastName);
             person.setReference(reference);
         }
         person.setFirstName(firstName);
@@ -184,16 +186,16 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putOrganisation(@Named("reference") String reference, @Named("name") String name) {
-        Organisation org = (Organisation) parties.findPartyByReference(reference);
+        Organisation org = (Organisation) parties.findPartyByReferenceOrName(reference);
         if (org == null) {
-            org = parties.newOrganisation(reference, name);
+            org = organisations.newOrganisation(reference, name);
             org.setReference(reference);
         }
         org.setName(name);
     }
 
     private Party fetchParty(String reference) {
-        Party party = parties.findPartyByReference(reference);
+        Party party = parties.findPartyByReferenceOrName(reference);
         if (party == null) {
             throw new ApplicationException(String.format("Party with reference %s not found.", reference));
         }
@@ -517,7 +519,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("reference") @Optional String reference, @Named("name") @Optional String name, @Named("bankAccountType") @Optional String bankAccountType, @Named("ownerReference") String ownerReference, @Named("iban") @Optional String iban,
             @Named("nationalCheckCode") @Optional String nationalCheckCode, @Named("nationalBankCode") @Optional String nationalBankCode, @Named("branchCode") @Optional String branchCode, @Named("accountNumber") @Optional String accountNumber) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
-        Party owner = parties.findPartyByReference(ownerReference);
+        Party owner = parties.findPartyByReferenceOrName(ownerReference);
         if (owner == null)
             return;
         if (bankAccount == null) {
@@ -558,10 +560,22 @@ public class Api extends AbstractFactoryAndRepository {
 
     private Parties parties;
 
-    public void setPartyRepository(final Parties parties) {
+    public void setParties(final Parties parties) {
         this.parties = parties;
     }
 
+    private Organisations organisations;
+    
+    public void setOrganisations(final Organisations organisations) {
+        this.organisations = organisations;
+    }
+    
+    private Persons persons;
+    
+    public void setOrganisations(final Persons persons) {
+        this.persons = persons;
+    }
+    
     private FixedAssetRoles propertyActors;
 
     public void setPropertyActorRepository(final FixedAssetRoles propertyActors) {

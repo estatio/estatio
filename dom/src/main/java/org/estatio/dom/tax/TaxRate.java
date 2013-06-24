@@ -21,8 +21,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "findForDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.TaxRate WHERE tax == :tax  && startDate >= :date && (endDate == null || endDate <= :date)")
-public class TaxRate extends EstatioTransactionalObject<TaxRate> implements /* Comparable<TaxRate>, */ WithInterval {
+@javax.jdo.annotations.Query(name = "findByTaxAndDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.TaxRate WHERE tax == :tax  && startDate >= :date && (endDate == null || endDate <= :date)")
+public class TaxRate extends EstatioTransactionalObject<TaxRate> implements WithInterval {
 
     public TaxRate() {
         super("tax, startDate desc");

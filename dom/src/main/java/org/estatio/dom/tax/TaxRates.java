@@ -52,8 +52,8 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
     // //////////////////////////////////////
 
     @Hidden
-    public TaxRate findTaxRateForDate(final Tax tax, final LocalDate date) {
-        return firstMatch("findForDate", "tax", tax, "date", date);
+    public TaxRate findTaxRateByTaxAndDate(final Tax tax, final LocalDate date) {
+        return firstMatch("findByTaxAndDate", "tax", tax, "date", date);
     }
 
 }

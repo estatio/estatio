@@ -56,7 +56,7 @@ public class InvoiceItemForLeaseTest_verify {
     public void happyCase() {
         context.checking(new Expectations() {
             {
-                allowing(mockTaxRates).findTaxRateForDate(with(tax), with(new LocalDate(2012, 1, 1)));
+                allowing(mockTaxRates).findTaxRateByTaxAndDate(with(tax), with(new LocalDate(2012, 1, 1)));
                 will(returnValue(rate));
             }
         });

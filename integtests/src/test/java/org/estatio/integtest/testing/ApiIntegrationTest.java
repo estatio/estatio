@@ -58,7 +58,7 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
     public void t02_putOrganisation() {
         api.putOrganisation("APITENANT", "API Tenant");
         api.putOrganisation("APILANDLORD", "API Landlord");
-        Assert.assertThat(parties.findPartiesByReference("API*").size(), Is.is(2));
+        Assert.assertThat(parties.findParties("API*").size(), Is.is(2));
     }
 
     @Test

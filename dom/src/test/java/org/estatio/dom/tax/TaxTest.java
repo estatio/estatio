@@ -94,9 +94,9 @@ public class TaxTest {
 
         context.checking(new Expectations() {
             {
-                oneOf(mockTaxRates).findTaxRateForDate(with(equal(tax)), with(equal(d1)));
+                oneOf(mockTaxRates).findTaxRateByTaxAndDate(with(equal(tax)), with(equal(d1)));
                 will(returnValue(r1));
-                oneOf(mockTaxRates).findTaxRateForDate(with(equal(tax)), with(equal(d2)));
+                oneOf(mockTaxRates).findTaxRateByTaxAndDate(with(equal(tax)), with(equal(d2)));
                 will(returnValue(r2));
             }
         });

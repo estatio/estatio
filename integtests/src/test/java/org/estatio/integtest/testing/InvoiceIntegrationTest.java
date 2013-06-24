@@ -26,7 +26,7 @@ public class InvoiceIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t2_invoiceCanBeFound() throws Exception {
-        Invoice invoice = invoices.findMatchingInvoice(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findLeaseByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE);
+        Invoice invoice = invoices.findMatchingInvoice(parties.findPartyByReferenceOrName(InvoiceFixture.SELLER_PARTY), parties.findPartyByReferenceOrName(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findLeaseByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE);
         Assert.assertNotNull(invoice);
     }
 
@@ -38,8 +38,8 @@ public class InvoiceIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t4_invoiceCanBeRemoved() throws Exception {
-        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findLeaseByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE).get(0);
+        Invoice invoice = invoices.findMatchingInvoices(parties.findPartyByReferenceOrName(InvoiceFixture.SELLER_PARTY), parties.findPartyByReferenceOrName(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findLeaseByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE).get(0);
         invoice.remove();
-        Assert.assertThat(invoices.findMatchingInvoices(parties.findPartyByReference(InvoiceFixture.SELLER_PARTY), parties.findPartyByReference(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findLeaseByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE).size(), Is.is(0));
+        Assert.assertThat(invoices.findMatchingInvoices(parties.findPartyByReferenceOrName(InvoiceFixture.SELLER_PARTY), parties.findPartyByReferenceOrName(InvoiceFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, leases.findLeaseByReference(InvoiceFixture.LEASE), InvoiceStatus.NEW, InvoiceFixture.START_DATE).size(), Is.is(0));
     }
 }

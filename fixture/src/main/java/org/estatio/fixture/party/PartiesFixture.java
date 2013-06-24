@@ -6,8 +6,10 @@ import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
+import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.Persons;
 
 public class PartiesFixture extends AbstractFixture {
 
@@ -73,13 +75,13 @@ public class PartiesFixture extends AbstractFixture {
     }
 
     private Party createPerson(String reference, String initials, String firstName, String lastName) {
-        Party p = parties.newPerson(initials, firstName, lastName);
+        Party p = persons.newPerson(initials, firstName, lastName);
         p.setReference(reference);
         return p;
     }
 
     private Party createOrganisation(String reference, String name, FinancialAccount account, CommunicationChannel ... communicationChannels ) {
-        Party p = parties.newOrganisation(reference, name);
+        Party p = organisations.newOrganisation(reference, name);
         p.setReference(reference);
         account.setOwner(p);
         for (CommunicationChannel channel : communicationChannels) {
@@ -101,6 +103,19 @@ public class PartiesFixture extends AbstractFixture {
         this.parties = parties;
     }
     
+    private Organisations organisations;
+    
+    public void setOrganisations(final Organisations organisations) {
+        this.organisations = organisations;
+    }
+    
+    private Persons persons;
+    
+    public void setOrganisations(final Persons persons) {
+        this.persons = persons;
+    }
+    
+
     private CommunicationChannels communicationChannels;
     
     public void injectCommunicationChannels(CommunicationChannels communicationChannels) {

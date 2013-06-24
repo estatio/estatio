@@ -38,7 +38,7 @@ public class LeasesFixture extends AbstractFixture {
     @Override
     public void install() {
 
-        manager = parties.findPartyByReference("JDOE");
+        manager = parties.findPartyByReferenceOrName("JDOE");
         Lease lease1 = createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14));
         createLeaseTermForIndexableRent(lease1, BigInteger.valueOf(1), lease1.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1), new LocalDate(2011, 1, 1), new LocalDate(2011, 4, 1));
         createLeaseTermForServiceCharge(lease1, lease1.getStartDate(), null, BigDecimal.valueOf(6000));
@@ -58,8 +58,8 @@ public class LeasesFixture extends AbstractFixture {
     }
 
     private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tenantReference, LocalDate startDate, LocalDate endDate) {
-        Party landlord = parties.findPartyByReference(landlordReference);
-        Party tenant = parties.findPartyByReference(tenantReference);
+        Party landlord = parties.findPartyByReferenceOrName(landlordReference);
+        Party tenant = parties.findPartyByReferenceOrName(tenantReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
         AgreementRole role = lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);

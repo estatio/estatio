@@ -18,10 +18,8 @@ import org.estatio.dom.EstatioTransactionalObject;
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(
-        name = "numerator_find", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.numerator.Numerator " +
-        		"WHERE type == :type")
+        name = "findByType", language = "JDOQL", 
+        value = "SELECT FROM org.estatio.dom.numerator.Numerator WHERE type == :type")
 public class Numerator extends EstatioTransactionalObject<Numerator> implements ComparableByDescription<Numerator> {
 
     public Numerator() {
