@@ -172,7 +172,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
     @MemberOrder(name = "CommunicationChannels", sequence = "1")
     public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
         CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
-        communicationChannels.add(communicationChannel);
+        addToCommunicationChannels(communicationChannel);
         return communicationChannel;
     }
 

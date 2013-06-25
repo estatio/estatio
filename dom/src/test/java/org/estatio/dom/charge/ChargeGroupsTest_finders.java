@@ -57,4 +57,12 @@ public class ChargeGroupsTest_finders {
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
 
+    @Test
+    public void allChargeGroups() {
+        
+        chargeGroups.allChargeGroups();
+        
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+    }
+
 }

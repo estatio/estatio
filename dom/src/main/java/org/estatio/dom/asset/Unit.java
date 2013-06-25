@@ -1,8 +1,6 @@
 package org.estatio.dom.asset;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -33,10 +31,6 @@ public class Unit extends FixedAsset {
 
     public void setUnitType(final UnitType type) {
         this.unitType = type;
-    }
-
-    public List<UnitType> choicesUnitType() {
-        return Arrays.asList(UnitType.values());
     }
 
     

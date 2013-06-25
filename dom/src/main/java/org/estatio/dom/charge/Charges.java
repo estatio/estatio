@@ -19,8 +19,7 @@ public class Charges extends EstatioDomainService<Charge> {
     
     // //////////////////////////////////////
 
-    // TODO: this is actually idempotent?
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.1")
     public Charge newCharge(String reference) {
         Charge charge = findChargeByReference(reference);
