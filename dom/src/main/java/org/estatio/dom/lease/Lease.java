@@ -257,7 +257,7 @@ public class Lease extends Agreement implements InvoiceSource {
         bankMandate.addRole(getSecondaryParty(), debtorRoleType, startDate, endDate);
         
         persist(bankMandate);
-        this.setPaidBy(bankMandate);
+        paidBy(bankMandate);
         
         return this;
     }

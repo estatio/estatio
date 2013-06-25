@@ -1,12 +1,14 @@
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 import com.google.common.collect.Lists;
 
@@ -22,19 +24,23 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
 
-public class LeaseTest_paidBy {
+public class LeaseTest_newMandate {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -42,9 +48,11 @@ public class LeaseTest_paidBy {
     @Mock
     private AgreementRoleTypes mockAgreementRoleTypes;
     @Mock
+    private AgreementRoles mockAgreementRoles;
+    @Mock
     private AgreementTypes mockAgreementTypes;
     @Mock
-    private Agreements mockAgreements;
+    private FinancialAccounts mockFinancialAccounts;
     @Mock
     private ClockService mockClockService;
     
@@ -54,14 +62,20 @@ public class LeaseTest_paidBy {
     private Lease lease;
 
     private BankMandate bankMandate;
-    private BankMandate someOtherBankMandate;
 
+    private BankAccount bankAccount;
+    private BankAccount someOtherBankAccount;
+    
     private Party tenant;
     private AgreementRoleType tenantAgreementRoleType;
     private AgreementRoleType debtorAgreementRoleType;
     private AgreementRole tenantAgreementRole;
 
     private AgreementType bankMandateAgreementType;
+
+
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @Before
     public void setUp() throws Exception {
@@ -107,12 +121,21 @@ public class LeaseTest_paidBy {
         tenantAgreementRole.injectClockService(mockClockService);
 
         bankMandate = new BankMandate();
-        someOtherBankMandate = new BankMandate();
+        bankMandate.injectAgreementRoles(mockAgreementRoles);
+        
+        bankAccount = new BankAccount();
+        bankAccount.setReference("REF1");
+        someOtherBankAccount = new BankAccount();
+        
+        startDate = new LocalDate(2013,4,1);
+        endDate = new LocalDate(2013,5,2);
         
         lease = new Lease();
         lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
-        lease.injectAgreements(mockAgreements);
+        lease.injectAgreementRoles(mockAgreementRoles);
         lease.injectAgreementTypes(mockAgreementTypes);
+        lease.injectFinancialAccounts(mockFinancialAccounts);
+        lease.setContainer(mockContainer);
     }
     
 
@@ -124,30 +147,11 @@ public class LeaseTest_paidBy {
         assertThat(lease.getRoles(), Matchers.empty());
         
         // when
-        final String reason = lease.disablePaidBy(bankMandate);
+        final String disabledReason = lease.disableNewMandate(bankAccount, startDate, endDate);
         
         // then
-        assertThat(reason, is("There are no valid mandates; set one up using 'New Mandate'"));
+        assertThat(disabledReason, is("Could not determine the tenant (secondary party) of this lease"));
     }
-
-    @Test
-    public void whenSecondaryPartyIsKnownButNoMandates_isDisabled() {
-
-        // given
-        lease.addToRoles(tenantAgreementRole);
-
-        context.checking(new Expectations() {
-            {
-                oneOf(mockAgreements).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
-                will(returnValue(Collections.emptyList()));
-            }
-        });
-        
-        // when, then
-        final String disabledReason = lease.disablePaidBy(bankMandate);
-        assertThat(disabledReason, is(not(nullValue())));
-    }
-
     
     @Test
     public void whenSecondaryPartyIsKnownButNotCurrent_isDisabled() {
@@ -156,79 +160,118 @@ public class LeaseTest_paidBy {
         lease.addToRoles(tenantAgreementRole);
         tenantAgreementRole.setEndDate(new LocalDate(2013,4,1));
         
-        context.checking(new Expectations() {
-            {
-                never(mockAgreements);
-            }
-        });
-        
-        final String reason = lease.disablePaidBy(bankMandate);
+        // when
+        final String disabledReason = lease.disableNewMandate(bankAccount, startDate, endDate);
         
         // then
-        assertThat(reason, is(not(nullValue())));
+        assertThat(disabledReason, is(not(nullValue())));
         
         // and when/then
         // (defaultXxx wouldn't get called, but for coverage...)
         assertThat(lease.default0PaidBy(), is(nullValue()));
     }
-    
+
     @Test
-    public void whenSecondaryPartyIsKnownAndHasMandates_canInvoke() {
+    public void whenSecondaryPartyIsKnownButNoBankAccounts_isDisabled() {
 
         // given
         lease.addToRoles(tenantAgreementRole);
 
         context.checking(new Expectations() {
             {
-                allowing(mockAgreements).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
-                will(returnValue(Lists.newArrayList(bankMandate)));
+                oneOf(mockFinancialAccounts).findBankAccountsByParty(tenant);
+                will(returnValue(Collections.emptyList()));
+            }
+        });
+        
+        // when, then
+        final String disabledReason = lease.disableNewMandate(bankAccount, startDate, endDate);
+        assertThat(disabledReason, is(not(nullValue())));
+    }
+
+    
+    @Test
+    public void whenSecondaryPartyIsKnownAndHasBankAccounts_canInvoke() {
+
+        // given
+        lease.addToRoles(tenantAgreementRole);
+
+        context.checking(new Expectations() {
+            {
+                allowing(mockFinancialAccounts).findBankAccountsByParty(tenant);
+                will(returnValue(Lists.newArrayList(bankAccount)));
             }
         });
         
         // when/then
-        final String disabledReason = lease.disablePaidBy(bankMandate);
+        final String disabledReason = lease.disableNewMandate(bankAccount, startDate, endDate);
         assertThat(disabledReason, is(nullValue()));
         
         // and when/then
-        final List<BankMandate> bankMandates = lease.choices0PaidBy();
-        assertThat(bankMandates, Matchers.contains(bankMandate));
+        final List<BankAccount> bankAccounts = lease.choices0NewMandate();
+        assertThat(bankAccounts, Matchers.contains(bankAccount));
         
         // and when/then
-        final BankMandate defaultBankMandate = lease.default0PaidBy();
-        assertThat(defaultBankMandate, is(bankMandate));
+        final BankAccount defaultBankAccount = lease.default0NewMandate();
+        assertThat(defaultBankAccount, is(bankAccount));
         
         // and when/then
-        final String validateReason = lease.validatePaidBy(bankMandate);
+        final String validateReason = lease.validateNewMandate(defaultBankAccount, startDate, endDate);
         assertThat(validateReason, is(nullValue()));
         
         // and given
         assertThat(lease.getPaidBy(), is(nullValue()));
+        final AgreementRole newBankMandateAgreementRole = new AgreementRole();
+
+        context.checking(new Expectations() {
+            {
+                oneOf(mockContainer).newTransientInstance(BankMandate.class);
+                will(returnValue(bankMandate));
+                
+                oneOf(mockContainer).persist(bankMandate);
+
+                oneOf(mockAgreementRoles).findByAgreementAndPartyAndTypeAndStartDate(with(equalTo(bankMandate)), with(any(Party.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
+                will(returnValue(null));
+                
+                oneOf(mockAgreementRoles).newAgreementRole(bankMandate, tenant, debtorAgreementRoleType, startDate, endDate);
+                will(returnValue(newBankMandateAgreementRole));
+            }
+        });
 
         // when
-        final Lease returned = lease.paidBy(bankMandate);
+        final Lease returned = lease.newMandate(defaultBankAccount, startDate, endDate);
         
         // then
-        assertThat(lease.getPaidBy(), is(bankMandate));
         assertThat(returned, is(lease));
+        
+        assertThat(lease.getPaidBy(), is(bankMandate));
+        assertThat(bankMandate.getAgreementType(), is(bankMandateAgreementType));
+        assertThat(bankMandate.getBankAccount(), is((FinancialAccount)bankAccount));
+        assertThat(bankMandate.getStartDate(), is(startDate));
+        assertThat(bankMandate.getEndDate(), is(endDate));
+        assertThat(bankMandate.getReference(), is("REF1-20130401"));
+
+        // we don't assert on the bankMandate's roles,because that is the responsibility of the AgreementRoles#newRole()
+        // (mocked out above).
     }
     
     @Test
-    public void whenPrereqs_butValidateWithOtherBankMandate_isInvalid() {
+    public void whenPrereqs_validateWithIncorrectBankAccount() {
         
         // given
         lease.addToRoles(tenantAgreementRole);
         
         context.checking(new Expectations() {
             {
-                allowing(mockAgreements).findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorAgreementRoleType, tenant);
-                will(returnValue(Lists.newArrayList(bankMandate)));
+                oneOf(mockFinancialAccounts).findBankAccountsByParty(tenant);
+                will(returnValue(Lists.newArrayList(bankAccount)));
             }
         });
         
-        
         // when/then
-        final String validateReason = lease.validatePaidBy(someOtherBankMandate);
-        assertThat(validateReason, is("Invalid mandate; the mandate's debtor must be this lease's tenant"));
+        final String validateReason = lease.validateNewMandate(someOtherBankAccount, startDate, endDate);
+        assertThat(validateReason, is("Bank account is not owned by this lease's tenant"));
     }
-
+    
 }
+
