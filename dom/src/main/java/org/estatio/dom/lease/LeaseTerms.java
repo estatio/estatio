@@ -78,18 +78,21 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     // //////////////////////////////////////
 
-    /**
-     * Horrid hack... without this hsqldb was attempting to do the DDL for the
-     * table intermixed with DML, and so hit a deadlock in the driver.
-     * 
-     * HSQLDB 1.8.10 didn't have this problem.
-     * 
-     * REVIEW: this might not be needed now that we have {@link RegisterEntities}.
-     */
-    @Hidden
-    public LeaseTerm dummy() {
-        return null;
-    }
+    // commenting out since suspect may now be ok...
+    // if reoccurs, add back in...
+    
+//    /**
+//     * Horrid hack... without this hsqldb was attempting to do the DDL for the
+//     * table intermixed with DML, and so hit a deadlock in the driver.
+//     * 
+//     * HSQLDB 1.8.10 didn't have this problem.
+//     * 
+//     * this might not be needed now that we have {@link RegisterEntities}.
+//     */
+//    @Hidden
+//    public LeaseTerm dummy() {
+//        return null;
+//    }
 
     
     // //////////////////////////////////////

@@ -25,6 +25,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="INDEX_ID")
     private Index index;
     
     @Title(sequence = "1", append = ", ")
@@ -90,6 +91,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="PREVIOUSBASE_ID")
     @javax.jdo.annotations.Persistent(mappedBy = "nextBase")
     private IndexBase previousBase;
 
@@ -114,6 +116,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="NEXTBASE_ID")
     private IndexBase nextBase;
 
     /**

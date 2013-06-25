@@ -49,7 +49,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "REFERENCE_IDX")
+    @javax.jdo.annotations.Unique(name = "FIXEDASSET_REFERENCE_IDX")
     private String reference;
 
     @DescribedAs("Unique reference code for this property")
@@ -66,12 +66,12 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
 
     // //////////////////////////////////////
 
-    // REVIEW: when I added this annotation, per the @DescribedAs, then the
+    // TODO when I added this annotation, per the @DescribedAs, then the
     // fixtures failed to load...
     // @javax.jdo.annotations.Unique(name = "NAME_IDX")
     private String name;
 
-    @DescribedAs("Unique reference code for this property")
+    @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
     @MemberOrder(sequence = "1.2")
     public String getName() {

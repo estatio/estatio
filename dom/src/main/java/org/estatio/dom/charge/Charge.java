@@ -51,6 +51,7 @@ public class Charge extends EstatioRefDataObject<Charge> {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="TAX_ID")
     private Tax tax;
 
     @MemberOrder(sequence = "3")
@@ -77,6 +78,7 @@ public class Charge extends EstatioRefDataObject<Charge> {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="GROUP_ID")
     private ChargeGroup group;
 
     @MemberOrder(sequence = "5")

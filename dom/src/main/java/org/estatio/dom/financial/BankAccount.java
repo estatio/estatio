@@ -23,9 +23,10 @@ import org.estatio.dom.party.Party;
 @MemberGroups({"General", "Account Details"})
 public class BankAccount extends FinancialAccount {
 
+    @javax.jdo.annotations.Column(name="BANK_ID")
     private Party bank;
 
-    @Optional // REVIEW: really?
+    @Optional // TODO: really?
     @MemberOrder(name = "Account Details", sequence = "9")
     public Party getBank() {
         return bank;
@@ -51,6 +52,7 @@ public class BankAccount extends FinancialAccount {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
     @MemberOrder(name = "Account Details", sequence = "11")

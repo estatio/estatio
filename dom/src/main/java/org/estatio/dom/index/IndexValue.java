@@ -38,6 +38,7 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="INDEXBASE_ID")
     private IndexBase indexBase;
 
     @Hidden(where = Where.PARENTED_TABLES)

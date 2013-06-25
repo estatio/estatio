@@ -139,8 +139,8 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
 
     // //////////////////////////////////////
 
-    // REVIEW: is this in scope, or can we remove?
-    // REVIEW: if in scope, is it a bidir requiring mappedBy?
+    // TODO: is this in scope, or can we remove?
+    // if in scope, is it a bidir requiring mappedBy?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 

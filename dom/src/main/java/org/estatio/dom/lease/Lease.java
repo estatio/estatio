@@ -178,6 +178,7 @@ public class Lease extends Agreement implements InvoiceSource {
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="PAIDBY_ID")
     private BankMandate paidBy;
 
     @Optional

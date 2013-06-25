@@ -121,6 +121,7 @@ public class Property extends FixedAsset {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
     @MemberOrder(sequence = "1.9")

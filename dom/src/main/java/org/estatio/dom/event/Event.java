@@ -10,7 +10,7 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
-// REVIEW: is this in scope?
+// TODO: is this in scope?
 
 //@PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")

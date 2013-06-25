@@ -37,6 +37,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="ASSET_ID")
     private FixedAsset asset;
 
     @Title(sequence = "3", prepend = ":")
@@ -53,6 +54,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="PARTY_ID")
     private Party party;
 
     @Title(sequence = "2", prepend = ":")

@@ -4,6 +4,7 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
@@ -16,6 +17,7 @@ import org.apache.isis.applib.annotation.Title;
         		"FROM org.estatio.dom.geography.Country " +
         		"WHERE reference.matches(:reference)")
 @Bounded
+@Immutable
 public class Country extends Geography {
 
     @javax.jdo.annotations.Unique

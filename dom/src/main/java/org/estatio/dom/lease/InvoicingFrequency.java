@@ -19,25 +19,19 @@ public enum InvoicingFrequency {
     YEARLY_IN_ARREARS("Yearly","RRULE:FREQ=YEARLY;INTERVAL=1", false, BigDecimal.valueOf(1), BigDecimal.valueOf(1));
 
     private InvoicingFrequency(String title, String rrule, Boolean inAdvance, BigDecimal numerator, BigDecimal denominator){
-        this.title = title;
+        // TODO: title is unused...
         this.rrule = rrule;
         this.numerator = numerator;
         this.denominator = denominator;
         this.inAdvance = inAdvance;
     }
 
-    private final String title;
     private final String rrule;
     
     private final Boolean inAdvance;
     private final BigDecimal numerator;
     private final BigDecimal denominator;
     
-    
-    // REVIEW: does not seem to be used?
-    public String title() {
-        return title;
-    }
 
     public String getRrule() {
         return rrule;

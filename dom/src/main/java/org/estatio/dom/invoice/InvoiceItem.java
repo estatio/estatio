@@ -59,6 +59,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="INVOICE_ID")
     private Invoice invoice;
 
     @Render(Type.EAGERLY)
@@ -92,6 +93,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="CHARGE_ID")
     private Charge charge;
 
     @Title(sequence = "2")
@@ -172,6 +174,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="TAX_ID")
     private Tax tax;
 
     @MemberOrder(sequence = "7")

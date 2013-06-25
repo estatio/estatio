@@ -14,6 +14,7 @@ import com.google.common.collect.Iterables;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -59,9 +60,10 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_IDX")
+    @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @DescribedAs("Unique reference code for this agreement")
     @MemberOrder(sequence = "1")
     @Title
     public String getReference() {
@@ -76,6 +78,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     private String name;
 
+    @DescribedAs("Optional name for this agreement")
     @MemberOrder(sequence = "2")
     @Optional
     public String getName() {
@@ -176,6 +179,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="AGREEMENTTYPE_ID")
     private AgreementType agreementType;
 
     @MemberOrder(sequence = "8")
@@ -189,6 +193,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="PREVIOUSAGREEMENT_ID")
     @javax.jdo.annotations.Persistent(mappedBy = "nextAgreement")
     private Agreement previousAgreement;
 
@@ -229,6 +234,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="NEXTAGREEMENT_ID")
     private Agreement nextAgreement;
 
     @Disabled

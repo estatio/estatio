@@ -46,6 +46,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="LEASE_ID")
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -183,6 +184,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="CHARGE_ID")
     private Charge charge;
 
     @MemberOrder(sequence = "14")

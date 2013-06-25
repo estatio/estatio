@@ -48,7 +48,7 @@ public class InvoiceCalculationService {
 
     // //////////////////////////////////////
 
-    // REVIEW: [JWA] Should injected services by default be not contributed?
+    // TODO: [JWA] Should injected services by default be not contributed?
     @NotContributed
     public void calculateAndInvoice(LeaseTerm leaseTerm, LocalDate periodStartDate, LocalDate dueDate, InvoicingFrequency invoicingFrequency, InvoiceRunType runType) {
         if (runType.equals(InvoiceRunType.RETRO_RUN)) {

@@ -5,7 +5,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
@@ -16,8 +15,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class BankMandate extends Agreement {
     
-    
-    
+    @javax.jdo.annotations.Column(name="BANKACCOUNT_ID")
     private FinancialAccount bankAccount;
 
     @MemberOrder(name = "Details", sequence = "11")

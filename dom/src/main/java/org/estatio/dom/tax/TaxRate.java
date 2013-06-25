@@ -30,6 +30,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="TAX_ID")
     private Tax tax;
 
     @Title
@@ -94,21 +95,23 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
 
     // //////////////////////////////////////
 
-    private TaxRate propertyName;
+    @javax.jdo.annotations.Column(name="PREVIOUSRATE_ID")
+    @javax.jdo.annotations.Persistent(mappedBy="nextRate")
+    private TaxRate previousRate;
 
     @Hidden
     @MemberOrder(sequence = "1")
-    @Persistent(mappedBy = "nextRate")
     public TaxRate getPreviousRate() {
-        return propertyName;
+        return previousRate;
     }
 
-    public void setPreviousRate(final TaxRate propertyName) {
-        this.propertyName = propertyName;
+    public void setPreviousRate(final TaxRate previousRate) {
+        this.previousRate = previousRate;
     }
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="NEXTRATE_ID")
     private TaxRate nextRate;
 
     @Hidden

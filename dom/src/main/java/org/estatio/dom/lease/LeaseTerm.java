@@ -55,12 +55,13 @@ import org.estatio.services.clock.ClockService;
 public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*Comparable<LeaseTerm>, */ WithInterval, WithSequence {
 
     public LeaseTerm() {
-        // REVIEW: the integration tests fail if this is made DESCending.
+        // TODO: the integration tests fail if this is made DESCending.
         super("leaseItem, sequence");
     }
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="LEASEITEM_ID")
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
@@ -220,6 +221,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="PREVIOUSTERM_ID")
     @javax.jdo.annotations.Persistent(mappedBy = "nextTerm")
     private LeaseTerm previousTerm;
 
@@ -255,6 +257,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="NEXTTERM_ID")
     private LeaseTerm nextTerm;
 
     @MemberOrder(sequence = "7")

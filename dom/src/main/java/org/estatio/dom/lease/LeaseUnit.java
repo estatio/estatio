@@ -36,6 +36,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="LEASE_ID")
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
@@ -67,6 +68,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="UNIT_ID")
     private UnitForLease unit;
 
     @Title(sequence = "2", append = ":")
@@ -132,6 +134,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="BRANDTAG_ID")
     private Tag brandTag;
 
     @Hidden
@@ -172,6 +175,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="SECTORTAG_ID")
     private Tag sectorTag;
 
     @Hidden
@@ -212,6 +216,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="ACTIVITYTAG_ID")
     private Tag activityTag;
 
     @Hidden

@@ -32,6 +32,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Query(name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL", value = "SELECT " + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + "WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " + "&& dueDate == :dueDate " + "&& startDate == :startDate")
 public class InvoiceItemForLease extends InvoiceItem {
 
+    @javax.jdo.annotations.Column(name="LEASETERM_ID")
     private LeaseTerm leaseTerm;
 
     @Disabled

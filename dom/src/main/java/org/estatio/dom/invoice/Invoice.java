@@ -53,6 +53,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="BUYER_ID")
     private Party buyer;
 
     @MemberOrder(sequence = "1")
@@ -66,6 +67,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="SELLER_ID")
     private Party seller;
 
     @MemberOrder(sequence = "2")
@@ -118,6 +120,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="SOURCE_ID")
     @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
     private InvoiceSource source;
 
@@ -178,6 +181,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="CURRENCY_ID")
     private Currency currency;
 
     @MemberOrder(sequence = "10")

@@ -23,7 +23,7 @@ public class PostalAddress extends CommunicationChannel {
      * This is NOT the <tt>@Title</tt>, because the title omits
      * the <i>address2</i> attribute.
      * 
-     * REVIEW: is this inconsistency intentional?
+     * TODO: is this inconsistency intentional?
      */
     @Override
     public String getName() {

@@ -48,6 +48,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="AGREEMENT_ID")
     private Agreement agreement;
 
     @Title(sequence = "3", prepend = ":")
@@ -86,6 +87,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="PARTY_ID")
     private Party party;
 
     @Title(sequence = "2", prepend = ":")

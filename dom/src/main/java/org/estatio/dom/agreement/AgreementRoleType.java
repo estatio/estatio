@@ -44,6 +44,7 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name="APPLIESTO_ID")
     private AgreementType appliesTo;
 
     @MemberOrder(sequence = "2")

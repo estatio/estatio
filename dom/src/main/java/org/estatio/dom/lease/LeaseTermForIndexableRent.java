@@ -22,6 +22,7 @@ import org.estatio.dom.index.Indices;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
+    @javax.jdo.annotations.Column(name="INDEX_ID")
     private Index index;
 
     @MemberOrder(sequence = "10", name = "Indexable Rent")
