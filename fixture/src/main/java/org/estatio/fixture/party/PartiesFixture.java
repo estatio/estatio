@@ -18,47 +18,47 @@ public class PartiesFixture extends AbstractFixture {
         createOrganisation(
                 "ACME", 
                 "ACME Properties International",
-                financialAccounts.newBankAccount("NL31ABNA0580744434"),
+                financialAccounts.newBankAccount("NL31ABNA0580722234"),
                 communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211333"),
-                communicationChannels.newFaxNumber("+312022211399"),
-                communicationChannels.newEmailAddress("info@topmodel.example.com")
+                communicationChannels.newPhoneNumber("+31202211011"),
+                communicationChannels.newFaxNumber("+312022211311"),
+                communicationChannels.newEmailAddress("info@acme.com")
                 );
         createOrganisation(
                 "HELLOWORLD", 
                 "Hello World Properties", 
-                financialAccounts.newBankAccount("NL31ABNA0580744434"),
-                communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211333"),
-                communicationChannels.newFaxNumber("+312022211399"),
-                communicationChannels.newEmailAddress("info@example.com")
+                financialAccounts.newBankAccount("NL31ABNA0580733334"),
+                communicationChannels.newPostalAddress("Herengracht 101", null, "1010 AA", "Amsterdam", null, null),
+                communicationChannels.newPhoneNumber("+31202211022"),
+                communicationChannels.newFaxNumber("+312022211322"),
+                communicationChannels.newEmailAddress("info@helloworldproperties.com")
                 );
         createOrganisation(
                 "TOPMODEL", 
                 "Topmodel Fashion",
                 financialAccounts.newBankAccount("NL31ABNA0580744434"),
-                communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211333"),
-                communicationChannels.newFaxNumber("+312022211399"),
-                communicationChannels.newEmailAddress("info@topmodel.example.com")
+                communicationChannels.newPostalAddress("Herengracht 102", null, "1010 AA", "Amsterdam", null, null),
+                communicationChannels.newPhoneNumber("+31202211033"),
+                communicationChannels.newFaxNumber("+312022211333"),
+                communicationChannels.newEmailAddress("info@topmodel.com")
                 );
         createOrganisation(
                 "MEDIAX", 
                 "Mediax Electronics",
-                financialAccounts.newBankAccount("NL31ABNA0580744434"),
-                communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211333"),
-                communicationChannels.newFaxNumber("+312022211399"),
-                communicationChannels.newEmailAddress("info@topmodel.example.com")
+                financialAccounts.newBankAccount("NL31ABNA0580755534"),
+                communicationChannels.newPostalAddress("Herengracht 103", null, "1010 AA", "Amsterdam", null, null),
+                communicationChannels.newPhoneNumber("+31202211044"),
+                communicationChannels.newFaxNumber("+312022211344"),
+                communicationChannels.newEmailAddress("info@mediax.com")
                 );
         createOrganisation(
                 "POISON", 
                 "Poison Perfumeries",
-                financialAccounts.newBankAccount("NL31ABNA0580744434"),
-                communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211333"),
-                communicationChannels.newFaxNumber("+312022211399"),
-                communicationChannels.newEmailAddress("info@topmodel.example.com")
+                financialAccounts.newBankAccount("NL31ABNA0580766634"),
+                communicationChannels.newPostalAddress("Herengracht 104", null, "1010 AA", "Amsterdam", null, null),
+                communicationChannels.newPhoneNumber("+31202211055"),
+                communicationChannels.newFaxNumber("+312022211355"),
+                communicationChannels.newEmailAddress("info@posion-perfumeries.com")
                 );
         createPerson(
                 "JDOE",
