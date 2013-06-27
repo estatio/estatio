@@ -81,7 +81,7 @@ public class LeaseTermTest {
     @Test
     public void update_ok() {
         LeaseTermForTesting nextTerm = new LeaseTermForTesting();
-        nextTerm.modifyPreviousTerm(term);
+        nextTerm.modifyPrevious(term);
         nextTerm.modifyStartDate(new LocalDate(2013, 1, 1));
         // term.update();
         assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
@@ -137,7 +137,7 @@ public class LeaseTermTest {
                 LeaseTerm leaseTerm = (LeaseTerm) invocation.getParameter(1);
                 LeaseTermForTesting ltt = new LeaseTermForTesting();
                 ltt.modifyLeaseItem(leaseItem);
-                ltt.modifyPreviousTerm(leaseTerm);
+                ltt.modifyPrevious(leaseTerm);
                 ltt.initialize();
                 ltt.injectClockService(mockClockService);
                 return ltt;

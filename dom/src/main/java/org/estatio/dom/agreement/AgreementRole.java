@@ -6,8 +6,11 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -31,6 +34,14 @@ import org.estatio.services.clock.ClockService;
         		"&& type == :type " +
         		"&& startDate == :startDate"),
 	@javax.jdo.annotations.Query(
+        name = "findByAgreementAndPartyAndTypeAndEndDate", language = "JDOQL", 
+        value = "SELECT " +
+                "FROM org.estatio.dom.agreement.AgreementRole " +
+                "WHERE agreement == :agreement " +
+                "&& party == :party " +
+                "&& type == :type " +
+                "&& endDate == :endDate"),
+	@javax.jdo.annotations.Query(
         name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL", 
         value = "SELECT " +
                 "FROM org.estatio.dom.agreement.AgreementRole " +
@@ -40,7 +51,8 @@ import org.estatio.services.clock.ClockService;
                 "&& (endDate == null | endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioTransactionalObject<AgreementRole> implements WithInterval {
+@MemberGroups({"General", "Dates", "Related"})
+public class AgreementRole extends EstatioTransactionalObject<AgreementRole> implements WithInterval<AgreementRole> {
 
     public AgreementRole() {
         super("agreement, party, startDate desc, type");
@@ -139,7 +151,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Dates", sequence = "4")
     @Optional
     @javax.jdo.annotations.Persistent
     public LocalDate getStartDate() {
@@ -152,7 +164,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(name="Dates", sequence = "5")
     @Optional
     @javax.jdo.annotations.Persistent
     public LocalDate getEndDate() {
@@ -166,6 +178,30 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Role")
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    @Override
+    public AgreementRole getPrevious() {
+        return getStartDate() != null
+                ?agreementRoles.findByAgreementAndPartyAndTypeAndEndDate(getAgreement(), getParty(), getType(), getStartDate().minusDays(1))
+                :null;
+    }
+
+    @MemberOrder(name="Related", sequence = "9.2")
+    @Named("Next Role")
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    @Override
+    public AgreementRole getNext() {
+        return getEndDate() != null
+                ?agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(getAgreement(), getParty(), getType(), getEndDate().plusDays(1))
+                :null;
     }
 
     // //////////////////////////////////////
@@ -186,6 +222,12 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
+    }
+
+    private AgreementRoles agreementRoles;
+    
+    public void injectAgreementRoles(AgreementRoles agreementRoles) {
+        this.agreementRoles = agreementRoles;
     }
 
 }

@@ -364,8 +364,8 @@ public class Lease extends Agreement implements InvoiceSource {
                 term = item.getTerms().last();
             if (term != null) {
                 term.modifyEndDate(terminationDate);
-                if (term.getNextTerm() != null)
-                    term.getNextTerm().remove();
+                if (term.getNext() != null)
+                    term.getNext().remove();
             }
         }
         return this;

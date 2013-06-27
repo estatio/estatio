@@ -41,6 +41,12 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         return firstMatch("findByAgreementAndPartyAndTypeAndStartDate", "agreement", agreement, "party", party, "type", type, "startDate", startDate);
     }
 
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public AgreementRole findByAgreementAndPartyAndTypeAndEndDate(Agreement agreement, Party party, AgreementRoleType type, LocalDate endDate) {
+        return firstMatch("findByAgreementAndPartyAndTypeAndEndDate", "agreement", agreement, "party", party, "type", type, "endDate", endDate);
+    }
+
     // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
@@ -48,5 +54,6 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
     public AgreementRole findByAgreementAndTypeAndContainsDate(Agreement agreement, AgreementRoleType type, LocalDate date) {
         return firstMatch("findByAgreementAndTypeAndContainsDate", "agreement", agreement, "type", type, "date", date);
     }
+
 
 }

@@ -16,12 +16,14 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
@@ -210,82 +212,88 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUSAGREEMENT_ID")
-    @javax.jdo.annotations.Persistent(mappedBy = "nextAgreement")
-    private Agreement previousAgreement;
+    @javax.jdo.annotations.Column(name="PREVIOUS_ID")
+    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    private Agreement previous;
 
+    @MemberOrder(name="Related", sequence = "9")
+    @Named("Previous Agreement")
+    @Hidden(where=Where.ALL_TABLES)
     @Disabled
     @Optional
-    @MemberOrder(name="Related", sequence = "9")
-    public Agreement getPreviousAgreement() {
-        return previousAgreement;
+    @Override
+    public Agreement getPrevious() {
+        return previous;
     }
 
-    public void setPreviousAgreement(final Agreement previousAgreement) {
-        this.previousAgreement = previousAgreement;
+    public void setPrevious(final Agreement previous) {
+        this.previous = previous;
     }
 
-    public void modifyPreviousAgreement(final Agreement previousAgreement) {
-        Agreement currentPreviousAgreement = getPreviousAgreement();
+    public void modifyPrevious(final Agreement previous) {
+        Agreement currentPrevious = getPrevious();
         // check for no-op
-        if (previousAgreement == null || previousAgreement.equals(currentPreviousAgreement)) {
+        if (previous == null || previous.equals(currentPrevious)) {
             return;
         }
         // dissociate existing
-        clearPreviousAgreement();
+        clearPrevious();
         // associate new
-        previousAgreement.setNextAgreement(this);
-        setPreviousAgreement(previousAgreement);
+        previous.setNext(this);
+        setPrevious(previous);
     }
 
-    public void clearPreviousAgreement() {
-        Agreement currentPreviousAgreement = getPreviousAgreement();
+    public void clearPrevious() {
+        Agreement currentPreviousAgreement = getPrevious();
         // check for no-op
         if (currentPreviousAgreement == null) {
             return;
         }
         // dissociate existing
-        currentPreviousAgreement.setNextAgreement(null);
-        setPreviousAgreement(null);
+        currentPreviousAgreement.setNext(null);
+        setPrevious(null);
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXTAGREEMENT_ID")
-    private Agreement nextAgreement;
+    @javax.jdo.annotations.Column(name="NEXT_ID")
+    private Agreement next;
 
+    @MemberOrder(name="Related", sequence = "10")
+    @Named("Next Agreement")
+    @Hidden(where=Where.ALL_TABLES)
     @Disabled
     @Optional
-    @MemberOrder(name="Related", sequence = "10")
-    public Agreement getNextAgreement() {
-        return nextAgreement;
+    @Override
+    public Agreement getNext() {
+        return next;
     }
 
-    public void setNextAgreement(final Agreement nextAgreement) {
-        this.nextAgreement = nextAgreement;
+    public void setNext(final Agreement next) {
+        this.next = next;
     }
 
-    public void modifyNextAgreement(final Agreement nextAgreement) {
-        Agreement currentNextAgreement = getNextAgreement();
+    public void modifyNext(final Agreement next) {
+        Agreement currentNext = getNext();
         // check for no-op
-        if (nextAgreement == null || nextAgreement.equals(currentNextAgreement)) {
+        if (next == null || next.equals(currentNext)) {
             return;
         }
         // delegate to parent(s) to (re-)associate
-        if (currentNextAgreement != null) {
-            currentNextAgreement.clearPreviousAgreement();
+        if (currentNext != null) {
+            currentNext.clearPrevious();
         }
-        nextAgreement.modifyPreviousAgreement(this);
+        next.modifyPrevious(this);
     }
 
-    public void clearNextAgreement() {
-        Agreement currentNextAgreement = getNextAgreement();
+    public void clearNext() {
+        Agreement currentNext = getNext();
         // check for no-op
-        if (currentNextAgreement == null) {
+        if (currentNext == null) {
             return;
         }
         // delegate to parent to dissociate
-        currentNextAgreement.clearPreviousAgreement();
+        currentNext.clearPrevious();
     }
 
     // //////////////////////////////////////

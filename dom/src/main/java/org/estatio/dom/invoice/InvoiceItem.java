@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -17,7 +16,9 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -39,7 +40,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem> implements /*Comparable<InvoiceItem>, */ WithInterval, WithDescriptionGetter {
+@MemberGroups({"General", "Amounts", "Dates", "Related"})
+public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
         super("invoice, startDate desc, charge, description, sequence");
@@ -131,7 +133,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Amounts", sequence = "4")
     public BigDecimal getNetAmount() {
         return netAmount;
     }
@@ -150,7 +152,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private BigDecimal vatAmount;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @MemberOrder(sequence = "5")
+    @MemberOrder(name="Amounts", sequence = "5")
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -164,7 +166,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(name="Amounts", sequence = "6")
     public BigDecimal getGrossAmount() {
         return grossAmount;
     }
@@ -207,7 +209,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @MemberOrder(sequence = "9")
+    @MemberOrder(name="Dates", sequence = "9")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -221,7 +223,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "10")
+    @MemberOrder(name="Dates", sequence = "10")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -233,7 +235,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "11")
+    @MemberOrder(name="Dates", sequence = "11")
     @Disabled
     @Optional
     public LocalDate getEndDate() {
@@ -248,6 +250,27 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Item")
+    @Disabled
+    @Optional
+    @Override
+    public InvoiceItem getPrevious() {
+        return null;
+    }
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.2")
+    @Named("Next Item")
+    @Disabled
+    @Optional
+    @Override
+    public InvoiceItem getNext() {
+        return null;
     }
 
     // //////////////////////////////////////

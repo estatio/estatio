@@ -5,6 +5,7 @@ import java.util.SortedMap;
 
 import com.google.common.collect.Maps;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.exceprecog.ExceptionRecognizerComposite;
 
 import org.estatio.dom.utils.StringUtils;
@@ -74,6 +75,7 @@ public class ExceptionRecognizersForEstatio extends ExceptionRecognizerComposite
         constraintNames.put(constraintName, replacement);
     }
     
+    @Programmatic
     public Set<String> getRecognizedConstraintNames() {
         return constraintNames.keySet();
     }

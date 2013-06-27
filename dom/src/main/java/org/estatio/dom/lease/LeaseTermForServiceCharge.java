@@ -99,7 +99,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Programmatic
     public void initialize() {
         super.initialize();
-        LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPreviousTerm();
+        LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPrevious();
         if (previousTerm != null) {
             this.setBudgetedValue(MathUtils.isNotZeroOrNull(previousTerm.getAuditedValue()) ? previousTerm.getAuditedValue() : previousTerm.getBudgetedValue());
         }
@@ -111,9 +111,9 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         super.update();
         if (getStatus() == LeaseTermStatus.NEW) {
             // date from previous term
-            if (getPreviousTerm() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
-                if (MathUtils.isNotZeroOrNull(getPreviousTerm().getTrialValue())) {
-                    setBudgetedValue(getPreviousTerm().getTrialValue());
+            if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
+                if (MathUtils.isNotZeroOrNull(getPrevious().getTrialValue())) {
+                    setBudgetedValue(getPrevious().getTrialValue());
                 }
             }
 

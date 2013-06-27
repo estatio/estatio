@@ -8,6 +8,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -29,7 +30,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
     @javax.jdo.annotations.Query(
             name = "findByLeaseAndUnitAndStartDate", language = "JDOQL", 
             value = "SELECT FROM org.estatio.dom.lease.LeaseUnit WHERE lease == :lease && unit == :unit && startDate == :startDate") })
-public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements /*Comparable<LeaseUnit>, */ WithInterval {
+@MemberGroups({"General", "Dates", "Tags", "Related"})
+public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements WithInterval<LeaseUnit> {
 
     public LeaseUnit() {
         super("lease, unit, startDate desc");
@@ -105,7 +107,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     private LocalDate startDate;
 
     @Optional
-    @MemberOrder(sequence = "3")
+    @MemberOrder(name="Dates", sequence = "3")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -119,7 +121,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Dates", sequence = "4")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -132,6 +134,27 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Occupany")
+    @Disabled
+    @Optional
+    @Override
+    public LeaseUnit getPrevious() {
+        return null;
+    }
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.2")
+    @Named("Next Occupancy")
+    @Disabled
+    @Optional
+    @Override
+    public LeaseUnit getNext() {
+        return null;
     }
 
     // //////////////////////////////////////
@@ -148,7 +171,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.brandTag = brandTag;
     }
 
-    @MemberOrder(sequence = "6")
+    @MemberOrder(name="Tags", sequence="6")
     @Optional
     public String getBrand() {
         final Tag existingTag = getBrandTag();
@@ -189,7 +212,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.sectorTag = sectorTag;
     }
 
-    @MemberOrder(sequence = "7")
+    @MemberOrder(name="Tags", sequence = "7")
     @Optional
     public String getSector() {
         final Tag existingTag = getSectorTag();
@@ -230,7 +253,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.activityTag = activityTag;
     }
 
-    @MemberOrder(sequence = "8")
+    @MemberOrder(name="Tags", sequence = "8")
     @Optional
     public String getActivity() {
         final Tag existingTag = getActivityTag();
@@ -264,5 +287,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     public void injectTags(final Tags tags) {
         this.tags = tags;
     }
+
 
 }

@@ -355,7 +355,7 @@ public class Api extends AbstractFactoryAndRepository {
     public void putLeaseLink(@Named("leaseReference") String leaseReference, @Named("previousLeaseReference") String previousLeaseReference) {
         Lease lease = fetchLease(leaseReference);
         Lease previousLease = fetchLease(previousLeaseReference);
-        lease.modifyPreviousAgreement(previousLease);
+        lease.modifyPrevious(previousLease);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

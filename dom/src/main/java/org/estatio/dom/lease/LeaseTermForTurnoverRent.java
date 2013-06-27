@@ -122,7 +122,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     @Override
     protected void initialize() {
         super.initialize();
-        LeaseTermForTurnoverRent prev = (LeaseTermForTurnoverRent) getPreviousTerm();
+        LeaseTermForTurnoverRent prev = (LeaseTermForTurnoverRent) getPrevious();
         if (prev != null) {
             setTurnoverRentRule(prev.getTurnoverRentRule());
         }

@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -52,6 +53,7 @@ import org.estatio.services.clock.ClockService;
     @javax.jdo.annotations.Query(name = "findByLeaseItemAndSequence", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE leaseItem == :leaseItem && sequence == :sequence") 
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@MemberGroups({"General", "Dates", "Related"})
 public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*Comparable<LeaseTerm>, */ WithInterval, WithSequence {
 
     public LeaseTerm() {
@@ -113,7 +115,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     private LocalDate startDate;
 
     @Title(sequence = "2", append = "-")
-    @MemberOrder(sequence = "2")
+    @MemberOrder(name="Dates", sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -132,8 +134,8 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     }
 
     protected void onModifyStartDate(final LocalDate oldStartDate, final LocalDate newStartDate) {
-        if (getPreviousTerm() != null) {
-            getPreviousTerm().modifyEndDate(getInterval().endDateFromstartDate());
+        if (getPrevious() != null) {
+            getPrevious().modifyEndDate(getInterval().endDateFromstartDate());
         }
     }
 
@@ -142,7 +144,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(name="Dates", sequence = "3")
     @Title(sequence = "3")
     @Disabled
     @Optional
@@ -169,8 +171,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-
-    // //////////////////////////////////////
 
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
@@ -222,73 +222,75 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUSTERM_ID")
-    @javax.jdo.annotations.Persistent(mappedBy = "nextTerm")
-    private LeaseTerm previousTerm;
+    @javax.jdo.annotations.Column(name="PREVIOUS_ID")
+    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    private LeaseTerm previous;
 
-    @MemberOrder(sequence = "6")
-    @Hidden
+    @MemberOrder(name="Related", sequence = "6")
+    @Named("Previous Term")
+    @Hidden(where=Where.ALL_TABLES)
     @Optional
-    public LeaseTerm getPreviousTerm() {
-        return previousTerm;
+    public LeaseTerm getPrevious() {
+        return previous;
     }
 
-    public void setPreviousTerm(final LeaseTerm previousTerm) {
-        this.previousTerm = previousTerm;
+    public void setPrevious(final LeaseTerm previous) {
+        this.previous = previous;
     }
 
-    public void modifyPreviousTerm(final LeaseTerm previousTerm) {
-        LeaseTerm currentPreviousTerm = getPreviousTerm();
-        if (previousTerm == null || previousTerm.equals(currentPreviousTerm)) {
+    public void modifyPrevious(final LeaseTerm previous) {
+        LeaseTerm currentPrevious = getPrevious();
+        if (previous == null || previous.equals(currentPrevious)) {
             return;
         }
-        clearPreviousTerm();
-        previousTerm.setNextTerm(this);
-        setPreviousTerm(previousTerm);
+        clearPrevious();
+        previous.setNext(this);
+        setPrevious(previous);
     }
 
-    public void clearPreviousTerm() {
-        LeaseTerm currentPreviousTerm = getPreviousTerm();
-        if (currentPreviousTerm == null) {
+    public void clearPrevious() {
+        LeaseTerm currentPrevious = getPrevious();
+        if (currentPrevious == null) {
             return;
         }
-        currentPreviousTerm.setNextTerm(null);
-        setPreviousTerm(null);
+        currentPrevious.setNext(null);
+        setPrevious(null);
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXTTERM_ID")
-    private LeaseTerm nextTerm;
+    @javax.jdo.annotations.Column(name="NEXT_ID")
+    private LeaseTerm next;
 
-    @MemberOrder(sequence = "7")
-    @Hidden
+    @Hidden(where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "7")
+    @Named("Next Term")
     @Optional
-    public LeaseTerm getNextTerm() {
-        return nextTerm;
+    public LeaseTerm getNext() {
+        return next;
     }
 
-    public void setNextTerm(final LeaseTerm nextTerm) {
-        this.nextTerm = nextTerm;
+    public void setNext(final LeaseTerm next) {
+        this.next = next;
     }
 
-    public void modifyNextTerm(final LeaseTerm nextTerm) {
-        LeaseTerm currentNextTerm = getNextTerm();
-        if (nextTerm == null || nextTerm.equals(currentNextTerm)) {
+    public void modifyNext(final LeaseTerm next) {
+        LeaseTerm currentNext = getNext();
+        if (next == null || next.equals(currentNext)) {
             return;
         }
-        if (currentNextTerm != null) {
-            currentNextTerm.clearPreviousTerm();
+        if (currentNext != null) {
+            currentNext.clearPrevious();
         }
-        nextTerm.modifyPreviousTerm(this);
+        next.modifyPrevious(this);
     }
 
-    public void clearNextTerm() {
-        LeaseTerm currentNextTerm = getNextTerm();
-        if (currentNextTerm == null) {
+    public void clearNext() {
+        LeaseTerm currentNext = getNext();
+        if (currentNext == null) {
             return;
         }
-        currentNextTerm.clearPreviousTerm();
+        currentNext.clearPrevious();
     }
 
     // //////////////////////////////////////
@@ -328,15 +330,15 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     @Programmatic
     @Hidden
     public void remove() {
-        if (getNextTerm() != null) {
-            getNextTerm().remove();
+        if (getNext() != null) {
+            getNext().remove();
         }
         if (this.getInvoiceItems().size() > 0) {
             // TODO: this term is outside the scope of the lease termination
             // date and there are invoice items related to it so the amount
             // should be credited
         } else {
-            this.modifyPreviousTerm(null);
+            this.modifyPrevious(null);
             this.modifyLeaseItem(null);
         }
     }
@@ -411,9 +413,9 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         // have a start date after today
         if (getStartDate() != null && getStartDate().compareTo(clockService.now()) < 0) {
             createNext();
-            nextTerm = getNextTerm();
-            if (nextTerm != null) {
-                nextTerm.verify();
+            next = getNext();
+            if (next != null) {
+                next.verify();
             }
         }
         return this;
@@ -444,7 +446,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     }
 
     LeaseTerm createNext(LocalDate nextStartDate) {
-        if (getNextTerm() != null) {
+        if (getNext() != null) {
             return null;
         }
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
@@ -459,8 +461,8 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
             return null;
         }
 
-        LeaseTerm term = getNextTerm();
-        if (getNextTerm() == null) {
+        LeaseTerm term = getNext();
+        if (getNext() == null) {
             term = getLeaseItem().createNextTerm(this);
         }
 
@@ -474,7 +476,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     protected void initialize() {
         setStatus(LeaseTermStatus.NEW);
-        LeaseTerm previousTerm = getPreviousTerm();
+        LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
         if (previousTerm != null) {
             sequence = previousTerm.getSequence().add(BigInteger.ONE);
@@ -486,7 +488,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     protected void update() {
         // terminate the last term
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null && nextTerm == null)
+        if (terminationDate != null && next == null)
             if (getEndDate() == null || getEndDate().compareTo(terminationDate) > 0)
                 setEndDate(terminationDate);
     }

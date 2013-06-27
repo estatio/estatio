@@ -8,7 +8,9 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -29,7 +31,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         		"&& party == :party " +
         		"&& type == :type")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> implements /*Comparable<FixedAssetRole>, */WithInterval {
+@MemberGroups({"General", "Dates", "Related"})
+public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> implements WithInterval<FixedAssetRole> {
 
     public FixedAssetRole() {
         super("asset, party, startDate desc, type");
@@ -88,7 +91,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
 
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Dates", sequence = "4")
     @Optional
     public LocalDate getStartDate() {
         return startDate;
@@ -101,7 +104,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "5")
+    @MemberOrder(name="Dates", sequence = "5")
     @Optional
     public LocalDate getEndDate() {
         return endDate;
@@ -117,4 +120,35 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Role")
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    @Override
+    public FixedAssetRole getPrevious() {
+        return getStartDate() != null
+                ?fixedAssetRoles.findByAssetAndPartyAndTypeAndEndDate(getAsset(), getParty(), getType(), getStartDate().minusDays(1))
+                :null;
+    }
+
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Next Role")
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    @Override
+    public FixedAssetRole getNext() {
+        return getEndDate() != null
+                ?fixedAssetRoles.findByAssetAndPartyAndTypeAndStartDate(getAsset(), getParty(), getType(), getEndDate().plusDays(1))
+                :null;
+    }
+
+    // //////////////////////////////////////
+
+    private FixedAssetRoles fixedAssetRoles;
+    public void injectFixedAssetRoles(FixedAssetRoles fixedAssetRoles) {
+        this.fixedAssetRoles = fixedAssetRoles;
+    }
+    
 }

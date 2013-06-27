@@ -223,7 +223,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Programmatic
     public void initialize() {
         super.initialize();
-        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
+        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
         if (previousTerm != null) {
             LeaseTermFrequency frequency = previousTerm.getFrequency();
             if (frequency != null) {
@@ -250,7 +250,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     public void update() {
         super.update();
         if (getStatus().equals(LeaseTermStatus.NEW)) {
-            LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPreviousTerm();
+            LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
             if (previousTerm != null) {
                 BigDecimal newBaseValue = firstValue(previousTerm.getTrialValue(), previousTerm.getIndexedValue(), previousTerm.getBaseValue());
                 if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {

@@ -21,9 +21,13 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
@@ -32,7 +36,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 // TODO: is this in scope?
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class PartyRegistration extends EstatioTransactionalObject<PartyRegistration> implements WithInterval {
+@MemberGroups({"General", "Dates", "Tags", "Related"})
+public class PartyRegistration extends EstatioTransactionalObject<PartyRegistration> implements WithInterval<PartyRegistration> {
 
     public PartyRegistration() {
         // TODO: I made this up...
@@ -71,7 +76,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Dates", sequence = "1")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -83,7 +88,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(name="Dates", sequence = "1")
     @Optional
     @Disabled
     public LocalDate getEndDate() {
@@ -98,6 +103,26 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Registration")
+    @Disabled
+    @Optional
+    @Override
+    public PartyRegistration getPrevious() {
+        return null;
+    }
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.2")
+    @Named("Next Registration")
+    @Disabled
+    @Optional
+    @Override
+    public PartyRegistration getNext() {
+        return null;
     }
 
     // //////////////////////////////////////

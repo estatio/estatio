@@ -15,6 +15,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
@@ -23,7 +24,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(name = "findByTaxAndDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.TaxRate WHERE tax == :tax  && startDate >= :date && (endDate == null || endDate <= :date)")
-public class TaxRate extends EstatioTransactionalObject<TaxRate> implements WithInterval {
+public class TaxRate extends EstatioTransactionalObject<TaxRate> implements WithInterval<TaxRate> {
 
     public TaxRate() {
         super("tax, startDate desc");
@@ -78,7 +79,25 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    // }}
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Rate")
+    @Disabled
+    @Optional
+    @Override
+    public TaxRate getPrevious() {
+        return null;
+    }
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.2")
+    @Named("Next Rate")
+    @Disabled
+    @Optional
+    @Override
+    public TaxRate getNext() {
+        return null;
+    }
 
     // //////////////////////////////////////
 
@@ -153,5 +172,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
         rate.setPreviousRate(this);
         return rate;
     }
+
 
 }

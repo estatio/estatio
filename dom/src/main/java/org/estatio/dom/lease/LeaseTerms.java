@@ -30,7 +30,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         persist(leaseTerm);
         leaseTerm.modifyLeaseItem(leaseItem);
-        leaseTerm.modifyPreviousTerm(previous);
+        leaseTerm.modifyPrevious(previous);
 
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated

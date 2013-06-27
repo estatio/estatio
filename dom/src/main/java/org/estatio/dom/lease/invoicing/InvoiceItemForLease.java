@@ -9,6 +9,7 @@ import com.google.common.collect.Ordering;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.agreement.AgreementRole;
@@ -154,5 +155,6 @@ public class InvoiceItemForLease extends InvoiceItem {
             return Ordering.natural().nullsFirst().compare(p.getLeaseTerm(), q.getLeaseTerm());
         }
     };
+
 
 }

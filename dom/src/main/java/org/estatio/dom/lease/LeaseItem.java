@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -38,7 +39,8 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_INDEX_IDX", members = { "lease", "type", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_INDEX2_IDX", members = { "lease", "type", "startDate" }) })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements WithInterval, WithSequence {
+@MemberGroups({"General", "Current Value", "Dates", "Related"})
+public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements WithInterval<LeaseItem>, WithSequence {
 
     public LeaseItem() {
         super("lease, type, sequence desc");
@@ -122,7 +124,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(sequence = "3")
+    @MemberOrder(name="Dates", sequence = "3")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -134,7 +136,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Dates", sequence = "4")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -154,6 +156,28 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Previous Lease's Role")
+    @Disabled
+    @Optional
+    @Override
+    public LeaseItem getPrevious() {
+        return null;
+    }
+
+    @Hidden // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence = "9.1")
+    @Named("Next Lease's Item")
+    @Disabled
+    @Optional
+    @Override
+    public LeaseItem getNext() {
+        return null;
+    }
+
+
+    
     // //////////////////////////////////////
 
     private InvoicingFrequency invoicingFrequency;
@@ -303,7 +327,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
 
     public LeaseItem verify() {
         for (LeaseTerm term : getTerms()) {
-            if (term.getPreviousTerm() == null) {
+            if (term.getPrevious() == null) {
                 // since verify is recursive on terms only start on the main
                 // term
                 term.verify();
