@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -27,7 +28,7 @@ import org.estatio.dom.party.Party;
             value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE type == :type && owner == :owner")
 })
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount> implements WithReferenceGetter, WithNameGetter {
+public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount> implements WithReferenceGetter, WithNameGetter /* TODO: implement WithReferenceUnique */{
 
     public FinancialAccount() {
         super("type, reference");
@@ -35,6 +36,8 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     
     // //////////////////////////////////////
 
+    // TODO: integtests failing with this.
+    //@javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @MemberOrder(sequence = "1")

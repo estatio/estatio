@@ -46,7 +46,7 @@ public class InvoiceNumberTest_assignInvoiceNumber {
     public void happyCase() {
         context.checking(new Expectations() {
             {
-                allowing(mockNumerators).establish(NumeratorType.INVOICE_NUMBER);
+                allowing(mockNumerators).establishNumerator(NumeratorType.INVOICE_NUMBER);
                 will(returnValue(numerator));
             }
         });

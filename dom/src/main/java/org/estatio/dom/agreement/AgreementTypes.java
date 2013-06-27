@@ -18,7 +18,7 @@ public class AgreementTypes extends EstatioDomainService<AgreementType> {
 
     @ActionSemantics(Of.SAFE)
     public AgreementType find(final String title) {
-        return firstMatch("findByTitle", "title", StringUtils.wildcardToCaseInsensitiveRegex(title));
+        return firstMatch("findByTitle", "title", title);
     }
 
 }

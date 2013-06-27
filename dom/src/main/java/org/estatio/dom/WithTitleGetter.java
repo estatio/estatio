@@ -1,6 +1,5 @@
 package org.estatio.dom;
 
-import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.util.ObjectContracts.ToStringEvaluator;
 
 public interface WithTitleGetter {

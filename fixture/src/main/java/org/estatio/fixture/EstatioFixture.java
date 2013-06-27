@@ -26,16 +26,16 @@ public class EstatioFixture extends AbstractFixture {
     public void install() {
         
         List<AbstractFixture> fixtures = Arrays.asList(
-        getContainer().newTransientInstance(GeographyFixture.class),
-        getContainer().newTransientInstance(AgreementTypesAndRoleTypesFixture.class),
-        getContainer().newTransientInstance(TaxFixture.class),
-        getContainer().newTransientInstance(CurrencyFixture.class),
-        getContainer().newTransientInstance(ChargeFixture.class),
-        getContainer().newTransientInstance(IndexFixture.class),
-        getContainer().newTransientInstance(PartiesFixture.class),
-        getContainer().newTransientInstance(PropertiesAndUnitsFixture.class),
-        getContainer().newTransientInstance(LeasesFixture.class),
-        getContainer().newTransientInstance(InvoiceFixture.class)
+            newFixture(GeographyFixture.class),
+            newFixture(AgreementTypesAndRoleTypesFixture.class),
+            newFixture(TaxFixture.class),
+            newFixture(CurrencyFixture.class),
+            newFixture(ChargeFixture.class),
+            newFixture(IndexFixture.class),
+            newFixture(PartiesFixture.class),
+            newFixture(PropertiesAndUnitsFixture.class),
+            newFixture(LeasesFixture.class),
+            newFixture(InvoiceFixture.class)
         );
 
         for (AbstractFixture fixture : fixtures) {
@@ -43,6 +43,10 @@ public class EstatioFixture extends AbstractFixture {
             getContainer().flush();
         }
 
+    }
+
+    private AbstractFixture newFixture(Class<? extends AbstractFixture> fixtureClass) {
+        return getContainer().newTransientInstance(fixtureClass);
     }
 
 }

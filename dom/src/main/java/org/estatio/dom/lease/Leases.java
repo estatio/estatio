@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;

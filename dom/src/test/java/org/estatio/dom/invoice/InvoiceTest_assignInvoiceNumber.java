@@ -67,7 +67,7 @@ public class InvoiceTest_assignInvoiceNumber {
     private void allowingMockNumeratorsRepoToReturn(final Numerator inn) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumerators).establish(NumeratorType.INVOICE_NUMBER);
+                allowing(mockNumerators).establishNumerator(NumeratorType.INVOICE_NUMBER);
                 will(returnValue(inn));
             }
         });

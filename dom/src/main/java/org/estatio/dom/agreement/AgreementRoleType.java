@@ -2,6 +2,7 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
@@ -22,6 +23,7 @@ import org.estatio.dom.EstatioRefDataObject;
             "WHERE appliesTo == :agreementType ")
 })
 @Immutable
+@Bounded
 public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
 
     public AgreementRoleType() {

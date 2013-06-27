@@ -10,7 +10,7 @@ import org.reflections.Reflections;
 
 
 /**
- * Automatically tests all domain objects implementing {@link ComparableByDescription}.
+ * Automatically tests all domain objects implementing {@link WithDescriptionComparable}.
  * 
  * <p>
  * Any that cannot be instantiated are skipped; manually test using
@@ -32,9 +32,9 @@ public abstract class ComparableByDescriptionContractTestAbstract_compareTo {
     public void searchAndTest() {
         Reflections reflections = new Reflections(packagePrefix);
         
-        Set<Class<? extends ComparableByDescription>> subtypes = 
-                reflections.getSubTypesOf(ComparableByDescription.class);
-        for (Class<? extends ComparableByDescription> subtype : subtypes) {
+        Set<Class<? extends WithDescriptionComparable>> subtypes = 
+                reflections.getSubTypesOf(WithDescriptionComparable.class);
+        for (Class<? extends WithDescriptionComparable> subtype : subtypes) {
             if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
                 return;
@@ -45,12 +45,12 @@ public abstract class ComparableByDescriptionContractTestAbstract_compareTo {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private Class<? extends ComparableByDescription> instantiable(Class<? extends ComparableByDescription> cls) {
+    private Class<? extends WithDescriptionComparable> instantiable(Class<? extends WithDescriptionComparable> cls) {
         final Class<?> substitute = noninstantiableSubstitutes.get(cls);
-        return (Class<? extends ComparableByDescription>) (substitute!=null?substitute:cls);
+        return (Class<? extends WithDescriptionComparable>) (substitute!=null?substitute:cls);
     }
 
-    private <T extends ComparableByDescription<T>> void test(Class<T> cls) {
+    private <T extends WithDescriptionComparable<T>> void test(Class<T> cls) {
         new ComparableByDescriptionContractTester<T>(cls).test();
     }
 

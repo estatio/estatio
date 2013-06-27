@@ -46,15 +46,15 @@ public class AgreementTypesTest_finders {
 
 
     @Test
-    public void findAgreementByReference() {
+    public void findAgreementByTitle() {
 
-        agreements.find("*some?title*");
+        agreements.find("Some.exact*title");
         
         // then
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementType.class));
         assertThat(finderInteraction.getQueryName(), is("findByTitle"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("title"), is((Object)"(?i).*some.title.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("title"), is((Object)"Some.exact*title"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
     

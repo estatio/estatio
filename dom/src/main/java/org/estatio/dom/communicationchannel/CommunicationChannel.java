@@ -14,6 +14,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -22,7 +23,7 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @javax.jdo.annotations.Query(name="findByReferenceAndType", language="JDOQL", value="SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
 @ObjectType("CCHN")
-public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements /*Comparable<CommunicationChannel>,*/ WithNameGetter {
+public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements WithNameGetter, WithReferenceGetter /*TODO: make implement WithReferenceUnique */ {
 
     public CommunicationChannel() {
         super("type, description");
@@ -43,6 +44,8 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     // //////////////////////////////////////
 
+    // TODO: integtests failing 
+    // @javax.jdo.annotations.Unique(name = "COMMUNICATION_CHANNEL_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @Hidden

@@ -4,8 +4,9 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-import org.estatio.dom.ComparableByReference;
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithDescriptionUnique;
+import org.estatio.dom.WithReferenceComparable;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(
@@ -15,7 +16,7 @@ import org.estatio.dom.EstatioRefDataObject;
         		"WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
-public class Currency extends EstatioRefDataObject<Currency> implements ComparableByReference<Currency> {
+public class Currency extends EstatioRefDataObject<Currency> implements WithReferenceComparable<Currency>, WithDescriptionUnique {
 
     public Currency() {
         super("reference");
@@ -23,6 +24,7 @@ public class Currency extends EstatioRefDataObject<Currency> implements Comparab
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "CURRENCY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @MemberOrder(sequence = "1")
@@ -36,6 +38,7 @@ public class Currency extends EstatioRefDataObject<Currency> implements Comparab
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX")
     private String description;
 
     @MemberOrder(sequence = "2")

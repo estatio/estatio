@@ -18,6 +18,6 @@ package org.estatio.dom;
 
 
 
-public interface ComparableByTitle<T extends ComparableByTitle<T>> extends Comparable<T>, WithTitleGetter {
+public interface WithTitleComparable<T extends WithTitleComparable<T>> extends Comparable<T>, WithTitleGetter {
     void setTitle(String title);
 }

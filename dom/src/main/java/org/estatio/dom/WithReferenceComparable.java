@@ -18,6 +18,6 @@ package org.estatio.dom;
 
 
 
-public interface ComparableByReference<T extends ComparableByReference<T>> extends Comparable<T>, WithReferenceGetter {
+public interface WithReferenceComparable<T extends WithReferenceComparable<T>> extends Comparable<T>, WithReferenceGetter {
     void setReference(String reference);
 }

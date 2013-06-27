@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -11,9 +12,10 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByTitle;
+import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
+import org.estatio.dom.WithTitleUnique;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.Queries({
@@ -23,7 +25,8 @@ import org.estatio.dom.utils.ClassUtils;
 })
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class AgreementType extends EstatioRefDataObject<AgreementType> implements ComparableByTitle<AgreementType>, PowerType<Agreement> {
+@Bounded
+public class AgreementType extends EstatioRefDataObject<AgreementType> implements WithTitleComparable<AgreementType>, WithTitleUnique, PowerType<Agreement> {
 
     public AgreementType() {
         super("title");
@@ -32,6 +35,7 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
     // //////////////////////////////////////
 
 
+    @javax.jdo.annotations.Unique(name = "AGREEMENT_TYPE_TITLE_UNIQUE_IDX")
     private String title;
 
     @MemberOrder(sequence = "1")

@@ -8,7 +8,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -19,7 +19,7 @@ import org.estatio.dom.EstatioRefDataObject;
         		"WHERE reference.matches(:reference)")
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements ComparableByReference<ChargeGroup> {
+public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements WithReferenceComparable<ChargeGroup> {
 
 
     public ChargeGroup() {
@@ -28,6 +28,7 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Co
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "CHARGE_GROUP_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @MemberOrder(sequence = "1")

@@ -6,7 +6,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -37,10 +37,9 @@ public class Numerators extends EstatioDomainService<Numerator> {
     
     // //////////////////////////////////////
 
-    // TODO: this is actually idempotent?
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "numerators.2")
-    public Numerator establish(NumeratorType type) {
+    public Numerator establishNumerator(NumeratorType type) {
         Numerator numerator = findNumeratorByType(type);
         return numerator == null ? create(type) : numerator;
     }

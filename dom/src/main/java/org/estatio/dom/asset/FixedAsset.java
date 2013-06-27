@@ -28,8 +28,11 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByName;
+import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
@@ -41,7 +44,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Query(name = "findAssetsByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:regex) || name.matches(:regex)")
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
-public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements ComparableByName<FixedAsset>, Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements WithNameComparable<FixedAsset> /*, WithNameUnique*/, WithReferenceUnique, Locatable {
 
     public FixedAsset() {
         super("name");
@@ -49,10 +52,10 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "FIXEDASSET_REFERENCE_IDX")
+    @javax.jdo.annotations.Unique(name = "FIXEDASSET_REFERENCE_UNIQUE_IDX")
     private String reference;
 
-    @DescribedAs("Unique reference code for this property")
+    @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @MemberOrder(sequence = "1.1")
     @Mask("AAAAAAAA")

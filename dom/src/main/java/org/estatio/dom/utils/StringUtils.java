@@ -52,7 +52,7 @@ public class StringUtils {
         return pattern.replace("*", ".*").replace("?", ".");
     }
 
-    private static String capitalize(final String str) {
+    public static String capitalize(final String str) {
         if (str == null || str.length() == 0) {
             return str;
         }

@@ -24,6 +24,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.numerator.Numerator;
@@ -38,7 +39,7 @@ import org.estatio.dom.party.Party;
         value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE source == :source && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate") 
 })
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject<Invoice> implements WithReferenceGetter {
+public class Invoice extends EstatioTransactionalObject<Invoice> implements WithReferenceUnique {
 
 
     public Invoice() {
@@ -107,6 +108,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "INVOICE_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @MemberOrder(sequence = "5")
@@ -302,7 +304,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     @Bulk
     @MemberOrder(sequence = "2")
     public Invoice assignCollectionNumber() {
-        Numerator numerator = numerators.establish(NumeratorType.COLLECTION_NUMBER);
+        Numerator numerator = numerators.establishNumerator(NumeratorType.COLLECTION_NUMBER);
         if (getInvoiceNumber() != null) {
             return null;
         }
@@ -323,7 +325,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     @Bulk
     @MemberOrder(sequence = "4")
     public Invoice assignInvoiceNumber() {
-        Numerator numerator = numerators.establish(NumeratorType.INVOICE_NUMBER);
+        Numerator numerator = numerators.establishNumerator(NumeratorType.INVOICE_NUMBER);
         if (getInvoiceNumber() != null) {
             return null;
         }

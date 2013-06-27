@@ -6,6 +6,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithCodeGetter;
+import org.estatio.dom.WithCodeUnique;
+import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithDescriptionUnique;
+import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -16,7 +22,7 @@ import org.estatio.dom.tax.Tax;
         		"WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject<Charge> {
+public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceUnique, WithCodeUnique, WithDescriptionUnique {
 
     public Charge() {
         super("code");
@@ -24,6 +30,7 @@ public class Charge extends EstatioRefDataObject<Charge> {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "CHARGE_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @Title(sequence = "1")
@@ -38,6 +45,7 @@ public class Charge extends EstatioRefDataObject<Charge> {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "CHARGE_CODE_UNIQUE_IDX")
     private String code;
 
     @MemberOrder(sequence = "2")
@@ -65,6 +73,7 @@ public class Charge extends EstatioRefDataObject<Charge> {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "CHARGE_DESCRIPTION_UNIQUE_IDX")
     private String description;
 
     @MemberOrder(sequence = "4")

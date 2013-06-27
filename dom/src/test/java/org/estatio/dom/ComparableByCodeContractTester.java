@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTester;
 
 
-public class ComparableByCodeContractTester<T extends ComparableByCode<T>> {
+public class ComparableByCodeContractTester<T extends WithCodeComparable<T>> {
 
     private final Class<T> cls;
     

@@ -10,7 +10,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByDescription;
+import org.estatio.dom.WithDescriptionComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 
 @javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
@@ -20,7 +20,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 @javax.jdo.annotations.Query(
         name = "findByType", language = "JDOQL", 
         value = "SELECT FROM org.estatio.dom.numerator.Numerator WHERE type == :type")
-public class Numerator extends EstatioTransactionalObject<Numerator> implements ComparableByDescription<Numerator> {
+public class Numerator extends EstatioTransactionalObject<Numerator> implements WithDescriptionComparable<Numerator> {
 
     public Numerator() {
         super("description");

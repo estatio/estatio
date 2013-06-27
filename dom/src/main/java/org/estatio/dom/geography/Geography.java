@@ -5,14 +5,15 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithNameUnique;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Query(name = "findGeographyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
-public abstract class Geography extends EstatioRefDataObject<Geography> implements ComparableByReference<Geography>, WithNameGetter {
+public abstract class Geography extends EstatioRefDataObject<Geography> implements WithReferenceComparable<Geography>, WithNameUnique {
 
     public Geography() {
         super("reference");
@@ -20,7 +21,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique
+    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     /**
@@ -41,7 +42,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique
+    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX")
     private String name;
 
     @Title

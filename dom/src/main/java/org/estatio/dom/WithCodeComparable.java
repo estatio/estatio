@@ -18,7 +18,6 @@ package org.estatio.dom;
 
 
 
-public interface ComparableByName<T extends ComparableByName<T>> extends Comparable<T>, WithNameGetter {
-    
-    void setName(String name);
+public interface WithCodeComparable<T extends WithCodeComparable<T>> extends Comparable<T>, WithCodeGetter {
+    void setCode(String code);
 }

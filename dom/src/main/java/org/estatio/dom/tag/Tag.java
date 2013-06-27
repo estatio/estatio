@@ -8,8 +8,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithNameGetter;
 
 
 /**
@@ -23,7 +25,7 @@ import org.estatio.dom.EstatioRefDataObject;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Unique(name="tag_bookmark_and_name", members={"objectType","name","objectIdentifier"})
 @Immutable
-public class Tag extends EstatioRefDataObject<Tag> {
+public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, BookmarkHolder {
 
     public Tag() {
         super("objectType, name, objectIdentifier, value");
@@ -112,8 +114,11 @@ public class Tag extends EstatioRefDataObject<Tag> {
 
     // //////////////////////////////////////
     
+    /**
+     * Implementation of {@link BookmarkHolder}.
+     */
     @Programmatic
-    public Bookmark asBookmark() {
+    public Bookmark bookmark() {
         return new Bookmark(getObjectType(), getObjectIdentifier());
     }
 

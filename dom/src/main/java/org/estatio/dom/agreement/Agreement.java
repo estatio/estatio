@@ -25,9 +25,10 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -52,7 +53,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable
 @MemberGroups({"General", "Dates", "Related"})
-public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements ComparableByReference<Agreement>, WithInterval {
+public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements WithReferenceComparable<Agreement>, WithInterval, WithNameGetter {
 
     public Agreement() {
         super("reference");
@@ -139,6 +140,10 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+    public String validateStartDate(final LocalDate startDate) {
+        final LocalDate endDate2 = getEndDate();
+        return validateStartAndEndDate(startDate, endDate2);
+    }
 
     private LocalDate endDate;
 
@@ -151,12 +156,24 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+    public String validateEndDate(final LocalDate endDate) {
+        return validateStartAndEndDate(getStartDate(), endDate);
+    }
+
 
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
+    private String validateStartAndEndDate(final LocalDate startDate, final LocalDate endDate) {
+        if (startDate == null)
+            return null;
+        if (endDate == null)
+            return null;
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+    }
+    
     // //////////////////////////////////////
 
     private LocalDate terminationDate;
@@ -182,6 +199,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     @javax.jdo.annotations.Column(name="AGREEMENTTYPE_ID")
     private AgreementType agreementType;
 
+    @Disabled
     @MemberOrder(sequence = "8")
     public AgreementType getAgreementType() {
         return agreementType;
@@ -320,6 +338,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         return agreementRole;
     }
 
+    
     // //////////////////////////////////////
 
     @Programmatic

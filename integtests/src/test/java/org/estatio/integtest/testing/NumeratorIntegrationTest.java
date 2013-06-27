@@ -16,7 +16,7 @@ public class NumeratorIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        numerators.establish(NumeratorType.INVOICE_NUMBER);
+        numerators.establishNumerator(NumeratorType.INVOICE_NUMBER);
     }
 
     @Test

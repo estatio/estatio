@@ -6,10 +6,10 @@ import org.apache.isis.core.unittestsupport.bidir.BidirectionalRelationshipContr
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 import org.apache.isis.core.unittestsupport.bidir.InstantiatorSimple;
 
-import org.estatio.dom.ComparableByCode;
-import org.estatio.dom.ComparableByDescription;
-import org.estatio.dom.ComparableByName;
-import org.estatio.dom.ComparableByReference;
+import org.estatio.dom.WithCodeComparable;
+import org.estatio.dom.WithDescriptionComparable;
+import org.estatio.dom.WithNameComparable;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.InstantiatorForComparableByCode;
 import org.estatio.dom.InstantiatorForComparableByDescription;
 import org.estatio.dom.InstantiatorForComparableByName;
@@ -49,17 +49,17 @@ public class BidirectionalRelationshipContractTestAll extends BidirectionalRelat
         if(WithStartDate.class.isAssignableFrom(cls)) {
             return new InstantiatorForWithStartDate((Class<? extends WithStartDate>) cls);
         }
-        if(ComparableByCode.class.isAssignableFrom(cls)) {
-            return new InstantiatorForComparableByCode((Class<? extends ComparableByCode<?>>) cls);
+        if(WithCodeComparable.class.isAssignableFrom(cls)) {
+            return new InstantiatorForComparableByCode((Class<? extends WithCodeComparable<?>>) cls);
         }
-        if(ComparableByName.class.isAssignableFrom(cls)) {
-            return new InstantiatorForComparableByName((Class<? extends ComparableByName<?>>) cls);
+        if(WithNameComparable.class.isAssignableFrom(cls)) {
+            return new InstantiatorForComparableByName((Class<? extends WithNameComparable<?>>) cls);
         }
-        if(ComparableByDescription.class.isAssignableFrom(cls)) {
-            return new InstantiatorForComparableByDescription((Class<? extends ComparableByDescription<?>>) cls);
+        if(WithDescriptionComparable.class.isAssignableFrom(cls)) {
+            return new InstantiatorForComparableByDescription((Class<? extends WithDescriptionComparable<?>>) cls);
         }
-        if(ComparableByReference.class.isAssignableFrom(cls)) {
-            return new InstantiatorForComparableByReference((Class<? extends ComparableByReference<?>>) cls);
+        if(WithReferenceComparable.class.isAssignableFrom(cls)) {
+            return new InstantiatorForComparableByReference((Class<? extends WithReferenceComparable<?>>) cls);
         }
         return super.doInstantiatorFor(cls);
     }

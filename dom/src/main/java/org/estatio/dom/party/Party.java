@@ -5,9 +5,10 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.ComparableByName;
+import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -25,7 +26,7 @@ import org.apache.isis.applib.annotation.Title;
     @javax.jdo.annotations.Query(name = "findByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern) || name.matches(:searchPattern)") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
-public abstract class Party extends EstatioTransactionalObject<Party> implements ComparableByName<Party>, WithReferenceGetter {
+public abstract class Party extends EstatioTransactionalObject<Party> implements WithNameComparable<Party>, WithReferenceUnique {
 
     public Party() {
         super("name");
@@ -33,7 +34,7 @@ public abstract class Party extends EstatioTransactionalObject<Party> implements
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique
+    @javax.jdo.annotations.Unique(name = "PARTY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @Disabled

@@ -45,7 +45,7 @@ public class EstatioDomainObjectTest_toString {
         }
     }
     
-    public static class WithReferenceGetterImpl implements WithReferenceGetter {
+    public static class WithReferenceUniqueImpl implements WithReferenceGetter {
         
         private String reference;
         @Override
@@ -151,7 +151,7 @@ public class EstatioDomainObjectTest_toString {
         wdgi.setDescription("B");
         final WithNameGetterImpl wngi = new WithNameGetterImpl();
         wngi.setName("C");
-        final WithReferenceGetterImpl wrgi = new WithReferenceGetterImpl();
+        final WithReferenceUniqueImpl wrgi = new WithReferenceUniqueImpl();
         wrgi.setReference("D");
         final WithTitleGetterImpl wtgi = new WithTitleGetterImpl();
         wtgi.setTitle("E");

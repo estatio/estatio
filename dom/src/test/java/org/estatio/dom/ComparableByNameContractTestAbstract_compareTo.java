@@ -10,7 +10,7 @@ import org.reflections.Reflections;
 
 
 /**
- * Automatically tests all domain objects implementing {@link ComparableByName}.
+ * Automatically tests all domain objects implementing {@link WithNameComparable}.
  * 
  * <p>
  * Any that cannot be instantiated are skipped; manually test using
@@ -32,9 +32,9 @@ public abstract class ComparableByNameContractTestAbstract_compareTo {
     public void searchAndTest() {
         Reflections reflections = new Reflections(packagePrefix);
         
-        Set<Class<? extends ComparableByName>> subtypes = 
-                reflections.getSubTypesOf(ComparableByName.class);
-        for (Class<? extends ComparableByName> subtype : subtypes) {
+        Set<Class<? extends WithNameComparable>> subtypes = 
+                reflections.getSubTypesOf(WithNameComparable.class);
+        for (Class<? extends WithNameComparable> subtype : subtypes) {
             if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
                 return;
@@ -45,12 +45,12 @@ public abstract class ComparableByNameContractTestAbstract_compareTo {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private Class<? extends ComparableByName> instantiable(Class<? extends ComparableByName> cls) {
+    private Class<? extends WithNameComparable> instantiable(Class<? extends WithNameComparable> cls) {
         final Class<?> substitute = noninstantiableSubstitutes.get(cls);
-        return (Class<? extends ComparableByName>) (substitute!=null?substitute:cls);
+        return (Class<? extends WithNameComparable>) (substitute!=null?substitute:cls);
     }
 
-    private <T extends ComparableByName<T>> void test(Class<T> cls) {
+    private <T extends WithNameComparable<T>> void test(Class<T> cls) {
         new ComparableByNameContractTester<T>(cls).test();
     }
 

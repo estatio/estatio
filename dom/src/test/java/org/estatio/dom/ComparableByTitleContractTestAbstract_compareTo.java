@@ -10,7 +10,7 @@ import org.reflections.Reflections;
 
 
 /**
- * Automatically tests all domain objects implementing {@link ComparableByTitle}.
+ * Automatically tests all domain objects implementing {@link WithTitleComparable}.
  * 
  * <p>
  * Any that cannot be instantiated are skipped; manually test using
@@ -32,9 +32,9 @@ public abstract class ComparableByTitleContractTestAbstract_compareTo {
     public void searchAndTest() {
         Reflections reflections = new Reflections(packagePrefix);
         
-        Set<Class<? extends ComparableByTitle>> subtypes = 
-                reflections.getSubTypesOf(ComparableByTitle.class);
-        for (Class<? extends ComparableByTitle> subtype : subtypes) {
+        Set<Class<? extends WithTitleComparable>> subtypes = 
+                reflections.getSubTypesOf(WithTitleComparable.class);
+        for (Class<? extends WithTitleComparable> subtype : subtypes) {
             if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
                 return;
@@ -45,12 +45,12 @@ public abstract class ComparableByTitleContractTestAbstract_compareTo {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private Class<? extends ComparableByTitle> instantiable(Class<? extends ComparableByTitle> cls) {
+    private Class<? extends WithTitleComparable> instantiable(Class<? extends WithTitleComparable> cls) {
         final Class<?> substitute = noninstantiableSubstitutes.get(cls);
-        return (Class<? extends ComparableByTitle>) (substitute!=null?substitute:cls);
+        return (Class<? extends WithTitleComparable>) (substitute!=null?substitute:cls);
     }
 
-    private <T extends ComparableByTitle<T>> void test(Class<T> cls) {
+    private <T extends WithTitleComparable<T>> void test(Class<T> cls) {
         new ComparableByTitleContractTester<T>(cls).test();
     }
 

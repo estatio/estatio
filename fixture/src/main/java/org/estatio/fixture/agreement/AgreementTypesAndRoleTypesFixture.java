@@ -21,8 +21,6 @@ public class AgreementTypesAndRoleTypesFixture extends AbstractFixture {
 
     void create(final String atTitle, final String... artTitles) {
         AgreementType at = createAgreementType(atTitle, BankMandate.class.getName(), getContainer());
-        getContainer().flush();
-        at = agreementTypes.find(atTitle);
         for(String artTitle: artTitles) {
             createAgreementRoleType(artTitle, at, getContainer());
         }
