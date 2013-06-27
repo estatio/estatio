@@ -8,6 +8,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -62,6 +63,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
     @Persistent
     @MemberOrder(sequence = "3")
     @Optional
+    @Disabled
     public LocalDate getEndDate() {
         return endDate;
     }

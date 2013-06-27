@@ -12,7 +12,7 @@ import org.estatio.dom.ApplicationSettingCreator.Helper;
 import org.estatio.dom.WithNameGetter.ToString;
 import org.estatio.dom.utils.PrivateConstructorTester;
 
-public class StaticHelperClassesTest_privateConstructor {
+public class StaticHelperClassesContractTestAll_privateConstructor {
 
     @Test
     public void cover() throws Exception {

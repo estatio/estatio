@@ -17,12 +17,12 @@ import org.reflections.Reflections;
 import org.estatio.services.exceprecog.ExceptionRecognizersForEstatio;
 
 
-public abstract class WithFieldUniqueTestAllAbstract<T> {
+public abstract class WithFieldUniqueContractTestAllAbstract<T> {
 
     private Class<T> interfaceType;
     private String fieldName;
 
-    public WithFieldUniqueTestAllAbstract(Class<T> interfaceType, String fieldName) {
+    public WithFieldUniqueContractTestAllAbstract(Class<T> interfaceType, String fieldName) {
         this.interfaceType = interfaceType;
         this.fieldName = fieldName;
     }

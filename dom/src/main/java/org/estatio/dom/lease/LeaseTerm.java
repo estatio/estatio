@@ -144,6 +144,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     @MemberOrder(sequence = "3")
     @Title(sequence = "3")
+    @Disabled
     @Optional
     public LocalDate getEndDate() {
         return endDate;

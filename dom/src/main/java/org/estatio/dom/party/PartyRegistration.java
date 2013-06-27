@@ -20,7 +20,9 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -82,6 +84,8 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     private LocalDate endDate;
 
     @MemberOrder(sequence = "1")
+    @Optional
+    @Disabled
     public LocalDate getEndDate() {
         return endDate;
     }

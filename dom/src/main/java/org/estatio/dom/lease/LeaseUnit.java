@@ -6,6 +6,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -116,6 +117,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
+    @Disabled
     @Optional
     @MemberOrder(sequence = "4")
     public LocalDate getEndDate() {

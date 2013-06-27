@@ -18,6 +18,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -233,7 +234,8 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private LocalDate endDate;
 
     @MemberOrder(sequence = "11")
-    @Persistent
+    @Disabled
+    @Optional
     public LocalDate getEndDate() {
         return endDate;
     }

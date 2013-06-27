@@ -145,19 +145,18 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         return validateStartAndEndDate(startDate, endDate2);
     }
 
+    @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @javax.jdo.annotations.Persistent
     @MemberOrder(name="Dates", sequence = "6")
+    @Disabled
+    @Optional
     public LocalDate getEndDate() {
         return endDate;
     }
 
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
-    }
-    public String validateEndDate(final LocalDate endDate) {
-        return validateStartAndEndDate(getStartDate(), endDate);
     }
 
 
