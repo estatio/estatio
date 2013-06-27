@@ -16,9 +16,11 @@ public class CurrencyFixture extends AbstractFixture {
         currency.setDescription(despription);
     }
 
+    // //////////////////////////////////////
+
     private Currencies currencies;
 
-    public void setCurrencies(Currencies currencies) {
+    public void injectCurrencies(Currencies currencies) {
         this.currencies = currencies;
     }
 

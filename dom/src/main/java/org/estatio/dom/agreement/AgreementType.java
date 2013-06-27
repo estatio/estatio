@@ -87,10 +87,16 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     @Programmatic
     @NotPersisted
-    public List<AgreementRoleType> getApplicableTo() {
+    public List<AgreementRoleType> getRoleTypesApplicableTo() {
         return agreementRoleTypes.findApplicableTo(this);
     }
 
+    @Programmatic
+    @NotPersisted
+    public List<AgreementRoleCommunicationChannelType> getRoleChannelTypesApplicableTo() {
+        return agreementRoleCommunicationChannelTypes.findApplicableTo(this);
+    }
+    
 
     // //////////////////////////////////////
 
@@ -100,6 +106,12 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
+    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+    
+    public void injectAgreementRoleCommunicationChannelTypes(final AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
+        this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
+    }
+    
 
 
 }

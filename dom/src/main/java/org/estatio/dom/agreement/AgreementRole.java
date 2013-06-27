@@ -17,8 +17,11 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
@@ -27,6 +30,8 @@ import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.filter.Filter;
@@ -217,6 +222,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
 
+    @Render(Type.EAGERLY)
     @MemberOrder(sequence = "1")
     public SortedSet<AgreementRoleCommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
@@ -245,7 +251,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
-    public AgreementRoleCommunicationChannel findCommunicationChannel(final AgremeentRoleCommunicationChannelType type, final LocalDate date) {
+    @Programmatic
+    public AgreementRoleCommunicationChannel findCommunicationChannel(final AgreementRoleCommunicationChannelType type, final LocalDate date) {
         return firstMatch(AgreementRoleCommunicationChannel.class, new Filter<AgreementRoleCommunicationChannel>() {
             @Override
             public boolean accept(AgreementRoleCommunicationChannel t) {
@@ -256,27 +263,36 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
-    public AgreementRole addCommunicationChannel(@Named("Type") AgremeentRoleCommunicationChannelType type, @Named("Communication Channel") CommunicationChannel communicationChannel) {
-        if (type != null && communicationChannel != null) {
-            AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, clockService.now());
-            if (arcc == null) {
-                arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
-                persistIfNotAlready(arcc);
-                arcc.setStartDate(startDate);
-                arcc.setCommunicationChannel(communicationChannel);
-                arcc.setType(type);
-                addToCommunicationChannels(arcc);
-            }
-        }
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="communicationChannels", sequence="1")
+    public AgreementRole addCommunicationChannel(@Named("Type") AgreementRoleCommunicationChannelType type, @Named("Communication Channel") CommunicationChannel communicationChannel) {
+        if (type == null || communicationChannel == null) {
+            return this;
+        } 
+        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, clockService.now());
+        if (arcc != null) {
+            return this;
+        } 
+        arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
+        arcc.setStartDate(startDate);
+        arcc.setCommunicationChannel(communicationChannel);
+        arcc.setType(type);
+        persistIfNotAlready(arcc);
+        addToCommunicationChannels(arcc);
         return this;
+    }
+
+    public List<AgreementRoleCommunicationChannelType> choices0AddCommunicationChannel() {
+        return getAgreement().getAgreementType().getRoleChannelTypesApplicableTo();
     }
 
     public List<CommunicationChannel> choices1AddCommunicationChannel() {
         return Lists.newArrayList(getParty().getCommunicationChannels());
     }
-
+    
     public CommunicationChannel default1AddCommunicationChannel() {
-        return getParty().getCommunicationChannels().first();
+        final SortedSet<CommunicationChannel> partyChannels = getParty().getCommunicationChannels();
+        return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
     // //////////////////////////////////////
@@ -291,12 +307,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
     }
 
     // //////////////////////////////////////
-
-    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
-
-    public void injectAgreementRoleCommunicationChannels(AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
-        this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
-    }
 
     private ClockService clockService;
 

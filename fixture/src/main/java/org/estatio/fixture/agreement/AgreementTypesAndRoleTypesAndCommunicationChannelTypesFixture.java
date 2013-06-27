@@ -4,25 +4,32 @@ package org.estatio.fixture.agreement;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 
-public class AgreementTypesAndRoleTypesFixture extends AbstractFixture {
+public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        create(FinancialConstants.AT_MANDATE, FinancialConstants.ART_CREDITOR, FinancialConstants.ART_DEBTOR, FinancialConstants.ART_OWNER);
-        create(LeaseConstants.AT_LEASE, LeaseConstants.ART_LANDLORD, LeaseConstants.ART_MANAGER, LeaseConstants.ART_TENANT);
+        create(FinancialConstants.AT_MANDATE, 
+                new String[]{FinancialConstants.ART_CREDITOR, FinancialConstants.ART_DEBTOR, FinancialConstants.ART_OWNER},
+                new String[]{FinancialConstants.ARCCT_BAR_ADDRESS, FinancialConstants.ARCCT_FOO_ADDRESS});
+        create(LeaseConstants.AT_LEASE, 
+                new String[]{LeaseConstants.ART_LANDLORD, LeaseConstants.ART_MANAGER, LeaseConstants.ART_TENANT},
+                new String[]{LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, LeaseConstants.ARCCT_INVOICE_ADDRESS});
     }
 
-    void create(final String atTitle, final String... artTitles) {
+    void create(final String atTitle, final String[] artTitles, final String[] arcctTitles) {
         AgreementType at = createAgreementType(atTitle, BankMandate.class.getName(), getContainer());
         for(String artTitle: artTitles) {
             createAgreementRoleType(artTitle, at, getContainer());
+        }
+        for(String arcctTitle: arcctTitles) {
+            createAgreementRoleCommunicationChannelType(arcctTitle, at, getContainer());
         }
     }
 
@@ -42,14 +49,14 @@ public class AgreementTypesAndRoleTypesFixture extends AbstractFixture {
         return agreementRoleType;
     }
 
-    // //////////////////////////////////////
-
-    private AgreementTypes agreementTypes;
-    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
+    private static AgreementRoleCommunicationChannelType createAgreementRoleCommunicationChannelType(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
+        final AgreementRoleCommunicationChannelType arcct = container.newTransientInstance(AgreementRoleCommunicationChannelType.class);
+        arcct.setTitle(title);
+        arcct.setAppliesTo(appliesTo);
+        container.persist(arcct);
+        return arcct;
     }
-
-
+    
 
 
 }

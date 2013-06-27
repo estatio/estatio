@@ -11,7 +11,6 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
 

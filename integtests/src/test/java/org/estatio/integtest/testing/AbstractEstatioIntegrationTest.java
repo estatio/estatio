@@ -26,6 +26,7 @@ import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSuppor
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.api.Api;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementTypes;
@@ -102,8 +103,9 @@ public abstract class AbstractEstatioIntegrationTest {
 
     protected Numerators numerators;
 
-    protected AgreementRoleTypes agreementRoleTypes;
     protected AgreementRoles agreementRoles;
+    protected AgreementRoleTypes agreementRoleTypes;
+    protected AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
 
     protected FixedAssets fixedAssets;
     protected Properties properties;
@@ -118,12 +120,18 @@ public abstract class AbstractEstatioIntegrationTest {
 
     protected Leases leases;
     protected LeaseTerms leaseTerms;
+    protected LeaseUnits leaseUnits;
+    
     protected Invoices invoices;
     protected InvoiceItemsForLease invoiceItemsForLease;
+
+    protected CommunicationChannels communicationChannels;
 
     protected Tags tags;
 
     protected EstatioSettingsService settings;
+    protected ClockService clock;
+
 
     @Before
     public void init() {
@@ -141,6 +149,7 @@ public abstract class AbstractEstatioIntegrationTest {
 
         agreementRoles = getIsft().getService(AgreementRoles.class);
         agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
+        agreementRoleCommunicationChannelTypes = getIsft().getService(AgreementRoleCommunicationChannelTypes.class);
 
         fixedAssets = getIsft().getService(FixedAssets.class);
         properties = getIsft().getService(Properties.class);
@@ -155,11 +164,15 @@ public abstract class AbstractEstatioIntegrationTest {
 
         leases = getIsft().getService(Leases.class);
         leaseTerms = getIsft().getService(LeaseTerms.class);
+        leaseUnits = getIsft().getService(LeaseUnits.class);
         invoices = getIsft().getService(Invoices.class);
         invoiceItemsForLease = getIsft().getService(InvoiceItemsForLease.class);
 
+        communicationChannels = getIsft().getService(CommunicationChannels.class);
+        
         tags = getIsft().getService(Tags.class);
 
+        clock = getIsft().getService(ClockService.class);
         settings = getIsft().getService(EstatioSettingsService.class);
     }
 
@@ -260,6 +273,7 @@ public abstract class AbstractEstatioIntegrationTest {
                     new Agreements(), 
                     new AgreementTypes(),
                     new AgreementRoleTypes(), 
+                    new AgreementRoleCommunicationChannelTypes(), 
                     new AgreementRoles(), 
                     new Leases(), 
                     new LeaseTerms(), 

@@ -4,22 +4,26 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 
 @PersistenceCapable
-@Bounded
+@MemberGroups({"General", "Dates", "Related"})
+// TODO: does this really need to implement WithInterval?  
 public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel> implements WithInterval<AgreementRoleCommunicationChannel> {
 
     public AgreementRoleCommunicationChannel() {
@@ -31,6 +35,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     @Column(name = "LEASEROLE_ID")
     private AgreementRole role;
 
+    @Title(sequence="2")
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     public AgreementRole getRole() {
@@ -59,14 +64,16 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
-    private AgremeentRoleCommunicationChannelType type;
+    private AgreementRoleCommunicationChannelType type;
 
+    @Disabled
+    @Title(sequence="1", append=":")
     @MemberOrder(sequence = "2")
-    public AgremeentRoleCommunicationChannelType getType() {
+    public AgreementRoleCommunicationChannelType getType() {
         return type;
     }
 
-    public void setType(AgremeentRoleCommunicationChannelType type) {
+    public void setType(AgreementRoleCommunicationChannelType type) {
         this.type = type;
     }
 
@@ -75,6 +82,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     @Column(name = "COMMUNICATIONCHANNEL_ID")
     private CommunicationChannel communicationChannel;
 
+    @Title(sequence="3", prepend=",")
     @MemberOrder(sequence = "3")
     public CommunicationChannel getCommunicationChannel() {
         return communicationChannel;
@@ -90,7 +98,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     private LocalDate startDate;
 
     @Override
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="Dates", sequence = "4")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -106,7 +114,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     private LocalDate endDate;
 
     @Override
-    @MemberOrder(sequence = "5")
+    @MemberOrder(name="Dates", sequence = "5")
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -124,24 +132,25 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    @Override
-    @Hidden(where = Where.ALL_TABLES)
+    @Hidden // TODO (where = Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence="1")
+    @Named("Previous Channel")
     @Disabled
     @Optional
+    @Override
     public AgreementRoleCommunicationChannel getPrevious() {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
-    @Hidden(where = Where.ALL_TABLES)
+    @Hidden // TODO (where = Where.ALL_TABLES)
+    @MemberOrder(name="Related", sequence="2")
+    @Named("Next Channel")
     @Disabled
     @Optional
+    @Override
     public AgreementRoleCommunicationChannel getNext() {
-        // TODO Auto-generated method stub
         return null;
     }
 
-    // //////////////////////////////////////
 
 }

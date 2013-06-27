@@ -22,7 +22,7 @@ import java.math.BigInteger;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
 import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgremeentRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
@@ -455,7 +455,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeasePostalAddress(@Named("partyReference") String partyReference, @Named("leaseReference") @Optional String leaseReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("postalCode") @Optional String postalCode,
-            @Named("city") @Optional String city, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("type") @Optional AgremeentRoleCommunicationChannelType type) {
+            @Named("city") @Optional String city, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("type") @Optional AgreementRoleCommunicationChannelType type) {
         if (address1 != null && partyReference != null && leaseReference != null) {
             Lease lease = fetchLease(leaseReference);
             Party party = fetchParty(partyReference);

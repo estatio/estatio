@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesFixture;
+import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.charge.ChargeFixture;
 import org.estatio.fixture.charge.CurrencyFixture;
@@ -27,7 +27,7 @@ public class EstatioFixture extends AbstractFixture {
         
         List<AbstractFixture> fixtures = Arrays.asList(
             newFixture(GeographyFixture.class),
-            newFixture(AgreementTypesAndRoleTypesFixture.class),
+            newFixture(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class),
             newFixture(TaxFixture.class),
             newFixture(CurrencyFixture.class),
             newFixture(ChargeFixture.class),

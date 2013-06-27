@@ -12,14 +12,14 @@ public class TaxFixture extends AbstractFixture {
 
     @Override
     public void install() {
-       Tax tax = taxRepo.newTax("IT-VATSTD");
+       Tax tax = taxes.newTax("IT-VATSTD");
        tax.newRate(new LocalDate(1980,1,1), BigDecimal.valueOf(19)).newRate(new LocalDate(2011,9,17), BigDecimal.valueOf(21));
     }
 
-    private Taxes taxRepo;
+    private Taxes taxes;
 
-    public void setTaxRepository(Taxes taxRepository) {
-        this.taxRepo = taxRepository;
+    public void injectTaxes(Taxes taxes) {
+        this.taxes = taxes;
     }
 
 }

@@ -14,19 +14,19 @@ import org.estatio.dom.EstatioRefDataObject;
     @javax.jdo.annotations.Query(
         name = "findByTitle", language = "JDOQL", 
         value = "SELECT " +
-                "FROM org.estatio.dom.agreement.AgreementRoleType " +
+                "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannelType " +
                 "WHERE title == :title "),
     @javax.jdo.annotations.Query(
             name = "findByAgreementType", language = "JDOQL", 
             value = "SELECT " +
-                    "FROM org.estatio.dom.agreement.AgreementRoleType " +
+                    "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannelType " +
             "WHERE appliesTo == :agreementType ")
 })
 @Immutable
 @Bounded
-public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
+public class AgreementRoleCommunicationChannelType extends EstatioRefDataObject<AgreementRoleCommunicationChannelType> {
 
-    public AgreementRoleType() {
+    public AgreementRoleCommunicationChannelType() {
         super("title");
     }
 
@@ -60,8 +60,8 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
 
     // //////////////////////////////////////
 
-    public static List<AgreementRoleType> applicableTo(final AgreementType at) {
-        return at.getRoleTypesApplicableTo();
+    public static List<AgreementRoleCommunicationChannelType> applicableTo(final AgreementType at) {
+        return at.getRoleChannelTypesApplicableTo();
     }
 
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioFixture;
-import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesFixture;
+import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexFixture;
 import org.estatio.fixturescripts.FixtureScript;
 import org.estatio.services.appsettings.EstatioSettingsService;
@@ -56,7 +56,7 @@ public class EstatioAdministrationService {
     @Prototype
     @MemberOrder(sequence = "4")
     public String installConstants() {
-        AgreementTypesAndRoleTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesFixture.class);
+        AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
         fixture.install();
         return "Constants successfully installed";
     }

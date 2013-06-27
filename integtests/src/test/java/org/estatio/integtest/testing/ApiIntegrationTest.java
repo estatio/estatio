@@ -3,46 +3,26 @@ package org.estatio.integtest.testing;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgremeentRoleCommunicationChannelType;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseUnits;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.party.Parties;
-import org.estatio.services.clock.ClockService;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
 
     private static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
-    private Leases leases;
-    private Properties properties;
-    private Parties parties;
-    private LeaseUnits leaseUnits;
-    private CommunicationChannels communicationChannels;
-    private ClockService clock;
 
-    @Before
-    public void setup() {
-        leases = getIsft().getService(Leases.class);
-        properties = getIsft().getService(Properties.class);
-        parties = getIsft().getService(Parties.class);
-        leaseUnits = getIsft().getService(LeaseUnits.class);
-        communicationChannels = getIsft().getService(CommunicationChannels.class);
-        clock = getIsft().getService(ClockService.class);
-    }
 
     @Test
     public void t00_refData() throws Exception {
@@ -93,9 +73,11 @@ public class ApiIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t05b_putLeasePostalAddress() throws Exception {
-        api.putLeasePostalAddress("APITENANT", "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", AgremeentRoleCommunicationChannelType.INVOICE_ADDRESS);
-        Lease l = leases.findLeaseByReference("APILEASE");
-        AgreementRole ar = l.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), clock.now());
+        final AgreementRoleCommunicationChannelType arcttInvoiceAddress = agreementRoleCommunicationChannelTypes.findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
+        api.putLeasePostalAddress("APITENANT", "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", arcttInvoiceAddress);
+        final Lease l = leases.findLeaseByReference("APILEASE");
+        final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRole ar = l.findRoleWithType(artTenant, clock.now());
         Assert.assertThat(ar.getCommunicationChannels().size(), Is.is(1));
     }
 

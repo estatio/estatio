@@ -58,7 +58,7 @@ public class AgreementRoleTypesTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRoleType.class));
         assertThat(finderInteraction.getQueryName(), is("findByAgreementType"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("appliesTo"), is((Object)agreementType));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType"), is((Object)agreementType));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
 

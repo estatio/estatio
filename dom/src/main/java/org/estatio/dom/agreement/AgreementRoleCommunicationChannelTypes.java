@@ -8,22 +8,22 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.estatio.dom.EstatioDomainService;
 
 @Hidden
-public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> {
+public class AgreementRoleCommunicationChannelTypes extends EstatioDomainService<AgreementRoleCommunicationChannelType> {
 
-    public AgreementRoleTypes() {
-        super(AgreementRoleTypes.class, AgreementRoleType.class);
+    public AgreementRoleCommunicationChannelTypes() {
+        super(AgreementRoleCommunicationChannelTypes.class, AgreementRoleCommunicationChannelType.class);
     }
     
     // //////////////////////////////////////
 
 
     @NotContributed
-    public AgreementRoleType findByTitle(final String title) {
+    public AgreementRoleCommunicationChannelType findByTitle(final String title) {
         return firstMatch("findByTitle", "title", title);
     }
 
     @NotContributed
-    public List<AgreementRoleType> findApplicableTo(AgreementType agreementType) {
+    public List<AgreementRoleCommunicationChannelType> findApplicableTo(AgreementType agreementType) {
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 
