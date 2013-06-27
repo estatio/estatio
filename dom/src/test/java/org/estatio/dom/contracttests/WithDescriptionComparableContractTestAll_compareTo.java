@@ -9,9 +9,9 @@ import org.estatio.dom.ComparableByDescriptionContractTestAbstract_compareTo;
 /**
  * Automatically tests all domain objects implementing {@link WithDescriptionComparable}.
  */
-public class ComparableByDescriptionContractTestAll_compareTo extends ComparableByDescriptionContractTestAbstract_compareTo {
+public class WithDescriptionComparableContractTestAll_compareTo extends ComparableByDescriptionContractTestAbstract_compareTo {
 
-    public ComparableByDescriptionContractTestAll_compareTo() {
+    public WithDescriptionComparableContractTestAll_compareTo() {
         super(Constants.packagePrefix, ImmutableMap.<Class<?>,Class<?>>of());
     }
 

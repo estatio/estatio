@@ -21,6 +21,7 @@ public class ExceptionRecognizersForEstatio extends ExceptionRecognizerComposite
         recognizeDescriptionConstraint("CURRENCY");
         
         recognizeNameConstraint("GEOGRAPHY");
+        recognizeNameConstraint("INDEX");
         recognizeNameConstraint("TAX");
         
         recognizeReferenceConstraint("ACCOUNT");

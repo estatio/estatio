@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
@@ -18,7 +19,7 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.Index WHERE reference == :reference")
 @Immutable
-public class Index extends EstatioRefDataObject<Index> implements WithReferenceComparable<Index>, WithNameGetter {
+public class Index extends EstatioRefDataObject<Index> implements WithReferenceComparable<Index>, WithNameUnique {
 
     public Index() {
         super("reference");
@@ -40,6 +41,7 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Unique(name = "INDEX_NAME_UNIQUE_IDX")
     private String name;
 
     @Title

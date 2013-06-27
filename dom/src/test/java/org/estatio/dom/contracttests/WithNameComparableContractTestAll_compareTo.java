@@ -13,9 +13,9 @@ import org.estatio.dom.party.PartyForTesting;
 /**
  * Automatically tests all domain objects implementing {@link WithNameComparable}.
  */
-public class ComparableByNameContractTestAll_compareTo extends ComparableByNameContractTestAbstract_compareTo {
+public class WithNameComparableContractTestAll_compareTo extends ComparableByNameContractTestAbstract_compareTo {
 
-    public ComparableByNameContractTestAll_compareTo() {
+    public WithNameComparableContractTestAll_compareTo() {
         super(Constants.packagePrefix, noninstantiableSubstitutes());
     }
 

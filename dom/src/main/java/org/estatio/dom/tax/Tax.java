@@ -13,15 +13,17 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceUnique;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.Tax WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
-public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceComparable<Tax>, WithNameGetter {
+public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceComparable<Tax>, WithNameUnique, WithReferenceUnique {
 
     public Tax() {
         super("reference");

@@ -23,7 +23,7 @@ import org.estatio.dom.WithReferenceGetter;
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @javax.jdo.annotations.Query(name="findByReferenceAndType", language="JDOQL", value="SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
 @ObjectType("CCHN")
-public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements WithNameGetter, WithReferenceGetter /*TODO: make implement WithReferenceUnique */ {
+public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
         // TODO: description is annotated as optional, 
@@ -46,12 +46,15 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     // //////////////////////////////////////
 
-    // TODO: integtests failing 
-    // @javax.jdo.annotations.Unique(name = "COMMUNICATION_CHANNEL_REFERENCE_UNIQUE_IDX")
+    /**
+     * For import purposes only
+     */
     private String reference;
 
+    /**
+     * For import purposes only
+     */
     @Hidden
-    // For import purposes
     public String getReference() {
         return reference;
     }

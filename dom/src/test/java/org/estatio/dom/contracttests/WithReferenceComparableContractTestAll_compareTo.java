@@ -13,9 +13,9 @@ import org.estatio.dom.geography.GeographyForTesting;
 /**
  * Automatically tests all domain objects implementing {@link WithReferenceComparable}.
  */
-public class ComparableByReferenceContractTestAll_compareTo extends ComparableByReferenceContractTestAbstract_compareTo {
+public class WithReferenceComparableContractTestAll_compareTo extends ComparableByReferenceContractTestAbstract_compareTo {
 
-    public ComparableByReferenceContractTestAll_compareTo() {
+    public WithReferenceComparableContractTestAll_compareTo() {
         super(Constants.packagePrefix, noninstantiableSubstitutes());
     }
 
