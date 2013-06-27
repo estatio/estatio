@@ -18,9 +18,9 @@ public class Countries extends EstatioDomainService<Country> {
     }
 
     // //////////////////////////////////////
-    
+
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "geography.countries.1")
+    @MemberOrder(name = "Other", sequence = "geography.countries.1")
     public Country newCountry(final @Named("Reference") String reference, final @Named("Name") String name) {
         final Country country = newTransientInstance();
         country.setReference(reference);
@@ -35,7 +35,7 @@ public class Countries extends EstatioDomainService<Country> {
      * Returns the Country with given reference
      */
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "geography.countries.2")
+    @MemberOrder(name = "Other", sequence = "geography.countries.2")
     public Country findCountryByReference(@Named("Reference") String reference) {
         if (reference == null) {
             return null;
@@ -43,12 +43,11 @@ public class Countries extends EstatioDomainService<Country> {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
-    
     // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "geography.countries.99")
+    @MemberOrder(name = "Other", sequence = "geography.countries.99")
     public List<Country> allCountries() {
         return allInstances();
     }

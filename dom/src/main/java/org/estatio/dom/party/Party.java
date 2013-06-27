@@ -11,6 +11,7 @@ import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -26,7 +27,7 @@ import org.apache.isis.applib.annotation.Title;
     @javax.jdo.annotations.Query(name = "findByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern) || name.matches(:searchPattern)") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
-public abstract class Party extends EstatioTransactionalObject<Party> implements WithNameComparable<Party>, WithReferenceUnique {
+public abstract class Party extends EstatioTransactionalObject<Party> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
         super("name");

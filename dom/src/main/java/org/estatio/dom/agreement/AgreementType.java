@@ -31,9 +31,8 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
     public AgreementType() {
         super("title");
     }
-    
-    // //////////////////////////////////////
 
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "AGREEMENT_TYPE_TITLE_UNIQUE_IDX")
     private String title;

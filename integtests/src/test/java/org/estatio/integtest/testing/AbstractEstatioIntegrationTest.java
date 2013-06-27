@@ -37,6 +37,7 @@ import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
@@ -243,9 +244,46 @@ public abstract class AbstractEstatioIntegrationTest {
             withServices(
                     new RegisterEntities(), 
                     new WrapperFactoryDefault(), 
-                    new Countries(), new States(), new Currencies(), new Indices(), new IndexBases(), new IndexValues(), new FixedAssets(), new Properties(), new FixedAssetRoles(), new UnitsForLease(), new Parties(), new Persons(), new Organisations(), new Agreements(), new AgreementTypes(),
-                    new AgreementRoleTypes(), new AgreementRoles(), new Leases(), new LeaseTerms(), new LeaseItems(), new LeaseUnits(), new Invoices(), new InvoiceItemsForLease(), new CommunicationChannels(), new Taxes(), new TaxRates(), new Tags(), new EstatioBookmarkService(), new Charges(),
-                    new ChargeGroups(), new FinancialAccounts(), new Numerators(), new ClockService(), new Api(), new IsisJdoSupportImpl(), new InvoiceCalculationService(), new ApplicationSettingsServiceJdo(), new EstatioSettingsServiceJdo(), new FinancialAccountContributedActions(),
+                    new Countries(), 
+                    new States(), 
+                    new Currencies(), 
+                    new Indices(), 
+                    new IndexBases(), 
+                    new IndexValues(), 
+                    new FixedAssets(), 
+                    new Properties(), 
+                    new FixedAssetRoles(), 
+                    new UnitsForLease(), 
+                    new Parties(), 
+                    new Persons(), 
+                    new Organisations(), 
+                    new Agreements(), 
+                    new AgreementTypes(),
+                    new AgreementRoleTypes(), 
+                    new AgreementRoles(), 
+                    new Leases(), 
+                    new LeaseTerms(), 
+                    new LeaseItems(), 
+                    new LeaseUnits(), 
+                    new Invoices(), 
+                    new InvoiceItemsForLease(), 
+                    new CommunicationChannels(),
+                    new PostalAddresses(),
+                    new Taxes(), 
+                    new TaxRates(), 
+                    new Tags(), 
+                    new EstatioBookmarkService(), 
+                    new Charges(),
+                    new ChargeGroups(), 
+                    new FinancialAccounts(), 
+                    new Numerators(), 
+                    new ClockService(), 
+                    new Api(), 
+                    new IsisJdoSupportImpl(), 
+                    new InvoiceCalculationService(), 
+                    new ApplicationSettingsServiceJdo(), 
+                    new EstatioSettingsServiceJdo(), 
+                    new FinancialAccountContributedActions(),
                     new LeaseTermContributedActions());
         }
 

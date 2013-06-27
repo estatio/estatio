@@ -19,15 +19,10 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgremeentRoleCommunicationChannelType;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
@@ -42,6 +37,8 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.PostalAddress;
+import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -54,6 +51,7 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
@@ -74,6 +72,15 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.estatio.services.clock.ClockService;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 
 //@Hidden
 public class Api extends AbstractFactoryAndRepository {
@@ -123,6 +130,18 @@ public class Api extends AbstractFactoryAndRepository {
         }
         state.setName(name);
         state.setCountry(country);
+    }
+
+    private State fetchState(String stateCode) {
+        return fetchState(stateCode, true);
+    }
+
+    private State fetchState(String stateCode, boolean exception) {
+        State country = states.findStateByReference(stateCode);
+        if (country == null && exception) {
+            throw new ApplicationException(String.format("State with code %1$s not found", stateCode));
+        }
+        return country;
     }
 
     // //////////////////////////////////////
@@ -194,10 +213,10 @@ public class Api extends AbstractFactoryAndRepository {
         org.setName(name);
     }
 
-    private Party fetchParty(String reference) {
-        Party party = parties.findPartyByReferenceOrName(reference);
+    private Party fetchParty(String partyReference) {
+        Party party = parties.findPartyByReferenceOrName(partyReference);
         if (party == null) {
-            throw new ApplicationException(String.format("Party with reference %s not found.", reference));
+            throw new ApplicationException(String.format("Party with reference %s not found.", partyReference));
         }
         return party;
     }
@@ -248,8 +267,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setTerraceArea(terraceArea);
         CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            cc = communicationChannels.newPostalAddress(address1, null, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
-            unit.addToCommunicationChannels(cc);
+            cc = communicationChannels.newPostalAddress(unit, address1, null, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
         }
     }
 
@@ -275,9 +293,8 @@ public class Api extends AbstractFactoryAndRepository {
         }
         CommunicationChannel comm = property.findCommunicationChannelForType(null);
         if (comm == null) {
-            comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+            comm = communicationChannels.newPostalAddress(property, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
         }
-        property.getCommunicationChannels().add(comm);
     }
 
     // //////////////////////////////////////
@@ -290,27 +307,54 @@ public class Api extends AbstractFactoryAndRepository {
         if (address1 != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
             if (comm == null) {
-                comm = communicationChannels.newPostalAddress(address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+                comm = communicationChannels.newPostalAddress(party, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
                 comm.setReference(reference);
-                party.addToCommunicationChannels(comm);
             }
         }
         // Phone
         if (phoneNumber != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
             if (comm == null) {
-                comm = communicationChannels.newPhoneNumber(phoneNumber);
+                comm = communicationChannels.newPhoneNumber(party, phoneNumber);
                 comm.setReference(reference);
-                party.addToCommunicationChannels(comm);
             }
         }
         // Fax
         if (faxNumber != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
             if (comm == null) {
-                comm = communicationChannels.newFaxNumber(faxNumber);
+                comm = communicationChannels.newFaxNumber(party, faxNumber);
                 comm.setReference(reference);
-                party.addToCommunicationChannels(comm);
+            }
+        }
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putPartyPostalAddress(@Named("partyReference") String partyReference, @Named("reference") @Optional String reference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") @Optional String city,
+            @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("phoneNumber") @Optional String phoneNumber, @Named("faxNumber") @Optional String faxNumber) {
+        Party party = fetchParty(partyReference);
+        // Address
+        if (address1 != null) {
+            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
+            if (comm == null) {
+                comm = communicationChannels.newPostalAddress(party, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+                comm.setReference(reference);
+            }
+        }
+        // Phone
+        if (phoneNumber != null) {
+            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
+            if (comm == null) {
+                comm = communicationChannels.newPhoneNumber(party, phoneNumber);
+                comm.setReference(reference);
+            }
+        }
+        // Fax
+        if (faxNumber != null) {
+            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
+            if (comm == null) {
+                comm = communicationChannels.newFaxNumber(party, faxNumber);
+                comm.setReference(reference);
             }
         }
     }
@@ -321,9 +365,9 @@ public class Api extends AbstractFactoryAndRepository {
     public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         Property property = fetchProperty(propertyReference, false);
         Party party = fetchParty(partyReference);
-        FixedAssetRole actor = propertyActors.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
+        FixedAssetRole actor = fixedAssetRoles.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
         if (actor == null) {
-            propertyActors.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
+            fixedAssetRoles.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
         }
     }
 
@@ -407,6 +451,23 @@ public class Api extends AbstractFactoryAndRepository {
             throw new ApplicationException(String.format("Type with reference %s not found.", type));
         }
         return itemType;
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putLeasePostalAddress(@Named("partyReference") String partyReference, @Named("leaseReference") @Optional String leaseReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("postalCode") @Optional String postalCode,
+            @Named("city") @Optional String city, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("type") @Optional AgremeentRoleCommunicationChannelType type) {
+        if (address1 != null && partyReference != null && leaseReference != null) {
+            Lease lease = fetchLease(leaseReference);
+            Party party = fetchParty(partyReference);
+            PostalAddress address = (PostalAddress) postalAddresses.findByAddress(address1, postalCode, city, fetchCountry(countryCode));
+            if (address == null) {
+                address = communicationChannels.newPostalAddress(party, address1, address2, postalCode, city, fetchState(stateCode), fetchCountry(countryCode));
+            }
+            party.addToCommunicationChannels(address);
+            AgreementRole role = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), clockService.now());
+            role.addCommunicationChannel(type, address);
+
+        }
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -523,7 +584,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (owner == null)
             return;
         if (bankAccount == null) {
-            bankAccount = financialAccounts.newBankAccount(iban);
+            bankAccount = financialAccounts.newBankAccount(owner, iban);
         }
         bankAccount.setReference(reference);
         bankAccount.setAccountNumber(accountNumber);
@@ -534,93 +595,119 @@ public class Api extends AbstractFactoryAndRepository {
         bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
     }
 
+    // //////////////////////////////////////
+
+    private ClockService clockService;
+
+    public void setClockService(ClockService clockService) {
+        this.clockService = clockService;
+    }
+
     private Countries countries;
 
-    public void setCountryRepository(final Countries countries) {
+    public void injectCountries(final Countries countries) {
         this.countries = countries;
     }
 
     private States states;
 
-    public void setStateRepository(final States states) {
+    public void injectStates(final States states) {
         this.states = states;
     }
 
-    private Units units;
+    private Units<Unit> units;
 
-    public void setUnitRepository(final Units units) {
+    public void injectUnits(final Units<Unit> units) {
         this.units = units;
     }
 
     private Properties properties;
 
-    public void setPropertyRepository(final Properties properties) {
+    public void injectProperties(final Properties properties) {
         this.properties = properties;
     }
 
     private Parties parties;
 
-    public void setParties(final Parties parties) {
+    public void injectParties(final Parties parties) {
         this.parties = parties;
     }
 
     private Organisations organisations;
-    
-    public void setOrganisations(final Organisations organisations) {
+
+    public void injectOrganisations(final Organisations organisations) {
         this.organisations = organisations;
     }
-    
+
     private Persons persons;
-    
-    public void setOrganisations(final Persons persons) {
+
+    public void injectOrganisations(final Persons persons) {
         this.persons = persons;
     }
-    
-    private FixedAssetRoles propertyActors;
 
-    public void setPropertyActorRepository(final FixedAssetRoles propertyActors) {
-        this.propertyActors = propertyActors;
+    private FixedAssetRoles fixedAssetRoles;
+
+    public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
+        this.fixedAssetRoles = fixedAssetRoles;
     }
 
     private CommunicationChannels communicationChannels;
 
-    public void setCommunicationChannelRepository(final CommunicationChannels communicationChannels) {
+    public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {
         this.communicationChannels = communicationChannels;
+    }
+
+    private PostalAddresses postalAddresses;
+
+    public void injectPostalAddresses(PostalAddresses postalAddresses) {
+        this.postalAddresses = postalAddresses;
     }
 
     private Leases leases;
 
-    public void setLeaseRepository(final Leases leases) {
+    public void injectLeaseRepository(final Leases leases) {
         this.leases = leases;
+    }
+
+    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
+
+    public void injectAgreementRoleCommunicationChannels(AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
+        this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
+    }
+
+    private AgreementRoleTypes agreementRoleTypes;
+
+    public void injectAgreementRoleTypes(AgreementRoleTypes agreementRoleTypes) {
+        this.agreementRoleTypes = agreementRoleTypes;
     }
 
     private LeaseUnits leaseUnits;
 
-    public void setLeaseUnitsRepository(final LeaseUnits leaseUnits) {
+    public void injectLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
 
     private Taxes taxes;
 
-    public void setTaxesRepsitory(final Taxes taxes) {
+    public void injectTaxes(final Taxes taxes) {
         this.taxes = taxes;
     }
 
     private Charges charges;
 
-    public void setChargesRepo(final Charges charges) {
+    public void injectCharges(final Charges charges) {
         this.charges = charges;
     }
 
     private Indices indices;
 
-    public void setIndexRepo(final Indices indices) {
+    public void injectIndices(final Indices indices) {
         this.indices = indices;
     }
 
     private FinancialAccounts financialAccounts;
 
-    public void setFinancialAccounts(FinancialAccounts financialAccounts) {
+    public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
 

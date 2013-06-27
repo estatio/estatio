@@ -34,6 +34,7 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -44,7 +45,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Query(name = "findAssetsByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:regex) || name.matches(:regex)")
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
-public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements WithNameComparable<FixedAsset> /*, WithNameUnique*/, WithReferenceUnique, Locatable {
+public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements WithNameComparable<FixedAsset> /*, WithNameUnique*/, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
 
     public FixedAsset() {
         super("name");

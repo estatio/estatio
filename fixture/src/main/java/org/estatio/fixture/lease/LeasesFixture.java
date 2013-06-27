@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -139,9 +140,9 @@ public class LeasesFixture extends AbstractFixture {
         this.indices = indices;
     }
 
-    private Units units;
+    private Units<Unit> units;
 
-    public void injectUnits(final Units units) {
+    public void injectUnits(final Units<Unit> units) {
         this.units = units;
     }
 

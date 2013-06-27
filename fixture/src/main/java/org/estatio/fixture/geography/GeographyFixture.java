@@ -1,6 +1,5 @@
 package org.estatio.fixture.geography;
 
-
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
@@ -28,15 +27,17 @@ public class GeographyFixture extends AbstractFixture {
         return state;
     }
 
+    // //////////////////////////////////////
+
     private States states;
 
-    public void setStateRepository(final States states) {
+    public void injectsStates(final States states) {
         this.states = states;
     }
 
     private Countries countries;
 
-    public void setCountryRepository(final Countries countries) {
+    public void injectCountries(final Countries countries) {
         this.countries = countries;
     }
 

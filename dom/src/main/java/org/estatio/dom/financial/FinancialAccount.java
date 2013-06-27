@@ -17,7 +17,7 @@ import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
@@ -33,7 +33,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     public FinancialAccount() {
         super("type, reference");
     }
-    
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX")
@@ -65,7 +65,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     // //////////////////////////////////////
 
     private FinancialAccountType type;
-    
+
     @Hidden
     @MemberOrder(sequence = "1")
     public FinancialAccountType getType() {
@@ -75,7 +75,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     public void setType(final FinancialAccountType type) {
         this.type = type;
     }
-    
+
     // //////////////////////////////////////
 
     private Party owner;
@@ -88,6 +88,5 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     public void setOwner(final Party owner) {
         this.owner = owner;
     }
-
 
 }

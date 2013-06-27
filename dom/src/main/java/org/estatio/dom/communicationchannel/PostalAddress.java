@@ -4,24 +4,25 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.TitleBuffer;
-
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Query(name = "findByAddress", language = "JDOQL", value = "SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (address1 == :address1 && postalCode == :postalCode && city == :city && country == :country)")
+
 public class PostalAddress extends CommunicationChannel {
 
     /**
-     * This is NOT the <tt>@Title</tt>, because the title omits
-     * the <i>address2</i> attribute.
+     * This is NOT the <tt>@Title</tt>, because the title omits the
+     * <i>address2</i> attribute.
      * 
      * TODO: is this inconsistency intentional?
      */

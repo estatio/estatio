@@ -23,13 +23,14 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     // //////////////////////////////////////
 
     @Hidden
-    public BankAccount newBankAccount(final @Named("IBAN") String IBAN) {
-        final BankAccount ba = newTransientInstance(BankAccount.class);
-        ba.setIBAN(IBAN);
-        ba.setName(IBAN);
-        ba.setReference(IBAN);
-        persist(ba);
-        return ba;
+    public BankAccount newBankAccount(final @Named("Owner") Party owner, final @Named("IBAN") String IBAN) {
+        final BankAccount bankAccount = newTransientInstance(BankAccount.class);
+        bankAccount.setIBAN(IBAN);
+        bankAccount.setName(IBAN);
+        bankAccount.setReference(IBAN);
+        persistIfNotAlready(bankAccount);
+        bankAccount.setOwner(owner);
+        return bankAccount;
     }
 
     // //////////////////////////////////////

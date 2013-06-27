@@ -1,77 +1,26 @@
 package org.estatio.fixture.party;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
+
+import org.apache.isis.applib.fixtures.AbstractFixture;
 
 public class PartiesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        createOrganisation(
-                "ACME", 
-                "ACME Properties International",
-                financialAccounts.newBankAccount("NL31ABNA0580722234"),
-                communicationChannels.newPostalAddress("Herengracht 100", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211011"),
-                communicationChannels.newFaxNumber("+312022211311"),
-                communicationChannels.newEmailAddress("info@acme.com")
-                );
-        createOrganisation(
-                "HELLOWORLD", 
-                "Hello World Properties", 
-                financialAccounts.newBankAccount("NL31ABNA0580733334"),
-                communicationChannels.newPostalAddress("Herengracht 101", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211022"),
-                communicationChannels.newFaxNumber("+312022211322"),
-                communicationChannels.newEmailAddress("info@helloworldproperties.com")
-                );
-        createOrganisation(
-                "TOPMODEL", 
-                "Topmodel Fashion",
-                financialAccounts.newBankAccount("NL31ABNA0580744434"),
-                communicationChannels.newPostalAddress("Herengracht 102", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211033"),
-                communicationChannels.newFaxNumber("+312022211333"),
-                communicationChannels.newEmailAddress("info@topmodel.com")
-                );
-        createOrganisation(
-                "MEDIAX", 
-                "Mediax Electronics",
-                financialAccounts.newBankAccount("NL31ABNA0580755534"),
-                communicationChannels.newPostalAddress("Herengracht 103", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211044"),
-                communicationChannels.newFaxNumber("+312022211344"),
-                communicationChannels.newEmailAddress("info@mediax.com")
-                );
-        createOrganisation(
-                "POISON", 
-                "Poison Perfumeries",
-                financialAccounts.newBankAccount("NL31ABNA0580766634"),
-                communicationChannels.newPostalAddress("Herengracht 104", null, "1010 AA", "Amsterdam", null, null),
-                communicationChannels.newPhoneNumber("+31202211055"),
-                communicationChannels.newFaxNumber("+312022211355"),
-                communicationChannels.newEmailAddress("info@posion-perfumeries.com")
-                );
-        createPerson(
-                "JDOE",
-                "J",
-                "John", 
-                "Doe"
-                );
-        createPerson(
-                "LTORVALDS", 
-                "L", 
-                "Linus", 
-                "Torvalds"
-                );
+        createOrganisation("ACME;ACME Properties International;NL31ABNA0580744433;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com");
+        createOrganisation("HELLOWORLD;Hello World Properties;NL31ABNA0580744434;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com");
+        createOrganisation("TOPMODEL;Topmodel Fashion;NL31ABNA0580744435;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com");
+        createOrganisation("MEDIAX;Mediax Electronics;NL31ABNA0580744436;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com");
+        createOrganisation("POISON;Poison Perfumeries;NL31ABNA0580744437;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com");
+        createPerson("JDOE", "J", "John", "Doe");
+        createPerson("LTORVALDS", "L", "Linus", "Torvalds");
     }
 
     private Party createPerson(String reference, String initials, String firstName, String lastName) {
@@ -80,52 +29,53 @@ public class PartiesFixture extends AbstractFixture {
         return p;
     }
 
-    private Party createOrganisation(String reference, String name, FinancialAccount account, CommunicationChannel ... communicationChannels ) {
-        Party p = organisations.newOrganisation(reference, name);
-        p.setReference(reference);
-        account.setOwner(p);
-        for (CommunicationChannel channel : communicationChannels) {
-            channel.setReference(reference);
-            p.addToCommunicationChannels(channel);
-        }
-        return p;
+    private Party createOrganisation(String input) {
+        String[] values = input.split(";");
+        Party party = organisations.newOrganisation(values[0], values[1]);
+        financialAccounts.newBankAccount(party, values[2]);
+        communicationChannels.newPostalAddress(party, values[3], values[4], values[5], values[6], states.findStateByReference(values[7]), countries.findCountryByReference(values[8]));
+        communicationChannels.newPhoneNumber(party, values[9]);
+        communicationChannels.newFaxNumber(party, values[10]);
+        communicationChannels.newEmailAddress(party ,values[11]);
+        return party;
     }
-    
-//    private Party createOrganisation(String reference, String name) {
-//        Party p = parties.newOrganisation(name);
-//        p.setReference(reference);
-//        return p;
-//    }
-    
-    private Parties parties;
 
-    public void injectParties(final Parties parties) {
-        this.parties = parties;
+    // //////////////////////////////////////
+
+    private Countries countries;
+
+    public void injectCountries(Countries countries) {
+        this.countries = countries;
     }
-    
+
+    private States states;
+
+    public void injectStates(States states) {
+        this.states = states;
+    }
+
     private Organisations organisations;
-    
+
     public void setOrganisations(final Organisations organisations) {
         this.organisations = organisations;
     }
-    
+
     private Persons persons;
-    
+
     public void setOrganisations(final Persons persons) {
         this.persons = persons;
     }
-    
 
     private CommunicationChannels communicationChannels;
-    
+
     public void injectCommunicationChannels(CommunicationChannels communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
-    
+
     private FinancialAccounts financialAccounts;
-    
+
     public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
-    
+
 }

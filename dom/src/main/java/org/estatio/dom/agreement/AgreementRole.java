@@ -1,7 +1,22 @@
 package org.estatio.dom.agreement;
 
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.collect.Lists;
+import com.google.inject.name.Named;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -10,19 +25,15 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
+import org.apache.isis.applib.filter.Filter;
 
 @javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
@@ -60,7 +71,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="AGREEMENT_ID")
+    @javax.jdo.annotations.Column(name = "AGREEMENT_ID")
     private Agreement agreement;
 
     @Title(sequence = "3", prepend = ":")
@@ -99,7 +110,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PARTY_ID")
+    @javax.jdo.annotations.Column(name = "PARTY_ID")
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
@@ -115,21 +126,17 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     public void modifyParty(final Party party) {
         Party currentParty = getParty();
-        // check for no-op
         if (party == null || party.equals(currentParty)) {
             return;
         }
-        // delegate to parent to associate
         party.addToAgreements(this);
     }
 
     public void clearParty() {
         Party currentParty = getParty();
-        // check for no-op
         if (currentParty == null) {
             return;
         }
-        // delegate to parent to dissociate
         currentParty.removeFromAgreements(this);
     }
 
@@ -175,6 +182,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
         this.endDate = endDate;
     }
 
+    // //////////////////////////////////////
+
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
@@ -206,7 +215,73 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "6")
+    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
+
+    @MemberOrder(sequence = "1")
+    public SortedSet<AgreementRoleCommunicationChannel> getCommunicationChannels() {
+        return communicationChannels;
+    }
+
+    public void setCommunicationChannels(final SortedSet<AgreementRoleCommunicationChannel> communinationChannels) {
+        this.communicationChannels = communinationChannels;
+    }
+
+    public void addToCommunicationChannels(final AgreementRoleCommunicationChannel channel) {
+        if (channel == null || getCommunicationChannels().contains(channel)) {
+            return;
+        }
+        channel.clearRole();
+        channel.setRole(this);
+        getCommunicationChannels().add(channel);
+    }
+
+    public void removeFromCommunicationChannels(final AgreementRoleCommunicationChannel channel) {
+        if (channel == null || !getCommunicationChannels().contains(channel)) {
+            return;
+        }
+        channel.setRole(null);
+        getCommunicationChannels().remove(channel);
+    }
+
+    // //////////////////////////////////////
+
+    public AgreementRoleCommunicationChannel findCommunicationChannel(final AgremeentRoleCommunicationChannelType type, final LocalDate date) {
+        return firstMatch(AgreementRoleCommunicationChannel.class, new Filter<AgreementRoleCommunicationChannel>() {
+            @Override
+            public boolean accept(AgreementRoleCommunicationChannel t) {
+                return t.getType() == type && getInterval().contains(date);
+            }
+        });
+    }
+
+    // //////////////////////////////////////
+
+    public AgreementRole addCommunicationChannel(@Named("Type") AgremeentRoleCommunicationChannelType type, @Named("Communication Channel") CommunicationChannel communicationChannel) {
+        if (type != null && communicationChannel != null) {
+            AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, clockService.now());
+            if (arcc == null) {
+                arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
+                persistIfNotAlready(arcc);
+                arcc.setStartDate(startDate);
+                arcc.setCommunicationChannel(communicationChannel);
+                arcc.setType(type);
+                addToCommunicationChannels(arcc);
+            }
+        }
+        return this;
+    }
+
+    public List<CommunicationChannel> choices1AddCommunicationChannel() {
+        return Lists.newArrayList(getParty().getCommunicationChannels());
+    }
+
+    public CommunicationChannel default1AddCommunicationChannel() {
+        return getParty().getCommunicationChannels().first();
+    }
+
+    // //////////////////////////////////////
+
+    @MemberOrder(sequence = "7")
     public boolean isCurrent() {
         return isActiveOn(clockService.now());
     }
@@ -215,8 +290,13 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
         return getInterval().contains(localDate);
     }
 
-
     // //////////////////////////////////////
+
+    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
+
+    public void injectAgreementRoleCommunicationChannels(AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
+        this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
+    }
 
     private ClockService clockService;
 

@@ -44,7 +44,7 @@ import org.estatio.dom.party.Party;
         @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(name = "findByAssetAndActiveOnDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE units.contains(lu) && (terminationDate == null || terminationDate <= :activeOnDate) && (lu.unit == :asset || lu.unit.property == :asset) VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
 @Bookmarkable
-@MemberGroups({"General", "Dates", "Lease Details", "Related"})
+@MemberGroups({ "General", "Dates", "Lease Details", "Related" })
 public class Lease extends Agreement implements InvoiceSource {
 
     @Override
@@ -65,7 +65,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     private LeaseType type;
 
-    @MemberOrder(name="Lease Details", sequence = "8")
+    @MemberOrder(name = "Lease Details", sequence = "8")
     public LeaseType getType() {
         return type;
     }
@@ -175,7 +175,7 @@ public class Lease extends Agreement implements InvoiceSource {
         }
         return null;
     }
-    
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="PAIDBY_ID")
@@ -183,7 +183,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     @Optional
     @Disabled
-    @MemberOrder(name="Lease Details", sequence = "10")
+    @MemberOrder(name = "Lease Details", sequence = "10")
     public BankMandate getPaidBy() {
         return paidBy;
     }
@@ -192,21 +192,22 @@ public class Lease extends Agreement implements InvoiceSource {
         this.paidBy = paidBy;
     }
 
-    
     // //////////////////////////////////////
 
-    @MemberOrder(name="paidBy", sequence = "1")
+    @MemberOrder(name = "paidBy", sequence = "1")
     public Lease paidBy(final BankMandate bankMandate) {
         setPaidBy(bankMandate);
         return this;
     }
+
     public String disablePaidBy(final BankMandate bankMandate) {
         final List<BankMandate> validMandates = existingBankMandatesForTenant();
-        if(validMandates.isEmpty()) {
+        if (validMandates.isEmpty()) {
             return "There are no valid mandates; set one up using 'New Mandate'";
         }
         return null;
     }
+
     public List<BankMandate> choices0PaidBy() {
         return existingBankMandatesForTenant();
     }
@@ -215,100 +216,96 @@ public class Lease extends Agreement implements InvoiceSource {
         final List<BankMandate> choices = existingBankMandatesForTenant();
         return !choices.isEmpty() ? choices.get(0) : null;
     }
+
     public String validatePaidBy(final BankMandate bankMandate) {
         final List<BankMandate> validMandates = existingBankMandatesForTenant();
-        if(validMandates.contains(bankMandate)) {
+        if (validMandates.contains(bankMandate)) {
             return null;
         } else {
             return "Invalid mandate; the mandate's debtor must be this lease's tenant";
         }
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<BankMandate> existingBankMandatesForTenant() {
         final Party tenant = getSecondaryParty();
-        
-        if(tenant != null) {
+
+        if (tenant != null) {
             final AgreementType bankMandateAgreementType = bankMandateAgreementType();
             final AgreementRoleType debtorRoleType = debtorRoleType();
-            
-            return (List)agreements.findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
+
+            return (List) agreements.findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
         }
         return Collections.emptyList();
     }
 
-    
     // //////////////////////////////////////
 
-    @MemberOrder(name="paidBy", sequence = "2")
-    public Lease newMandate(
-            final BankAccount bankAccount, 
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate
-            ) {
+    @MemberOrder(name = "paidBy", sequence = "2")
+    public Lease newMandate(final BankAccount bankAccount, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         final BankMandate bankMandate = newTransientInstance(BankMandate.class);
         final AgreementType bankMandateAgreementType = bankMandateAgreementType();
         final AgreementRoleType debtorRoleType = debtorRoleType();
-        
+
         bankMandate.setAgreementType(bankMandateAgreementType);
         bankMandate.setBankAccount(bankAccount);
         bankMandate.setStartDate(startDate);
         bankMandate.setEndDate(endDate);
-        bankMandate.setReference(bankAccount.getReference() + "-"+ startDate.toString("yyyyMMdd"));
+        bankMandate.setReference(bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd"));
         bankMandate.addRole(getSecondaryParty(), debtorRoleType, startDate, endDate);
-        
+
         persist(bankMandate);
         paidBy(bankMandate);
-        
+
         return this;
     }
-    public String disableNewMandate(
-            final BankAccount bankAccount, 
-            final LocalDate startDate,
-            final LocalDate endDate) {
+
+    public String disableNewMandate(final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
         final Party tenant = getSecondaryParty();
         if (tenant == null) {
             return "Could not determine the tenant (secondary party) of this lease";
-        } 
+        }
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
-        if(validBankAccounts.isEmpty()) {
+        if (validBankAccounts.isEmpty()) {
             return "There are no bank accounts available for this tenant";
         }
         return null;
     }
+
     public List<BankAccount> choices0NewMandate() {
         return existingBankAccountsForTenant();
     }
+
     public BankAccount default0NewMandate() {
         final List<BankAccount> choices = existingBankAccountsForTenant();
         return !choices.isEmpty() ? choices.get(0) : null;
     }
+
     public LocalDate default1NewMandate() {
         return getClockService().now();
     }
+
     public LocalDate default2NewMandate() {
         return getClockService().now().plusYears(1);
     }
-    public String validateNewMandate(
-            final BankAccount bankAccount, 
-            final LocalDate startDate,
-            final LocalDate endDate) {
+
+    public String validateNewMandate(final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
-        if(!validBankAccounts.contains(bankAccount)) {
+        if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
-        } 
+        }
         return null;
     }
-    
+
     private List<BankAccount> existingBankAccountsForTenant() {
         final Party tenant = getSecondaryParty();
-        if(tenant != null) {
+        if (tenant != null) {
             return financialAccounts.findBankAccountsByParty(tenant);
         } else {
             return Collections.emptyList();
         }
     }
-    
+
     private AgreementRoleType debtorRoleType() {
         return agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
     }
@@ -316,7 +313,6 @@ public class Lease extends Agreement implements InvoiceSource {
     private AgreementType bankMandateAgreementType() {
         return agreementTypes.find(FinancialConstants.AT_MANDATE);
     }
-    
 
     // //////////////////////////////////////
 
@@ -355,7 +351,7 @@ public class Lease extends Agreement implements InvoiceSource {
     }
 
     // //////////////////////////////////////
-    
+
     @MemberOrder(sequence = "4")
     public Lease terminate(@Named("Termination Date") LocalDate terminationDate, @Named("Are you sure?") boolean confirm) {
         for (LeaseItem item : getItems()) {
@@ -385,8 +381,8 @@ public class Lease extends Agreement implements InvoiceSource {
         this.leaseUnits = leaseUnits;
     }
 
-
     private FinancialAccounts financialAccounts;
+
     public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }

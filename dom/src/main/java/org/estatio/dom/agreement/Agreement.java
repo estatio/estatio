@@ -55,7 +55,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable
 @MemberGroups({"General", "Dates", "Related"})
-public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements WithReferenceComparable<Agreement>, WithInterval, WithNameGetter {
+public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements WithReferenceComparable<Agreement>, WithInterval<Agreement>, WithNameGetter {
 
     public Agreement() {
         super("reference");

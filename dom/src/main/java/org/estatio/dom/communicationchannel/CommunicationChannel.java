@@ -5,32 +5,31 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.ObjectType;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
+
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-@javax.jdo.annotations.Query(name="findByReferenceAndType", language="JDOQL", value="SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
-@ObjectType("CCHN")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Query(name = "findByReferenceAndType", language = "JDOQL", value = "SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
 public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel> implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
-        // TODO: description is annotated as optional, 
-        // so it doesn't really make sense for it to be part of the natural sort order
+        // TODO: description is annotated as optional,
+        // so it doesn't really make sense for it to be part of the natural sort
+        // order
         super("type, description");
     }
-    
+
     // //////////////////////////////////////
 
     private CommunicationChannelType type;
@@ -66,8 +65,8 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     // //////////////////////////////////////
 
     @Title
-    @MemberOrder(sequence="1")
-    @Hidden(where=Where.OBJECT_FORMS)
+    @MemberOrder(sequence = "1")
+    @Hidden(where = Where.OBJECT_FORMS)
     public abstract String getName();
 
     // //////////////////////////////////////
@@ -96,6 +95,5 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     public void setLegal(final boolean Legal) {
         this.legal = Legal;
     }
-    
 
 }
