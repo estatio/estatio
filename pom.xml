@@ -32,6 +32,9 @@
         <isis-security-file.version>1.0.2-SNAPSHOT</isis-security-file.version>
 		<isis-viewer-restfulobjects.version>2.1.0-SNAPSHOT</isis-viewer-restfulobjects.version>
         <isis-security-shiro.version>1.1.2-SNAPSHOT</isis-security-shiro.version>
+        
+        <!-- must be consistent with the version defined by the JDO Objectstore -->
+        <datanucleus-core.version>3.2.4</datanucleus-core.version>
 
         <!-- override in each module (used by locate global resources) -->
         <siteBaseDir>.</siteBaseDir>
