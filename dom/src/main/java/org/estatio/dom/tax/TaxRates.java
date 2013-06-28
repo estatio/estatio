@@ -42,9 +42,9 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
         }
         rate.setPercentage(percentage);
         if (currentRate != null) {
-            TaxRate currentNextRate = currentRate.getNextRate();
-            currentRate.modifyNextRate(rate);
-            rate.modifyNextRate(currentNextRate);
+            TaxRate currentNextRate = currentRate.getNext();
+            currentRate.modifyNext(rate);
+            rate.modifyNext(currentNextRate);
         }
         return rate;
     }

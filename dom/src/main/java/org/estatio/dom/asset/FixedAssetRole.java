@@ -23,13 +23,31 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(
-        name = "findRoleByAssetAndPartyAndType", language = "JDOQL", 
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+        name = "findByAssetAndPartyAndType", language = "JDOQL", 
         value = "SELECT " +
         		"FROM org.estatio.dom.asset.FixedAssetRole " +
         		"WHERE asset == :asset " +
         		"&& party == :party " +
-        		"&& type == :type")
+        		"&& type == :type"),
+	@javax.jdo.annotations.Query(
+        name = "findByAssetAndPartyAndTypeAndStartDate", language = "JDOQL", 
+        value = "SELECT " +
+                "FROM org.estatio.dom.asset.FixedAssetRole " +
+                "WHERE asset == :asset " +
+                "&& party == :party " +
+	            "&& type == :type " + 
+                "&& startDate == :startDate"),
+    @javax.jdo.annotations.Query(
+        name = "findByAssetAndPartyAndTypeAndEndDate", language = "JDOQL", 
+        value = "SELECT " +
+                "FROM org.estatio.dom.asset.FixedAssetRole " +
+                "WHERE asset == :asset " +
+                "&& party == :party " +
+                "&& type == :type " + 
+                "&& endDate == :endDate"),
+})
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Dates", "Related"})
 public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> implements WithInterval<FixedAssetRole> {
@@ -93,32 +111,80 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
 
     @MemberOrder(name="Dates", sequence = "4")
     @Optional
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
     @MemberOrder(name="Dates", sequence = "5")
     @Optional
+    @Disabled
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+    // //////////////////////////////////////
 
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
+
+    // //////////////////////////////////////
 
     @MemberOrder(name="Related", sequence = "9.1")
     @Named("Previous Role")

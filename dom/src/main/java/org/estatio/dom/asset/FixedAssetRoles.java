@@ -35,24 +35,24 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
 
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type) {
-        return firstMatch(newQueryDefault("findRoleByAssetAndPartyAndType", "asset", asset, "party", party, "type", type));
+        return firstMatch(newQueryDefault("findByAssetAndPartyAndType", "asset", asset, "party", party, "type", type));
     }
 
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type, final LocalDate startDate, final LocalDate endDate) {
-        return firstMatch("findRoleByAssetAndPartyAndType", "asset", asset, "party", party, "type", type);
+        return firstMatch("findByAssetAndPartyAndType", "asset", asset, "party", party, "type", type);
     }
     
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public FixedAssetRole findByAssetAndPartyAndTypeAndStartDate(final FixedAsset asset, final Party party, final FixedAssetRoleType type, final LocalDate startDate) {
-        return firstMatch("findRoleByAssetAndPartyAndTypeAndStartDate", "asset", asset, "party", party, "type", type, "startDate", startDate);
+        return firstMatch("findByAssetAndPartyAndTypeAndStartDate", "asset", asset, "party", party, "type", type, "startDate", startDate);
     }
     
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public FixedAssetRole findByAssetAndPartyAndTypeAndEndDate(final FixedAsset asset, final Party party, final FixedAssetRoleType type, final LocalDate endDate) {
-        return firstMatch("findRoleByAssetAndPartyAndTypeAndEndDate", "asset", asset, "party", party, "type", type, "endDate", endDate);
+        return firstMatch("findByAssetAndPartyAndTypeAndEndDate", "asset", asset, "party", party, "type", type, "endDate", endDate);
     }
 
 }

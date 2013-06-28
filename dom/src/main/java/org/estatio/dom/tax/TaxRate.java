@@ -3,13 +3,13 @@ package org.estatio.dom.tax;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -23,16 +23,37 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "findByTaxAndDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.TaxRate WHERE tax == :tax  && startDate >= :date && (endDate == null || endDate <= :date)")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByTaxAndDate", language = "JDOQL",
+            value = "SELECT "
+                    + "FROM org.estatio.dom.tax.TaxRate "
+                    + "WHERE tax == :tax"
+                    + "  && startDate >= :date"
+                    + "  && (endDate == null || endDate <= :date)"),
+    @javax.jdo.annotations.Query(
+            name = "findByTaxAndStartDate", language = "JDOQL",
+            value = "SELECT "
+                    + "FROM org.estatio.dom.tax.TaxRate "
+                    + "WHERE tax == :tax "
+                    + "&& startDate == :startDate"),
+    @javax.jdo.annotations.Query(
+            name = "findByTaxAndEndDate", language = "JDOQL",
+            value = "SELECT "
+                    + "FROM org.estatio.dom.tax.TaxRate "
+                    + "WHERE tax == :tax "
+                    + "&& endDate == :endDate"),
+})
+@MemberGroups({ "General", "Dates", "Related" })
 public class TaxRate extends EstatioTransactionalObject<TaxRate> implements WithInterval<TaxRate> {
 
     public TaxRate() {
         super("tax, startDate desc");
     }
-    
+
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="TAX_ID")
+    @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
     @Title
@@ -49,8 +70,8 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
 
     private LocalDate startDate;
 
-    @Persistent
-    @MemberOrder(sequence = "2")
+    @Optional
+    @MemberOrder(name = "Dates", sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -59,10 +80,28 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
         this.startDate = startDate;
     }
 
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+
+    // //////////////////////////////////////
+
     private LocalDate endDate;
 
-    @Persistent
-    @MemberOrder(sequence = "3")
+    @MemberOrder(name = "Dates", sequence = "3")
     @Optional
     @Disabled
     public LocalDate getEndDate() {
@@ -73,30 +112,28 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
         this.endDate = endDate;
     }
 
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+    // //////////////////////////////////////
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
-    }
-
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.1")
-    @Named("Previous Rate")
-    @Disabled
-    @Optional
-    @Override
-    public TaxRate getPrevious() {
-        return null;
-    }
-
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.2")
-    @Named("Next Rate")
-    @Disabled
-    @Optional
-    @Override
-    public TaxRate getNext() {
-        return null;
     }
 
     // //////////////////////////////////////
@@ -116,62 +153,71 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUSRATE_ID")
-    @javax.jdo.annotations.Persistent(mappedBy="nextRate")
-    private TaxRate previousRate;
+    @javax.jdo.annotations.Column(name = "PREVIOUS_ID")
+    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    private TaxRate previous;
 
-    @Hidden
-    @MemberOrder(sequence = "1")
-    public TaxRate getPreviousRate() {
-        return previousRate;
+    @Hidden(where = Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.1")
+    @Named("Previous Rate")
+    @Disabled
+    @Optional
+    @Override
+    public TaxRate getPrevious() {
+        return previous;
     }
 
-    public void setPreviousRate(final TaxRate previousRate) {
-        this.previousRate = previousRate;
-    }
-
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Column(name="NEXTRATE_ID")
-    private TaxRate nextRate;
-
-    @Hidden
-    @MemberOrder(sequence = "1")
-    public TaxRate getNextRate() {
-        return nextRate;
-    }
-
-    public void setNextRate(final TaxRate nextRate) {
-        this.nextRate = nextRate;
-    }
-
-    public void modifyNextRate(final TaxRate nextRate) {
-        TaxRate currentNextRate = getNextRate();
-        if (nextRate == null || nextRate.equals(currentNextRate)) {
-            return;
-        }
-        clearNextRate();
-        nextRate.setPreviousRate(this);
-        setNextRate(nextRate);
-    }
-
-    public void clearNextRate() {
-        TaxRate currentNextRate = getNextRate();
-        if (currentNextRate == null) {
-            return;
-        }
-        currentNextRate.setPreviousRate(null);
-        setNextRate(null);
+    public void setPrevious(final TaxRate previous) {
+        this.previous = previous;
     }
 
     // //////////////////////////////////////
 
-    public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
+    @javax.jdo.annotations.Column(name = "NEXT_ID")
+    private TaxRate next;
+
+    @Hidden(where = Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.2")
+    @Named("Next Rate")
+    @Disabled
+    @Optional
+    @Override
+    public TaxRate getNext() {
+        return next;
+    }
+
+    public void setNext(final TaxRate next) {
+        this.next = next;
+    }
+
+    public void modifyNext(final TaxRate next) {
+        TaxRate currentNextRate = getNext();
+        if (next == null || next.equals(currentNextRate)) {
+            return;
+        }
+        clearNext();
+        next.setPrevious(this);
+        setNext(next);
+    }
+
+    public void clearNext() {
+        TaxRate currentNext = getNext();
+        if (currentNext == null) {
+            return;
+        }
+        currentNext.setPrevious(null);
+        setNext(null);
+    }
+
+    // //////////////////////////////////////
+
+    public TaxRate newRate(
+            final @Named("Start Date") LocalDate startDate,
+            final @Named("Percentage") BigDecimal percentage) {
         TaxRate rate = this.getTax().newRate(startDate, percentage);
-        setNextRate(rate);
-        rate.setPreviousRate(this);
+        setNext(rate);
+        rate.setPrevious(this);
         return rate;
     }
-
 
 }

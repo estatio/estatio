@@ -11,13 +11,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.collect.Lists;
 import com.google.inject.name.Named;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -35,6 +28,13 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.filter.Filter;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -161,32 +161,76 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole> imp
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
     @MemberOrder(name="Dates", sequence = "4")
     @Optional
-    @javax.jdo.annotations.Persistent
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
     @MemberOrder(name="Dates", sequence = "5")
     @Optional
-    @javax.jdo.annotations.Persistent
+    @Disabled
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
+    @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+    
     // //////////////////////////////////////
 
     @Programmatic

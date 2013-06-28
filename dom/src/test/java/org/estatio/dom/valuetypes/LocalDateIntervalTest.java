@@ -111,7 +111,7 @@ public class LocalDateIntervalTest {
 
     @Test
     public void testEndDateFromStartDate() {
-        Assert.assertThat(interval1.endDateFromstartDate(), Is.is(interval1.startDate().minusDays(1)));
+        Assert.assertThat(interval1.endDateFromStartDate(), Is.is(interval1.startDate().minusDays(1)));
     }
 
     @Test

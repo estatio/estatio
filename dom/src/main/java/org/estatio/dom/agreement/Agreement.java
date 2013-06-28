@@ -1,5 +1,6 @@
 package org.estatio.dom.agreement;
 
+import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -131,21 +132,49 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @javax.jdo.annotations.Persistent
     @MemberOrder(name="Dates", sequence = "5")
+    @Optional
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-    public String validateStartDate(final LocalDate startDate) {
-        final LocalDate endDate2 = getEndDate();
-        return validateStartAndEndDate(startDate, endDate2);
+    
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
     }
+
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+    public String validateStartDate(final LocalDate startDate) {
+        if (startDate == null)
+            return null;
+        if (getEndDate() == null)
+            return null;
+        return startDate.isBefore(getEndDate())?null:"Start date must be before end date";
+    }
+
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
@@ -153,33 +182,47 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     @MemberOrder(name="Dates", sequence = "6")
     @Disabled
     @Optional
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
+    @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+    // //////////////////////////////////////
 
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    private String validateStartAndEndDate(final LocalDate startDate, final LocalDate endDate) {
-        if (startDate == null)
-            return null;
-        if (endDate == null)
-            return null;
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
-    }
     
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Persistent
     private LocalDate terminationDate;
 
-    @javax.jdo.annotations.Persistent
     @MemberOrder(name="Dates", sequence = "7")
     @Optional
     public LocalDate getTerminationDate() {

@@ -6,6 +6,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -30,7 +32,29 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL", value = "SELECT " + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + "WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " + "&& dueDate == :dueDate " + "&& startDate == :startDate")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+        name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL", 
+        value = "SELECT " + 
+                "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
+                "WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " + 
+                "&& dueDate == :dueDate " + 
+                "&& startDate == :startDate"),
+    @javax.jdo.annotations.Query(
+        name = "findByInvoiceAndLeaseTermAndStartDate", language = "JDOQL", 
+        value = "SELECT " + 
+                "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
+                "WHERE invoice == :invoice " + 
+                "&& leaseTerm == :leaseTerm " + 
+                "&& startDate == :startDate"),
+    @javax.jdo.annotations.Query(
+        name = "findByInvoiceAndLeaseTermAndEndDate", language = "JDOQL", 
+        value = "SELECT " + 
+                "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
+                "WHERE invoice == :invoice " + 
+                "&& leaseTerm == :leaseTerm " + 
+                "&& endDate == :endDate"),
+})
 public class InvoiceItemForLease extends InvoiceItem {
 
     @javax.jdo.annotations.Column(name="LEASETERM_ID")

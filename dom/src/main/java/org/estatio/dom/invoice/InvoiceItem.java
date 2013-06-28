@@ -224,13 +224,37 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private LocalDate startDate;
 
     @MemberOrder(name="Dates", sequence = "10")
+    @Optional
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
@@ -238,19 +262,44 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @MemberOrder(name="Dates", sequence = "11")
     @Disabled
     @Optional
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+
+    // //////////////////////////////////////
+
     @Programmatic
+    @Override
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
+
+    // //////////////////////////////////////
 
 
     @Hidden // TODO (where=Where.ALL_TABLES)

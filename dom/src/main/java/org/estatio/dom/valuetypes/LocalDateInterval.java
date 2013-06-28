@@ -63,7 +63,7 @@ public final class LocalDateInterval {
         return endDate(IntervalEnding.EXCLUDING_END_DATE);
     }
 
-    public LocalDate endDateFromstartDate() {
+    public LocalDate endDateFromStartDate() {
         return adjustDate(startDate(), ending);
     }
 

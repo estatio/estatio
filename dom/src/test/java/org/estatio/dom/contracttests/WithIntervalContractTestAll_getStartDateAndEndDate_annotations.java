@@ -20,9 +20,10 @@ import org.apache.isis.applib.annotation.Optional;
 import org.estatio.dom.WithInterval;
 
 
-public class WithIntervalContractTestAll_getEndDate_annotations {
+public class WithIntervalContractTestAll_getStartDateAndEndDate_annotations {
 
     @Test
+    @SuppressWarnings("rawtypes")
     public void searchAndTest() throws Exception {
         
         Reflections reflections = new Reflections(Constants.packagePrefix);
@@ -36,17 +37,27 @@ public class WithIntervalContractTestAll_getEndDate_annotations {
             
             System.out.println("checking " + subtype.getName());
 
-            Predicate<? super Method> getEndDatePredicate = new Predicate<Method>() {
-                public boolean apply(Method f) {
-                    return f.getName().equals("getEndDate") && 
-                           f.getParameterTypes().length == 0;
-                }
-            };
-            final Method method = Reflections.getAllMethods(subtype, getEndDatePredicate).iterator().next();
+            final Set<Method> startDateMethod = Reflections.getAllMethods(subtype, withGetterNamed("getStartDate"));
+            for (Method method : startDateMethod) {
+                assertMethodAnnotated(subtype, method, Optional.class);
+            }
             
-            assertMethodAnnotated(subtype, method, Disabled.class);
-            assertMethodAnnotated(subtype, method, Optional.class);
+            final Set<Method> endDateMethod = Reflections.getAllMethods(subtype, withGetterNamed("getEndDate"));
+            for (Method method : endDateMethod) {
+                assertMethodAnnotated(subtype, method, Disabled.class);
+                assertMethodAnnotated(subtype, method, Optional.class);
+            }
+            
         }
+    }
+
+    private static Predicate<? super Method> withGetterNamed(final String methodName) {
+        return (Predicate<? super Method>) new Predicate<Method>() {
+            public boolean apply(Method f) {
+                return f.getName().equals(methodName) && 
+                       f.getParameterTypes().length == 0;
+            }
+        };
     }
 
     private static void assertMethodAnnotated(final Class<? extends WithInterval> subtype, final Method method, final Class<? extends Annotation> annotationClass) {

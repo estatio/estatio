@@ -47,23 +47,56 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_TERM_IDX", members = { "leaseItem", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_TERM2_IDX", members = { "leaseItem", "startDate" }) })
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(name = "findByStatusAndActiveDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE status == :status && startDate <= :date && (endDate == null || endDate >= :date)"),
-    @javax.jdo.annotations.Query(name = "findByLeaseItemAndSequence", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.LeaseTerm WHERE leaseItem == :leaseItem && sequence == :sequence") 
+@javax.jdo.annotations.Indices({
+        @javax.jdo.annotations.Index(
+                name = "LEASE_TERM_IDX",
+                members = { "leaseItem", "sequence" }),
+        @javax.jdo.annotations.Index(
+                name = "LEASE_TERM2_IDX", 
+                members = { "leaseItem", "startDate" }) })
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByStatusAndActiveDate", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE status == :status "
+                        + "&& startDate <= :date "
+                        + "&& (endDate == null || endDate >= :date)"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseItemAndSequence", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem == :leaseItem "
+                        + "&& sequence == :sequence"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseItemAndStartDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.LeaseTerm " +
+                        "WHERE leaseItem == :leaseItem " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseItemAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.LeaseTerm " +
+                        "WHERE leaseItem == :leaseItem " +
+                        "&& endDate == :endDate"),
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({"General", "Dates", "Related"})
-public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*Comparable<LeaseTerm>, */ WithInterval, WithSequence {
+@MemberGroups({ "General", "Dates", "Related" })
+public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*
+                                                                                          * Comparable
+                                                                                          * <
+                                                                                          * LeaseTerm
+                                                                                          * >
+                                                                                          * ,
+                                                                                          */WithInterval, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
         super("leaseItem, sequence");
     }
-    
+
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="LEASEITEM_ID")
+    @javax.jdo.annotations.Column(name = "LEASEITEM_ID")
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
@@ -115,28 +148,37 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     private LocalDate startDate;
 
     @Title(sequence = "2", append = "-")
-    @MemberOrder(name="Dates", sequence = "2")
+    @MemberOrder(name = "Dates", sequence = "2")
+    @Optional
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
     public void modifyStartDate(final LocalDate startDate) {
         LocalDate currentStartDate = getStartDate();
         if (startDate == null || startDate.equals(currentStartDate)) {
             return;
         }
         setStartDate(startDate);
-        onModifyStartDate(currentStartDate, startDate);
+        if (getPrevious() != null) {
+            getPrevious().modifyEndDate(getInterval().endDateFromStartDate());
+        }
     }
 
-    protected void onModifyStartDate(final LocalDate oldStartDate, final LocalDate newStartDate) {
-        if (getPrevious() != null) {
-            getPrevious().modifyEndDate(getInterval().endDateFromstartDate());
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
         }
+        setStartDate(null);
     }
 
     // //////////////////////////////////////
@@ -144,18 +186,21 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "3")
+    @MemberOrder(name = "Dates", sequence = "3")
     @Title(sequence = "3")
     @Disabled
     @Optional
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
+    @Override
     public void modifyEndDate(final LocalDate endDate) {
         LocalDate currentEndDate = getEndDate();
         if (endDate == null || endDate.equals(currentEndDate)) {
@@ -164,10 +209,19 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         setEndDate(endDate);
     }
 
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
     // //////////////////////////////////////
 
-    @Override
     @Programmatic
+    @Override
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
@@ -222,13 +276,13 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUS_ID")
+    @javax.jdo.annotations.Column(name = "PREVIOUS_ID")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private LeaseTerm previous;
 
-    @MemberOrder(name="Related", sequence = "6")
+    @MemberOrder(name = "Related", sequence = "6")
     @Named("Previous Term")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Optional
     public LeaseTerm getPrevious() {
         return previous;
@@ -259,11 +313,11 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXT_ID")
+    @javax.jdo.annotations.Column(name = "NEXT_ID")
     private LeaseTerm next;
 
-    @Hidden(where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "7")
+    @Hidden(where = Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "7")
     @Named("Next Term")
     @Optional
     public LeaseTerm getNext() {
@@ -510,7 +564,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     }
 
     // //////////////////////////////////////
-
 
     private InvoiceItemsForLease invoiceItemsForLease;
 

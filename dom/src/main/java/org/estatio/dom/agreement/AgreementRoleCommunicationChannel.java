@@ -1,11 +1,14 @@
 package org.estatio.dom.agreement;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -21,9 +24,28 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByRoleAndTypeAndStartDate", language = "JDOQL", 
+            value = "SELECT " +
+                    "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
+                    "WHERE role == :agreementRole " +
+                    "&& type == :type " +
+                    "&& startDate == :startDate"),
+    @javax.jdo.annotations.Query(
+            name = "findByRoleAndTypeAndEndDate", language = "JDOQL", 
+            value = "SELECT " +
+                    "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
+                    "WHERE role == :agreementRole " +
+                    "&& type == :type " +
+                    "&& endDate == :endDate"),
+})
+@Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Dates", "Related"})
-// TODO: does this really need to implement WithInterval?  
 public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel> implements WithInterval<AgreementRoleCommunicationChannel> {
 
     public AgreementRoleCommunicationChannel() {
@@ -38,6 +60,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     @Title(sequence="2")
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
+    @Disabled
     public AgreementRole getRole() {
         return role;
     }
@@ -66,9 +89,9 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     private AgreementRoleCommunicationChannelType type;
 
-    @Disabled
-    @Title(sequence="1", append=":")
     @MemberOrder(sequence = "2")
+    @Title(sequence="1", append=":")
+    @Disabled
     public AgreementRoleCommunicationChannelType getType() {
         return type;
     }
@@ -94,11 +117,12 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
-    @Persistent
+    @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Override
     @MemberOrder(name="Dates", sequence = "4")
+    @Optional
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -108,13 +132,33 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         this.startDate = startDate;
     }
 
-    // //////////////////////////////////////
-
-    @Persistent
-    private LocalDate endDate;
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
 
     @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent
+    private LocalDate endDate;
+
     @MemberOrder(name="Dates", sequence = "5")
+    @Optional
+    @Disabled
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -124,6 +168,25 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         this.endDate = localDate;
     }
 
+    @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+    
     // //////////////////////////////////////
 
     @Override
@@ -131,6 +194,8 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
+
+    // //////////////////////////////////////
 
     @Hidden // TODO (where = Where.ALL_TABLES)
     @MemberOrder(name="Related", sequence="1")

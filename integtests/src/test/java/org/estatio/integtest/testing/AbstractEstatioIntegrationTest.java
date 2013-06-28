@@ -22,6 +22,7 @@ import org.apache.isis.core.wrapper.WrapperFactoryDefault;
 import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
@@ -298,7 +299,8 @@ public abstract class AbstractEstatioIntegrationTest {
                     new ApplicationSettingsServiceJdo(), 
                     new EstatioSettingsServiceJdo(), 
                     new FinancialAccountContributedActions(),
-                    new LeaseTermContributedActions());
+                    new LeaseTermContributedActions(),
+                    new EventBusServiceJdo());
         }
 
         private IsisConfiguration testConfiguration() {

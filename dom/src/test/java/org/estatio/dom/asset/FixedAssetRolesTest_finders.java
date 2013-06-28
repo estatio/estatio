@@ -67,7 +67,7 @@ public class FixedAssetRolesTest_finders {
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAssetRole.class));
-        assertThat(finderInteraction.getQueryName(), is("findRoleByAssetAndPartyAndType"));
+        assertThat(finderInteraction.getQueryName(), is("findByAssetAndPartyAndType"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("asset"), is((Object)asset));
         assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object)party));
         assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)type));
@@ -82,7 +82,7 @@ public class FixedAssetRolesTest_finders {
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAssetRole.class));
-        assertThat(finderInteraction.getQueryName(), is("findRoleByAssetAndPartyAndType"));
+        assertThat(finderInteraction.getQueryName(), is("findByAssetAndPartyAndType"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("asset"), is((Object)asset));
         assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object)party));
         assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)type));

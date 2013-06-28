@@ -1,6 +1,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
@@ -46,6 +47,9 @@ import org.estatio.dom.party.Party;
 @Bookmarkable
 @MemberGroups({ "General", "Dates", "Lease Details", "Related" })
 public class Lease extends Agreement implements InvoiceSource {
+
+
+    // //////////////////////////////////////
 
     @Override
     @NotPersisted
@@ -352,7 +356,7 @@ public class Lease extends Agreement implements InvoiceSource {
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "4")
+    @MemberOrder(name="terminationDate", sequence = "4")
     public Lease terminate(@Named("Termination Date") LocalDate terminationDate, @Named("Are you sure?") boolean confirm) {
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);

@@ -24,22 +24,38 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Index(name = "LEASE_UNIT_IDX", members = { "lease", "unit", "startDate" })
-@javax.jdo.annotations.Unique(name = "LEASE_UNIT_IDX2", members = { "lease", "unit", "startDate" })
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(
-            name = "findByLeaseAndUnitAndStartDate", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.lease.LeaseUnit WHERE lease == :lease && unit == :unit && startDate == :startDate") })
-@MemberGroups({"General", "Dates", "Tags", "Related"})
+@javax.jdo.annotations.Index(
+        name = "LEASE_UNIT_IDX",
+        members = { "lease", "unit", "startDate" })
+@javax.jdo.annotations.Unique(
+        name = "LEASE_UNIT_IDX2",
+        members = { "lease", "unit", "startDate" })
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseUnit "
+                        + "WHERE lease == :lease "
+                        + "&& unit == :unit "
+                        + "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndUnitAndEndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseUnit "
+                        + "WHERE lease == :lease "
+                        + "&& unit == :unit "
+                        + "&& endDate == :endDate"),
+})
+@MemberGroups({ "General", "Dates", "Tags", "Related" })
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements WithInterval<LeaseUnit> {
 
     public LeaseUnit() {
         super("lease, unit, startDate desc");
     }
-    
+
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="LEASE_ID")
+    @javax.jdo.annotations.Column(name = "LEASE_ID")
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
@@ -71,7 +87,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="UNIT_ID")
+    @javax.jdo.annotations.Column(name = "UNIT_ID")
     private UnitForLease unit;
 
     @Title(sequence = "2", append = ":")
@@ -106,29 +122,73 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
+    @MemberOrder(name = "Dates", sequence = "3")
     @Optional
-    @MemberOrder(name="Dates", sequence = "3")
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
+    @MemberOrder(name = "Dates", sequence = "4")
     @Disabled
     @Optional
-    @MemberOrder(name="Dates", sequence = "4")
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+    // //////////////////////////////////////
 
     @Override
     @Programmatic
@@ -136,9 +196,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.1")
+    @Hidden
+    // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Previous Occupany")
     @Disabled
     @Optional
@@ -147,8 +207,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         return null;
     }
 
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.2")
+    @Hidden
+    // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.2")
     @Named("Next Occupancy")
     @Disabled
     @Optional
@@ -159,7 +220,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="BRANDTAG_ID")
+    @javax.jdo.annotations.Column(name = "BRANDTAG_ID")
     private Tag brandTag;
 
     @Hidden
@@ -171,7 +232,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.brandTag = brandTag;
     }
 
-    @MemberOrder(name="Tags", sequence="6")
+    @MemberOrder(name = "Tags", sequence = "6")
     @Optional
     public String getBrand() {
         final Tag existingTag = getBrandTag();
@@ -200,7 +261,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="SECTORTAG_ID")
+    @javax.jdo.annotations.Column(name = "SECTORTAG_ID")
     private Tag sectorTag;
 
     @Hidden
@@ -212,7 +273,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.sectorTag = sectorTag;
     }
 
-    @MemberOrder(name="Tags", sequence = "7")
+    @MemberOrder(name = "Tags", sequence = "7")
     @Optional
     public String getSector() {
         final Tag existingTag = getSectorTag();
@@ -241,7 +302,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="ACTIVITYTAG_ID")
+    @javax.jdo.annotations.Column(name = "ACTIVITYTAG_ID")
     private Tag activityTag;
 
     @Hidden
@@ -253,7 +314,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.activityTag = activityTag;
     }
 
-    @MemberOrder(name="Tags", sequence = "8")
+    @MemberOrder(name = "Tags", sequence = "8")
     @Optional
     public String getActivity() {
         final Tag existingTag = getActivityTag();
@@ -287,6 +348,5 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     public void injectTags(final Tags tags) {
         this.tags = tags;
     }
-
 
 }

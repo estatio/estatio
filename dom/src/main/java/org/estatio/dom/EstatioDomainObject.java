@@ -1,6 +1,7 @@
 package org.estatio.dom;
 
 import org.apache.isis.applib.AbstractDomainObject;
+import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.services.clock.ClockService;
@@ -33,6 +34,19 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
     }
     public void injectClockService(ClockService clockService) {
         this.clockService = clockService;
+    }
+    
+    /**
+     * a default value is used to prevent null pointers for objects 
+     * being initialized where the service has not yet been injected into.
+     */
+    private EventBusService eventBusService = EventBusService.NOOP;
+    protected EventBusService getEventBusService() {
+        return eventBusService;
+    }
+    public void injectEventBusService(EventBusService eventBusService) {
+        this.eventBusService = eventBusService;
+        eventBusService.register(this);
     }
     
     // //////////////////////////////////////

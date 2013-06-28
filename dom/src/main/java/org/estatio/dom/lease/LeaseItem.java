@@ -37,7 +37,28 @@ import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Indices({ @javax.jdo.annotations.Index(name = "LEASE_INDEX_IDX", members = { "lease", "type", "sequence" }), @javax.jdo.annotations.Index(name = "LEASE_INDEX2_IDX", members = { "lease", "type", "startDate" }) })
+@javax.jdo.annotations.Indices({ 
+    @javax.jdo.annotations.Index(
+            name = "LEASE_INDEX_IDX", 
+            members = { "lease", "type", "sequence" }), 
+    @javax.jdo.annotations.Index(
+            name = "LEASE_INDEX2_IDX", 
+            members = { "lease", "type", "startDate" }) 
+})
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+        name = "findByLeaseAndTypeAndStartDate", language = "JDOQL", 
+        value = "SELECT " + 
+                "FROM org.estatio.dom.lease.LeaseItem " + 
+                "WHERE lease == :lease " + 
+                "&& startDate == :startDate"),
+    @javax.jdo.annotations.Query(
+        name = "findByLeaseAndTypeAndEndDate", language = "JDOQL", 
+        value = "SELECT " + 
+                "FROM org.estatio.dom.lease.LeaseItem " + 
+                "WHERE lease == :lease " + 
+                "&& endDate == :endDate"),
+})
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Current Value", "Dates", "Related"})
 public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements WithInterval<LeaseItem>, WithSequence {
@@ -84,10 +105,12 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
 
     @MemberOrder(sequence = "1")
     @Hidden
+    @Override
     public BigInteger getSequence() {
         return sequence;
     }
 
+    @Override
     public void setSequence(final BigInteger sequence) {
         this.sequence = sequence;
     }
@@ -125,28 +148,77 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
     private LocalDate startDate;
 
     @MemberOrder(name="Dates", sequence = "3")
+    @Optional
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
+
+    @Override
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    @Override
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
+
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
     @MemberOrder(name="Dates", sequence = "4")
+    @Optional
+    @Disabled
+    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     @Override
+    public void modifyEndDate(final LocalDate endDate) {
+        final LocalDate currentEndDate = getEndDate();
+        if (endDate == null || endDate.equals(currentEndDate)) {
+            return;
+        }
+        setEndDate(endDate);
+    }
+
+    @Override
+    public void clearEndDate() {
+        LocalDate currentEndDate = getEndDate();
+        if (currentEndDate == null) {
+            return;
+        }
+        setEndDate(null);
+    }
+
+
+    // //////////////////////////////////////
+
     @Programmatic
+    @Override
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
@@ -155,6 +227,8 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
     public LocalDate calculatedEndDate() {
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
+
+    // //////////////////////////////////////
 
     @Hidden // TODO (where=Where.ALL_TABLES)
     @MemberOrder(name="Related", sequence = "9.1")

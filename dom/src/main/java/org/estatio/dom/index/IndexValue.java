@@ -36,6 +36,22 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
         this.startDate = startDate;
     }
 
+    public void modifyStartDate(final LocalDate startDate) {
+        final LocalDate currentStartDate = getStartDate();
+        if (startDate == null || startDate.equals(currentStartDate)) {
+            return;
+        }
+        setStartDate(startDate);
+    }
+
+    public void clearStartDate() {
+        LocalDate currentStartDate = getStartDate();
+        if (currentStartDate == null) {
+            return;
+        }
+        setStartDate(null);
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="INDEXBASE_ID")
