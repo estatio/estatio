@@ -26,35 +26,35 @@ import org.estatio.dom.utils.StringUtils;
  * Irrespective of whether they use this {@link Status} type or not, the first
  * state should always be called <tt>NEW</tt>.
  */
-public enum Status implements TitledEnum {
+public enum Status implements TitledEnum, Lockable {
 
     /**
-     * Object has just been created, and can be referenced by other NEW objects,
-     * but may not be involved in 'critical' operations.
-     * 
-     * <p>
-     * Much of the data on the referencing object may be mutable when in this state;
+     * Object is in an unlocked status, and so (most of the data of this object) may be edited
      * eg to allow for fixing up of typos and other minor errors.
      * 
      * <p>
-     * Most entities allow objects in this state to be (physically) deleted.
+     * Some domain classes will allow objects in this state to be (physically) deleted.  RDBMS referential
+     * integrity constraints are used to ensure that objects referenced elsewhere cannot be removed. 
      */
-    NEW, 
+    UNLOCKED, 
     /**
-     * The object's state has been checked, and should now be made (mostly) immutable.
-     * It can no longer be deleted after this point.
+     * The object's state is locked, and is mostly or completely immutable.
+     * It can no longer be deleted when in this state.
      */
-    CHECKED;
+    LOCKED;
 
+    @Override
     public String title() {
         return StringUtils.enumTitle(this.name());
     }
 
-    public boolean isNew() {
-        return this == NEW;
+    @Override
+    public boolean isUnlocked() {
+        return this == UNLOCKED;
     }
-    public boolean isChecked() {
-        return this == CHECKED;
+    @Override
+    public boolean isLocked() {
+        return this == LOCKED;
     }
 
  }

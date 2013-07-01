@@ -6,9 +6,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.geography.Country;
@@ -23,10 +23,10 @@ import org.estatio.dom.party.Party;
 @MemberGroups({"General", "Account Details"})
 public class BankAccount extends FinancialAccount {
 
+    
     @javax.jdo.annotations.Column(name="BANK_ID")
     private Party bank;
 
-    @Optional // TODO: really?
     @MemberOrder(name = "Account Details", sequence = "9")
     public Party getBank() {
         return bank;
@@ -36,11 +36,16 @@ public class BankAccount extends FinancialAccount {
         this.bank = bank;
     }
 
+    public String disableBank() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
     // //////////////////////////////////////
 
     private BankAccountType bankAccountType;
 
     @MemberOrder(name = "Account Details", sequence = "10")
+    @Disabled
     public BankAccountType getBankAccountType() {
         return bankAccountType;
     }
@@ -49,6 +54,9 @@ public class BankAccount extends FinancialAccount {
         this.bankAccountType = bankAccountType;
     }
 
+    public String disableBankAccountType() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
 
     // //////////////////////////////////////
 
@@ -64,6 +72,10 @@ public class BankAccount extends FinancialAccount {
         this.country = country;
     }
 
+    public String disableCountry() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+
     // //////////////////////////////////////
 
     private String IBAN;
@@ -77,12 +89,22 @@ public class BankAccount extends FinancialAccount {
         this.IBAN = IBAN;
     }
 
+    public String disableIBAN() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
+    // //////////////////////////////////////
+    
     @MemberOrder(name="IBAN", sequence="1")
-    public void checkAccount() {
+    public void verifyIBAN() {
         IBANHelper ibanHelper = new IBANHelper(getIBAN());
         ibanHelper.update(this);
     }
-    
+
+    public String disableVerifyIBAN() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+
     // //////////////////////////////////////
     
     private String nationalCheckCode;
@@ -96,7 +118,10 @@ public class BankAccount extends FinancialAccount {
         this.nationalCheckCode = nationalCheckCode;
     }
 
-    
+    public String disableNationalCheckCode() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+
     // //////////////////////////////////////
 
     private String nationalBankCode;
@@ -108,6 +133,10 @@ public class BankAccount extends FinancialAccount {
 
     public void setNationalBankCode(final String nationalBankCode) {
         this.nationalBankCode = nationalBankCode;
+    }
+
+    public String disableNationalBankCode() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
     }
 
     // //////////////////////////////////////
@@ -123,6 +152,9 @@ public class BankAccount extends FinancialAccount {
         this.branchCode = branchCode;
     }
 
+    public String disableBranchCode() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
     
     // //////////////////////////////////////
 
@@ -137,5 +169,9 @@ public class BankAccount extends FinancialAccount {
         this.accountNumber = accountNumber;
     }
 
+    public String disableAccountNumber() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
 
 }

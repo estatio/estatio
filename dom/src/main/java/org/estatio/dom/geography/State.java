@@ -14,8 +14,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
     @javax.jdo.annotations.Query(name = "findByCountry", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE country == :country"),
     @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE reference == :reference") 
 })
-@Bounded
 @Immutable
+@Bounded
 public class State extends Geography {
 
     @javax.jdo.annotations.Column(name="COUNTRY_ID")
@@ -29,5 +29,6 @@ public class State extends Geography {
     public void setCountry(final Country country) {
         this.country = country;
     }
+
 
 }

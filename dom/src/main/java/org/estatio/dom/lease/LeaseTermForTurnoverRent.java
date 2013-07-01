@@ -90,7 +90,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     public BigDecimal getApprovedValue() {
-        if (getStatus().isChecked())
+        if (getStatus().isLocked())
             return getTurnoverRentValue();
         return null;
     }
@@ -131,11 +131,11 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    public LeaseTerm check() {
-        super.check();
+    public LeaseTerm lock() {
+        super.lock();
 
         // guard against invalid updates when called as bulk action
-        if (getStatus().isChecked()) {
+        if (getStatus().isLocked()) {
             return this;
         } 
 

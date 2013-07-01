@@ -21,8 +21,8 @@ public class GenerateTopModelInvoice implements Callable<Object> {
         for (LeaseItem leaseItem : items) {
             final SortedSet<LeaseTerm> terms = leaseItem.getTerms();
             for (LeaseTerm leaseTerm : terms) {
-                if(leaseTerm.getStatus().isNew()) {
-                    leaseTerm.check();
+                if(leaseTerm.getStatus().isUnlocked()) {
+                    leaseTerm.lock();
                 }
             }
 
@@ -37,12 +37,12 @@ public class GenerateTopModelInvoice implements Callable<Object> {
     }
     
     
-    // {{ injected: Leases
+    // //////////////////////////////////////
+
     private Leases leases;
 
     public void setLeases(final Leases leases) {
         this.leases = leases;
     }
-    // }}
 
 }

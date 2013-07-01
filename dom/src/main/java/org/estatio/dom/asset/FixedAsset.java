@@ -19,6 +19,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -28,6 +29,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithNameUnique;
@@ -45,11 +47,28 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Query(name = "findAssetsByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:regex) || name.matches(:regex)")
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
-public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset> implements WithNameComparable<FixedAsset> /*, WithNameUnique*/, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
+public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, Status> implements WithNameComparable<FixedAsset>, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
 
     public FixedAsset() {
-        super("name");
+        super("name", Status.LOCKED, Status.UNLOCKED);
     }
+    
+    
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @Hidden
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+
 
     // //////////////////////////////////////
 

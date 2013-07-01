@@ -4,6 +4,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
@@ -17,7 +19,8 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -50,10 +53,26 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Dates", "Related"})
-public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> implements WithInterval<FixedAssetRole> {
+public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalMutable<FixedAssetRole> {
 
     public FixedAssetRole() {
-        super("asset, party, startDate desc, type");
+        super("asset, party, startDate desc, type", Status.LOCKED, Status.UNLOCKED);
+    }
+
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @MemberOrder(sequence = "4.5")
+    @Disabled
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
     }
 
     // //////////////////////////////////////
@@ -111,6 +130,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
 
     @MemberOrder(name="Dates", sequence = "4")
     @Optional
+    @Disabled
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -121,8 +141,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
         this.startDate = startDate;
     }
 
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
@@ -138,6 +156,41 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole> i
     @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    // //////////////////////////////////////
+
+    @MemberOrder(name="endDate", sequence="1")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public FixedAssetRole changeDates(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
+    }
+
+    public String disableChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
+    @Override
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+    @Override
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+    
+    @Override
+    public String validateChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
     }
 
     // //////////////////////////////////////

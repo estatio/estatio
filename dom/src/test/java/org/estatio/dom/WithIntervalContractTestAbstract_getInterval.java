@@ -27,6 +27,7 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
         this.noninstantiableSubstitutes = noninstantiableSubstitutes;
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void searchAndTest() {
         Reflections reflections = new Reflections(packagePrefix);
@@ -34,7 +35,7 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
         Set<Class<? extends WithInterval>> subtypes = 
                 reflections.getSubTypesOf(WithInterval.class);
         for (Class<? extends WithInterval> subtype : subtypes) {
-            if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
+            if(subtype.isInterface() || subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
                 return;
             }
@@ -43,13 +44,13 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
         }
     }
 
-    @SuppressWarnings({ "unchecked" })
-    private Class<? extends WithInterval> instantiable(Class<? extends WithInterval> cls) {
-        final Class<?> substitute = noninstantiableSubstitutes.get(cls);
-        return (Class<? extends WithInterval>) (substitute!=null?substitute:cls);
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Class<? extends WithInterval<?>> instantiable(Class<? extends WithInterval> subtype) {
+        final Class<?> substitute = noninstantiableSubstitutes.get(subtype);
+        return (Class<? extends WithInterval<?>>) (substitute!=null?substitute:subtype);
     }
 
-    private <T extends WithInterval> void test(Class<T> cls) {
+    private <T extends WithInterval<?>> void test(Class<T> cls) {
         new WithIntervalContractTester<T>(cls).test();
     }
 

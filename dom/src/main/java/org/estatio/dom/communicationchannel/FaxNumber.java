@@ -28,4 +28,8 @@ public class FaxNumber extends CommunicationChannel {
         this.faxNumber = number;
     }
 
+    public String disableFaxNumber() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+    }
+
 }

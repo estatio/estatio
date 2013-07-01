@@ -49,6 +49,10 @@ public class PostalAddress extends CommunicationChannel {
         this.address1 = address1;
     }
 
+    public String disableAddress1() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+    }
+
     // //////////////////////////////////////
 
     private String address2;
@@ -61,6 +65,10 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setAddress2(final String address2) {
         this.address2 = address2;
+    }
+
+    public String disableAddress2() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////
@@ -77,6 +85,10 @@ public class PostalAddress extends CommunicationChannel {
         this.postalCode = postalCode;
     }
 
+    public String disablePostalCode() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+    }
+
     // //////////////////////////////////////
 
     private String city;
@@ -89,6 +101,10 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setCity(final String city) {
         this.city = city;
+    }
+
+    public String disableCity() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////
@@ -110,22 +126,26 @@ public class PostalAddress extends CommunicationChannel {
         this.country = country;
     }
 
-    public void modifyCountry(final Country country) {
-        setCountry(country);
-        if (getState() != null && getState().getCountry() != country) {
-            setState(null);
-        }
+    public String disableCountry() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     public List<Country> choicesCountry() {
         return countries.allCountries();
     }
 
+    public void modifyCountry(final Country country) {
+        setCountry(country);
+        if (getState() != null && getState().getCountry() != country) {
+            setState(null);
+        }
+    }
+    
     public void clearCountry() {
         setCountry(null);
         setState(null);
     }
-
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "STATE_ID")
@@ -141,10 +161,14 @@ public class PostalAddress extends CommunicationChannel {
         this.state = state;
     }
 
+    public String disableState() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+    }
+
     public List<State> choicesState() {
         return states.findStatesByCountry(getCountry());
     }
-
+    
     // //////////////////////////////////////
 
     private States states;

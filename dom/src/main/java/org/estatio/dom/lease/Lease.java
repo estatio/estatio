@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
+import org.estatio.dom.Lockable;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
@@ -45,10 +46,36 @@ import org.estatio.dom.party.Party;
         @javax.jdo.annotations.Query(name = "findByAssetAndActiveOnDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE units.contains(lu) && (terminationDate == null || terminationDate <= :activeOnDate) && (lu.unit == :asset || lu.unit.property == :asset) VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
 @Bookmarkable
 @MemberGroups({ "General", "Dates", "Lease Details", "Related" })
-public class Lease extends Agreement implements InvoiceSource {
+public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
 
+    public Lease() {
+        super(LeaseStatus.APPROVED, LeaseStatus.NEW);
+    }
+    
     // //////////////////////////////////////
+
+    private LeaseStatus status;
+
+    @Hidden
+    @Override
+    public LeaseStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final LeaseStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public void created() {
+        super.created();
+        setStatus(LeaseStatus.NEW);
+    }
+    
+    // //////////////////////////////////////
+
 
     @Override
     @NotPersisted
@@ -325,7 +352,7 @@ public class Lease extends Agreement implements InvoiceSource {
     public Lease approveAllTermsOfThisLease() {
         for (LeaseItem item : getItems()) {
             for (LeaseTerm term : item.getTerms()) {
-                term.check();
+                term.lock();
             }
         }
         return this;
@@ -356,7 +383,9 @@ public class Lease extends Agreement implements InvoiceSource {
     // //////////////////////////////////////
 
     @MemberOrder(name="terminationDate", sequence = "4")
-    public Lease terminate(@Named("Termination Date") LocalDate terminationDate, @Named("Are you sure?") boolean confirm) {
+    public Lease terminate(
+            @Named("Termination Date") LocalDate terminationDate, 
+            @Named("Are you sure?") @Optional Boolean confirm) {
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);
             if (term == null)

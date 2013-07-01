@@ -49,7 +49,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Override
     @Mask("")
     public BigDecimal getApprovedValue() {
-        return getStatus().isChecked() ? getTrialValue() : null;
+        return getStatus().isLocked() ? getTrialValue() : null;
     }
 
     // //////////////////////////////////////
@@ -95,7 +95,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Programmatic
     public void update() {
         super.update();
-        if (getStatus().isNew()) {
+        if (getStatus().isUnlocked()) {
             // date from previous term
             if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
                 if (MathUtils.isNotZeroOrNull(getPrevious().getTrialValue())) {

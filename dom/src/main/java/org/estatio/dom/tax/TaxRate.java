@@ -7,6 +7,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -18,7 +20,8 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -45,12 +48,28 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                     + "&& endDate == :endDate"),
 })
 @MemberGroups({ "General", "Dates", "Related" })
-public class TaxRate extends EstatioTransactionalObject<TaxRate> implements WithInterval<TaxRate> {
+public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
-        super("tax, startDate desc");
+        super("tax, startDate desc", Status.LOCKED, Status.UNLOCKED);
     }
 
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @Hidden
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "TAX_ID")
@@ -70,8 +89,9 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
 
     private LocalDate startDate;
 
-    @Optional
     @MemberOrder(name = "Dates", sequence = "2")
+    @Optional
+    @Disabled
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -80,24 +100,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
         this.startDate = startDate;
     }
 
-    public void modifyStartDate(final LocalDate startDate) {
-        final LocalDate currentStartDate = getStartDate();
-        if (startDate == null || startDate.equals(currentStartDate)) {
-            return;
-        }
-        setStartDate(startDate);
-    }
 
-    public void clearStartDate() {
-        LocalDate currentStartDate = getStartDate();
-        if (currentStartDate == null) {
-            return;
-        }
-        setStartDate(null);
-    }
-
-
-    // //////////////////////////////////////
 
     private LocalDate endDate;
 
@@ -112,21 +115,42 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate> implements With
         this.endDate = endDate;
     }
 
-    public void modifyEndDate(final LocalDate endDate) {
-        final LocalDate currentEndDate = getEndDate();
-        if (endDate == null || endDate.equals(currentEndDate)) {
-            return;
-        }
+    
+    // //////////////////////////////////////
+
+    @MemberOrder(name="endDate", sequence="1")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public TaxRate changeDates(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        setStartDate(startDate);
         setEndDate(endDate);
+        return this;
     }
 
-    public void clearEndDate() {
-        LocalDate currentEndDate = getEndDate();
-        if (currentEndDate == null) {
-            return;
-        }
-        setEndDate(null);
+    public String disableChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
     }
+    
+    @Override
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+    @Override
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+    
+    @Override
+    public String validateChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+    }
+
 
     // //////////////////////////////////////
 

@@ -5,13 +5,20 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.WithStatus;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -27,11 +34,28 @@ import org.estatio.dom.party.Party;
             value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE type == :type && owner == :owner")
 })
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount> implements WithNameGetter, WithReferenceUnique {
+public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount, Status> implements WithNameGetter, WithReferenceUnique  {
 
     public FinancialAccount() {
-        super("type, reference");
+        super("type, reference", Status.LOCKED, Status.UNLOCKED);
     }
+
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @MemberOrder(sequence = "4.5")
+    @Disabled
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+
 
     // //////////////////////////////////////
 

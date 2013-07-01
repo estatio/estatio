@@ -1,17 +1,12 @@
 package org.estatio.dom;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryDefault;
 
 public class EstatioDomainServiceTest_newQueryDefault {

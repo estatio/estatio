@@ -13,6 +13,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
@@ -25,6 +26,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
@@ -32,7 +34,11 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
+import org.estatio.dom.WithStatus;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
@@ -82,11 +88,11 @@ import org.estatio.services.clock.ClockService;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({ "General", "Dates", "Related" })
-public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements WithInterval<LeaseTerm>, WithSequence {
+public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> implements WithIntervalMutable<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
-        super("leaseItem, sequence");
+        super("leaseItem, sequence", LeaseTermStatus.APPROVED, LeaseTermStatus.NEW);
     }
 
     // //////////////////////////////////////
@@ -145,6 +151,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     @Title(sequence = "2", append = "-")
     @MemberOrder(name = "Dates", sequence = "2")
     @Optional
+    @Disabled
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -212,6 +219,40 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
+    @MemberOrder(name="endDate", sequence="1")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public LeaseTerm changeDates(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        modifyStartDate(startDate);
+        modifyEndDate(endDate);
+        return this;
+    }
+
+    public String disableChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
+    @Override
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+    @Override
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+    
+    @Override
+    public String validateChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+    }
+    // //////////////////////////////////////
+
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
@@ -226,19 +267,25 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-    private Status status;
+    private LeaseTermStatus status;
 
     /**
      * Disabled, is maintained through LeaseTermContributedActions
      */
     @Disabled
     @MemberOrder(sequence = "4")
-    public Status getStatus() {
+    public LeaseTermStatus getStatus() {
         return status;
     }
 
-    public void setStatus(final Status status) {
+    public void setStatus(final LeaseTermStatus status) {
         this.status = status;
+    }
+    
+    @Override
+    public void created() {
+        super.created();
+        setStatus(LeaseTermStatus.NEW);
     }
 
     // //////////////////////////////////////
@@ -467,22 +514,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         return this;
     }
 
-    // //////////////////////////////////////
-
-    @Bulk
-    @MemberOrder(sequence = "2")
-    public LeaseTerm check() {
-        // guard against invalid updates when called as bulk action
-        if (getStatus().isChecked()) {
-            return this;
-        } 
-        setStatus(Status.CHECKED);
-        return this;
-    }
-
-    public String disableCheck() {
-        return getStatus().isChecked() ? "Already checked" : null;
-    }
 
     // //////////////////////////////////////
 
@@ -522,7 +553,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     // //////////////////////////////////////
 
     protected void initialize() {
-        setStatus(Status.NEW);
+        setStatus(LeaseTermStatus.NEW);
         LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
         if (previousTerm != null) {
@@ -549,7 +580,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     @Programmatic
     BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
-        if (getStatus() == Status.NEW) {
+        if (getStatus().isUnlocked()) {
             BigDecimal value = invoiceCalculationService.calculatedValue(this, periodStartDate, dueDate, frequency);
             return value;
         }

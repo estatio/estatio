@@ -18,7 +18,7 @@ public class BankAccountTest_checkAccount {
     @Test
     public void happyCase() {
         account.setIBAN("NL31ABNA0580744434");
-        account.checkAccount();
+        account.verifyIBAN();
         assertThat(account.getAccountNumber(), is("0580744434"));
     }
 }

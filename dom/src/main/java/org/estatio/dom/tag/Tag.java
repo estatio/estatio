@@ -11,6 +11,7 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 
 

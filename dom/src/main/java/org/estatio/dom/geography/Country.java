@@ -16,8 +16,8 @@ import org.apache.isis.applib.annotation.Title;
         value = "SELECT " +
         		"FROM org.estatio.dom.geography.Country " +
         		"WHERE reference.matches(:reference)")
-@Bounded
 @Immutable
+@Bounded
 public class Country extends Geography {
 
     @javax.jdo.annotations.Unique
@@ -32,5 +32,6 @@ public class Country extends Geography {
     public void setAlpha2Code(final String alpha2Code) {
         this.alpha2Code = alpha2Code;
     }
+
 
 }

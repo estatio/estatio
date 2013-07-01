@@ -10,8 +10,10 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -21,13 +23,19 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
+import org.estatio.dom.WithStatus;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -61,12 +69,28 @@ import org.estatio.services.clock.ClockService;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Current Value", "Dates", "Related"})
-public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements WithInterval<LeaseItem>, WithSequence {
+public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     public LeaseItem() {
-        super("lease, type, sequence desc");
+        super("lease, type, sequence desc", LeaseItemStatus.APPROVED, LeaseItemStatus.NEW);
     }
     
+    // //////////////////////////////////////
+
+    private LeaseItemStatus status;
+
+    @MemberOrder(sequence = "4.5")
+    @Disabled
+    @Override
+    public LeaseItemStatus getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final LeaseItemStatus status) {
+        this.status = status;
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="LEASE_ID")
@@ -149,6 +173,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
 
     @MemberOrder(name="Dates", sequence = "3")
     @Optional
+    @Disabled
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -159,8 +184,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
         this.startDate = startDate;
     }
 
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
@@ -178,6 +201,41 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem> implements 
         this.endDate = endDate;
     }
 
+
+    // //////////////////////////////////////
+
+    @MemberOrder(name="endDate", sequence="1")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public LeaseItem changeDates(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
+    }
+
+    public String disableChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
+    @Override
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+    @Override
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+    
+    @Override
+    public String validateChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+    }
 
     // //////////////////////////////////////
 

@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithReferenceGetter;
@@ -16,6 +17,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -27,12 +29,27 @@ import org.apache.isis.applib.annotation.Title;
     @javax.jdo.annotations.Query(name = "findByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.party.Party WHERE reference.matches(:searchPattern) || name.matches(:searchPattern)") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
-public abstract class Party extends EstatioTransactionalObject<Party> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
+public abstract class Party extends EstatioTransactionalObject<Party, Status> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
-        super("name");
+        super("name", Status.LOCKED, Status.UNLOCKED);
     }
 
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @Hidden
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "PARTY_REFERENCE_UNIQUE_IDX")

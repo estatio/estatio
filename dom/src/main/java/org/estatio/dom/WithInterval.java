@@ -2,8 +2,12 @@ package org.estatio.dom;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
@@ -12,7 +16,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
 
-    
     @Optional
     @Disabled
     public LocalDate getEndDate();
@@ -21,6 +24,8 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
     @Programmatic
     public LocalDateInterval getInterval();
 
+
+    
 
     /**
      * The interval that immediately precedes this one, if any.

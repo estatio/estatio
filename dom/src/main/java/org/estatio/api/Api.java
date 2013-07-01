@@ -19,6 +19,7 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.estatio.dom.Status;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -72,6 +73,7 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -564,7 +566,7 @@ public class Api extends AbstractFactoryAndRepository {
                 }
                 term.setSequence(sequence);
             }
-            term.setStatus(org.estatio.dom.Status.valueOf(status));
+            term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(status));
             term.setStartDate(startDate);
             // will be overwritten if there is a next term
             term.setEndDate(lease.getTerminationDate());

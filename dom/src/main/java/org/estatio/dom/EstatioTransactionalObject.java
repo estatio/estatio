@@ -2,7 +2,13 @@ package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over time,
@@ -17,10 +23,15 @@ import org.apache.isis.applib.annotation.Hidden;
  * }
  * </pre>
  */
-public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>> extends EstatioDomainObject<T> {
+public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> extends EstatioDomainObject<T> implements WithStatus<T,S> {
 
-    public EstatioTransactionalObject(String keyProperties) {
+    private final S statusToLock;
+    private final S statusToUnlock;
+
+    public EstatioTransactionalObject(String keyProperties, S statusToLock, S statusToUnlock) {
         super(keyProperties);
+        this.statusToLock = statusToLock;
+        this.statusToUnlock = statusToUnlock;
     }
 
     @Hidden
@@ -29,6 +40,14 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         return id;
     }
 
+    
+    
+    // //////////////////////////////////////
+    
+    public void created() {
+        setStatus(statusToLock);
+    }
+    
     // //////////////////////////////////////
 
     @Hidden
@@ -36,5 +55,55 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         final Long version = (Long) JDOHelper.getVersion(this);
         return version;
     }
+
+    // //////////////////////////////////////
+    
+    @MemberOrder(sequence = "4.5")
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @Override
+    public boolean isLocked() {
+        return getStatus().isLocked();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Bulk
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="locked", sequence = "1")
+    @Override
+    public T lock() {
+        // guard against invalid updates when called as bulk action
+        if (hideLock()) {
+            return (T) this;
+        } 
+        setStatus(statusToLock);
+        return (T) this;
+    }
+
+    @Override
+    public boolean hideLock() {
+        return statusToLock == null || getStatus().isLocked();
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Bulk
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="locked", sequence = "2")
+    @Override
+    public T unlock() {
+        // guard against invalid updates when called as bulk action
+        if (hideUnlock()) {
+            return (T) this;
+        } 
+        setStatus(statusToUnlock);
+        return (T) this;
+    }
+    
+    @Override
+    public boolean hideUnlock() {
+        return statusToUnlock == null || getStatus().isUnlocked();
+    }
+
+    
 
 }

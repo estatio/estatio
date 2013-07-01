@@ -3,6 +3,8 @@ package org.estatio.dom.agreement;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
+import java.util.SortedSet;
+
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.jmock.Expectations;
@@ -57,7 +59,7 @@ public class AgreementRolesTest_newAgreementRole {
         
         final AgreementRole role = new AgreementRole();
         
-        assertThat(agreement.getRoles(), Matchers.empty());
+        assertThat(agreement.getRoles().size(), is(0));
 
         context.checking(new Expectations() {
             {
@@ -77,7 +79,7 @@ public class AgreementRolesTest_newAgreementRole {
         assertThat(agreementRole.getStartDate(), is(startDate));
         assertThat(agreementRole.getEndDate(), is(endDate));
         
-        assertThat(agreement.getRoles(), Matchers.contains(agreementRole));
+        assertThat((SortedSet<AgreementRole>) agreement.getRoles(), Matchers.contains(agreementRole));
     }
 
 }

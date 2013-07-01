@@ -6,6 +6,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -15,9 +17,15 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithStatus;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.tag.Tag;
 import org.estatio.dom.tag.Tags;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -47,10 +55,26 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate"),
 })
 @MemberGroups({ "General", "Dates", "Tags", "Related" })
-public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements WithInterval<LeaseUnit> {
+public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {
 
     public LeaseUnit() {
-        super("lease, unit, startDate desc");
+        super("lease, unit, startDate desc", Status.LOCKED, Status.UNLOCKED);
+    }
+
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @MemberOrder(sequence = "4.5")
+    @Disabled
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
     }
 
     // //////////////////////////////////////
@@ -124,6 +148,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
 
     @MemberOrder(name = "Dates", sequence = "3")
     @Optional
+    @Disabled
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -133,8 +158,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
@@ -150,6 +173,41 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    // //////////////////////////////////////
+
+    @MemberOrder(name="endDate", sequence="1")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public LeaseUnit changeDates(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
+    }
+
+    public String disableChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
+    @Override
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+    @Override
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+    
+    @Override
+    public String validateChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
     }
 
     // //////////////////////////////////////

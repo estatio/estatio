@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
@@ -41,12 +42,28 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Amounts", "Dates", "Related"})
-public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
+public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem, Status> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
-        super("invoice, startDate desc, charge, description, sequence");
+        super("invoice, startDate desc, charge, description, sequence", null, null);
     }
     
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @Hidden
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+
+
     // //////////////////////////////////////
 
     private BigInteger sequence;
@@ -101,6 +118,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @Title(sequence = "2")
     @MemberOrder(sequence = "2")
+    @Disabled
     public Charge getCharge() {
         return charge;
     }
@@ -120,6 +138,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private BigDecimal quantity;
 
     @MemberOrder(sequence = "3")
+    @Disabled
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -134,6 +153,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private BigDecimal netAmount;
 
     @MemberOrder(name="Amounts", sequence = "4")
+    @Disabled
     public BigDecimal getNetAmount() {
         return netAmount;
     }
@@ -152,6 +172,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private BigDecimal vatAmount;
 
     @Hidden(where = Where.PARENTED_TABLES)
+    @Disabled
     @MemberOrder(name="Amounts", sequence = "5")
     public BigDecimal getVatAmount() {
         return vatAmount;
@@ -167,6 +188,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private BigDecimal grossAmount;
 
     @MemberOrder(name="Amounts", sequence = "6")
+    @Disabled
     public BigDecimal getGrossAmount() {
         return grossAmount;
     }
@@ -182,6 +204,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @MemberOrder(sequence = "7")
     @Hidden(where = Where.PARENTED_TABLES)
+    @Disabled
     public Tax getTax() {
         return tax;
     }
@@ -195,6 +218,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private String description;
 
     @Hidden(where = Where.PARENTED_TABLES)
+    @Disabled
     @MemberOrder(sequence = "8")
     public String getDescription() {
         return description;
@@ -210,6 +234,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private LocalDate dueDate;
 
     @MemberOrder(name="Dates", sequence = "9")
+    @Disabled
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -224,6 +249,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private LocalDate startDate;
 
     @MemberOrder(name="Dates", sequence = "10")
+    @Disabled
     @Optional
     @Override
     public LocalDate getStartDate() {
@@ -235,8 +261,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         this.startDate = startDate;
     }
 
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;

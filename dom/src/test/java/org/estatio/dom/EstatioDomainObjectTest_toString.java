@@ -138,8 +138,6 @@ public class EstatioDomainObjectTest_toString {
         public void setWithTitle(final WithTitleGetter withTitle) {
             this.withTitle = withTitle;
         }
-        
-        
     }
 
     

@@ -29,4 +29,8 @@ public class PhoneNumber extends CommunicationChannel {
         this.phoneNumber = number;
     }
 
+    public String disablePhoneNumber() {
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+    }
+
 }

@@ -11,20 +11,26 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.WithStatus;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.numerator.Numerator;
@@ -34,18 +40,17 @@ import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(name = "findMatchingInvoices", language = "JDOQL", 
-        value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE source == :source && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate") 
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(name = "findMatchingInvoices", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE source == :source && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate")
 })
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject<Invoice> implements WithReferenceUnique {
-
+public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> implements WithReferenceUnique {
 
     public Invoice() {
-        super("invoiceNumber");
+        super("invoiceNumber", InvoiceStatus.APPROVED, InvoiceStatus.NEW);
     }
-    
+
     // //////////////////////////////////////
 
     public String title() {
@@ -54,10 +59,11 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="BUYER_ID")
+    @javax.jdo.annotations.Column(name = "BUYER_ID")
     private Party buyer;
 
     @MemberOrder(sequence = "1")
+    @Disabled
     public Party getBuyer() {
         return buyer;
     }
@@ -68,10 +74,11 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="SELLER_ID")
+    @javax.jdo.annotations.Column(name = "SELLER_ID")
     private Party seller;
 
     @MemberOrder(sequence = "2")
+    @Disabled
     public Party getSeller() {
         return seller;
     }
@@ -85,6 +92,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     private String collectionNumber;
 
     @MemberOrder(sequence = "3")
+    @Disabled
     public String getCollectionNumber() {
         return collectionNumber;
     }
@@ -98,6 +106,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     private String invoiceNumber;
 
     @MemberOrder(sequence = "4")
+    @Disabled
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -112,6 +121,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     private String reference;
 
     @MemberOrder(sequence = "5")
+    @Disabled
     public String getReference() {
         return reference;
     }
@@ -122,7 +132,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="SOURCE_ID")
+    @javax.jdo.annotations.Column(name = "SOURCE_ID")
     @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
     private InvoiceSource source;
 
@@ -130,6 +140,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
      * Polymorphic association to (any implementation of) {@link InvoiceSource}.
      */
     @MemberOrder(sequence = "6")
+    @Disabled
     public InvoiceSource getSource() {
         return source;
     }
@@ -143,8 +154,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     @javax.jdo.annotations.Persistent
     private LocalDate invoiceDate;
 
-    @Disabled
     @MemberOrder(sequence = "7")
+    @Disabled
     public LocalDate getInvoiceDate() {
         return invoiceDate;
     }
@@ -159,6 +170,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     private LocalDate dueDate;
 
     @MemberOrder(sequence = "8")
+    @Disabled
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -171,8 +183,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
 
     private InvoiceStatus status;
 
-    @Disabled
     @MemberOrder(sequence = "9")
+    @Disabled
     public InvoiceStatus getStatus() {
         return status;
     }
@@ -181,12 +193,14 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
         this.status = status;
     }
 
+
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="CURRENCY_ID")
+    @javax.jdo.annotations.Column(name = "CURRENCY_ID")
     private Currency currency;
 
     @MemberOrder(sequence = "10")
+    @Disabled
     public Currency getCurrency() {
         return currency;
     }
@@ -200,6 +214,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     private PaymentMethod paymentMethod;
 
     @MemberOrder(sequence = "11")
+    @Disabled
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
@@ -214,6 +229,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     private SortedSet<InvoiceItem> items = new TreeSet<InvoiceItem>();
 
     @MemberOrder(sequence = "12")
+    @Disabled
     @Render(Type.EAGERLY)
     public SortedSet<InvoiceItem> getItems() {
         return items;
@@ -254,6 +270,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
         this.lastItemSequence = lastItemSequence;
     }
 
+    
+    @Programmatic
     public BigInteger nextItemSequence() {
         BigInteger nextItemSequence = getLastItemSequence() == null ? BigInteger.ONE : getLastItemSequence().add(BigInteger.ONE);
         setLastItemSequence(nextItemSequence);
@@ -295,13 +313,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     // //////////////////////////////////////
 
     @Bulk
-    @MemberOrder(sequence = "1")
-    public Invoice approve() {
-        this.setStatus(InvoiceStatus.APPROVED);
-        return this;
-    }
-
-    @Bulk
     @MemberOrder(sequence = "2")
     public Invoice assignCollectionNumber() {
         Numerator numerator = numerators.establishNumerator(NumeratorType.COLLECTION_NUMBER);
@@ -314,13 +325,44 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
         return this;
     }
 
+    public boolean hideAssignCollectionNumber() {
+        // only applies to direct debits
+        return !getPaymentMethod().isDirectDebit();
+    }
+
+    public String disableAssignCollectionNumber() {
+        if (getPaymentMethod().isDirectDebit()) {
+            return getStatus() == InvoiceStatus.COLLECTED ? null : "Must be collected";
+        } else {
+            return getStatus() == InvoiceStatus.APPROVED ? null : "Must be checked";
+        }
+    }
+
+    // //////////////////////////////////////
+
     @PublishedAction(InvoiceEagerlyRenderedPayloadFactory.class)
     @Bulk
+    @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(sequence = "3")
     public Invoice submitToCoda() {
         assignCollectionNumber();
         return this;
     }
+
+    public String disableSubmitToCoda() {
+        if (getPaymentMethod().isDirectDebit()) {
+            return getStatus() == InvoiceStatus.COLLECTED ||
+                    getStatus() == InvoiceStatus.INVOICED
+                    ? null
+                    : "Must be collected or invoiced";
+        } else {
+            return getStatus() == InvoiceStatus.INVOICED
+                    ? null
+                    : "Must be invoiced";
+        }
+    }
+
+    // //////////////////////////////////////
 
     @Bulk
     @MemberOrder(sequence = "4")
@@ -348,7 +390,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice> implements With
     }
 
     // //////////////////////////////////////
-
 
     private Numerators numerators;
 

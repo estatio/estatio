@@ -4,14 +4,18 @@ import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithStartDate;
+import org.estatio.dom.WithStatus;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(name = "findByIndexAndStartDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.IndexValue WHERE indexBase.index == :index && startDate >= :startDate")
@@ -28,28 +32,15 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
 
     @MemberOrder(sequence = "1")
     @Title(sequence = "2", prepend = ":")
+    @Disabled
+    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
-    }
-
-    public void modifyStartDate(final LocalDate startDate) {
-        final LocalDate currentStartDate = getStartDate();
-        if (startDate == null || startDate.equals(currentStartDate)) {
-            return;
-        }
-        setStartDate(startDate);
-    }
-
-    public void clearStartDate() {
-        LocalDate currentStartDate = getStartDate();
-        if (currentStartDate == null) {
-            return;
-        }
-        setStartDate(null);
     }
 
     // //////////////////////////////////////
@@ -60,6 +51,7 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "2")
     @MemberOrder(sequence = "2")
+    @Disabled
     public IndexBase getIndexBase() {
         return indexBase;
     }
@@ -90,6 +82,7 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
     private BigDecimal value;
 
     @MemberOrder(sequence = "4")
+    @Disabled
     public BigDecimal getValue() {
         return value;
     }

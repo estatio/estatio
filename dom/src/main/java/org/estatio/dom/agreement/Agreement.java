@@ -13,6 +13,8 @@ import com.google.common.collect.Iterables;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
@@ -21,7 +23,6 @@ import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.PostsPropertyChangedEvent;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -29,7 +30,9 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
+import org.estatio.dom.Lockable;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.party.Party;
@@ -56,12 +59,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable
 @MemberGroups({"General", "Dates", "Related"})
-public abstract class Agreement extends EstatioTransactionalObject<Agreement> implements WithReferenceComparable<Agreement>, WithInterval<Agreement>, WithNameGetter {
+public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, WithNameGetter {
 
-    public Agreement() {
-        super("reference");
+    public Agreement(S statusToLock, S statusToUnlock) {
+        super("reference", statusToLock, statusToUnlock);
     }
 
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_UNIQUE_IDX")
@@ -78,6 +82,10 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         this.reference = reference;
     }
 
+    public String disableReference() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
     // //////////////////////////////////////
 
     private String name;
@@ -91,6 +99,10 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public String disableName() {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
     }
 
     // //////////////////////////////////////
@@ -130,12 +142,14 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         };
     }
 
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
     @MemberOrder(name="Dates", sequence = "5")
+    @Disabled
     @Optional
     @Override
     public LocalDate getStartDate() {
@@ -146,17 +160,6 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-    
-    public String validateStartDate(final LocalDate startDate) {
-        if (startDate == null)
-            return null;
-        if (getEndDate() == null)
-            return null;
-        return startDate.isBefore(getEndDate())?null:"Start date must be before end date";
-    }
-
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
@@ -175,33 +178,71 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     }
 
     // //////////////////////////////////////
-
+    
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
-    private LocalDate terminationDate;
-
-    @MemberOrder(name="Dates", sequence = "7")
-    @Optional
-    public LocalDate getTerminationDate() {
-        return terminationDate;
+    @MemberOrder(name="endDate", sequence="1")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public Agreement<S> changeDates(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+        return this;
     }
 
-    public void setTerminationDate(final LocalDate terminationDate) {
-        this.terminationDate = terminationDate;
+    @Override
+    public String disableChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return getStatus().isLocked()? "Cannot modify when locked": null;
+    }
+    
+    @Override
+    public LocalDate default0ChangeDates() {
+        return getStartDate();
+    }
+    @Override
+    public LocalDate default1ChangeDates() {
+        return getEndDate();
+    }
+    
+    @Override
+    public String validateChangeDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        return startDate.isBefore(endDate)?null:"Start date must be before end date";
     }
 
+    // //////////////////////////////////////
+    
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
         return LocalDateInterval.including(getStartDate(), getTerminationDate());
     }
 
+    // //////////////////////////////////////
+    
+    @javax.jdo.annotations.Persistent
+    private LocalDate terminationDate;
+    
+    @MemberOrder(name="Dates", sequence = "7")
+    @Optional
+    @Disabled
+    public LocalDate getTerminationDate() {
+        return terminationDate;
+    }
+    
+    public void setTerminationDate(final LocalDate terminationDate) {
+        this.terminationDate = terminationDate;
+    }
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="AGREEMENTTYPE_ID")
@@ -221,7 +262,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
 
     @javax.jdo.annotations.Column(name="PREVIOUS_ID")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
-    private Agreement previous;
+    private Agreement<S> previous;
 
     @MemberOrder(name="Related", sequence = "9")
     @Named("Previous Agreement")
@@ -229,16 +270,16 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     @Disabled
     @Optional
     @Override
-    public Agreement getPrevious() {
+    public Agreement<S> getPrevious() {
         return previous;
     }
 
-    public void setPrevious(final Agreement previous) {
+    public void setPrevious(final Agreement<S> previous) {
         this.previous = previous;
     }
 
-    public void modifyPrevious(final Agreement previous) {
-        Agreement currentPrevious = getPrevious();
+    public void modifyPrevious(final Agreement<S> previous) {
+        Agreement<S> currentPrevious = getPrevious();
         // check for no-op
         if (previous == null || previous.equals(currentPrevious)) {
             return;
@@ -251,7 +292,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     }
 
     public void clearPrevious() {
-        Agreement currentPreviousAgreement = getPrevious();
+        Agreement<S> currentPreviousAgreement = getPrevious();
         // check for no-op
         if (currentPreviousAgreement == null) {
             return;
@@ -264,7 +305,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="NEXT_ID")
-    private Agreement next;
+    private Agreement<S> next;
 
     @MemberOrder(name="Related", sequence = "10")
     @Named("Next Agreement")
@@ -272,16 +313,16 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     @Disabled
     @Optional
     @Override
-    public Agreement getNext() {
+    public Agreement<S> getNext() {
         return next;
     }
 
-    public void setNext(final Agreement next) {
+    public void setNext(final Agreement<S> next) {
         this.next = next;
     }
 
-    public void modifyNext(final Agreement next) {
-        Agreement currentNext = getNext();
+    public void modifyNext(final Agreement<S> next) {
+        Agreement<S> currentNext = getNext();
         // check for no-op
         if (next == null || next.equals(currentNext)) {
             return;
@@ -294,7 +335,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     }
 
     public void clearNext() {
-        Agreement currentNext = getNext();
+        Agreement<S> currentNext = getNext();
         // check for no-op
         if (currentNext == null) {
             return;
@@ -309,6 +350,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
     @MemberOrder(name = "Roles", sequence = "11")
+    @Disabled
     @Render(Type.EAGERLY)
     public SortedSet<AgreementRole> getRoles() {
         return roles;
@@ -349,6 +391,7 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
             agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
         }
         agreementRole.setEndDate(endDate);
+        agreementRole.setStatus(Status.UNLOCKED);
         return agreementRole;
     }
 

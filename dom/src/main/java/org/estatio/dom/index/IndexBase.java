@@ -10,6 +10,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -184,8 +185,8 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
 
     // //////////////////////////////////////
 
-    @Named("Get Factor For Date") // avoiding the 'get' prefix
-    public BigDecimal factorForDate(@Named("Date") LocalDate date) {
+    @Programmatic
+    public BigDecimal factorForDate(LocalDate date) {
         if (date.isBefore(getStartDate())) {
             return getFactor().multiply(getPreviousBase().factorForDate(date));
         }

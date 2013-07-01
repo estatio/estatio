@@ -205,7 +205,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public BigDecimal getApprovedValue() {
-        return getStatus().isChecked()
+        return getStatus().isLocked()
                 ? getTrialValue()
                 : null;
     }
@@ -249,7 +249,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Override
     public void update() {
         super.update();
-        if (getStatus().isNew()) {
+        if (getStatus().isUnlocked()) {
             LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
             if (previousTerm != null) {
                 BigDecimal newBaseValue = firstValue(previousTerm.getTrialValue(), previousTerm.getIndexedValue(), previousTerm.getBaseValue());

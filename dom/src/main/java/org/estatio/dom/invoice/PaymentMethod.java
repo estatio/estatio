@@ -12,5 +12,9 @@ public enum PaymentMethod {
     public String title() {
         return StringUtils.enumTitle(this.name());
     }
+    
+    public boolean isDirectDebit() {
+        return this == DIRECT_DEBIT;
+    }
 
 }

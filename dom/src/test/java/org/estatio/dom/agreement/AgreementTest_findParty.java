@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.Status;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
@@ -42,7 +43,11 @@ public class AgreementTest_findParty  {
     private Party creditor;
     private Party debtor;
 
-    public static class AgreementForSubtypeTesting extends Agreement {
+    public static class AgreementForSubtypeTesting extends Agreement<Status> {
+
+        public AgreementForSubtypeTesting() {
+            super(null, null);
+        }
 
         @Override
         public Party getPrimaryParty() {
@@ -57,6 +62,15 @@ public class AgreementTest_findParty  {
         @Override
         public Party findParty(String agreementRoleTypeTitle) {
             return super.findParty(agreementRoleTypeTitle);
+        }
+
+        @Override
+        public Status getStatus() {
+            return null;
+        }
+
+        @Override
+        public void setStatus(Status newStatus) {
         }
     }
     

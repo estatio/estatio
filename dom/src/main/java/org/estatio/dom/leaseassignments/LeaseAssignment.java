@@ -2,22 +2,40 @@ package org.estatio.dom.leaseassignments;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.lease.Lease;
 
 //TODO: is this in scope?
 //@javax.jdo.annotations.PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment> {
+public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment, Status> {
 
     
     public LeaseAssignment() {
         // TODO: I made this up...
-        super("nextLease,assignmentDate");
+        super("nextLease,assignmentDate", Status.LOCKED, Status.UNLOCKED);
     }
     
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @Hidden
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="PREVIOUSLEASE_ID")

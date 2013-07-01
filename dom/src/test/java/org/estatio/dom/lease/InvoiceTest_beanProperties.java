@@ -3,6 +3,8 @@ package org.estatio.dom.lease;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceSource;
@@ -21,8 +23,14 @@ public class InvoiceTest_beanProperties extends AbstractBeanPropertiesTest {
 	        // a test class (eg public class InvoiceSourceForTesting implements InvoiceSource {}) trips up DN.
 	        // the reason is that the DN enhancer doesn't seem to enhance it
 	        .withFixture(pojos(InvoiceSource.class, Lease.class))
+            .withFixture(statii())
 	        .exercise(new Invoice());
 	}
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static FixtureDatumFactory<Lockable> statii() {
+        return new FixtureDatumFactory(Lockable.class, (Object[])org.estatio.dom.invoice.InvoiceStatus.values());
+    }
 
 
 }

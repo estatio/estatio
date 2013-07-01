@@ -6,10 +6,12 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 
@@ -20,11 +22,28 @@ import org.estatio.dom.EstatioTransactionalObject;
 @javax.jdo.annotations.Query(
         name = "findByType", language = "JDOQL", 
         value = "SELECT FROM org.estatio.dom.numerator.Numerator WHERE type == :type")
-public class Numerator extends EstatioTransactionalObject<Numerator> implements WithDescriptionComparable<Numerator> {
+public class Numerator extends EstatioTransactionalObject<Numerator, Status> implements WithDescriptionComparable<Numerator> {
 
     public Numerator() {
-        super("description");
+        super("description", Status.LOCKED, Status.UNLOCKED);
     }
+
+    
+    // //////////////////////////////////////
+
+    private Status status;
+
+    @Hidden
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public void setStatus(final Status status) {
+        this.status = status;
+    }
+    
     
     // //////////////////////////////////////
 

@@ -1,14 +1,12 @@
-package org.estatio.dom.invoice;
+package org.estatio.dom.lease;
 
 import org.estatio.dom.Lockable;
 import org.estatio.dom.utils.StringUtils;
 
-public enum InvoiceStatus implements Lockable {
+public enum LeaseTermStatus implements Lockable {
 
-    NEW, 
-    APPROVED, 
-    COLLECTED, 
-    INVOICED;
+    APPROVED,
+    NEW;
 
     public String title() {
         return StringUtils.enumTitle(this.name());
@@ -24,4 +22,4 @@ public enum InvoiceStatus implements Lockable {
         return this == APPROVED;
     }
 
-}
+ }

@@ -3,6 +3,7 @@ package org.estatio.fixture.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.estatio.dom.Status;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.asset.Unit;
@@ -28,6 +29,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
@@ -44,7 +46,7 @@ public class LeasesFixture extends AbstractFixture {
         createLeaseTermForIndexableRent(lease1, BigInteger.valueOf(1), lease1.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1), new LocalDate(2011, 1, 1), new LocalDate(2011, 4, 1));
         createLeaseTermForServiceCharge(lease1, lease1.getStartDate(), null, BigDecimal.valueOf(6000));
         createLeaseTermForTurnoverRent(lease1, lease1.getStartDate().withDayOfYear(1).plusYears(1), null, "7");
-
+        
         Lease lease2 = createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31));
         createLeaseTermForIndexableRent(lease2, BigInteger.valueOf(1), lease2.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2008, 1, 1), new LocalDate(2009, 1, 1), new LocalDate(2009, 4, 1));
         createLeaseTermForServiceCharge(lease2, lease2.getStartDate(), null, BigDecimal.valueOf(6000));

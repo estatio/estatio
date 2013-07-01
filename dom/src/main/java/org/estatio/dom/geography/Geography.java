@@ -2,23 +2,25 @@ package org.estatio.dom.geography;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.WithReferenceComparable;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Query(name = "findGeographyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
+@Immutable
 public abstract class Geography extends EstatioRefDataObject<Geography> implements WithReferenceComparable<Geography>, WithNameUnique {
 
     public Geography() {
         super("reference");
     }
     
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "GEOGRAPHY_REFERENCE_UNIQUE_IDX")
@@ -40,6 +42,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
         this.reference = reference;
     }
 
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX")
@@ -54,6 +57,5 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
     public void setName(final String name) {
         this.name = name;
     }
-
 
 }

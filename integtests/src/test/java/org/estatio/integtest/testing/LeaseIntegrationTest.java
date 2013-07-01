@@ -27,6 +27,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
@@ -171,8 +172,8 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
     public void t13_leaseTermApprovesWell() throws Exception {
         LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTerm term = (LeaseTerm) item.getTerms().toArray()[0];
-        term.check();
-        assertThat(term.getStatus(), is(Status.CHECKED));
+        term.lock();
+        assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
         assertThat(term.getApprovedValue(), is(BigDecimal.valueOf(20200).setScale(2)));
     }
 
@@ -194,7 +195,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
         Assert.assertNull(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)));
         // let's approve
-        term.check();
+        term.lock();
         // partial period
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
@@ -220,7 +221,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         settings.updateEpochDate(null);
         LeaseItem item = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
-        term.check();
+        term.lock();
         // partial period
         term.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
