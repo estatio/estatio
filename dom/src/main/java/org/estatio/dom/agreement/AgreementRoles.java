@@ -55,5 +55,6 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         return firstMatch("findByAgreementAndTypeAndContainsDate", "agreement", agreement, "type", type, "date", date);
     }
 
+    // //////////////////////////////////////
 
 }

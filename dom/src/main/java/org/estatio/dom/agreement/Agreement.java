@@ -1,6 +1,5 @@
 package org.estatio.dom.agreement;
 
-import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -22,16 +21,17 @@ import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.PostsPropertyChangedEvent;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -147,24 +147,6 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
         this.startDate = startDate;
     }
     
-    @Override
-    public void modifyStartDate(final LocalDate startDate) {
-        final LocalDate currentStartDate = getStartDate();
-        if (startDate == null || startDate.equals(currentStartDate)) {
-            return;
-        }
-        setStartDate(startDate);
-    }
-
-    @Override
-    public void clearStartDate() {
-        LocalDate currentStartDate = getStartDate();
-        if (currentStartDate == null) {
-            return;
-        }
-        setStartDate(null);
-    }
-
     public String validateStartDate(final LocalDate startDate) {
         if (startDate == null)
             return null;
@@ -190,24 +172,6 @@ public abstract class Agreement extends EstatioTransactionalObject<Agreement> im
     @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    @Override
-    public void modifyEndDate(final LocalDate endDate) {
-        final LocalDate currentEndDate = getEndDate();
-        if (endDate == null || endDate.equals(currentEndDate)) {
-            return;
-        }
-        setEndDate(endDate);
-    }
-
-    @Override
-    public void clearEndDate() {
-        LocalDate currentEndDate = getEndDate();
-        if (currentEndDate == null) {
-            return;
-        }
-        setEndDate(null);
     }
 
     // //////////////////////////////////////

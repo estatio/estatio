@@ -134,24 +134,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
         this.startDate = startDate;
     }
 
-    @Override
-    public void modifyStartDate(final LocalDate startDate) {
-        final LocalDate currentStartDate = getStartDate();
-        if (startDate == null || startDate.equals(currentStartDate)) {
-            return;
-        }
-        setStartDate(startDate);
-    }
-
-    @Override
-    public void clearStartDate() {
-        LocalDate currentStartDate = getStartDate();
-        if (currentStartDate == null) {
-            return;
-        }
-        setStartDate(null);
-    }
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
@@ -168,24 +150,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit> implements 
     @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    @Override
-    public void modifyEndDate(final LocalDate endDate) {
-        final LocalDate currentEndDate = getEndDate();
-        if (endDate == null || endDate.equals(currentEndDate)) {
-            return;
-        }
-        setEndDate(endDate);
-    }
-
-    @Override
-    public void clearEndDate() {
-        LocalDate currentEndDate = getEndDate();
-        if (currentEndDate == null) {
-            return;
-        }
-        setEndDate(null);
     }
 
     // //////////////////////////////////////

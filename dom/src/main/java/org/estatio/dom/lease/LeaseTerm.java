@@ -81,13 +81,7 @@ import org.estatio.services.clock.ClockService;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({ "General", "Dates", "Related" })
-public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements /*
-                                                                                          * Comparable
-                                                                                          * <
-                                                                                          * LeaseTerm
-                                                                                          * >
-                                                                                          * ,
-                                                                                          */WithInterval, WithSequence {
+public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> implements WithInterval<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
@@ -160,7 +154,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         this.startDate = startDate;
     }
 
-    @Override
     public void modifyStartDate(final LocalDate startDate) {
         LocalDate currentStartDate = getStartDate();
         if (startDate == null || startDate.equals(currentStartDate)) {
@@ -172,13 +165,13 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         }
     }
 
-    @Override
     public void clearStartDate() {
         LocalDate currentStartDate = getStartDate();
         if (currentStartDate == null) {
             return;
         }
         setStartDate(null);
+        // TODO: shouldn't there be some logic reciprocal to that in modifyStartDate ?
     }
 
     // //////////////////////////////////////
@@ -200,7 +193,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         this.endDate = endDate;
     }
 
-    @Override
     public void modifyEndDate(final LocalDate endDate) {
         LocalDate currentEndDate = getEndDate();
         if (endDate == null || endDate.equals(currentEndDate)) {
@@ -208,8 +200,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
         }
         setEndDate(endDate);
     }
-
-    @Override
+    
     public void clearEndDate() {
         LocalDate currentEndDate = getEndDate();
         if (currentEndDate == null) {

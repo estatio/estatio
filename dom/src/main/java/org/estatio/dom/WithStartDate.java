@@ -10,6 +10,4 @@ public interface WithStartDate {
     public LocalDate getStartDate();
     public void setStartDate(LocalDate startDate);
 
-    public void modifyStartDate(LocalDate startDate);
-    public void clearStartDate();
 }

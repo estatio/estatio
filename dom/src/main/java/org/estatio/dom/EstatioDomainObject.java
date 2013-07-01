@@ -44,9 +44,13 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
     protected EventBusService getEventBusService() {
         return eventBusService;
     }
+    /**
+     * Unlike domain services, domain objects are NOT automatically registered
+     * with the {@link EventBusService}; Isis makes no guarantees as to whether
+     * a subscribing domain object is in memory or not to receive the event.
+     */
     public void injectEventBusService(EventBusService eventBusService) {
         this.eventBusService = eventBusService;
-        eventBusService.register(this);
     }
     
     // //////////////////////////////////////
