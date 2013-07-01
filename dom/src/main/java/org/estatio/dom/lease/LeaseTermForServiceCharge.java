@@ -49,9 +49,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Override
     @Mask("")
     public BigDecimal getApprovedValue() {
-        if (getStatus() == LeaseTermStatus.APPROVED)
-            return getTrialValue();
-        return null;
+        return getStatus().isChecked() ? getTrialValue() : null;
     }
 
     // //////////////////////////////////////
@@ -59,22 +57,9 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Override
     @Mask("")
     public BigDecimal getTrialValue() {
-        if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
-            return getAuditedValue();
-        }
-        return getBudgetedValue();
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    public LeaseTerm approve() {
-        super.approve();
-        return this;
-    }
-
-    public String disableApprove() {
-        return getStatus().equals(LeaseTermStatus.APPROVED) ? "Already approved" : null;
+        return MathUtils.isNotZeroOrNull(getAuditedValue()) 
+                ? getAuditedValue() 
+                : getBudgetedValue();
     }
 
     // //////////////////////////////////////
@@ -86,8 +71,9 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         // available
         if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
             if (getEndDate() != null) {
-                if (dueDate.compareTo(getEndDate().plusDays(1)) >= 0)
+                if (dueDate.compareTo(getEndDate().plusDays(1)) >= 0) {
                     return getAuditedValue();
+                }
             }
         }
         return getBudgetedValue();
@@ -109,7 +95,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Programmatic
     public void update() {
         super.update();
-        if (getStatus() == LeaseTermStatus.NEW) {
+        if (getStatus().isNew()) {
             // date from previous term
             if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
                 if (MathUtils.isNotZeroOrNull(getPrevious().getTrialValue())) {

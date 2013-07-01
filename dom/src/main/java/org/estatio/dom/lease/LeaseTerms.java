@@ -14,6 +14,7 @@ import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.Status;
 import org.estatio.services.clock.ClockService;
 
 public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
@@ -52,7 +53,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Leases", sequence="20")
     public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
-        return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
+        return allMatches("findByStatusAndActiveDate", "status", Status.NEW, "date", date);
     }
 
     public LocalDate default0LeaseTermsToBeApproved() {

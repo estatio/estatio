@@ -54,7 +54,6 @@ import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitsForLease;
-import org.estatio.dom.lease.contributed.LeaseTermContributedActions;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.numerator.Numerators;
@@ -299,7 +298,6 @@ public abstract class AbstractEstatioIntegrationTest {
                     new ApplicationSettingsServiceJdo(), 
                     new EstatioSettingsServiceJdo(), 
                     new FinancialAccountContributedActions(),
-                    new LeaseTermContributedActions(),
                     new EventBusServiceJdo());
         }
 

@@ -1,7 +1,6 @@
 package org.estatio.dom.lease;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
@@ -20,6 +19,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.Status;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -87,7 +87,7 @@ public class LeaseTermsTest_finders {
         
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(LeaseTerm.class));
         assertThat(finderInteraction.getQueryName(), is("findByStatusAndActiveDate"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object)LeaseTermStatus.NEW));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object)Status.NEW));
         assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object)date));
         
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));

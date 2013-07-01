@@ -325,7 +325,7 @@ public class Lease extends Agreement implements InvoiceSource {
     public Lease approveAllTermsOfThisLease() {
         for (LeaseItem item : getItems()) {
             for (LeaseTerm term : item.getTerms()) {
-                term.approve();
+                term.check();
             }
         }
         return this;

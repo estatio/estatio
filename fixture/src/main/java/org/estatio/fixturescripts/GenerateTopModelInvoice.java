@@ -8,7 +8,6 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.Leases;
 
 public class GenerateTopModelInvoice implements Callable<Object> {
@@ -22,8 +21,8 @@ public class GenerateTopModelInvoice implements Callable<Object> {
         for (LeaseItem leaseItem : items) {
             final SortedSet<LeaseTerm> terms = leaseItem.getTerms();
             for (LeaseTerm leaseTerm : terms) {
-                if(leaseTerm.getStatus() == LeaseTermStatus.NEW) {
-                    leaseTerm.approve();
+                if(leaseTerm.getStatus().isNew()) {
+                    leaseTerm.check();
                 }
             }
 

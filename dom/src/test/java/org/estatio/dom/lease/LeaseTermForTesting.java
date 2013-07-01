@@ -7,16 +7,16 @@ import org.apache.isis.applib.annotation.MemberOrder;
 
 public class LeaseTermForTesting extends LeaseTerm {
 
-    @Override
     @MemberOrder(sequence = "4")
     @Mask("")
+    @Override
     public BigDecimal getApprovedValue() {
         return value;
     }
 
-    @Override
     @MemberOrder(sequence = "5")
     @Mask("")
+    @Override
     public BigDecimal getTrialValue() {
         return value;
     }

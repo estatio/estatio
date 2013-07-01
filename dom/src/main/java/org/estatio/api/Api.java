@@ -59,7 +59,6 @@ import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseUnit;
 import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
@@ -565,7 +564,7 @@ public class Api extends AbstractFactoryAndRepository {
                 }
                 term.setSequence(sequence);
             }
-            term.setStatus(LeaseTermStatus.valueOf(status));
+            term.setStatus(org.estatio.dom.Status.valueOf(status));
             term.setStartDate(startDate);
             // will be overwritten if there is a next term
             term.setEndDate(lease.getTerminationDate());

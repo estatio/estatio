@@ -22,7 +22,7 @@ import org.estatio.dom.index.Indices;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
-    @javax.jdo.annotations.Column(name="INDEX_ID")
+    @javax.jdo.annotations.Column(name = "INDEX_ID")
     private Index index;
 
     @MemberOrder(sequence = "10", name = "Indexable Rent")
@@ -205,9 +205,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public BigDecimal getApprovedValue() {
-        if (getStatus() == LeaseTermStatus.APPROVED)
-            return getTrialValue();
-        return null;
+        return getStatus().isChecked()
+                ? getTrialValue()
+                : null;
     }
 
     // //////////////////////////////////////
@@ -223,7 +223,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Programmatic
     public void initialize() {
         super.initialize();
-        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
+        final LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
         if (previousTerm != null) {
             LeaseTermFrequency frequency = previousTerm.getFrequency();
             if (frequency != null) {
@@ -249,7 +249,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Override
     public void update() {
         super.update();
-        if (getStatus().equals(LeaseTermStatus.NEW)) {
+        if (getStatus().isNew()) {
             LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
             if (previousTerm != null) {
                 BigDecimal newBaseValue = firstValue(previousTerm.getTrialValue(), previousTerm.getIndexedValue(), previousTerm.getBaseValue());

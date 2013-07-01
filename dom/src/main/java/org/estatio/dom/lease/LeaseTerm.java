@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.Invoice;
@@ -225,18 +226,18 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     // //////////////////////////////////////
 
-    private LeaseTermStatus status;
+    private Status status;
 
     /**
      * Disabled, is maintained through LeaseTermContributedActions
      */
     @Disabled
     @MemberOrder(sequence = "4")
-    public LeaseTermStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(final LeaseTermStatus status) {
+    public void setStatus(final Status status) {
         this.status = status;
     }
 
@@ -470,16 +471,17 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     @Bulk
     @MemberOrder(sequence = "2")
-    public LeaseTerm approve() {
+    public LeaseTerm check() {
         // guard against invalid updates when called as bulk action
-        if (getStatus() == LeaseTermStatus.NEW) {
-            setStatus(LeaseTermStatus.APPROVED);
-        }
+        if (getStatus().isChecked()) {
+            return this;
+        } 
+        setStatus(Status.CHECKED);
         return this;
     }
 
-    public String disableApprove() {
-        return this.getStatus() == LeaseTermStatus.NEW ? null : "Cannot approve. Already approved?";
+    public String disableCheck() {
+        return getStatus().isChecked() ? "Already checked" : null;
     }
 
     // //////////////////////////////////////
@@ -520,7 +522,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
     // //////////////////////////////////////
 
     protected void initialize() {
-        setStatus(LeaseTermStatus.NEW);
+        setStatus(Status.NEW);
         LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
         if (previousTerm != null) {
@@ -547,7 +549,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm> im
 
     @Programmatic
     BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
-        if (getStatus() == LeaseTermStatus.APPROVED) {
+        if (getStatus() == Status.NEW) {
             BigDecimal value = invoiceCalculationService.calculatedValue(this, periodStartDate, dueDate, frequency);
             return value;
         }
