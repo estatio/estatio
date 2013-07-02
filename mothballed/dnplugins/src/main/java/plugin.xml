@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<plugin id="estatio" name="DataNucleus plug-ins" provider-name="Eurocommercial Properties NV">
+
+    <extension point="org.datanucleus.store_identifierfactory">
+        <identifierfactory name="estatio" 
+            class-name="org.estatio.dnplugins.EstatioIdentifierFactory"/>
+    </extension>
+</plugin>
