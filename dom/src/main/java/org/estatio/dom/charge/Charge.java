@@ -20,8 +20,8 @@ package org.estatio.dom.charge;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithCodeUnique;
-import org.estatio.dom.WithDescriptionUnique;
-import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.tax.Tax;
 
 import org.apache.isis.applib.annotation.Bounded;
@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Title;
                 "WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceUnique, WithCodeUnique, WithDescriptionUnique {
+public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceGetter, WithCodeUnique, WithDescriptionGetter {
 
     public Charge() {
         super("code");
