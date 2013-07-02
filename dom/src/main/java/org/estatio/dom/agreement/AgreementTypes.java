@@ -5,7 +5,6 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.utils.StringUtils;
 
 @Hidden
 public class AgreementTypes extends EstatioDomainService<AgreementType> {

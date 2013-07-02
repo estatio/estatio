@@ -2,6 +2,18 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.DateTimeUtils;
+import org.estatio.dom.utils.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -12,20 +24,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
-
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssets;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.DateTimeUtils;
-import org.estatio.dom.utils.StringUtils;
 
 public class Leases extends EstatioDomainService<Lease> {
 

@@ -19,11 +19,10 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
-import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
@@ -42,6 +41,8 @@ import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankAccountType;
+import org.estatio.dom.financial.BankMandate;
+import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
@@ -73,7 +74,6 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.services.clock.ClockService;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -99,7 +99,10 @@ public class Api extends AbstractFactoryAndRepository {
     // }}
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putCountry(@Named("code") String code, @Named("alpha2Code") String alpha2Code, @Named("name") String name) {
+    public void putCountry(
+            @Named("code") String code,
+            @Named("alpha2Code") String alpha2Code,
+            @Named("name") String name) {
         Country country = countries.findCountryByReference(code);
         if (country == null) {
             country = countries.newCountry(code, name);
@@ -123,7 +126,10 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putState(@Named("code") String code, @Named("name") String name, @Named("countryCode") String countryCode) {
+    public void putState(
+            @Named("code") String code,
+            @Named("name") String name,
+            @Named("countryCode") String countryCode) {
         Country country = fetchCountry(countryCode);
         State state = states.findStateByReference(countryCode);
         if (state == null) {
@@ -148,7 +154,11 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putCharge(@Named("code") String code, @Named("reference") String reference, @Named("description") String description, @Named("taxReference") String taxReference) {
+    public void putCharge(
+            @Named("code") String code,
+            @Named("reference") String reference,
+            @Named("description") String description,
+            @Named("taxReference") String taxReference) {
         Tax tax = fetchTax(taxReference);
         Charge charge = charges.findChargeByReference(reference);
         if (charge == null) {
@@ -170,7 +180,12 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putTax(@Named("reference") String reference, @Named("name") String name, @Named("description") String decription, @Named("percentage") BigDecimal percentage, @Named("startDate") LocalDate startDate) {
+    public void putTax(
+            @Named("reference") String reference,
+            @Named("name") String name,
+            @Named("description") String decription,
+            @Named("percentage") BigDecimal percentage,
+            @Named("startDate") LocalDate startDate) {
         Tax tax = fetchTax(reference);
         if (tax == null) {
             tax = taxes.newTax(reference);
@@ -193,7 +208,11 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPerson(@Named("reference") String reference, @Named("initials") @Optional String initials, @Named("firstName") String firstName, @Named("lastName") String lastName) {
+    public void putPerson(
+            @Named("reference") String reference,
+            @Named("initials") @Optional String initials,
+            @Named("firstName") String firstName,
+            @Named("lastName") String lastName) {
         // TODO Add check for return type
         Person person = (Person) parties.findPartyByReferenceOrName(reference);
         if (person == null) {
@@ -205,7 +224,9 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putOrganisation(@Named("reference") String reference, @Named("name") String name) {
+    public void putOrganisation(
+            @Named("reference") String reference,
+            @Named("name") String name) {
         Organisation org = (Organisation) parties.findPartyByReferenceOrName(reference);
         if (org == null) {
             org = organisations.newOrganisation(reference, name);
@@ -225,7 +246,13 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putProperty(@Named("reference") String reference, @Named("name") String name, @Named("type") String type, @Named("acquireDate") @Optional LocalDate acquireDate, @Named("disposalDate") @Optional LocalDate disposalDate, @Named("openingDate") @Optional LocalDate openingDate,
+    public void putProperty(
+            @Named("reference") String reference,
+            @Named("name") String name,
+            @Named("type") String type,
+            @Named("acquireDate") @Optional LocalDate acquireDate,
+            @Named("disposalDate") @Optional LocalDate disposalDate,
+            @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference) {
         Party owner = fetchParty(ownerReference);
         Property property = fetchProperty(reference, true);
@@ -250,9 +277,23 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putUnit(@Named("reference") String reference, @Named("propertyReference") String propertyReference, @Named("ownerReference") @Optional String ownerReference, @Named("name") String name, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate,
-            @Named("endDate") @Optional LocalDate endDate, @Named("area") @Optional BigDecimal area, @Named("salesArea") @Optional BigDecimal salesArea, @Named("storageArea") @Optional BigDecimal storageArea, @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
-            @Named("terraceArea") @Optional BigDecimal terraceArea, @Named("address1") @Optional String address1, @Named("city") @Optional String city, @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode) {
+    public void putUnit(
+            @Named("reference") String reference,
+            @Named("propertyReference") String propertyReference,
+            @Named("ownerReference") @Optional String ownerReference,
+            @Named("name") String name, @Named("type") String type,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("area") @Optional BigDecimal area,
+            @Named("salesArea") @Optional BigDecimal salesArea,
+            @Named("storageArea") @Optional BigDecimal storageArea,
+            @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
+            @Named("terraceArea") @Optional BigDecimal terraceArea,
+            @Named("address1") @Optional String address1,
+            @Named("city") @Optional String city,
+            @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode,
+            @Named("countryCode") @Optional String countryCode) {
         Property property = fetchProperty(propertyReference, false);
         Unit unit = units.findUnitByReference(reference);
         if (unit == null) {
@@ -286,8 +327,14 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyPostalAddress(@Named("propertyReference") String propertyReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") String city, @Named("postalCode") @Optional String postalCode,
-            @Named("stateCode") @Optional String stateCode, @Named("countryCode") String countryCode) {
+    public void putPropertyPostalAddress(
+            @Named("propertyReference") String propertyReference,
+            @Named("address1") @Optional String address1,
+            @Named("address2") @Optional String address2,
+            @Named("city") String city,
+            @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode,
+            @Named("countryCode") String countryCode) {
         Property property = properties.findPropertyByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
@@ -301,8 +348,17 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPartyCommunicationChannels(@Named("partyReference") String partyReference, @Named("reference") @Optional String reference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") @Optional String city,
-            @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("phoneNumber") @Optional String phoneNumber, @Named("faxNumber") @Optional String faxNumber) {
+    public void putPartyCommunicationChannels(
+            @Named("partyReference") String partyReference,
+            @Named("reference") @Optional String reference,
+            @Named("address1") @Optional String address1,
+            @Named("address2") @Optional String address2,
+            @Named("city") @Optional String city,
+            @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode,
+            @Named("countryCode") @Optional String countryCode,
+            @Named("phoneNumber") @Optional String phoneNumber,
+            @Named("faxNumber") @Optional String faxNumber) {
         Party party = fetchParty(partyReference);
         // Address
         if (address1 != null) {
@@ -331,8 +387,17 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPartyPostalAddress(@Named("partyReference") String partyReference, @Named("reference") @Optional String reference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("city") @Optional String city,
-            @Named("postalCode") @Optional String postalCode, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("phoneNumber") @Optional String phoneNumber, @Named("faxNumber") @Optional String faxNumber) {
+    public void putPartyPostalAddress(
+            @Named("partyReference") String partyReference,
+            @Named("reference") @Optional String reference,
+            @Named("address1") @Optional String address1,
+            @Named("address2") @Optional String address2,
+            @Named("city") @Optional String city,
+            @Named("postalCode") @Optional String postalCode,
+            @Named("stateCode") @Optional String stateCode,
+            @Named("countryCode") @Optional String countryCode,
+            @Named("phoneNumber") @Optional String phoneNumber,
+            @Named("faxNumber") @Optional String faxNumber) {
         Party party = fetchParty(partyReference);
         // Address
         if (address1 != null) {
@@ -373,8 +438,16 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLease(@Named("reference") String reference, @Named("name") String name, @Named("tenantReference") String tenantReference, @Named("landlordReference") String landlordReference, @Named("type") @Optional String type, @Named("startDate") @Optional LocalDate startDate,
-            @Named("endDate") @Optional LocalDate endDate, @Named("terminationDate") @Optional LocalDate terminationDate, @Named("propertyReference") @Optional String propertyReference) {
+    public void putLease(
+            @Named("reference") String reference,
+            @Named("name") String name,
+            @Named("tenantReference") String tenantReference,
+            @Named("landlordReference") String landlordReference,
+            @Named("type") @Optional String type,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("terminationDate") @Optional LocalDate terminationDate,
+            @Named("propertyReference") @Optional String propertyReference) {
         Party tenant = fetchParty(tenantReference);
         Party landlord = fetchParty(landlordReference);
         Lease lease = leases.findLeaseByReference(reference);
@@ -404,8 +477,16 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseUnit(@Named("leaseReference") String leaseReference, @Named("unitReference") @Optional String unitReference, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
-            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate, @Named("brand") @Optional String brand, @Named("sector") @Optional String sector, @Named("activity") @Optional String activity) {
+    public void putLeaseUnit(
+            @Named("leaseReference") String leaseReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
+            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate,
+            @Named("brand") @Optional String brand,
+            @Named("sector") @Optional String sector,
+            @Named("activity") @Optional String activity) {
         Lease lease = fetchLease(leaseReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         if (unitReference != null && unit == null) {
@@ -425,8 +506,17 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseItem(@Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("type") @Optional String type, @Named("sequence") BigInteger sequence,
-            @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("chargeReference") @Optional String chargeReference, @Named("nextDueDate") @Optional LocalDate nextDueDate, @Named("invoicingFrequency") @Optional String invoicingFrequency,
+    public void putLeaseItem(
+            @Named("leaseReference") String leaseReference,
+            @Named("tenantReference") String tenantReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("type") @Optional String type,
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("chargeReference") @Optional String chargeReference,
+            @Named("nextDueDate") @Optional LocalDate nextDueDate,
+            @Named("invoicingFrequency") @Optional String invoicingFrequency,
             @Named("paymentMethod") @Optional String paymentMethod) {
         Lease lease = fetchLease(leaseReference);
         Unit unit = fetchUnit(unitReference);
@@ -455,8 +545,16 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeasePostalAddress(@Named("partyReference") String partyReference, @Named("leaseReference") @Optional String leaseReference, @Named("address1") @Optional String address1, @Named("address2") @Optional String address2, @Named("postalCode") @Optional String postalCode,
-            @Named("city") @Optional String city, @Named("stateCode") @Optional String stateCode, @Named("countryCode") @Optional String countryCode, @Named("type") @Optional AgreementRoleCommunicationChannelType type) {
+    public void putLeasePostalAddress(
+            @Named("partyReference") String partyReference,
+            @Named("leaseReference") @Optional String leaseReference,
+            @Named("address1") @Optional String address1,
+            @Named("address2") @Optional String address2,
+            @Named("postalCode") @Optional String postalCode,
+            @Named("city") @Optional String city,
+            @Named("stateCode") @Optional String stateCode,
+            @Named("countryCode") @Optional String countryCode,
+            @Named("type") @Optional AgreementRoleCommunicationChannelType type) {
         if (address1 != null && partyReference != null && leaseReference != null) {
             Lease lease = fetchLease(leaseReference);
             Party party = fetchParty(partyReference);
@@ -508,10 +606,21 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForTurnoverRent(
             // start generic fields
-            @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status,
+            @Named("leaseReference") String leaseReference,
+            @Named("tenantReference") String tenantReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("itemSequence") BigInteger itemSequence,
+            @Named("itemType") String itemType,
+            @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("status") @Optional String status,
             // end generic fields
-            @Named("turnoverRentRule") @Optional String turnoverRentRule, @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover, @Named("auditedTurnover") @Optional BigDecimal auditedTurnover, @Named("turnoverRentValue") @Optional BigDecimal turnoverRentValue) {
+            @Named("turnoverRentRule") @Optional String turnoverRentRule,
+            @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover,
+            @Named("auditedTurnover") @Optional BigDecimal auditedTurnover,
+            @Named("turnoverRentValue") @Optional BigDecimal turnoverRentValue) {
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
             term.setTurnoverRentValue(turnoverRentValue);
@@ -524,10 +633,19 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForServiceCharge(
             // start generic fields
-            @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
-            @Named("sequence") BigInteger sequence, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate, @Named("status") @Optional String status,
+            @Named("leaseReference") String leaseReference,
+            @Named("tenantReference") String tenantReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("itemSequence") BigInteger itemSequence,
+            @Named("itemType") String itemType,
+            @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("status") @Optional String status,
             // end generic fields
-            @Named("auditedValue") @Optional BigDecimal auditedValue, @Named("budgetedValue") @Optional BigDecimal budgetedValue) {
+            @Named("auditedValue") @Optional BigDecimal auditedValue,
+            @Named("budgetedValue") @Optional BigDecimal budgetedValue) {
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
             term.setAuditedValue(auditedValue);
@@ -578,8 +696,15 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putBankAccount(
             // start generic fields
-            @Named("reference") @Optional String reference, @Named("name") @Optional String name, @Named("bankAccountType") @Optional String bankAccountType, @Named("ownerReference") String ownerReference, @Named("iban") @Optional String iban,
-            @Named("nationalCheckCode") @Optional String nationalCheckCode, @Named("nationalBankCode") @Optional String nationalBankCode, @Named("branchCode") @Optional String branchCode, @Named("accountNumber") @Optional String accountNumber) {
+            @Named("reference") @Optional String reference,
+            @Named("name") @Optional String name,
+            @Named("bankAccountType") @Optional String bankAccountType,
+            @Named("ownerReference") String ownerReference,
+            @Named("iban") @Optional String iban,
+            @Named("nationalCheckCode") @Optional String nationalCheckCode,
+            @Named("nationalBankCode") @Optional String nationalBankCode,
+            @Named("branchCode") @Optional String branchCode,
+            @Named("accountNumber") @Optional String accountNumber) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
         Party owner = parties.findPartyByReferenceOrName(ownerReference);
         if (owner == null)
@@ -596,7 +721,38 @@ public class Api extends AbstractFactoryAndRepository {
         bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
     }
 
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putBankMandate(
+            @Named("reference") String reference,
+            @Named("name") @Optional String name,
+            @Named("leaseReference") String leaseReference,
+            @Named("debtorReference") String debtorReference,
+            @Named("creditorReference") String creditorReference,
+            @Named("startDate") LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate) {
+        BankMandate bankMandate = (BankMandate) agreements.findAgreementByReference(reference);
+        if (bankMandate == null) {
+            Party debtor = fetchParty(debtorReference);
+            Party creditor = fetchParty(creditorReference);
+            Lease lease = fetchLease(leaseReference);
+            bankMandate = bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor);
+            lease.paidBy(bankMandate);
+        }
+    }
+
     // //////////////////////////////////////
+
+    private Agreements agreements;
+
+    public void injectAgreements(Agreements agreements) {
+        this.agreements = agreements;
+    }
+
+    private BankMandates bankMandates;
+
+    public void injectBankMandates(BankMandates bankMandates) {
+        this.bankMandates = bankMandates;
+    }
 
     private ClockService clockService;
 
@@ -668,12 +824,6 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectLeaseRepository(final Leases leases) {
         this.leases = leases;
-    }
-
-    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
-
-    public void injectAgreementRoleCommunicationChannels(AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
-        this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
     }
 
     private AgreementRoleTypes agreementRoleTypes;

@@ -1,25 +1,22 @@
 package org.estatio.dom.charge;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithCodeUnique;
+import org.estatio.dom.WithDescriptionUnique;
+import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.tax.Tax;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithCodeGetter;
-import org.estatio.dom.WithCodeUnique;
-import org.estatio.dom.WithDescriptionGetter;
-import org.estatio.dom.WithDescriptionUnique;
-import org.estatio.dom.WithReferenceGetter;
-import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.tax.Tax;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
+        name = "findByReference", language = "JDOQL",
         value = "SELECT " +
-        		"FROM org.estatio.dom.charge.Charge " +
-        		"WHERE reference.matches(:reference)")
+                "FROM org.estatio.dom.charge.Charge " +
+                "WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
 public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceUnique, WithCodeUnique, WithDescriptionUnique {
@@ -30,7 +27,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "CHARGE_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @Title(sequence = "1")
@@ -59,7 +55,7 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="TAX_ID")
+    @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
     @MemberOrder(sequence = "3")
@@ -73,7 +69,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "CHARGE_DESCRIPTION_UNIQUE_IDX")
     private String description;
 
     @MemberOrder(sequence = "4")
@@ -87,7 +82,7 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="GROUP_ID")
+    @javax.jdo.annotations.Column(name = "GROUP_ID")
     private ChargeGroup group;
 
     @MemberOrder(sequence = "5")
@@ -98,6 +93,5 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
     public void setGroup(final ChargeGroup group) {
         this.group = group;
     }
-
 
 }

@@ -46,7 +46,6 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "TAX_NAME_UNIQUE_IDX")
     private String name;
 
     @MemberOrder(sequence = "2")
