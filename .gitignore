@@ -1,1 +1,26 @@
-jacoco.exec
+*~
+*.swp
+*.class
+db/
+target/
+target-ide/
+logs/
+.settings/
+.project
+.classpath
+datanucleus.log
+*.iml
+.idea
+*.log
+*.lck
+
+
+# os specific files
+.DS_Store
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+/xml/

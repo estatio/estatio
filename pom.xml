@@ -22,7 +22,7 @@
 	<packaging>pom</packaging>
 
 	<scm>
-		<connection>scm:git:https://jcvanderwal@bitbucket.org/estatio/app.git</connection>
+		<connection>scm:git:https://github.com/estatio/estatio.git</connection>
 	</scm>
 	
 	<properties>
@@ -46,8 +46,8 @@
 		     see https://issues.apache.org/jira/browse/ACCUMULO-443 -->
 		<targetJdk>1.6</targetJdk>    
         <distMgmtSiteUrl>file:///tmp/m2-sites/estatio</distMgmtSiteUrl>
-        <checkstyle.configLocation>${trunkBaseDir}/../standards/site/resources/codequality/checkstyle.xml</checkstyle.configLocation>
-        <pmd.ruleset>${trunkBaseDir}/../standards/site/resources/codequality/pmd.xml</pmd.ruleset>
+        <checkstyle.configLocation>${trunkBaseDir}/docs/codequality/checkstyle.xml</checkstyle.configLocation>
+        <pmd.ruleset>${trunkBaseDir}/docs/codequality/pmd.xml</pmd.ruleset>
 	</properties>
 
 	<repositories>
