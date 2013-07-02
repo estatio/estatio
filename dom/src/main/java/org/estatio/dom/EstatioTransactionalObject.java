@@ -58,24 +58,17 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
 
     // //////////////////////////////////////
     
-    @MemberOrder(sequence = "4.5")
-    @Hidden(where=Where.ALL_TABLES)
-    @Disabled
+    @Hidden
     @Override
     public boolean isLocked() {
         return getStatus().isLocked();
     }
 
-    @SuppressWarnings("unchecked")
-    @Bulk
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="locked", sequence = "1")
+    @MemberOrder(sequence = "1")
     @Override
+    @SuppressWarnings("unchecked")
     public T lock() {
-        // guard against invalid updates when called as bulk action
-        if (hideLock()) {
-            return (T) this;
-        } 
         setStatus(statusToLock);
         return (T) this;
     }
@@ -85,16 +78,11 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         return statusToLock == null || getStatus().isLocked();
     }
     
-    @SuppressWarnings("unchecked")
-    @Bulk
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="locked", sequence = "2")
+    @MemberOrder(sequence = "2")
     @Override
+    @SuppressWarnings("unchecked")
     public T unlock() {
-        // guard against invalid updates when called as bulk action
-        if (hideUnlock()) {
-            return (T) this;
-        } 
         setStatus(statusToUnlock);
         return (T) this;
     }

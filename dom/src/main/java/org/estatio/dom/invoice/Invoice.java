@@ -22,6 +22,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 
@@ -200,6 +201,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     private Currency currency;
 
     @MemberOrder(sequence = "10")
+    @Hidden(where=Where.ALL_TABLES)
     @Disabled
     public Currency getCurrency() {
         return currency;

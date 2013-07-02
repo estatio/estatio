@@ -5,11 +5,13 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@MemberGroups({ "General", "Dates", "Turnover Rent", "Related" })
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private String turnoverRentRule;

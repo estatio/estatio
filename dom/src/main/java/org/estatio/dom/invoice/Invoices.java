@@ -55,11 +55,5 @@ public class Invoices extends EstatioDomainService<Invoice> {
         return allInstances();
     }
 
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    public List<InvoiceItem> allInvoiceItems() {
-        return allInstances(InvoiceItem.class);
-    }
 
 }

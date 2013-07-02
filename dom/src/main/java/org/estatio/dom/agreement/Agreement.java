@@ -92,6 +92,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     @DescribedAs("Optional name for this agreement")
     @MemberOrder(sequence = "2")
+    @Hidden(where=Where.ALL_TABLES)
     @Optional
     public String getName() {
         return name;
@@ -248,6 +249,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     @javax.jdo.annotations.Column(name="AGREEMENTTYPE_ID")
     private AgreementType agreementType;
 
+    @Hidden(where=Where.ALL_TABLES)
     @Disabled
     @MemberOrder(sequence = "8")
     public AgreementType getAgreementType() {

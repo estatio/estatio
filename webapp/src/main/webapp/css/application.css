@@ -17,6 +17,19 @@
  *  under the License.
  */
 
+
+.entityActions .cssMenuPanel .menuh a.Lease-lock {
+    background-color: #BF8B5C;
+    float: right;
+}
+.entityActions .cssMenuPanel .menuh a.Lease-unlock {
+    background-color: #51A95C;
+    float: right;
+}
+
+
+
+
 #header {
 	width: 73%;
 	float: left;
@@ -28,8 +41,7 @@
 }
 
 .headerContainer .links>span:first-child {
-	background: url("../images/icon_appuser.png") no-repeat scroll left
-		center transparent;
+	background: url("../images/icon_appuser.png") no-repeat scroll left center transparent;
 	line-height: 30px;
 	padding: 5px 0 5px 20px;
 	margin-left: 10px;
@@ -42,3 +54,5 @@
 .headerContainer .links a {
 	margin-left: 10px;
 }
+
+

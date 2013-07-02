@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.Lockable;
@@ -55,9 +56,17 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     
     // //////////////////////////////////////
 
+    @Override
+    public void created() {
+        super.created();
+        setStatus(LeaseStatus.NEW);
+    }
+    
+    // //////////////////////////////////////
+    
     private LeaseStatus status;
 
-    @Hidden
+    @Disabled
     @Override
     public LeaseStatus getStatus() {
         return status;
@@ -68,11 +77,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.status = status;
     }
 
-    @Override
-    public void created() {
-        super.created();
-        setStatus(LeaseStatus.NEW);
-    }
     
     // //////////////////////////////////////
 
@@ -211,9 +215,10 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     @javax.jdo.annotations.Column(name="PAIDBY_ID")
     private BankMandate paidBy;
 
-    @Optional
-    @Disabled
     @MemberOrder(name = "Lease Details", sequence = "10")
+    @Hidden(where=Where.ALL_TABLES)
+    @Disabled
+    @Optional
     public BankMandate getPaidBy() {
         return paidBy;
     }
@@ -361,7 +366,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     @Bulk
-    @MemberOrder(name = "Items", sequence = "2")
+    @MemberOrder(sequence = "2")
     public Lease verify() {
         for (LeaseItem item : getItems()) {
             item.verify();
