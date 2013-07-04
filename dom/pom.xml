@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
-	language governing permissions and limitations under the License. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<!-- 
+Copyright 2012-2013 Eurocommercial Properties NV
 
-	<parent>
-		<groupId>org.estatio</groupId>
-		<artifactId>estatio</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+Licensed under the Apache License, Version 2.0 (the "License"); 
+you may not use this file except in compliance with the License. 
+You may obtain a copy of the License at 
 
-	<properties>
-		<siteBaseDir>..</siteBaseDir>
-	</properties>
+    http://www.apache.org/licenses/LICENSE-2.0
+     
+Unless required by applicable law or agreed to in writing, 
+software distributed under the License is distributed on an 
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+either express or implied. See the License for the specific
+language governing permissions and limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>estatio-dom</artifactId>
-	<name>Estatio DOM</name>
+    <parent>
+        <groupId>org.estatio</groupId>
+        <artifactId>estatio</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<build>
-		<plugins>
+    <properties>
+        <siteBaseDir>..</siteBaseDir>
+    </properties>
+
+    <artifactId>estatio-dom</artifactId>
+    <name>Estatio DOM</name>
+
+    <build>
+        <plugins>
             <!-- Test coverage: cobertura -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -35,140 +39,121 @@
                 <version>2.5.2</version>
                 <inherited>true</inherited>
                 <configuration>
-                   <instrumentation>
+                    <instrumentation>
                         <ignores>
-                            <!-- 
-                            http://jira.codehaus.org/browse/MCOBERTURA-52
-                             -->
+                            <!-- http://jira.codehaus.org/browse/MCOBERTURA-52 -->
                             <ignore>org[.]estatio[.].*[.]jdo.*</ignore>
                         </ignores>
                         <excludes>
                             <exclude>org/estatio/**/*Test*.class</exclude>
                         </excludes>
-                   </instrumentation>
+                    </instrumentation>
                 </configuration>
-                <!-- goal:check binds to phase:verify (not currently configured, can 
-                    be used to break build if code coverage < threshold) -->
-                <!-- goal:cobertura is a report so is configured in the reporting section; 
-                    invokes phase:test before running itself -->
+                <!-- goal:check binds to phase:verify (not currently configured, can be used to break build if code coverage < threshold) -->
+                <!-- goal:cobertura is a report so is configured in the reporting section; invokes phase:test before running itself -->
             </plugin>
 
-			<plugin>
-				<groupId>org.datanucleus</groupId>
-				<artifactId>datanucleus-maven-plugin</artifactId>
-				<version>3.2.0-release</version>
-                    <dependencies>
-                        <dependency>
-                            <!-- Force the enhancer to use the same version of core that's already
-                                    on the classpath -->
-                            <groupId>org.datanucleus</groupId>
-                            <artifactId>datanucleus-core</artifactId>
-                            <version>${datanucleus-core.version}</version>
-                        </dependency>
-                    </dependencies>
+            <plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>datanucleus-maven-plugin</artifactId>
+                <version>3.2.0-release</version>
+                <dependencies>
+                    <dependency>
+                        <!-- Force the enhancer to use the same version of core that's already on the classpath -->
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-core</artifactId>
+                        <version>${datanucleus-core.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <fork>false</fork>
+                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
                     <configuration>
-					<fork>false</fork>
-					<log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
-					<verbose>true</verbose>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.datanucleus
-										</groupId>
-										<artifactId>
-											datanucleus-maven-plugin
-										</artifactId>
-										<versionRange>
-											[3.2.0-release,)
-										</versionRange>
-										<goals>
-											<goal>enhance</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.datanucleus
+                                        </groupId>
+                                        <artifactId>
+                                            datanucleus-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [3.2.0-release,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>enhance</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.apache.isis.core</groupId>
-			<artifactId>isis-core-applib</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.objectstore</groupId>
-			<artifactId>isis-objectstore-jdo-applib</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.isis.objectstore</groupId>
-			<artifactId>isis-objectstore-jdo-datanucleus</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.xnap.commons</groupId>
-			<artifactId>gettext-commons</artifactId>
-		</dependency>
-
-<!-- 
-		<dependency>
-			<groupId>javax.jdo</groupId>
-			<artifactId>jdo-api</artifactId>
-		</dependency>
- -->
-		<!-- (horrid, but needed to run the enhancer) -->
-        <!-- 
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-core</artifactId>
-		</dependency>
+    <dependencies>
         <dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-api-jdo</artifactId>
-		</dependency>
-         -->
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-applib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.objectstore</groupId>
+            <artifactId>isis-objectstore-jdo-applib</artifactId>
+        </dependency>
 
-		<!-- testing -->
+        <dependency>
+            <groupId>org.apache.isis.objectstore</groupId>
+            <artifactId>isis-objectstore-jdo-datanucleus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.xnap.commons</groupId>
+            <artifactId>gettext-commons</artifactId>
+        </dependency>
+
+        <!-- <dependency> <groupId>javax.jdo</groupId> <artifactId>jdo-api</artifactId> </dependency> -->
+        <!-- (horrid, but needed to run the enhancer) -->
+        <!-- <dependency> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-core</artifactId> </dependency> <dependency> <groupId>org.datanucleus</groupId> <artifactId>datanucleus-api-jdo</artifactId> 
+            </dependency> -->
+
+        <!-- testing -->
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-unittestsupport</artifactId>
         </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.reflections</groupId>
@@ -176,62 +161,52 @@
             <scope>test</scope>
         </dependency>
 
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-junit4</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>junit</groupId>
-					<artifactId>junit-dep</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-junit4</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit-dep</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-legacy</artifactId>
-			<scope>test</scope>
-		</dependency>
-        
+        <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock-legacy</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- needed by gmap3/HttpClient; not correctly declared as transitive dependency, it would seem... -->
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.picocontainer</groupId>
             <artifactId>picocontainer</artifactId>
         </dependency>
 
-        <!-- 
-        download from http://code.google.com/p/google-rfc-2445/downloads/detail?name=rfc2445-4Mar2011.jar
-        install to ~/.m2/repo using:
-        
-        mvn install:install-file -Dfile=rfc2445-4Mar2011.jar \
-                                 -DgroupId=com.google \
-                                 -DartifactId=rfc-2445 \
-                                 -Dversion=0.0.20110304 \
-                                 -Dpackaging=jar
-         -->
-		<dependency> 
-			<groupId>com.google</groupId>
-			<artifactId>rfc-2445</artifactId> 
-			<version>0.0.20110304</version>
-		</dependency>
-        
-        <!--
-        GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 
-         -->
+        <!-- download from http://code.google.com/p/google-rfc-2445/downloads/detail?name=rfc2445-4Mar2011.jar install to ~/.m2/repo using: mvn install:install-file -Dfile=rfc2445-4Mar2011.jar 
+            \ -DgroupId=com.google \ -DartifactId=rfc-2445 \ -Dversion=0.0.20110304 \ -Dpackaging=jar -->
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>rfc-2445</artifactId>
+            <version>0.0.20110304</version>
+        </dependency>
+
+        <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
         <dependency>
             <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
             <artifactId>danhaywood-isis-wicket-gmap3-applib</artifactId>
@@ -240,9 +215,9 @@
             <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
             <artifactId>danhaywood-isis-wicket-gmap3-service</artifactId>
         </dependency>
-        
-   	</dependencies>
-    
+
+    </dependencies>
+
     <reporting>
         <plugins>
             <plugin>
@@ -252,15 +227,15 @@
             </plugin>
         </plugins>
     </reporting>
-   	
-   <profiles>
+
+    <profiles>
         <profile>
             <id>metrics-on</id>
             <activation>
-               <property>
-                   <name>metrics</name>
-                   <value>on</value>
-               </property>
+                <property>
+                    <name>metrics</name>
+                    <value>on</value>
+                </property>
             </activation>
             <build>
                 <plugins>
@@ -299,15 +274,15 @@
                     </plugin>
 
                     <plugin>
-                       <groupId>org.codehaus.mojo</groupId>
-                       <artifactId>findbugs-maven-plugin</artifactId>
-                       <inherited>true</inherited>
-                       <configuration>
-                          <findbugsXmlOutput>true</findbugsXmlOutput>
-                          <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                          <xmlOutput>true</xmlOutput>
-                          <failOnError>false</failOnError>
-                       </configuration>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <inherited>true</inherited>
+                        <configuration>
+                            <findbugsXmlOutput>true</findbugsXmlOutput>
+                            <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+                            <xmlOutput>true</xmlOutput>
+                            <failOnError>false</failOnError>
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>verify</phase>

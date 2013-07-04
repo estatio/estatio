@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Licensed to the Apache Software Foundation (ASF) under one
-  or more contributor license agreements.  See the NOTICE file
-  distributed with this work for additional information
-  regarding copyright ownership.  The ASF licenses this file
-  to you under the Apache License, Version 2.0 (the
-  "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
-  
-         http://www.apache.org/licenses/LICENSE-2.0
-         
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
-  specific language governing permissions and limitations
-  under the License.
+<!-- 
+Copyright 2012-2013 Eurocommercial Properties NV
+
+Licensed under the Apache License, Version 2.0 (the "License"); 
+you may not use this file except in compliance with the License. 
+You may obtain a copy of the License at 
+
+    http://www.apache.org/licenses/LICENSE-2.0
+     
+Unless required by applicable law or agreed to in writing, 
+software distributed under the License is distributed on an 
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+either express or implied. See the License for the specific
+language governing permissions and limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.estatio</groupId>
@@ -26,17 +23,17 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-	<artifactId>estatio-webapp</artifactId>
-	<name>Estatio Webapp</name>
-	
-	<packaging>war</packaging>
+    <artifactId>estatio-webapp</artifactId>
+    <name>Estatio Webapp</name>
 
-	<properties>
+    <packaging>war</packaging>
+
+    <properties>
         <siteBaseDir>..</siteBaseDir>
-	</properties>
-    
-	<build>
-		<plugins>
+    </properties>
+
+    <build>
+        <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -54,16 +51,16 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.5</version>
-                  <executions>
+                <executions>
                     <execution>
-                      <phase>validate</phase>
-                      <goals>
-                        <goal>maven-version</goal>
-                      </goals>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>maven-version</goal>
+                        </goals>
                     </execution>
-                  </executions>
+                </executions>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.1.1</version>
@@ -71,7 +68,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>false</addClasspath>
-                        </manifest>                            
+                        </manifest>
                         <manifestEntries>
                             <Implementation-Version>${project.version}.${maven.build.timestamp}</Implementation-Version>
                             <Build-Time>${maven.build.timestamp}</Build-Time>
@@ -116,12 +113,12 @@
                     </tasks>
                 </configuration>
             </plugin>
-		</plugins>
- 	</build>
+        </plugins>
+    </build>
 
-	
-	<dependencies>
-	
+
+    <dependencies>
+
         <!-- other modules in this project -->
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -131,7 +128,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
         </dependency>
-        
+
 
         <!-- other isis components -->
         <dependency>
@@ -175,7 +172,7 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        
+
 
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -195,13 +192,13 @@
         </dependency>
 
         <dependency>
-          <groupId>org.lazyluke</groupId>
-          <artifactId>log4jdbc-remix</artifactId>
+            <groupId>org.lazyluke</groupId>
+            <artifactId>log4jdbc-remix</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <!-- scheduler -->
@@ -209,18 +206,14 @@
             <groupId>com.danhaywood.ddd.domainservices</groupId>
             <artifactId>danhaywood-domainservice-scheduler</artifactId>
         </dependency>
-        
+
         <!-- 3rd party dependency -->
-        <!-- 
-        GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3
-         -->
+        <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
         <dependency>
             <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
             <artifactId>danhaywood-isis-wicket-gmap3-ui</artifactId>
         </dependency>
-        <!-- 
-        WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts
-         -->
+        <!-- WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts -->
         <dependency>
             <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
             <artifactId>danhaywood-isis-wicket-wickedcharts-scalarchart</artifactId>
@@ -229,24 +222,16 @@
             <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
             <artifactId>danhaywood-isis-wicket-wickedcharts-summarycharts</artifactId>
         </dependency>
-        <!-- 
-        EXCEL: uncomment to use https://github.com/danhaywood/isis-wicket-excel
-         -->        
+        <!-- EXCEL: uncomment to use https://github.com/danhaywood/isis-wicket-excel -->
         <dependency>
             <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
             <artifactId>danhaywood-isis-wicket-excel</artifactId>
         </dependency>
 
-        <!--  
-        CALENDAR
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket.ui.components</groupId>
-            <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
-        </dependency>
-         -->
+        <!-- CALENDAR <dependency> <groupId>com.danhaywood.isis.wicket.ui.components</groupId> <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId> </dependency> -->
 
-	</dependencies>
-    
+    </dependencies>
+
     <profiles>
         <profile>
             <id>jetty-console</id>
@@ -277,14 +262,11 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <id>m2e</id>
             <activation>
-                <!-- 
-                if running in Eclipse, this profile makes the SQL Server JDBC available on classpath 
-                (nb: driver must be manually installed to local repo manually using mvn install-file)
-                 -->
+                <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath (nb: driver must be manually installed to local repo manually using mvn install-file) -->
                 <property>
                     <name>m2e.version</name>
                 </property>
