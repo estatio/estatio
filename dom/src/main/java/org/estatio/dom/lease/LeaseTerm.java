@@ -32,6 +32,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
@@ -44,19 +45,14 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
-import org.estatio.dom.WithStatus;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
@@ -77,7 +73,7 @@ import org.estatio.services.clock.ClockService;
                 name = "LEASE_TERM_IDX",
                 members = { "leaseItem", "sequence" }),
         @javax.jdo.annotations.Index(
-                name = "LEASE_TERM2_IDX", 
+                name = "LEASE_TERM2_IDX",
                 members = { "leaseItem", "startDate" }) })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -197,7 +193,8 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
             return;
         }
         setStartDate(null);
-        // TODO: shouldn't there be some logic reciprocal to that in modifyStartDate ?
+        // TODO: shouldn't there be some logic reciprocal to that in
+        // modifyStartDate ?
     }
 
     // //////////////////////////////////////
@@ -226,7 +223,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         }
         setEndDate(endDate);
     }
-    
+
     public void clearEndDate() {
         LocalDate currentEndDate = getEndDate();
         if (currentEndDate == null) {
@@ -237,11 +234,11 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    @MemberOrder(name = "endDate", sequence = "1")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseTerm changeDates(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         modifyStartDate(startDate);
         modifyEndDate(endDate);
@@ -249,32 +246,52 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
     }
+
     // //////////////////////////////////////
+
+    @Hidden
+    @Override
+    public LeaseItem getParentWithInterval() {
+        return getLeaseItem();
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
 
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
     @Programmatic
@@ -299,7 +316,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     public void setStatus(final LeaseTermStatus status) {
         this.status = status;
     }
-    
+
     @Override
     public void created() {
         super.created();
@@ -531,7 +548,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         }
         return this;
     }
-
 
     // //////////////////////////////////////
 

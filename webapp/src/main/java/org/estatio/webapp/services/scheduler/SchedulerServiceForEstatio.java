@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.viewer.wicket.app.scheduler;
+package org.estatio.webapp.services.scheduler;
 
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
@@ -29,9 +29,9 @@ import org.quartz.Trigger;
 import com.danhaywood.ddd.domainservices.scheduler.SchedulerService;
 
 @Hidden
-public class EstatioSchedulerService extends SchedulerService {
+public class SchedulerServiceForEstatio extends SchedulerService {
 
-    public EstatioSchedulerService() {
+    public SchedulerServiceForEstatio() {
         super("scheduler_user", "scheduler_role", "admin_role");
     }
 

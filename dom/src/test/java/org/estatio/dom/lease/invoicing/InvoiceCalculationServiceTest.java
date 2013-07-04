@@ -55,7 +55,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRates;
-import org.estatio.services.appsettings.EstatioSettingsService;
+import org.estatio.services.settings.EstatioSettingsService;
 
 public class InvoiceCalculationServiceTest {
     private static LocalDate START_DATE = new LocalDate(2011, 11, 1);

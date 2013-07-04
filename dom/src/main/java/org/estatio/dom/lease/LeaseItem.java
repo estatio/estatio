@@ -29,9 +29,9 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -41,19 +41,14 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
-import org.estatio.dom.WithStatus;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -63,36 +58,36 @@ import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Indices({ 
-    @javax.jdo.annotations.Index(
-            name = "LEASE_INDEX_IDX", 
-            members = { "lease", "type", "sequence" }), 
-    @javax.jdo.annotations.Index(
-            name = "LEASE_INDEX2_IDX", 
-            members = { "lease", "type", "startDate" }) 
+@javax.jdo.annotations.Indices({
+        @javax.jdo.annotations.Index(
+                name = "LEASE_INDEX_IDX",
+                members = { "lease", "type", "sequence" }),
+        @javax.jdo.annotations.Index(
+                name = "LEASE_INDEX2_IDX",
+                members = { "lease", "type", "startDate" })
 })
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByLeaseAndTypeAndStartDate", language = "JDOQL", 
-        value = "SELECT " + 
-                "FROM org.estatio.dom.lease.LeaseItem " + 
-                "WHERE lease == :lease " + 
-                "&& startDate == :startDate"),
-    @javax.jdo.annotations.Query(
-        name = "findByLeaseAndTypeAndEndDate", language = "JDOQL", 
-        value = "SELECT " + 
-                "FROM org.estatio.dom.lease.LeaseItem " + 
-                "WHERE lease == :lease " + 
-                "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndTypeAndStartDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.LeaseItem " +
+                        "WHERE lease == :lease " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndTypeAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.LeaseItem " +
+                        "WHERE lease == :lease " +
+                        "&& endDate == :endDate"),
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({"General", "Current Value", "Dates", "Related"})
+@MemberGroups({ "General", "Current Value", "Dates", "Related" })
 public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     public LeaseItem() {
         super("lease, type, sequence desc", LeaseItemStatus.APPROVED, LeaseItemStatus.NEW);
     }
-    
+
     // //////////////////////////////////////
 
     private LeaseItemStatus status;
@@ -111,7 +106,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="LEASE_ID")
+    @javax.jdo.annotations.Column(name = "LEASE_ID")
     private Lease lease;
 
     @Hidden(where = Where.PARENTED_TABLES)
@@ -189,7 +184,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name="Dates", sequence = "3")
+    @MemberOrder(name = "Dates", sequence = "3")
     @Optional
     @Disabled
     @Override
@@ -202,11 +197,10 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         this.startDate = startDate;
     }
 
-
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "4")
+    @MemberOrder(name = "Dates", sequence = "4")
     @Optional
     @Disabled
     @Override
@@ -219,14 +213,13 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         this.endDate = endDate;
     }
 
-
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    @MemberOrder(name = "endDate", sequence = "1")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseItem changeDates(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
@@ -234,33 +227,52 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
     }
 
     // //////////////////////////////////////
 
+    @Hidden
+    @Override
+    public Lease getParentWithInterval() {
+        return getLease();
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
+
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
     @Programmatic
@@ -270,8 +282,9 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.1")
+    @Hidden
+    // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Previous Lease's Role")
     @Disabled
     @Optional
@@ -280,8 +293,9 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         return null;
     }
 
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.1")
+    @Hidden
+    // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Next Lease's Item")
     @Disabled
     @Optional
@@ -290,8 +304,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         return null;
     }
 
-
-    
     // //////////////////////////////////////
 
     private InvoicingFrequency invoicingFrequency;
@@ -322,7 +334,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="CHARGE_ID")
+    @javax.jdo.annotations.Column(name = "CHARGE_ID")
     private Charge charge;
 
     @MemberOrder(sequence = "14")
@@ -342,7 +354,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "15", name = "Current Value") 
+    @MemberOrder(sequence = "15", name = "Current Value")
     public BigDecimal getTrialValue() {
         LeaseTerm currentTerm = currentTerm(clockService.now());
         if (currentTerm != null)
@@ -354,8 +366,8 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "16", name = "Current Value") 
-       public BigDecimal getApprovedValue() {
+    @MemberOrder(sequence = "16", name = "Current Value")
+    public BigDecimal getApprovedValue() {
         LeaseTerm currentTerm = currentTerm(clockService.now());
         if (currentTerm != null)
             return currentTerm.getApprovedValue();

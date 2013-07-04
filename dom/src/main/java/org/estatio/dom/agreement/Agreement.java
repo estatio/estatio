@@ -50,6 +50,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
@@ -198,6 +199,24 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     // //////////////////////////////////////
     
+    @Hidden
+    @Override
+    public WithInterval<?> getParentWithInterval() {
+        return null;
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
+
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());

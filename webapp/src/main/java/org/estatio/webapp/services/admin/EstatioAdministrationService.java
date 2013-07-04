@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.viewer.wicket.app.administration;
+package org.estatio.webapp.services.admin;
 
 import java.util.List;
 
@@ -26,8 +26,9 @@ import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexFixture;
 import org.estatio.fixturescripts.FixtureScript;
-import org.estatio.services.appsettings.EstatioSettingsService;
-import org.estatio.viewer.wicket.app.scheduler.EstatioSchedulerService;
+import org.estatio.services.settings.EstatioSettingsService;
+import org.estatio.webapp.services.scheduler.SchedulerServiceForEstatio;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -108,9 +109,9 @@ public class EstatioAdministrationService {
         this.container = container;
     }
 
-    private EstatioSchedulerService scheduler;
+    private SchedulerServiceForEstatio scheduler;
 
-    public void injectSchedulerService(EstatioSchedulerService scheduler) {
+    public void injectSchedulerService(SchedulerServiceForEstatio scheduler) {
         this.scheduler = scheduler;
     }
 

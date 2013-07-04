@@ -53,9 +53,9 @@ public abstract class ComparableByDescriptionContractTestAbstract_compareTo {
         Set<Class<? extends WithDescriptionComparable>> subtypes = 
                 reflections.getSubTypesOf(WithDescriptionComparable.class);
         for (Class<? extends WithDescriptionComparable> subtype : subtypes) {
-            if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
+            if(subtype.isInterface() || subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
-                return;
+                continue;
             }
             subtype = instantiable(subtype);
             test(subtype);

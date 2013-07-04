@@ -73,7 +73,7 @@ public class DomainServicesInjectionTestAll_inject{
         Set<Class<? extends EstatioDomainService>> subtypes = 
                 reflections.getSubTypesOf(EstatioDomainService.class);
         for (Class<? extends EstatioDomainService> subtype : subtypes) {
-            if(subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
+            if(subtype.isInterface() || subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
                 continue;
             }

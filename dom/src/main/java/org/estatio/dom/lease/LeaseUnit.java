@@ -25,7 +25,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -35,15 +35,11 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithStatus;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.tag.Tag;
 import org.estatio.dom.tag.Tags;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -195,11 +191,11 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    @MemberOrder(name = "endDate", sequence = "1")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseUnit changeDates(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
@@ -207,33 +203,52 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
     }
 
     // //////////////////////////////////////
 
+    @Hidden
+    @Override
+    public Lease getParentWithInterval() {
+        return getLease();
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
     @Hidden

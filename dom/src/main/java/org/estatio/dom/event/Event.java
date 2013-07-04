@@ -23,22 +23,18 @@ import com.google.inject.name.Named;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithStatus;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
@@ -141,6 +137,24 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     }
 
     // //////////////////////////////////////
+
+    @Hidden
+    @Override
+    public WithInterval<?> getParentWithInterval() {
+        return null;
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
 
     @Override
     @Programmatic

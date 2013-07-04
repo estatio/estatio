@@ -53,19 +53,18 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({"General", "Amounts", "Dates", "Related"})
+@MemberGroups({ "General", "Amounts", "Dates", "Related" })
 public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem, Status> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
         super("invoice, startDate desc, charge, description, sequence", null, null);
     }
-    
+
     // //////////////////////////////////////
 
     private Status status;
@@ -80,7 +79,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     public void setStatus(final Status status) {
         this.status = status;
     }
-
 
     // //////////////////////////////////////
 
@@ -97,7 +95,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="INVOICE_ID")
+    @javax.jdo.annotations.Column(name = "INVOICE_ID")
     private Invoice invoice;
 
     @Render(Type.EAGERLY)
@@ -131,7 +129,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="CHARGE_ID")
+    @javax.jdo.annotations.Column(name = "CHARGE_ID")
     private Charge charge;
 
     @Title(sequence = "2")
@@ -170,7 +168,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
 
-    @MemberOrder(name="Amounts", sequence = "4")
+    @MemberOrder(name = "Amounts", sequence = "4")
     @Disabled
     public BigDecimal getNetAmount() {
         return netAmount;
@@ -191,7 +189,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
-    @MemberOrder(name="Amounts", sequence = "5")
+    @MemberOrder(name = "Amounts", sequence = "5")
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -205,7 +203,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
 
-    @MemberOrder(name="Amounts", sequence = "6")
+    @MemberOrder(name = "Amounts", sequence = "6")
     @Disabled
     public BigDecimal getGrossAmount() {
         return grossAmount;
@@ -217,7 +215,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="TAX_ID")
+    @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
     @MemberOrder(sequence = "7")
@@ -251,7 +249,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @MemberOrder(name="Dates", sequence = "9")
+    @MemberOrder(name = "Dates", sequence = "9")
     @Disabled
     public LocalDate getDueDate() {
         return dueDate;
@@ -266,7 +264,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name="Dates", sequence = "10")
+    @MemberOrder(name = "Dates", sequence = "10")
     @Disabled
     @Optional
     @Override
@@ -279,11 +277,10 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         this.startDate = startDate;
     }
 
-
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "11")
+    @MemberOrder(name = "Dates", sequence = "11")
     @Disabled
     @Optional
     @Override
@@ -296,8 +293,25 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         this.endDate = endDate;
     }
 
-
     // //////////////////////////////////////
+
+    @Hidden
+    @Override
+    public WithInterval<?> getParentWithInterval() {
+        return null;
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
 
     @Programmatic
     @Override
@@ -307,9 +321,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.1")
+    @Hidden
+    // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Previous Item")
     @Disabled
     @Optional
@@ -318,8 +332,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         return null;
     }
 
-    @Hidden // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name="Related", sequence = "9.2")
+    @Hidden
+    // TODO (where=Where.ALL_TABLES)
+    @MemberOrder(name = "Related", sequence = "9.2")
     @Named("Next Item")
     @Disabled
     @Optional
@@ -387,7 +402,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     public void created() {
         initialize();
     }
-
 
     // //////////////////////////////////////
 

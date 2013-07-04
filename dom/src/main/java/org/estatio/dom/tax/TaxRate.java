@@ -39,31 +39,32 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByTaxAndDate", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.tax.TaxRate "
-                    + "WHERE tax == :tax"
-                    + "  && startDate >= :date"
-                    + "  && (endDate == null || endDate <= :date)"),
-    @javax.jdo.annotations.Query(
-            name = "findByTaxAndStartDate", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.tax.TaxRate "
-                    + "WHERE tax == :tax "
-                    + "&& startDate == :startDate"),
-    @javax.jdo.annotations.Query(
-            name = "findByTaxAndEndDate", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.tax.TaxRate "
-                    + "WHERE tax == :tax "
-                    + "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByTaxAndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.tax.TaxRate "
+                        + "WHERE tax == :tax"
+                        + "  && startDate >= :date"
+                        + "  && (endDate == null || endDate <= :date)"),
+        @javax.jdo.annotations.Query(
+                name = "findByTaxAndStartDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.tax.TaxRate "
+                        + "WHERE tax == :tax "
+                        + "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByTaxAndEndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.tax.TaxRate "
+                        + "WHERE tax == :tax "
+                        + "&& endDate == :endDate"),
 })
 @MemberGroups({ "General", "Dates", "Related" })
 public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalMutable<TaxRate> {
@@ -87,7 +88,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
         this.status = status;
     }
 
-    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "TAX_ID")
@@ -118,8 +118,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
         this.startDate = startDate;
     }
 
-
-
     private LocalDate endDate;
 
     @MemberOrder(name = "Dates", sequence = "3")
@@ -133,14 +131,13 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
         this.endDate = endDate;
     }
 
-    
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    @MemberOrder(name = "endDate", sequence = "1")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public TaxRate changeDates(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
@@ -148,29 +145,47 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
     }
 
-
     // //////////////////////////////////////
+
+    @Hidden
+    @Override
+    public WithInterval<?> getParentWithInterval() {
+        return null;
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
 
     @Override
     @Programmatic

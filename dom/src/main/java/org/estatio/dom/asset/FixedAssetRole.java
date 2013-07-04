@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -45,32 +46,32 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByAssetAndPartyAndType", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.asset.FixedAssetRole " +
-        		"WHERE asset == :asset " +
-        		"&& party == :party " +
-        		"&& type == :type"),
-	@javax.jdo.annotations.Query(
-        name = "findByAssetAndPartyAndTypeAndStartDate", language = "JDOQL", 
-        value = "SELECT " +
-                "FROM org.estatio.dom.asset.FixedAssetRole " +
-                "WHERE asset == :asset " +
-                "&& party == :party " +
-	            "&& type == :type " + 
-                "&& startDate == :startDate"),
-    @javax.jdo.annotations.Query(
-        name = "findByAssetAndPartyAndTypeAndEndDate", language = "JDOQL", 
-        value = "SELECT " +
-                "FROM org.estatio.dom.asset.FixedAssetRole " +
-                "WHERE asset == :asset " +
-                "&& party == :party " +
-                "&& type == :type " + 
-                "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByAssetAndPartyAndType", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.asset.FixedAssetRole " +
+                        "WHERE asset == :asset " +
+                        "&& party == :party " +
+                        "&& type == :type"),
+        @javax.jdo.annotations.Query(
+                name = "findByAssetAndPartyAndTypeAndStartDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.asset.FixedAssetRole " +
+                        "WHERE asset == :asset " +
+                        "&& party == :party " +
+                        "&& type == :type " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByAssetAndPartyAndTypeAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.asset.FixedAssetRole " +
+                        "WHERE asset == :asset " +
+                        "&& party == :party " +
+                        "&& type == :type " +
+                        "&& endDate == :endDate"),
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({"General", "Dates", "Related"})
+@MemberGroups({ "General", "Dates", "Related" })
 public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalMutable<FixedAssetRole> {
 
     public FixedAssetRole() {
@@ -95,7 +96,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="ASSET_ID")
+    @javax.jdo.annotations.Column(name = "ASSET_ID")
     private FixedAsset asset;
 
     @Title(sequence = "3", prepend = ":")
@@ -112,7 +113,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PARTY_ID")
+    @javax.jdo.annotations.Column(name = "PARTY_ID")
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
@@ -146,7 +147,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     private LocalDate startDate;
 
-    @MemberOrder(name="Dates", sequence = "4")
+    @MemberOrder(name = "Dates", sequence = "4")
     @Optional
     @Disabled
     @Override
@@ -159,11 +160,10 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
         this.startDate = startDate;
     }
 
-
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "5")
+    @MemberOrder(name = "Dates", sequence = "5")
     @Optional
     @Disabled
     @Override
@@ -178,11 +178,11 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    @MemberOrder(name = "endDate", sequence = "1")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public FixedAssetRole changeDates(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
@@ -190,28 +190,47 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
     }
 
     // //////////////////////////////////////
+
+    @Hidden
+    @Override
+    public WithInterval<?> getParentWithInterval() {
+        return null;
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
 
     @Override
     @Programmatic
@@ -221,35 +240,36 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="Related", sequence = "9.1")
+    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Previous Role")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
     public FixedAssetRole getPrevious() {
         return getStartDate() != null
-                ?fixedAssetRoles.findByAssetAndPartyAndTypeAndEndDate(getAsset(), getParty(), getType(), getStartDate().minusDays(1))
-                :null;
+                ? fixedAssetRoles.findByAssetAndPartyAndTypeAndEndDate(getAsset(), getParty(), getType(), getStartDate().minusDays(1))
+                : null;
     }
 
-    @MemberOrder(name="Related", sequence = "9.1")
+    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Next Role")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
     public FixedAssetRole getNext() {
         return getEndDate() != null
-                ?fixedAssetRoles.findByAssetAndPartyAndTypeAndStartDate(getAsset(), getParty(), getType(), getEndDate().plusDays(1))
-                :null;
+                ? fixedAssetRoles.findByAssetAndPartyAndTypeAndStartDate(getAsset(), getParty(), getType(), getEndDate().plusDays(1))
+                : null;
     }
 
     // //////////////////////////////////////
 
     private FixedAssetRoles fixedAssetRoles;
+
     public void injectFixedAssetRoles(FixedAssetRoles fixedAssetRoles) {
         this.fixedAssetRoles = fixedAssetRoles;
     }
-    
+
 }

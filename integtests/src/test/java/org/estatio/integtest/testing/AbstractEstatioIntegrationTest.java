@@ -82,10 +82,10 @@ import org.estatio.dom.tag.Tags;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioFixture;
-import org.estatio.services.appsettings.EstatioSettingsService;
-import org.estatio.services.appsettings.EstatioSettingsServiceJdo;
-import org.estatio.services.bookmarks.EstatioBookmarkService;
+import org.estatio.services.bookmarks.BookmarkServiceForEstatio;
 import org.estatio.services.clock.ClockService;
+import org.estatio.services.settings.EstatioSettingsService;
+import org.estatio.services.settings.EstatioSettingsServiceJdo;
 
 public abstract class AbstractEstatioIntegrationTest {
 
@@ -304,7 +304,7 @@ public abstract class AbstractEstatioIntegrationTest {
                     new Taxes(), 
                     new TaxRates(), 
                     new Tags(), 
-                    new EstatioBookmarkService(), 
+                    new BookmarkServiceForEstatio(), 
                     new Charges(),
                     new ChargeGroups(), 
                     new FinancialAccounts(), 

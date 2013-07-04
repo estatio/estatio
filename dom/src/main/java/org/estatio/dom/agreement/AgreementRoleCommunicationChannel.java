@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.agreement;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
@@ -26,9 +25,9 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberGroups;
@@ -38,13 +37,11 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithStatus;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -228,10 +225,29 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
+    @Hidden
+    @Override
+    public AgreementRole getParentWithInterval() {
+        return getRole();
+    }
+
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
+
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
     // //////////////////////////////////////

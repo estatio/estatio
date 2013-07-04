@@ -37,7 +37,7 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.appsettings.EstatioSettingsService;
+import org.estatio.services.settings.EstatioSettingsService;
 
 @Hidden
 public class InvoiceCalculationService {

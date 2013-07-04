@@ -49,6 +49,7 @@ import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.party.Party;
@@ -112,21 +113,21 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "AGREEMENT_ID")
-    private Agreement agreement;
+    private Agreement<?> agreement;
 
     @Title(sequence = "3", prepend = ":")
     @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
-    public Agreement getAgreement() {
+    public Agreement<?> getAgreement() {
         return agreement;
     }
 
-    public void setAgreement(final Agreement agreement) {
+    public void setAgreement(final Agreement<?> agreement) {
         this.agreement = agreement;
     }
 
-    public void modifyAgreement(final Agreement agreement) {
-        Agreement currentAgreement = getAgreement();
+    public void modifyAgreement(final Agreement<?> agreement) {
+        Agreement<?> currentAgreement = getAgreement();
         // check for no-op
         if (agreement == null || agreement.equals(currentAgreement)) {
             return;
@@ -139,7 +140,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     public void clearAgreement() {
-        Agreement currentAgreement = getAgreement();
+        Agreement<?> currentAgreement = getAgreement();
         // check for no-op
         if (currentAgreement == null) {
             return;
@@ -267,9 +268,28 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     
     // //////////////////////////////////////
 
+    @Hidden
+    @Override
+    public Agreement<?> getParentWithInterval() {
+        return getAgreement();
+    }
+
+    
+    @Hidden
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return WithInterval.Util.effectiveStartDateOf(this);
+    }
+
+    @Hidden
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return WithInterval.Util.effectiveEndDateOf(this);
+    }
+    
     @Programmatic
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
     @MemberOrder(name="Related", sequence = "9.1")

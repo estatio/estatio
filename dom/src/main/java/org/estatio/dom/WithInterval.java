@@ -20,12 +20,8 @@ package org.estatio.dom;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
@@ -34,11 +30,46 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
 
+    /**
+     * The start date of the interval.
+     * 
+     * <p>
+     * A value of <tt>null</tt> implies that the {@link #getParentWithInterval() parent}'s
+     * start date should be used.  If that is <tt>null</tt>, then implies 'the beginning of time'.
+     */
+    @Disabled
+    @Optional
+    public LocalDate getStartDate();
+    public void setStartDate(LocalDate startDate);
+
+    /**
+     * The end date of the interval.
+     * 
+     * <p>
+     * A value of <tt>null</tt> implies that the {@link #getParentWithInterval() parent}'s
+     * end date should be used.  If that is <tt>null</tt>, then implies 'the end of time'.
+     */
     @Optional
     @Disabled
     public LocalDate getEndDate();
     public void setEndDate(LocalDate endDate);
-    
+
+    @Hidden
+    public WithInterval<?> getParentWithInterval();
+
+    /**
+     * Either the {@link #getStartDate() start date}, or the {@link #getParentWithInterval() parent}'s
+     * start date (if any). 
+     */
+    @Hidden
+    public LocalDate getEffectiveStartDate();
+    /**
+     * Either the {@link #getEndDate() end date}, or the {@link #getParentWithInterval() parent}'s
+     * end date (if any). 
+     */
+    @Hidden
+    public LocalDate getEffectiveEndDate();
+
     @Programmatic
     public LocalDateInterval getInterval();
 
@@ -69,4 +100,29 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
     @Optional
     public T getNext();
 
+    
+    
+    public static class Util {
+        private Util() {}
+        public static LocalDate effectiveStartDateOf(final WithInterval<?> wi) {
+            if (wi.getStartDate() != null) {
+                return wi.getStartDate();
+            } 
+            final WithInterval<?> parentWi = wi.getParentWithInterval();
+            if (parentWi != null) {
+                return parentWi.getEffectiveStartDate();
+            } 
+            return null;
+        }
+        public static LocalDate effectiveEndDateOf(final WithInterval<?> wi) {
+            if (wi.getEndDate() != null) {
+                return wi.getEndDate();
+            } 
+            final WithInterval<?> parentWi = wi.getParentWithInterval();
+            if (parentWi != null) {
+                return parentWi.getEffectiveEndDate();
+            } 
+            return null;
+        }
+    }
 }

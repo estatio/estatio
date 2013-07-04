@@ -30,10 +30,10 @@ import org.estatio.dom.EstatioDomainService;
 
 @Named("Audit")
 @Hidden
-public class EstatioAuditService extends EstatioDomainService<AuditEntryForEstatio> implements AuditingService {
+public class AuditingServiceForEstatio extends EstatioDomainService<AuditEntryForEstatio> implements AuditingService {
 
-    public EstatioAuditService() {
-        super(EstatioAuditService.class, AuditEntryForEstatio.class);
+    public AuditingServiceForEstatio() {
+        super(AuditingServiceForEstatio.class, AuditEntryForEstatio.class);
     }
     
     public List<AuditEntryForEstatio> list() {

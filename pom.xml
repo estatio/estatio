@@ -468,13 +468,6 @@
             </dependency>
 
 
-			<!-- the domain services -->
-			<dependency>
-                <groupId>com.danhaywood.ddd.domainservices</groupId>
-                <artifactId>danhaywood-domainservice-scheduler</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-			</dependency>
-
 			<!-- this project's own modules -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
@@ -569,6 +562,15 @@
                 <artifactId>jmock-legacy</artifactId>
                 <version>2.6.0</version>
             </dependency>
+
+
+            <!-- the domain services -->
+            <dependency>
+                <groupId>com.danhaywood.ddd.domainservices</groupId>
+                <artifactId>danhaywood-domainservice-scheduler</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
 
             <!-- viewer extensions -->
 

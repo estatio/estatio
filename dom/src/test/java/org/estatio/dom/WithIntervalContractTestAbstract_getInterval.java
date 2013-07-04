@@ -18,13 +18,18 @@
  */
 package org.estatio.dom;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-
 import org.junit.Test;
 import org.reflections.Reflections;
+
+import org.estatio.dom.WithIntervalContractTester.WIInstantiator;
 
 
 /**
@@ -34,20 +39,21 @@ import org.reflections.Reflections;
  * Any that cannot be instantiated are skipped; manually test using
  * {@link WithIntervalContractTester}.
  */
+@SuppressWarnings("rawtypes")
 public abstract class WithIntervalContractTestAbstract_getInterval {
 
     private final String packagePrefix;
-    private Map<Class<?>, Class<?>> noninstantiableSubstitutes;
+    private Map<Class, WIInstantiator> instantiatorByType;
 
     protected WithIntervalContractTestAbstract_getInterval(String packagePrefix, 
-            ImmutableMap<Class<?>, Class<?>> noninstantiableSubstitutes) {
+            Map<Class, WIInstantiator> map) {
         this.packagePrefix = packagePrefix;
-        this.noninstantiableSubstitutes = noninstantiableSubstitutes;
+        this.instantiatorByType = map;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "unchecked" })
     @Test
-    public void searchAndTest() {
+    public void searchAndTest() throws Exception {
         Reflections reflections = new Reflections(packagePrefix);
         
         Set<Class<? extends WithInterval>> subtypes = 
@@ -55,21 +61,36 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
         for (Class<? extends WithInterval> subtype : subtypes) {
             if(subtype.isInterface() || subtype.isAnonymousClass() || subtype.isLocalClass() || subtype.isMemberClass()) {
                 // skip (probably a testing class)
-                return;
+                continue;
             }
-            subtype = instantiable(subtype);
-            test(subtype);
+            WIInstantiator<?> instantiator = instantiatorFor(subtype);
+            if(instantiator == null) {
+                assertThat("No instantiator for " + subtype.getName(), instantiator, is(not(nullValue())));
+            }
+            final WithIntervalContractTester withIntervalContractTester = new WithIntervalContractTester(instantiator);
+            withIntervalContractTester.testAll();
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private Class<? extends WithInterval<?>> instantiable(Class<? extends WithInterval> subtype) {
-        final Class<?> substitute = noninstantiableSubstitutes.get(subtype);
-        return (Class<? extends WithInterval<?>>) (substitute!=null?substitute:subtype);
+    @SuppressWarnings("unchecked")
+    private WIInstantiator<?> instantiatorFor(Class<? extends WithInterval> subtype) {
+        WIInstantiator<?> instantiator = lookup(subtype);
+        while (instantiator == null) {
+            final Class superClass = subtype.getSuperclass();
+            if(WithInterval.class.isAssignableFrom(superClass)) {
+                instantiator = lookup(superClass);
+            } else {
+                break;
+            }
+        }
+        if(instantiator == null) {
+            instantiator = new WIInstantiator(subtype); 
+        }
+        return instantiator;
     }
 
-    private <T extends WithInterval<?>> void test(Class<T> cls) {
-        new WithIntervalContractTester<T>(cls).test();
+    private WIInstantiator lookup(Class<? extends WithInterval> subtype) {
+        return instantiatorByType.get(subtype);
     }
 
 }

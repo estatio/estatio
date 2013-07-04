@@ -41,7 +41,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.services.appsettings.EstatioSettingsService;
+import org.estatio.services.settings.EstatioSettingsService;
 
 public class EstatioSettingsServiceTest {
 

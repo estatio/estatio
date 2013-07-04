@@ -16,23 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.viewer.wicket.app.administration;
+package org.estatio.webapp.services.scheduler;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.value.Clob;
-import org.apache.isis.core.metamodel.services.devutils.DeveloperUtilitiesServiceDefault;
+import org.estatio.dom.asset.Properties;
+import org.quartz.JobExecutionContext;
 
-public class DeveloperUtilities extends DeveloperUtilitiesServiceDefault {
+import com.danhaywood.ddd.domainservices.scheduler.AbstractIsisJob;
 
-    /**
-     * 'Move' the action underneath the 'administration' menu item. 
-     */
-    @MemberOrder(name="Administration", sequence="90")
-    @Override
-    @ActionSemantics(Of.SAFE)
-    public Clob downloadMetaModel() {
-        return super.downloadMetaModel();
+public class CountPropertiesJob extends AbstractIsisJob {
+
+    protected void doExecute(JobExecutionContext context) {
+        Properties properties = getService(Properties.class);
+        int numProperties = properties.allProperties().size();
+        
+        System.out.println("number of properties is: " + numProperties);
     }
+
 }
