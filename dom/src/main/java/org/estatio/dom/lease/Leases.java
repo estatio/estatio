@@ -80,10 +80,14 @@ public class Leases extends EstatioDomainService<Lease> {
         lease.setEndDate(calculatedEndDate);
         persistIfNotAlready(lease);
         
-        final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
-        lease.addRole(tenant, artTenant, null, null);
-        final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
-        lease.addRole(landlord, artLandlord, null, null);
+        if(tenant != null) {
+            final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+            lease.addRole(tenant, artTenant, null, null);
+        }
+        if(landlord != null) {
+            final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
+            lease.addRole(landlord, artLandlord, null, null);
+        }
         return lease;
     }
 

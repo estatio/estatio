@@ -40,7 +40,9 @@ public class Organisations extends EstatioDomainService<Organisation> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Parties", sequence = "2")
-    public Organisation newOrganisation(final @Named("Reference") String reference, final @Named("Name") String name) {
+    public Organisation newOrganisation(
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name) {
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setReference(reference);
         organisation.setName(name);
@@ -52,8 +54,9 @@ public class Organisations extends EstatioDomainService<Organisation> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Parties", sequence = "5")
-    public Organisation findOrganisation(final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String searchArg) {
-        return firstMatch("findByReferenceOrName", "searchArg", StringUtils.wildcardToCaseInsensitiveRegex(searchArg));
+    public Organisation findOrganisation(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+        return firstMatch("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     // //////////////////////////////////////

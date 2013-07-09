@@ -24,23 +24,25 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
+import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integtest.AbstractEstatioIntegrationTest;
 
 public class GeographyIntegrationTest extends AbstractEstatioIntegrationTest {
 
-
     @Test
     public void countryIsNL() throws Exception {
-        assertThat(countries.findCountryByReference("NLD").getReference(), is("NLD"));
+        assertThat(app.countries.findCountryByReference("NLD").getReference(), is("NLD"));
     }
 
     @Test
     public void stateCanBeFound() throws Exception {
-        final Country country = countries.findCountryByReference("NLD");
-        final List<State> statesInCountry = states.findStatesByCountry(country);
+        final Country country = app.countries.findCountryByReference("NLD");
+        final List<State> statesInCountry = app.states.findStatesByCountry(country);
         assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
         for (State state : statesInCountry) {
             assertThat(state.getCountry(), is(country));

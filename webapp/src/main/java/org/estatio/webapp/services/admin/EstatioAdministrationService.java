@@ -24,7 +24,7 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
-import org.estatio.fixture.index.IndexFixture;
+import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
 import org.estatio.fixturescripts.FixtureScript;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.estatio.webapp.services.scheduler.SchedulerServiceForEstatio;
@@ -61,7 +61,7 @@ public class EstatioAdministrationService {
     @Prototype
     @MemberOrder(sequence = "3")
     public String installIndexFixture() {
-        IndexFixture fixture = container.newTransientInstance(IndexFixture.class);
+        IndexAndIndexBaseAndIndexValueFixture fixture = container.newTransientInstance(IndexAndIndexBaseAndIndexValueFixture.class);
         fixture.install();
         return "Index fixture successfully installed";
     }

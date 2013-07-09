@@ -69,6 +69,14 @@ language governing permissions and limitations under the License.
             <id>gettext-commons-site</id>
             <url>http://gettext-commons.googlecode.com/svn/maven-repository/</url>
         </repository>
+
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <build>
@@ -102,6 +110,7 @@ language governing permissions and limitations under the License.
                         <includes>
                             <include>**/*Test.java</include>
                             <include>**/*Test*_*.java</include>
+                            <include>**/*Specs*_*.java</include>
                         </includes>
                         <excludes>
                             <exclude>**/*ForTesting.java</exclude>
@@ -550,6 +559,22 @@ language governing permissions and limitations under the License.
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>info.cukes</groupId>
+                <artifactId>cucumber-java</artifactId>
+                <version>1.1.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>info.cukes</groupId>
+                <artifactId>cucumber-junit</artifactId>
+                <version>1.1.4-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>info.cukes</groupId>
+                <artifactId>cucumber-picocontainer</artifactId>
+                <version>1.1.4-SNAPSHOT</version>
+            </dependency>
+
             <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
             <dependency>
                 <groupId>org.jmock</groupId>
@@ -560,9 +585,9 @@ language governing permissions and limitations under the License.
 
             <!-- the domain services -->
             <dependency>
-                <groupId>com.danhaywood.ddd.domainservices</groupId>
-                <artifactId>danhaywood-domainservice-scheduler</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <groupId>com.danhaywood.isis.domainservices</groupId>
+                <artifactId>danhaywood-isis-domainservice-scheduler</artifactId>
+                <version>1.2.0-SNAPSHOT</version>
             </dependency>
 
 

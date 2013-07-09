@@ -29,7 +29,7 @@ import org.estatio.dom.index.Indices;
 import org.joda.time.LocalDate;
 
 
-public class IndexFixture extends AbstractFixture {
+public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
 
 
     @Override

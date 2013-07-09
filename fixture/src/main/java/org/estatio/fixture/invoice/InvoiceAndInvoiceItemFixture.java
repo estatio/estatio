@@ -35,7 +35,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-public class InvoiceFixture extends AbstractFixture {
+public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
 
     public static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
     public static final String LEASE = "OXF-POISON-003";

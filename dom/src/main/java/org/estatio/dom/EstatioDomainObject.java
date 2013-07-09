@@ -19,17 +19,9 @@
 package org.estatio.dom;
 
 import org.apache.isis.applib.AbstractDomainObject;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.util.ObjectContracts;
 
-import org.estatio.dom.agreement.Agreement;
 import org.estatio.services.clock.ClockService;
 
 public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> extends AbstractDomainObject implements Comparable<T> {

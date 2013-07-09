@@ -52,7 +52,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-public class LeasesFixture extends AbstractFixture {
+public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture extends AbstractFixture {
 
     private Party manager;
 
@@ -60,40 +60,55 @@ public class LeasesFixture extends AbstractFixture {
     public void install() {
 
         manager = parties.findPartyByReferenceOrName("JDOE");
-        Lease lease1 = createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14));
+        Lease lease1 = createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true);
         createLeaseTermForIndexableRent(lease1, BigInteger.valueOf(1), lease1.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1), new LocalDate(2011, 1, 1), new LocalDate(2011, 4, 1));
         createLeaseTermForServiceCharge(lease1, lease1.getStartDate(), null, BigDecimal.valueOf(6000));
         createLeaseTermForTurnoverRent(lease1, lease1.getStartDate().withDayOfYear(1).plusYears(1), null, "7");
         
-        Lease lease2 = createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31));
+        Lease lease2 = createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true);
         createLeaseTermForIndexableRent(lease2, BigInteger.valueOf(1), lease2.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2008, 1, 1), new LocalDate(2009, 1, 1), new LocalDate(2009, 4, 1));
         createLeaseTermForServiceCharge(lease2, lease2.getStartDate(), null, BigDecimal.valueOf(6000));
         createLeaseTermForTurnoverRent(lease2, lease2.getStartDate(), null, "7");
 
-        Lease lease3 = createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31));
+        Lease lease3 = createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
         createLeaseTermForIndexableRent(lease3, BigInteger.valueOf(1), lease3.getStartDate(), null, BigDecimal.valueOf(87300), null, null, null);
         createLeaseTermForIndexableRent(lease3, BigInteger.valueOf(2), lease3.getStartDate().plusYears(1), null, BigDecimal.valueOf(87300), new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
         createLeaseTermForServiceCharge(lease3, lease3.getStartDate(), null, BigDecimal.valueOf(12400));
         createLeaseTermForTurnoverRent(lease3, lease3.getStartDate(), null, "7");
 
+        Lease lease4 = createLease("OXF-PRET-004", "Pret lease", "OXF-004", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false);
+
     }
 
-    private Lease createLease(String reference, String name, String unitReference, String landlordReference, String tenantReference, LocalDate startDate, LocalDate endDate) {
-        Party landlord = parties.findPartyByReferenceOrName(landlordReference);
-        Party tenant = parties.findPartyByReferenceOrName(tenantReference);
+    private Lease createLease(
+            String reference, String name, 
+            String unitReference, 
+            String landlordReference, String tenantReference, 
+            LocalDate startDate, LocalDate endDate, 
+            boolean createManagerRole, boolean createLeaseUnit) {
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
+        Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
+        Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
-        AgreementRole role = lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);
-        LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
 
-        lu.setBrand(tenantReference);
-        lu.setActivity("OTHER");
-        lu.setSector("OTHER");
+        if(createManagerRole) {
+            lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);
+        }
+        if(createLeaseUnit) {
+            LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
+            lu.setBrand(tenantReference);
+            lu.setActivity("OTHER");
+            lu.setSector("OTHER");
+        }
         
         if (leases.findLeaseByReference(reference) == null) {
             throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
         return lease;
+    }
+
+    private Party findPartyByReferenceOrNameElseNull(String partyReference) {
+        return partyReference != null? parties.findPartyByReferenceOrName(partyReference): null;
     }
 
     private LeaseItem findOrCreateLeaseItem(Lease lease, LeaseItemType leaseItemType, Charge charge, InvoicingFrequency invoicingFrequency) {

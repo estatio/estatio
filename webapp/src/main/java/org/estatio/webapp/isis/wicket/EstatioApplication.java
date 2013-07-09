@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.viewer.wicket.app;
+package org.estatio.webapp.isis.wicket;
 
 import java.io.InputStream;
 

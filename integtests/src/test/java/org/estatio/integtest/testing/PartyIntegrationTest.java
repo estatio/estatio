@@ -28,31 +28,41 @@ import com.google.common.collect.Lists;
 
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integtest.AbstractEstatioIntegrationTest;
+
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
 
+    @BeforeClass
+    public static void setupTransactionalData() {
+        app.install(new EstatioTransactionalObjectsFixture());
+    }
+
     @Test
     public void partyCanBeFound() throws Exception {
-        Assert.assertNotNull(parties.findPartyByReferenceOrName("HELLOWORLD"));
+        Assert.assertNotNull(app.parties.findPartyByReferenceOrName("HELLOWORLD"));
     }
 
     @Test
     public void partyCanNotBeFound() throws Exception {
-        Assert.assertNull(parties.findPartyByReferenceOrName("HELLO"));
+        Assert.assertNull(app.parties.findPartyByReferenceOrName("HELLO"));
     }
 
     @Test
     public void partyHasFourCommunicationChannels() throws Exception {
-        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
+        Party party = app.parties.findPartyByReferenceOrName("HELLOWORLD");
         Assert.assertThat(party.getCommunicationChannels().size(), is(4));
     }
 
     @Test
     public void partyHasOneFinancialAccount() throws Exception {
-        final Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
-        List<FinancialAccount> allAccounts = financialAccounts.allAccounts();
+        final Party party = app.parties.findPartyByReferenceOrName("HELLOWORLD");
+        List<FinancialAccount> allAccounts = app.financialAccounts.allAccounts();
         List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
             public boolean apply(FinancialAccount fa) {
                 return fa.getOwner() == party;
@@ -63,22 +73,22 @@ public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void partyCanBeFoundOnPartialReference() {
-        Assert.assertThat(parties.findParties("*LLOWOR*").size(), is(1));
+        Assert.assertThat(app.parties.findParties("*LLOWOR*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundOnPartialName1() {
-        Assert.assertThat(parties.findParties("*ello Wor*").size(), is(1));
+        Assert.assertThat(app.parties.findParties("*ello Wor*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundOnPartialName2() {
-        Assert.assertThat(parties.findParties("Doe, Jo*").size(), is(1));
+        Assert.assertThat(app.parties.findParties("Doe, Jo*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundCaseInsensitive() {
-        Assert.assertThat(parties.findParties("*OE, jO*").size(), is(1));
+        Assert.assertThat(app.parties.findParties("*OE, jO*").size(), is(1));
     }
 
 }

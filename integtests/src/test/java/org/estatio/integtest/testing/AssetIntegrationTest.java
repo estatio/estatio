@@ -27,6 +27,8 @@ import java.util.Set;
 
 import org.hamcrest.core.Is;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.estatio.dom.asset.FixedAssetRole;
@@ -34,27 +36,34 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integtest.AbstractEstatioIntegrationTest;
 
 public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
+    @BeforeClass
+    public static void setupTransactionalData() {
+        app.install(new EstatioTransactionalObjectsFixture());
+    }
+
     @Test
     public void fixedAssetFindAssetsByReferenceOrName_ok() throws Exception {
-        Assert.assertThat(fixedAssets.findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
+        Assert.assertThat(app.fixedAssets.findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
     }
 
     @Test
     public void fixedAssetAutoComplete_ok() throws Exception {
-        Assert.assertThat(fixedAssets.autoComplete("mall").size(), Is.is(1));
+        Assert.assertThat(app.fixedAssets.autoComplete("mall").size(), Is.is(1));
     }
 
     @Test
     public void propertyCanBeFound() throws Exception {
-        assertNotNull(properties.findPropertiesByReference("OXF"));
+        assertNotNull(app.properties.findPropertiesByReference("OXF"));
     }
 
     @Test
     public void numberOfUnitsIs25() throws Exception {
-        List<Property> allProperties = properties.allProperties();
+        List<Property> allProperties = app.properties.allProperties();
         Property property = allProperties.get(0);
         Set<Unit> units = property.getUnits();
         assertThat(units.size(), is(25));
@@ -62,28 +71,28 @@ public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void propertyCannotNotNull() throws Exception {
-        Assert.assertNotNull(properties.findPropertyByReference("OXF"));
+        Assert.assertNotNull(app.properties.findPropertyByReference("OXF"));
     }
 
     @Test
     public void propertyActorCanBeFound() throws Exception {
-        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
-        Property property = properties.findPropertyByReference("OXF");
-        FixedAssetRole propertyActor = actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
+        Party party = app.parties.findPartyByReferenceOrName("HELLOWORLD");
+        Property property = app.properties.findPropertyByReference("OXF");
+        FixedAssetRole propertyActor = app.actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
     @Test
     public void propertyActorWithoutStartDateCanBeFound() throws Exception {
-        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
-        Property property = properties.findPropertyByReference("OXF");
-        FixedAssetRole propertyActor = actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
+        Party party = app.parties.findPartyByReferenceOrName("HELLOWORLD");
+        Property property = app.properties.findPropertyByReference("OXF");
+        FixedAssetRole propertyActor = app.actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
     @Test
     public void unitCanBeFound() throws Exception {
-        Assert.assertEquals("OXF-001", units.findUnitByReference("OXF-001").getReference());
+        Assert.assertEquals("OXF-001", app.units.findUnitByReference("OXF-001").getReference());
     }
 
 }

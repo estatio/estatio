@@ -28,7 +28,7 @@ import org.estatio.dom.party.Persons;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-public class PartiesFixture extends AbstractFixture {
+public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture extends AbstractFixture {
 
     @Override
     public void install() {
@@ -37,6 +37,7 @@ public class PartiesFixture extends AbstractFixture {
         createOrganisation("TOPMODEL;Topmodel Fashion;NL31ABNA0580744435;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com");
         createOrganisation("MEDIAX;Mediax Electronics;NL31ABNA0580744436;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com");
         createOrganisation("POISON;Poison Perfumeries;NL31ABNA0580744437;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com");
+        createOrganisation("PRET;Pret-a-Manger;NL31ABNA0580744438;;;;;;;;;");
         createPerson("JDOE", "J", "John", "Doe");
         createPerson("LTORVALDS", "L", "Linus", "Torvalds");
     }
@@ -51,11 +52,23 @@ public class PartiesFixture extends AbstractFixture {
         String[] values = input.split(";");
         Party party = organisations.newOrganisation(values[0], values[1]);
         financialAccounts.newBankAccount(party, values[2]);
-        communicationChannels.newPostalAddress(party, values[3], values[4], values[5], values[6], states.findStateByReference(values[7]), countries.findCountryByReference(values[8]));
-        communicationChannels.newPhoneNumber(party, values[9]);
-        communicationChannels.newFaxNumber(party, values[10]);
-        communicationChannels.newEmailAddress(party ,values[11]);
+        if(defined(values, 3)) {
+            communicationChannels.newPostalAddress(party, values[3], values[4], values[5], values[6], states.findStateByReference(values[7]), countries.findCountryByReference(values[8]));
+        }
+        if(defined(values, 9)) {
+            communicationChannels.newPhoneNumber(party, values[9]);
+        }
+        if(defined(values, 10)) {
+            communicationChannels.newFaxNumber(party, values[10]);
+        }
+        if(defined(values, 11)) {
+            communicationChannels.newEmailAddress(party ,values[11]);
+        }
         return party;
+    }
+
+    protected boolean defined(String[] values, int i) {
+        return values.length>i && !values[i].isEmpty();
     }
 
     // //////////////////////////////////////

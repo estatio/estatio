@@ -248,9 +248,6 @@ public class LeaseTest_newMandate {
                 
                 oneOf(mockContainer).persist(bankMandate);
 
-                oneOf(mockAgreementRoles).findByAgreementAndPartyAndTypeAndStartDate(with(equalTo(bankMandate)), with(any(Party.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
-                will(returnValue(null));
-                
                 oneOf(mockAgreementRoles).newAgreementRole(bankMandate, tenant, debtorAgreementRoleType, startDate, endDate);
                 will(returnValue(newBankMandateAgreementRole));
             }

@@ -64,27 +64,26 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:reference)"),
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(
-            name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL", 
-            value = "SELECT " + 
-                    "FROM org.estatio.dom.agreement.Agreement " + 
-                    "WHERE agreementType == :agreementType" +
-                    " && roles.contains(role)" +
-                    " && role.type == :roleType" +
-                    " && role.party == :party" +
-                    " VARIABLES org.estatio.dom.agreement.AgreementRole role")
+                name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.Agreement " +
+                        "WHERE agreementType == :agreementType" +
+                        " && roles.contains(role)" +
+                        " && role.type == :roleType" +
+                        " && role.party == :party" +
+                        " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
 @Bookmarkable
-@MemberGroups({"General", "Dates", "Related"})
+@MemberGroups({ "General", "Dates", "Related" })
 public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, WithNameGetter {
 
     public Agreement(S statusToLock, S statusToUnlock) {
         super("reference", statusToLock, statusToUnlock);
     }
 
-    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_UNIQUE_IDX")
@@ -102,16 +101,16 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     }
 
     public String disableReference() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     // //////////////////////////////////////
 
     private String name;
 
     @DescribedAs("Optional name for this agreement")
     @MemberOrder(sequence = "2")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Optional
     public String getName() {
         return name;
@@ -122,7 +121,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     }
 
     public String disableName() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////
@@ -149,7 +148,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     private static Function<AgreementRole, Party> partyOfAgreementRole() {
         return new Function<AgreementRole, Party>() {
             public Party apply(AgreementRole agreementRole) {
-                return agreementRole != null? agreementRole.getParty(): null;
+                return agreementRole != null ? agreementRole.getParty() : null;
             }
         };
     }
@@ -157,18 +156,17 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType art) {
         return new Predicate<AgreementRole>() {
             public boolean apply(AgreementRole candidate) {
-                return candidate != null? candidate.getType() == art && candidate.isCurrent(): false;
+                return candidate != null ? candidate.getType() == art && candidate.isCurrent() : false;
             }
         };
     }
-
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name="Dates", sequence = "5")
+    @MemberOrder(name = "Dates", sequence = "5")
     @Disabled
     @Optional
     @Override
@@ -184,7 +182,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "6")
+    @MemberOrder(name = "Dates", sequence = "6")
     @Disabled
     @Optional
     @Override
@@ -198,7 +196,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     }
 
     // //////////////////////////////////////
-    
+
     @Hidden
     @Override
     public WithInterval<?> getParentWithInterval() {
@@ -221,14 +219,14 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
-    
+
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    @MemberOrder(name = "endDate", sequence = "1")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public Agreement<S> changeDates(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
@@ -237,56 +235,57 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     @Override
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
         return getStartDate();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
         return getEndDate();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
         return LocalDateInterval.including(getStartDate(), getTerminationDate());
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent
     private LocalDate terminationDate;
-    
-    @MemberOrder(name="Dates", sequence = "7")
+
+    @MemberOrder(name = "Dates", sequence = "7")
     @Optional
     @Disabled
     public LocalDate getTerminationDate() {
         return terminationDate;
     }
-    
+
     public void setTerminationDate(final LocalDate terminationDate) {
         this.terminationDate = terminationDate;
     }
-    
+
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="AGREEMENTTYPE_ID")
+    @javax.jdo.annotations.Column(name = "AGREEMENTTYPE_ID")
     private AgreementType agreementType;
 
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @MemberOrder(sequence = "8")
     public AgreementType getAgreementType() {
@@ -299,13 +298,13 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUS_ID")
+    @javax.jdo.annotations.Column(name = "PREVIOUS_ID")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private Agreement<S> previous;
 
-    @MemberOrder(name="Related", sequence = "9")
+    @MemberOrder(name = "Related", sequence = "9")
     @Named("Previous Agreement")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
@@ -343,12 +342,12 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXT_ID")
+    @javax.jdo.annotations.Column(name = "NEXT_ID")
     private Agreement<S> next;
 
-    @MemberOrder(name="Related", sequence = "10")
+    @MemberOrder(name = "Related", sequence = "10")
     @Named("Next Agreement")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
@@ -420,21 +419,24 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     }
 
     /**
-     * TODO: need logic ensure that there cannot be two {@link AgreementRole}s 
+     * TODO: need logic ensure that there cannot be two {@link AgreementRole}s
      * of the same type at the same point in time.
      */
     @MemberOrder(name = "Roles", sequence = "11")
-    public AgreementRole addRole(@Named("party") Party party, @Named("agreementType") AgreementRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        AgreementRole agreementRole = findRole(party, type, startDate);
-        if (agreementRole == null) {
+    public AgreementRole addRole(
+            final Party party,
+            final @Named("type") AgreementRoleType type,
+            final @Named("startDate") @Optional LocalDate startDate,
+            final @Named("endDate") @Optional LocalDate endDate) {
+        AgreementRole agreementRole;// = findRole(party, type, startDate);
+        //if (agreementRole == null) {
             agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
-        }
+        //}
         agreementRole.setEndDate(endDate);
         agreementRole.setStatus(Status.UNLOCKED);
         return agreementRole;
     }
 
-    
     // //////////////////////////////////////
 
     @Programmatic
@@ -450,20 +452,25 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     // //////////////////////////////////////
 
     protected Agreements agreements;
+
     public void injectAgreements(Agreements agreements) {
         this.agreements = agreements;
     }
+
     protected AgreementRoles agreementRoles;
+
     public void injectAgreementRoles(final AgreementRoles agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
 
     protected AgreementRoleTypes agreementRoleTypes;
+
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
     protected AgreementTypes agreementTypes;
+
     public void injectAgreementTypes(AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }

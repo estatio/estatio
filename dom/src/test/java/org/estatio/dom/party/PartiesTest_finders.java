@@ -72,7 +72,7 @@ public class PartiesTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Party.class));
         assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("searchPattern"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)".*REF.1.*"));
 
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
@@ -85,7 +85,7 @@ public class PartiesTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Party.class));
         assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("searchPattern"), is((Object)"(?i).*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*REF.1.*"));
         
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }

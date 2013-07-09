@@ -26,7 +26,7 @@ import org.estatio.dom.tax.Taxes;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-public class ChargeFixture extends AbstractFixture {
+public class ChargeAndChargeGroupFixture extends AbstractFixture {
 
     @Override
     public void install() {

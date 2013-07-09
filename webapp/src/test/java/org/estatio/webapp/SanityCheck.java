@@ -16,18 +16,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.viewer.wicket.app;
+package org.estatio.webapp;
 
-import com.google.inject.Singleton;
+import javax.jdo.spi.PersistenceCapable;
 
-import org.apache.isis.viewer.wicket.viewer.registries.components.ComponentFactoryRegistrarDefault;
+import org.estatio.dom.lease.Lease;
 
-@Singleton
-public class ComponentFactoryRegistrarForEstatio extends ComponentFactoryRegistrarDefault {
+public class SanityCheck {
 
-    @Override
-    public void addComponentFactories(ComponentFactoryList componentFactories) {
-        super.addComponentFactories(componentFactories);
-        // currently no replacements
+    public static void main(String[] args) {
+        check(Lease.class);
     }
+
+    private static void check(Class<?> cls) {
+        if(PersistenceCapable.class.isAssignableFrom(cls)) {
+            System.out.println(cls.getName() + " class enhanced OK");
+            System.out.flush();
+        } else {
+            System.err.println(cls.getName() + " class NOT enhanced");
+            System.err.flush();
+        }
+    }
+
 }

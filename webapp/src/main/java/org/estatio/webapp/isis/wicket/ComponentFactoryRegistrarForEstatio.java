@@ -16,14 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.security.shiro;
+package org.estatio.webapp.isis.wicket;
 
+import com.google.inject.Singleton;
 
-import org.apache.shiro.realm.ldap.JndiLdapContextFactory;
+import org.apache.isis.viewer.wicket.viewer.registries.components.ComponentFactoryRegistrarDefault;
 
-/**
- * Introduced in case there is a need to fine-tune at some later date.
- */
-public class EstatioLdapContextFactory extends JndiLdapContextFactory {
+@Singleton
+public class ComponentFactoryRegistrarForEstatio extends ComponentFactoryRegistrarDefault {
 
+    @Override
+    public void addComponentFactories(ComponentFactoryList componentFactories) {
+        super.addComponentFactories(componentFactories);
+        // currently no replacements
+    }
 }

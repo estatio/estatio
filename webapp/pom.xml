@@ -203,8 +203,8 @@ language governing permissions and limitations under the License.
 
         <!-- scheduler -->
         <dependency>
-            <groupId>com.danhaywood.ddd.domainservices</groupId>
-            <artifactId>danhaywood-domainservice-scheduler</artifactId>
+            <groupId>com.danhaywood.isis.domainservices</groupId>
+            <artifactId>danhaywood-isis-domainservice-scheduler</artifactId>
         </dependency>
 
         <!-- 3rd party dependency -->

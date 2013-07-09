@@ -40,7 +40,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
-    public AgreementRole newAgreementRole(final Agreement agreement, final Party party, final AgreementRoleType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
+    public AgreementRole newAgreementRole(final Agreement<?> agreement, final Party party, final AgreementRoleType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         AgreementRole agreementRole = newTransientInstance();
         persistIfNotAlready(agreementRole);
         agreementRole.setStartDate(startDate);

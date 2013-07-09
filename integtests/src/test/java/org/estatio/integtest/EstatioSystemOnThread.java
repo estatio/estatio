@@ -1,7 +1,5 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
- *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,26 +14,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.testing;
+package org.estatio.integtest;
 
 import org.apache.log4j.Level;
-import org.apache.log4j.PropertyConfigurator;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.MethodRule;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.Statement;
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.fixtures.InstallableFixture;
-import org.apache.isis.applib.services.wrapper.WrapperFactory;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.apache.isis.core.wrapper.WrapperFactoryDefault;
 import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
@@ -53,7 +38,6 @@ import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -81,195 +65,35 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tag.Tags;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.dom.tax.Taxes;
-import org.estatio.fixture.EstatioFixture;
+import org.estatio.fixture.EstatioRefDataObjectsFixture;
 import org.estatio.services.bookmarks.BookmarkServiceForEstatio;
 import org.estatio.services.clock.ClockService;
-import org.estatio.services.settings.EstatioSettingsService;
 import org.estatio.services.settings.EstatioSettingsServiceJdo;
 
-public abstract class AbstractEstatioIntegrationTest {
-
-    @Rule
-    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
-
-    @Rule
-    public BootstrapIsisRule bootstrapIsis = new BootstrapIsisRule();
-
-    @Rule
-    public ExpectedException expectedExceptions = ExpectedException.none();
-
-    /**
-     * Same running system returned for all tests, set up with
-     * {@link ToDoItemsFixture}.
-     * 
-     * <p>
-     * The database is NOT reset between tests.
-     */
-    public IsisSystemForTest getIsft() {
-        return bootstrapIsis.getIsisSystemForTest();
-    }
-
-    protected WrapperFactory wrapperFactory;
-    protected DomainObjectContainer container;
-
-    protected Api api;
-
-    protected Countries countries;
-    protected States states;
-
-    protected Charges charges;
-
-    protected Numerators numerators;
-
-    protected AgreementRoles agreementRoles;
-    protected AgreementRoleTypes agreementRoleTypes;
-    protected AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
-
-    protected FixedAssets fixedAssets;
-    protected Properties properties;
-    protected FixedAssetRoles actors;
-    protected Units units;
-
-    protected FinancialAccounts financialAccounts;
-
-    protected Parties parties;
-    protected Organisations organisations;
-    protected Persons persons;
-
-    protected Leases leases;
-    protected LeaseTerms leaseTerms;
-    protected LeaseUnits leaseUnits;
+/**
+ * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on the current thread,
+ * initialized with Estatio's domain services and with {@link EstatioRefDataObjectsFixture reference data fixture}. 
+ */
+public class EstatioSystemOnThread {
     
-    protected Invoices invoices;
-    protected InvoiceItemsForLease invoiceItemsForLease;
+    private EstatioSystemOnThread(){}
 
-    protected CommunicationChannels communicationChannels;
-
-    protected Tags tags;
-
-    protected EstatioSettingsService settings;
-    protected ClockService clock;
-
-
-    @Before
-    public void init() {
-        wrapperFactory = getIsft().getService(WrapperFactoryDefault.class);
-        container = getIsft().container;
-
-        api = getIsft().getService(Api.class);
-
-        charges = getIsft().getService(Charges.class);
-
-        countries = getIsft().getService(Countries.class);
-        states = getIsft().getService(States.class);
-
-        numerators = getIsft().getService(Numerators.class);
-
-        agreementRoles = getIsft().getService(AgreementRoles.class);
-        agreementRoleTypes = getIsft().getService(AgreementRoleTypes.class);
-        agreementRoleCommunicationChannelTypes = getIsft().getService(AgreementRoleCommunicationChannelTypes.class);
-
-        fixedAssets = getIsft().getService(FixedAssets.class);
-        properties = getIsft().getService(Properties.class);
-        actors = getIsft().getService(FixedAssetRoles.class);
-        units = getIsft().getService(Units.class);
-
-        financialAccounts = getIsft().getService(FinancialAccounts.class);
-
-        parties = getIsft().getService(Parties.class);
-        organisations = getIsft().getService(Organisations.class);
-        persons = getIsft().getService(Persons.class);
-
-        leases = getIsft().getService(Leases.class);
-        leaseTerms = getIsft().getService(LeaseTerms.class);
-        leaseUnits = getIsft().getService(LeaseUnits.class);
-        invoices = getIsft().getService(Invoices.class);
-        invoiceItemsForLease = getIsft().getService(InvoiceItemsForLease.class);
-
-        communicationChannels = getIsft().getService(CommunicationChannels.class);
-        
-        tags = getIsft().getService(Tags.class);
-
-        clock = getIsft().getService(ClockService.class);
-        settings = getIsft().getService(EstatioSettingsService.class);
+    public static IsisSystemForTest getIsft() {
+        return ISFT.get();
     }
 
-    protected <T> T wrap(T obj) {
-        return wrapperFactory.wrap(obj);
-    }
-
-    protected <T> T unwrap(T obj) {
-        return wrapperFactory.unwrap(obj);
-    }
-
-    // //////////////////////////////////////////////////////////////
-    // Boilerplate
-    // //////////////////////////////////////////////////////////////
-
-    static InstallableFixture newFixture() {
-        return new EstatioFixture();
-    };
-
-    @BeforeClass
-    public static void initClass() {
-        PropertyConfigurator.configure("logging.properties");
-    }
-
-    private static class BootstrapIsisRule implements MethodRule {
-
-        private static ThreadLocal<IsisSystemForTest> ISFT = new ThreadLocal<IsisSystemForTest>() {
-            @Override
-            protected IsisSystemForTest initialValue() {
-                final IsisSystemForTest isft = EstatioIntegTestBuilder.builderWith(newFixture()).build().setUpSystem();
-                return isft;
-            }
-
-        };
-
-        public IsisSystemForTest getIsisSystemForTest() {
-            return ISFT.get();
-        }
-
+    private static ThreadLocal<IsisSystemForTest> ISFT = new ThreadLocal<IsisSystemForTest>() {
         @Override
-        public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
-            final IsisSystemForTest isft = getIsisSystemForTest(); // creates
-                                                                   // and starts
-                                                                   // running if
-                                                                   // required
-            return new Statement() {
-                @Override
-                public void evaluate() throws Throwable {
-                    isft.beginTran();
-                    base.evaluate();
-                    // if an exception is thrown by any test, then we don't
-                    // attempt to cleanup (eg by calling bounceSystem)#
-                    // because - in any case - we only ever install the fixtures
-                    // once for ALL of the tests.
-                    // therefore, just fix the first test that fails and don't
-                    // worry about any other test failures beyond that
-                    // (fix them up one by one)
-                    isft.commitTran();
-                }
-            };
+        protected IsisSystemForTest initialValue() {
+            return new EstatioIntegTestBuilder().build().setUpSystem();
         }
-
-    }
-
+    };
+    
     private static class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
-        @SuppressWarnings("unused")
-        public static EstatioIntegTestBuilder builder() {
-            return builderWith(new EstatioFixture());
-        }
-
-        public static EstatioIntegTestBuilder builderWith(InstallableFixture... fixtures) {
-            EstatioIntegTestBuilder builder = new EstatioIntegTestBuilder();
-            builder.withFixtures(fixtures);
-            builder.withLoggingAt(Level.INFO);
-            return builder;
-        }
-
         private EstatioIntegTestBuilder() {
+            withFixtures(new EstatioRefDataObjectsFixture());
+            withLoggingAt(Level.INFO);
             with(testConfiguration());
             with(new DataNucleusPersistenceMechanismInstaller());
             withServices(

@@ -24,7 +24,7 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
-public class GeographyFixture extends AbstractFixture {
+public class CountriesAndStatesFixture extends AbstractFixture {
 
     @Override
     public void install() {

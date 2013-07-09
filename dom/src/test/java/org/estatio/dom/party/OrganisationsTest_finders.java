@@ -72,7 +72,7 @@ public class OrganisationsTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Organisation.class));
         assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("searchArg"), is((Object)"(?i).*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*REF.1.*"));
 
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
