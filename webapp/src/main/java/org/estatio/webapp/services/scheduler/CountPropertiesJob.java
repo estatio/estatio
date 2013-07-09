@@ -18,10 +18,11 @@
  */
 package org.estatio.webapp.services.scheduler;
 
-import org.estatio.dom.asset.Properties;
+import com.danhaywood.isis.domainservice.scheduler.AbstractIsisJob;
+
 import org.quartz.JobExecutionContext;
 
-import com.danhaywood.ddd.domainservices.scheduler.AbstractIsisJob;
+import org.estatio.dom.asset.Properties;
 
 public class CountPropertiesJob extends AbstractIsisJob {
 

@@ -22,14 +22,15 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-import org.apache.isis.applib.annotation.Hidden;
+import com.danhaywood.isis.domainservice.scheduler.AbstractSchedulerService;
+
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
-import com.danhaywood.ddd.domainservices.scheduler.SchedulerService;
+import org.apache.isis.applib.annotation.Hidden;
 
 @Hidden
-public class SchedulerServiceForEstatio extends SchedulerService {
+public class SchedulerServiceForEstatio extends AbstractSchedulerService {
 
     public SchedulerServiceForEstatio() {
         super("scheduler_user", "scheduler_role", "admin_role");
