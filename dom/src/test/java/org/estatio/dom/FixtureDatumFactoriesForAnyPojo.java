@@ -33,4 +33,8 @@ public class FixtureDatumFactoriesForAnyPojo {
         }
     }
 
+    public static <T> FixtureDatumFactory<T> pojos(Class<T> type) {
+        return pojos(type, type);
+    }
+
 }
