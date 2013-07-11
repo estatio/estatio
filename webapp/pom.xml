@@ -24,9 +24,12 @@ language governing permissions and limitations under the License.
     </parent>
 
     <artifactId>estatio-webapp</artifactId>
-    <name>Estatio Webapp</name>
-
     <packaging>war</packaging>
+    
+    <name>Estatio Webapp</name>
+    <description>
+        Packages the Estatio management system as a standard Java webapp.
+    </description>
 
     <properties>
         <siteBaseDir>..</siteBaseDir>

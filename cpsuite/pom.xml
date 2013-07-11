@@ -8,168 +8,31 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.junit.extensions</groupId>
+    <parent>
+        <groupId>org.estatio</groupId>
+        <artifactId>estatio</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.estatio.thirdparty.org.junit.extensions</groupId>
     <artifactId>cpsuite</artifactId>
     <version>1.2.6</version>
+    <packaging>jar</packaging>
+    
+    <name>Johannes Link's cpsuite</name>
+    <description>
+        This is a rebundling of Johannes Link's cpsuite utility.  It is used by
+        Estatio to run dom unit tests from within the integration test suite
+        (for a unified code coverage figure)
+    </description>
 
-
+    <url>http://johanneslink.net/projects/cpsuite.jsp</url>
+    
 	<dependencies>
-
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-            <version>4.11</version>
 		</dependency>
    	</dependencies>
    	
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.1</version>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-					<executions>
-						<execution>
-							<id>source</id>
-							<phase>compile</phase>
-						</execution>
-						<execution>
-							<id>test</id>
-							<phase>test-compile</phase>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.10</version>
-					<configuration>
-						<excludes>
-							<exclude>**/Test*.java</exclude>
-						</excludes>
-						<useFile>true</useFile>
-						<printSummary>false</printSummary>
-    					<outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
-                        <systemProperties>
-                            <property>
-                                <name>skipLdapTests</name>
-                                <value>${skipLdapTests}</value>
-                            </property>
-                        </systemProperties>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<excludes>
-							<exclude>**/Test*.java</exclude>
-						</excludes>
-						<showSuccess>false</showSuccess>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>test</phase>
-						</execution>
-					</executions>
-				</plugin>
-
-
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.4.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3.2</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.3.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.7</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>1.2</version>
-                    <configuration>
-                        <rules>
-                            <requireMavenVersion>
-                                <version>[2.2.1,)</version>
-                            </requireMavenVersion>
-                            <requireJavaVersion>
-                                <version>[1.6.0-11,)</version>
-                            </requireJavaVersion>
-                            <requirePluginVersions>
-                                <message>All plugin versions must be
-                                    defined!</message>
-                                <banLatest>true</banLatest>
-                                <banRelease>true</banRelease>
-                            </requirePluginVersions>
-                            <DependencyConvergence />
-                        </rules>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>validate-enforce</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>enforce</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-			</plugins>
-		</pluginManagement>
-		<plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-            </plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-    
-    <profiles>
-        <profile>
-            <id>m2e</id>
-            <activation>
-                <property>
-                    <name>m2e.version</name>
-                </property>
-            </activation>
-            <build>
-                <directory>target-ide</directory>
-            </build>
-        </profile>
-    </profiles>
-    
 </project>

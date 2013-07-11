@@ -17,17 +17,50 @@ language governing permissions and limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
-    <name>Estatio App</name>
-
     <packaging>pom</packaging>
 
+    <name>Estatio Management System</name>
+    <description>
+        Estatio is modern and flexible property management software, built on Apache Isis.
+        It offers real estate professionals and service providers the power and 
+        flexibility to manage their business in a superior, flexible and 
+        cost-effective manner.
+    </description>
+
+    <url>https://www.estatio.org</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <scm>
         <connection>scm:git:https://github.com/estatio/estatio.git</connection>
+        <developerConnection>scm:git:https://github.com/estatio/estatio.git</developerConnection>
+        <url>https://github.com/estatio/estatio.git</url>
     </scm>
+    <developers>
+        <developer>
+            <id>jcvanderwal</id>
+            <name>Jeroen van der Wal</name>
+            <email>jeroen@stromboli.it</email>
+        </developer>
+        <developer>
+            <id>danhaywood</id>
+            <name>Dan Haywood</name>
+            <email>dan@haywood-associates.co.uk</email>
+        </developer>
+    </developers>
 
     <properties>
         <isis.version>1.3.0-SNAPSHOT</isis.version>
@@ -36,6 +69,11 @@ language governing permissions and limitations under the License.
         <isis-security-file.version>1.0.2-SNAPSHOT</isis-security-file.version>
         <isis-viewer-restfulobjects.version>2.1.0-SNAPSHOT</isis-viewer-restfulobjects.version>
         <isis-security-shiro.version>1.1.2-SNAPSHOT</isis-security-shiro.version>
+        
+        <danhaywood-isis-wicket-excel.version>1.2.0</danhaywood-isis-wicket-excel.version>
+        <danhaywood-isis-wicket-fullcalendar.version>1.2.0</danhaywood-isis-wicket-fullcalendar.version>
+        <danhaywood-isis-wicket-gmap3.version>1.2.0</danhaywood-isis-wicket-gmap3.version>
+        <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
 
         <!-- must be consistent with the version defined by the JDO Objectstore -->
         <datanucleus-core.version>3.2.4</datanucleus-core.version>
@@ -48,7 +86,6 @@ language governing permissions and limitations under the License.
 
         <!-- targetJdk required as a workaround for pmd error, see https://issues.apache.org/jira/browse/ACCUMULO-443 -->
         <targetJdk>1.6</targetJdk>
-        <distMgmtSiteUrl>file:///tmp/m2-sites/estatio</distMgmtSiteUrl>
         <checkstyle.configLocation>${trunkBaseDir}/docs/codequality/checkstyle.xml</checkstyle.configLocation>
         <pmd.ruleset>${trunkBaseDir}/docs/codequality/pmd.xml</pmd.ruleset>
     </properties>
@@ -153,9 +190,11 @@ language governing permissions and limitations under the License.
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.5</version>
                 </plugin>
+                
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.3.1</version>
+                    <inherited>true</inherited>
                     <executions>
                         <execution>
                             <id>package-test-jar</id>
@@ -182,6 +221,7 @@ language governing permissions and limitations under the License.
                         </archive>
                     </configuration>
                 </plugin>
+
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.3.1</version>
@@ -194,14 +234,7 @@ language governing permissions and limitations under the License.
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.0</version>
                 </plugin>
-
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.6.3.201306030806</version>
-                </plugin>
-
-
+               
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>maven-jetty-plugin</artifactId>
@@ -271,15 +304,6 @@ language governing permissions and limitations under the License.
                     <!-- goal:generate is a report so is configured in the reporting section -->
                 </plugin>
 
-                <!-- Artifacts derived from code: taglist -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>taglist-maven-plugin</artifactId>
-                    <version>2.4</version>
-                    <inherited>true</inherited>
-                    <!-- goal:taglist is a report so is configured in the reporting section -->
-                </plugin>
-
                 <!-- Artifacts derived from code: javadoc; supports both build and report goals; not included as a build plugin except through profiles (to speed up the build) -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -293,9 +317,7 @@ language governing permissions and limitations under the License.
                         <quiet>true</quiet>
                         <doctitle>${project.name} ${project.version}</doctitle>
                         <windowtitle>${project.name} ${project.version}</windowtitle>
-                        <testDoctitle>${project.name} ${project.version}
-                            (TEST API)
-                        </testDoctitle>
+                        <testDoctitle>${project.name} ${project.version} (TEST API)</testDoctitle>
                         <testWindowtitle>${project.name}
                             ${project.version} (TEST API)
                         </testWindowtitle>
@@ -329,14 +351,9 @@ language governing permissions and limitations under the License.
 
                 <!-- Packaging: source jars of main and test code -->
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.1.2</version>
-                    <configuration>
-                        <includePom>true</includePom>
-                    </configuration>
-                    <!-- goal:aggregate (for aggregator modules) binds to phase:package -->
-                    <!-- goal:jar and goal:test-jar are meant to bind to phase:package, but doesn't seem to so bound explicitly -->
+                    <inherited>true</inherited>
                     <executions>
                         <execution>
                             <id>package-jars</id>
@@ -345,10 +362,15 @@ language governing permissions and limitations under the License.
                                 <goal>jar</goal>
                                 <goal>test-jar</goal>
                             </goals>
+                            <configuration>
+                                <includePom>true</includePom>
+                            </configuration>
                         </execution>
                     </executions>
+                    <configuration>
+                        <includePom>true</includePom>
+                    </configuration>
                 </plugin>
-
 
                 <!-- http://simplericity.com/2009/11/10/1257880778509.html -->
                 <plugin>
@@ -385,7 +407,10 @@ language governing permissions and limitations under the License.
                                 <banLatest>true</banLatest>
                                 <banRelease>true</banRelease>
                             </requirePluginVersions>
+                            <!-- 
+                            RELAXED!
                             <DependencyConvergence />
+                            -->
                         </rules>
                     </configuration>
                     <!-- goal:enforce supposedly binds to phase:validate, but explicit binding seems to be required -->
@@ -403,12 +428,10 @@ language governing permissions and limitations under the License.
             </plugins>
         </pluginManagement>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -536,7 +559,7 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>org.junit.extensions</groupId>
+                <groupId>org.estatio.thirdparty.org.junit.extensions</groupId>
                 <artifactId>cpsuite</artifactId>
                 <version>1.2.6</version>
             </dependency>
@@ -597,7 +620,7 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-gmap3</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>${danhaywood-isis-wicket-gmap3.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -606,7 +629,7 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-wickedcharts</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>${danhaywood-isis-wicket-wickedcharts.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -615,34 +638,19 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-excel</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>${danhaywood-isis-wicket-excel.version}</version>
             </dependency>
 
-            <!-- FULLCALENDAR: uncomment to use https://github.com/danhaywood/isis-wicket-fullcalendar
-                -->
+            <!-- FULLCALENDAR: uncomment to use https://github.com/danhaywood/isis-wicket-fullcalendar -->
             <dependency> 
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
-                <version>1.2.0-SNAPSHOT</version> 
+                <version>${danhaywood-isis-wicket-fullcalendar.version}</version>
             </dependency> 
-
-            <!-- viewer extensions' dependencies -->
-            <dependency>
-                <groupId>net.ftlines.wicket-fullcalendar</groupId>
-                <artifactId>wicket-fullcalendar-parent</artifactId>
-                <version>6.0-SNAPSHOT</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.ftlines.wicket-fullcalendar</groupId>
-                <artifactId>wicket-fullcalendar-core</artifactId>
-                <version>6.0-SNAPSHOT</version>
-            </dependency>
-
-
 
         </dependencies>
     </dependencyManagement>
+    
     <reporting>
         <plugins>
             <plugin>
@@ -802,14 +810,6 @@ language governing permissions and limitations under the License.
         </plugins>
     </reporting>
 
-    <distributionManagement>
-        <site>
-            <id>isis-site</id>
-            <name>Apache Isis Site</name>
-            <url>${distMgmtSiteUrl}</url>
-        </site>
-    </distributionManagement>
-
     <modules>
         <module>cpsuite</module>
         <module>dom</module>
@@ -829,6 +829,53 @@ language governing permissions and limitations under the License.
             </activation>
             <build>
                 <directory>target-ide</directory>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                    </plugin>
+
+                    <!-- STRICTER than the default! -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>1.2</version>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[2.2.1,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[1.6.0-11,)</version>
+                                </requireJavaVersion>
+                                <requirePluginVersions>
+                                    <message>All plugin versions must be
+                                        defined!</message>
+                                    <banLatest>true</banLatest>
+                                    <banRelease>true</banRelease>
+                                </requirePluginVersions>
+                                <DependencyConvergence />
+                            </rules>
+                        </configuration>
+                        <!-- goal:enforce supposedly binds to phase:validate, but explicit binding seems to be required -->
+                        <executions>
+                            <execution>
+                                <id>validate-enforce</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
     </profiles>

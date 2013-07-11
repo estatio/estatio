@@ -23,12 +23,19 @@ language governing permissions and limitations under the License.
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
+    <artifactId>estatio-dom</artifactId>
+    <packaging>jar</packaging>
+    
+    <name>Estatio DOM</name>
+    <description>
+        Domain object model for Estatio.  Includes repositories and
+        their implementations (using JDO API), as well as a number of
+        other domain services.
+    </description>
+
     <properties>
         <siteBaseDir>..</siteBaseDir>
     </properties>
-
-    <artifactId>estatio-dom</artifactId>
-    <name>Estatio DOM</name>
 
     <build>
         <plugins>

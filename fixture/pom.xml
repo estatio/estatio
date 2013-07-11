@@ -24,7 +24,13 @@ language governing permissions and limitations under the License.
     </parent>
 
     <artifactId>estatio-fixture</artifactId>
+    <packaging>jar</packaging>
+    
     <name>Estatio Fixtures</name>
+    <description>
+        Testing/demo fixtures for Estatio.  These can be installed either during
+        bootstrapped or from the admin menu.)
+    </description>
 
     <properties>
         <siteBaseDir>..</siteBaseDir>

@@ -24,7 +24,12 @@ language governing permissions and limitations under the License.
     </parent>
 
     <artifactId>estatio-integtests</artifactId>
+    <packaging>jar</packaging>
+    
     <name>Estatio Integration Tests</name>
+    <description>
+        Cucumber specs and integration tests for Estatio.
+    </description>
 
     <properties>
         <siteBaseDir>..</siteBaseDir>
@@ -90,7 +95,7 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>org.junit.extensions</groupId>
+            <groupId>org.estatio.thirdparty.org.junit.extensions</groupId>
             <artifactId>cpsuite</artifactId>
             <scope>test</scope>
         </dependency>
