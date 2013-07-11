@@ -43,8 +43,9 @@ import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integtest.AbstractEstatioCukeStepDefs;
-import org.estatio.integtest.specs.C;
-import org.estatio.integtest.specs.D;
+import org.estatio.integtest.specs.V;
+import org.estatio.integtest.specs.ERD;
+import org.estatio.integtest.specs.ETO;
 import org.estatio.integtest.specs.EstatioScenario;
 
 public class AgreementStepDefs extends AbstractEstatioCukeStepDefs {
@@ -84,10 +85,10 @@ public class AgreementStepDefs extends AbstractEstatioCukeStepDefs {
     
     @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* party \"([^\"]*)\"$")
     public void add_agreement_role_with_type_with_start_date_and_end_date(
-            @Transform(D.AgreementRoleType.class) AgreementRoleType type, 
-            @Transform(C.LocalDate.class) LocalDate startDate, 
-            @Transform(C.LocalDate.class) LocalDate endDate,
-            @Transform(D.Organisation.class) Organisation organisation) throws Throwable {
+            @Transform(ERD.AgreementRoleType.class) AgreementRoleType type, 
+            @Transform(V.LyyyyMMdd.class) LocalDate startDate, 
+            @Transform(V.LyyyyMMdd.class) LocalDate endDate,
+            @Transform(ETO.Organisation.class) Organisation organisation) throws Throwable {
         
         Lease lease = scenario.get("lease", null, Lease.class);
         lease.addRole(organisation, type, startDate, endDate);
@@ -128,11 +129,11 @@ public class AgreementStepDefs extends AbstractEstatioCukeStepDefs {
 
     
     public static class AgreementRoleDesc {
-        @XStreamConverter(D.AgreementRoleType.class) private AgreementRoleType type;
-        @XStreamConverter(C.LocalDate.class) private LocalDate startDate;
-        @XStreamConverter(C.LocalDate.class) private LocalDate endDate;
-        @XStreamConverter(D.Lease.class) private Lease agreement;
-        @XStreamConverter(D.Organisation.class) private Organisation party;
+        @XStreamConverter(ERD.AgreementRoleType.class) private AgreementRoleType type;
+        @XStreamConverter(V.LyyyyMMdd.class) private LocalDate startDate;
+        @XStreamConverter(V.LyyyyMMdd.class) private LocalDate endDate;
+        @XStreamConverter(ETO.Lease.class) private Lease agreement;
+        @XStreamConverter(ETO.Organisation.class) private Organisation party;
     }
 
     

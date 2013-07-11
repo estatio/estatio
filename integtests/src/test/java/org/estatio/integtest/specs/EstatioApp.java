@@ -45,6 +45,7 @@ import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Persons;
 import org.estatio.dom.tag.Tags;
+import org.estatio.integtest.AbstractApp;
 import org.estatio.integtest.EstatioSystemOnThread;
 import org.estatio.services.clock.ClockService;
 import org.estatio.services.settings.EstatioSettingsService;
@@ -54,10 +55,7 @@ import org.estatio.services.settings.EstatioSettingsService;
  * Provides access to Estatio's domain services, for either
  * integration tests or Cucumber specifications. 
  */
-public class EstatioApp {
-
-    public WrapperFactory wrapperFactory;
-    public DomainObjectContainer container;
+public class EstatioApp extends AbstractApp {
 
     public Api api;
 
@@ -97,22 +95,10 @@ public class EstatioApp {
     public EstatioSettingsService settings;
     public ClockService clock;
     
-    private IsisSystemForTest isft;
-    
-
     // //////////////////////////////////////
 
-    /**
-     * 
-     */
     public EstatioApp() {
-        init(EstatioSystemOnThread.getIsft());
-    }
-    
-    private void init(IsisSystemForTest isft) {
-        this.isft = isft;
-        wrapperFactory = isft.getService(WrapperFactoryDefault.class);
-        container = isft.container;
+        super(EstatioSystemOnThread.getIsft());
 
         api = isft.getService(Api.class);
 
@@ -151,37 +137,4 @@ public class EstatioApp {
         clock = isft.getService(ClockService.class);
         settings = isft.getService(EstatioSettingsService.class);
     }
-
-
-    // //////////////////////////////////////
-    
-    /**
-     * Install arbitrary fixtures, eg before an integration tests or as part of a 
-     * Cucumber step definitions or hook.
-     */
-    public void install(InstallableFixture... fixtures) {
-        isft.installFixtures(fixtures);
-    }
-
-    // //////////////////////////////////////
-
-    /**
-     * For Cucumber hooks to call, performing transaction management around each step.
-     */
-    public void beginTran() {
-        isft.beginTran();
-    }
-
-    /**
-     * For Cucumber hooks to call, performing transaction management around each step.
-     */
-    public void endTran(boolean ok) {
-        if(ok) {
-            isft.commitTran();
-        } else {
-            isft.abortTran();
-        }
-    }
-
-    
 }

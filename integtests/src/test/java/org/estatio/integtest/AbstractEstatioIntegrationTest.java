@@ -88,10 +88,6 @@ public abstract class AbstractEstatioIntegrationTest {
 
     // //////////////////////////////////////
 
-
-
-    // //////////////////////////////////////
-
     protected <T> T wrap(T obj) {
         return app.wrapperFactory.wrap(obj);
     }

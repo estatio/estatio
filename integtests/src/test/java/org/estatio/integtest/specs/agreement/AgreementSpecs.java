@@ -16,10 +16,10 @@
  */
 package org.estatio.integtest.specs.agreement;
 
-import org.estatio.integtest.AbstractEstatioCukeSpecs;
+import org.estatio.integtest.AbstractCukeSpecs;
 
 
-public class AgreementSpecs extends AbstractEstatioCukeSpecs {
+public class AgreementSpecs extends AbstractCukeSpecs {
 
 
 }

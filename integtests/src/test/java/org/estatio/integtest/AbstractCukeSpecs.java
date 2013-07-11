@@ -22,6 +22,9 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
+/**
+ * Base class for all Cucumber specs; runs the spec as a JUnit test.
+ */
 @RunWith(Cucumber.class)
 @Cucumber.Options(
         format = {
@@ -31,7 +34,7 @@ import org.junit.runner.RunWith;
         },
         strict = true,
         tags = { "~@backlog" })
-public abstract class AbstractEstatioCukeSpecs {
+public abstract class AbstractCukeSpecs {
 
     @BeforeClass
     public static void initClass() {

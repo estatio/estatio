@@ -16,17 +16,14 @@
  */
 package org.estatio.integtest;
 
-import java.util.List;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 
 import org.estatio.integtest.specs.EstatioApp;
 import org.estatio.integtest.specs.EstatioScenario;
 
-import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 
-
-public class AbstractEstatioCukeStepDefs {
+public abstract class AbstractEstatioCukeStepDefs {
 
     protected final EstatioScenario scenario;
     /**
@@ -78,6 +75,5 @@ public class AbstractEstatioCukeStepDefs {
     public void endTran(cucumber.api.Scenario sc) {
         app.endTran(!sc.isFailed());
     }
-
 
 }
