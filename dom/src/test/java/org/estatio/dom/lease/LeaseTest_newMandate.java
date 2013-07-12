@@ -139,7 +139,7 @@ public class LeaseTest_newMandate {
         tenantAgreementRole.injectClockService(mockClockService);
 
         bankMandate = new BankMandate();
-        bankMandate.injectAgreementRoles(mockAgreementRoles);
+        bankMandate.setContainer(mockContainer);
         
         bankAccount = new BankAccount();
         bankAccount.setReference("REF1");
@@ -248,8 +248,10 @@ public class LeaseTest_newMandate {
                 
                 oneOf(mockContainer).persist(bankMandate);
 
-                oneOf(mockAgreementRoles).newAgreementRole(bankMandate, tenant, debtorAgreementRoleType, startDate, endDate);
+                oneOf(mockContainer).newTransientInstance(AgreementRole.class);
                 will(returnValue(newBankMandateAgreementRole));
+                
+                oneOf(mockContainer).persistIfNotAlready(newBankMandateAgreementRole);
             }
         });
 

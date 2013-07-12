@@ -1,5 +1,6 @@
 Feature: Add and remove AgreementRoles for an Agreement
 
+  #@unit
   @integration
   Scenario: Add role when none, with new role having no start or end dates
     Given there is a lease "OXF-PRET-004"

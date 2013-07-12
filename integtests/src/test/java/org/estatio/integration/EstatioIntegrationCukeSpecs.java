@@ -18,8 +18,6 @@ package org.estatio.integration;
 
 import cucumber.api.junit.Cucumber;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
@@ -41,10 +39,5 @@ import org.junit.runner.RunWith;
         tags = { "~@backlog" })
 public abstract class EstatioIntegrationCukeSpecs {
 
-    @BeforeClass
-    public static void initClass() {
-        PropertyConfigurator.configure("logging.properties");
-        EstatioSystemInitializer.initIsft();
-    }
 
 }

@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithTitleComparable;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Queries({
@@ -42,7 +43,7 @@ import org.estatio.dom.EstatioRefDataObject;
 })
 @Immutable
 @Bounded
-public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> {
+public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> implements WithTitleComparable<AgreementRoleType> {
 
     public AgreementRoleType() {
         super("title");

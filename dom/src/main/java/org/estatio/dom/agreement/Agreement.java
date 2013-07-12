@@ -430,10 +430,15 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             final @Named("endDate") @Optional LocalDate endDate) {
         AgreementRole agreementRole;// = findRole(party, type, startDate);
         //if (agreementRole == null) {
-            agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
-        //}
+        //agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
+        agreementRole = newTransientInstance(AgreementRole.class);
+        persistIfNotAlready(agreementRole);
+        agreementRole.setStartDate(startDate);
         agreementRole.setEndDate(endDate);
+        agreementRole.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
         agreementRole.setStatus(Status.UNLOCKED);
+        agreementRole.modifyParty(party);
+        agreementRole.modifyAgreement(this);
         return agreementRole;
     }
 
