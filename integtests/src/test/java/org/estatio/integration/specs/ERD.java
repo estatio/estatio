@@ -14,11 +14,11 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.specs;
+package org.estatio.integration.specs;
 
 import cucumber.api.Transformer;
 
-import org.apache.isis.core.unittestsupport.scenarios.ScenarioExecution;
+import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;

@@ -1,5 +1,7 @@
 /*
+ *
  *  Copyright 2012-2013 Eurocommercial Properties NV
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,35 +18,27 @@
  */
 package org.estatio.integration;
 
-import cucumber.api.junit.Cucumber;
-
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
+
+import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
+import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
 
 /**
- * Base class for all Cucumber specs run at integration-scope; 
- * runs the spec as a JUnit test.
+ * Base class for integration tests.
  * 
  * <p>
- * The similarity between this class' responsibilities and {@link EstatioIntegrationTest} is
+ * The similarity between this class' responsibilities and {@link EstatioIntegrationCukeSpecs} is
  * no accident. 
  */
-@RunWith(Cucumber.class)
-@Cucumber.Options(
-        format = {
-                "html:target/cucumber-html-report"
-                // addHook causes an exception to be thrown if this reporter is registered...
-                // ,"json-pretty:target/cucumber-json-report.json"
-        },
-        strict = true,
-        tags = { "~@backlog" })
-public abstract class EstatioIntegrationCukeSpecs {
+public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
 
     @BeforeClass
     public static void initClass() {
         PropertyConfigurator.configure("logging.properties");
         EstatioSystemInitializer.initIsft();
+        scenarioExecution = new ScenarioExecutionForIntegration();
     }
 
 }
+

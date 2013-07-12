@@ -19,6 +19,7 @@
 package org.estatio.dom.agreement;
 
 import org.estatio.dom.Status;
+import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
 
 public class AgreementForTesting extends Agreement<Status> {

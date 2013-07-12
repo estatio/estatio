@@ -24,17 +24,18 @@ import org.junit.Test;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integration.EstatioIntegrationTest;
 
-public class PersonIntegrationTest extends AbstractEstatioIntegrationTest {
+public class PersonIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        world.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void cannotModifyName() throws Exception {
-        Person party = wrap((Person)world.service(Parties.class).findParties("Doe, Jo*").get(0));
+        Person party = wrap((Person)scenarioExecution.service(Parties.class).findParties("Doe, Jo*").get(0));
         
         expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");
         party.setName("Cannot change name directly");

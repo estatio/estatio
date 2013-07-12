@@ -17,14 +17,10 @@
 package org.estatio.integration.specs.agreement;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
-import cucumber.api.DataTable;
 import cucumber.api.Transform;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -35,123 +31,96 @@ import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionIntegrationScopeAbstract;
-import org.apache.isis.core.integtestsupport.scenarios.specs.CukeStepDefsIntegrationScopeAbstract;
-import org.apache.isis.core.unittestsupport.scenarios.specs.V;
+import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
+import org.apache.isis.core.specsupport.scenarios.ScenarioExecutionScope;
+import org.apache.isis.core.specsupport.specs.CukeStepDefsAbstract;
+import org.apache.isis.core.specsupport.specs.V;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.party.Organisation;
-import org.estatio.dom.party.Organisations;
+import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.specs.ERD;
-import org.estatio.dom.specs.ETO;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioIntegrationScenarioExecution;
+import org.estatio.integration.specs.ERD;
+import org.estatio.integration.specs.ETO;
 
-public class AgreementStepDefs extends CukeStepDefsIntegrationScopeAbstract {
+public class AgreementStepDefs extends CukeStepDefsAbstract {
 
-    public AgreementStepDefs(EstatioIntegrationScenarioExecution scenarioExecution) {
-        super(scenarioExecution);
-    }
-
-    @Given(".*usual transactional data$")
+    @Before(value={"@integration"}, order=20000)
     public void given_transactional_data() throws Throwable {
-        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
-
 
     @Given(".*there is.* lease \"([^\"]*)\"$")
     public void given_lease(String leaseReference) throws Throwable {
         
-        final Lease lease = scenarioExecution.service(Leases.class).findLeaseByReference(leaseReference);
-        scenarioExecution.put("lease", leaseReference, lease);
+        final Lease lease = service(Leases.class).findLeaseByReference(leaseReference);
+        put("lease", leaseReference, lease);
     }
 
     
-    @Given(".*there is.* organisation \"([^\"]*)\"$")
-    public void given_organisation(String organisationReference) throws Throwable {
-        final Organisation organisation = scenarioExecution.service(Organisations.class).findOrganisation(organisationReference);
-        scenarioExecution.put("organisation", organisationReference, organisation);
+    @Given(".*there is.* party \"([^\"]*)\"$")
+    public void given_party(String partyReference) throws Throwable {
+        final Party party = service(Parties.class).findPartyByReferenceOrName(partyReference);
+        put("party", partyReference, party);
     }
 
     @Given(".*lease has no.* roles$")
     public void assuming_lease_has_no_roles() throws Throwable {
-        Lease lease = scenarioExecution.get("lease", null, Lease.class);
+        Lease lease = get("lease", null, Lease.class);
         assertThat(lease.getRoles().size(), is(0));
     }
 
     // //////////////////////////////////////
 
     
-    @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* party \"([^\"]*)\"$")
+    @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* this party$")
     public void add_agreement_role_with_type_with_start_date_and_end_date(
             @Transform(ERD.AgreementRoleType.class) AgreementRoleType type, 
             @Transform(V.LyyyyMMdd.class) LocalDate startDate, 
-            @Transform(V.LyyyyMMdd.class) LocalDate endDate,
-            @Transform(ETO.Organisation.class) Organisation organisation) throws Throwable {
+            @Transform(V.LyyyyMMdd.class) LocalDate endDate) throws Throwable {
         
-        Lease lease = scenarioExecution.get("lease", null, Lease.class);
-        lease.addRole(organisation, type, startDate, endDate);
+        Lease lease = get("lease", null, Lease.class);
+        Party party = get("party", null, Party.class);
+        lease.addRole(party, type, startDate, endDate);
     }
     
     // //////////////////////////////////////
 
     @Then("^.*lease's roles collection should contain:$")
     public void leases_roles_collection_should_contain(
-            final List<AgreementRoleDesc> expected) throws Throwable {
-        final Lease lease = scenarioExecution.get("lease", null, Lease.class);
-        final List<AgreementRole> actual = Lists.newArrayList(lease.getRoles());
-        
-
-        assertThat(actual.size(), is(expected.size()));
-
-        for (int i=0; i<actual.size(); i++) {
-            
-            // TODO: do this reflectively as a utility, using expectedTableColumns...
-            final DataTable expectedTable = DataTable.create(expected);
-            final String[] expectedTableColumns = expectedTable.topCells().toArray(new String[]{});
-            
-            assertThat(actual.get(i).getType(), is(expected.get(i).type));
-            assertThat(actual.get(i).getAgreement(), is((Agreement)expected.get(i).agreement));
-            assertThat(actual.get(i).getParty(), is((Party)expected.get(i).party));
-            if(!"null".equals(expected.get(i).startDate)) {
-                assertThat(actual.get(i).getStartDate(), is(expected.get(i).startDate));
-            } else {
-                assertThat(actual.get(i).getStartDate(), is(nullValue()));
-            }
-            if(!"null".equals(expected.get(i).endDate)) {
-                assertThat(actual.get(i).getEndDate(), is(expected.get(i).endDate));
-            } else {
-                assertThat(actual.get(i).getEndDate(), is(nullValue()));
-            }
-        }
+            final List<AgreementRoleDesc> listOfExpecteds) throws Throwable {
+        final Lease lease = get("lease", null, Lease.class);
+        assertTableEquals(listOfExpecteds, lease.getRoles());
     }
 
-    
     public static class AgreementRoleDesc {
         @XStreamConverter(ERD.AgreementRoleType.class) private AgreementRoleType type;
         @XStreamConverter(V.LyyyyMMdd.class) private LocalDate startDate;
         @XStreamConverter(V.LyyyyMMdd.class) private LocalDate endDate;
         @XStreamConverter(ETO.Lease.class) private Lease agreement;
-        @XStreamConverter(ETO.Organisation.class) private Organisation party;
+        @XStreamConverter(ETO.Party.class) private Party party;
     }
 
     
     // //////////////////////////////////////
     // boilerplate
     
-    @Before
-    public void beginTran() {
-        super.beginTran();
+    @Before({"@unit"})
+    public void beforeScenarioUnitScope() {
+        before(ScenarioExecutionScope.UNIT);
+    }
+    
+
+    @Before({"@integration"})
+    public void beforeScenarioIntegrationScope() {
+        before(new ScenarioExecutionScope(ScenarioExecutionForIntegration.class));
     }
 
     @After
-    public void endTran(cucumber.api.Scenario sc) {
-        super.endTran(sc);
+    public void afterScenario(cucumber.api.Scenario sc) {
+        after(sc);
     }
 
 }

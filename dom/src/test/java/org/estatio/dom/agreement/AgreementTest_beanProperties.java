@@ -24,6 +24,8 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementType;
 
 public class AgreementTest_beanProperties extends AbstractBeanPropertiesTest {
 

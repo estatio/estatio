@@ -23,6 +23,9 @@ import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

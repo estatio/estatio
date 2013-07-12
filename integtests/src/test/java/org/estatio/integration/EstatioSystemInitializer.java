@@ -74,21 +74,19 @@ import org.estatio.services.settings.EstatioSettingsServiceJdo;
  * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on the current thread,
  * initialized with Estatio's domain services and with {@link EstatioRefDataObjectsFixture reference data fixture}. 
  */
-public class EstatioSystemOnThread {
+public class EstatioSystemInitializer {
     
-    private EstatioSystemOnThread(){}
+    private EstatioSystemInitializer(){}
 
-    public static IsisSystemForTest getIsft() {
-        return ISFT.get();
+    public static IsisSystemForTest initIsft() {
+        IsisSystemForTest isft = IsisSystemForTest.getElseNull();
+        if(isft == null) {
+            isft = new EstatioIntegTestBuilder().build().setUpSystem();
+            IsisSystemForTest.set(isft);
+        }
+        return isft;
     }
 
-    private static ThreadLocal<IsisSystemForTest> ISFT = new ThreadLocal<IsisSystemForTest>() {
-        @Override
-        protected IsisSystemForTest initialValue() {
-            return new EstatioIntegTestBuilder().build().setUpSystem();
-        }
-    };
-    
     private static class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
         private EstatioIntegTestBuilder() {

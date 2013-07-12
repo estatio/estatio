@@ -1,15 +1,14 @@
 Feature: Add and remove AgreementRoles for an Agreement
 
+  @integration
   Scenario: Add role when none, with new role having no start or end dates
-    Given the usual transactional data
-    And   there is a lease "OXF-PRET-004"
+    Given there is a lease "OXF-PRET-004"
     And   the lease has no existing roles
-    And   there is an organisation "PRET" 
-    When  I add a new agreement role of type "Landlord", start date "2013-4-1", end date "null", party "PRET"
+    And   there is a party "PRET" 
+    When  I add a new agreement role of type "Landlord", start date "2013-4-1", end date "null", for this party 
     Then  the lease's roles collection should contain:
           | type     | start date | end date | party  | agreement    |
           | Landlord | 2013-4-1   | null     | PRET   | OXF-PRET-004 | 
-          # end date omitted because haven't figured out how to specify 'null' yet.
 
 
 #  Scenario: Add role when none, with new role have a start date

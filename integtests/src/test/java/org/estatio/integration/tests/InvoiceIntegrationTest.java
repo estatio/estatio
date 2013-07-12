@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.hamcrest.core.Is;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -40,43 +39,44 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.integration.EstatioIntegrationTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class InvoiceIntegrationTest extends AbstractEstatioIntegrationTest {
+public class InvoiceIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        world.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void t1_chargeCanBeFound() throws Exception {
-        Charge charge = world.service(Charges.class).findChargeByReference("RENT");
+        Charge charge = scenarioExecution.service(Charges.class).findChargeByReference("RENT");
         Assert.assertEquals(charge.getReference(), "RENT");
     }
 
     @Test
     public void t2_invoiceCanBeFound() throws Exception {
-        Invoice invoice = world.service(Invoices.class).findMatchingInvoice(world.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY), world.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, world.service(Leases.class).findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE), InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
+        Invoice invoice = scenarioExecution.service(Invoices.class).findMatchingInvoice(scenarioExecution.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY), scenarioExecution.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, scenarioExecution.service(Leases.class).findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE), InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
         Assert.assertNotNull(invoice);
     }
 
     @Test
     public void t3_invoiceItemCanBeFound() throws Exception {
-        List<InvoiceItemForLease> invoiceItems = world.service(InvoiceItemsForLease.class).findInvoiceItemsByLease(InvoiceAndInvoiceItemFixture.LEASE, InvoiceAndInvoiceItemFixture.START_DATE, InvoiceAndInvoiceItemFixture.START_DATE);
+        List<InvoiceItemForLease> invoiceItems = scenarioExecution.service(InvoiceItemsForLease.class).findInvoiceItemsByLease(InvoiceAndInvoiceItemFixture.LEASE, InvoiceAndInvoiceItemFixture.START_DATE, InvoiceAndInvoiceItemFixture.START_DATE);
         Assert.assertThat(invoiceItems.size(), Is.is(2));
     }
 
     @Test
     public void t4_invoiceCanBeRemoved() throws Exception {
-        Invoice invoice = world.service(Invoices.class).findMatchingInvoices(world.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY), world.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, world.service(Leases.class).findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE), InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE).get(0);
+        Invoice invoice = scenarioExecution.service(Invoices.class).findMatchingInvoices(scenarioExecution.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY), scenarioExecution.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, scenarioExecution.service(Leases.class).findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE), InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE).get(0);
         invoice.remove();
-        Assert.assertThat(world.service(Invoices.class).findMatchingInvoices(world.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY), world.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, world.service(Leases.class).findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE), InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE).size(), Is.is(0));
+        Assert.assertThat(scenarioExecution.service(Invoices.class).findMatchingInvoices(scenarioExecution.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY), scenarioExecution.service(Parties.class).findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY), PaymentMethod.DIRECT_DEBIT, scenarioExecution.service(Leases.class).findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE), InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE).size(), Is.is(0));
     }
     
     @Test
     public void t5_redundant_was_added_for_testing_can_remove_chargeCanBeFound() throws Exception {
-        Charge charge = world.service(Charges.class).findChargeByReference("RENT");
+        Charge charge = scenarioExecution.service(Charges.class).findChargeByReference("RENT");
         Assert.assertEquals(charge.getReference(), "RENT");
     }
 

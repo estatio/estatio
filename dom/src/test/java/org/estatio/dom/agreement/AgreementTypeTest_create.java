@@ -19,7 +19,6 @@
 package org.estatio.dom.agreement;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -43,6 +42,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementType;
 
 public class AgreementTypeTest_create {
 

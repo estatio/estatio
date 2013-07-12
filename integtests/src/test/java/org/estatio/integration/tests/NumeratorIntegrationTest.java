@@ -31,29 +31,30 @@ import org.junit.Test;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
+import org.estatio.integration.EstatioIntegrationTest;
 
 @FixMethodOrder()
-public class NumeratorIntegrationTest extends AbstractEstatioIntegrationTest {
+public class NumeratorIntegrationTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        world.service(Numerators.class).establishNumerator(NumeratorType.INVOICE_NUMBER);
+        scenarioExecution.service(Numerators.class).establishNumerator(NumeratorType.INVOICE_NUMBER);
     }
 
     @Test
     public void t01_numeratorCanBeFound() throws Exception {
-        Numerator numerator = world.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
+        Numerator numerator = scenarioExecution.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertNotNull(numerator);
     }
 
     @Test
     public void t02_canFindUsingNaiveImpl() throws Exception {
-        assertThat(world.service(Numerators.class).allNumerators().size(), is(1));
+        assertThat(scenarioExecution.service(Numerators.class).allNumerators().size(), is(1));
     }
 
     @Test
     public void t03_numberOfNumeratorsIsOne() throws Exception {
-        Numerator in = world.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
+        Numerator in = scenarioExecution.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
         assertThat(in.increment(), is(BigInteger.ONE));
         assertThat(in.getLastIncrement(), is(BigInteger.ONE));

@@ -23,6 +23,8 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import org.estatio.dom.agreement.AgreementRoles;
+
 public class AgreementRolesTest_getId_and_iconName {
 
     @Test

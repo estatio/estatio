@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.appsettings;
+package org.estatio.services.appsettings;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;

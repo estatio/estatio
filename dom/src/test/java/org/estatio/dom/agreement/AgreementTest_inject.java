@@ -32,6 +32,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -49,7 +54,7 @@ public class AgreementTest_inject {
     @Mock
     private AgreementRoles mockAgreementRoles;
     
-    private Agreement agreement;
+    private Agreement<?> agreement;
 
     @Before
     public void setup() {

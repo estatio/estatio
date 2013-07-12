@@ -19,8 +19,6 @@
 package org.estatio.dom.agreement;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
@@ -32,6 +30,10 @@ import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.Agreements;
 
 public class AgreementsTest_newAgreement {
 

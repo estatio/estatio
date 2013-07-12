@@ -24,6 +24,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.dom.agreement.Agreement;
+
 public class AgreementTest_getEffectiveInterval {
 
     private Agreement agreement;

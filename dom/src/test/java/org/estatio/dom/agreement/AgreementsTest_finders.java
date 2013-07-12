@@ -31,6 +31,10 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;

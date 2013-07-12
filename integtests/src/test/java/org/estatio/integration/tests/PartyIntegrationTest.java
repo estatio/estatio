@@ -26,44 +26,44 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integration.EstatioIntegrationTest;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
+public class PartyIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        world.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void partyCanBeFound() throws Exception {
-        Assert.assertNotNull(world.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD"));
+        Assert.assertNotNull(scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD"));
     }
 
     @Test
     public void partyCanNotBeFound() throws Exception {
-        Assert.assertNull(world.service(Parties.class).findPartyByReferenceOrName("HELLO"));
+        Assert.assertNull(scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLO"));
     }
 
     @Test
     public void partyHasFourCommunicationChannels() throws Exception {
-        Party party = world.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        Party party = scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
         Assert.assertThat(party.getCommunicationChannels().size(), is(4));
     }
 
     @Test
     public void partyHasOneFinancialAccount() throws Exception {
-        final Party party = world.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
-        List<FinancialAccount> allAccounts = world.service(FinancialAccounts.class).allAccounts();
+        final Party party = scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        List<FinancialAccount> allAccounts = scenarioExecution.service(FinancialAccounts.class).allAccounts();
         List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
             public boolean apply(FinancialAccount fa) {
                 return fa.getOwner() == party;
@@ -74,22 +74,22 @@ public class PartyIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void partyCanBeFoundOnPartialReference() {
-        Assert.assertThat(world.service(Parties.class).findParties("*LLOWOR*").size(), is(1));
+        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("*LLOWOR*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundOnPartialName1() {
-        Assert.assertThat(world.service(Parties.class).findParties("*ello Wor*").size(), is(1));
+        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("*ello Wor*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundOnPartialName2() {
-        Assert.assertThat(world.service(Parties.class).findParties("Doe, Jo*").size(), is(1));
+        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("Doe, Jo*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundCaseInsensitive() {
-        Assert.assertThat(world.service(Parties.class).findParties("*OE, jO*").size(), is(1));
+        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("*OE, jO*").size(), is(1));
     }
 
 }

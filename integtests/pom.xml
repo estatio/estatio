@@ -87,10 +87,21 @@ language governing permissions and limitations under the License.
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.isis.core</groupId>
+            <artifactId>isis-core-specsupport</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-integtestsupport</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.objectstore</groupId>
+            <artifactId>isis-objectstore-jdo-datanucleus</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -109,11 +120,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-java</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-picocontainer</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -25,6 +25,9 @@ import org.junit.Before;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

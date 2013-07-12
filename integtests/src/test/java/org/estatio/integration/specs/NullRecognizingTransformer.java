@@ -14,20 +14,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration;
+package org.estatio.integration.specs;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionIntegrationScopeAbstract;
-import org.apache.isis.core.unittestsupport.scenarios.DomainServiceProvider;
-
+import cucumber.api.Transformer;
 
 /**
- * Simply specifies the {@link DomainServiceProvider} (an {@link IsisSystemForTest} wired
- * up with Estatio's domain service). 
+ * Looks up from session only.
  */
-public class EstatioIntegrationScenarioExecution extends ScenarioExecutionIntegrationScopeAbstract {
+public abstract class NullRecognizingTransformer<T> extends Transformer<T> {
 
-    public EstatioIntegrationScenarioExecution() {
-        super(EstatioSystemOnThread.getIsft());
+    @Override
+    public T transform(String id) {
+        if(id == null || "null".equals(id)) { return null; }
+        return transformNonNull(id);
     }
+
+    protected abstract T transformNonNull(String id);
 }
