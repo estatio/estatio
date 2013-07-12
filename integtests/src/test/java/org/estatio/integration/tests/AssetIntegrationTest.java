@@ -47,27 +47,27 @@ public class AssetIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void fixedAssetFindAssetsByReferenceOrName_ok() throws Exception {
-        Assert.assertThat(scenarioExecution.service(FixedAssets.class).findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
+        Assert.assertThat(service(FixedAssets.class).findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
     }
 
     @Test
     public void fixedAssetAutoComplete_ok() throws Exception {
-        Assert.assertThat(scenarioExecution.service(FixedAssets.class).autoComplete("mall").size(), Is.is(1));
+        Assert.assertThat(service(FixedAssets.class).autoComplete("mall").size(), Is.is(1));
     }
 
     @Test
     public void propertyCanBeFound() throws Exception {
-        assertNotNull(scenarioExecution.service(Properties.class).findPropertiesByReference("OXF"));
+        assertNotNull(service(Properties.class).findPropertiesByReference("OXF"));
     }
 
     @Test
     public void numberOfUnitsIs25() throws Exception {
-        List<Property> allProperties = scenarioExecution.service(Properties.class).allProperties();
+        List<Property> allProperties = service(Properties.class).allProperties();
         Property property = allProperties.get(0);
         Set<Unit> units = property.getUnits();
         assertThat(units.size(), is(25));
@@ -75,28 +75,28 @@ public class AssetIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void propertyCannotNotNull() throws Exception {
-        Assert.assertNotNull(scenarioExecution.service(Properties.class).findPropertyByReference("OXF"));
+        Assert.assertNotNull(service(Properties.class).findPropertyByReference("OXF"));
     }
 
     @Test
     public void propertyActorCanBeFound() throws Exception {
-        Party party = scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
-        Property property = scenarioExecution.service(Properties.class).findPropertyByReference("OXF");
-        FixedAssetRole propertyActor = scenarioExecution.service(FixedAssetRoles.class).findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
+        Party party = service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        Property property = service(Properties.class).findPropertyByReference("OXF");
+        FixedAssetRole propertyActor = service(FixedAssetRoles.class).findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
     @Test
     public void propertyActorWithoutStartDateCanBeFound() throws Exception {
-        Party party = scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
-        Property property = scenarioExecution.service(Properties.class).findPropertyByReference("OXF");
-        FixedAssetRole propertyActor = scenarioExecution.service(FixedAssetRoles.class).findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
+        Party party = service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        Property property = service(Properties.class).findPropertyByReference("OXF");
+        FixedAssetRole propertyActor = service(FixedAssetRoles.class).findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
     @Test
     public void unitCanBeFound() throws Exception {
-        Assert.assertEquals("OXF-001", ((Units<?>) scenarioExecution.service(Units.class)).findUnitByReference("OXF-001").getReference());
+        Assert.assertEquals("OXF-001", ((Units<?>) service(Units.class)).findUnitByReference("OXF-001").getReference());
     }
 
 }

@@ -30,12 +30,12 @@ public class PersonIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void cannotModifyName() throws Exception {
-        Person party = wrap((Person)scenarioExecution.service(Parties.class).findParties("Doe, Jo*").get(0));
+        Person party = wrap((Person)service(Parties.class).findParties("Doe, Jo*").get(0));
         
         expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");
         party.setName("Cannot change name directly");

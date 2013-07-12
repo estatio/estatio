@@ -41,29 +41,29 @@ public class PartyIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void partyCanBeFound() throws Exception {
-        Assert.assertNotNull(scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD"));
+        Assert.assertNotNull(service(Parties.class).findPartyByReferenceOrName("HELLOWORLD"));
     }
 
     @Test
     public void partyCanNotBeFound() throws Exception {
-        Assert.assertNull(scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLO"));
+        Assert.assertNull(service(Parties.class).findPartyByReferenceOrName("HELLO"));
     }
 
     @Test
     public void partyHasFourCommunicationChannels() throws Exception {
-        Party party = scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        Party party = service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
         Assert.assertThat(party.getCommunicationChannels().size(), is(4));
     }
 
     @Test
     public void partyHasOneFinancialAccount() throws Exception {
-        final Party party = scenarioExecution.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
-        List<FinancialAccount> allAccounts = scenarioExecution.service(FinancialAccounts.class).allAccounts();
+        final Party party = service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        List<FinancialAccount> allAccounts = service(FinancialAccounts.class).allAccounts();
         List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
             public boolean apply(FinancialAccount fa) {
                 return fa.getOwner() == party;
@@ -74,22 +74,22 @@ public class PartyIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void partyCanBeFoundOnPartialReference() {
-        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("*LLOWOR*").size(), is(1));
+        Assert.assertThat(service(Parties.class).findParties("*LLOWOR*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundOnPartialName1() {
-        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("*ello Wor*").size(), is(1));
+        Assert.assertThat(service(Parties.class).findParties("*ello Wor*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundOnPartialName2() {
-        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("Doe, Jo*").size(), is(1));
+        Assert.assertThat(service(Parties.class).findParties("Doe, Jo*").size(), is(1));
     }
 
     @Test
     public void partyCanBeFoundCaseInsensitive() {
-        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("*OE, jO*").size(), is(1));
+        Assert.assertThat(service(Parties.class).findParties("*OE, jO*").size(), is(1));
     }
 
 }

@@ -38,23 +38,23 @@ public class NumeratorIntegrationTest extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        scenarioExecution.service(Numerators.class).establishNumerator(NumeratorType.INVOICE_NUMBER);
+        service(Numerators.class).establishNumerator(NumeratorType.INVOICE_NUMBER);
     }
 
     @Test
     public void t01_numeratorCanBeFound() throws Exception {
-        Numerator numerator = scenarioExecution.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
+        Numerator numerator = service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertNotNull(numerator);
     }
 
     @Test
     public void t02_canFindUsingNaiveImpl() throws Exception {
-        assertThat(scenarioExecution.service(Numerators.class).allNumerators().size(), is(1));
+        assertThat(service(Numerators.class).allNumerators().size(), is(1));
     }
 
     @Test
     public void t03_numberOfNumeratorsIsOne() throws Exception {
-        Numerator in = scenarioExecution.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
+        Numerator in = service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
         assertThat(in.increment(), is(BigInteger.ONE));
         assertThat(in.getLastIncrement(), is(BigInteger.ONE));

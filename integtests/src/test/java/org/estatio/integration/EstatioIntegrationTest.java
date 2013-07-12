@@ -37,7 +37,9 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
     public static void initClass() {
         PropertyConfigurator.configure("logging.properties");
         EstatioSystemInitializer.initIsft();
-        scenarioExecution = new ScenarioExecutionForIntegration();
+        
+        // instantiating will install onto ThreadLocal
+        new ScenarioExecutionForIntegration();
     }
 
 }

@@ -56,79 +56,79 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void t00_refData() throws Exception {
-        scenarioExecution.service(Api.class).putCountry("NLD", "NL", "Netherlands");
-        scenarioExecution.service(Api.class).putState("NH", "NH", "NLD");
-        scenarioExecution.service(Api.class).putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
-        scenarioExecution.service(Api.class).putCharge("APICHARGE", "APICHARGE", "API CHARGE", "APITAX");
+        service(Api.class).putCountry("NLD", "NL", "Netherlands");
+        service(Api.class).putState("NH", "NH", "NLD");
+        service(Api.class).putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
+        service(Api.class).putCharge("APICHARGE", "APICHARGE", "API CHARGE", "APITAX");
     }
 
     @Test
     public void t01_putAsset() throws Exception {
-        scenarioExecution.service(Api.class).putProperty("APIPROP", "Apiland", "SHOPPING_CENTER", null, null, null, "HELLOWORLD");
-        scenarioExecution.service(Api.class).putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", null, null, null, null, null, null, null, null, null, null, null, null);
-        Assert.assertThat(scenarioExecution.service(Properties.class).findPropertiesByReference("APIPROP").size(), Is.is(1));
+        service(Api.class).putProperty("APIPROP", "Apiland", "SHOPPING_CENTER", null, null, null, "HELLOWORLD");
+        service(Api.class).putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", null, null, null, null, null, null, null, null, null, null, null, null);
+        Assert.assertThat(service(Properties.class).findPropertiesByReference("APIPROP").size(), Is.is(1));
     }
 
     @Test
     public void t02_putOrganisation() {
-        scenarioExecution.service(Api.class).putOrganisation("APITENANT", "API Tenant");
-        scenarioExecution.service(Api.class).putOrganisation("APILANDLORD", "API Landlord");
-        Assert.assertThat(scenarioExecution.service(Parties.class).findParties("API*").size(), Is.is(2));
+        service(Api.class).putOrganisation("APITENANT", "API Tenant");
+        service(Api.class).putOrganisation("APILANDLORD", "API Landlord");
+        Assert.assertThat(service(Parties.class).findParties("API*").size(), Is.is(2));
     }
 
     @Test
     public void t03_putPartyCommunicationChannels() {
-        scenarioExecution.service(Api.class).putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210");
-        Assert.assertNotNull(scenarioExecution.service(CommunicationChannels.class).findByReferenceAndType("APITENANT", CommunicationChannelType.POSTAL_ADDRESS));
-        Assert.assertNotNull(scenarioExecution.service(CommunicationChannels.class).findByReferenceAndType("APITENANT", CommunicationChannelType.FAX_NUMBER));
-        Assert.assertNotNull(scenarioExecution.service(CommunicationChannels.class).findByReferenceAndType("APITENANT", CommunicationChannelType.PHONE_NUMBER));
+        service(Api.class).putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210");
+        Assert.assertNotNull(service(CommunicationChannels.class).findByReferenceAndType("APITENANT", CommunicationChannelType.POSTAL_ADDRESS));
+        Assert.assertNotNull(service(CommunicationChannels.class).findByReferenceAndType("APITENANT", CommunicationChannelType.FAX_NUMBER));
+        Assert.assertNotNull(service(CommunicationChannels.class).findByReferenceAndType("APITENANT", CommunicationChannelType.PHONE_NUMBER));
     }
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        scenarioExecution.service(Api.class).putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", null, START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
-        Lease lease = scenarioExecution.service(Leases.class).findLeaseByReference("APILEASE");
+        service(Api.class).putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", null, START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
+        Lease lease = service(Leases.class).findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
     }
 
     @Test
     public void t05_putLeaseUnitWorks() throws Exception {
-        scenarioExecution.service(Api.class).putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "ABIBRAND", "APISECTOR", "APIACTIVITY");
-        Lease l = scenarioExecution.service(Leases.class).findLeaseByReference("APILEASE");
-        Unit u = ((Units<?>) scenarioExecution.service(Units.class)).findUnitByReference("APIUNIT");
-        Assert.assertNotNull(scenarioExecution.service(LeaseUnits.class).findByLeaseAndUnitAndStartDate(l, u, START_DATE));
-        Assert.assertNotNull(scenarioExecution.service(LeaseUnits.class).findByLeaseAndUnitAndStartDate(l, u, START_DATE));
+        service(Api.class).putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "ABIBRAND", "APISECTOR", "APIACTIVITY");
+        Lease l = service(Leases.class).findLeaseByReference("APILEASE");
+        Unit u = ((Units<?>) service(Units.class)).findUnitByReference("APIUNIT");
+        Assert.assertNotNull(service(LeaseUnits.class).findByLeaseAndUnitAndStartDate(l, u, START_DATE));
+        Assert.assertNotNull(service(LeaseUnits.class).findByLeaseAndUnitAndStartDate(l, u, START_DATE));
     }
 
     @Test
     public void t05b_putLeasePostalAddress() throws Exception {
-        final AgreementRoleCommunicationChannelType arcttInvoiceAddress = scenarioExecution.service(AgreementRoleCommunicationChannelTypes.class).findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
-        scenarioExecution.service(Api.class).putLeasePostalAddress("APITENANT", "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", arcttInvoiceAddress);
-        final Lease l = scenarioExecution.service(Leases.class).findLeaseByReference("APILEASE");
-        final AgreementRoleType artTenant = scenarioExecution.service(AgreementRoleTypes.class).findByTitle(LeaseConstants.ART_TENANT);
-        final AgreementRole ar = l.findRoleWithType(artTenant, scenarioExecution.service(ClockService.class).now());
+        final AgreementRoleCommunicationChannelType arcttInvoiceAddress = service(AgreementRoleCommunicationChannelTypes.class).findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
+        service(Api.class).putLeasePostalAddress("APITENANT", "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", arcttInvoiceAddress);
+        final Lease l = service(Leases.class).findLeaseByReference("APILEASE");
+        final AgreementRoleType artTenant = service(AgreementRoleTypes.class).findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRole ar = l.findRoleWithType(artTenant, service(ClockService.class).now());
         Assert.assertThat(ar.getCommunicationChannels().size(), Is.is(1));
     }
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        scenarioExecution.service(Api.class).putLeaseItem("APILEASE", "APITENANT", "APIUNIT", "RENT", BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGE", null, "QUARTERLY_IN_ADVANCE", "DIRECT_DEBIT");
-        Assert.assertThat(scenarioExecution.service(Leases.class).findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
+        service(Api.class).putLeaseItem("APILEASE", "APITENANT", "APIUNIT", "RENT", BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGE", null, "QUARTERLY_IN_ADVANCE", "DIRECT_DEBIT");
+        Assert.assertThat(service(Leases.class).findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 
     @Test
     public void t07_putLeaseTermWorks() throws Exception {
-        scenarioExecution.service(Api.class).putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", "YEARLY",
+        service(Api.class).putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", "YEARLY",
                 null, null, null, null, null, null, null, null, null);
-        scenarioExecution.service(Api.class).putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null,
+        service(Api.class).putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null,
                 "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
-        Lease lease = scenarioExecution.service(Leases.class).findLeaseByReference("APILEASE");
+        Lease lease = service(Leases.class).findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
     }
 

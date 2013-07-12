@@ -36,13 +36,13 @@ public class GeographyIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void countryIsNL() throws Exception {
-        assertThat(scenarioExecution.service(Countries.class).findCountryByReference("NLD").getReference(), is("NLD"));
+        assertThat(service(Countries.class).findCountryByReference("NLD").getReference(), is("NLD"));
     }
 
     @Test
     public void stateCanBeFound() throws Exception {
-        final Country country = scenarioExecution.service(Countries.class).findCountryByReference("NLD");
-        final List<State> statesInCountry = scenarioExecution.service(States.class).findStatesByCountry(country);
+        final Country country = service(Countries.class).findCountryByReference("NLD");
+        final List<State> statesInCountry = service(States.class).findStatesByCountry(country);
         assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
         for (State state : statesInCountry) {
             assertThat(state.getCountry(), is(country));
