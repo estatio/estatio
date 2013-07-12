@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest;
+package org.estatio.integration;
 
 import org.apache.log4j.Level;
 

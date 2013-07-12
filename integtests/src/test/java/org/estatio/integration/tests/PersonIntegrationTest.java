@@ -16,25 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.testing;
+package org.estatio.integration.tests;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integtest.AbstractEstatioIntegrationTest;
 
 public class PersonIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        app.install(new EstatioTransactionalObjectsFixture());
+        world.install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void cannotModifyName() throws Exception {
-        Person party = wrap((Person)app.parties.findParties("Doe, Jo*").get(0));
+        Person party = wrap((Person)world.service(Parties.class).findParties("Doe, Jo*").get(0));
         
         expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");
         party.setName("Cannot change name directly");

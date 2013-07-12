@@ -14,11 +14,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.specs;
+package org.estatio.dom.specs;
 
 import cucumber.api.Transformer;
 
+import org.apache.isis.core.unittestsupport.scenarios.ScenarioExecution;
+
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleTypes;
 
 
 /**
@@ -31,14 +35,14 @@ public class ERD  {
     public static class AgreementRoleCommunicationChannelType extends Transformer<org.estatio.dom.agreement.AgreementRoleCommunicationChannelType> {
         @Override
         public org.estatio.dom.agreement.AgreementRoleCommunicationChannelType transform(String id) {
-            return EstatioScenario.currentApp().agreementRoleCommunicationChannelTypes.findByTitle(id);
+            return ScenarioExecution.current().service(AgreementRoleCommunicationChannelTypes.class).findByTitle(id);
         }
     }
 
     public static class AgreementRoleType extends Transformer<org.estatio.dom.agreement.AgreementRoleType> {
         @Override
         public org.estatio.dom.agreement.AgreementRoleType transform(String id) {
-            return EstatioScenario.currentApp().agreementRoleTypes.findByTitle(id);
+            return ScenarioExecution.current().service(AgreementRoleTypes.class).findByTitle(id);
         }
     }
 

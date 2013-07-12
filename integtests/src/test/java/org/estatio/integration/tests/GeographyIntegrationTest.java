@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.testing;
+package org.estatio.integration.tests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -27,22 +27,23 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integtest.AbstractEstatioIntegrationTest;
 
 public class GeographyIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void countryIsNL() throws Exception {
-        assertThat(app.countries.findCountryByReference("NLD").getReference(), is("NLD"));
+        assertThat(world.service(Countries.class).findCountryByReference("NLD").getReference(), is("NLD"));
     }
 
     @Test
     public void stateCanBeFound() throws Exception {
-        final Country country = app.countries.findCountryByReference("NLD");
-        final List<State> statesInCountry = app.states.findStatesByCountry(country);
+        final Country country = world.service(Countries.class).findCountryByReference("NLD");
+        final List<State> statesInCountry = world.service(States.class).findStatesByCountry(country);
         assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
         for (State state : statesInCountry) {
             assertThat(state.getCountry(), is(country));

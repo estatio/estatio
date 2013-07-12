@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest;
+package org.estatio.integration;
 
 import cucumber.api.junit.Cucumber;
 
@@ -23,7 +23,8 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 /**
- * Base class for all Cucumber specs; runs the spec as a JUnit test.
+ * Base class for all Cucumber specs run at integration-scope; 
+ * runs the spec as a JUnit test.
  */
 @RunWith(Cucumber.class)
 @Cucumber.Options(
@@ -34,7 +35,7 @@ import org.junit.runner.RunWith;
         },
         strict = true,
         tags = { "~@backlog" })
-public abstract class AbstractCukeSpecs {
+public abstract class EstatioIntegrationCukeSpecs {
 
     @BeforeClass
     public static void initClass() {

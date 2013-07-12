@@ -14,17 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.specs;
-
-import org.estatio.dom.EstatioTransactionalObject;
+package org.estatio.dom.specs;
 
 import cucumber.api.Transformer;
+
+import org.apache.isis.core.unittestsupport.scenarios.ScenarioExecution;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Organisations;
 
 /**
  * A set of Estatio-specific converters for {@link EstatioTransactionalObject transactional object}s.
  * 
  * <p>
- * These converters look up from the {@link EstatioScenario scenario}, then fall back to looking up from
+ * These converters look up from the {@link ScenarioExecutionIntegrationScopeAbstract scenario}, then fall back to looking up from
  * the associated repository (if there is one for that type).
  */
 public class ETO  {
@@ -37,7 +41,7 @@ public class ETO  {
 
         @Override
         public org.estatio.dom.EstatioTransactionalObject<?,?> transform(String id) {
-            return EstatioScenario.current().get(null, id, org.estatio.dom.EstatioTransactionalObject.class);
+            return ScenarioExecution.current().get(null, id, org.estatio.dom.EstatioTransactionalObject.class);
         }
     }
 
@@ -47,7 +51,7 @@ public class ETO  {
     public static class Agreement extends Transformer<org.estatio.dom.agreement.Agreement<?>> {
         @Override
         public org.estatio.dom.agreement.Agreement<?> transform(String id) {
-            return EstatioScenario.current().get("agreement", id, org.estatio.dom.agreement.Agreement.class);
+            return ScenarioExecution.current().get("agreement", id, org.estatio.dom.agreement.Agreement.class);
         }
     }
 
@@ -57,8 +61,8 @@ public class ETO  {
     public static class Lease extends Transformer<org.estatio.dom.lease.Lease> {
         @Override
         public org.estatio.dom.lease.Lease transform(String id) {
-            final org.estatio.dom.lease.Lease lease = EstatioScenario.current().get("lease", id, org.estatio.dom.lease.Lease.class);
-            return lease != null? lease: EstatioScenario.currentApp().leases.findLeaseByReference(id);
+            final org.estatio.dom.lease.Lease lease = ScenarioExecution.current().get("lease", id, org.estatio.dom.lease.Lease.class);
+            return lease != null? lease: ScenarioExecution.current().service(Leases.class).findLeaseByReference(id);
         }
     }
     
@@ -68,8 +72,8 @@ public class ETO  {
     public static class Organisation extends Transformer<org.estatio.dom.party.Organisation> {
         @Override
         public org.estatio.dom.party.Organisation transform(String id) {
-            final org.estatio.dom.party.Organisation organisation = EstatioScenario.current().get("organisation", id, org.estatio.dom.party.Organisation.class);
-            return organisation != null? organisation: EstatioScenario.currentApp().organisations.findOrganisation(id);
+            final org.estatio.dom.party.Organisation organisation = ScenarioExecution.current().get("organisation", id, org.estatio.dom.party.Organisation.class);
+            return organisation != null? organisation: ScenarioExecution.current().service(Organisations.class).findOrganisation(id);
         }
     }
 }

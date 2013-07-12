@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.testing;
+package org.estatio.integration.tests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -38,6 +38,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
@@ -46,24 +48,27 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.LeaseTerms;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integtest.AbstractEstatioIntegrationTest;
+import org.estatio.services.settings.EstatioSettingsService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        app.install(new EstatioTransactionalObjectsFixture());
+        world.install(new EstatioTransactionalObjectsFixture());
     }
 
     private Lease leaseTopModel;
 
     @Before
     public void setup() {
-        leaseTopModel = app.leases.findLeaseByReference("OXF-TOPMODEL-001");
+        leaseTopModel = world.service(Leases.class).findLeaseByReference("OXF-TOPMODEL-001");
     }
 
     @Test
@@ -73,8 +78,8 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t02_leaseRoleCanBeFound() throws Exception {
-        Party party = app.parties.findPartyByReferenceOrName("TOPMODEL");
-        AgreementRole role = app.agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(leaseTopModel, party, app.agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), null);
+        Party party = world.service(Parties.class).findPartyByReferenceOrName("TOPMODEL");
+        AgreementRole role = world.service(AgreementRoles.class).findByAgreementAndPartyAndTypeAndStartDate(leaseTopModel, party, world.service(AgreementRoleTypes.class).findByTitle(LeaseConstants.ART_TENANT), null);
         Assert.assertNotNull(role);
     }
 
@@ -85,26 +90,26 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t03_indexationFrequencyCannotBeNull() throws Exception {
-        List<LeaseTerm> allLeaseTerms = app.leaseTerms.allLeaseTerms();
+        List<LeaseTerm> allLeaseTerms = world.service(LeaseTerms.class).allLeaseTerms();
         LeaseTerm term = (LeaseTerm) allLeaseTerms.get(0);
         Assert.assertNotNull(term.getFrequency());
     }
 
     @Test
     public void t04_nextDateCannotBeNull() throws Exception {
-        List<LeaseTerm> allLeaseTerms = app.leaseTerms.allLeaseTerms();
+        List<LeaseTerm> allLeaseTerms = world.service(LeaseTerms.class).allLeaseTerms();
         LeaseTerm term = (LeaseTerm) allLeaseTerms.get(0);
         Assert.assertNotNull(term.getFrequency().nextDate(new LocalDate(2012, 1, 1)));
     }
 
     @Test
     public void t05_leaseCanBeFound() throws Exception {
-        Assert.assertEquals("OXF-TOPMODEL-001", app.leases.findLeaseByReference("OXF-TOPMODEL-001").getReference());
+        Assert.assertEquals("OXF-TOPMODEL-001", world.service(Leases.class).findLeaseByReference("OXF-TOPMODEL-001").getReference());
     }
 
     @Test
     public void t06_leasesCanBeFoundUsingWildcard() throws Exception {
-        assertThat(app.leases.findLeasesByReference("OXF*").size(), is(4));
+        assertThat(world.service(Leases.class).findLeasesByReference("OXF*").size(), is(4));
     }
 
     @Test
@@ -167,7 +172,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t12_leaseVerifiesWell() throws Exception {
-        Lease leaseMediax = app.leases.findLeaseByReference("OXF-MEDIAX-002");
+        Lease leaseMediax = world.service(Leases.class).findLeaseByReference("OXF-MEDIAX-002");
         leaseMediax.verify();
         LeaseItem item = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2008, 1, 1), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2008, 1, 1)));
@@ -176,7 +181,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t12b_thereAreTwoLeaseTems() throws Exception {
-        Lease leaseMediax = app.leases.findLeaseByReference("OXF-POISON-003");
+        Lease leaseMediax = world.service(Leases.class).findLeaseByReference("OXF-POISON-003");
         LeaseItem item = leaseMediax.findItem(LeaseItemType.RENT, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
         assertThat(item.getTerms().size(), is(4));
         assertNotNull(item.findTerm(new LocalDate(2011, 1, 1)));
@@ -185,7 +190,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t12b_leaseVerifiesWell() throws Exception {
-        Lease leasePoison = app.leases.findLeaseByReference("OXF-POISON-003");
+        Lease leasePoison = world.service(Leases.class).findLeaseByReference("OXF-POISON-003");
         leasePoison.verify();
         LeaseItem item = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
         assertNotNull(item.findTerm(new LocalDate(2011, 1, 1)));
@@ -213,7 +218,7 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void t14b_invoiceItemsForRentCreated() throws Exception {
-        app.settings.updateEpochDate(null);
+        world.service(EstatioSettingsService.class).updateEpochDate(null);
         LeaseItem item = leaseTopModel.findItem(LeaseItemType.RENT, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         // unapproved doesn't work
         LeaseTerm term = (LeaseTerm) item.getTerms().first();
@@ -231,19 +236,19 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(5050.00).setScale(2, RoundingMode.HALF_UP)));
         // invoice after effective date with mock
-        app.settings.updateEpochDate(new LocalDate(2011, 1, 1));
+        world.service(EstatioSettingsService.class).updateEpochDate(new LocalDate(2011, 1, 1));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
         // remove
         term.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        app.settings.updateEpochDate(null);
+        world.service(EstatioSettingsService.class).updateEpochDate(null);
         assertThat(term.getInvoiceItems().size(), is(2));
     }
 
 
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
-        app.settings.updateEpochDate(null);
+        world.service(EstatioSettingsService.class).updateEpochDate(null);
         LeaseItem item = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge term = (LeaseTermForServiceCharge) item.getTerms().first();
         term.lock();
@@ -257,10 +262,10 @@ public class LeaseIntegrationTest extends AbstractEstatioIntegrationTest {
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile with mock date
-        app.settings.updateEpochDate(new LocalDate(2011, 10, 1));
+        world.service(EstatioSettingsService.class).updateEpochDate(new LocalDate(2011, 10, 1));
         term.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
         assertThat(term.findUnapprovedInvoiceItemFor(term, new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
-        app.settings.updateEpochDate(null);
+        world.service(EstatioSettingsService.class).updateEpochDate(null);
     }
 
     @Ignore

@@ -14,12 +14,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.specs.agreement;
+package org.estatio.integration;
 
-import org.estatio.integtest.AbstractCukeSpecs;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionIntegrationScopeAbstract;
+import org.apache.isis.core.unittestsupport.scenarios.DomainServiceProvider;
 
 
-public class AgreementSpecs extends AbstractCukeSpecs {
+/**
+ * Simply specifies the {@link DomainServiceProvider} (an {@link IsisSystemForTest} wired
+ * up with Estatio's domain service). 
+ */
+public class EstatioIntegrationScenarioExecution extends ScenarioExecutionIntegrationScopeAbstract {
 
-
+    public EstatioIntegrationScenarioExecution() {
+        super(EstatioSystemOnThread.getIsft());
+    }
 }

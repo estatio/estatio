@@ -16,10 +16,9 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest;
+package org.estatio.integration.tests;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -31,11 +30,12 @@ import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.integtest.specs.EstatioApp;
+import org.estatio.integration.EstatioIntegrationScenarioExecution;
+import org.estatio.integration.EstatioSystemOnThread;
 
 public abstract class AbstractEstatioIntegrationTest {
 
-    protected static EstatioApp app;
+    protected static EstatioIntegrationScenarioExecution world;
     
     @BeforeClass
     public static void initClass() {
@@ -45,7 +45,7 @@ public abstract class AbstractEstatioIntegrationTest {
 
     @BeforeClass
     public static void init() {
-        app = new EstatioApp();
+        world = new EstatioIntegrationScenarioExecution();
     }
     
     // //////////////////////////////////////
@@ -88,16 +88,19 @@ public abstract class AbstractEstatioIntegrationTest {
 
     // //////////////////////////////////////
 
+    /**
+     * Convenience method
+     */
     protected <T> T wrap(T obj) {
-        return app.wrapperFactory.wrap(obj);
+        return world.getWrapperFactory().wrap(obj);
     }
 
+    /**
+     * Convenience method
+     */
     protected <T> T unwrap(T obj) {
-        return app.wrapperFactory.unwrap(obj);
+        return world.getWrapperFactory().unwrap(obj);
     }
-
-    // //////////////////////////////////////
-
 
 }
 

@@ -1,7 +1,5 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
- *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,29 +14,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest;
+package org.estatio.integration.specs.agreement;
 
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
+import org.estatio.integration.EstatioIntegrationCukeSpecs;
 
-public class TestTimer extends TestWatcher {
 
-    private long t0, t1;
-    private String prefix;
-    
-    public TestTimer(String prefix) {
-        this.prefix = prefix;
-    }
+public class AgreementSpecs extends EstatioIntegrationCukeSpecs {
 
-    @Override
-    protected void starting(Description description) {
-        t0 = System.currentTimeMillis();
-    }
-    
-    @Override
-    protected void finished(Description description) {
-        t1 = System.currentTimeMillis();
-        
-        System.out.println(prefix + ": " + description.getDisplayName() + "took: " + (t1-t0) + "millis");
-    }
+
 }

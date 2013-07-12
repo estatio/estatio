@@ -582,22 +582,6 @@ language governing permissions and limitations under the License.
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>info.cukes</groupId>
-                <artifactId>cucumber-java</artifactId>
-                <version>1.1.4-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>info.cukes</groupId>
-                <artifactId>cucumber-junit</artifactId>
-                <version>1.1.4-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>info.cukes</groupId>
-                <artifactId>cucumber-picocontainer</artifactId>
-                <version>1.1.4-SNAPSHOT</version>
-            </dependency>
-
             <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
             <dependency>
                 <groupId>org.jmock</groupId>

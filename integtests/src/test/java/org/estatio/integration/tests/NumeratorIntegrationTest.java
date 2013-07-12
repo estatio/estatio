@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.testing;
+package org.estatio.integration.tests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -30,30 +30,30 @@ import org.junit.Test;
 
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
-import org.estatio.integtest.AbstractEstatioIntegrationTest;
+import org.estatio.dom.numerator.Numerators;
 
 @FixMethodOrder()
 public class NumeratorIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        app.numerators.establishNumerator(NumeratorType.INVOICE_NUMBER);
+        world.service(Numerators.class).establishNumerator(NumeratorType.INVOICE_NUMBER);
     }
 
     @Test
     public void t01_numeratorCanBeFound() throws Exception {
-        Numerator numerator = app.numerators.findNumeratorByType(NumeratorType.INVOICE_NUMBER);
+        Numerator numerator = world.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertNotNull(numerator);
     }
 
     @Test
     public void t02_canFindUsingNaiveImpl() throws Exception {
-        assertThat(app.numerators.allNumerators().size(), is(1));
+        assertThat(world.service(Numerators.class).allNumerators().size(), is(1));
     }
 
     @Test
     public void t03_numberOfNumeratorsIsOne() throws Exception {
-        Numerator in = app.numerators.findNumeratorByType(NumeratorType.INVOICE_NUMBER);
+        Numerator in = world.service(Numerators.class).findNumeratorByType(NumeratorType.INVOICE_NUMBER);
         assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
         assertThat(in.increment(), is(BigInteger.ONE));
         assertThat(in.getLastIncrement(), is(BigInteger.ONE));

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.testing;
+package org.estatio.integration.tests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -33,37 +33,41 @@ import org.junit.Test;
 
 import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.FixedAssetRoles;
+import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.Units;
+import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integtest.AbstractEstatioIntegrationTest;
 
 public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        app.install(new EstatioTransactionalObjectsFixture());
+        world.install(new EstatioTransactionalObjectsFixture());
     }
 
     @Test
     public void fixedAssetFindAssetsByReferenceOrName_ok() throws Exception {
-        Assert.assertThat(app.fixedAssets.findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
+        Assert.assertThat(world.service(FixedAssets.class).findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
     }
 
     @Test
     public void fixedAssetAutoComplete_ok() throws Exception {
-        Assert.assertThat(app.fixedAssets.autoComplete("mall").size(), Is.is(1));
+        Assert.assertThat(world.service(FixedAssets.class).autoComplete("mall").size(), Is.is(1));
     }
 
     @Test
     public void propertyCanBeFound() throws Exception {
-        assertNotNull(app.properties.findPropertiesByReference("OXF"));
+        assertNotNull(world.service(Properties.class).findPropertiesByReference("OXF"));
     }
 
     @Test
     public void numberOfUnitsIs25() throws Exception {
-        List<Property> allProperties = app.properties.allProperties();
+        List<Property> allProperties = world.service(Properties.class).allProperties();
         Property property = allProperties.get(0);
         Set<Unit> units = property.getUnits();
         assertThat(units.size(), is(25));
@@ -71,28 +75,28 @@ public class AssetIntegrationTest extends AbstractEstatioIntegrationTest {
 
     @Test
     public void propertyCannotNotNull() throws Exception {
-        Assert.assertNotNull(app.properties.findPropertyByReference("OXF"));
+        Assert.assertNotNull(world.service(Properties.class).findPropertyByReference("OXF"));
     }
 
     @Test
     public void propertyActorCanBeFound() throws Exception {
-        Party party = app.parties.findPartyByReferenceOrName("HELLOWORLD");
-        Property property = app.properties.findPropertyByReference("OXF");
-        FixedAssetRole propertyActor = app.actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
+        Party party = world.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        Property property = world.service(Properties.class).findPropertyByReference("OXF");
+        FixedAssetRole propertyActor = world.service(FixedAssetRoles.class).findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
     @Test
     public void propertyActorWithoutStartDateCanBeFound() throws Exception {
-        Party party = app.parties.findPartyByReferenceOrName("HELLOWORLD");
-        Property property = app.properties.findPropertyByReference("OXF");
-        FixedAssetRole propertyActor = app.actors.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
+        Party party = world.service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
+        Property property = world.service(Properties.class).findPropertyByReference("OXF");
+        FixedAssetRole propertyActor = world.service(FixedAssetRoles.class).findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);
     }
 
     @Test
     public void unitCanBeFound() throws Exception {
-        Assert.assertEquals("OXF-001", app.units.findUnitByReference("OXF-001").getReference());
+        Assert.assertEquals("OXF-001", ((Units<?>) world.service(Units.class)).findUnitByReference("OXF-001").getReference());
     }
 
 }

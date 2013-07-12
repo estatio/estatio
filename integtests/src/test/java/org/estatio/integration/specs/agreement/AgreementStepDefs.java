@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest.specs.agreement;
+package org.estatio.integration.specs.agreement;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -35,48 +35,52 @@ import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionIntegrationScopeAbstract;
+import org.apache.isis.core.integtestsupport.scenarios.specs.CukeStepDefsIntegrationScopeAbstract;
+import org.apache.isis.core.unittestsupport.scenarios.specs.V;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.specs.ERD;
+import org.estatio.dom.specs.ETO;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integtest.AbstractEstatioCukeStepDefs;
-import org.estatio.integtest.specs.V;
-import org.estatio.integtest.specs.ERD;
-import org.estatio.integtest.specs.ETO;
-import org.estatio.integtest.specs.EstatioScenario;
+import org.estatio.integration.EstatioIntegrationScenarioExecution;
 
-public class AgreementStepDefs extends AbstractEstatioCukeStepDefs {
+public class AgreementStepDefs extends CukeStepDefsIntegrationScopeAbstract {
 
-    public AgreementStepDefs(EstatioScenario scenario) {
-        super(scenario);
+    public AgreementStepDefs(EstatioIntegrationScenarioExecution scenarioExecution) {
+        super(scenarioExecution);
     }
 
     @Given(".*usual transactional data$")
     public void given_transactional_data() throws Throwable {
-        app.install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution.install(new EstatioTransactionalObjectsFixture());
     }
 
 
     @Given(".*there is.* lease \"([^\"]*)\"$")
     public void given_lease(String leaseReference) throws Throwable {
         
-        final Lease lease = app.leases.findLeaseByReference(leaseReference);
-        scenario.put("lease", leaseReference, lease);
+        final Lease lease = scenarioExecution.service(Leases.class).findLeaseByReference(leaseReference);
+        scenarioExecution.put("lease", leaseReference, lease);
     }
 
     
     @Given(".*there is.* organisation \"([^\"]*)\"$")
     public void given_organisation(String organisationReference) throws Throwable {
-        final Organisation organisation = app.organisations.findOrganisation(organisationReference);
-        scenario.put("organisation", organisationReference, organisation);
+        final Organisation organisation = scenarioExecution.service(Organisations.class).findOrganisation(organisationReference);
+        scenarioExecution.put("organisation", organisationReference, organisation);
     }
 
     @Given(".*lease has no.* roles$")
     public void assuming_lease_has_no_roles() throws Throwable {
-        Lease lease = scenario.get("lease", null, Lease.class);
+        Lease lease = scenarioExecution.get("lease", null, Lease.class);
         assertThat(lease.getRoles().size(), is(0));
     }
 
@@ -90,7 +94,7 @@ public class AgreementStepDefs extends AbstractEstatioCukeStepDefs {
             @Transform(V.LyyyyMMdd.class) LocalDate endDate,
             @Transform(ETO.Organisation.class) Organisation organisation) throws Throwable {
         
-        Lease lease = scenario.get("lease", null, Lease.class);
+        Lease lease = scenarioExecution.get("lease", null, Lease.class);
         lease.addRole(organisation, type, startDate, endDate);
     }
     
@@ -99,7 +103,7 @@ public class AgreementStepDefs extends AbstractEstatioCukeStepDefs {
     @Then("^.*lease's roles collection should contain:$")
     public void leases_roles_collection_should_contain(
             final List<AgreementRoleDesc> expected) throws Throwable {
-        final Lease lease = scenario.get("lease", null, Lease.class);
+        final Lease lease = scenarioExecution.get("lease", null, Lease.class);
         final List<AgreementRole> actual = Lists.newArrayList(lease.getRoles());
         
 
