@@ -21,12 +21,8 @@ import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
 
 /**
- * Base class for all Cucumber specs run at integration-scope; 
- * runs the spec as a JUnit test.
- * 
- * <p>
- * The similarity between this class' responsibilities and {@link EstatioIntegrationTest} is
- * no accident. 
+ * Base class for all Cucumber specs; tags in the <tt>.feature</tt> determine
+ * whether the spec runs at unit-scope or integration-scope.
  */
 @RunWith(Cucumber.class)
 @Cucumber.Options(
@@ -37,7 +33,7 @@ import org.junit.runner.RunWith;
         },
         strict = true,
         tags = { "~@backlog" })
-public abstract class EstatioIntegrationCukeSpecs {
+public abstract class EstatioCukeSpecs {
 
 
 }

@@ -16,13 +16,13 @@
  */
 package org.estatio.integration.specs.agreement;
 
-import org.estatio.integration.EstatioIntegrationCukeSpecs;
+import org.estatio.integration.EstatioCukeSpecs;
 
 
 /**
  * Runs all scenarios in corresponding <tt>.feature</tt> file. 
  */
-public class AgreementSpecs extends EstatioIntegrationCukeSpecs {
+public class AgreementSpecs extends EstatioCukeSpecs {
 
 
 }

@@ -26,10 +26,6 @@ import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForInteg
 
 /**
  * Base class for integration tests.
- * 
- * <p>
- * The similarity between this class' responsibilities and {@link EstatioIntegrationCukeSpecs} is
- * no accident. 
  */
 public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
 
