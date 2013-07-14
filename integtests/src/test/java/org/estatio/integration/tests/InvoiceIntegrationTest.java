@@ -39,7 +39,6 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
-import org.estatio.integration.EstatioIntegrationTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoiceIntegrationTest extends EstatioIntegrationTest {

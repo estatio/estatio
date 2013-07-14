@@ -16,13 +16,24 @@
  */
 package org.estatio.integration.specs.agreement;
 
-import org.estatio.integration.EstatioCukeSpecs;
+import cucumber.api.junit.Cucumber;
+
+import org.junit.runner.RunWith;
 
 
 /**
  * Runs all scenarios in corresponding <tt>.feature</tt> file. 
  */
-public class AgreementSpecs extends EstatioCukeSpecs {
+@RunWith(Cucumber.class)
+@Cucumber.Options(
+        format = {
+                "html:target/cucumber-html-report"
+                // addHook causes an exception to be thrown if this reporter is registered...
+                // ,"json-pretty:target/cucumber-json-report.json"
+        },
+        strict = true,
+        tags = { "~@backlog" })
+public class AgreementSpecs {
 
 
 }

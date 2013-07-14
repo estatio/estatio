@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioIntegrationTest;
 
 public class PersonIntegrationTest extends EstatioIntegrationTest {
 

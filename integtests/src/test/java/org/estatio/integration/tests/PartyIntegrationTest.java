@@ -35,7 +35,6 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioIntegrationTest;
 
 public class PartyIntegrationTest extends EstatioIntegrationTest {
 

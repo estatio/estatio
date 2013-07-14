@@ -30,7 +30,6 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
-import org.estatio.integration.EstatioIntegrationTest;
 
 public class GeographyIntegrationTest extends EstatioIntegrationTest {
 

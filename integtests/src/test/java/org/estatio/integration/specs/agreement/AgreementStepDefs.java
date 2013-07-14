@@ -72,7 +72,7 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
 
     @Before(value={"@unit"}, order=20000)
     public void unitFixtures() throws Throwable {
-        final InMemoryDB inMemoryDB = new InMemoryDB(this.scenarioExecution());
+        final InMemoryDB inMemoryDB = new InMemoryDBForEstatio(this.scenarioExecution());
         checking(new Expectations() {
             {
                 allowing(service(Leases.class)).findLeaseByReference(with(any(String.class)));

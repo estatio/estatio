@@ -16,13 +16,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration;
+package org.estatio.integration.tests;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
 
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
+
+import org.estatio.integration.EstatioSystemInitializer;
 
 /**
  * Base class for integration tests.

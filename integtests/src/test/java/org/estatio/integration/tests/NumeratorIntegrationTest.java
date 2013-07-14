@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
-import org.estatio.integration.EstatioIntegrationTest;
 
 @FixMethodOrder()
 public class NumeratorIntegrationTest extends EstatioIntegrationTest {

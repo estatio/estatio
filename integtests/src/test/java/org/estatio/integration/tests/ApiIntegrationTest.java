@@ -46,7 +46,6 @@ import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

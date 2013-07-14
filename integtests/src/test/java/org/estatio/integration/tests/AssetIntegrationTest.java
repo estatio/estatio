@@ -41,7 +41,6 @@ import org.estatio.dom.asset.Units;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioIntegrationTest;
 
 public class AssetIntegrationTest extends EstatioIntegrationTest {
 

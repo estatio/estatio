@@ -54,7 +54,6 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioIntegrationTest;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
