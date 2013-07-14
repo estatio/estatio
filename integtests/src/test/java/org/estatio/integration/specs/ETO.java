@@ -40,7 +40,7 @@ public class ETO  {
 
         @Override
         public org.estatio.dom.EstatioTransactionalObject<?,?> transformNonNull(String id) {
-            return ScenarioExecution.current().get(null, id, org.estatio.dom.EstatioTransactionalObject.class);
+            return ScenarioExecution.current().getVar(null, id, org.estatio.dom.EstatioTransactionalObject.class);
         }
     }
 
@@ -50,7 +50,7 @@ public class ETO  {
     public static class Agreement extends NullRecognizingTransformer<org.estatio.dom.agreement.Agreement<?>> {
         @Override
         public org.estatio.dom.agreement.Agreement<?> transformNonNull(String id) {
-            return ScenarioExecution.current().get("agreement", id, org.estatio.dom.agreement.Agreement.class);
+            return ScenarioExecution.current().getVar("agreement", id, org.estatio.dom.agreement.Agreement.class);
         }
     }
 
@@ -60,7 +60,7 @@ public class ETO  {
     public static class Lease extends NullRecognizingTransformer<org.estatio.dom.lease.Lease> {
         @Override
         public org.estatio.dom.lease.Lease transformNonNull(String id) {
-            final org.estatio.dom.lease.Lease lease = ScenarioExecution.current().get("lease", id, org.estatio.dom.lease.Lease.class);
+            final org.estatio.dom.lease.Lease lease = ScenarioExecution.current().getVar("lease", id, org.estatio.dom.lease.Lease.class);
             return lease != null? lease: ScenarioExecution.current().service(Leases.class).findLeaseByReference(id);
         }
     }
@@ -71,7 +71,7 @@ public class ETO  {
     public static class Party extends NullRecognizingTransformer<org.estatio.dom.party.Party> {
         @Override
         public org.estatio.dom.party.Party transformNonNull(String id) {
-            final org.estatio.dom.party.Party party = ScenarioExecution.current().get("party", id, org.estatio.dom.party.Party.class);
+            final org.estatio.dom.party.Party party = ScenarioExecution.current().getVar("party", id, org.estatio.dom.party.Party.class);
             return party != null? party: ScenarioExecution.current().service(Parties.class).findPartyByReferenceOrName(id);
         }
     }
@@ -82,7 +82,7 @@ public class ETO  {
     public static class Organisation extends NullRecognizingTransformer<org.estatio.dom.party.Organisation> {
         @Override
         public org.estatio.dom.party.Organisation transformNonNull(String id) {
-            final org.estatio.dom.party.Organisation organisation = ScenarioExecution.current().get("organisation", id, org.estatio.dom.party.Organisation.class);
+            final org.estatio.dom.party.Organisation organisation = ScenarioExecution.current().getVar("organisation", id, org.estatio.dom.party.Organisation.class);
             return organisation != null? organisation: ScenarioExecution.current().service(Organisations.class).findOrganisation(id);
         }
     }

@@ -34,7 +34,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.core.specsupport.scenarios.InMemoryDB;
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecutionScope;
-import org.apache.isis.core.specsupport.scenarios.InMemoryDB.Strategy;
 import org.apache.isis.core.specsupport.specs.CukeStepDefsAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
@@ -65,6 +64,7 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
 
     @After
     public void afterScenario(cucumber.api.Scenario sc) {
+        assertMocksSatisfied();
         after(sc);
     }
 
@@ -76,13 +76,13 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
         checking(new Expectations() {
             {
                 allowing(service(Leases.class)).findLeaseByReference(with(any(String.class)));
-                will(inMemoryDB.findByXxx(Lease.class, Strategy.AUTOCREATE));
+                will(inMemoryDB.finds(Lease.class));
                 
                 allowing(service(Parties.class)).findPartyByReferenceOrName(with(any(String.class)));
-                will(inMemoryDB.findByXxx(PartyForTesting.class, Strategy.AUTOCREATE));
+                will(inMemoryDB.finds(PartyForTesting.class));
                 
                 allowing(service(AgreementRoleTypes.class)).findByTitle(with(any(String.class)));
-                will(inMemoryDB.findByXxx(AgreementRoleType.class, Strategy.AUTOCREATE));
+                will(inMemoryDB.finds(AgreementRoleType.class));
             }
         });
     }
@@ -97,19 +97,19 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
     @Given(".*there is.* lease \"([^\"]*)\"$")
     public void given_lease(final String leaseReference) throws Throwable {
         final Lease lease = service(Leases.class).findLeaseByReference(leaseReference);
-        put("lease", leaseReference, lease);
+        putVar("lease", leaseReference, lease);
     }
 
     
     @Given(".*there is.* party \"([^\"]*)\"$")
     public void given_party(final String partyReference) throws Throwable {
         final Party party = service(Parties.class).findPartyByReferenceOrName(partyReference);
-        put("party", partyReference, party);
+        putVar("party", partyReference, party);
     }
 
     @Given(".*lease has no.* roles$")
     public void assuming_lease_has_no_roles() throws Throwable {
-        Lease lease = get("lease", null, Lease.class);
+        Lease lease = getVar("lease", null, Lease.class);
         assertThat(lease.getRoles().size(), equalTo(0));
     }
 
@@ -122,8 +122,8 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
             @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
             @Transform(V.LyyyyMMdd.class) final LocalDate endDate) throws Throwable {
         
-        final Lease lease = get("lease", null, Lease.class);
-        final Party party = get("party", null, Party.class);
+        final Lease lease = getVar("lease", null, Lease.class);
+        final Party party = getVar("party", null, Party.class);
 
         lease.addRole(party, type, startDate, endDate);
     }
@@ -133,7 +133,7 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
     @Then("^.*lease's roles collection should contain:$")
     public void leases_roles_collection_should_contain(
             final List<AgreementRoleDesc> listOfExpecteds) throws Throwable {
-        final Lease lease = get("lease", null, Lease.class);
+        final Lease lease = getVar("lease", null, Lease.class);
         assertTableEquals(listOfExpecteds, lease.getRoles());
     }
 

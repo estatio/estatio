@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 
 
 /**
- * Runs all scenarios in corresponding <tt>.feature</tt> file. 
+ * Runs scenarios in all <tt>.feature</tt> files in this package. 
  */
 @RunWith(Cucumber.class)
 @Cucumber.Options(
@@ -32,8 +32,8 @@ import org.junit.runner.RunWith;
                 // ,"json-pretty:target/cucumber-json-report.json"
         },
         strict = true,
-        tags = { "~@backlog" })
-public class AgreementSpecs {
+        tags = { "~@backlog", "~@ignore" })
+public class AgreementManageRoleSpecs {
 
 
 }
