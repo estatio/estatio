@@ -23,7 +23,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceModifier;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
@@ -46,6 +48,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.filter.Filter;
+import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
@@ -91,7 +94,7 @@ import org.estatio.services.clock.ClockService;
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalMutable<AgreementRole> {
 
     public AgreementRole() {
-        super("agreement, party, startDate desc, type", Status.LOCKED, Status.UNLOCKED);
+        super("agreement, startDate desc nullsLast, party, type", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////
@@ -183,6 +186,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name = "TYPE_ID")
     private AgreementRoleType type;
 
     @Title(sequence = "1")

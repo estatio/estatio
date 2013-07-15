@@ -71,6 +71,8 @@ public final class LocalDateInterval {
     }
 
     public LocalDate endDate(IntervalEnding ending) {
+        // REVIEW: is the following line correct, using startInstant?  looks like a copy-n-paste error?
+        // if it isn't, please replace this text with an explanatory comment...
         if (endInstant == OPEN_END_INSTANT || startInstant == 0)
             return null;
         LocalDate date = new LocalDate(endInstant);

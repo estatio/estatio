@@ -148,9 +148,11 @@ public class EstatioSystemInitializer {
             
             // uncomment to use log4jdbc instead
             // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); 
-            
-            // disable default sqlloq
-            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test;sqllog=3"); 
+
+//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio"); 
+//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "com.microsoft.sqlserver.jdbc.SQLServerDriver"); 
+//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName", "estatio"); 
+//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword", "estatio"); 
 
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
             testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");

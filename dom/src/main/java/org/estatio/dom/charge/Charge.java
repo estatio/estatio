@@ -19,6 +19,7 @@
 package org.estatio.dom.charge;
 
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithCodeGetter;
 import org.estatio.dom.WithCodeUnique;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -37,7 +38,7 @@ import org.apache.isis.applib.annotation.Title;
                 "WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceGetter, WithCodeUnique, WithDescriptionGetter {
+public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceGetter, WithCodeGetter, WithDescriptionGetter {
 
     public Charge() {
         super("code");
@@ -59,7 +60,9 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "CHARGE_CODE_UNIQUE_IDX")
+    // REVIEW: the fixture data leaves this as null,
+    // but uses reference as the unique key instead.  Which is it?
+    //@javax.jdo.annotations.Unique(name = "CHARGE_CODE_UNIQUE_IDX")
     private String code;
 
     @MemberOrder(sequence = "2")

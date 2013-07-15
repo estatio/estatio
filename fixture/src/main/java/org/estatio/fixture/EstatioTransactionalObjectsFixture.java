@@ -63,33 +63,33 @@ public class EstatioTransactionalObjectsFixture extends AbstractFixture {
     }
 
     void truncateTables(IsisJdoSupport isisJdoSupport) {
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE INVOICEITEM");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE INVOICE");
+        isisJdoSupport.executeUpdate("DELETE FROM INVOICEITEM");
+        isisJdoSupport.executeUpdate("DELETE FROM INVOICE");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE LEASETERM");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE LEASEITEM");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE LEASEUNIT");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE TAG");
+        isisJdoSupport.executeUpdate("DELETE FROM LEASETERM");
+        isisJdoSupport.executeUpdate("DELETE FROM LEASEITEM");
+        isisJdoSupport.executeUpdate("DELETE FROM LEASEUNIT");
+        isisJdoSupport.executeUpdate("DELETE FROM TAG");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTROLECOMMUNICATIONCHANNEL");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTROLE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENT");
+        isisJdoSupport.executeUpdate("DELETE FROM AGREEMENTROLECOMMUNICATIONCHANNEL");
+        isisJdoSupport.executeUpdate("DELETE FROM AGREEMENTROLE");
+        isisJdoSupport.executeUpdate("DELETE FROM AGREEMENT");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE FINANCIALACCOUNT");
+        isisJdoSupport.executeUpdate("DELETE FROM FINANCIALACCOUNT");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE FIXEDASSET_COMMUNICATIONCHANNELS");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE FIXEDASSETROLE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE FIXEDASSET");
+        isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET_COMMUNICATIONCHANNELS");
+        isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSETROLE");
+        isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET");
         
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE PARTY_COMMUNICATIONCHANNELS");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE PARTYREGISTRATION");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE ORGANISATION");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE PERSON");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE PARTY");
+        isisJdoSupport.executeUpdate("DELETE FROM PARTY_COMMUNICATIONCHANNELS");
+        isisJdoSupport.executeUpdate("DELETE FROM PARTYREGISTRATION");
+        isisJdoSupport.executeUpdate("DELETE FROM ORGANISATION");
+        isisJdoSupport.executeUpdate("DELETE FROM PERSON");
+        isisJdoSupport.executeUpdate("DELETE FROM PARTY");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE NUMERATOR");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE COMMUNICATIONCHANNEL");
+        isisJdoSupport.executeUpdate("DELETE FROM NUMERATOR");
+        isisJdoSupport.executeUpdate("DELETE FROM COMMUNICATIONCHANNEL");
     }
 
     private AbstractFixture newFixture(Class<? extends AbstractFixture> fixtureClass) {

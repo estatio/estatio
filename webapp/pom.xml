@@ -276,10 +276,12 @@ language governing permissions and limitations under the License.
             </build>
         </profile>
 
+        <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath (nb: driver must be manually installed to local repo manually using mvn install-file) -->
+        <!--
+        commented out for open source release.
         <profile>
             <id>m2e</id>
             <activation>
-                <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath (nb: driver must be manually installed to local repo manually using mvn install-file) -->
                 <property>
                     <name>m2e.version</name>
                 </property>
@@ -292,6 +294,7 @@ language governing permissions and limitations under the License.
                 </dependency>
             </dependencies>
         </profile>
+        -->
     </profiles>
 
 </project>

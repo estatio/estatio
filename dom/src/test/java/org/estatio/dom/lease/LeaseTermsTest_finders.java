@@ -105,7 +105,7 @@ public class LeaseTermsTest_finders {
         
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(LeaseTerm.class));
         assertThat(finderInteraction.getQueryName(), is("findByStatusAndActiveDate"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object)Status.UNLOCKED));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object)LeaseTermStatus.NEW));
         assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object)date));
         
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));

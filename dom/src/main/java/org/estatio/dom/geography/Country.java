@@ -38,7 +38,9 @@ import org.apache.isis.applib.annotation.Title;
 @Bounded
 public class Country extends Geography {
 
-    @javax.jdo.annotations.Unique
+    // not possible because Country is rolled-up to Geography.
+    //@javax.jdo.annotations.Unique
+    @javax.jdo.annotations.Index(unique="false")
     private String alpha2Code;
 
     @Title

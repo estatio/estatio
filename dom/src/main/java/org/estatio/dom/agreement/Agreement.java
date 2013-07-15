@@ -26,6 +26,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -46,6 +47,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Lockable;
@@ -428,20 +430,83 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             final @Named("type") AgreementRoleType type,
             final @Named("startDate") @Optional LocalDate startDate,
             final @Named("endDate") @Optional LocalDate endDate) {
-        AgreementRole agreementRole;// = findRole(party, type, startDate);
-        //if (agreementRole == null) {
-        //agreementRole = agreementRoles.newAgreementRole(this, party, type, startDate, endDate);
-        agreementRole = newTransientInstance(AgreementRole.class);
-        persistIfNotAlready(agreementRole);
-        agreementRole.setStartDate(startDate);
-        agreementRole.setEndDate(endDate);
-        agreementRole.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
-        agreementRole.setStatus(Status.UNLOCKED);
-        agreementRole.modifyParty(party);
-        agreementRole.modifyAgreement(this);
-        return agreementRole;
+
+        final SortedSet<AgreementRole> existingRoles = getRoles();
+        for (AgreementRole existingRole : existingRoles) {
+            if(existingRole.getType() != type) {
+                continue;
+            } 
+            final LocalDate existingStartDate = existingRole.getStartDate();
+            final LocalDate existingEndDate = existingRole.getEndDate();
+            
+            // replace existing if exact match
+            if(Objects.equal(existingStartDate, startDate) &&
+               Objects.equal(existingEndDate, endDate)) {
+                existingRole.setParty(party);
+                return existingRole;
+            }
+            
+            final boolean newStartsBeforeExisting = 
+                    existingStartDate !=null && (startDate == null || startDate.isBefore(existingStartDate));
+            final boolean newEndsAfterExisting = 
+                    existingEndDate !=null && (endDate == null || endDate.isAfter(existingEndDate));
+
+            // bisect new
+            if(newStartsBeforeExisting && newEndsAfterExisting) {
+                newRole(party, type, startDate, existingStartDate);
+                return newRole(party, type, existingEndDate, endDate);
+            }
+            
+            final boolean existingStartsBeforeNew = 
+                    startDate !=null && (existingStartDate == null || existingStartDate.isBefore(startDate));
+            final boolean existingEndsAfterNew = 
+                    endDate !=null && (existingEndDate == null || existingEndDate.isAfter(endDate));
+
+            // bisect existing
+            if(existingStartsBeforeNew && existingEndsAfterNew) {
+                newRole(existingRole.getParty(), type, existingStartDate, startDate);
+                AgreementRole newRole = newRole(party, type, startDate, endDate);
+                existingRole.setStartDate(endDate);
+                return newRole;
+            }
+
+            // adjust
+            if(startDate != null){
+                if(existingRole.getInterval().contains(startDate)) {
+                    existingRole.setEndDate(startDate);
+                }
+            }
+            
+            // adjust
+            if(endDate != null){
+                if(existingRole.getInterval().contains(endDate)) {
+                    existingRole.setStartDate(endDate);
+                }
+            }
+        }
+        
+        return newRole(party, type, startDate, endDate);
     }
 
+    private AgreementRole newRole(final Party party, final AgreementRoleType type, final LocalDate startDate, final LocalDate endDate) {
+        final AgreementRole newRole = newTransientInstance(AgreementRole.class);
+        newRole.setStartDate(startDate);
+        newRole.setEndDate(endDate);
+        newRole.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
+
+        newRole.setStatus(Status.UNLOCKED);
+        
+        // NOT modifyXxx(), because JDO will do the 1:m management
+        // (and otherwise, get object in set twice...)
+        newRole.setParty(party);
+        newRole.setAgreement(this);
+        
+        persistIfNotAlready(newRole);
+        
+        return newRole;
+    }
+
+    
     // //////////////////////////////////////
 
     @Programmatic
@@ -479,5 +544,11 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     public void injectAgreementTypes(AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
+
+    private IsisJdoSupport isisJdoSupport;
+    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+        this.isisJdoSupport = isisJdoSupport;
+    }
+    
 
 }

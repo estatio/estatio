@@ -78,10 +78,10 @@ public class AgreementRoleTest_compareTo extends ComparableContractTest_compareT
                             newAgreementRole(agreement1, party2, null, null)
                             ), 
                     listOf(
-                            newAgreementRole(agreement1, party1, null, null), 
                             newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), null), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), null), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,3,1), null)
+                            newAgreementRole(agreement1, party1, new LocalDate(2013,3,1), null), 
+                            newAgreementRole(agreement1, party1, new LocalDate(2013,3,1), null), 
+                            newAgreementRole(agreement1, party1, null, null)
                             ),
                     listOf(
                             newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), null), 

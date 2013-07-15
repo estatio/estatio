@@ -60,8 +60,15 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(name = "findMatchingInvoices", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice WHERE source == :source && seller == :seller && buyer == :buyer && paymentMethod == :paymentMethod && status == :status && dueDate == :dueDate")
+        @javax.jdo.annotations.Query(
+                name = "findMatchingInvoices", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice "
+                        + "WHERE source == :source "
+                        + "&& seller == :seller "
+                        + "&& buyer == :buyer "
+                        + "&& paymentMethod == :paymentMethod "
+                        + "&& status == :status "
+                        + "&& dueDate == :dueDate")
 })
 @Bookmarkable
 public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> implements WithReferenceUnique {

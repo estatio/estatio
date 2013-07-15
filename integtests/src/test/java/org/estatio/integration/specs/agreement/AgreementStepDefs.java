@@ -16,10 +16,15 @@
  */
 package org.estatio.integration.specs.agreement;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+
+import com.google.common.collect.Lists;
 
 import cucumber.api.Transform;
 import cucumber.api.java.After;
@@ -37,6 +42,7 @@ import org.apache.isis.core.specsupport.scenarios.ScenarioExecutionScope;
 import org.apache.isis.core.specsupport.specs.CukeStepDefsAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.lease.Lease;
@@ -108,33 +114,45 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
     }
 
     @Given(".*lease has no.* roles$")
-    public void assuming_lease_has_no_roles() throws Throwable {
+    public void given_lease_has_no_roles() throws Throwable {
         Lease lease = getVar("lease", null, Lease.class);
         assertThat(lease.getRoles().size(), equalTo(0));
+    }
+
+    @Given("^the lease.* roles collection contains:$")
+    public void given_the_lease_s_roles_collection_contains(final List<AgreementRoleDesc> listOfActuals) throws Throwable {
+        final Lease lease = getVar("lease", null, Lease.class);
+        assertThat(lease.getRoles().isEmpty(), is(true));
+        for (AgreementRoleDesc ard : listOfActuals) {
+            lease.addRole(ard.party, ard.type, ard.startDate, ard.endDate);
+        }
     }
 
     // //////////////////////////////////////
 
     
     @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* this party$")
-    public void add_agreement_role_with_type_with_start_date_and_end_date(
+    public void when_add_agreement_role_with_type_with_start_date_and_end_date(
             @Transform(ERD.AgreementRoleType.class) final AgreementRoleType type, 
             @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
             @Transform(V.LyyyyMMdd.class) final LocalDate endDate) throws Throwable {
-        
+      
         final Lease lease = getVar("lease", null, Lease.class);
         final Party party = getVar("party", null, Party.class);
 
-        lease.addRole(party, type, startDate, endDate);
+        wrap(lease).addRole(party, type, startDate, endDate);
     }
     
     // //////////////////////////////////////
 
     @Then("^.*lease's roles collection should contain:$")
-    public void leases_roles_collection_should_contain(
+    public void then_leases_roles_collection_should_contain(
             final List<AgreementRoleDesc> listOfExpecteds) throws Throwable {
         final Lease lease = getVar("lease", null, Lease.class);
-        assertTableEquals(listOfExpecteds, lease.getRoles());
+        
+        final SortedSet<AgreementRole> roles = lease.getRoles();
+        final ArrayList<AgreementRole> rolesList = Lists.newArrayList(roles);
+        assertTableEquals(listOfExpecteds, rolesList);
     }
 
     public static class AgreementRoleDesc {
@@ -144,6 +162,5 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
         @XStreamConverter(ETO.Lease.class) private Lease agreement;
         @XStreamConverter(ETO.Party.class) private Party party;
     }
-
     
 }
