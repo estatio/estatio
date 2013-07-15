@@ -20,15 +20,6 @@ package org.estatio.webapp.services.admin;
 
 import java.util.List;
 
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.index.Indices;
-import org.estatio.fixture.EstatioFixture;
-import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
-import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
-import org.estatio.fixturescripts.FixtureScript;
-import org.estatio.services.settings.EstatioSettingsService;
-import org.estatio.webapp.services.scheduler.SchedulerServiceForEstatio;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -37,6 +28,16 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsService;
+import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
+
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.index.Indices;
+import org.estatio.fixture.EstatioFixture;
+import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
+import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
+import org.estatio.fixturescripts.FixtureScript;
+import org.estatio.services.settings.EstatioSettingsService;
+import org.estatio.webapp.services.scheduler.SchedulerServiceForEstatio;
 
 @Named("Administration")
 public class EstatioAdministrationService {
@@ -49,8 +50,7 @@ public class EstatioAdministrationService {
     @Prototype
     @MemberOrder(sequence = "2")
     public String installDemoFixtures() {
-        EstatioFixture fixtures = container.newTransientInstance(EstatioFixture.class);
-        fixtures.install();
+        installFixtures(container.newTransientInstance(EstatioFixture.class));
         return "Demo fixtures successfully installed";
     }
 
@@ -61,8 +61,7 @@ public class EstatioAdministrationService {
     @Prototype
     @MemberOrder(sequence = "3")
     public String installIndexFixture() {
-        IndexAndIndexBaseAndIndexValueFixture fixture = container.newTransientInstance(IndexAndIndexBaseAndIndexValueFixture.class);
-        fixture.install();
+        installFixtures(container.newTransientInstance(IndexAndIndexBaseAndIndexValueFixture.class));
         return "Index fixture successfully installed";
     }
 
@@ -101,6 +100,14 @@ public class EstatioAdministrationService {
         return applicationSettingsService.listAll();
     }
     
+    // //////////////////////////////////////
+
+    private static void installFixtures(final Object fixture) {
+        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
+        installer.addFixture(fixture);
+        installer.installFixtures();
+    }
+
     // //////////////////////////////////////
     
     private DomainObjectContainer container;
