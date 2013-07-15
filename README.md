@@ -3,8 +3,28 @@ Estatio: an open source estate management system.
 
 Estatio is modern and flexible property management software. It offers real estate professionals and service providers the power and flexibility to manage their business in a superior, flexible and cost-effective manner.
 
-
 ## Screenshots ##
+
+The following screenshots (taken 15 jul 2013) correspond to the business logic in Estatio's [domain object model](
+https://github.com/estatio/estatio/tree/master/dom/src/main/java/org/estatio/dom).
+
+<br/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/1.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/2.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/3.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/4.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/5.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/6.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/7.png" width=600"/>
+
+<img src="https://raw.github.com/estatio/estatio/master/docs/20130715/8.png" width=600"/>
 
 
 ## Building Estatio ##
@@ -106,9 +126,11 @@ Then browse to:
 
 * Run a script to setup invoices:
 
-    Administration > Run script: Generate invoices
+    Administration > Run script: GenerateTopModelInvoice
 
+* Take a look around :-)
 
+This is still alpha software, but if you encounter any bugs, do [let us know](https://github.com/estatio/estatio/blob/master/pom.xml#L52).
 
 ## Implementation
 
@@ -117,7 +139,9 @@ developed at [The Apache Software Foundation](http://www.apache.org/).
 
 ## Support
 
-For more information, go to [www.estatio.org](http://www.estatio.org).
+You are free to adapt or extend Estatio to your needs.  If you would like assistance in doing so, go to [www.estatio.org](http://www.estatio.org).
+
+You can find plenty of help on using Apache Isis at the [Isis mailing lists](http://isis.apache.org/support.html).  There is also extensive [online documentation](http://isis.apache.org/documentation.html).
 
 ## Legal Stuff ##
 
