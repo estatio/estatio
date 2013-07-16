@@ -33,6 +33,7 @@ import com.google.common.collect.Maps;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.apache.isis.core.commons.exceptions.IsisException;
+import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
@@ -55,11 +56,12 @@ public class EstatioTransactionalObjectsFixture extends AbstractFixture {
             newFixture(InvoiceAndInvoiceItemFixture.class)
         );
 
+        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate();
         for (AbstractFixture fixture : fixtures) {
-            fixture.install(); 
-            getContainer().flush();
+            installer.addFixture(fixture);
         }
-
+        installer.installFixtures(); 
+        getContainer().flush();
     }
 
     void truncateTables(IsisJdoSupport isisJdoSupport) {

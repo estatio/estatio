@@ -1,7 +1,5 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
- *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,15 +14,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.integration.tests.lease;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
+import cucumber.api.junit.Cucumber;
 
-public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture extends AbstractFixture {
+import org.junit.runner.RunWith;
 
-    public LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture() {
-        addFixture(new LeasesAndRolesAndLeaseUnitsAndTagsFixture());
-        addFixture(new LeaseItemsAndLeaseTermsFixture());
-    }
+
+/**
+ * Runs scenarios in all <tt>.feature</tt> files in this package. 
+ */
+@RunWith(Cucumber.class)
+@Cucumber.Options(
+        format = {
+                "html:target/cucumber-html-report"
+                // addHook causes an exception to be thrown if this reporter is registered...
+                // ,"json-pretty:target/cucumber-json-report.json"
+        },
+        strict = true,
+        tags = { "~@backlog", "~@ignore" })
+public class LeaseTermSpec_verify {
+
 
 }
