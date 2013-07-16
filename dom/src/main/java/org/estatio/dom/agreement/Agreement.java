@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,7 +27,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -57,6 +55,9 @@ import org.estatio.dom.Lockable;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithIntervals;
+import org.estatio.dom.WithIntervals.RootedPredicate;
+import org.estatio.dom.WithIntervals.WithIntervalMutator;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.party.Party;
@@ -430,64 +431,41 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             final @Named("startDate") @Optional LocalDate startDate,
             final @Named("endDate") @Optional LocalDate endDate) {
 
-        final SortedSet<AgreementRole> existingRoles = getRoles();
-        for (AgreementRole existingRole : existingRoles) {
-            if(existingRole.getType() != type) {
-                continue;
-            } 
-            final LocalDate existingStartDate = existingRole.getStartDate();
-            final LocalDate existingEndDate = existingRole.getEndDate();
-            
-            // replace existing if exact match
-            if(Objects.equal(existingStartDate, startDate) &&
-               Objects.equal(existingEndDate, endDate)) {
-                existingRole.setParty(party);
-                return this;
+        final RootedPredicate<AgreementRole, AgreementRoleType> predicate = new RootedPredicate<AgreementRole, AgreementRoleType>() {
+            @Override
+            public boolean doApply(AgreementRole root, AgreementRoleType input) {
+                return root.getType() == input;
             }
-            
-            final boolean newStartsBeforeExisting = 
-                    existingStartDate !=null && (startDate == null || startDate.isBefore(existingStartDate));
-            final boolean newEndsAfterExisting = 
-                    existingEndDate !=null && (endDate == null || endDate.isAfter(existingEndDate));
-
-            // bisect new
-            if(newStartsBeforeExisting && newEndsAfterExisting) {
-                newRole(party, type, startDate, existingStartDate);
-                newRole(party, type, existingEndDate, endDate);
-                return this;
-            }
-            
-            final boolean existingStartsBeforeNew = 
-                    startDate !=null && (existingStartDate == null || existingStartDate.isBefore(startDate));
-            final boolean existingEndsAfterNew = 
-                    endDate !=null && (existingEndDate == null || existingEndDate.isAfter(endDate));
-
-            // bisect existing
-            if(existingStartsBeforeNew && existingEndsAfterNew) {
-                newRole(existingRole.getParty(), type, existingStartDate, startDate);
+        };
+        
+        final WithIntervalMutator<AgreementRole> mutator = new WithIntervalMutator<AgreementRole>() {
+            @Override
+            public void newInterval(LocalDate startDate, LocalDate endDate) {
                 newRole(party, type, startDate, endDate);
-                existingRole.setStartDate(endDate);
-                return this;
             }
-
-            // adjust
-            if(startDate != null){
-                if(existingRole.getInterval().contains(startDate)) {
-                    existingRole.setEndDate(startDate);
-                }
+            @Override
+            public void copyExisting(AgreementRole existing, LocalDate startDate, LocalDate endDate) {
+                newRole(existing.getParty(), type, startDate, endDate);
             }
-            
-            // adjust
-            if(endDate != null){
-                if(existingRole.getInterval().contains(endDate)) {
-                    existingRole.setStartDate(endDate);
-                }
+            @Override
+            public void replaceExactMatch(AgreementRole existingRole) {
+                existingRole.setParty(party);
             }
-        }
-        newRole(party, type, startDate, endDate);
+            @Override
+            public void adjustExistingStartDate(AgreementRole existingRole, LocalDate date) {
+                existingRole.setStartDate(date);
+            }
+            @Override
+            public void adjustExistingEndDate(AgreementRole existingRole, LocalDate date) {
+                existingRole.setEndDate(date);
+            }
+        };
+        
+        WithIntervals.addInterval(getRoles(), type, startDate, endDate, predicate, mutator);
         
         return this;
     }
+
 
     private AgreementRole newRole(final Party party, final AgreementRoleType type, final LocalDate startDate, final LocalDate endDate) {
         final AgreementRole newRole = newTransientInstance(AgreementRole.class);
@@ -512,9 +490,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     @MemberOrder(name = "Roles", sequence = "11.2")
     public Agreement<S> removeRole(final AgreementRole agreementRole) {
         
-        // TODO: there is more logic still to come here..
         getRoles().remove(agreementRole);
-        
         return this;
     }
 
@@ -528,6 +504,10 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     public List<AgreementRole> choices0RemoveRole() {
         return Lists.newArrayList(getRoles());
+    }
+    public AgreementRole default0RemoveRole() {
+        final SortedSet<AgreementRole> roles = getRoles();
+        return !roles.isEmpty() ? roles.first() : null;
     }
 
     
