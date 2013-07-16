@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.tests;
+package org.estatio.integration.tests.financial;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -27,6 +27,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,60 +36,36 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
 
-public class PartyIntegrationTest extends EstatioIntegrationTest {
+public class FinancialAccountTest_owner extends EstatioIntegrationTest {
+
+    private Parties parties;
+    private FinancialAccounts financialAccounts;
+    private Party party;
 
     @BeforeClass
     public static void setupTransactionalData() {
         scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
 
-    @Test
-    public void partyCanBeFound() throws Exception {
-        Assert.assertNotNull(service(Parties.class).findPartyByReferenceOrName("HELLOWORLD"));
+    @Before
+    public void setUp() throws Exception {
+        parties = service(Parties.class);
+        party = parties.findPartyByReferenceOrName("HELLOWORLD");
+        
+        financialAccounts = service(FinancialAccounts.class);
     }
-
+    
     @Test
-    public void partyCanNotBeFound() throws Exception {
-        Assert.assertNull(service(Parties.class).findPartyByReferenceOrName("HELLO"));
-    }
-
-    @Test
-    public void partyHasFourCommunicationChannels() throws Exception {
-        Party party = service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
-        Assert.assertThat(party.getCommunicationChannels().size(), is(4));
-    }
-
-    @Test
-    public void partyHasOneFinancialAccount() throws Exception {
-        final Party party = service(Parties.class).findPartyByReferenceOrName("HELLOWORLD");
-        List<FinancialAccount> allAccounts = service(FinancialAccounts.class).allAccounts();
+    public void accounts() throws Exception {
+        List<FinancialAccount> allAccounts = financialAccounts.allAccounts();
         List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
             public boolean apply(FinancialAccount fa) {
                 return fa.getOwner() == party;
             }
         }));
         Assert.assertThat(partyAccounts.size(), is(1));
-    }
-
-    @Test
-    public void partyCanBeFoundOnPartialReference() {
-        Assert.assertThat(service(Parties.class).findParties("*LLOWOR*").size(), is(1));
-    }
-
-    @Test
-    public void partyCanBeFoundOnPartialName1() {
-        Assert.assertThat(service(Parties.class).findParties("*ello Wor*").size(), is(1));
-    }
-
-    @Test
-    public void partyCanBeFoundOnPartialName2() {
-        Assert.assertThat(service(Parties.class).findParties("Doe, Jo*").size(), is(1));
-    }
-
-    @Test
-    public void partyCanBeFoundCaseInsensitive() {
-        Assert.assertThat(service(Parties.class).findParties("*OE, jO*").size(), is(1));
     }
 
 }
