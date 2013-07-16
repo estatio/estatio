@@ -18,6 +18,8 @@ package org.estatio.integration.specs.agreement;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -34,14 +36,19 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.jmock.Expectations;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 
+import org.apache.isis.applib.services.wrapper.DisabledException;
+import org.apache.isis.applib.services.wrapper.InvalidException;
 import org.apache.isis.core.specsupport.scenarios.InMemoryDB;
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecutionScope;
 import org.apache.isis.core.specsupport.specs.CukeStepDefsAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
+import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -51,20 +58,22 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integration.EstatioSystemInitializer;
 import org.estatio.integration.specs.ERD;
 import org.estatio.integration.specs.ETO;
 
 public class AgreementStepDefs extends CukeStepDefsAbstract {
 
-    // //////////////////////////////////////
-    
-    @Before({"@unit"})
+    @Before(value={"@unit"}, order=100)
     public void beforeScenarioUnitScope() {
         before(ScenarioExecutionScope.UNIT);
     }
-
-    @Before({"@integration"})
+    
+    @Before(value={"@integration"}, order=100)
     public void beforeScenarioIntegrationScope() {
+        PropertyConfigurator.configure("logging.properties");
+        EstatioSystemInitializer.initIsft();
+        
         before(ScenarioExecutionScope.INTEGRATION);
     }
 
@@ -76,7 +85,7 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
 
     // //////////////////////////////////////
 
-    @Before(value={"@unit"}, order=20000)
+    @Before("@unit")
     public void unitFixtures() throws Throwable {
         final InMemoryDB inMemoryDB = new InMemoryDBForEstatio(this.scenarioExecution());
         checking(new Expectations() {
@@ -137,22 +146,146 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
             @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
             @Transform(V.LyyyyMMdd.class) final LocalDate endDate) throws Throwable {
       
+        nextTransaction();
+        
         final Lease lease = getVar("lease", null, Lease.class);
         final Party party = getVar("party", null, Party.class);
 
-        wrap(lease).addRole(party, type, startDate, endDate);
+        try {
+            wrap(lease).addRole(party, type, startDate, endDate);
+        } catch(Exception ex) {
+            putVar("exception", "exception", ex);
+        }
     }
-    
+
+    @When("^.*remove.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".*  party \"([^\"]*)\"$")
+    public void when_remove_agreement_role_with_type_with_start_date_and_party(
+            @Transform(ERD.AgreementRoleType.class) final AgreementRoleType type, 
+            @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
+            @Transform(ETO.Party.class) final Party party) throws Throwable {
+      
+        nextTransaction();
+
+        final Lease lease = getVar("lease", null, Lease.class);
+
+        final AgreementRole existingRole = findAgreementRole(lease, type, startDate, party);
+        assertThat("Could not locate role in lease", existingRole, is(not(nullValue())));
+        
+        try {
+            wrap(lease).removeRole(existingRole);
+        } catch(Exception ex) {
+            putVar("exception", "exception", ex);
+        }
+    }
+
+    @When("^.* remove.* (\\d+).* agreement role$")
+    public void when_remove_nth_agreement_role(
+            final int index) throws Throwable {
+
+        nextTransaction();
+
+        final Lease lease = getVar("lease", null, Lease.class);
+
+        final AgreementRole existingRole = findAgreementRole(lease, index);
+        assertThat("Could not locate role in lease", existingRole, is(not(nullValue())));
+        
+        try {
+            wrap(lease).removeRole(existingRole);
+        } catch(Exception ex) {
+            putVar("exception", "exception", ex);
+        }
+    }
+
+    /**
+     * @param index - 1-based index into {@link Agreement#getRoles()}
+     */
+    private AgreementRole findAgreementRole(final Agreement<?> agreement, int index) {
+        int i = 0;
+        for (AgreementRole ar : agreement.getRoles()) {
+            if(++i == index) {
+                return ar;
+            }
+        }
+        return null;
+    }
+
+    private AgreementRole findAgreementRole(final Agreement<?> agreement, final AgreementRoleType type, final LocalDate startDate, final Party party) {
+        for (AgreementRole ar : agreement.getRoles()) {
+            if(ar.getType() == type && ar.getParty() == party && ar.getAgreement() == agreement && ar.getStartDate() == startDate) {
+                return ar;
+            }
+        }
+        return null;
+    }
+
+
     // //////////////////////////////////////
 
     @Then("^.*lease's roles collection should contain:$")
     public void then_leases_roles_collection_should_contain(
             final List<AgreementRoleDesc> listOfExpecteds) throws Throwable {
+        
+        nextTransaction();
+
         final Lease lease = getVar("lease", null, Lease.class);
         
         final SortedSet<AgreementRole> roles = lease.getRoles();
         final ArrayList<AgreementRole> rolesList = Lists.newArrayList(roles);
         assertTableEquals(listOfExpecteds, rolesList);
+    }
+
+    @Then("^.*disabled$")
+    public void then_disabled() throws Throwable {
+        
+        nextTransaction();
+        
+        final Exception var = getVar("exception", "exception", Exception.class);
+        if(var instanceof DisabledException) {
+            // ok
+        } else {
+            Assert.fail("Expected DisabledException to have been thrown; was instead: " + var);
+        }
+    }
+
+    @Then("^.*disabled with message \"([^\"]*)\"$")
+    public void then_disabled_with_message(String message) throws Throwable {
+        
+        nextTransaction();
+
+        final Exception var = getVar("exception", "exception", Exception.class);
+        if(var instanceof DisabledException) {
+            final DisabledException ex = (DisabledException) var;
+            assertThat(ex.getMessage(), is(message));
+        } else {
+            Assert.fail("Expected DisabledException to have been thrown; was instead: " + var);
+        }
+    }
+
+    @Then("^.*invalid$")
+    public void then_invalid() throws Throwable {
+        
+        nextTransaction();
+
+        final Exception var = getVar("exception", "exception", Exception.class);
+        if(var instanceof InvalidException) {
+            // ok
+        } else {
+            Assert.fail("Expected DisabledException to have been thrown; was instead: " + var);
+        }
+    }
+
+    @Then("^.*invalid with message \"([^\"]*)\"$")
+    public void then_invalid_with_message(String message) throws Throwable {
+
+        nextTransaction();
+
+        final Exception var = getVar("exception", "exception", Exception.class);
+        if(var instanceof InvalidException) {
+            final InvalidException ex = (InvalidException) var;
+            assertThat(ex.getMessage(), is(message));
+        } else {
+            Assert.fail("Expected InvalidException to have been thrown; was instead: " + var);
+        }
     }
 
     public static class AgreementRoleDesc {

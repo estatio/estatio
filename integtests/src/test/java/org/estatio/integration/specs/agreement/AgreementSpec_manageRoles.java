@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
         },
         strict = true,
         tags = { "~@backlog", "~@ignore" })
-public class AgreementManageRoleSpecs {
+public class AgreementSpec_manageRoles {
 
 
 }

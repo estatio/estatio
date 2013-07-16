@@ -1,4 +1,4 @@
-Feature: Add AgreementRoles for an Agreement
+Feature: Manage AgreementRoles for an Agreement
 
   #@unit
   #@ignore
@@ -227,3 +227,71 @@ Feature: Add AgreementRoles for an Agreement
           | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
           | Tenant   | null       | null     | PRET   | OXF-PRET-004 | 
 
+
+  @integration
+  Scenario: Adding role that fills a gap does not automatically merge
+    Given there is a lease "OXF-PRET-004"
+    And   the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | 2010-2-1   | 2012-3-1 | POISON | OXF-PRET-004 | 
+    And   there is a party "POISON" 
+    When  I add a new agreement role of type "Landlord", start date "2012-3-1", end date "2013-4-1", for this party 
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | 2012-3-1   | 2013-4-1 | POISON | OXF-PRET-004 | 
+          | Landlord | 2010-2-1   | 2012-3-1 | POISON | OXF-PRET-004 | 
+
+##############################################################################
+
+
+  @integration
+  Scenario: Remove last role
+    Given there is a lease "OXF-PRET-004"
+    And   the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    |
+          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | 
+    When  I remove the 1st agreement role
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+
+  @integration
+  Scenario: Remove role (when different role types)
+    Given there is a lease "OXF-PRET-004"
+    And   the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | 
+    When  I remove the 2nd agreement role
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+
+  @integration
+  Scenario: Remove role does not change existing roles of same type
+    Given there is a lease "OXF-PRET-004"
+    And   the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | null       | 2013-4-1 | PRET   | OXF-PRET-004 | 
+    When  I remove the 2nd agreement role
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+
+  @integration
+  Scenario: Remove role can leave gaps, are not automatically filled
+    Given there is a lease "OXF-PRET-004"
+    And   the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | 2012-3-1   | 2013-4-1 | PRET   | OXF-PRET-004 | 
+          | Landlord | 2010-2-1   | 2012-3-1 | POISON | OXF-PRET-004 | 
+    When  I remove the 2nd agreement role
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | 2010-2-1   | 2012-3-1 | POISON | OXF-PRET-004 | 
+
+          

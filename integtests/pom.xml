@@ -35,6 +35,25 @@ language governing permissions and limitations under the License.
         <siteBaseDir>..</siteBaseDir>
     </properties>
 
+    <build>
+        <testResources>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <filtering>false</filtering>
+                <directory>src/test/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+    </build>
+
     <dependencies>
 
         <!-- this project's dependencies -->

@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -29,6 +31,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 
@@ -420,12 +423,8 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         agreementRole.setAgreement(null);
     }
 
-    /**
-     * TODO: need logic ensure that there cannot be two {@link AgreementRole}s
-     * of the same type at the same point in time.
-     */
     @MemberOrder(name = "Roles", sequence = "11")
-    public AgreementRole addRole(
+    public Agreement<S> addRole(
             final Party party,
             final @Named("type") AgreementRoleType type,
             final @Named("startDate") @Optional LocalDate startDate,
@@ -443,7 +442,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             if(Objects.equal(existingStartDate, startDate) &&
                Objects.equal(existingEndDate, endDate)) {
                 existingRole.setParty(party);
-                return existingRole;
+                return this;
             }
             
             final boolean newStartsBeforeExisting = 
@@ -454,7 +453,8 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             // bisect new
             if(newStartsBeforeExisting && newEndsAfterExisting) {
                 newRole(party, type, startDate, existingStartDate);
-                return newRole(party, type, existingEndDate, endDate);
+                newRole(party, type, existingEndDate, endDate);
+                return this;
             }
             
             final boolean existingStartsBeforeNew = 
@@ -465,9 +465,9 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             // bisect existing
             if(existingStartsBeforeNew && existingEndsAfterNew) {
                 newRole(existingRole.getParty(), type, existingStartDate, startDate);
-                AgreementRole newRole = newRole(party, type, startDate, endDate);
+                newRole(party, type, startDate, endDate);
                 existingRole.setStartDate(endDate);
-                return newRole;
+                return this;
             }
 
             // adjust
@@ -484,8 +484,9 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
                 }
             }
         }
+        newRole(party, type, startDate, endDate);
         
-        return newRole(party, type, startDate, endDate);
+        return this;
     }
 
     private AgreementRole newRole(final Party party, final AgreementRoleType type, final LocalDate startDate, final LocalDate endDate) {
@@ -504,6 +505,29 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         persistIfNotAlready(newRole);
         
         return newRole;
+    }
+
+    // //////////////////////////////////////
+
+    @MemberOrder(name = "Roles", sequence = "11.2")
+    public Agreement<S> removeRole(final AgreementRole agreementRole) {
+        
+        // TODO: there is more logic still to come here..
+        getRoles().remove(agreementRole);
+        
+        return this;
+    }
+
+    public String disableRemoveRole(final AgreementRole agreementRole) {
+        return getRoles().isEmpty()? "No roles to remove": null;
+    }
+
+    public String validateRemoveRole(final AgreementRole agreementRole) {
+        return !getRoles().contains(agreementRole)?"No such role": null;
+    }
+
+    public List<AgreementRole> choices0RemoveRole() {
+        return Lists.newArrayList(getRoles());
     }
 
     
