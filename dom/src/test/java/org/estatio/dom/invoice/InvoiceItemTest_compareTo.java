@@ -62,10 +62,10 @@ public class InvoiceItemTest_compareTo extends ComparableContractTest_compareTo<
                         newInvoiceItem(inv2, null, null, null)
                         ),
                 listOf(
-                        newInvoiceItem(inv1, null, null, null),
                         newInvoiceItem(inv1, new LocalDate(2012,4,2), null, null),
-                        newInvoiceItem(inv1, new LocalDate(2012,4,2), null, null),
-                        newInvoiceItem(inv1, new LocalDate(2012,3,1), null, null)
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), null, null),
+                        newInvoiceItem(inv1, new LocalDate(2012,3,1), null, null),
+                        newInvoiceItem(inv1, null, null, null)
                         ),
                 listOf(
                         newInvoiceItem(inv1, new LocalDate(2012,3,1), null, null),

@@ -72,7 +72,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {
 
     public LeaseUnit() {
-        super("lease, unit, startDate desc", Status.LOCKED, Status.UNLOCKED);
+        super("lease, startDate desc nullsLast, unit", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////

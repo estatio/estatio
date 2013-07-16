@@ -45,7 +45,7 @@ import org.estatio.services.clock.ClockService;
 public class Event extends EstatioTransactionalObject<Event, Status> implements WithIntervalMutable<Event>, WithDescriptionGetter {
 
     public Event() {
-        super("startDate desc, id", Status.LOCKED, Status.UNLOCKED);
+        super("startDate desc nullsLast, id", Status.LOCKED, Status.UNLOCKED);
     }
     
     // //////////////////////////////////////

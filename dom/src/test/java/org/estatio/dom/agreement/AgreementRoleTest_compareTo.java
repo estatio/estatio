@@ -33,8 +33,8 @@ import org.estatio.dom.party.PartyForTesting;
 
 public class AgreementRoleTest_compareTo extends ComparableContractTest_compareTo<AgreementRole> {
 
-    private Agreement agreement1;
-    private Agreement agreement2;
+    private Agreement<?> agreement1;
+    private Agreement<?> agreement2;
 
     private Party party1;
     private Party party2;
@@ -70,33 +70,33 @@ public class AgreementRoleTest_compareTo extends ComparableContractTest_compareT
                             newAgreementRole(agreement1, null, null, null), 
                             newAgreementRole(agreement1, null, null, null), 
                             newAgreementRole(agreement2, null, null, null)
-                            ), 
-                    listOf(
-                            newAgreementRole(agreement1, null, null, null), 
-                            newAgreementRole(agreement1, party1, null, null), 
-                            newAgreementRole(agreement1, party1, null, null), 
-                            newAgreementRole(agreement1, party2, null, null)
-                            ), 
-                    listOf(
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), null), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,3,1), null), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,3,1), null), 
-                            newAgreementRole(agreement1, party1, null, null)
-                            ),
-                    listOf(
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), null), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), type1), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), type1), 
-                            newAgreementRole(agreement1, party1, new LocalDate(2013,4,1), type2)
                             ) 
+                    ,listOf(
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), null, null), 
+                            newAgreementRole(agreement1, new LocalDate(2013,3,1), null, null), 
+                            newAgreementRole(agreement1, new LocalDate(2013,3,1), null, null), 
+                            newAgreementRole(agreement1, null, null, null)
+                            )
+                    ,listOf(
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), null, null), 
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, null), 
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, null), 
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type2, null)
+                            )
+                    ,listOf(
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, null), 
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, party1), 
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, party1), 
+                            newAgreementRole(agreement1, new LocalDate(2013,4,1), type1, party2)
+                            )
                 );
     }
 
-    private AgreementRole newAgreementRole(Agreement agreement, Party party, LocalDate date, AgreementRoleType art) {
+    private AgreementRole newAgreementRole(Agreement<?> agreement, LocalDate startDate, AgreementRoleType art, Party party) {
         final AgreementRole ar = new AgreementRole();
         ar.setAgreement(agreement);
         ar.setParty(party);
-        ar.setStartDate(date);
+        ar.setStartDate(startDate);
         ar.setType(art);
         return ar;
     }

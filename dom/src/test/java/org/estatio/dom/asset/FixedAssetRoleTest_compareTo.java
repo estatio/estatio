@@ -59,24 +59,24 @@ public class FixedAssetRoleTest_compareTo extends ComparableContractTest_compare
                         newFixedAssetRole(asset1, null, null, null),
                         newFixedAssetRole(asset2, null, null, null))
                 ,listOf(
-                        newFixedAssetRole(asset1, null, null, null),
-                        newFixedAssetRole(asset1, party1, null, null),
-                        newFixedAssetRole(asset1, party1, null, null),
-                        newFixedAssetRole(asset1, party2, null, null))
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), null, null),
+                        newFixedAssetRole(asset1, new LocalDate(2012,3,1), null, null),
+                        newFixedAssetRole(asset1, new LocalDate(2012,3,1), null, null),
+                        newFixedAssetRole(asset1, null, null, null))
                 ,listOf(
-                        newFixedAssetRole(asset1, party1, null, null),
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,4,2), null),
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,4,2), null),
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,3,1), null))
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), null, null),
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, null),
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, null),
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.PROPERTY_CONTACT, null))
                 ,listOf(
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,4,2), null),
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER),
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER),
-                        newFixedAssetRole(asset1, party1, new LocalDate(2012,4,2), FixedAssetRoleType.PROPERTY_CONTACT))
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, null),
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, party1),
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, party1),
+                        newFixedAssetRole(asset1, new LocalDate(2012,4,2), FixedAssetRoleType.ASSET_MANAGER, party2))
                 );
     }
 
-    private FixedAssetRole newFixedAssetRole(FixedAsset asset, Party party, LocalDate startDate, FixedAssetRoleType type) {
+    private FixedAssetRole newFixedAssetRole(FixedAsset asset, LocalDate startDate, FixedAssetRoleType type, Party party) {
         final FixedAssetRole far = new FixedAssetRole();
         far.setAsset(asset);
         far.setParty(party);

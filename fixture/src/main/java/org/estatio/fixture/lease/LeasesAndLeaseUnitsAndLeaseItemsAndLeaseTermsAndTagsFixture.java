@@ -92,7 +92,7 @@ public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture extends
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
 
         if(createManagerRole) {
-            lease.addRole(manager, agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), null, null);
+            lease.addRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
         }
         if(createLeaseUnit) {
             LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);

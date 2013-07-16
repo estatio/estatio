@@ -94,7 +94,7 @@ import org.estatio.services.clock.ClockService;
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalMutable<AgreementRole> {
 
     public AgreementRole() {
-        super("agreement, startDate desc nullsLast, party, type", Status.LOCKED, Status.UNLOCKED);
+        super("agreement, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////
@@ -191,6 +191,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     @Title(sequence = "1")
     @MemberOrder(sequence = "3")
+    @Hidden(where=Where.ALL_TABLES)
     @Disabled
     public AgreementRoleType getType() {
         return type;

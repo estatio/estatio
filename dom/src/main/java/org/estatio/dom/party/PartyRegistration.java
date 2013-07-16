@@ -63,7 +63,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     public PartyRegistration() {
         // TODO: I made this up...
-        super("party, startDate desc", Status.LOCKED, Status.UNLOCKED);
+        super("party, startDate desc nullsLast", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////

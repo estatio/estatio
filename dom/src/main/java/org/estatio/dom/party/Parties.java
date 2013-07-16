@@ -20,6 +20,8 @@ package org.estatio.dom.party;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -60,7 +62,7 @@ public class Parties extends EstatioDomainService<Party> {
     public List<Party> autoComplete(String searchPhrase) {
         return searchPhrase.length()>2 
                 ? findParties("*"+searchPhrase+"*") 
-                : null;
+                : Lists.<Party>newArrayList();
     }
 
     // //////////////////////////////////////

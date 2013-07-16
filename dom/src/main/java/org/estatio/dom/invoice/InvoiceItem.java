@@ -62,7 +62,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem, Status> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
-        super("invoice, startDate desc, charge, description, sequence", null, null);
+        super("invoice, startDate desc nullsLast, charge, description, sequence", null, null);
     }
 
     // //////////////////////////////////////

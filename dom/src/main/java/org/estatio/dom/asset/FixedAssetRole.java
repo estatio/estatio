@@ -75,7 +75,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalMutable<FixedAssetRole> {
 
     public FixedAssetRole() {
-        super("asset, party, startDate desc, type", Status.LOCKED, Status.UNLOCKED);
+        super("asset, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////

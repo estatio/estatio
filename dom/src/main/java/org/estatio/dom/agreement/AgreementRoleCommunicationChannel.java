@@ -70,7 +70,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel, Status> implements WithIntervalMutable<AgreementRoleCommunicationChannel>{
 
     public AgreementRoleCommunicationChannel() {
-        super("startDate desc, type, communicationChannel, role", Status.LOCKED, Status.UNLOCKED);
+        super("role, startDate desc nullsLast, type, communicationChannel", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////

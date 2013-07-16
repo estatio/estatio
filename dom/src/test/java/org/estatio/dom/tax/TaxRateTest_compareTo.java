@@ -21,28 +21,47 @@ package org.estatio.dom.tax;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.Before;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 
 public class TaxRateTest_compareTo extends ComparableContractTest_compareTo<TaxRate> {
 
+    private Tax tax1;
+    private Tax tax2;
+
+    @Before
+    public void setUp() throws Exception {
+        tax1 = new Tax();
+        tax1.setReference("TAX1");
+        
+        tax2 = new Tax();
+        tax2.setReference("TAX2");
+    }
+        
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<TaxRate>> orderedTuples() {
         return listOf(
-                listOf(
-                        newTaxRate(null),
-                        newTaxRate(new LocalDate(2012,4,2)),
-                        newTaxRate(new LocalDate(2012,4,2)),
-                        newTaxRate(new LocalDate(2012,3,1))
-                        )
+                 listOf(
+                        newTaxRate(null, new LocalDate(2012,4,2)),
+                        newTaxRate(tax1, new LocalDate(2012,3,1)),
+                        newTaxRate(tax1, new LocalDate(2012,3,1)),
+                        newTaxRate(tax2, null))
+                ,listOf(
+                        newTaxRate(tax1, new LocalDate(2012,4,2)),
+                        newTaxRate(tax1, new LocalDate(2012,3,1)),
+                        newTaxRate(tax1, new LocalDate(2012,3,1)),
+                        newTaxRate(tax1, null))
                 );
     }
 
     private TaxRate newTaxRate(
+            Tax tax, 
             LocalDate startDate) {
         final TaxRate tr = new TaxRate();
+        tr.setTax(tax);
         tr.setStartDate(startDate);
         return tr;
     }

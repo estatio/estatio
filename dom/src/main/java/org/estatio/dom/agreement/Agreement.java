@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -426,8 +427,8 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     @MemberOrder(name = "Roles", sequence = "11")
     public Agreement<S> addRole(
-            final Party party,
             final @Named("type") AgreementRoleType type,
+            final Party party,
             final @Named("startDate") @Optional LocalDate startDate,
             final @Named("endDate") @Optional LocalDate endDate) {
 
@@ -485,6 +486,18 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         return newRole;
     }
 
+    public List<AgreementRoleType> choices0AddRole() {
+        return agreementRoleTypes.findApplicableTo(getAgreementType());
+    }
+    
+    public LocalDate default2AddRole() {
+        return getEffectiveStartDate();
+    }
+    
+    public LocalDate default3AddRole() {
+        return getEffectiveEndDate();
+    }
+    
     // //////////////////////////////////////
 
     @MemberOrder(name = "Roles", sequence = "11.2")

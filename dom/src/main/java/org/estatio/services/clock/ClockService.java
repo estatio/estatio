@@ -30,4 +30,10 @@ public class ClockService {
         return Clock.getTimeAsLocalDate();
     }
 
+    public LocalDate beginningOfMonth() {
+        final LocalDate now = now();
+        final int dayOfMonth = now.getDayOfMonth();
+        return now.minusDays(dayOfMonth-1);
+    }
+
 }

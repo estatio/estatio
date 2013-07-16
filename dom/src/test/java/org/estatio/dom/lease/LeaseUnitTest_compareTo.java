@@ -57,27 +57,24 @@ public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<Le
                         newLeaseUnit(null, null, null),
                         newLeaseUnit(lease1, null, null),
                         newLeaseUnit(lease1, null, null),
-                        newLeaseUnit(lease2, null, null)
-                        ),
-                listOf(
-                        newLeaseUnit(lease1, null, null),
-                        newLeaseUnit(lease1, unit1, null),
-                        newLeaseUnit(lease1, unit1, null),
-                        newLeaseUnit(lease1, unit2, null)
-                        ),
-                listOf(
-                        newLeaseUnit(lease1, unit1, null),
-                        newLeaseUnit(lease1, unit1, new LocalDate(2012,4,1)),
-                        newLeaseUnit(lease1, unit1, new LocalDate(2012,4,1)),
-                        newLeaseUnit(lease1, unit1, new LocalDate(2012,3,1))
-                        )
+                        newLeaseUnit(lease2, null, null))
+                ,listOf(
+                        newLeaseUnit(lease1, new LocalDate(2012,4,2), unit1),
+                        newLeaseUnit(lease1, new LocalDate(2012,3,1), unit1),
+                        newLeaseUnit(lease1, new LocalDate(2012,3,1), unit1),
+                        newLeaseUnit(lease1, null, unit1))
+                ,listOf(
+                        newLeaseUnit(lease1, new LocalDate(2012,3,1), null),
+                        newLeaseUnit(lease1, new LocalDate(2012,3,1), unit1),
+                        newLeaseUnit(lease1, new LocalDate(2012,3,1), unit1),
+                        newLeaseUnit(lease1, new LocalDate(2012,3,1), unit2))
                 );
     }
 
     private LeaseUnit newLeaseUnit(
             Lease lease,
-            UnitForLease unit,
-            LocalDate startDate) {
+            LocalDate startDate,
+            UnitForLease unit) {
         final LeaseUnit ib = new LeaseUnit();
         ib.setLease(lease);
         ib.setUnit(unit);

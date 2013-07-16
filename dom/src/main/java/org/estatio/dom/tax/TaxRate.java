@@ -70,7 +70,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
-        super("tax, startDate desc", Status.LOCKED, Status.UNLOCKED);
+        super("tax, startDate desc nullsLast", Status.LOCKED, Status.UNLOCKED);
     }
 
     // //////////////////////////////////////

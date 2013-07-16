@@ -133,7 +133,7 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
         final Lease lease = getVar("lease", null, Lease.class);
         assertThat(lease.getRoles().isEmpty(), is(true));
         for (AgreementRoleDesc ard : listOfActuals) {
-            lease.addRole(ard.party, ard.type, ard.startDate, ard.endDate);
+            lease.addRole(ard.type, ard.party, ard.startDate, ard.endDate);
         }
     }
 
@@ -152,7 +152,7 @@ public class AgreementStepDefs extends CukeStepDefsAbstract {
         final Party party = getVar("party", null, Party.class);
 
         try {
-            wrap(lease).addRole(party, type, startDate, endDate);
+            wrap(lease).addRole(type, party, startDate, endDate);
         } catch(Exception ex) {
             putVar("exception", "exception", ex);
         }

@@ -305,7 +305,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         bankMandate.setStartDate(startDate);
         bankMandate.setEndDate(endDate);
         bankMandate.setReference(bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd"));
-        bankMandate.addRole(getSecondaryParty(), debtorRoleType, startDate, endDate);
+        bankMandate.addRole(debtorRoleType, getSecondaryParty(), startDate, endDate);
 
         persist(bankMandate);
         paidBy(bankMandate);
