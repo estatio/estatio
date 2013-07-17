@@ -134,7 +134,7 @@ public class InvoiceItemForLease extends InvoiceItem {
 //            Integer identityHashCode = System.identityHashCode(this);
             // setSequence(BigInteger.valueOf(identityHashCode.longValue()));
             setSequence(invoice.nextItemSequence());
-            this.modifyInvoice(invoice);
+            this.setInvoice(invoice);
         }
     }
 

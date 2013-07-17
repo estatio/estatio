@@ -123,12 +123,17 @@ public class InvoiceCalculationServiceTest {
         
         leaseItem = new LeaseItem();
         leaseItem.setStartDate(START_DATE);
-        leaseItem.modifyLease(lease);
+        
+        lease.getItems().add(leaseItem);
+        leaseItem.setLease(lease);
+        
         leaseItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         
         leaseTerm = new LeaseTermForTesting();
         leaseTerm.injectInvoiceItemsForLease(mockInvoiceItemsForLease);
-        leaseTerm.modifyLeaseItem(leaseItem);
+        
+        leaseItem.getTerms().add(leaseTerm);
+        leaseTerm.setLeaseItem(leaseItem);
         
         tax = new Tax();
         tax.injectTaxRates(mockTaxRates);

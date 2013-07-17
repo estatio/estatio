@@ -175,7 +175,9 @@ public class LeaseTest_newMandate {
     public void whenSecondaryPartyIsKnownButNotCurrent_isDisabled() {
         
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
+        
         tenantAgreementRole.setEndDate(new LocalDate(2013,4,1));
         
         // when
@@ -193,7 +195,8 @@ public class LeaseTest_newMandate {
     public void whenSecondaryPartyIsKnownButNoBankAccounts_isDisabled() {
 
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
 
         context.checking(new Expectations() {
             {
@@ -212,7 +215,8 @@ public class LeaseTest_newMandate {
     public void whenSecondaryPartyIsKnownAndHasBankAccounts_canInvoke() {
 
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
 
         context.checking(new Expectations() {
             {
@@ -276,7 +280,8 @@ public class LeaseTest_newMandate {
     public void whenPrereqs_validateWithIncorrectBankAccount() {
         
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
         
         context.checking(new Expectations() {
             {

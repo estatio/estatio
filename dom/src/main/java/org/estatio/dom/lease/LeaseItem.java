@@ -120,22 +120,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         this.lease = lease;
     }
 
-    public void modifyLease(final Lease lease) {
-        Lease currentLease = getLease();
-        if (lease == null || lease.equals(currentLease)) {
-            return;
-        }
-        lease.addToItems(this);
-    }
-
-    public void clearLease() {
-        Lease currentLease = getLease();
-        if (currentLease == null) {
-            return;
-        }
-        currentLease.removeFromItems(this);
-    }
-
     // //////////////////////////////////////
 
     private BigInteger sequence;
@@ -402,22 +386,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         this.terms = terms;
     }
 
-    public void addToTerms(final LeaseTerm term) {
-        if (term == null || getTerms().contains(term)) {
-            return;
-        }
-        term.clearLeaseItem();
-        term.setLeaseItem(this);
-        getTerms().add(term);
-    }
-
-    public void removeFromTerms(final LeaseTerm term) {
-        if (term == null || !getTerms().contains(term)) {
-            return;
-        }
-        term.setLeaseItem(null);
-        getTerms().remove(term);
-    }
 
     @Programmatic
     public LeaseTerm findTerm(LocalDate startDate) {

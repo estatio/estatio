@@ -129,29 +129,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         this.agreement = agreement;
     }
 
-    public void modifyAgreement(final Agreement<?> agreement) {
-        Agreement<?> currentAgreement = getAgreement();
-        // check for no-op
-        if (agreement == null || agreement.equals(currentAgreement)) {
-            return;
-        }
-        // delegate to parent to associate
-        if (currentAgreement != null) {
-            currentAgreement.removeFromRoles(this);
-        }
-        agreement.addToRoles(this);
-    }
-
-    public void clearAgreement() {
-        Agreement<?> currentAgreement = getAgreement();
-        // check for no-op
-        if (currentAgreement == null) {
-            return;
-        }
-        // delegate to parent to dissociate
-        currentAgreement.removeFromRoles(this);
-    }
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "PARTY_ID")
@@ -166,22 +143,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     public void setParty(final Party party) {
         this.party = party;
-    }
-
-    public void modifyParty(final Party party) {
-        Party currentParty = getParty();
-        if (party == null || party.equals(currentParty)) {
-            return;
-        }
-        party.addToAgreements(this);
-    }
-
-    public void clearParty() {
-        Party currentParty = getParty();
-        if (currentParty == null) {
-            return;
-        }
-        currentParty.removeFromAgreements(this);
     }
 
     // //////////////////////////////////////

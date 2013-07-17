@@ -111,22 +111,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         this.invoice = invoice;
     }
 
-    public void modifyInvoice(final Invoice invoice) {
-        Invoice currentInvoice = getInvoice();
-        if (invoice == null || invoice.equals(currentInvoice)) {
-            return;
-        }
-        invoice.addToItems(this);
-    }
-
-    public void clearInvoice() {
-        Invoice currentInvoice = getInvoice();
-        if (currentInvoice == null) {
-            return;
-        }
-        currentInvoice.removeFromItems(this);
-    }
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "CHARGE_ID")
@@ -364,7 +348,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @Programmatic
     public void remove() {
         // no safeguard, assuming being called with precaution
-        clearInvoice();
+        setInvoice(null);
         getContainer().flush();
         getContainer().remove(this);
     }

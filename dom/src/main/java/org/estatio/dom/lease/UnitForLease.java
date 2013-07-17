@@ -55,21 +55,4 @@ public class UnitForLease extends Unit {
         this.leases = leases;
     }
 
-    public void addToLeases(final LeaseUnit leaseUnit) {
-        if (leaseUnit == null || getLeases().contains(leaseUnit)) {
-            return;
-        }
-        leaseUnit.clearUnit();
-        leaseUnit.setUnit(this);
-        getLeases().add(leaseUnit);
-    }
-
-    public void removeFromLeases(final LeaseUnit leaseUnit) {
-        if (leaseUnit == null || !getLeases().contains(leaseUnit)) {
-            return;
-        }
-        leaseUnit.setUnit(null);
-        getLeases().remove(leaseUnit);
-    }
-
 }

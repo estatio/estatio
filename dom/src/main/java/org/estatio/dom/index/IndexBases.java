@@ -46,8 +46,8 @@ public class IndexBases extends EstatioDomainService<IndexBase> {
         indexBase.modifyPreviousBase(previousBase);
         indexBase.setStartDate(startDate);
         indexBase.setFactor(factor);
-        persist(indexBase);
-        index.addToIndexBases(indexBase);
+        indexBase.setIndex(index);
+        persistIfNotAlready(indexBase);
         return indexBase;
     }
 

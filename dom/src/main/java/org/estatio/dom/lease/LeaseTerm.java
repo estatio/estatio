@@ -127,22 +127,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         this.leaseItem = leaseItem;
     }
 
-    public void modifyLeaseItem(final LeaseItem item) {
-        LeaseItem currentLeaseItem = getLeaseItem();
-        if (item == null || item.equals(currentLeaseItem)) {
-            return;
-        }
-        item.addToTerms(this);
-    }
-
-    public void clearLeaseItem() {
-        LeaseItem currentLeaseItem = getLeaseItem();
-        if (currentLeaseItem == null) {
-            return;
-        }
-        currentLeaseItem.removeFromTerms(this);
-    }
-
     // //////////////////////////////////////
 
     private BigInteger sequence;
@@ -467,7 +451,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
             // should be credited
         } else {
             this.modifyPrevious(null);
-            this.modifyLeaseItem(null);
+            this.setLeaseItem(null);
         }
     }
 
@@ -476,7 +460,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
             if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
-                invoiceItem.clearInvoice();
+                invoiceItem.setInvoice(null);
                 invoiceItem.clearLeaseTerm();
                 getContainer().flush();
                 remove(invoiceItem);

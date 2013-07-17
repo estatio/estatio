@@ -86,24 +86,6 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
         this.indexBases = indexBases;
     }
 
-    public void addToIndexBases(final IndexBase indexBase) {
-        if (indexBase == null || getIndexBases().contains(indexBase)) {
-            return;
-        }
-        indexBase.clearIndex();
-        indexBase.setIndex(this);
-        getIndexBases().add(indexBase);
-
-    }
-
-    public void removeFromIndexBases(final IndexBase indexBase) {
-        if (indexBase == null || !getIndexBases().contains(indexBase)) {
-            return;
-        }
-        indexBase.setIndex(null);
-        getIndexBases().remove(indexBase);
-    }
-
     // //////////////////////////////////////
 
     @Programmatic

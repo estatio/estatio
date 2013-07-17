@@ -162,23 +162,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
         this.agreements = agreements;
     }
 
-    public void addToAgreements(final AgreementRole agreementRole) {
-        if (agreementRole == null || getAgreements().contains(agreementRole)) {
-            return;
-        }
-        agreementRole.clearParty();
-        agreementRole.setParty(this);
-        getAgreements().add(agreementRole);
-    }
-
-    public void removeFromAgreements(final AgreementRole agreementRole) {
-        if (agreementRole == null || !getAgreements().contains(agreementRole)) {
-            return;
-        }
-        agreementRole.setParty(null);
-        getAgreements().remove(agreementRole);
-    }
-
     // //////////////////////////////////////
 
     // TODO: is this in scope, or can we remove?

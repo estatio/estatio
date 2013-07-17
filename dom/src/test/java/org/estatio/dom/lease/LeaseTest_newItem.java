@@ -67,14 +67,17 @@ public class LeaseTest_newItem {
             {
                 oneOf(mockContainer).newTransientInstance(LeaseItem.class);
                 will(returnValue(leaseItem));
-                oneOf(mockContainer).persist(leaseItem);
+                oneOf(mockContainer).persistIfNotAlready(leaseItem);
             }
         });
         
         final LeaseItem newItem = lease.newItem(LeaseItemType.RENT);
         assertThat(newItem, is(leaseItem));
         assertThat(leaseItem.getLease(), is(lease));
-        assertThat(lease.getItems(), Matchers.contains(newItem));
+        
+        // this assertion not true for unit tests, because we rely on JDO
+        // to manage the bidir relationship for us.
+        //assertThat(lease.getItems(), Matchers.contains(newItem));
     }
 
     

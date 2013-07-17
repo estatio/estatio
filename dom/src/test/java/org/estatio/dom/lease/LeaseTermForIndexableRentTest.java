@@ -79,14 +79,14 @@ public class LeaseTermForIndexableRentTest {
         ib1 = new IndexBase();
         ib1.setStartDate(new LocalDate(2000, 1, 1));
 
-        i.addToIndexBases(ib1);
+        ib1.setIndex(i);
 
         ib2 = new IndexBase();
         ib2.setFactor(BigDecimal.valueOf(1.373));
         ib2.modifyPreviousBase(ib1);
         ib2.setStartDate(new LocalDate(2011, 1, 1));
 
-        i.addToIndexBases(ib2);
+        ib2.setIndex(i);
 
         iv1 = new IndexValue();
         iv1.setStartDate(new LocalDate(2010, 1, 1));
@@ -104,7 +104,10 @@ public class LeaseTermForIndexableRentTest {
         
         item = new LeaseItem();
         item.injectClockService(mockClockService);
-        item.modifyLease(lease);
+        
+        lease.getItems().add(item);
+        item.setLease(lease);
+        
         item.setType(LeaseItemType.RENT);
         item.injectLeaseTerms(mockLeaseTerms);
 
@@ -115,7 +118,10 @@ public class LeaseTermForIndexableRentTest {
         term.setNextIndexStartDate(iv2.getStartDate());
         term.setBaseValue(BigDecimal.valueOf(23456.78));
         term.setIndex(i);
-        term.modifyLeaseItem(item);
+        
+        item.getTerms().add(term);
+        term.setLeaseItem(item);
+        
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.initialize();
         

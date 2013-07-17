@@ -152,7 +152,8 @@ public class LeaseTest_paidBy {
     public void whenSecondaryPartyIsKnownButNoMandates_isDisabled() {
 
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
 
         context.checking(new Expectations() {
             {
@@ -171,7 +172,9 @@ public class LeaseTest_paidBy {
     public void whenSecondaryPartyIsKnownButNotCurrent_isDisabled() {
         
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
+
         tenantAgreementRole.setEndDate(new LocalDate(2013,4,1));
         
         context.checking(new Expectations() {
@@ -194,7 +197,8 @@ public class LeaseTest_paidBy {
     public void whenSecondaryPartyIsKnownAndHasMandates_canInvoke() {
 
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
 
         context.checking(new Expectations() {
             {
@@ -234,7 +238,8 @@ public class LeaseTest_paidBy {
     public void whenPrereqs_butValidateWithOtherBankMandate_isInvalid() {
         
         // given
-        lease.addToRoles(tenantAgreementRole);
+        tenantAgreementRole.setAgreement(lease);
+        lease.getRoles().add(tenantAgreementRole);
         
         context.checking(new Expectations() {
             {

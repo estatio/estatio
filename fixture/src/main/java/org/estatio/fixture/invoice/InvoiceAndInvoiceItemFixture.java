@@ -62,7 +62,7 @@ public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
         final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
         for (final LeaseTerm term : terms) {
             InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem();
-            item.modifyInvoice(invoice);
+            item.setInvoice(invoice);
             item.setDueDate(START_DATE);
             item.setStartDate(START_DATE);
             item.modifyLeaseTerm(term);

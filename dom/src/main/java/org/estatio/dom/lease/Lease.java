@@ -141,22 +141,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.units = units;
     }
 
-    public void addToUnits(final LeaseUnit leaseUnit) {
-        if (leaseUnit == null || getUnits().contains(leaseUnit)) {
-            return;
-        }
-        leaseUnit.clearLease();
-        leaseUnit.setLease(this);
-        getUnits().add(leaseUnit);
-    }
-
-    public void removeFromUnits(final LeaseUnit leaseUnit) {
-        if (leaseUnit == null || !getUnits().contains(leaseUnit)) {
-            return;
-        }
-        leaseUnit.setLease(null);
-        getUnits().remove(leaseUnit);
-    }
 
     @MemberOrder(name = "Units", sequence = "21")
     public LeaseUnit addUnit(@Named("unit") UnitForLease unit) {
@@ -179,23 +163,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     public void setItems(final SortedSet<LeaseItem> items) {
         this.items = items;
-    }
-
-    public void addToItems(final LeaseItem leaseItem) {
-        if (leaseItem == null || getItems().contains(leaseItem)) {
-            return;
-        }
-        leaseItem.clearLease();
-        leaseItem.setLease(this);
-        getItems().add(leaseItem);
-    }
-
-    public void removeFromItems(final LeaseItem leaseItem) {
-        if (leaseItem == null || !getItems().contains(leaseItem)) {
-            return;
-        }
-        leaseItem.setLease(null);
-        getItems().remove(leaseItem);
     }
 
     @MemberOrder(name = "Items", sequence = "31")

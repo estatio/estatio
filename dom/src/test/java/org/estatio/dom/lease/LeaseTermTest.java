@@ -73,13 +73,18 @@ public class LeaseTermTest {
         lease.setStartDate(new LocalDate(2012, 1, 1));
 
         item = new LeaseItem();
-        item.modifyLease(lease);
+        lease.getItems().add(item);
+        item.setLease(lease);
+        
         item.setEndDate(new LocalDate(2013, 6, 30));
         item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
 
         term = new LeaseTermForTesting();
-        term.modifyLeaseItem(item);
+        
+        item.getTerms().add(term);
+        term.setLeaseItem(item);
+        
         term.setStartDate(new LocalDate(2012, 1, 1));
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.injectClockService(mockClockService);
@@ -88,10 +93,12 @@ public class LeaseTermTest {
 
     @Test
     public void createNext_ok() {
-        final LeaseTermForTesting mockTerm = new LeaseTermForTesting();
-        mockTerm.modifyLeaseItem(item);
-        LeaseTermForTesting next = (LeaseTermForTesting) term.createNext(new LocalDate(2013, 1, 1));
-        Assert.assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
+        final LeaseTermForTesting anotherTerm = new LeaseTermForTesting();
+        item.getTerms().add(anotherTerm);
+        anotherTerm.setLeaseItem(item);
+        
+        LeaseTermForTesting next = (LeaseTermForTesting) this.term.createNext(new LocalDate(2013, 1, 1));
+        Assert.assertThat(this.term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
         Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
         Assert.assertNull(next.getEndDate());
     }
@@ -109,7 +116,10 @@ public class LeaseTermTest {
     public void verify_ok() {
         LeaseTerm newTerm = new LeaseTermForTesting();
         newTerm.injectClockService(mockClockService);
-        newTerm.modifyLeaseItem(item);
+        
+        item.getTerms().add(newTerm);
+        newTerm.setLeaseItem(item);
+        
         newTerm.setStartDate(new LocalDate(2012, 1, 1));
         newTerm.setFrequency(LeaseTermFrequency.YEARLY);
         newTerm.initialize();
@@ -124,12 +134,18 @@ public class LeaseTermTest {
         Invoice invoice = new Invoice();
         invoice.setStatus(InvoiceStatus.APPROVED);
         InvoiceItemForLease item1 = new InvoiceItemForLease();
-        item1.modifyInvoice(invoice);
+        
+        invoice.getItems().add(item1);
+        item1.setInvoice(invoice);
+        
         item1.modifyLeaseTerm(term);
         item1.setStartDate(date);
         item1.setNetAmount(BigDecimal.valueOf(1234.45));
+        
         InvoiceItemForLease item2 = new InvoiceItemForLease();
-        item2.modifyInvoice(invoice);
+        invoice.getItems().add(item2);
+        item2.setInvoice(invoice);
+        
         item2.setNetAmount(BigDecimal.valueOf(1234.45));
         item2.modifyLeaseTerm(term);
         item2.setStartDate(date);
@@ -154,7 +170,8 @@ public class LeaseTermTest {
                 LeaseItem leaseItem = (LeaseItem) invocation.getParameter(0);
                 LeaseTerm leaseTerm = (LeaseTerm) invocation.getParameter(1);
                 LeaseTermForTesting ltt = new LeaseTermForTesting();
-                ltt.modifyLeaseItem(leaseItem);
+                leaseItem.getTerms().add(ltt);
+                ltt.setLeaseItem(leaseItem);
                 ltt.modifyPrevious(leaseTerm);
                 ltt.initialize();
                 ltt.injectClockService(mockClockService);

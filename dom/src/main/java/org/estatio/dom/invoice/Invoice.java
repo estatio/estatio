@@ -266,23 +266,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         this.items = items;
     }
 
-    public void addToItems(final InvoiceItem item) {
-        if (item == null || getItems().contains(item)) {
-            return;
-        }
-        item.clearInvoice();
-        item.setInvoice(this);
-        getItems().add(item);
-    }
-
-    public void removeFromItems(final InvoiceItem item) {
-        if (item == null || !getItems().contains(item)) {
-            return;
-        }
-        item.setInvoice(null);
-        getItems().remove(item);
-    }
-
     // //////////////////////////////////////
 
     @Persistent

@@ -107,22 +107,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.lease = lease;
     }
 
-    public void modifyLease(final Lease lease) {
-        Lease currentLease = getLease();
-        if (lease == null || lease.equals(currentLease)) {
-            return;
-        }
-        lease.addToUnits(this);
-    }
-
-    public void clearLease() {
-        Lease currentLease = getLease();
-        if (currentLease == null) {
-            return;
-        }
-        currentLease.removeFromUnits(this);
-    }
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "UNIT_ID")
@@ -137,22 +121,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     public void setUnit(final UnitForLease unit) {
         this.unit = unit;
-    }
-
-    public void modifyUnit(final UnitForLease unit) {
-        UnitForLease currentUnit = getUnit();
-        if (unit == null || unit.equals(currentUnit)) {
-            return;
-        }
-        unit.addToLeases(this);
-    }
-
-    public void clearUnit() {
-        UnitForLease currentUnit = getUnit();
-        if (currentUnit == null) {
-            return;
-        }
-        currentUnit.removeFromLeases(this);
     }
 
     // //////////////////////////////////////

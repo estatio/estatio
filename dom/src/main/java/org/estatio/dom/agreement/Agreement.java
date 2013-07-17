@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -405,26 +404,6 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         this.roles = actors;
     }
 
-    public void addToRoles(final AgreementRole agreementRole) {
-        // check for no-op
-        if (agreementRole == null || getRoles().contains(agreementRole)) {
-            return;
-        }
-        // associate new
-        getRoles().add(agreementRole);
-        agreementRole.setAgreement(this);
-    }
-
-    public void removeFromRoles(final AgreementRole agreementRole) {
-        // check for no-op
-        if (agreementRole == null || !getRoles().contains(agreementRole)) {
-            return;
-        }
-        // dissociate existing
-        getRoles().remove(agreementRole);
-        agreementRole.setAgreement(null);
-    }
-
     @MemberOrder(name = "Roles", sequence = "11")
     public Agreement<S> addRole(
             final @Named("type") AgreementRoleType type,
@@ -476,8 +455,8 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
         newRole.setStatus(Status.UNLOCKED);
         
-        // NOT modifyXxx(), because JDO will do the 1:m management
-        // (and otherwise, get object in set twice...)
+        // JDO will manage the relationship for us
+        // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email 2013-7-17
         newRole.setParty(party);
         newRole.setAgreement(this);
         

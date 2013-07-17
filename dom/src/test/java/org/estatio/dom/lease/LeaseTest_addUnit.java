@@ -64,7 +64,7 @@ public class LeaseTest_addUnit {
             {
                 oneOf(mockContainer).newTransientInstance(LeaseUnit.class);
                 will(returnValue(leaseUnit));
-                oneOf(mockContainer).persist(leaseUnit);
+                oneOf(mockContainer).persistIfNotAlready(leaseUnit);
             }
         });
         

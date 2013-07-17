@@ -42,9 +42,9 @@ public class LeaseUnits extends EstatioDomainService<LeaseUnit> {
     @NotContributed
     public LeaseUnit newLeaseUnit(Lease lease, UnitForLease unit) {
         LeaseUnit lu = newTransientInstance(LeaseUnit.class);
-        persist(lu);
-        lu.modifyLease(lease);
-        lu.modifyUnit(unit);
+        lu.setLease(lease);
+        lu.setUnit(unit);
+        persistIfNotAlready(lu);
         return lu;
     }
 

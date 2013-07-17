@@ -29,10 +29,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.Status;
 import org.estatio.services.clock.ClockService;
 
 public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
@@ -47,12 +45,14 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @Hidden
     public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
-        persist(leaseTerm);
-        leaseTerm.modifyLeaseItem(leaseItem);
+        leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.modifyPrevious(previous);
+        persistIfNotAlready(leaseTerm);
 
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated
+        
+        // REVIEW: is this still an issue?
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
         leaseTerm.initialize();

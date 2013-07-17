@@ -57,22 +57,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
         this.index = index;
     }
 
-    public void modifyIndex(final Index index) {
-        Index currentIndex = getIndex();
-        if (index == null || index.equals(currentIndex)) {
-            return;
-        }
-        index.addToIndexBases(this);
-    }
-
-    public void clearIndex() {
-        Index currentIndex = getIndex();
-        if (currentIndex == null) {
-            return;
-        }
-        currentIndex.removeFromIndexBases(this);
-    }
-    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent

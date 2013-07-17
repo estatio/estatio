@@ -46,8 +46,8 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         agreementRole.setStartDate(startDate);
         agreementRole.setEndDate(endDate);
         agreementRole.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
-        agreementRole.modifyParty(party);
-        agreementRole.modifyAgreement(agreement);
+        agreementRole.setParty(party);
+        agreementRole.setAgreement(agreement);
         return agreementRole;
     }
 

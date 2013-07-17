@@ -53,13 +53,24 @@ public class LeaseTermForServiceChargeTest {
     public void setup() {
         lease = new Lease();
         lease.setStartDate(new LocalDate(2000,1,1));
+        
         item = new LeaseItem();
-        item.modifyLease(lease);
-        item.setType(LeaseItemType.SERVICE_CHARGE);
         item.injectLeaseTerms(mockLeaseTerms);
+        
+        lease.getItems().add(item);
+        item.setLease(lease);
+        
+        item.setType(LeaseItemType.SERVICE_CHARGE);
+        
         term = new LeaseTermForServiceCharge();
-        term.modifyLeaseItem(item);
+        
+        item.getTerms().add(term);
+        term.setLeaseItem(item);
+        
+        // when
         term.initialize();
+        
+        // then
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.setBudgetedValue(BigDecimal.valueOf(6000).setScale(4));
     }
@@ -69,7 +80,10 @@ public class LeaseTermForServiceChargeTest {
         term.update();
         assertThat(term.getTrialValue(), Is.is(term.getBudgetedValue()));
         LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
-        nextTerm.modifyLeaseItem(item);
+        
+        item.getTerms().add(nextTerm);
+        nextTerm.setLeaseItem(item);
+        
         nextTerm.modifyPrevious(term);
         nextTerm.initialize();
         nextTerm.update();
@@ -79,7 +93,10 @@ public class LeaseTermForServiceChargeTest {
     @Test
     public void valueForDueDate_ok() throws Exception {
         LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
-        term.modifyLeaseItem(item);
+        
+        item.getTerms().add(term);
+        term.setLeaseItem(item);
+        
         term.setEndDate(new LocalDate(2011, 12, 31));
         term.setBudgetedValue(BigDecimal.valueOf(6000));
         term.setAuditedValue(BigDecimal.valueOf(6600));
