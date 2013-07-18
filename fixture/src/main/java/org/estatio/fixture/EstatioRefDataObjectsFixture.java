@@ -22,21 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.ChargeGroup;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBase;
-import org.estatio.dom.index.IndexValue;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.tax.TaxRate;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.charge.ChargeAndChargeGroupFixture;
 import org.estatio.fixture.charge.CurrencyFixture;
@@ -50,72 +37,23 @@ public class EstatioRefDataObjectsFixture extends AbstractFixture {
     @Override
     public void install() {
         
-        new EstatioTransactionalObjectsFixture().truncateTables(isisJdoSupport);
-        truncateTables(isisJdoSupport);
-
-        List<AbstractFixture> fixtures = Arrays.asList(
-            newFixture(CountriesAndStatesFixture.class),
-            newFixture(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class),
-            newFixture(CurrencyFixture.class),
-            newFixture(ChargeAndChargeGroupFixture.class),
-            newFixture(IndexAndIndexBaseAndIndexValueFixture.class),
-            newFixture(TaxesAndTaxRatesFixture.class)
+        final List<AbstractFixture> fixtures = Arrays.asList(
+            new EstatioTransactionalObjectsTeardownFixture(),
+            new EstatioRefDataObjectsTeardownFixture(),
+            new CountriesAndStatesFixture(),
+            new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
+            new CurrencyFixture(),
+            new ChargeAndChargeGroupFixture(),
+            new IndexAndIndexBaseAndIndexValueFixture(),
+            new TaxesAndTaxRatesFixture()
         );
 
+        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate();
         for (AbstractFixture fixture : fixtures) {
-            fixture.install(); 
-            getContainer().flush();
+            installer.addFixture(fixture);
         }
-    }
-
-    void truncateTables(IsisJdoSupport isisJdoSupport) {
-        isisJdoSupport.deleteAll(
-                State.class,
-                Country.class,
-                Currency.class,
-                Charge.class,
-                ChargeGroup.class,
-                TaxRate.class,
-                Tax.class,
-                AgreementRoleCommunicationChannelType.class,
-                AgreementRoleType.class,
-                AgreementType.class,
-                IndexValue.class,
-                IndexBase.class,
-                Index.class
-                );
-    }
-    
-    /**
-     * unused, but equivalent to {@link #truncateTables(IsisJdoSupport)}, above
-     */
-    @SuppressWarnings("unused")
-    private void truncateTablesSQL(IsisJdoSupport isisJdoSupport) {
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE GEOGRAPHY");
-        
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE CURRENCY");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE CHARGE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE CHARGEGROUP");
-        
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE TAXRATE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE TAX");
-        
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTROLETYPE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTROLECOMMUNICATIONCHANNELTYPE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTTYPE");
-        
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE INDEXVALUE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE INDEXBASE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"INDEX\"");
-    }
-
-    private AbstractFixture newFixture(Class<? extends AbstractFixture> fixtureClass) {
-        return getContainer().newTransientInstance(fixtureClass);
-    }
-
-    private IsisJdoSupport isisJdoSupport;
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
+        installer.installFixtures(); 
+        getContainer().flush();
     }
 
 }

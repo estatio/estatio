@@ -14,26 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.specs.agreement;
+package org.estatio.integration.glue.party;
 
-import cucumber.api.junit.Cucumber;
+import cucumber.api.java.en.Given;
 
-import org.junit.runner.RunWith;
+import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 
-/**
- * Runs scenarios in all <tt>.feature</tt> files in this package. 
- */
-@RunWith(Cucumber.class)
-@Cucumber.Options(
-        format = {
-                "html:target/cucumber-html-report"
-                // addHook causes an exception to be thrown if this reporter is registered...
-                // ,"json-pretty:target/cucumber-json-report.json"
-        },
-        strict = true,
-        tags = { "~@backlog", "~@ignore" })
-public class AgreementSpec_manageRoles {
+public class PartyGlue extends CukeGlueAbstract {
 
-
+    @Given(".*there is.* party \"([^\"]*)\"$")
+    public void given_party(final String partyReference) throws Throwable {
+        final Party party = service(Parties.class).findPartyByReferenceOrName(partyReference);
+        putVar("party", partyReference, party);
+    }
+    
 }

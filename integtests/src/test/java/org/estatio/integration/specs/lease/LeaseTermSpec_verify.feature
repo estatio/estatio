@@ -1,25 +1,12 @@
-#
-#  Copyright 2012-2013 Eurocommercial Properties NV
-#
-#  Licensed under the Apache License, Version 2.0 (the
-#  "License"); you may not use this file except in compliance
-#  with the License.  You may obtain a copy of the License at
-#
-#        http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing,
-#  software distributed under the License is distributed on an
-#  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-#  KIND, either express or implied.  See the License for the
-#  specific language governing permissions and limitations
-#  under the License.
-#
+@LeasesOnlyFixture
 Feature: Verify Lease terms with IndexableRent and ServiceCharge items
 
+    # corresponds to: 
+    # LeaseTermTest_verify_and_InvoiceItems_calculate#t10_leaseTermRent_verify
     @integration
     @backlog
     Scenario: Verify rent term
-      Given I have a lease "OXF-TOPMODEL-001"
+      Given there is a lease "OXF-TOPMODEL-001"
       And   the lease's start date is "2010-7-15"
       And   the lease's items are:
              | type          | charge         | invoicingFrequency   |   

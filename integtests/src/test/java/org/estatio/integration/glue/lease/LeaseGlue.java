@@ -14,26 +14,23 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.tests.lease;
+package org.estatio.integration.glue.lease;
 
-import cucumber.api.junit.Cucumber;
+import cucumber.api.java.en.Given;
 
-import org.junit.runner.RunWith;
+import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
 
-/**
- * Runs scenarios in all <tt>.feature</tt> files in this package. 
- */
-@RunWith(Cucumber.class)
-@Cucumber.Options(
-        format = {
-                "html:target/cucumber-html-report"
-                // addHook causes an exception to be thrown if this reporter is registered...
-                // ,"json-pretty:target/cucumber-json-report.json"
-        },
-        strict = true,
-        tags = { "~@backlog", "~@ignore" })
-public class LeaseTermSpec_verify {
+public class LeaseGlue extends CukeGlueAbstract {
 
+    @Given(".*there is.* lease \"([^\"]*)\"$")
+    public void given_lease(final String leaseReference) throws Throwable {
+        final Lease lease = service(Leases.class).findLeaseByReference(leaseReference);
+        putVar("lease", leaseReference, lease);
+        putVar("agreement", leaseReference, lease);
+    }
 
+    
 }

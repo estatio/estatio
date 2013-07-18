@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.specs;
+package org.estatio.integration.spectransformers;
 
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
