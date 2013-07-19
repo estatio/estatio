@@ -68,7 +68,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "WHERE asset == :asset " +
                         "&& party == :party " +
                         "&& type == :type " +
-                        "&& endDate == :endDate"),
+                        "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({ "General", "Dates", "Related" })

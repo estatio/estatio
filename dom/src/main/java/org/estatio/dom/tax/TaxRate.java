@@ -64,7 +64,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT "
                         + "FROM org.estatio.dom.tax.TaxRate "
                         + "WHERE tax == :tax "
-                        + "&& endDate == :endDate"),
+                        + "&& endDate == :endDate")
 })
 @MemberGroups({ "General", "Dates", "Related" })
 public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalMutable<TaxRate> {

@@ -66,7 +66,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.LeaseUnit "
                         + "WHERE lease == :lease "
                         + "&& unit == :unit "
-                        + "&& endDate == :endDate"),
+                        + "&& endDate == :endDate")
 })
 @MemberGroups({ "General", "Dates", "Tags", "Related" })
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {

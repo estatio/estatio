@@ -78,7 +78,7 @@ import org.estatio.services.clock.ClockService;
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.LeaseItem " +
                         "WHERE lease == :lease " +
-                        "&& endDate == :endDate"),
+                        "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({ "General", "Current Value", "Dates", "Related" })

@@ -55,7 +55,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.party.PartyRegistration "
                         + "WHERE party == :party "
                         + "&& partyRegistrationType == :partyRegistrationType "
-                        + "&& endDate == :endDate"),
+                        + "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({ "General", "Dates", "Tags", "Related" })

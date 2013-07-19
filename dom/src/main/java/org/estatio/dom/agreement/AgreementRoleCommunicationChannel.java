@@ -63,7 +63,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                     "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
                     "WHERE role == :agreementRole " +
                     "&& type == :type " +
-                    "&& endDate == :endDate"),
+                    "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @MemberGroups({"General", "Dates", "Related"})

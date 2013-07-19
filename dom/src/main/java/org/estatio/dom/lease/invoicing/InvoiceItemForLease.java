@@ -71,7 +71,7 @@ import org.estatio.dom.party.Party;
                 "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
                 "WHERE invoice == :invoice " + 
                 "&& leaseTerm == :leaseTerm " + 
-                "&& endDate == :endDate"),
+                "&& endDate == :endDate")
 })
 public class InvoiceItemForLease extends InvoiceItem {
 
