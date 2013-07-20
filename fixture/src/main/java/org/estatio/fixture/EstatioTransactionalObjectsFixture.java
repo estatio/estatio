@@ -43,7 +43,7 @@ public class EstatioTransactionalObjectsFixture extends AbstractFixture {
             new InvoiceAndInvoiceItemFixture()
         );
 
-        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate();
+        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
         for (AbstractFixture fixture : fixtures) {
             installer.addFixture(fixture);
         }

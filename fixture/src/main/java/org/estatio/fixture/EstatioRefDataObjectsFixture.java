@@ -48,7 +48,7 @@ public class EstatioRefDataObjectsFixture extends AbstractFixture {
             new TaxesAndTaxRatesFixture()
         );
 
-        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate();
+        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
         for (AbstractFixture fixture : fixtures) {
             installer.addFixture(fixture);
         }
