@@ -57,7 +57,7 @@ public class Property extends FixedAsset {
 
     private PropertyType propertyType;
 
-    @MemberOrder(sequence = "1.3")
+    @MemberOrder(name="Property",sequence = "1.3")
     public PropertyType getPropertyType() {
         return propertyType;
     }
@@ -71,7 +71,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate openingDate;
 
-    @MemberOrder(sequence = "1.4")
+    @MemberOrder(name="Dates",sequence = "1.4")
     public LocalDate getOpeningDate() {
         return openingDate;
     }
@@ -85,7 +85,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate acquireDate;
 
-    @MemberOrder(sequence = "1.5")
+    @MemberOrder(name="Dates",sequence = "1.5")
     @Optional
     public LocalDate getAcquireDate() {
         return acquireDate;
@@ -100,7 +100,7 @@ public class Property extends FixedAsset {
     private LocalDate disposalDate;
 
     @javax.jdo.annotations.Persistent
-    @MemberOrder(sequence = "1.6")
+    @MemberOrder(name="Dates",sequence = "1.6")
     @Optional
     public LocalDate getDisposalDate() {
         return disposalDate;
@@ -115,7 +115,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
-    @MemberOrder(sequence = "1.7")
+    @MemberOrder(name="Property",sequence = "1.7")
     public BigDecimal getArea() {
         return area;
     }
@@ -128,7 +128,7 @@ public class Property extends FixedAsset {
 
     private String city;
 
-    @MemberOrder(sequence = "1.8")
+    @MemberOrder(name="Location",sequence = "1.8")
     public String getCity() {
         return city;
     }
@@ -142,7 +142,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
-    @MemberOrder(sequence = "1.9")
+    @MemberOrder(name="Location",sequence = "1.9")
     public Country getCountry() {
         return country;
     }

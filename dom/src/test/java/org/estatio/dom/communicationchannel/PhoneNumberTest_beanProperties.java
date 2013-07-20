@@ -30,7 +30,8 @@ public class PhoneNumberTest_beanProperties extends AbstractBeanPropertiesTest {
 	public void test() {
 	    newPojoTester()
             .withFixture(statii())
-	        .exercise(new PhoneNumber());
+            .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+	        .exercise(new PhoneOrFaxNumber());
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

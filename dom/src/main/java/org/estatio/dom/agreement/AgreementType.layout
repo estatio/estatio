@@ -1,0 +1,48 @@
+memberGroupLayout.columnSpans=_6_0_0_6
+memberGroupLayout.left=
+memberGroupLayout.middle=
+memberGroupLayout.right=
+
+# two column, with collections
+#memberGroupLayout.columnSpans=_2_0_0_10,
+#memberGroupLayout.columnSpans=_3_0_0_9,
+#memberGroupLayout.columnSpans=_4_0_0_8,
+#memberGroupLayout.columnSpans=_5_0_0_7,
+#memberGroupLayout.columnSpans=_6_0_0_6,
+        
+# three column, with collections
+#memberGroupLayout.columnSpans=_2_2_0_8,
+#memberGroupLayout.columnSpans=_2_3_0_7,
+#memberGroupLayout.columnSpans=_2_4_0_6,
+#memberGroupLayout.columnSpans=_2_5_0_5,
+#memberGroupLayout.columnSpans=_2_6_0_4,
+        
+#memberGroupLayout.columnSpans=_3_3_0_6,
+#memberGroupLayout.columnSpans=_3_4_0_5,
+#memberGroupLayout.columnSpans=_3_5_0_4,
+#memberGroupLayout.columnSpans=_3_6_0_3,
+        
+#memberGroupLayout.columnSpans=_4_4_0_4,
+        
+# two column, suppress collections
+#memberGroupLayout.columnSpans=_2_0_10_0,
+#memberGroupLayout.columnSpans=_3_0_9_0,
+#memberGroupLayout.columnSpans=_4_0_8_0,
+#memberGroupLayout.columnSpans=_5_0_7_0,
+#memberGroupLayout.columnSpans=_6_0_6_0,
+        
+# three column, suppress collections
+#memberGroupLayout.columnSpans=_2_2_8_0,
+#memberGroupLayout.columnSpans=_2_3_7_0,
+#memberGroupLayout.columnSpans=_2_4_6_0,
+#memberGroupLayout.columnSpans=_2_5_5_0,
+#memberGroupLayout.columnSpans=_2_6_4_0,
+
+#memberGroupLayout.columnSpans=_3_3_6_0,
+#memberGroupLayout.columnSpans=_3_4_5_0,
+#memberGroupLayout.columnSpans=_3_5_4_0,
+#memberGroupLayout.columnSpans=_3_6_3_0,
+
+#memberGroupLayout.columnSpans=_4_4_4_0,
+#memberGroupLayout.columnSpans=_4_5_3_0,
+#memberGroupLayout.columnSpans=_4_6_2_0,

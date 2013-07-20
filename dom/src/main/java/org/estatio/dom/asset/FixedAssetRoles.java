@@ -37,6 +37,7 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
 
     // //////////////////////////////////////
 
+    @NotContributed
     @ActionSemantics(Of.NON_IDEMPOTENT)
     public FixedAssetRole newRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type, LocalDate startDate, LocalDate endDate) {
         final FixedAssetRole role = newTransientInstance();
@@ -51,11 +52,13 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
 
     // //////////////////////////////////////
 
+    @NotContributed
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type) {
         return firstMatch(newQueryDefault("findByAssetAndPartyAndType", "asset", asset, "party", party, "type", type));
     }
 
+    @NotContributed
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type, final LocalDate startDate, final LocalDate endDate) {
         return firstMatch("findByAssetAndPartyAndType", "asset", asset, "party", party, "type", type);

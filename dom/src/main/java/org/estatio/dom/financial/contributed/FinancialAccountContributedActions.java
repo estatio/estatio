@@ -21,6 +21,7 @@ package org.estatio.dom.financial.contributed;
 import java.util.List;
 
 import org.apache.isis.applib.AbstractContainedObject;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.filter.Filter;
@@ -29,6 +30,7 @@ import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.party.Party;
 
+@Hidden
 public class FinancialAccountContributedActions extends AbstractContainedObject {
 
     @NotInServiceMenu

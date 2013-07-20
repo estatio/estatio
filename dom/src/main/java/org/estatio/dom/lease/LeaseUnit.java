@@ -68,7 +68,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& unit == :unit "
                         + "&& endDate == :endDate")
 })
-@MemberGroups({ "General", "Dates", "Tags", "Related" })
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {
 
     public LeaseUnit() {

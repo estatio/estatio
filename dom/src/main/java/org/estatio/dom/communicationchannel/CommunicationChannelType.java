@@ -18,21 +18,24 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.DomainObjectContainer;
+import java.util.Arrays;
+import java.util.List;
 
-import org.estatio.dom.PowerType;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import org.estatio.dom.TitledEnum;
 import org.estatio.dom.utils.StringUtils;
 
-public enum CommunicationChannelType implements TitledEnum, PowerType<CommunicationChannel> {
+public enum CommunicationChannelType implements TitledEnum {
 
     ACCOUNTING_POSTAL_ADDRESS(PostalAddress.class), 
     POSTAL_ADDRESS(PostalAddress.class), 
     ACCOUNTING_EMAIL_ADDRESS(EmailAddress.class), 
     EMAIL_ADDRESS(EmailAddress.class), 
-    PHONE_NUMBER(PhoneNumber.class), 
-    FAX_NUMBER(FaxNumber.class);
+    PHONE_NUMBER(PhoneOrFaxNumber.class), 
+    FAX_NUMBER(PhoneOrFaxNumber.class);
 
     private Class<? extends CommunicationChannel> cls;
 
@@ -40,18 +43,17 @@ public enum CommunicationChannelType implements TitledEnum, PowerType<Communicat
         this.cls = cls;
     }
 
-    public CommunicationChannel create(DomainObjectContainer container) {
-        try {
-            CommunicationChannel cc = container.newTransientInstance(cls);
-            cc.setType(this);
-            return cc;
-        } catch (Exception ex) {
-            throw new ApplicationException(ex);
-        }
-    }
-
     public String title() {
         return StringUtils.enumTitle(this.toString());
+    }
+    
+    public static List<CommunicationChannelType> matching(final Class<? extends CommunicationChannel> cls) {
+        return Lists.newArrayList(Iterables.filter(Arrays.asList(values()), new Predicate<CommunicationChannelType>(){
+
+            @Override
+            public boolean apply(CommunicationChannelType input) {
+                return input.cls == cls;
+            }}));
     }
 
 }

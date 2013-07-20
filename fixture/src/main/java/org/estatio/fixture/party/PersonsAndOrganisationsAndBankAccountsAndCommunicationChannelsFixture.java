@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.geography.Countries;
@@ -53,16 +55,16 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
         Party party = organisations.newOrganisation(values[0], values[1]);
         financialAccounts.newBankAccount(party, values[2]);
         if(defined(values, 3)) {
-            communicationChannels.newPostalAddress(party, values[3], values[4], values[5], values[6], states.findStateByReference(values[7]), countries.findCountryByReference(values[8]));
+            communicationChannelContributedActions.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, values[3], values[4], values[5], values[6], states.findStateByReference(values[7]), countries.findCountryByReference(values[8]));
         }
         if(defined(values, 9)) {
-            communicationChannels.newPhoneNumber(party, values[9]);
+            communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, values[9]);
         }
         if(defined(values, 10)) {
-            communicationChannels.newFaxNumber(party, values[10]);
+            communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, values[10]);
         }
         if(defined(values, 11)) {
-            communicationChannels.newEmailAddress(party ,values[11]);
+            communicationChannelContributedActions.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, values[11]);
         }
         return party;
     }
@@ -97,10 +99,10 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
         this.persons = persons;
     }
 
-    private CommunicationChannels communicationChannels;
+    private CommunicationChannelContributedActions communicationChannelContributedActions;
 
-    public void injectCommunicationChannels(CommunicationChannels communicationChannels) {
-        this.communicationChannels = communicationChannels;
+    public void injectCommunicationChannels(CommunicationChannelContributedActions communicationChannelContributedActions) {
+        this.communicationChannelContributedActions = communicationChannelContributedActions;
     }
 
     private FinancialAccounts financialAccounts;

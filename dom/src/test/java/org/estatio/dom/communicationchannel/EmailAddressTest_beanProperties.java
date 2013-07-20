@@ -30,6 +30,7 @@ public class EmailAddressTest_beanProperties extends AbstractBeanPropertiesTest 
 	public void test() {
 	    newPojoTester()
 	        .withFixture(statii())
+            .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
 	        .exercise(new EmailAddress());
 	}
 

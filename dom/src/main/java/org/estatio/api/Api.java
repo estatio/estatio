@@ -35,6 +35,7 @@ import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.communicationchannel.PostalAddress;
@@ -74,6 +75,7 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -309,7 +311,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setTerraceArea(terraceArea);
         CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            cc = communicationChannels.newPostalAddress(unit, address1, null, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+            communicationChannelContributedActions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, address1, null, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
         }
     }
 
@@ -341,7 +343,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         CommunicationChannel comm = property.findCommunicationChannelForType(null);
         if (comm == null) {
-            comm = communicationChannels.newPostalAddress(property, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+            communicationChannelContributedActions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
         }
     }
 
@@ -364,7 +366,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (address1 != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
             if (comm == null) {
-                comm = communicationChannels.newPostalAddress(party, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
                 comm.setReference(reference);
             }
         }
@@ -372,7 +374,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (phoneNumber != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
             if (comm == null) {
-                comm = communicationChannels.newPhoneNumber(party, phoneNumber);
+                comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
                 comm.setReference(reference);
             }
         }
@@ -380,7 +382,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (faxNumber != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
             if (comm == null) {
-                comm = communicationChannels.newFaxNumber(party, faxNumber);
+                comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, faxNumber);
                 comm.setReference(reference);
             }
         }
@@ -403,7 +405,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (address1 != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
             if (comm == null) {
-                comm = communicationChannels.newPostalAddress(party, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
                 comm.setReference(reference);
             }
         }
@@ -411,7 +413,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (phoneNumber != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
             if (comm == null) {
-                comm = communicationChannels.newPhoneNumber(party, phoneNumber);
+                comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
                 comm.setReference(reference);
             }
         }
@@ -419,7 +421,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (faxNumber != null) {
             CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
             if (comm == null) {
-                comm = communicationChannels.newFaxNumber(party, faxNumber);
+                comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, faxNumber);
                 comm.setReference(reference);
             }
         }
@@ -519,7 +521,10 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("invoicingFrequency") @Optional String invoicingFrequency,
             @Named("paymentMethod") @Optional String paymentMethod) {
         Lease lease = fetchLease(leaseReference);
+        
+        @SuppressWarnings("unused")
         Unit unit = fetchUnit(unitReference);
+        
         LeaseItemType itemType = fetchLeaseItemType(type);
         Charge charge = fetchCharge(type, chargeReference);
         //
@@ -560,12 +565,10 @@ public class Api extends AbstractFactoryAndRepository {
             Party party = fetchParty(partyReference);
             PostalAddress address = (PostalAddress) postalAddresses.findByAddress(address1, postalCode, city, fetchCountry(countryCode));
             if (address == null) {
-                address = communicationChannels.newPostalAddress(party, address1, address2, postalCode, city, fetchState(stateCode), fetchCountry(countryCode));
+                address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, fetchState(stateCode), fetchCountry(countryCode));
             }
-            party.addToCommunicationChannels(address);
             AgreementRole role = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), clockService.now());
             role.addCommunicationChannel(type, address);
-
         }
     }
 
@@ -808,6 +811,12 @@ public class Api extends AbstractFactoryAndRepository {
         this.fixedAssetRoles = fixedAssetRoles;
     }
 
+    private CommunicationChannelContributedActions communicationChannelContributedActions;
+    
+    public void injectCommunicationChannelContributedActions(final CommunicationChannelContributedActions communicationChannelContributedActions) {
+        this.communicationChannelContributedActions = communicationChannelContributedActions;
+    }
+    
     private CommunicationChannels communicationChannels;
 
     public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {

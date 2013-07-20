@@ -34,6 +34,7 @@ public class PostalAddressTest_beanProperties extends AbstractBeanPropertiesTest
 			.withFixture(pojos(Country.class))
 			.withFixture(pojos(State.class))
             .withFixture(statii())
+            .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
 			.exercise(new PostalAddress());
 	}
 

@@ -30,6 +30,7 @@ public class CommunicationChannelTest_beanProperties extends AbstractBeanPropert
     public void test() {
         newPojoTester()
             .withFixture(statii())
+            .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
             .exercise(new CommunicationChannelForTesting());
     }
 

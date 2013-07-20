@@ -32,6 +32,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
+
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -40,6 +41,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 
@@ -55,6 +57,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
+    @NotContributed
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(

@@ -159,7 +159,11 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "SOURCE_ID")
-    @javax.jdo.annotations.Persistent(extensions = { @Extension(vendorName = "datanucleus", key = "mapping-strategy", value = "per-implementation") })
+    @javax.jdo.annotations.Persistent(
+            extensions = { 
+                    @Extension(vendorName = "datanucleus", 
+                            key = "mapping-strategy", 
+                            value = "per-implementation") })
     private InvoiceSource source;
 
     /**

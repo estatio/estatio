@@ -22,31 +22,32 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-public class FaxNumber extends CommunicationChannel {
+public class PhoneOrFaxNumber extends CommunicationChannel {
 
-    @Override
     @Title
+    @Override
     public String getName() {
-        return "Fax ".concat(getFaxNumber());
+        return new TitleBuffer("Phone").append(getPhoneNumber()).toString();
     }
 
     // //////////////////////////////////////
 
-    private String faxNumber;
+    private String phoneNumber;
 
     @MemberOrder(sequence = "1")
-    public String getFaxNumber() {
-        return faxNumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setFaxNumber(final String number) {
-        this.faxNumber = number;
+    public void setNumber(final String number) {
+        this.phoneNumber = number;
     }
 
-    public String disableFaxNumber() {
+    public String disablePhoneNumber() {
         return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 

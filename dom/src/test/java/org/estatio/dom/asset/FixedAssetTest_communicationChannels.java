@@ -36,7 +36,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelForTesting;
 import org.estatio.dom.communicationchannel.EmailAddress;
-import org.estatio.dom.communicationchannel.PhoneNumber;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumber;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

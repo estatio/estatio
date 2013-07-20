@@ -90,7 +90,6 @@ import org.estatio.services.clock.ClockService;
                 "&& (endDate == null | endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({"General", "Dates", "Related"})
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalMutable<AgreementRole> {
 
     public AgreementRole() {

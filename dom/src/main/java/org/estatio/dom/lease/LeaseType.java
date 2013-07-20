@@ -20,7 +20,7 @@ package org.estatio.dom.lease;
 
 
 
-// TODO: this needs to be made into an entity, so can make into a multi-tenanted entity:
+// TODO: this needs to be made into an entity
 //@javax.jdo.annotations.PersistenceCapable
 public enum LeaseType {
 

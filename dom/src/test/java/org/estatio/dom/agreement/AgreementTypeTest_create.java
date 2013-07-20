@@ -75,7 +75,7 @@ public class AgreementTypeTest_create {
                 will(returnValue(new AgreementForTesting()));
             }
         });
-        final Agreement agreement = agreementType.create(mockContainer);
+        final Agreement<?> agreement = agreementType.create(mockContainer);
         
         // then
         assertThat(agreement.getAgreementType(), is(agreementType));

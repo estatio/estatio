@@ -64,7 +64,6 @@ import org.estatio.dom.party.Party;
         @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(name = "findByAssetAndActiveOnDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE units.contains(lu) && (terminationDate == null || terminationDate <= :activeOnDate) && (lu.unit == :asset || lu.unit.property == :asset) VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
 @Bookmarkable
-@MemberGroups({ "General", "Dates", "Lease Details", "Related" })
 public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
 

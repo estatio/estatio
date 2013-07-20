@@ -38,7 +38,7 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-// TODO: is this in scope?
+// REVIEW: is this in scope?
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
@@ -58,7 +58,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({ "General", "Dates", "Tags", "Related" })
 public class PartyRegistration extends EstatioTransactionalObject<PartyRegistration, Status> implements WithIntervalMutable<PartyRegistration> {
 
     public PartyRegistration() {

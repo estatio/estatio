@@ -18,14 +18,17 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
 
 @Hidden
 public class CommunicationChannels extends EstatioDomainService<CommunicationChannel> {
@@ -36,50 +39,65 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public PostalAddress newPostalAddress(final CommunicationChannelOwner owner, final String address1, final String address2, final String postalCode, final String city, final State state, final Country country) {
+    public PostalAddress newPostal(
+            final CommunicationChannelOwner owner, 
+            final CommunicationChannelType type,
+            final String address1, 
+            final String address2, 
+            final String postalCode, 
+            final String city, 
+            final State state, 
+            final Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
-        pa.setType(CommunicationChannelType.POSTAL_ADDRESS);
+        pa.setType(type);
         pa.setAddress1(address1);
         pa.setAddress2(address2);
         pa.setCity(city);
         pa.setPostalCode(postalCode);
         pa.setState(state);
         pa.setCountry(country);
+        pa.setOwner(owner);
         persistIfNotAlready(pa);
         owner.addToCommunicationChannels(pa);
         return pa;
     }
 
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public EmailAddress newEmailAddress(final CommunicationChannelOwner owner, final String address) {
+    public EmailAddress newEmail(
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type,
+            final String address) {
         final EmailAddress ea = newTransientInstance(EmailAddress.class);
-        ea.setType(CommunicationChannelType.EMAIL_ADDRESS);
+        ea.setType(type);
         ea.setAddress(address);
+        ea.setOwner(owner);
         persistIfNotAlready(ea);
         owner.addToCommunicationChannels(ea);
         return ea;
     }
 
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public PhoneNumber newPhoneNumber(final CommunicationChannelOwner owner, final String number) {
-        final PhoneNumber pn = newTransientInstance(PhoneNumber.class);
-        pn.setType(CommunicationChannelType.PHONE_NUMBER);
-        pn.setPhoneNumber(number);
+    public PhoneOrFaxNumber newPhoneOrFax(
+            final CommunicationChannelOwner owner,
+            final CommunicationChannelType type,
+            final String number) {
+        final PhoneOrFaxNumber pn = newTransientInstance(PhoneOrFaxNumber.class);
+        pn.setType(type);
+        pn.setNumber(number);
+        pn.setOwner(owner);
         persistIfNotAlready(pn);
         owner.addToCommunicationChannels(pn);
         return pn;
     }
 
-    @Hidden
-    public FaxNumber newFaxNumber(final CommunicationChannelOwner owner, final String number) {
-        final FaxNumber fn = newTransientInstance(FaxNumber.class);
-        fn.setType(CommunicationChannelType.FAX_NUMBER);
-        fn.setFaxNumber(number);
-        persistIfNotAlready(fn);
-        owner.addToCommunicationChannels(fn);
-        return fn;
-    }
 
     // //////////////////////////////////////
 

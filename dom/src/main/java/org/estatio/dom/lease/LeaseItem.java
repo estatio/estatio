@@ -81,7 +81,6 @@ import org.estatio.services.clock.ClockService;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({ "General", "Current Value", "Dates", "Related" })
 public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     public LeaseItem() {

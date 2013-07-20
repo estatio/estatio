@@ -34,6 +34,7 @@ import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleUnique;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.Queries({
@@ -89,11 +90,12 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     // //////////////////////////////////////
 
+    @SuppressWarnings("unchecked")
     @Programmatic
-    public Agreement create(DomainObjectContainer container) {
+    public Agreement<?> create(DomainObjectContainer container) {
         try {
-            Class<? extends Agreement> cls = ClassUtils.load(implementationClassName, Agreement.class);
-            Agreement agreement = container.newTransientInstance(cls);
+            Class<? extends Agreement<?>> cls = (Class<? extends Agreement<?>>) ClassUtils.load(implementationClassName, Agreement.class);
+            Agreement<?> agreement = container.newTransientInstance(cls);
             agreement.setAgreementType(this);
             return agreement;
         } catch (Exception ex) {

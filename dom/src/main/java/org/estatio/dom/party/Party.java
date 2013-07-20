@@ -34,6 +34,8 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 
 import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -52,6 +54,7 @@ import org.apache.isis.applib.annotation.Title;
                     +    "|| name.matches(:referenceOrName)") })
 @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
+@Bookmarkable
 public abstract class Party extends EstatioTransactionalObject<Party, Status> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
@@ -138,13 +141,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
             return;
         }
         getCommunicationChannels().remove(communicationChannel);
-    }
-
-    @MemberOrder(name = "CommunicationChannels", sequence = "10")
-    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
-        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
-        addToCommunicationChannels(communicationChannel);
-        return communicationChannel;
     }
 
     // //////////////////////////////////////

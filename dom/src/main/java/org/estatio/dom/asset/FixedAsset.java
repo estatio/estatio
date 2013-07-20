@@ -95,7 +95,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
-    @MemberOrder(sequence = "1.1")
+    @MemberOrder(name="Asset", sequence = "1.1")
     @Mask("AAAAAAAA")
     public String getReference() {
         return reference;
@@ -114,7 +114,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
-    @MemberOrder(sequence = "1.2")
+    @MemberOrder(name="Asset", sequence = "1.2")
     public String getName() {
         return name;
     }
@@ -131,7 +131,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     @Override
     @Disabled
     @Optional
-    @MemberOrder(sequence = "1.8")
+    @MemberOrder(name="Location", sequence = "1.8")
     public Location getLocation() {
         return location;
     }
@@ -206,15 +206,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
             return;
         }
         getCommunicationChannels().remove(communicationChannel);
-    }
-
-    // TODO: this doesn't look correct; the communication channel is never persisted anywhere...
-    @ActionSemantics(Of.NON_IDEMPOTENT) 
-    @MemberOrder(name = "CommunicationChannels", sequence = "1")
-    public CommunicationChannel addCommunicationChannel(final CommunicationChannelType communicationChannelType) {
-        CommunicationChannel communicationChannel = communicationChannelType.create(getContainer());
-        addToCommunicationChannels(communicationChannel);
-        return communicationChannel;
     }
 
     @Programmatic

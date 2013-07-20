@@ -42,6 +42,7 @@ public class AgreementTypeTest_createForLease {
     @Mock
     private DomainObjectContainer mockContainer;
 
+    @SuppressWarnings("rawtypes")
     @Test
     public void test() {
         final AgreementType agreementType = new AgreementType();
@@ -54,7 +55,7 @@ public class AgreementTypeTest_createForLease {
                 will(returnValue(lease));
             }
         });
-        final Agreement created = agreementType.create(mockContainer);
+        final Agreement<?> created = agreementType.create(mockContainer);
         assertThat(created, is((Agreement)lease));
         
         assertThat(created.getAgreementType(), is(agreementType));

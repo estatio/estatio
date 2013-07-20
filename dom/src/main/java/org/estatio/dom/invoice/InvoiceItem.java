@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -58,7 +57,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({ "General", "Amounts", "Dates", "Related" })
 public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem, Status> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {

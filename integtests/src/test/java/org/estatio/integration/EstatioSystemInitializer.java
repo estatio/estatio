@@ -40,6 +40,7 @@ import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.currency.Currencies;
@@ -122,6 +123,7 @@ public class EstatioSystemInitializer {
                     new Invoices(), 
                     new InvoiceItemsForLease(), 
                     new CommunicationChannels(),
+                    new CommunicationChannelContributedActions(),
                     new PostalAddresses(),
                     new Taxes(), 
                     new TaxRates(), 

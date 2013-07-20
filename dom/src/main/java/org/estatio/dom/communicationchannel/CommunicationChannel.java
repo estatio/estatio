@@ -19,34 +19,40 @@
 package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceGetter;
-import org.estatio.dom.WithStatus;
-import org.estatio.dom.agreement.AgreementRole;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(name = "findByReferenceAndType", language = "JDOQL", value = "SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (reference == :reference && type == :type)")
-public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel, Status> implements WithNameGetter, WithReferenceGetter  {
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
+                        + "WHERE reference == :reference "
+                        + "&& type == :type")
+})
+@Bookmarkable(BookmarkPolicy.AS_CHILD)
+public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel, Status> implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
         // TODO: description is annotated as optional,
@@ -71,6 +77,27 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         this.status = status;
     }
 
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Column(name = "OWNER")
+    @javax.jdo.annotations.Persistent(
+            extensions = {
+                    @Extension(vendorName = "datanucleus",
+                            key = "mapping-strategy",
+                            value = "identity")
+            })
+    private CommunicationChannelOwner owner;
+
+    @Hidden(where = Where.PARENTED_TABLES)
+    @Disabled
+    @MemberOrder(sequence = "5")
+    public CommunicationChannelOwner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(final CommunicationChannelOwner owner) {
+        this.owner = owner;
+    }
 
     // //////////////////////////////////////
 
@@ -103,7 +130,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     public void setReference(final String reference) {
         this.reference = reference;
     }
-    
 
     // //////////////////////////////////////
 

@@ -71,7 +71,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-@MemberGroups({ "General", "Dates", "Related" })
 public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalMutable<FixedAssetRole> {
 
     public FixedAssetRole() {
