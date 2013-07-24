@@ -486,6 +486,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("endDate") @Optional LocalDate endDate,
             @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
             @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate,
+            @Named("size") @Optional String size,
             @Named("brand") @Optional String brand,
             @Named("sector") @Optional String sector,
             @Named("activity") @Optional String activity) {
@@ -502,6 +503,7 @@ public class Api extends AbstractFactoryAndRepository {
 
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
+        leaseUnit.setSize(size);
         leaseUnit.setBrand(brand);
         leaseUnit.setSector(sector);
         leaseUnit.setActivity(activity);

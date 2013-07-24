@@ -36,7 +36,7 @@ public class LeaseUnitTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Tag.class))
             .withFixture(statii())
 	        .exercise(new LeaseUnit(),
-	                FilterSet.excluding("sector", "activity", "brand",
+	                FilterSet.excluding("size", "sector", "activity", "brand",
 	                        // TODO: bug in PojoTester; claims there's interference between 
 	                        // these fields, however are just the same datatype
 	                        "sectorTag", "activityTag"));

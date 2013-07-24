@@ -124,7 +124,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t05_putLeaseUnitWorks() throws Exception {
-        api.putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "ABIBRAND", "APISECTOR", "APIACTIVITY");
+        api.putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "APISIZE", "ABIBRAND", "APISECTOR", "APIACTIVITY");
         Lease l = leases.findLeaseByReference("APILEASE");
         Unit u = units.findUnitByReference("APIUNIT");
         Assert.assertNotNull(leaseUnits.findByLeaseAndUnitAndStartDate(l, u, START_DATE));

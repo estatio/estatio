@@ -242,6 +242,47 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Column(name = "SIZETAG_ID")
+    private Tag sizeTag;
+
+    @Hidden
+    public Tag getSizeTag() {
+        return sizeTag;
+    }
+
+    public void setSizeTag(final Tag sizeTag) {
+        this.sizeTag = sizeTag;
+    }
+
+    @MemberOrder(name = "Tags", sequence = "6")
+    @Optional
+    public String getSize() {
+        final Tag existingTag = getSizeTag();
+        return existingTag != null ? existingTag.getValue() : null;
+    }
+
+    public void setSize(final String size) {
+        final Tag existingTag = getSizeTag();
+        Tag tag = tags.tagFor(existingTag, this, "size", size);
+        setSizeTag(tag);
+    }
+
+    public List<String> choicesSize() {
+        return tags.choices(this, "size");
+    }
+
+    @MemberOrder(name = "Size", sequence = "6.1")
+    public LeaseUnit newSize(@Named("Tag") @Optional final String size) {
+        setSize(size);
+        return this;
+    }
+
+    public String default0NewSize() {
+        return getSize();
+    }
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Column(name = "BRANDTAG_ID")
     private Tag brandTag;
 
@@ -254,7 +295,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.brandTag = brandTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "6")
+    @MemberOrder(name = "Tags", sequence = "7")
     @Optional
     public String getBrand() {
         final Tag existingTag = getBrandTag();
@@ -271,7 +312,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "brand");
     }
 
-    @MemberOrder(name = "Brand", sequence = "6.1")
+    @MemberOrder(name = "Brand", sequence = "7.1")
     public LeaseUnit newBrand(@Named("Tag") @Optional final String brand) {
         setBrand(brand);
         return this;
@@ -295,7 +336,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.sectorTag = sectorTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "7")
+    @MemberOrder(name = "Tags", sequence = "8")
     @Optional
     public String getSector() {
         final Tag existingTag = getSectorTag();
@@ -312,7 +353,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "sector");
     }
 
-    @MemberOrder(name = "Sector", sequence = "7.1")
+    @MemberOrder(name = "Sector", sequence = "8.1")
     public LeaseUnit newSector(@Named("Tag") @Optional final String sector) {
         setSector(sector);
         return this;
@@ -336,7 +377,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.activityTag = activityTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "8")
+    @MemberOrder(name = "Tags", sequence = "9")
     @Optional
     public String getActivity() {
         final Tag existingTag = getActivityTag();
@@ -353,7 +394,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "activity");
     }
 
-    @MemberOrder(name = "Activity", sequence = "8.1")
+    @MemberOrder(name = "Activity", sequence = "9.1")
     public LeaseUnit newActivity(@Named("Tag") @Optional final String activity) {
         setActivity(activity);
         return this;
