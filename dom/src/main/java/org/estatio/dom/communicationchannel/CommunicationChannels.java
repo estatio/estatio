@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -60,7 +57,6 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
         pa.setCountry(country);
         pa.setOwner(owner);
         persistIfNotAlready(pa);
-        owner.addToCommunicationChannels(pa);
         return pa;
     }
 
@@ -77,7 +73,6 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
         ea.setAddress(address);
         ea.setOwner(owner);
         persistIfNotAlready(ea);
-        owner.addToCommunicationChannels(ea);
         return ea;
     }
 
@@ -94,7 +89,6 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
         pn.setNumber(number);
         pn.setOwner(owner);
         persistIfNotAlready(pn);
-        owner.addToCommunicationChannels(pn);
         return pn;
     }
 

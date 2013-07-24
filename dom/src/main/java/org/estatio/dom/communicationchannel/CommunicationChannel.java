@@ -173,4 +173,12 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
+    // //////////////////////////////////////
+
+    /**
+     * Isis callback
+     */
+    public void persisting() {
+        owner.addToCommunicationChannels(this);
+    }
 }

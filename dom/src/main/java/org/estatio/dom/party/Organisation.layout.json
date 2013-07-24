@@ -1,0 +1,39 @@
+{
+  "columns": [
+    {
+      "span": 3,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "reference": {},
+            "name": {},
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 9,
+      "collections": {
+        "agreements": {},
+        "communicationChannels": {},
+        "registrations": {
+          "actions": {
+            "addRegistration": {}
+          }
+        }
+      }
+    }
+  ]
+}

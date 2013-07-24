@@ -1,0 +1,48 @@
+{
+  "columns": [
+    {
+      "span": 2,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "reference": {},
+            "gender": {},
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 2,
+      "memberGroups": {
+        "Name": {
+          "members": {
+            "name": {},
+            "firstName": {},
+            "initials": {},
+            "lastName": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "agreements": {},
+        "communicationChannels": {},
+        "registrations": {
+          "actions": {
+            "addRegistration": {}
+          }
+        }
+      }
+    }
+  ]
+}
