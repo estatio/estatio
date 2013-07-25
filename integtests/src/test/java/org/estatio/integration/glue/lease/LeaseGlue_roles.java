@@ -55,6 +55,7 @@ public class LeaseGlue_roles extends CukeGlueAbstract {
         @XStreamConverter(V.LyyyyMMdd.class) private LocalDate endDate;
         @XStreamConverter(ETO.Lease.class) private Lease agreement;
         @XStreamConverter(ETO.Party.class) private Party party;
+        private String indicated;
     }
     
     
