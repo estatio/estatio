@@ -202,6 +202,14 @@ language governing permissions and limitations under the License.
         <filter-name>IsisSessionFilterForRestfulObjects</filter-name>
         <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
     </filter-mapping>
+    <filter>
+        <filter-name>IsisTransactionFilterForRestfulObjects</filter-name>
+        <filter-class>org.apache.isis.viewer.restfulobjects.server.webapp.IsisTransactionFilterForRestfulObjects</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>IsisTransactionFilterForRestfulObjects</filter-name>
+        <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>RestfulObjectsRestEasyDispatcher</servlet-name>
