@@ -411,43 +411,35 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             final @Named("startDate") @Optional LocalDate startDate,
             final @Named("endDate") @Optional LocalDate endDate) {
 
-        final RootedPredicate<AgreementRole, AgreementRoleType> predicate = new RootedPredicate<AgreementRole, AgreementRoleType>() {
-            @Override
-            public boolean doApply(AgreementRole root, AgreementRoleType input) {
-                return root.getType() == input;
-            }
-        };
-        
-        final WithIntervalMutator<AgreementRole> mutator = new WithIntervalMutator<AgreementRole>() {
-            @Override
-            public void newInterval(LocalDate startDate, LocalDate endDate) {
-                newRole(party, type, startDate, endDate);
-            }
-            @Override
-            public void copyExisting(AgreementRole existing, LocalDate startDate, LocalDate endDate) {
-                newRole(existing.getParty(), type, startDate, endDate);
-            }
-            @Override
-            public void replaceExactMatch(AgreementRole existingRole) {
-                existingRole.setParty(party);
-            }
-            @Override
-            public void adjustExistingStartDate(AgreementRole existingRole, LocalDate date) {
-                existingRole.setStartDate(date);
-            }
-            @Override
-            public void adjustExistingEndDate(AgreementRole existingRole, LocalDate date) {
-                existingRole.setEndDate(date);
-            }
-        };
-        
-        WithIntervals.addInterval(getRoles(), type, startDate, endDate, predicate, mutator);
-        
+        newRole(type, party, startDate, endDate);
         return this;
+    }
+    public String validateAddRole(
+            final AgreementRoleType type,
+            final Party party,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if(startDate != null && endDate != null && startDate.equals(endDate)) {
+            return "End date must be after start date";
+        }
+        if(Iterables.filter(getRoles(), sameTypeAs(type)).iterator().hasNext()) {
+            return "Add a successor/predecessor to existing agreement role";
+        }
+        return null;
+    }
+
+    private static Predicate<AgreementRole> sameTypeAs(final AgreementRoleType type) {
+        return new Predicate<AgreementRole>() {
+
+            @Override
+            public boolean apply(AgreementRole input) {
+                return input.getType() == type;
+            }
+        };
     }
 
 
-    private AgreementRole newRole(final Party party, final AgreementRoleType type, final LocalDate startDate, final LocalDate endDate) {
+    private AgreementRole newRole(final AgreementRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
         final AgreementRole newRole = newTransientInstance(AgreementRole.class);
         newRole.setStartDate(startDate);
         newRole.setEndDate(endDate);

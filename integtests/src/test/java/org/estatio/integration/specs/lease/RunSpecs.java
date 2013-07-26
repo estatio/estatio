@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
                 ,"json:target/cucumber.json"
         },
         glue={"classpath:org.estatio.integration.glue"},
-        //strict = true,
+        strict = true,
         tags = { "~@backlog", "~@ignore" }
         )
 public class RunSpecs {
