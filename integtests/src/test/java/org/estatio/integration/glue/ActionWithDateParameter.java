@@ -16,10 +16,34 @@
  */
 package org.estatio.integration.glue;
 
+import com.google.common.base.Objects;
+
+import cucumber.api.Transform;
+import cucumber.api.java.en.Then;
+
 import org.joda.time.LocalDate;
+import org.junit.Assert;
+
+import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
+import org.apache.isis.core.specsupport.specs.V;
 
 public interface ActionWithDateParameter {
 
     public abstract LocalDate defaultDateParameter(String paramName);
 
+    
+    public static class Glue extends CukeGlueAbstract {
+        
+        @Then("^.*default for.* \"([^\"]*)\" date parameter.* \"([^\"]*)\"$")
+        public void the_default_for_date_parameter_is(
+                String paramName, 
+                @Transform(V.LyyyyMMdd.class) final LocalDate expectedDate) throws Throwable {
+
+            nextTransaction();
+
+            ActionWithDateParameter action = getVar("isis-action", null, ActionWithDateParameter.class);
+            LocalDate actualDate = action.defaultDateParameter(paramName);
+            Assert.assertTrue(Objects.equal(expectedDate, actualDate));
+        }
+    }
 }

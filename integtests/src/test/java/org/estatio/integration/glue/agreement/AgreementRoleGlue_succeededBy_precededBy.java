@@ -16,14 +16,10 @@
  */
 package org.estatio.integration.glue.agreement;
 
-import com.google.common.base.Objects;
-
 import cucumber.api.Transform;
-import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 import org.apache.isis.core.specsupport.specs.V;
@@ -37,6 +33,21 @@ public class AgreementRoleGlue_succeededBy_precededBy extends CukeGlueAbstract {
     
     interface ActionInvokedWithPartyDateDate {
         public void invoke(Party party, LocalDate startDate, LocalDate endDate);
+        
+        public static class Glue extends CukeGlueAbstract {
+            @When("^.*invoke.* action,.* start date.* \"([^\"]*)\",.* end date.* \"([^\"]*)\",.* party.* \"([^\"]*)\"$")
+            public void I_invoke_the_action_with_start_date_end_date_party(
+                    @Transform(V.LyyyyMMdd.class) LocalDate startDate, 
+                    @Transform(V.LyyyyMMdd.class) LocalDate endDate, 
+                    @Transform(ETO.Party.class) Party party) throws Throwable {
+                
+                nextTransaction();
+                
+                ActionInvokedWithPartyDateDate action = 
+                        getVar("isis-action", null, ActionInvokedWithPartyDateDate.class);
+                action.invoke(party, startDate, endDate);
+            }
+        }
     }
     
     class SucceededByAction implements ActionWithDateParameter, ActionInvokedWithPartyDateDate {
@@ -91,32 +102,6 @@ public class AgreementRoleGlue_succeededBy_precededBy extends CukeGlueAbstract {
     @When("^.*want to.*predecessor.*indicated agreement role$")
     public void I_want_to_add_a_predecessor_to_the_indicated_agreement_role() throws Throwable {
         final AgreementRole agreementRole = getVar("agreementRole", "indicated", AgreementRole.class);
-        putVar("isis-action", "succeededBy",  new PrecededByAction(agreementRole));
+        putVar("isis-action", "precededBy",  new PrecededByAction(agreementRole));
     }
-
-    @Then("^.*default for.* \"([^\"]*)\" date parameter is \"([^\"]*)\"$")
-    public void the_default_for_date_parameter_is(
-            String paramName, 
-            @Transform(V.LyyyyMMdd.class) final LocalDate expectedDate) throws Throwable {
-
-        nextTransaction();
-
-        ActionWithDateParameter action = getVar("isis-action", null, ActionWithDateParameter.class);
-        LocalDate actualDate = action.defaultDateParameter(paramName);
-        Assert.assertTrue(Objects.equal(expectedDate, actualDate));
-    }
-
-    @When("^.*invoke.* action,.* start date \"([^\"]*)\",.* end date \"([^\"]*)\",.* party \"([^\"]*)\"$")
-    public void I_invoke_the_action_with_start_date_end_date_party(
-            @Transform(V.LyyyyMMdd.class) LocalDate startDate, 
-            @Transform(V.LyyyyMMdd.class) LocalDate endDate, 
-            @Transform(ETO.Party.class) Party party) throws Throwable {
-        
-        nextTransaction();
-        
-        ActionInvokedWithPartyDateDate action = 
-                getVar("isis-action", null, ActionInvokedWithPartyDateDate.class);
-        action.invoke(party, startDate, endDate);
-    }
-    
 }

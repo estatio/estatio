@@ -269,7 +269,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @Optional
     @Override
     public AgreementRole getPrevious() {
-        return WithInterval.Util.find(getAgreement().getRoles(), Predicates.and(  matching(getType(), null, getStartDate()), not(this)));
+        return WithInterval.Util.find(getAgreement().getRoles(), matchingEndDate(getType(), getStartDate()));
     }
 
     @MemberOrder(name="Related", sequence = "9.2")
@@ -279,9 +279,10 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @Optional
     @Override
     public AgreementRole getNext() {
-        return WithInterval.Util.find(getAgreement().getRoles(), Predicates.and(matching(getType(), getEndDate(), null), not(this)));
+        return WithInterval.Util.find(getAgreement().getRoles(), matchingStartDate(getType(), getEndDate()));
     }
 
+    @SuppressWarnings("unused")
     private static Predicate<AgreementRole> not(final AgreementRole ar) {
         return new Predicate<AgreementRole>(){
             @Override
@@ -291,14 +292,27 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         };
     }
 
-    private static Predicate<AgreementRole> matching(final AgreementRoleType type, final LocalDate startDateIfAny, final LocalDate endDateIfAny) {
+    private static Predicate<AgreementRole> matchingStartDate(final AgreementRoleType type, final LocalDate startDate) {
         return new Predicate<AgreementRole>(){
             @Override
             public boolean apply(final AgreementRole ar) {
+                if(startDate == null) { return false; }
                 if(ar == null) { return false; }
                 if(!Objects.equal(ar.getType(), type)) { return false; } 
-                if(startDateIfAny != null && !Objects.equal(ar.getStartDate(), startDateIfAny)) { return false; }
-                if(endDateIfAny != null && !Objects.equal(ar.getEndDate(), endDateIfAny)) { return false; }
+                if(!Objects.equal(ar.getStartDate(), startDate)) { return false; }
+                return true;
+            }
+        };
+    }
+
+    private static Predicate<AgreementRole> matchingEndDate(final AgreementRoleType type, final LocalDate endDate) {
+        return new Predicate<AgreementRole>(){
+            @Override
+            public boolean apply(final AgreementRole ar) {
+                if(endDate == null) { return false; }
+                if(ar == null) { return false; }
+                if(!Objects.equal(ar.getType(), type)) { return false; } 
+                if(!Objects.equal(ar.getEndDate(), endDate)) { return false; }
                 return true;
             }
         };
@@ -306,6 +320,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     
     // //////////////////////////////////////
     
+    @MemberOrder(name="Next", sequence = "1")
     public void succeededBy(
             final Party party, 
             final @Named("Start date") LocalDate startDate, 
@@ -349,6 +364,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
+    @MemberOrder(name="Next", sequence = "2")
     public void precededBy(
             final Party party, 
             final @Named("Start date") @Optional LocalDate startDate, 
@@ -390,6 +406,61 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return null;
     }
 
+    
+    // //////////////////////////////////////
+
+    @MemberOrder(name="End date", sequence = "1")
+    public void updateDates(
+            final @Named("Start date") @Optional LocalDate startDate, 
+            final @Named("End date") @Optional LocalDate endDate) {
+        
+        final AgreementRole predecessor = getPrevious();
+        if(predecessor != null) {
+            predecessor.setEndDate(startDate);
+        }
+        final AgreementRole successor = getNext();
+        if(successor != null) {
+            successor.setStartDate(endDate);
+        }
+        setStartDate(startDate);
+        setEndDate(endDate);
+    }
+    
+    public LocalDate default0UpdateDates() {
+        return getStartDate();
+    }
+    public LocalDate default1UpdateDates() {
+        return getEndDate();
+    }
+
+    public String validateUpdateDates(
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+
+        if(startDate != null && endDate != null && !startDate.isBefore(endDate)) {
+            return "Start date cannot be on/after the end date";
+        }
+        final AgreementRole predecessor = getPrevious();
+        if (predecessor != null) {
+            if(startDate == null) {
+                return "Start date cannot be set to null if there is a predecessor";
+            }
+            if(predecessor.getStartDate() != null && !predecessor.getStartDate().isBefore(startDate)) {
+                return "Start date cannot be on/before start of current predecessor";
+            }
+        }
+        final AgreementRole successor = getNext();
+        if (successor != null) {
+            if(endDate == null) {
+                return "End date cannot be set to null if there is a successor";
+            }
+            if(successor.getEndDate() != null && !successor.getEndDate().isAfter(endDate)) {
+                return "End date cannot be on/after end of current successor";
+            }
+        }
+        return null;
+    }
+    
     
     // //////////////////////////////////////
 
@@ -494,6 +565,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     public void injectAgreementRoles(AgreementRoles agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
+
 
 
 }
