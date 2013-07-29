@@ -1,0 +1,72 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "leaseItem": {},
+            "status": {},
+            "frequency": {},
+            "effectiveEndDate": {},
+            "effectiveStartDate": {},
+            "id": {},
+            "locked": {},
+            "parentWithInterval": {},
+            "sequence": {},
+            "versionSequence": {}
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
+          }
+        },
+        "Turnover Rent": {
+          "members": {
+            "turnoverRentRule": {},
+            "budgetedTurnover": {},
+            "auditedTurnover": {},
+            "contractualRent": {},
+            "turnoverRentValue": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        },
+        "Values": {
+          "members": {
+            "trialValue": {},
+            "approvedValue": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "invoiceItems": {
+          "actions": {
+            "calculate": {}
+          }
+        }
+      }
+    }
+  ]
+}

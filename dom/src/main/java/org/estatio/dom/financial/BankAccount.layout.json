@@ -1,0 +1,54 @@
+{
+  "columns": [
+    {
+      "span": 6,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "owner": {},
+            "reference": {},
+            "type": {},
+            "name": {}
+          }
+        },
+        "Control": {
+          "members": {
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 6,
+      "memberGroups": {
+        "Account Details": {
+          "members": {
+            "bank": {},
+            "bankAccountType": {},
+            "country": {},
+            "IBAN": {
+              "actions": {
+                "verifyIBAN": {}
+              }
+            },
+            "nationalCheckCode": {},
+            "nationalBankCode": {},
+            "branchCode": {},
+            "accountNumber": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "collections": {}
+    }
+  ]
+}

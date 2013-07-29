@@ -14,26 +14,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.integration.specs.agreement;
+package org.estatio.integration.glue;
 
-import cucumber.api.junit.Cucumber;
+import cucumber.api.java.en.Then;
 
-import org.junit.runner.RunWith;
+import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
+public interface ActionNoArgs {
 
-/**
- * Runs scenarios in all <tt>.feature</tt> files (this package and any subpackages). 
- */
-@RunWith(Cucumber.class)
-@Cucumber.Options(
-        format = {
-                "html:target/cucumber-html-report"
-                ,"json:target/cucumber.json"
-        },
-        glue={"classpath:org.estatio.integration.glue"},
-        //strict = true,
-        tags = { "~@backlog", "~@ignore" }
-        )
-public class RunSpecs {
-    // intentionally empty 
+    public static class Glue extends CukeGlueAbstract {
+        
+        @Then("^.*invoke the action$")
+        public void invoke_the_no_arg_action() throws Throwable {
+
+            nextTransaction();
+
+            ActionNoArgs action = getVar("isis-action", null, ActionNoArgs.class);
+            action.invoke();
+        }
+    }
+
+    void invoke();
 }

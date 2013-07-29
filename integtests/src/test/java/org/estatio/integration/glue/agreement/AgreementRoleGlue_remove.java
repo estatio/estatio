@@ -14,35 +14,41 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.integration.glue;
+package org.estatio.integration.glue.agreement;
 
-import com.google.common.base.Objects;
-
+import cucumber.api.PendingException;
 import cucumber.api.Transform;
-import cucumber.api.java.en.Then;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.When;
 
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
-public interface ActionWithDateParameter {
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.integration.glue.ActionNoArgs;
 
-    public abstract LocalDate defaultDateParameter(String paramName);
+public class AgreementRoleGlue_remove extends CukeGlueAbstract {
     
-    public static class Glue extends CukeGlueAbstract {
+    class RemoveAction implements ActionNoArgs {
         
-        @Then("^.*default for.* \"([^\"]*)\" date parameter.* \"([^\"]*)\"$")
-        public void the_default_for_date_parameter_is(
-                String paramName, 
-                @Transform(V.LyyyyMMdd.class) final LocalDate expectedDate) throws Throwable {
-
-            nextTransaction();
-
-            ActionWithDateParameter action = getVar("isis-action", null, ActionWithDateParameter.class);
-            LocalDate actualDate = action.defaultDateParameter(paramName);
-            Assert.assertTrue(Objects.equal(expectedDate, actualDate));
+        private final AgreementRole agreementRole;
+        RemoveAction(AgreementRole agreementRole) {
+            this.agreementRole = agreementRole;
         }
+        
+        @Override
+        public void invoke() {
+            throw new PendingException();
+        }
+        
     }
+    
+    @Given("^.*want to remove.* indicated agreement role$")
+    public void I_want_to_update_the_dates_on_the_indicated_agreement_role() throws Throwable {
+        final AgreementRole agreementRole = getVar("agreementRole", "indicated", AgreementRole.class);
+        putVar("isis-action", "updateDates",  new RemoveAction(agreementRole));
+    }
+
 }

@@ -1,12 +1,14 @@
 {
   "columns": [
     {
-      "span": 2,
+      "span": 4,
       "memberGroups": {
-        "General": {
+        "Asset": {
           "members": {
             "reference": {},
-            "gender": {}
+            "name": {},
+            "unitType": {},
+            "property": {}
           }
         },
         "Control": {
@@ -20,14 +22,24 @@
       }
     },
     {
-      "span": 2,
+      "span": 4,
       "memberGroups": {
-        "Name": {
+        "Areas": {
           "members": {
-            "name": {},
-            "firstName": {},
-            "initials": {},
-            "lastName": {}
+            "storageArea": {},
+            "salesArea": {},
+            "mezzanineArea": {},
+            "area": {},
+            "terraceArea": {}
+          }
+        },
+        "Location": {
+          "members": {
+            "location": {
+              "actions": {
+                "lookupLocation": {}
+              }
+            }
           }
         }
       }
@@ -37,13 +49,12 @@
       "memberGroups": {}
     },
     {
-      "span": 8,
+      "span": 4,
       "collections": {
-        "agreements": {},
         "communicationChannels": {},
-        "registrations": {
+        "roles": {
           "actions": {
-            "addRegistration": {}
+            "addRole": {}
           }
         }
       }

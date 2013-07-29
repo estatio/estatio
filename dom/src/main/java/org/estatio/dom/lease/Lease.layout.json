@@ -1,0 +1,86 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "reference": {},
+            "name": {},
+            "primaryParty": {},
+            "secondaryParty": {},
+            "agreementType": {},
+            "effectiveEndDate": {},
+            "effectiveStartDate": {},
+            "id": {},
+            "locked": {},
+            "parentWithInterval": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "terminationDate": {
+              "actions": {
+                "terminate": {}
+              }
+            }
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        },
+        "Lease Details": {
+          "members": {
+            "type": {},
+            "paidBy": {
+              "actions": {
+                "paidBy": {},
+                "newMandate": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "items": {
+          "actions": {
+            "newItem": {}
+          }
+        },
+        "roles": {
+          "actions": {
+            "addRole": {},
+            "removeRole": {}
+          }
+        },
+        "units": {
+          "actions": {
+            "addUnit": {}
+          }
+        }
+      }
+    }
+  ]
+}

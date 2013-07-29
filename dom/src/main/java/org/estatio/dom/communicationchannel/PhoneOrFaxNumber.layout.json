@@ -1,12 +1,12 @@
 {
   "columns": [
     {
-      "span": 3,
+      "span": 4,
       "memberGroups": {
         "General": {
           "members": {
-            "reference": {},
-            "name": {}
+            "name": {},
+            "phoneNumber": {}
           }
         },
         "Control": {
@@ -24,20 +24,22 @@
       "memberGroups": {}
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 9,
-      "collections": {
-        "agreements": {},
-        "communicationChannels": {},
-        "registrations": {
-          "actions": {
-            "addRegistration": {}
+      "span": 6,
+      "memberGroups": {
+        "Detail": {
+          "members": {
+            "owner": {},
+            "description": {},
+            "legal": {},
+            "type": {},
+            "reference": {}
           }
         }
       }
+    },
+    {
+      "span": 0,
+      "collections": {}
     }
   ]
 }

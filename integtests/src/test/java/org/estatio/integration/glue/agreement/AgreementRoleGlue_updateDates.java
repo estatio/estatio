@@ -16,29 +16,21 @@
  */
 package org.estatio.integration.glue.agreement;
 
-import com.google.common.base.Objects;
-
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.party.Party;
 import org.estatio.integration.glue.ActionWithDateParameter;
-import org.estatio.integration.glue.agreement.AgreementRoleGlue_succeededBy_precededBy.ActionInvokedWithPartyDateDate;
-import org.estatio.integration.glue.agreement.AgreementRoleGlue_succeededBy_precededBy.SucceededByAction;
-import org.estatio.integration.spectransformers.ETO;
 
 public class AgreementRoleGlue_updateDates extends CukeGlueAbstract {
     
-    class UpdateDatesAction implements ActionWithDateParameter {
+    public static class UpdateDatesAction extends CukeGlueAbstract implements ActionWithDateParameter {
         
         private final AgreementRole agreementRole;
         UpdateDatesAction(AgreementRole agreementRole) {
@@ -63,7 +55,7 @@ public class AgreementRoleGlue_updateDates extends CukeGlueAbstract {
             }
         }
     }
-    
+
     @Given("^.*want to update.* dates.*indicated agreement role$")
     public void I_want_to_update_the_dates_on_the_indicated_agreement_role() throws Throwable {
         final AgreementRole agreementRole = getVar("agreementRole", "indicated", AgreementRole.class);
@@ -81,4 +73,5 @@ public class AgreementRoleGlue_updateDates extends CukeGlueAbstract {
                 getVar("isis-action", null, UpdateDatesAction.class);
         action.invoke(startDate, endDate);
     }    
+
 }

@@ -1,0 +1,63 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "collectionNumber": {},
+            "invoiceNumber": {},
+            "reference": {},
+            "source": {},
+            "currency": {},
+            "paymentMethod": {},
+            "lastItemSequence": {}
+          }
+        },
+        "Control": {
+          "members": {
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Parties": {
+          "members": {
+            "buyer": {},
+            "seller": {}
+          }
+        },
+        "Dates": {
+          "members": {
+            "invoiceDate": {},
+            "dueDate": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Amounts": {
+          "members": {
+            "netAmount": {},
+            "vatAmount": {},
+            "grossAmount": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 12,
+      "collections": {
+        "items": {}
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+@EstatioTransactionalObjectsFixture
+Feature: Remove the last role within an Agreement's role collection
+
+  This is the corollary of the Agreement's addRole action.
+
+  Background:
+    Given there is a lease "OXF-PRET-004"
+    And   there is a party "PRET" 
+
+
+  @integration
+  Scenario: Remove last role
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | *         |
+          
+    When  I want to remove the indicated agreement role
+    And   I invoke the action
+    
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+
+
+  @integration
+  Scenario: Remove last role (when different role types)
+  
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 |           |
+          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | *         |
+          
+    When  I want to remove the indicated agreement role
+    And   I invoke the action
+    
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+
+
+  @integration
+  Scenario: Cannot remove role if more than one role of existing type
+  
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | null       | 2013-4-1 | PRET   | OXF-PRET-004 | *         |
+
+    When  I want to remove the indicated agreement role
+    And   I attempt to invoke the action
+          
+    Then  the action is disabled with message "Only the first role of any type can be explicitly removed" 
+    And   the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-4-1   | null     | POISON | OXF-PRET-004 | 
+          | Landlord | null       | 2013-4-1 | PRET   | OXF-PRET-004 | *         |

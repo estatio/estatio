@@ -14,35 +14,34 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.integration.glue;
-
-import com.google.common.base.Objects;
+package org.estatio.integration.glue.agreement;
 
 import cucumber.api.Transform;
-import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
-public interface ActionWithDateParameter {
+import org.estatio.dom.party.Party;
+import org.estatio.integration.spectransformers.ETO;
 
-    public abstract LocalDate defaultDateParameter(String paramName);
+interface ActionInvokedWithPartyDateDate {
+    public void invoke(Party party, LocalDate startDate, LocalDate endDate);
     
     public static class Glue extends CukeGlueAbstract {
-        
-        @Then("^.*default for.* \"([^\"]*)\" date parameter.* \"([^\"]*)\"$")
-        public void the_default_for_date_parameter_is(
-                String paramName, 
-                @Transform(V.LyyyyMMdd.class) final LocalDate expectedDate) throws Throwable {
-
+        @When("^.*invoke.* action,.* start date.* \"([^\"]*)\",.* end date.* \"([^\"]*)\",.* party.* \"([^\"]*)\"$")
+        public void I_invoke_the_action_with_start_date_end_date_party(
+                @Transform(V.LyyyyMMdd.class) LocalDate startDate, 
+                @Transform(V.LyyyyMMdd.class) LocalDate endDate, 
+                @Transform(ETO.Party.class) Party party) throws Throwable {
+            
             nextTransaction();
-
-            ActionWithDateParameter action = getVar("isis-action", null, ActionWithDateParameter.class);
-            LocalDate actualDate = action.defaultDateParameter(paramName);
-            Assert.assertTrue(Objects.equal(expectedDate, actualDate));
+            
+            ActionInvokedWithPartyDateDate action = 
+                    getVar("isis-action", null, ActionInvokedWithPartyDateDate.class);
+            action.invoke(party, startDate, endDate);
         }
     }
 }

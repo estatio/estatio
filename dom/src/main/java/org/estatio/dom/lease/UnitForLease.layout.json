@@ -1,0 +1,59 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "unitType": {},
+            "area": {},
+            "storageArea": {},
+            "salesArea": {},
+            "mezzanineArea": {},
+            "terraceArea": {},
+            "property": {},
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        },
+        "Asset": {
+          "members": {
+            "reference": {},
+            "name": {}
+          }
+        },
+        "Location": {
+          "members": {
+            "location": {
+              "actions": {
+                "lookupLocation": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "leases": {},
+        "communicationChannels": {},
+        "roles": {
+          "actions": {
+            "addRole": {}
+          }
+        }
+      }
+    }
+  ]
+}

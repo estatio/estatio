@@ -1,0 +1,71 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "reference": {},
+            "name": {},
+            "bankAccount": {},
+            "agreementType": {}
+          }
+        },
+        "Parties": {
+          "members": {
+            "primaryParty": {},
+            "secondaryParty": {}
+          }
+        },
+        "Control": {
+          "members": {
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "terminationDate": {},
+            "effectiveEndDate": {},
+            "effectiveStartDate": {},
+            "parentWithInterval": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 4,
+      "collections": {
+        "roles": {
+          "actions": {
+            "addRole": {},
+            "removeRole": {}
+          }
+        }
+      }
+    }
+  ]
+}

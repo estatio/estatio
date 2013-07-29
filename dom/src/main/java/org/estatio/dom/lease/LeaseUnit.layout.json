@@ -1,0 +1,78 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "lease": {},
+            "unit": {},
+            "status": {},
+            "activityTag": {},
+            "brandTag": {},
+            "effectiveEndDate": {},
+            "effectiveStartDate": {},
+            "id": {},
+            "locked": {},
+            "parentWithInterval": {},
+            "sectorTag": {},
+            "sizeTag": {},
+            "versionSequence": {}
+          }
+        },
+        "Tags": {
+          "members": {
+            "size": {
+              "actions": {
+                "newSize": {}
+              }
+            },
+            "brand": {
+              "actions": {
+                "newBrand": {}
+              }
+            },
+            "sector": {
+              "actions": {
+                "newSector": {}
+              }
+            },
+            "activity": {
+              "actions": {
+                "newActivity": {}
+              }
+            }
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ]
+}

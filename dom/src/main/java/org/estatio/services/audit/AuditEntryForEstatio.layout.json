@@ -1,0 +1,42 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "timestamp": {},
+            "user": {},
+            "timestampEpoch": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Object": {
+          "members": {
+            "objectType": {},
+            "identifier": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Details": {
+          "members": {
+            "preValue": {},
+            "postValue": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "collections": {}
+    }
+  ]
+}

@@ -1,12 +1,13 @@
 {
   "columns": [
     {
-      "span": 3,
+      "span": 6,
       "memberGroups": {
         "General": {
           "members": {
-            "reference": {},
-            "name": {}
+            "type": {},
+            "description": {},
+            "lastIncrement": {}
           }
         },
         "Control": {
@@ -28,16 +29,8 @@
       "memberGroups": {}
     },
     {
-      "span": 9,
-      "collections": {
-        "agreements": {},
-        "communicationChannels": {},
-        "registrations": {
-          "actions": {
-            "addRegistration": {}
-          }
-        }
-      }
+      "span": 6,
+      "collections": {}
     }
   ]
 }

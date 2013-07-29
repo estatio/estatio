@@ -21,6 +21,7 @@ package org.estatio.webapp.services.admin;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.core.metamodel.services.devutils.DeveloperUtilitiesServiceDefault;
 
@@ -34,5 +35,15 @@ public class DeveloperUtilities extends DeveloperUtilitiesServiceDefault {
     @ActionSemantics(Of.SAFE)
     public Clob downloadMetaModel() {
         return super.downloadMetaModel();
+    }
+    
+    /**
+     * 'Move' the action underneath the 'administration' menu item. 
+     */
+    @MemberOrder(name="Administration", sequence="91")
+    @ActionSemantics(Of.SAFE)
+    @Override
+    public Blob downloadLayouts() {
+        return super.downloadLayouts();
     }
 }

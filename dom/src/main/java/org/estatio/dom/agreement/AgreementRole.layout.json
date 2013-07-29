@@ -1,0 +1,68 @@
+{
+  "columns": [
+    {
+      "span": 3,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "agreement": {},
+            "party": {},
+            "type": {},
+            "current": {}
+          }
+        },
+        "Control": {
+          "members": {
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "effectiveEndDate": {},
+            "effectiveStartDate": {},
+            "parentWithInterval": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {
+              "actions": {
+                "succeededBy": {},
+                "precededBy": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 6,
+      "collections": {
+        "communicationChannels": {
+          "actions": {
+            "addCommunicationChannel": {}
+          }
+        }
+      }
+    }
+  ]
+}

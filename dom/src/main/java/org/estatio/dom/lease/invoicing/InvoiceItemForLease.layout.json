@@ -1,0 +1,65 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "invoice": {},
+            "leaseTerm": {},
+            "sequence": {},
+            "description": {},
+            "charge": {},
+            "quantity": {}
+          }
+        },
+        "Control": {
+          "members": {
+            "id": {},
+            "locked": {},
+            "status": {},
+            "versionSequence": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Amounts": {
+          "members": {
+            "netAmount": {},
+            "vatAmount": {},
+            "tax": {},
+            "grossAmount": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Dates": {
+          "members": {
+            "dueDate": {},
+            "startDate": {},
+            "endDate": {},
+            "effectiveEndDate": {},
+            "effectiveStartDate": {},
+            "parentWithInterval": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 12,
+      "collections": {}
+    }
+  ]
+}
