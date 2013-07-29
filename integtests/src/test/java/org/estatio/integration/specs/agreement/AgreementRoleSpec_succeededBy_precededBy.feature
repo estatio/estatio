@@ -293,7 +293,7 @@ Feature: For an Agreement, specify a successor or predecessor to an existing rol
 
     And   I want to add a successor to the indicated agreement role
     
-    When  I attempt to invoke the action, with start date "2013-4-1", end date "null", for the existing successor's party "POISON"
+    When  I attempt to invoke the action, with start date "2013-4-1", end date "2013-10-1", for the existing successor's party "POISON"
      
     Then  the action is invalid with message "Successor's party cannot be the same as that of existing successor"
     And   the lease's roles collection should contain:

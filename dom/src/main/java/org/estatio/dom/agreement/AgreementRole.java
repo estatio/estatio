@@ -97,6 +97,21 @@ import org.estatio.services.clock.ClockService;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalMutable<AgreementRole> {
 
+    public static final class NewRole implements WithInterval.Factory {
+        private final AgreementRole ar;
+        private final Party party;
+
+        public NewRole(AgreementRole ar, Party party) {
+            this.ar = ar;
+            this.party = party;
+        }
+
+        @Override
+        public void newRole(LocalDate startDate, LocalDate endDate) {
+            ar.getAgreement().newRole(ar.getType(), party, startDate, endDate);
+        }
+    }
+
     public AgreementRole() {
         super("agreement, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
     }
@@ -320,17 +335,14 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     
     // //////////////////////////////////////
     
+    private WithInterval.SucceededBy succeededBy = new WithInterval.SucceededBy(this);
+
     @MemberOrder(name="Next", sequence = "1")
     public void succeededBy(
             final Party party, 
             final @Named("Start date") LocalDate startDate, 
             final @Named("End date") @Optional LocalDate endDate) {
-        final AgreementRole successor = getNext();
-        if(successor != null) {
-            successor.setStartDate(endDate);
-        }
-        setEndDate(startDate);
-        getAgreement().newRole(getType(), party, startDate, endDate);
+        succeededBy.succeededBy(startDate, endDate, new NewRole(this, party));
     }
     
     public LocalDate default1SucceededBy() {
@@ -341,40 +353,32 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
             final Party party, 
             final LocalDate startDate, 
             final LocalDate endDate) {
+        String invalidReasonIfAny = succeededBy.validateSucceededBy(startDate, endDate);
+        if(invalidReasonIfAny != null) {
+            return invalidReasonIfAny;
+        }
+
         if(party == getParty()) {
             return "Successor's party cannot be the same as this object's party";
         }
-        if(getStartDate() != null && !getStartDate().isBefore(startDate)) {
-            return "Successor must start after existing";
-        }
         final AgreementRole successor = getNext();
-        if(successor != null) {
-            if (party == successor.getParty()) {
-                return "Successor's party cannot be the same as that of existing successor";
-            }
-            if (endDate == null) {
-                return "An end date is required because a successor already exists";
-            }
-            if(successor.getEndDate() != null && !endDate.isBefore(successor.getEndDate())) {
-                return "Successor must end prior to existing successor";
-            }
+        if(successor != null && party == successor.getParty()) {
+            return "Successor's party cannot be the same as that of existing successor";
         }
         return null;
     }
 
     // //////////////////////////////////////
 
+    private WithInterval.PrecededBy precededBy = new WithInterval.PrecededBy(this);
+
     @MemberOrder(name="Next", sequence = "2")
     public void precededBy(
             final Party party, 
             final @Named("Start date") @Optional LocalDate startDate, 
             final @Named("End date") LocalDate endDate) {
-        final AgreementRole predecessor = getPrevious();
-        if(predecessor != null) {
-            predecessor.setEndDate(startDate);
-        }
-        setStartDate(endDate);
-        getAgreement().newRole(getType(), party, startDate, endDate);
+        
+        precededBy.precededBy(startDate, endDate, new NewRole(this, party));
     }
     
     public LocalDate default2PrecededBy() {
@@ -385,23 +389,17 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
             final Party party, 
             final LocalDate startDate, 
             final LocalDate endDate) {
+        final String invalidReasonIfAny = precededBy.validatePrecededBy(startDate, endDate);
+        if(invalidReasonIfAny != null) {
+            return invalidReasonIfAny;
+        }
+        
         if(party == getParty()) {
             return "Predecessor's party cannot be the same as this object's party";
         }
-        if(getEndDate() != null && !getEndDate().isAfter(endDate)) {
-            return "Predecessor must end before existing";
-        }
         final AgreementRole predecessor = getPrevious();
-        if(predecessor != null) {
-            if (party == predecessor.getParty()) {
-                return "Predecessor's party cannot be the same as that of existing predecessor";
-            }
-            if (startDate == null) {
-                return "A start date is required because a predecessor already exists";
-            }
-            if(predecessor.getStartDate() != null && !startDate.isAfter(predecessor.getStartDate())) {
-                return "Predecessor must start after existing predecessor";
-            }
+        if(predecessor != null && party == predecessor.getParty()) {
+            return "Predecessor's party cannot be the same as that of existing predecessor";
         }
         return null;
     }
@@ -409,21 +407,13 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     
     // //////////////////////////////////////
 
+    private WithInterval.UpdateDates updateDates = new WithInterval.UpdateDates(this);
+    
     @MemberOrder(name="End date", sequence = "1")
     public void updateDates(
             final @Named("Start date") @Optional LocalDate startDate, 
             final @Named("End date") @Optional LocalDate endDate) {
-        
-        final AgreementRole predecessor = getPrevious();
-        if(predecessor != null) {
-            predecessor.setEndDate(startDate);
-        }
-        final AgreementRole successor = getNext();
-        if(successor != null) {
-            successor.setStartDate(endDate);
-        }
-        setStartDate(startDate);
-        setEndDate(endDate);
+        updateDates.updateDates(startDate, endDate);
     }
     
     public LocalDate default0UpdateDates() {
@@ -436,29 +426,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     public String validateUpdateDates(
             final LocalDate startDate, 
             final LocalDate endDate) {
-
-        if(startDate != null && endDate != null && !startDate.isBefore(endDate)) {
-            return "Start date cannot be on/after the end date";
-        }
-        final AgreementRole predecessor = getPrevious();
-        if (predecessor != null) {
-            if(startDate == null) {
-                return "Start date cannot be set to null if there is a predecessor";
-            }
-            if(predecessor.getStartDate() != null && !predecessor.getStartDate().isBefore(startDate)) {
-                return "Start date cannot be on/before start of current predecessor";
-            }
-        }
-        final AgreementRole successor = getNext();
-        if (successor != null) {
-            if(endDate == null) {
-                return "End date cannot be set to null if there is a successor";
-            }
-            if(successor.getEndDate() != null && !successor.getEndDate().isAfter(endDate)) {
-                return "End date cannot be on/after end of current successor";
-            }
-        }
-        return null;
+        return updateDates.validateUpdateDates(startDate, endDate);
     }
     
     
