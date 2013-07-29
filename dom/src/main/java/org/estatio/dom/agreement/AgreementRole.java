@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -28,6 +29,10 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceModifier;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.name.Named;
 
@@ -264,9 +269,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @Optional
     @Override
     public AgreementRole getPrevious() {
-        return getStartDate() != null
-                ?agreementRoles.findByAgreementAndPartyAndTypeAndEndDate(getAgreement(), getParty(), getType(), getStartDate().minusDays(1))
-                :null;
+        return WithInterval.Util.find(getAgreement().getRoles(), Predicates.and(  matching(getType(), null, getStartDate()), not(this)));
     }
 
     @MemberOrder(name="Related", sequence = "9.2")
@@ -276,11 +279,118 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @Optional
     @Override
     public AgreementRole getNext() {
-        return getEndDate() != null
-                ?agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(getAgreement(), getParty(), getType(), getEndDate().plusDays(1))
-                :null;
+        return WithInterval.Util.find(getAgreement().getRoles(), Predicates.and(matching(getType(), getEndDate(), null), not(this)));
     }
 
+    private static Predicate<AgreementRole> not(final AgreementRole ar) {
+        return new Predicate<AgreementRole>(){
+            @Override
+            public boolean apply(AgreementRole input) {
+                return input != null && input != ar;
+            }
+        };
+    }
+
+    private static Predicate<AgreementRole> matching(final AgreementRoleType type, final LocalDate startDateIfAny, final LocalDate endDateIfAny) {
+        return new Predicate<AgreementRole>(){
+            @Override
+            public boolean apply(final AgreementRole ar) {
+                if(ar == null) { return false; }
+                if(!Objects.equal(ar.getType(), type)) { return false; } 
+                if(startDateIfAny != null && !Objects.equal(ar.getStartDate(), startDateIfAny)) { return false; }
+                if(endDateIfAny != null && !Objects.equal(ar.getEndDate(), endDateIfAny)) { return false; }
+                return true;
+            }
+        };
+    }
+    
+    // //////////////////////////////////////
+    
+    public void succeededBy(
+            final Party party, 
+            final @Named("Start date") LocalDate startDate, 
+            final @Named("End date") @Optional LocalDate endDate) {
+        final AgreementRole successor = getNext();
+        if(successor != null) {
+            successor.setStartDate(endDate);
+        }
+        setEndDate(startDate);
+        getAgreement().newRole(getType(), party, startDate, endDate);
+    }
+    
+    public LocalDate default1SucceededBy() {
+        return getEndDate();
+    }
+    
+    public String validateSucceededBy(
+            final Party party, 
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        if(party == getParty()) {
+            return "Successor's party cannot be the same as this object's party";
+        }
+        if(getStartDate() != null && !getStartDate().isBefore(startDate)) {
+            return "Successor must start after existing";
+        }
+        final AgreementRole successor = getNext();
+        if(successor != null) {
+            if (party == successor.getParty()) {
+                return "Successor's party cannot be the same as that of existing successor";
+            }
+            if (endDate == null) {
+                return "An end date is required because a successor already exists";
+            }
+            if(successor.getEndDate() != null && !endDate.isBefore(successor.getEndDate())) {
+                return "Successor must end prior to existing successor";
+            }
+        }
+        return null;
+    }
+
+    // //////////////////////////////////////
+
+    public void precededBy(
+            final Party party, 
+            final @Named("Start date") @Optional LocalDate startDate, 
+            final @Named("End date") LocalDate endDate) {
+        final AgreementRole predecessor = getPrevious();
+        if(predecessor != null) {
+            predecessor.setEndDate(startDate);
+        }
+        setStartDate(endDate);
+        getAgreement().newRole(getType(), party, startDate, endDate);
+    }
+    
+    public LocalDate default2PrecededBy() {
+        return getStartDate();
+    }
+    
+    public String validatePrecededBy(
+            final Party party, 
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        if(party == getParty()) {
+            return "Predecessor's party cannot be the same as this object's party";
+        }
+        if(getEndDate() != null && !getEndDate().isAfter(endDate)) {
+            return "Predecessor must end before existing";
+        }
+        final AgreementRole predecessor = getPrevious();
+        if(predecessor != null) {
+            if (party == predecessor.getParty()) {
+                return "Predecessor's party cannot be the same as that of existing predecessor";
+            }
+            if (startDate == null) {
+                return "A start date is required because a predecessor already exists";
+            }
+            if(predecessor.getStartDate() != null && !startDate.isAfter(predecessor.getStartDate())) {
+                return "Predecessor must start after existing predecessor";
+            }
+        }
+        return null;
+    }
+
+    
     // //////////////////////////////////////
 
     private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
@@ -384,5 +494,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     public void injectAgreementRoles(AgreementRoles agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
+
 
 }

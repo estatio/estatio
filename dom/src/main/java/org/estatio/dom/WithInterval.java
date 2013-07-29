@@ -18,6 +18,12 @@
  */
 package org.estatio.dom;
 
+import java.util.Iterator;
+import java.util.SortedSet;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -124,5 +130,11 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             } 
             return null;
         }
+        public static <T extends WithInterval<T>> T find(SortedSet<T> roles, Predicate<T> predicate) {
+            final Iterable<T> filter = Iterables.filter(roles, predicate);
+            final Iterator<T> iterator = filter.iterator();
+            return iterator.hasNext()? iterator.next(): null;
+        }
+
     }
 }

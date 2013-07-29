@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 import com.google.common.collect.Lists;
+import com.googlecode.totallylazy.Strings;
 
 import cucumber.api.Transform;
 import cucumber.api.java.en.Given;
@@ -73,20 +74,23 @@ public class LeaseGlue_roles extends CukeGlueAbstract {
         final Lease lease = getVar("lease", null, Lease.class);
         assertThat(lease.getRoles().isEmpty(), is(true));
         for (AgreementRoleDesc ard : listOfActuals) {
-            lease.addRole(ard.type, ard.party, ard.startDate, ard.endDate);
+            final AgreementRole ar = lease.newRole(ard.type, ard.party, ard.startDate, ard.endDate);
+            if(!Strings.isEmpty(ard.indicated)) {
+                putVar("agreementRole", "indicated", ar);
+            }
         }
     }
 
-    @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* this party$")
+    @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* party \"([^\"]*)\"$")
     public void when_add_agreement_role_with_type_with_start_date_and_end_date(
             @Transform(ERD.AgreementRoleType.class) final AgreementRoleType type, 
             @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
-            @Transform(V.LyyyyMMdd.class) final LocalDate endDate) throws Throwable {
+            @Transform(V.LyyyyMMdd.class) final LocalDate endDate,
+            @Transform(ETO.Party.class) final Party party) throws Throwable {
       
         nextTransaction();
         
         final Lease lease = getVar("lease", null, Lease.class);
-        final Party party = getVar("party", null, Party.class);
 
         try {
             wrap(lease).addRole(type, party, startDate, endDate);

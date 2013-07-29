@@ -439,7 +439,11 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     }
 
 
-    private AgreementRole newRole(final AgreementRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
+    /**
+     * Provided for BDD "glue"; delegated to by {@link #addRole(AgreementRoleType, Party, LocalDate, LocalDate)}.
+     */
+    @Programmatic
+    public AgreementRole newRole(final AgreementRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
         final AgreementRole newRole = newTransientInstance(AgreementRole.class);
         newRole.setStartDate(startDate);
         newRole.setEndDate(endDate);

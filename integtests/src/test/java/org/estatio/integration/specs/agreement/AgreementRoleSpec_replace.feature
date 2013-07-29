@@ -1,0 +1,87 @@
+@EstatioTransactionalObjectsFixture
+Feature: Remove an existing role, replacing with its predecessor or successor 
+
+  Roles must always be contiguous.  If a role is replaced, then the dates that it occupied
+  must be taken up either by its predecessor or its successor.
+
+
+  Background:
+    Given there is a lease "OXF-PRET-004"
+    And   there is a party "PRET" 
+
+
+  @backlog
+  @integration
+  Scenario: Cannot replace if no successor or predecessor
+  
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | *         |
+    And   I want to replace the agreement role with a successor or predecessor
+    
+    When  I attempt to invoke the action 
+    
+    Then  the action is disabled with message "No predecessor or successor to replace"
+    And   the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Tenant   | null       | 2013-4-1 | PRET   | OXF-PRET-004 |
+
+
+  @backlog
+  @integration
+  Scenario: Can replace if has successor, though no predecessor
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Tenant   | 2013-4-1   | 2015-9-1 | POISON | OXF-PRET-004 |           |
+          | Tenant   | 2010-3-1   | 2013-4-1 | PRET   | OXF-PRET-004 | *         |
+    When  I want to replace the agreement role with a successor or predecessor
+    
+    Then  the direction string parameter defaults to "successor"
+    And   the direction string parameter choices is only "successor"
+    
+    When  I invoke the action with direction as "successor"
+    
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Tenant   | 2010-3-1   | 2015-9-1 | POISON | OXF-PRET-004 |
+
+  @backlog
+  @integration
+  Scenario: Can replace if has predecessor though no successor
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Tenant   | 2013-4-1   | 2015-9-1 | PRET   | OXF-PRET-004 | *         |
+          | Tenant   | 2010-3-1   | 2013-4-1 | POISON | OXF-PRET-004 |           |
+    When  I want to replace the agreement role with a successor or predecessor
+    
+    Then  the direction string parameter defaults to "predecessor"
+    And   the direction string parameter choices is only "predecessor"
+    
+    When  I invoke the action with direction as "predecessor"
+     
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Tenant   | 2010-3-1   | 2015-9-1 | POISON | OXF-PRET-004 |
+
+
+  @backlog
+  @integration
+  Scenario: Can replace if has both predecessor and successor
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party    | agreement    | indicated |
+          | Tenant   | 2015-9-1   | 2018-4-1 | TOPMODEL | OXF-PRET-004 |           |
+          | Tenant   | 2013-4-1   | 2015-9-1 | PRET     | OXF-PRET-004 | *         |
+          | Tenant   | 2010-3-1   | 2013-4-1 | POISON   | OXF-PRET-004 |           |
+    When  I want to replace the agreement role with a successor or predecessor
+    
+    Then  the direction string parameter defaults to "successor"
+    And   the direction string parameter choices is:
+          | direction   |
+          | predecessor |
+          | successor   |
+    
+    When  I invoke the action with direction as "successor" 
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party    | agreement    |
+          | Tenant   | 2013-4-1   | 2018-4-1 | TOPMODEL | OXF-PRET-004 |
+          | Tenant   | 2010-3-1   | 2013-4-1 | POISON   | OXF-PRET-004 |
