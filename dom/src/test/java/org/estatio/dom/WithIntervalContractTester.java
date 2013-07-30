@@ -38,14 +38,14 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         }
 
         /**
-         * Instantiate the {@link WithInterval}, with NO {@link WithInterval#getParentWithInterval() parent}.
+         * Instantiate the {@link WithInterval}, with NO {@link WithInterval#getWithIntervalParent() parent}.
          */
         public T newWithInterval() throws Exception {
             return wiClass.newInstance();
         }
 
         /**
-         * Instantiate the {@link WithInterval}, with a {@link WithInterval#getParentWithInterval() parent}.
+         * Instantiate the {@link WithInterval}, with a {@link WithInterval#getWithIntervalParent() parent}.
          * 
          * <p>
          * If the {@link WithInterval} does not support having a parent, then just return <tt>null</tt>. 
@@ -150,7 +150,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(startDate);
         t.setEndDate(null);
         
-        t.getParentWithInterval().setEndDate(parentEndDate);
+        t.getWithIntervalParent().setEndDate(parentEndDate);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": has start date", interval.startDate(), is(startDate));
@@ -167,7 +167,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(startDate);
         t.setEndDate(null);
         
-        t.getParentWithInterval().setEndDate(null);
+        t.getWithIntervalParent().setEndDate(null);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": has start date", interval.startDate(), is(startDate));
@@ -184,7 +184,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(null);
         t.setEndDate(endDate);
         
-        t.getParentWithInterval().setStartDate(parentStartDate);
+        t.getWithIntervalParent().setStartDate(parentStartDate);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": has no start date but parent has start date", interval.startDate(), is(parentStartDate));
@@ -201,7 +201,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(null);
         t.setEndDate(endDate);
         
-        t.getParentWithInterval().setStartDate(null);
+        t.getWithIntervalParent().setStartDate(null);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": no start date and parent has no start date", interval.startDate(), is(nullValue()));
@@ -218,8 +218,8 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(null);
         t.setEndDate(null);
         
-        t.getParentWithInterval().setStartDate(null);
-        t.getParentWithInterval().setEndDate(null);
+        t.getWithIntervalParent().setStartDate(null);
+        t.getWithIntervalParent().setEndDate(null);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": no start date and parent has no start date", interval.startDate(), is(nullValue()));
@@ -236,8 +236,8 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(null);
         t.setEndDate(null);
         
-        t.getParentWithInterval().setStartDate(parentStartDate);
-        t.getParentWithInterval().setEndDate(null);
+        t.getWithIntervalParent().setStartDate(parentStartDate);
+        t.getWithIntervalParent().setEndDate(null);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": no start date but parent has start date", interval.startDate(), is(parentStartDate));
@@ -254,8 +254,8 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(null);
         t.setEndDate(null);
         
-        t.getParentWithInterval().setStartDate(null);
-        t.getParentWithInterval().setEndDate(parentEndDate);
+        t.getWithIntervalParent().setStartDate(null);
+        t.getWithIntervalParent().setEndDate(parentEndDate);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": has no start date and parent has no start date", interval.startDate(), is(nullValue()));
@@ -272,8 +272,8 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         t.setStartDate(null);
         t.setEndDate(null);
         
-        t.getParentWithInterval().setStartDate(parentStartDate);
-        t.getParentWithInterval().setEndDate(parentEndDate);
+        t.getWithIntervalParent().setStartDate(parentStartDate);
+        t.getWithIntervalParent().setEndDate(parentEndDate);
         
         final LocalDateInterval interval = t.getInterval();
         assertThat(instantiator.getClassName() + ": no start date but parent has start date", interval.startDate(), is(parentStartDate));
@@ -283,7 +283,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
     private T newWithInterval() {
         try {
             final T wi = instantiator.newWithInterval();
-            assertThat(wi.getParentWithInterval(), is(nullValue()));
+            assertThat(wi.getWithIntervalParent(), is(nullValue()));
             return wi;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -293,7 +293,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         try {
             final T wi = instantiator.newWithIntervalWithParent();
             if(wi != null) {
-                assertThat(wi.toString(), wi.getParentWithInterval(), is(not(nullValue())));
+                assertThat(wi.toString(), wi.getWithIntervalParent(), is(not(nullValue())));
             }
             return wi;
         } catch (Exception e) {

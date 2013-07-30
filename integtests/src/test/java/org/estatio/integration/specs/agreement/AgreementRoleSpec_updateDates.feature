@@ -16,37 +16,37 @@ Feature: Update the start/end dates of an existing AgreementRole
     And   there is a party "PRET" 
 
 
-#  @integration
-#  Scenario: Can update start and end dates of initial role from null
-#  
-#    Given the lease's roles collection contains:
-#          | type     | start date | end date | party  | agreement    | indicated |
-#          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | *         |
-#    And   I want to update the dates on the indicated agreement role
-#    
-#    When  I invoke the action, start date "2013-4-1", end date "2014-9-1"
-#     
-#    Then  the lease's roles collection should contain:
-#          | type     | start date | end date | party  | agreement    |
-#          | Tenant   | 2013-4-1   | 2014-9-1 | PRET   | OXF-PRET-004 |
-#
-#
-#  @integration
-#  Scenario: Cannot update start date to null if has predecessor
-#
-#    Given the lease's roles collection contains:
-#          | type     | start date | end date | party  | agreement    | indicated |
-#          | Tenant   | 2013-4-1   | null     | PRET   | OXF-PRET-004 | *         |
-#          | Tenant   | null       | 2013-4-1 | POISON | OXF-PRET-004 |           |
-#    And   I want to update the dates on the indicated agreement role
-#          
-#    When  I attempt to invoke the action, start date to "null", end date unchanged as "null"
-#
-#    Then  the action is invalid with message "Start date cannot be set to null if there is a predecessor"
-#    And   the lease's roles collection should contain:
-#          | type     | start date | end date | party  | agreement    |
-#          | Tenant   | 2013-4-1   | null     | PRET   | OXF-PRET-004 |
-#          | Tenant   | null       | 2013-4-1 | POISON | OXF-PRET-004 |
+  @integration
+  Scenario: Can update start and end dates of initial role from null
+  
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Tenant   | null       | null     | PRET   | OXF-PRET-004 | *         |
+    And   I want to update the dates on the indicated agreement role
+    
+    When  I invoke the action, start date "2013-4-1", end date "2014-9-1"
+     
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Tenant   | 2013-4-1   | 2014-9-1 | PRET   | OXF-PRET-004 |
+
+
+  @integration
+  Scenario: Cannot update start date to null if has predecessor
+
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    | indicated |
+          | Tenant   | 2013-4-1   | null     | PRET   | OXF-PRET-004 | *         |
+          | Tenant   | null       | 2013-4-1 | POISON | OXF-PRET-004 |           |
+    And   I want to update the dates on the indicated agreement role
+          
+    When  I attempt to invoke the action, start date to "null", end date unchanged as "null"
+
+    Then  the action is invalid with message "Start date cannot be set to null if there is a predecessor"
+    And   the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Tenant   | 2013-4-1   | null     | PRET   | OXF-PRET-004 |
+          | Tenant   | null       | 2013-4-1 | POISON | OXF-PRET-004 |
 
 
   @integration
@@ -227,7 +227,7 @@ Feature: Update the start/end dates of an existing AgreementRole
           
     When  I attempt to invoke the action, start date "2013-5-1", end date same as start, ie "2013-5-1"
           
-    Then  the action is invalid with message "Start date cannot be on/after the end date"
+    Then  the action is invalid with message "End date must be after start date"
     And   the lease's roles collection should contain:
           | type     | start date | end date | party  | agreement    |
           | Tenant   | 2013-4-1   | 2014-5-1 | PRET   | OXF-PRET-004 |

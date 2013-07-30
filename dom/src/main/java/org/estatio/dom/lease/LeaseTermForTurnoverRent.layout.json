@@ -8,25 +8,14 @@
             "leaseItem": {},
             "status": {},
             "frequency": {},
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "id": {},
-            "locked": {},
-            "parentWithInterval": {},
-            "sequence": {},
-            "versionSequence": {}
+            "sequence": {}
           }
-        },
-        "Dates": {
-          "members": {
-            "startDate": {},
-            "endDate": {
-              "actions": {
-                "changeDates": {}
-              }
-            }
-          }
-        },
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
         "Turnover Rent": {
           "members": {
             "turnoverRentRule": {},
@@ -34,12 +23,6 @@
             "auditedTurnover": {},
             "contractualRent": {},
             "turnoverRentValue": {}
-          }
-        },
-        "Related": {
-          "members": {
-            "previous": {},
-            "next": {}
           }
         },
         "Values": {
@@ -51,15 +34,28 @@
       }
     },
     {
-      "span": 0,
-      "memberGroups": {}
+      "span": 4,
+      "memberGroups": {
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 8,
+      "span": 12,
       "collections": {
         "invoiceItems": {
           "actions": {

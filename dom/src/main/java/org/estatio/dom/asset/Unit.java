@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -42,7 +41,6 @@ public class Unit extends FixedAsset {
 
     private UnitType unitType;
 
-    @MemberOrder(sequence = "3")
     public UnitType getUnitType() {
         return unitType;
     }
@@ -57,7 +55,6 @@ public class Unit extends FixedAsset {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
-    @MemberOrder(sequence = "4")
     public BigDecimal getArea() {
         return area;
     }
@@ -72,7 +69,6 @@ public class Unit extends FixedAsset {
     private BigDecimal storageArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @MemberOrder(sequence = "5")
     public BigDecimal getStorageArea() {
         return storageArea;
     }
@@ -88,7 +84,6 @@ public class Unit extends FixedAsset {
     private BigDecimal salesArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @MemberOrder(sequence = "6")
     public BigDecimal getSalesArea() {
         return salesArea;
     }
@@ -103,7 +98,6 @@ public class Unit extends FixedAsset {
     private BigDecimal mezzanineArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @MemberOrder(sequence = "7")
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
     }
@@ -119,7 +113,6 @@ public class Unit extends FixedAsset {
     private BigDecimal terraceArea;
 
     @Hidden(where = Where.PARENTED_TABLES)
-    @MemberOrder(sequence = "8")
     public BigDecimal getTerraceArea() {
         return terraceArea;
     }
@@ -135,7 +128,6 @@ public class Unit extends FixedAsset {
 
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
-    @MemberOrder(sequence = "9")
     public Property getProperty() {
         return property;
     }

@@ -68,8 +68,8 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         Property property = properties.newProperty(reference, name, type);
         property.setOpeningDate(openingDate);
         property.setAcquireDate(acquireDate);
-        property.addRole(owner, FixedAssetRoleType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
-        property.addRole(manager, FixedAssetRoleType.ASSET_MANAGER, null, null);
+        property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
+        property.addRoleIfDoesNotExist(manager, FixedAssetRoleType.ASSET_MANAGER, null, null);
         // property.setLocation(new Location(lat, lng));
         for (int i = 0; i < numberOfUnits; i++) {
             int unitNumber = i + 1;

@@ -8,14 +8,6 @@
             "name": {},
             "phoneNumber": {}
           }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
-          }
         }
       }
     },
@@ -31,6 +23,7 @@
             "owner": {},
             "description": {},
             "legal": {},
+            "status": {},
             "type": {},
             "reference": {}
           }

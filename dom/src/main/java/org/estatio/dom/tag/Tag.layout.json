@@ -5,24 +5,34 @@
       "memberGroups": {
         "General": {
           "members": {
+            "name": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Tagged object": {
+          "members": {
             "objectType": {},
-            "value": {},
-            "name": {},
             "objectIdentifier": {}
           }
         }
       }
     },
     {
-      "span": 0,
-      "memberGroups": {}
+      "span": 4,
+      "memberGroups": {
+        "Value": {
+          "members": {
+            "value": {}
+          }
+        }
+      }
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 8,
+      "span": 12,
       "collections": {}
     }
   ]

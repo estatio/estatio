@@ -263,7 +263,7 @@ public class Api extends AbstractFactoryAndRepository {
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);
-        property.addRole(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
+        property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
     }
 
     private Property fetchProperty(String reference, boolean createIfNotFond) {
@@ -430,13 +430,11 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        Property property = fetchProperty(propertyReference, false);
-        Party party = fetchParty(partyReference);
-        FixedAssetRole actor = fixedAssetRoles.findRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
-        if (actor == null) {
-            fixedAssetRoles.newRole(property, party, FixedAssetRoleType.valueOf(type), startDate, endDate);
-        }
+    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String typeStr, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
+        final Property property = fetchProperty(propertyReference, false);
+        final Party party = fetchParty(partyReference);
+        final FixedAssetRoleType type = FixedAssetRoleType.valueOf(typeStr);
+        property.addRoleIfDoesNotExist(party, type, startDate, endDate);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

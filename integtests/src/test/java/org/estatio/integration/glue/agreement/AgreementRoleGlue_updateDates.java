@@ -30,26 +30,26 @@ import org.estatio.integration.glue.ActionWithDateParameter;
 
 public class AgreementRoleGlue_updateDates extends CukeGlueAbstract {
     
-    public static class UpdateDatesAction extends CukeGlueAbstract implements ActionWithDateParameter {
+    public static class ChangeDatesAction extends CukeGlueAbstract implements ActionWithDateParameter {
         
         private final AgreementRole agreementRole;
-        UpdateDatesAction(AgreementRole agreementRole) {
+        ChangeDatesAction(AgreementRole agreementRole) {
             this.agreementRole = agreementRole;
         }
         
         @Override
         public LocalDate defaultDateParameter(String paramName) {
             if("start date".equals(paramName)) {
-                return agreementRole.default0UpdateDates();
+                return agreementRole.default0ChangeDates();
             }
             if("end date".equals(paramName)) {
-                return agreementRole.default1UpdateDates();
+                return agreementRole.default1ChangeDates();
             }
             throw new IllegalArgumentException("Unknown parameter name '" + paramName + "'");
         }
         public void invoke(LocalDate startDate, LocalDate endDate) {
             try {
-                wrap(agreementRole).updateDates(startDate, endDate);
+                wrap(agreementRole).changeDates(startDate, endDate);
             } catch(Exception ex) {
                 putVar("exception", "exception", ex);
             }
@@ -59,7 +59,7 @@ public class AgreementRoleGlue_updateDates extends CukeGlueAbstract {
     @Given("^.*want to update.* dates.*indicated agreement role$")
     public void I_want_to_update_the_dates_on_the_indicated_agreement_role() throws Throwable {
         final AgreementRole agreementRole = getVar("agreementRole", "indicated", AgreementRole.class);
-        putVar("isis-action", "updateDates",  new UpdateDatesAction(agreementRole));
+        putVar("isis-action", "updateDates",  new ChangeDatesAction(agreementRole));
     }
 
     @When("^.*invoke the action, start date.* \"([^\"]*)\", end date.* \"([^\"]*)\"$")
@@ -69,8 +69,8 @@ public class AgreementRoleGlue_updateDates extends CukeGlueAbstract {
         
         nextTransaction();
         
-        UpdateDatesAction action = 
-                getVar("isis-action", null, UpdateDatesAction.class);
+        ChangeDatesAction action = 
+                getVar("isis-action", null, ChangeDatesAction.class);
         action.invoke(startDate, endDate);
     }    
 

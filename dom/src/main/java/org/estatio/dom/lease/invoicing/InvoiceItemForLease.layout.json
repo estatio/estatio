@@ -8,17 +8,14 @@
             "invoice": {},
             "leaseTerm": {},
             "sequence": {},
+            "status": {}
+          }
+        },
+        "Details": {
+          "members": {
             "description": {},
             "charge": {},
             "quantity": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
           }
         }
       }
@@ -43,16 +40,7 @@
           "members": {
             "dueDate": {},
             "startDate": {},
-            "endDate": {},
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "parentWithInterval": {}
-          }
-        },
-        "Related": {
-          "members": {
-            "previous": {},
-            "next": {}
+            "endDate": {}
           }
         }
       }

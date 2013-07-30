@@ -7,19 +7,14 @@
           "members": {
             "lease": {},
             "unit": {},
-            "status": {},
-            "activityTag": {},
-            "brandTag": {},
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "id": {},
-            "locked": {},
-            "parentWithInterval": {},
-            "sectorTag": {},
-            "sizeTag": {},
-            "versionSequence": {}
+            "status": {}
           }
-        },
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
         "Tags": {
           "members": {
             "size": {
@@ -43,7 +38,12 @@
               }
             }
           }
-        },
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
         "Dates": {
           "members": {
             "startDate": {},
@@ -53,25 +53,11 @@
               }
             }
           }
-        },
-        "Related": {
-          "members": {
-            "previous": {},
-            "next": {}
-          }
         }
       }
     },
     {
       "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 8,
       "collections": {}
     }
   ]

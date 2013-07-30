@@ -18,22 +18,17 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.PersistenceModifier;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.name.Named;
 
 import org.joda.time.LocalDate;
@@ -44,8 +39,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -53,12 +46,14 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.filter.Filter;
-import org.apache.isis.applib.util.ObjectContracts;
 
+import org.estatio.api.Api;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -69,48 +64,36 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByAgreementAndPartyAndTypeAndStartDate", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.agreement.AgreementRole " +
-        		"WHERE agreement == :agreement " +
-        		"&& party == :party " +
-        		"&& type == :type " +
-        		"&& startDate == :startDate"),
-	@javax.jdo.annotations.Query(
-        name = "findByAgreementAndPartyAndTypeAndEndDate", language = "JDOQL", 
-        value = "SELECT " +
-                "FROM org.estatio.dom.agreement.AgreementRole " +
-                "WHERE agreement == :agreement " +
-                "&& party == :party " +
-                "&& type == :type " +
-                "&& endDate == :endDate"),
-	@javax.jdo.annotations.Query(
-        name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL", 
-        value = "SELECT " +
-                "FROM org.estatio.dom.agreement.AgreementRole " +
-                "WHERE agreement == :agreement " +
-                "&& type == :type "+ 
-                "&& (startDate == null | startDate < :date) "+
-                "&& (endDate == null | endDate > :date) ")
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementAndPartyAndTypeAndStartDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRole " +
+                        "WHERE agreement == :agreement " +
+                        "&& party == :party " +
+                        "&& type == :type " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementAndPartyAndTypeAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRole " +
+                        "WHERE agreement == :agreement " +
+                        "&& party == :party " +
+                        "&& type == :type " +
+                        "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRole " +
+                        "WHERE agreement == :agreement " +
+                        "&& type == :type " +
+                        "&& (startDate == null | startDate < :date) " +
+                        "&& (endDate == null | endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalMutable<AgreementRole> {
+public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalContiguous<AgreementRole> {
 
-    public static final class NewRole implements WithInterval.Factory {
-        private final AgreementRole ar;
-        private final Party party;
 
-        public NewRole(AgreementRole ar, Party party) {
-            this.ar = ar;
-            this.party = party;
-        }
-
-        @Override
-        public void newRole(LocalDate startDate, LocalDate endDate) {
-            ar.getAgreement().newRole(ar.getType(), party, startDate, endDate);
-        }
-    }
+    // //////////////////////////////////////
 
     public AgreementRole() {
         super("agreement, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
@@ -131,14 +114,12 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         this.status = status;
     }
 
-    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "AGREEMENT_ID")
     private Agreement<?> agreement;
 
     @Title(sequence = "3", prepend = ":")
-    @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Agreement<?> getAgreement() {
         return agreement;
@@ -154,7 +135,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
-    @MemberOrder(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Party getParty() {
         return party;
@@ -170,8 +150,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     private AgreementRoleType type;
 
     @Title(sequence = "1")
-    @MemberOrder(sequence = "3")
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public AgreementRoleType getType() {
         return type;
@@ -181,13 +160,11 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         this.type = type;
     }
 
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name="Dates", sequence = "4")
     @Optional
     @Disabled
     @Override
@@ -203,7 +180,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "5")
     @Optional
     @Disabled
     @Override
@@ -218,48 +194,48 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    private WithIntervalContiguous.ChangeDates<AgreementRole> changeDates = new WithIntervalContiguous.ChangeDates<AgreementRole>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public AgreementRole changeDates(
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        changeDates.changeDates(startDate, endDate);
         return this;
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return changeDates.default0ChangeDates();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return changeDates.default1ChangeDates();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
-    
+
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public Agreement<?> getParentWithInterval() {
+    public Agreement<?> getWithIntervalParent() {
         return getAgreement();
     }
 
-    
     @Hidden
     @Override
     public LocalDate getEffectiveStartDate() {
@@ -271,172 +247,129 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     public LocalDate getEffectiveEndDate() {
         return WithInterval.Util.effectiveEndDateOf(this);
     }
-    
+
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
-    @MemberOrder(name="Related", sequence = "9.1")
-    @Named("Previous Role")
-    @Hidden(where=Where.ALL_TABLES)
-    @Disabled
-    @Optional
-    @Override
-    public AgreementRole getPrevious() {
-        return WithInterval.Util.find(getAgreement().getRoles(), matchingEndDate(getType(), getStartDate()));
-    }
-
-    @MemberOrder(name="Related", sequence = "9.2")
-    @Named("Next Role")
-    @Hidden(where=Where.ALL_TABLES)
-    @Disabled
-    @Optional
-    @Override
-    public AgreementRole getNext() {
-        return WithInterval.Util.find(getAgreement().getRoles(), matchingStartDate(getType(), getEndDate()));
-    }
-
-    @SuppressWarnings("unused")
-    private static Predicate<AgreementRole> not(final AgreementRole ar) {
-        return new Predicate<AgreementRole>(){
-            @Override
-            public boolean apply(AgreementRole input) {
-                return input != null && input != ar;
-            }
-        };
-    }
-
-    private static Predicate<AgreementRole> matchingStartDate(final AgreementRoleType type, final LocalDate startDate) {
-        return new Predicate<AgreementRole>(){
-            @Override
-            public boolean apply(final AgreementRole ar) {
-                if(startDate == null) { return false; }
-                if(ar == null) { return false; }
-                if(!Objects.equal(ar.getType(), type)) { return false; } 
-                if(!Objects.equal(ar.getStartDate(), startDate)) { return false; }
-                return true;
-            }
-        };
-    }
-
-    private static Predicate<AgreementRole> matchingEndDate(final AgreementRoleType type, final LocalDate endDate) {
-        return new Predicate<AgreementRole>(){
-            @Override
-            public boolean apply(final AgreementRole ar) {
-                if(endDate == null) { return false; }
-                if(ar == null) { return false; }
-                if(!Objects.equal(ar.getType(), type)) { return false; } 
-                if(!Objects.equal(ar.getEndDate(), endDate)) { return false; }
-                return true;
-            }
-        };
-    }
-    
     // //////////////////////////////////////
-    
-    private WithInterval.SucceededBy succeededBy = new WithInterval.SucceededBy(this);
 
-    @MemberOrder(name="Next", sequence = "1")
-    public void succeededBy(
-            final Party party, 
-            final @Named("Start date") LocalDate startDate, 
-            final @Named("End date") @Optional LocalDate endDate) {
-        succeededBy.succeededBy(startDate, endDate, new NewRole(this, party));
+    @Hidden(where = Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    @Override
+    public AgreementRole getPredecessor() {
+        return WithInterval.Util.find(
+                getAgreement().getRoles(),
+                Predicates.and(
+                        getType().matchingRole(),
+                        WithInterval.Matching.<AgreementRole>endDate(getStartDate())));
     }
-    
+
+    @Hidden(where = Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    @Override
+    public AgreementRole getSuccessor() {
+        return WithInterval.Util.find(
+                getAgreement().getRoles(),
+                Predicates.and(
+                        getType().matchingRole(),
+                        WithInterval.Matching.<AgreementRole>startDate(getEndDate())));
+    }
+
+
+
+    // //////////////////////////////////////
+
+    private WithIntervalContiguous.SucceedPrecede<AgreementRole> helper = new WithIntervalContiguous.SucceedPrecede<AgreementRole>(this);
+
+    static final class SiblingFactory implements WithIntervalContiguous.Factory<AgreementRole> {
+        private final AgreementRole ar;
+        private final Party party;
+        
+        public SiblingFactory(AgreementRole ar, Party party) {
+            this.ar = ar;
+            this.party = party;
+        }
+        
+        @Override
+        public AgreementRole newRole(LocalDate startDate, LocalDate endDate) {
+            return ar.getAgreement().createRole(ar.getType(), party, startDate, endDate);
+        }
+    }
+
+    public AgreementRole succeededBy(
+            final Party party,
+            final @Named("Start date") LocalDate startDate,
+            final @Named("End date") @Optional LocalDate endDate) {
+        return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
+    }
+
     public LocalDate default1SucceededBy() {
         return getEndDate();
     }
-    
+
     public String validateSucceededBy(
-            final Party party, 
-            final LocalDate startDate, 
+            final Party party,
+            final LocalDate startDate,
             final LocalDate endDate) {
-        String invalidReasonIfAny = succeededBy.validateSucceededBy(startDate, endDate);
-        if(invalidReasonIfAny != null) {
+        String invalidReasonIfAny = helper.validateSucceededBy(startDate, endDate);
+        if (invalidReasonIfAny != null) {
             return invalidReasonIfAny;
         }
 
-        if(party == getParty()) {
+        if (party == getParty()) {
             return "Successor's party cannot be the same as this object's party";
         }
-        final AgreementRole successor = getNext();
-        if(successor != null && party == successor.getParty()) {
+        final AgreementRole successor = getSuccessor();
+        if (successor != null && party == successor.getParty()) {
             return "Successor's party cannot be the same as that of existing successor";
         }
         return null;
     }
 
-    // //////////////////////////////////////
 
-    private WithInterval.PrecededBy precededBy = new WithInterval.PrecededBy(this);
-
-    @MemberOrder(name="Next", sequence = "2")
-    public void precededBy(
-            final Party party, 
-            final @Named("Start date") @Optional LocalDate startDate, 
+    public AgreementRole precededBy(
+            final Party party,
+            final @Named("Start date") @Optional LocalDate startDate,
             final @Named("End date") LocalDate endDate) {
-        
-        precededBy.precededBy(startDate, endDate, new NewRole(this, party));
+
+        return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
     }
-    
+
     public LocalDate default2PrecededBy() {
         return getStartDate();
     }
-    
+
     public String validatePrecededBy(
-            final Party party, 
-            final LocalDate startDate, 
+            final Party party,
+            final LocalDate startDate,
             final LocalDate endDate) {
-        final String invalidReasonIfAny = precededBy.validatePrecededBy(startDate, endDate);
-        if(invalidReasonIfAny != null) {
+        final String invalidReasonIfAny = helper.validatePrecededBy(startDate, endDate);
+        if (invalidReasonIfAny != null) {
             return invalidReasonIfAny;
         }
-        
-        if(party == getParty()) {
+
+        if (party == getParty()) {
             return "Predecessor's party cannot be the same as this object's party";
         }
-        final AgreementRole predecessor = getPrevious();
-        if(predecessor != null && party == predecessor.getParty()) {
+        final AgreementRole predecessor = getPredecessor();
+        if (predecessor != null && party == predecessor.getParty()) {
             return "Predecessor's party cannot be the same as that of existing predecessor";
         }
         return null;
     }
 
-    
     // //////////////////////////////////////
 
-    private WithInterval.UpdateDates updateDates = new WithInterval.UpdateDates(this);
-    
-    @MemberOrder(name="End date", sequence = "1")
-    public void updateDates(
-            final @Named("Start date") @Optional LocalDate startDate, 
-            final @Named("End date") @Optional LocalDate endDate) {
-        updateDates.updateDates(startDate, endDate);
-    }
-    
-    public LocalDate default0UpdateDates() {
-        return getStartDate();
-    }
-    public LocalDate default1UpdateDates() {
-        return getEndDate();
-    }
 
-    public String validateUpdateDates(
-            final LocalDate startDate, 
-            final LocalDate endDate) {
-        return updateDates.validateUpdateDates(startDate, endDate);
-    }
-    
-    
-    // //////////////////////////////////////
-
+    @javax.jdo.annotations.Persistent(mappedBy = "role")
     private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
 
     @Disabled
     @Render(Type.EAGERLY)
-    @MemberOrder(sequence = "1")
     public SortedSet<AgreementRoleCommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
@@ -445,27 +378,93 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         this.communicationChannels = communinationChannels;
     }
 
-    public void addToCommunicationChannels(final AgreementRoleCommunicationChannel channel) {
-        if (channel == null || getCommunicationChannels().contains(channel)) {
-            return;
-        }
-        channel.clearRole();
-        channel.setRole(this);
-        getCommunicationChannels().add(channel);
+    
+    // //////////////////////////////////////
+
+
+    @Named("Create Initial")
+    public AgreementRole createInitialCommunicationChannel(
+            final @Named("Type") AgreementRoleCommunicationChannelType type,
+            final CommunicationChannel communicationChannel,
+            final @Named("Start date") @Optional LocalDate startDate,
+            final @Named("End date") @Optional LocalDate endDate) {
+        createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, endDate);
+        return this;
+    }
+    
+    public List<AgreementRoleCommunicationChannelType> choices0CreateInitialCommunicationChannel() {
+        return getAgreement().getAgreementType().getRoleChannelTypesApplicableTo();
     }
 
-    public void removeFromCommunicationChannels(final AgreementRoleCommunicationChannel channel) {
-        if (channel == null || !getCommunicationChannels().contains(channel)) {
-            return;
+    public List<CommunicationChannel> choices1CreateInitialCommunicationChannel() {
+        return Lists.newArrayList(getParty().getCommunicationChannels());
+    }
+
+    public CommunicationChannel default1CreateInitialCommunicationChannel() {
+        final SortedSet<CommunicationChannel> partyChannels = getParty().getCommunicationChannels();
+        return !partyChannels.isEmpty() ? partyChannels.first() : null;
+    }
+
+    public String validateCreateInitialCommunicationChannel(
+            final AgreementRoleCommunicationChannelType type,
+            final CommunicationChannel communicationChannel,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (startDate != null && endDate != null && startDate.equals(endDate)) {
+            return "End date must be after start date";
         }
-        channel.setRole(null);
-        getCommunicationChannels().remove(channel);
+        if (!Sets.filter(getCommunicationChannels(), type.matchingCommunicationChannel()).isEmpty()) {
+            return "Add a successor/predecessor from existing communication channel";
+        }
+        final SortedSet<CommunicationChannel> partyChannels = getParty().getCommunicationChannels();
+        if(!partyChannels.contains(communicationChannel)) {
+            return "Communication channel must be one of those of this party";
+        }
+        return null;
+    }
+    
+    
+    @Programmatic
+    public AgreementRoleCommunicationChannel createAgreementRoleCommunicationChannel(
+            final AgreementRoleCommunicationChannelType type, 
+            final CommunicationChannel cc, 
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        final AgreementRoleCommunicationChannel arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
+        arcc.setType(type);
+        arcc.setStartDate(startDate);
+        arcc.setEndDate(endDate);
+        arcc.setStatus(Status.UNLOCKED);
+        arcc.setCommunicationChannel(cc);
+        
+        // JDO will take care of bidir relationship
+        arcc.setRole(this);
+        persistIfNotAlready(arcc);
+
+        return arcc;
     }
 
     // //////////////////////////////////////
 
+    /**
+     * Called by {@link Api}.
+     */
     @Programmatic
-    public AgreementRoleCommunicationChannel findCommunicationChannel(final AgreementRoleCommunicationChannelType type, final LocalDate date) {
+    public void addCommunicationChannel(
+            final AgreementRoleCommunicationChannelType type, 
+            final CommunicationChannel communicationChannel) {
+        if (type == null || communicationChannel == null) {
+            return;
+        }
+        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, clockService.now());
+        if (arcc != null) {
+            return;
+        }
+        
+        createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, null);
+    }
+
+    private AgreementRoleCommunicationChannel findCommunicationChannel(final AgreementRoleCommunicationChannelType type, final LocalDate date) {
         return firstMatch(AgreementRoleCommunicationChannel.class, new Filter<AgreementRoleCommunicationChannel>() {
             @Override
             public boolean accept(AgreementRoleCommunicationChannel t) {
@@ -474,44 +473,9 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         });
     }
 
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="communicationChannels", sequence="1")
-    public AgreementRole addCommunicationChannel(@Named("Type") AgreementRoleCommunicationChannelType type, @Named("Communication Channel") CommunicationChannel communicationChannel) {
-        if (type == null || communicationChannel == null) {
-            return this;
-        } 
-        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, clockService.now());
-        if (arcc != null) {
-            return this;
-        } 
-        arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
-        arcc.setStartDate(startDate);
-        arcc.setCommunicationChannel(communicationChannel);
-        arcc.setType(type);
-        arcc.setStatus(Status.UNLOCKED);
-        persistIfNotAlready(arcc);
-        addToCommunicationChannels(arcc);
-        return this;
-    }
-
-    public List<AgreementRoleCommunicationChannelType> choices0AddCommunicationChannel() {
-        return getAgreement().getAgreementType().getRoleChannelTypesApplicableTo();
-    }
-
-    public List<CommunicationChannel> choices1AddCommunicationChannel() {
-        return Lists.newArrayList(getParty().getCommunicationChannels());
-    }
-    
-    public CommunicationChannel default1AddCommunicationChannel() {
-        final SortedSet<CommunicationChannel> partyChannels = getParty().getCommunicationChannels();
-        return !partyChannels.isEmpty() ? partyChannels.first() : null;
-    }
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "7")
     public boolean isCurrent() {
         return isActiveOn(clockService.now());
     }
@@ -527,13 +491,5 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
-
-    private AgreementRoles agreementRoles;
-    
-    public void injectAgreementRoles(AgreementRoles agreementRoles) {
-        this.agreementRoles = agreementRoles;
-    }
-
-
 
 }

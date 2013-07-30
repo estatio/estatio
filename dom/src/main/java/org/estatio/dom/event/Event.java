@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -52,7 +51,6 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
 
     private Status status;
 
-    @MemberOrder(sequence = "4.5")
     @Disabled
     @Override
     public Status getStatus() {
@@ -69,7 +67,6 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
 
     private LocalDate startDate;
 
-    @MemberOrder(name="Dates", sequence = "1")
     @Optional
     @Disabled
     @Override
@@ -89,7 +86,6 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
 
     private LocalDate endDate;
 
-    @MemberOrder(name="Dates", sequence = "1")
     @Disabled
     @Optional
     public LocalDate getEndDate() {
@@ -103,44 +99,44 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="endDate", sequence="1")
+    private WithIntervalMutable.ChangeDates<Event> changeDates = new WithIntervalMutable.ChangeDates<Event>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public Event changeDates(
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
-        return this;
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        return changeDates.changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
-    
+
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return changeDates.default0ChangeDates();
     }
+
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return changeDates.default1ChangeDates();
     }
-    
+
     @Override
     public String validateChangeDates(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate)?null:"Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public WithInterval<?> getParentWithInterval() {
+    public WithInterval<?> getWithIntervalParent() {
         return null;
     }
 
@@ -162,30 +158,11 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    // //////////////////////////////////////
-
-    @Hidden // TODO
-    @Disabled
-    @Optional
-    @Override
-    public Event getPrevious() {
-        return null;
-    }
-
-    @Hidden // TODO
-    @Disabled
-    @Optional
-    @Override
-    public Event getNext() {
-        return null;
-    }
-
 
     // //////////////////////////////////////
 
     private String description;
 
-    @MemberOrder(sequence = "1")
     public String getDescription() {
         return description;
     }

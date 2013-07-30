@@ -25,7 +25,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.geography.Country;
@@ -43,7 +42,6 @@ public class BankAccount extends FinancialAccount {
     @javax.jdo.annotations.Column(name="BANK_ID")
     private Party bank;
 
-    @MemberOrder(name = "Account Details", sequence = "9")
     public Party getBank() {
         return bank;
     }
@@ -60,7 +58,6 @@ public class BankAccount extends FinancialAccount {
 
     private BankAccountType bankAccountType;
 
-    @MemberOrder(name = "Account Details", sequence = "10")
     @Disabled
     public BankAccountType getBankAccountType() {
         return bankAccountType;
@@ -79,7 +76,6 @@ public class BankAccount extends FinancialAccount {
     @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
-    @MemberOrder(name = "Account Details", sequence = "11")
     public Country getCountry() {
         return country;
     }
@@ -96,7 +92,6 @@ public class BankAccount extends FinancialAccount {
 
     private String IBAN;
 
-    @MemberOrder(name = "Account Details", sequence = "12")
     public String getIBAN() {
         return IBAN;
     }
@@ -111,7 +106,6 @@ public class BankAccount extends FinancialAccount {
     
     // //////////////////////////////////////
     
-    @MemberOrder(name="IBAN", sequence="1")
     public void verifyIBAN() {
         IBANHelper ibanHelper = new IBANHelper(getIBAN());
         ibanHelper.update(this);
@@ -125,7 +119,6 @@ public class BankAccount extends FinancialAccount {
     
     private String nationalCheckCode;
 
-    @MemberOrder(name = "Account Details", sequence = "13")
     public String getNationalCheckCode() {
         return nationalCheckCode;
     }
@@ -142,7 +135,6 @@ public class BankAccount extends FinancialAccount {
 
     private String nationalBankCode;
 
-    @MemberOrder(name = "Account Details", sequence = "14")
     public String getNationalBankCode() {
         return nationalBankCode;
     }
@@ -159,7 +151,6 @@ public class BankAccount extends FinancialAccount {
 
     private String branchCode;
 
-    @MemberOrder(name = "Account Details", sequence = "15")
     public String getBranchCode() {
         return branchCode;
     }
@@ -176,7 +167,6 @@ public class BankAccount extends FinancialAccount {
 
     private String accountNumber;
 
-    @MemberOrder(name = "Account Details", sequence = "16")
     public String getAccountNumber() {
         return accountNumber;
     }

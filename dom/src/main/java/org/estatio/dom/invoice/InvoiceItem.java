@@ -34,8 +34,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -98,7 +96,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @Render(Type.EAGERLY)
     @Disabled
-    @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Title(sequence = "1", append = ":")
     public Invoice getInvoice() {
@@ -115,7 +112,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     private Charge charge;
 
     @Title(sequence = "2")
-    @MemberOrder(sequence = "2")
     @Disabled
     public Charge getCharge() {
         return charge;
@@ -135,7 +131,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal quantity;
 
-    @MemberOrder(sequence = "3")
     @Disabled
     public BigDecimal getQuantity() {
         return quantity;
@@ -150,7 +145,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
 
-    @MemberOrder(name = "Amounts", sequence = "4")
     @Disabled
     public BigDecimal getNetAmount() {
         return netAmount;
@@ -171,7 +165,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
-    @MemberOrder(name = "Amounts", sequence = "5")
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -185,7 +178,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
 
-    @MemberOrder(name = "Amounts", sequence = "6")
     @Disabled
     public BigDecimal getGrossAmount() {
         return grossAmount;
@@ -200,7 +192,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
-    @MemberOrder(sequence = "7")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public Tax getTax() {
@@ -217,7 +208,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
-    @MemberOrder(sequence = "8")
     public String getDescription() {
         return description;
     }
@@ -231,7 +221,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @MemberOrder(name = "Dates", sequence = "9")
     @Disabled
     public LocalDate getDueDate() {
         return dueDate;
@@ -246,7 +235,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name = "Dates", sequence = "10")
     @Disabled
     @Optional
     @Override
@@ -262,7 +250,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "11")
     @Disabled
     @Optional
     @Override
@@ -279,7 +266,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     @Hidden
     @Override
-    public WithInterval<?> getParentWithInterval() {
+    public WithInterval<?> getWithIntervalParent() {
         return null;
     }
 
@@ -301,29 +288,6 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    // //////////////////////////////////////
-
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Previous Item")
-    @Disabled
-    @Optional
-    @Override
-    public InvoiceItem getPrevious() {
-        return null;
-    }
-
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.2")
-    @Named("Next Item")
-    @Disabled
-    @Optional
-    @Override
-    public InvoiceItem getNext() {
-        return null;
-    }
 
     // //////////////////////////////////////
 

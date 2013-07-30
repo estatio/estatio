@@ -26,8 +26,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -39,13 +37,11 @@ import org.estatio.dom.index.Indices;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@MemberGroups({ "General", "Dates", "Indexable Rent", "Values", "Related" })
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(name = "INDEX_ID")
     private Index index;
 
-    @MemberOrder(sequence = "10", name = "Indexable Rent")
     public Index getIndex() {
         return index;
     }
@@ -63,7 +59,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Persistent
     private LocalDate baseIndexStartDate;
 
-    @MemberOrder(sequence = "12", name = "Indexable Rent")
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
     }
@@ -77,7 +72,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal baseIndexValue;
 
-    @MemberOrder(sequence = "14", name = "Indexable Rent")
     @Optional
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
@@ -92,7 +86,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Persistent
     private LocalDate nextIndexStartDate;
 
-    @MemberOrder(sequence = "15", name = "Indexable Rent")
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
     }
@@ -106,7 +99,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal nextIndexValue;
 
-    @MemberOrder(sequence = "17", name = "Indexable Rent")
     @Optional
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
@@ -122,7 +114,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate effectiveDate;
 
     @Optional
-    @MemberOrder(sequence = "19", name = "Indexable Rent")
     public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
@@ -136,7 +127,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 1)
     private BigDecimal indexationPercentage;
 
-    @MemberOrder(sequence = "20", name = "Indexable Rent")
     @Optional
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
@@ -151,7 +141,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 1)
     private BigDecimal levellingPercentage;
 
-    @MemberOrder(sequence = "21", name = "Indexable Rent")
     @Optional
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
@@ -166,7 +155,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal levellingValue;
 
-    @MemberOrder(sequence = "22", name = "Indexable Rent")
     @Optional
     public BigDecimal getLevellingValue() {
         return levellingValue;
@@ -181,7 +169,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal baseValue;
 
-    @MemberOrder(sequence = "30", name = "Values")
     @Optional
     public BigDecimal getBaseValue() {
         return baseValue;
@@ -196,7 +183,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal indexedValue;
 
-    @MemberOrder(sequence = "31", name = "Values")
     @Optional
     public BigDecimal getIndexedValue() {
         return indexedValue;
@@ -211,7 +197,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal settledValue;
 
-    @MemberOrder(sequence = "32", name = "Values")
     @Optional
     public BigDecimal getSettledValue() {
         return settledValue;

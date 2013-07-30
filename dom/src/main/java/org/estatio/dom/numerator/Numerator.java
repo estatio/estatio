@@ -25,7 +25,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
@@ -67,7 +66,6 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
 
     private NumeratorType type;
 
-    @MemberOrder(sequence = "1")
     public NumeratorType getType() {
         return type;
     }
@@ -81,7 +79,6 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     private String description;
 
     @Title
-    @MemberOrder(sequence = "2")
     public String getDescription() {
         return description;
     }
@@ -95,7 +92,6 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     @javax.jdo.annotations.Persistent
     private BigInteger lastIncrement;
 
-    @MemberOrder(sequence = "3")
     public BigInteger getLastIncrement() {
         return lastIncrement;
     }

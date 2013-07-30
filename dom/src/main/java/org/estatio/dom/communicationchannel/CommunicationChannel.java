@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
@@ -65,7 +64,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private Status status;
 
-    @MemberOrder(sequence = "4.5")
     @Disabled
     @Override
     public Status getStatus() {
@@ -90,7 +88,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
-    @MemberOrder(sequence = "5")
     public CommunicationChannelOwner getOwner() {
         return owner;
     }
@@ -134,7 +131,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     // //////////////////////////////////////
 
     @Title
-    @MemberOrder(sequence = "1")
     @Hidden(where = Where.OBJECT_FORMS)
     public abstract String getName();
 
@@ -143,7 +139,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     private String description;
 
     @Optional
-    @MemberOrder(sequence = "10")
     public String getDescription() {
         return description;
     }
@@ -160,7 +155,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private boolean legal;
 
-    @MemberOrder(sequence = "10")
     public boolean isLegal() {
         return legal;
     }

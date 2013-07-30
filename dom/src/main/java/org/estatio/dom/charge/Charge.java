@@ -20,14 +20,12 @@ package org.estatio.dom.charge;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithCodeGetter;
-import org.estatio.dom.WithCodeUnique;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.tax.Tax;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -49,7 +47,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
     private String reference;
 
     @Title(sequence = "1")
-    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -65,7 +62,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
     //@javax.jdo.annotations.Unique(name = "CHARGE_CODE_UNIQUE_IDX")
     private String code;
 
-    @MemberOrder(sequence = "2")
     public String getCode() {
         return code;
     }
@@ -79,7 +75,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
     @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
-    @MemberOrder(sequence = "3")
     public Tax getTax() {
         return tax;
     }
@@ -92,7 +87,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     private String description;
 
-    @MemberOrder(sequence = "4")
     public String getDescription() {
         return description;
     }
@@ -106,7 +100,6 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
     @javax.jdo.annotations.Column(name = "GROUP_ID")
     private ChargeGroup group;
 
-    @MemberOrder(sequence = "5")
     public ChargeGroup getGroup() {
         return group;
     }

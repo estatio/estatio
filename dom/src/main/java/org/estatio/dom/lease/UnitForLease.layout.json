@@ -1,27 +1,15 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 3,
       "memberGroups": {
-        "General": {
-          "members": {
-            "unitType": {},
-            "area": {},
-            "storageArea": {},
-            "salesArea": {},
-            "mezzanineArea": {},
-            "terraceArea": {},
-            "property": {},
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
-          }
-        },
         "Asset": {
           "members": {
             "reference": {},
-            "name": {}
+            "name": {},
+            "unitType": {},
+            "property": {},
+            "status": {}
           }
         },
         "Location": {
@@ -36,8 +24,18 @@
       }
     },
     {
-      "span": 0,
-      "memberGroups": {}
+      "span": 3,
+      "memberGroups": {
+        "Areas": {
+          "members": {
+            "area": {},
+            "storageArea": {},
+            "salesArea": {},
+            "mezzanineArea": {},
+            "terraceArea": {}
+          }
+        }
+      }
     },
     {
       "span": 0,
@@ -50,7 +48,7 @@
         "communicationChannels": {},
         "roles": {
           "actions": {
-            "addRole": {}
+            "createInitialRole": {}
           }
         }
       }

@@ -25,8 +25,6 @@ import java.util.TreeSet;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -48,7 +46,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     private Index index;
     
     @Title(sequence = "1", append = ", ")
-    @MemberOrder(sequence = "1")
     public Index getIndex() {
         return index;
     }
@@ -63,7 +60,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     private LocalDate startDate;
 
     @Title(sequence = "2")
-    @MemberOrder(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -96,7 +92,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     private BigDecimal factor;
 
     @Optional
-    @MemberOrder(sequence = "4")
     public BigDecimal getFactor() {
         return factor;
     }
@@ -119,7 +114,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
      * @see #getNextBase()
      */
     @Optional
-    @MemberOrder(sequence = "3")
     public IndexBase getPreviousBase() {
         return previousBase;
     }
@@ -143,7 +137,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
      * @see #getPreviousBase()
      */
     @Optional
-    @MemberOrder(sequence = "5")
     public IndexBase getNextBase() {
         return nextBase;
     }
@@ -157,7 +150,6 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     @javax.jdo.annotations.Persistent(mappedBy = "indexBase")
     private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
 
-    @MemberOrder(sequence = "6")
     public SortedSet<IndexValue> getValues() {
         return values;
     }

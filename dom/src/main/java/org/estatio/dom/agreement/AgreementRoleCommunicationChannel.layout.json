@@ -7,15 +7,8 @@
           "members": {
             "role": {},
             "type": {},
-            "communicationChannel": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "communicationChannel": {},
+            "status": {}
           }
         }
       }
@@ -30,16 +23,18 @@
               "actions": {
                 "changeDates": {}
               }
-            },
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "parentWithInterval": {}
+            }
           }
         },
         "Related": {
           "members": {
-            "previous": {},
-            "next": {}
+            "predecessor": {},
+            "successor": {
+              "actions": {
+                "succeededBy": {},
+                "precededBy": {}
+              }
+            }
           }
         }
       }

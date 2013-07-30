@@ -21,7 +21,6 @@ package org.estatio.dom.geography;
 import javax.jdo.annotations.DiscriminatorStrategy;
 
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -51,7 +50,6 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -67,7 +65,6 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
     private String name;
 
     @Title
-    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }

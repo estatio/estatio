@@ -21,21 +21,16 @@ package org.estatio.dom;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 
 public interface WithIntervalMutable<T extends WithIntervalMutable<T>> extends WithInterval<T> {
 
-    @MemberOrder(name="endDate", sequence="1")
     @ActionSemantics(Of.IDEMPOTENT)
     public T changeDates(
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("End Date") LocalDate endDate);
-
-    public String disableChangeDates(
-            final LocalDate startDate, 
-            final LocalDate endDate);
+            final @Named("Start Date") @Optional LocalDate startDate, 
+            final @Named("End Date") @Optional LocalDate endDate);
 
     public LocalDate default0ChangeDates();
     public LocalDate default1ChangeDates();
@@ -44,5 +39,45 @@ public interface WithIntervalMutable<T extends WithIntervalMutable<T>> extends W
             final LocalDate startDate, 
             final LocalDate endDate);
 
+
+    
+    /**
+     * Helper class to delegate to implementations of {@link WithIntervalMutable#changeDates(LocalDate, LocalDate)}
+     * 
+     * <p>
+     * If the class implements {@link WithIntervalContiguous} then use {@link WithIntervalContiguous.ChangeDates} instead.
+     */
+    public static class ChangeDates<T extends WithIntervalMutable<T>> {
+        private T withInterval;
+
+        public ChangeDates(final T withInterval) {
+            this.withInterval = withInterval;
+        }
+        
+        public T changeDates(
+                final LocalDate startDate,
+                final LocalDate endDate) {
+            withInterval.setStartDate(startDate);
+            withInterval.setEndDate(endDate);
+            return withInterval;
+        }
+
+        public LocalDate default0ChangeDates() {
+            return withInterval.getEffectiveStartDate();
+        }
+
+        public LocalDate default1ChangeDates() {
+            return withInterval.getEffectiveEndDate();
+        }
+
+        public String validateChangeDates(
+                final LocalDate startDate,
+                final LocalDate endDate) {
+            if(startDate != null && endDate != null && !startDate.isBefore(endDate)) {
+                return "End date must be after start date";
+            }
+            return null;
+        }
+    }
 
 }

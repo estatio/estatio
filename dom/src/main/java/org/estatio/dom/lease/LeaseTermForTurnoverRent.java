@@ -23,18 +23,13 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@MemberGroups({ "General", "Dates", "Turnover Rent", "Related" })
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private String turnoverRentRule;
 
-    @MemberOrder(sequence = "10", name = "Turnover Rent")
     public String getTurnoverRentRule() {
         return turnoverRentRule;
     }
@@ -55,7 +50,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedTurnover;
 
-    @MemberOrder(sequence = "11", name = "Turnover Rent")
     public BigDecimal getBudgetedTurnover() {
         return budgetedTurnover;
     }
@@ -69,7 +63,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedTurnover;
 
-    @MemberOrder(sequence = "12", name = "Turnover Rent")
     public BigDecimal getAuditedTurnover() {
         return auditedTurnover;
     }
@@ -83,7 +76,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal contractualRent;
 
-    @MemberOrder(sequence = "14", name = "Turnover Rent")
     public BigDecimal getContractualRent() {
         return contractualRent;
     }
@@ -97,7 +89,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal turnoverRentValue;
 
-    @MemberOrder(sequence = "15", name = "Turnover Rent")
     public BigDecimal getTurnoverRentValue() {
         return turnoverRentValue;
     }

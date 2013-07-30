@@ -27,7 +27,6 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
@@ -60,7 +59,6 @@ public class PostalAddress extends CommunicationChannel {
 
     @Title(sequence = "1", append = ", ")
     @Named("Address Line 1")
-    @MemberOrder(sequence = "1")
     public String getAddress1() {
         return address1;
     }
@@ -79,7 +77,6 @@ public class PostalAddress extends CommunicationChannel {
 
     @Optional
     @Named("Address Line 2")
-    @MemberOrder(sequence = "2")
     public String getAddress2() {
         return address2;
     }
@@ -97,7 +94,6 @@ public class PostalAddress extends CommunicationChannel {
     private String postalCode;
 
     @Title(sequence = "2", append = ", ")
-    @MemberOrder(sequence = "3")
     public String getPostalCode() {
         return postalCode;
     }
@@ -115,7 +111,6 @@ public class PostalAddress extends CommunicationChannel {
     private String city;
 
     @Title(sequence = "3")
-    @MemberOrder(sequence = "4")
     public String getCity() {
         return city;
     }
@@ -138,7 +133,6 @@ public class PostalAddress extends CommunicationChannel {
     private Country country;
 
     @Optional
-    @MemberOrder(sequence = "5")
     public Country getCountry() {
         return country;
     }
@@ -173,7 +167,6 @@ public class PostalAddress extends CommunicationChannel {
     private State state;
 
     @Optional
-    @MemberOrder(sequence = "6")
     public State getState() {
         return state;
     }

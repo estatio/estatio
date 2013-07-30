@@ -23,7 +23,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -44,7 +43,6 @@ public class Country extends Geography {
     private String alpha2Code;
 
     @Title
-    @MemberOrder(sequence = "1")
     public String getAlpha2Code() {
         return alpha2Code;
     }

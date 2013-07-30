@@ -26,8 +26,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -85,7 +83,6 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     @javax.jdo.annotations.Column(name = "PARTY_ID")
     private Party party;
 
-    @MemberOrder(sequence = "1")
     public Party getParty() {
         return party;
     }
@@ -98,7 +95,6 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     private PartyRegistrationType partyRegistrationType;
 
-    @MemberOrder(sequence = "1")
     public PartyRegistrationType getPartyRegistrationType() {
         return partyRegistrationType;
     }
@@ -112,7 +108,6 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name = "Dates", sequence = "1")
     @Optional
     @Disabled
     @Override
@@ -128,7 +123,6 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "1")
     @Optional
     @Disabled
     @Override
@@ -143,15 +137,14 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "endDate", sequence = "1")
+    private WithIntervalMutable.ChangeDates<PartyRegistration> changeDates = new WithIntervalMutable.ChangeDates<PartyRegistration>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public PartyRegistration changeDates(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
-        return this;
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        return changeDates.changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -162,26 +155,27 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return changeDates.default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return changeDates.default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
+
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public WithInterval<?> getParentWithInterval() {
+    public WithInterval<?> getWithIntervalParent() {
         return null;
     }
 
@@ -203,27 +197,6 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Previous Registration")
-    @Disabled
-    @Optional
-    @Override
-    public PartyRegistration getPrevious() {
-        return null;
-    }
-
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.2")
-    @Named("Next Registration")
-    @Disabled
-    @Optional
-    @Override
-    public PartyRegistration getNext() {
-        return null;
-    }
 
     // //////////////////////////////////////
 

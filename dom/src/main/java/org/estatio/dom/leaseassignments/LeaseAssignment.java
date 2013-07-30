@@ -21,7 +21,6 @@ package org.estatio.dom.leaseassignments;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
@@ -60,7 +59,6 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
     @javax.jdo.annotations.Persistent(mappedBy="nextLease")
     private Lease previousLease;
 
-    @MemberOrder(sequence = "1")
     public Lease getPreviousLease() {
         return previousLease;
     }
@@ -74,7 +72,6 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
     @javax.jdo.annotations.Column(name="NEXTLEASE_ID")
     private Lease nextLease;
 
-    @MemberOrder(sequence = "1")
     public Lease getNextLease() {
         return nextLease;
     }
@@ -87,7 +84,6 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
 
     private LocalDate assignmentDate;
 
-    @MemberOrder(sequence = "1")
     public LocalDate getAssignmentDate() {
         return assignmentDate;
     }
@@ -100,7 +96,6 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
 
     private LeaseAssignmentType assignmentType;
 
-    @MemberOrder(sequence = "1")
     public LeaseAssignmentType getAssignmentType() {
         return assignmentType;
     }

@@ -28,6 +28,7 @@ import javax.jdo.annotations.VersionStrategy;
 import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
@@ -39,7 +40,6 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -47,12 +47,12 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithNameUnique;
-import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
@@ -95,7 +95,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
-    @MemberOrder(name="Asset", sequence = "1.1")
     @Mask("AAAAAAAA")
     public String getReference() {
         return reference;
@@ -114,7 +113,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
-    @MemberOrder(name="Asset", sequence = "1.2")
     public String getName() {
         return name;
     }
@@ -131,7 +129,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     @Override
     @Disabled
     @Optional
-    @MemberOrder(name="Location", sequence = "1.8")
     public Location getLocation() {
         return location;
     }
@@ -142,7 +139,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Named("Lookup")
-    @MemberOrder(name = "location", sequence = "1.9")
     public FixedAsset lookupLocation(@Named("Address") String address) {
         setLocation(locationLookupService.lookup(address));
         return this;
@@ -154,7 +150,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     private SortedSet<FixedAssetRole> roles = new TreeSet<FixedAssetRole>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder(name = "Roles", sequence = "2.1")
     public SortedSet<FixedAssetRole> getRoles() {
         return roles;
     }
@@ -163,21 +158,52 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
         this.roles = roles;
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name = "Roles", sequence = "1")
-    public FixedAssetRole addRole(@Named("party") Party party, @Named("type") FixedAssetRoleType type, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
-        FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
-        if (role == null) {
-            role = fixedAssetRoles.newRole(this, party, type, startDate, endDate);
+
+    @Named("Create Initial")
+    public FixedAsset createInitialRole(
+            final @Named("Type") FixedAssetRoleType type,
+            final Party party,
+            final @Named("Start date") @Optional LocalDate startDate,
+            final @Named("End date") @Optional LocalDate endDate) {
+        createRole(type, party, startDate, endDate);
+        return this;
+    }
+    
+    public String validateCreateInitialRole(
+            final FixedAssetRoleType type,
+            final Party party,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (startDate != null && endDate != null && startDate.equals(endDate)) {
+            return "End date must be after start date";
         }
+        if (!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
+            return "Add a successor/predecessor from existing role";
+        }
+        return null;
+    }
+    
+
+    @Programmatic
+    public FixedAssetRole createRole(final FixedAssetRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
+        final FixedAssetRole role = newTransientInstance(FixedAssetRole.class);
+        role.setStartDate(startDate);
+        role.setEndDate(endDate);
+        role.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
+
+        role.setStatus(Status.UNLOCKED);
+        
+        // JDO will manage the relationship for us
+        // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email 2013-7-17
+        role.setParty(party);
+        role.setAsset(this);
+        
+        persistIfNotAlready(role);
+        
         return role;
     }
 
-    public List<Party> choices0AddRole() {
-        // TODO: this doesn't look right.  Should we have an autoComplete here instead?
-        return parties.allParties();
-    }
-
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
@@ -185,7 +211,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder(name = "CommunicationChannels", sequence = "1")
     public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
     }
@@ -220,17 +245,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     // //////////////////////////////////////
 
-    private FixedAssetRoles fixedAssetRoles;
-
-    public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRoles = fixedAssetRoles;
-    }
-
-    private Parties parties;
-
-    public void injectParties(Parties parties) {
-        this.parties = parties;
-    }
 
     private LocationLookupService locationLookupService;
 

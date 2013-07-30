@@ -1,36 +1,15 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 3,
       "memberGroups": {
         "Asset": {
           "members": {
             "reference": {},
             "name": {},
             "unitType": {},
-            "property": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Areas": {
-          "members": {
-            "storageArea": {},
-            "salesArea": {},
-            "mezzanineArea": {},
-            "area": {},
-            "terraceArea": {}
+            "property": {},
+            "status": {}
           }
         },
         "Location": {
@@ -45,16 +24,30 @@
       }
     },
     {
+      "span": 3,
+      "memberGroups": {
+        "Areas": {
+          "members": {
+            "area": {},
+            "storageArea": {},
+            "salesArea": {},
+            "mezzanineArea": {},
+            "terraceArea": {}
+          }
+        }
+      }
+    },
+    {
       "span": 0,
       "memberGroups": {}
     },
     {
-      "span": 4,
+      "span": 6,
       "collections": {
         "communicationChannels": {},
         "roles": {
           "actions": {
-            "addRole": {}
+            "createInitialRole": {}
           }
         }
       }

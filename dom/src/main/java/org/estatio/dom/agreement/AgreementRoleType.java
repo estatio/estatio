@@ -20,9 +20,12 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -53,7 +56,6 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> i
 
     private String title;
 
-    @MemberOrder(sequence = "1")
     @Title
     public String getTitle() {
         return title;
@@ -68,7 +70,6 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> i
     @javax.jdo.annotations.Column(name="APPLIESTO_ID")
     private AgreementType appliesTo;
 
-    @MemberOrder(sequence = "2")
     public AgreementType getAppliesTo() {
         return appliesTo;
     }
@@ -78,10 +79,23 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> i
     }
 
     // //////////////////////////////////////
+    
+    @Programmatic
+    public Predicate<? super AgreementRole> matchingRole() {
+        return new Predicate<AgreementRole>() {
+            @Override
+            public boolean apply(final AgreementRole ar) {
+                return ar != null && Objects.equal(ar.getType(), AgreementRoleType.this) ? true : false;
+            }
+        };
+    }
+
+    // //////////////////////////////////////
 
     public static List<AgreementRoleType> applicableTo(final AgreementType at) {
         return at.getRoleTypesApplicableTo();
     }
+
 
 
 }

@@ -22,14 +22,12 @@ import com.google.common.base.Function;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 
 
@@ -66,7 +64,6 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
      * The {@link Bookmark#getObjectType() object type} (either the class name or a unique alias of it) 
      * of the object to which this {@link Tag} belongs. 
      */
-    @MemberOrder(sequence = "1")
     public String getObjectType() {
         return objectType;
     }
@@ -87,7 +84,6 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
      * is unique.
      */
     @Disabled
-    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }
@@ -102,13 +98,12 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
 
     /**
      * The {@link Bookmark#getIdentifier() identifier} to the object that has this
-     * tag.
+     * tagged.
      * 
      * <p>
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
      * can be used to recreate a {@link Bookmark}, if required.
      */
-    @MemberOrder(sequence = "3")
     public String getObjectIdentifier() {
         return objectIdentifier;
     }
@@ -122,7 +117,6 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
     private String value;
 
     @Title
-    @MemberOrder(sequence = "1")
     public String getValue() {
         return value;
     }

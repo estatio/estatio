@@ -20,6 +20,8 @@ package org.estatio.dom.asset;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Predicates;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -28,8 +30,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -39,7 +39,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -71,7 +71,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalMutable<FixedAssetRole> {
+public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalContiguous<FixedAssetRole> {
 
     public FixedAssetRole() {
         super("asset, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
@@ -81,7 +81,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     private Status status;
 
-    @MemberOrder(sequence = "4.5")
     @Disabled
     @Override
     public Status getStatus() {
@@ -99,7 +98,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     private FixedAsset asset;
 
     @Title(sequence = "3", prepend = ":")
-    @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     public FixedAsset getAsset() {
@@ -116,7 +114,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     private Party party;
 
     @Title(sequence = "2", prepend = ":")
-    @MemberOrder(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     public Party getParty() {
@@ -132,7 +129,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     private FixedAssetRoleType type;
 
     @Disabled
-    @MemberOrder(sequence = "3")
     @Title(sequence = "1")
     public FixedAssetRoleType getType() {
         return type;
@@ -146,7 +142,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     private LocalDate startDate;
 
-    @MemberOrder(name = "Dates", sequence = "4")
     @Optional
     @Disabled
     @Override
@@ -162,7 +157,6 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "5")
     @Optional
     @Disabled
     @Override
@@ -177,14 +171,14 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "endDate", sequence = "1")
+    private WithIntervalContiguous.ChangeDates<FixedAssetRole> changeDates = new WithIntervalContiguous.ChangeDates<FixedAssetRole>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public FixedAssetRole changeDates(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        changeDates.changeDates(startDate, endDate);
         return this;
     }
 
@@ -208,14 +202,15 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
+
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public WithInterval<?> getParentWithInterval() {
+    public WithInterval<?> getWithIntervalParent() {
         return null;
     }
 
@@ -239,36 +234,111 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Previous Role")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
-    public FixedAssetRole getPrevious() {
-        return getStartDate() != null
-                ? fixedAssetRoles.findByAssetAndPartyAndTypeAndEndDate(getAsset(), getParty(), getType(), getStartDate().minusDays(1))
-                : null;
+    public FixedAssetRole getPredecessor() {
+        return WithInterval.Util.find(
+                getAsset().getRoles(),
+                Predicates.and(
+                        getType().matchingRole(),
+                        WithInterval.Matching.<FixedAssetRole>endDate(getStartDate())));
     }
 
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Next Role")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
-    public FixedAssetRole getNext() {
-        return getEndDate() != null
-                ? fixedAssetRoles.findByAssetAndPartyAndTypeAndStartDate(getAsset(), getParty(), getType(), getEndDate().plusDays(1))
-                : null;
+    public FixedAssetRole getSuccessor() {
+        return WithInterval.Util.find(
+                getAsset().getRoles(),
+                Predicates.and(
+                        getType().matchingRole(),
+                        WithInterval.Matching.<FixedAssetRole>startDate(getEndDate())));
     }
+
 
     // //////////////////////////////////////
 
-    private FixedAssetRoles fixedAssetRoles;
+    private WithIntervalContiguous.SucceedPrecede<FixedAssetRole> helper = new WithIntervalContiguous.SucceedPrecede<FixedAssetRole>(this);
 
-    public void injectFixedAssetRoles(FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRoles = fixedAssetRoles;
+    static final class SiblingFactory implements WithIntervalContiguous.Factory<FixedAssetRole> {
+        private final FixedAssetRole far;
+        private final Party party;
+        
+        public SiblingFactory(FixedAssetRole far, Party party) {
+            this.far = far;
+            this.party = party;
+        }
+        
+        @Override
+        public FixedAssetRole newRole(LocalDate startDate, LocalDate endDate) {
+            return far.getAsset().createRole(far.getType(), party, startDate, endDate);
+        }
     }
+
+    public FixedAssetRole succeededBy(
+            final Party party,
+            final @Named("Start date") LocalDate startDate,
+            final @Named("End date") @Optional LocalDate endDate) {
+        return helper.succeededBy(startDate, endDate, new SiblingFactory(this, party));
+    }
+
+    public LocalDate default1SucceededBy() {
+        return getEndDate();
+    }
+
+    public String validateSucceededBy(
+            final Party party,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        String invalidReasonIfAny = helper.validateSucceededBy(startDate, endDate);
+        if (invalidReasonIfAny != null) {
+            return invalidReasonIfAny;
+        }
+
+        if (party == getParty()) {
+            return "Successor's party cannot be the same as this object's party";
+        }
+        final FixedAssetRole successor = getSuccessor();
+        if (successor != null && party == successor.getParty()) {
+            return "Successor's party cannot be the same as that of existing successor";
+        }
+        return null;
+    }
+
+
+    public FixedAssetRole precededBy(
+            final Party party,
+            final @Named("Start date") @Optional LocalDate startDate,
+            final @Named("End date") LocalDate endDate) {
+
+        return helper.precededBy(startDate, endDate, new SiblingFactory(this, party));
+    }
+
+    public LocalDate default2PrecededBy() {
+        return getStartDate();
+    }
+
+    public String validatePrecededBy(
+            final Party party,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        final String invalidReasonIfAny = helper.validatePrecededBy(startDate, endDate);
+        if (invalidReasonIfAny != null) {
+            return invalidReasonIfAny;
+        }
+
+        if (party == getParty()) {
+            return "Predecessor's party cannot be the same as this object's party";
+        }
+        final FixedAssetRole predecessor = getPredecessor();
+        if (predecessor != null && party == predecessor.getParty()) {
+            return "Predecessor's party cannot be the same as that of existing predecessor";
+        }
+        return null;
+    }
+
 
 }

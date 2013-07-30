@@ -34,8 +34,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
@@ -44,7 +42,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
 
-import org.estatio.dom.Lockable;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
@@ -100,14 +97,12 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     @Override
     @NotPersisted
-    @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
         return findParty(LeaseConstants.ART_LANDLORD);
     }
 
     @Override
     @NotPersisted
-    @MemberOrder(sequence = "4")
     public Party getSecondaryParty() {
         return findParty(LeaseConstants.ART_TENANT);
     }
@@ -116,7 +111,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     private LeaseType type;
 
-    @MemberOrder(name = "Lease Details", sequence = "8")
     public LeaseType getType() {
         return type;
     }
@@ -130,7 +124,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
 
-    @MemberOrder(name = "Units", sequence = "20")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseUnit> getUnits() {
         return units;
@@ -141,7 +134,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     }
 
 
-    @MemberOrder(name = "Units", sequence = "21")
     public LeaseUnit addUnit(@Named("unit") UnitForLease unit) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
@@ -155,7 +147,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder(name = "Items", sequence = "30")
     public SortedSet<LeaseItem> getItems() {
         return items;
     }
@@ -164,7 +155,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.items = items;
     }
 
-    @MemberOrder(name = "Items", sequence = "31")
     public LeaseItem newItem(LeaseItemType type) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
@@ -199,7 +189,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     @javax.jdo.annotations.Column(name="PAIDBY_ID")
     private BankMandate paidBy;
 
-    @MemberOrder(name = "Lease Details", sequence = "10")
     @Hidden(where=Where.ALL_TABLES)
     @Disabled
     @Optional
@@ -213,7 +202,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "paidBy", sequence = "1")
     public Lease paidBy(final BankMandate bankMandate) {
         setPaidBy(bankMandate);
         return this;
@@ -260,7 +248,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "paidBy", sequence = "2")
     public Lease newMandate(final BankAccount bankAccount, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
         final BankMandate bankMandate = newTransientInstance(BankMandate.class);
         final AgreementType bankMandateAgreementType = bankMandateAgreementType();
@@ -271,7 +258,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         bankMandate.setStartDate(startDate);
         bankMandate.setEndDate(endDate);
         bankMandate.setReference(bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd"));
-        bankMandate.addRole(debtorRoleType, getSecondaryParty(), startDate, endDate);
+        bankMandate.createInitialRole(debtorRoleType, getSecondaryParty(), startDate, endDate);
 
         persist(bankMandate);
         paidBy(bankMandate);
@@ -337,7 +324,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     @Bulk
     @Prototype
-    @MemberOrder(name = "Items", sequence = "1")
     public Lease approveAllTermsOfThisLease() {
         for (LeaseItem item : getItems()) {
             for (LeaseTerm term : item.getTerms()) {
@@ -350,7 +336,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     @Bulk
-    @MemberOrder(sequence = "2")
     public Lease verify() {
         for (LeaseItem item : getItems()) {
             item.verify();
@@ -361,7 +346,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     @Bulk
-    @MemberOrder(sequence = "3")
     public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, dueDate, runType);
@@ -371,7 +355,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="terminationDate", sequence = "4")
     public Lease terminate(
             @Named("Termination Date") LocalDate terminationDate, 
             @Named("Are you sure?") @Optional Boolean confirm) {

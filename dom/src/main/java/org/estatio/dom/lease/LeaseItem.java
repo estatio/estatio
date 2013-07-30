@@ -34,8 +34,6 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
@@ -91,7 +89,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private LeaseItemStatus status;
 
-    @MemberOrder(sequence = "4.5")
     @Disabled
     @Override
     public LeaseItemStatus getStatus() {
@@ -110,7 +107,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
-    @MemberOrder(sequence = "1")
     public Lease getLease() {
         return lease;
     }
@@ -123,7 +119,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private BigInteger sequence;
 
-    @MemberOrder(sequence = "1")
     @Hidden
     @Override
     public BigInteger getSequence() {
@@ -153,7 +148,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     private LeaseItemType type;
 
     @Title(sequence = "2")
-    @MemberOrder(sequence = "2")
     public LeaseItemType getType() {
         return type;
     }
@@ -167,7 +161,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name = "Dates", sequence = "3")
     @Optional
     @Disabled
     @Override
@@ -183,7 +176,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "4")
     @Optional
     @Disabled
     @Override
@@ -198,15 +190,14 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "endDate", sequence = "1")
+    private WithIntervalMutable.ChangeDates<LeaseItem> changeDates = new WithIntervalMutable.ChangeDates<LeaseItem>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseItem changeDates(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
-        return this;
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        return changeDates.changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -217,26 +208,28 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return changeDates.default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return changeDates.default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
+
+
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public Lease getParentWithInterval() {
+    public Lease getWithIntervalParent() {
         return getLease();
     }
 
@@ -263,35 +256,11 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
-    // //////////////////////////////////////
-
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Previous Lease's Role")
-    @Disabled
-    @Optional
-    @Override
-    public LeaseItem getPrevious() {
-        return null;
-    }
-
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Next Lease's Item")
-    @Disabled
-    @Optional
-    @Override
-    public LeaseItem getNext() {
-        return null;
-    }
 
     // //////////////////////////////////////
 
     private InvoicingFrequency invoicingFrequency;
 
-    @MemberOrder(sequence = "12")
     @Hidden(where = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
@@ -305,7 +274,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private PaymentMethod paymentMethod;
 
-    @MemberOrder(sequence = "13")
     @Hidden(where = Where.PARENTED_TABLES)
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -320,7 +288,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @javax.jdo.annotations.Column(name = "CHARGE_ID")
     private Charge charge;
 
-    @MemberOrder(sequence = "14")
     public Charge getCharge() {
         return charge;
     }
@@ -337,7 +304,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "15", name = "Current Value")
     public BigDecimal getTrialValue() {
         LeaseTerm currentTerm = currentTerm(clockService.now());
         if (currentTerm != null)
@@ -349,7 +315,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Disabled
     @Optional
-    @MemberOrder(sequence = "16", name = "Current Value")
     public BigDecimal getApprovedValue() {
         LeaseTerm currentTerm = currentTerm(clockService.now());
         if (currentTerm != null)
@@ -375,7 +340,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder(name = "Terms", sequence = "15")
     @Paged(15)
     public SortedSet<LeaseTerm> getTerms() {
         return terms;
@@ -398,7 +362,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "terms", sequence = "11")
     public LeaseTerm createInitialTerm() {
         LeaseTerm term = leaseTerms.newLeaseTerm(this);
         return term;

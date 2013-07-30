@@ -6,7 +6,8 @@
         "Asset": {
           "members": {
             "reference": {},
-            "name": {}
+            "name": {},
+            "status": {}
           }
         },
         "Location": {
@@ -18,14 +19,6 @@
               }
             },
             "country": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "locked": {},
-            "status": {},
-            "id": {},
-            "versionSequence": {}
           }
         }
       }
@@ -58,7 +51,7 @@
         "communicationChannels": {},
         "roles": {
           "actions": {
-            "addRole": {}
+            "createInitialRole": {}
           }
         },
         "units": {

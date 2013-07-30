@@ -148,7 +148,6 @@ public class InvoiceCalculationServiceTest {
 
         invoiceItemForLease = new InvoiceItemForLease();
         invoiceItemForLease.injectInvoices(mockInvoices);
-        invoiceItemForLease.injectInvoiceItemsForLease(mockInvoiceItemsForLease);
         invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypes);
         invoiceItemForLease.injectAgreementTypes(mockAgreementTypes);
         

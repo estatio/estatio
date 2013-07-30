@@ -83,7 +83,6 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "1")
     @Override
     @SuppressWarnings("unchecked")
     public T lock() {
@@ -97,7 +96,6 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     }
     
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "2")
     @Override
     @SuppressWarnings("unchecked")
     public T unlock() {

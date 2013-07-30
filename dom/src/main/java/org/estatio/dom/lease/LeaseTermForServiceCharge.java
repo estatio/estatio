@@ -26,8 +26,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Mask;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.utils.MathUtils;
@@ -35,13 +33,11 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@MemberGroups({ "General", "Dates", "Service Charges", "Related" })
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedValue;
 
-    @MemberOrder(sequence = "11", name = "Service Charges")
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
@@ -55,7 +51,6 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedValue;
 
-    @MemberOrder(sequence = "12", name = "Service Charges")
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

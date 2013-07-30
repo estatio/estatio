@@ -22,7 +22,6 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.DateTime;
 
@@ -50,7 +49,6 @@ public class AuditEntryForEstatio {
     // //////////////////////////////////////
 
     @Title(sequence="1")
-    @MemberOrder(sequence = "1")
     public DateTime getTimestamp() {
         return timestampEpoch != null? new DateTime(timestampEpoch): null;
     }
@@ -59,7 +57,6 @@ public class AuditEntryForEstatio {
     
     private String user;
 
-    @MemberOrder(sequence = "2")
     public String getUser() {
         return user;
     }
@@ -73,7 +70,6 @@ public class AuditEntryForEstatio {
     private String objectType;
 
     @Title(sequence="3", prepend=":")
-    @MemberOrder(sequence = "3")
     public String getObjectType() {
         return objectType;
     }
@@ -86,7 +82,6 @@ public class AuditEntryForEstatio {
 
     private String identifier;
 
-    @MemberOrder(sequence = "4")
     public String getIdentifier() {
         return identifier;
     }
@@ -99,7 +94,6 @@ public class AuditEntryForEstatio {
     
     private String preValue;
 
-    @MemberOrder(sequence = "5")
     public String getPreValue() {
         return preValue;
     }
@@ -112,7 +106,6 @@ public class AuditEntryForEstatio {
 
     private String postValue;
 
-    @MemberOrder(sequence = "6")
     public String getPostValue() {
         return postValue;
     }

@@ -23,25 +23,21 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -82,7 +78,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     private String reference;
 
     @Disabled
-    @MemberOrder(sequence = "1")
     @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_IDX")
     public String getReference() {
         return reference;
@@ -96,7 +91,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
 
     private String name;
 
-    @MemberOrder(sequence = "2")
     @Title
     public String getName() {
         return name;
@@ -119,7 +113,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
     private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
 
-    @MemberOrder(name = "CommunicationChannels", sequence = "10")
     @Render(Type.EAGERLY)
     public SortedSet<CommunicationChannel> getCommunicationChannels() {
         return communicationChannels;
@@ -148,7 +141,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 
-    @MemberOrder(name = "Agreements", sequence = "11")
     @Render(Type.EAGERLY)
     public SortedSet<AgreementRole> getAgreements() {
         return agreements;
@@ -165,7 +157,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
-    @MemberOrder(name = "Registrations", sequence = "12")
     @Render(Type.EAGERLY)
     public SortedSet<PartyRegistration> getRegistrations() {
         return registrations;
@@ -175,7 +166,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
         this.registrations = registrations;
     }
 
-    @MemberOrder(name = "Registrations", sequence = "12")
     public Party addRegistration() {
         return this;
     }

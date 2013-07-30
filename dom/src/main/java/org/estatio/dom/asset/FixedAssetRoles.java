@@ -38,24 +38,9 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
     // //////////////////////////////////////
 
     @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    public FixedAssetRole newRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type, LocalDate startDate, LocalDate endDate) {
-        final FixedAssetRole role = newTransientInstance();
-        role.setParty(party);
-        role.setAsset(asset);
-        role.setStartDate(startDate);
-        role.setEndDate(endDate);
-        role.setType(type);
-        persist(role);
-        return role;
-    }
-
-    // //////////////////////////////////////
-
-    @NotContributed
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(final FixedAsset asset, final Party party, final FixedAssetRoleType type) {
-        return firstMatch(newQueryDefault("findByAssetAndPartyAndType", "asset", asset, "party", party, "type", type));
+        return firstMatch("findByAssetAndPartyAndType", "asset", asset, "party", party, "type", type);
     }
 
     @NotContributed

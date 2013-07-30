@@ -28,8 +28,6 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -78,7 +76,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     private Status status;
 
-    @MemberOrder(sequence = "4.5")
     @Disabled
     @Override
     public Status getStatus() {
@@ -96,7 +93,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     private Lease lease;
 
     @Title(sequence = "1", append = ":")
-    @MemberOrder(sequence = "1")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Lease getLease() {
         return lease;
@@ -112,7 +108,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     private UnitForLease unit;
 
     @Title(sequence = "2", append = ":")
-    @MemberOrder(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
     public UnitForLease getUnit() {
         return unit;
@@ -127,7 +122,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @MemberOrder(name = "Dates", sequence = "3")
     @Optional
     @Disabled
     @Override
@@ -143,7 +137,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "4")
     @Disabled
     @Optional
     @Override
@@ -158,15 +151,14 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "endDate", sequence = "1")
+    private WithIntervalMutable.ChangeDates<LeaseUnit> changeDates = new WithIntervalMutable.ChangeDates<LeaseUnit>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseUnit changeDates(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
-        return this;
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        return changeDates.changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -177,26 +169,28 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return changeDates.default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return changeDates.default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
+
+
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public Lease getParentWithInterval() {
+    public Lease getWithIntervalParent() {
         return getLease();
     }
 
@@ -218,27 +212,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.1")
-    @Named("Previous Occupany")
-    @Disabled
-    @Optional
-    @Override
-    public LeaseUnit getPrevious() {
-        return null;
-    }
 
-    @Hidden
-    // TODO (where=Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.2")
-    @Named("Next Occupancy")
-    @Disabled
-    @Optional
-    @Override
-    public LeaseUnit getNext() {
-        return null;
-    }
 
     // //////////////////////////////////////
 
@@ -254,7 +228,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.sizeTag = sizeTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "6")
     @Optional
     public String getSize() {
         final Tag existingTag = getSizeTag();
@@ -271,7 +244,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "size");
     }
 
-    @MemberOrder(name = "Size", sequence = "6.1")
     public LeaseUnit newSize(@Named("Tag") @Optional final String size) {
         setSize(size);
         return this;
@@ -295,7 +267,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.brandTag = brandTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "7")
     @Optional
     public String getBrand() {
         final Tag existingTag = getBrandTag();
@@ -312,7 +283,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "brand");
     }
 
-    @MemberOrder(name = "Brand", sequence = "7.1")
     public LeaseUnit newBrand(@Named("Tag") @Optional final String brand) {
         setBrand(brand);
         return this;
@@ -336,7 +306,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.sectorTag = sectorTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "8")
     @Optional
     public String getSector() {
         final Tag existingTag = getSectorTag();
@@ -353,7 +322,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "sector");
     }
 
-    @MemberOrder(name = "Sector", sequence = "8.1")
     public LeaseUnit newSector(@Named("Tag") @Optional final String sector) {
         setSector(sector);
         return this;
@@ -377,7 +345,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         this.activityTag = activityTag;
     }
 
-    @MemberOrder(name = "Tags", sequence = "9")
     @Optional
     public String getActivity() {
         final Tag existingTag = getActivityTag();
@@ -394,7 +361,6 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return tags.choices(this, "activity");
     }
 
-    @MemberOrder(name = "Activity", sequence = "9.1")
     public LeaseUnit newActivity(@Named("Tag") @Optional final String activity) {
         setActivity(activity);
         return this;

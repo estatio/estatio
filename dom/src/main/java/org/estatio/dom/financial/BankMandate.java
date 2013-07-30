@@ -23,7 +23,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.Status;
 import org.estatio.dom.agreement.Agreement;
@@ -61,7 +60,6 @@ public class BankMandate extends Agreement<Status> {
     @javax.jdo.annotations.Column(name="BANKACCOUNT_ID")
     private FinancialAccount bankAccount;
 
-    @MemberOrder(name = "Details", sequence = "11")
     public FinancialAccount getBankAccount() {
         return bankAccount;
     }
@@ -76,12 +74,10 @@ public class BankMandate extends Agreement<Status> {
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "3")
     public Party getPrimaryParty() {
         return findParty(FinancialConstants.ART_CREDITOR);
     }
 
-    @MemberOrder(sequence = "4")
     public Party getSecondaryParty() {
         return findParty(FinancialConstants.ART_DEBTOR);
     }

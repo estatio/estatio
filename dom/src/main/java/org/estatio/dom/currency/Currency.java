@@ -20,7 +20,6 @@ package org.estatio.dom.currency;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithDescriptionUnique;
@@ -45,7 +44,6 @@ public class Currency extends EstatioRefDataObject<Currency> implements WithRefe
     @javax.jdo.annotations.Unique(name = "CURRENCY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
-    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -59,7 +57,6 @@ public class Currency extends EstatioRefDataObject<Currency> implements WithRefe
     @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX")
     private String description;
 
-    @MemberOrder(sequence = "2")
     public String getDescription() {
         return description;
     }

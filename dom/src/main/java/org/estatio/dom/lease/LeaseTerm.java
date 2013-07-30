@@ -39,8 +39,6 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mask;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -51,6 +49,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalChained;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.Invoice;
@@ -101,7 +100,7 @@ import org.estatio.services.clock.ClockService;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> implements WithIntervalMutable<LeaseTerm>, WithSequence {
+public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> implements WithIntervalMutable<LeaseTerm>, WithIntervalChained<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
@@ -115,7 +114,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     private LeaseItem leaseItem;
 
     @Hidden(where = Where.REFERENCES_PARENT)
-    @MemberOrder(sequence = "1")
     @Disabled
     @Title(sequence = "1", append = ":")
     public LeaseItem getLeaseItem() {
@@ -146,7 +144,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     private LocalDate startDate;
 
     @Title(sequence = "2", append = "-")
-    @MemberOrder(name = "Dates", sequence = "2")
     @Optional
     @Disabled
     @Override
@@ -185,7 +182,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "3")
     @Title(sequence = "3")
     @Disabled
     @Optional
@@ -217,15 +213,14 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "endDate", sequence = "1")
+    private WithIntervalMutable.ChangeDates<LeaseTerm> changeDates = new WithIntervalMutable.ChangeDates<LeaseTerm>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseTerm changeDates(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
-        modifyStartDate(startDate);
-        modifyEndDate(endDate);
-        return this;
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        return changeDates.changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -236,26 +231,27 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return changeDates.default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return changeDates.default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
+
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public LeaseItem getParentWithInterval() {
+    public LeaseItem getWithIntervalParent() {
         return getLeaseItem();
     }
 
@@ -291,7 +287,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
      * Disabled, is maintained through LeaseTermContributedActions
      */
     @Disabled
-    @MemberOrder(sequence = "4")
     public LeaseTermStatus getStatus() {
         return status;
     }
@@ -310,7 +305,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     private LeaseTermFrequency frequency;
 
-    @MemberOrder(sequence = "5")
     public LeaseTermFrequency getFrequency() {
         return frequency;
     }
@@ -321,13 +315,11 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "6", name = "Values")
     @Mask("")
     public abstract BigDecimal getTrialValue();
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "7", name = "Values")
     @Mask("")
     public abstract BigDecimal getApprovedValue();
 
@@ -337,10 +329,10 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private LeaseTerm previous;
 
-    @MemberOrder(name = "Related", sequence = "6")
     @Named("Previous Term")
     @Hidden(where = Where.ALL_TABLES)
     @Optional
+    @Override
     public LeaseTerm getPrevious() {
         return previous;
     }
@@ -374,9 +366,9 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     private LeaseTerm next;
 
     @Hidden(where = Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "7")
     @Named("Next Term")
     @Optional
+    @Override
     public LeaseTerm getNext() {
         return next;
     }
@@ -409,7 +401,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     @Persistent(mappedBy = "leaseTerm")
     private SortedSet<InvoiceItemForLease> invoiceItems = new TreeSet<InvoiceItemForLease>();
 
-    @MemberOrder(sequence = "1")
     @Render(Type.EAGERLY)
     public SortedSet<InvoiceItemForLease> getInvoiceItems() {
         return invoiceItems;
@@ -508,7 +499,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         return calculate(startDate, dueDate, InvoiceRunType.NORMAL_RUN);
     }
 
-    @MemberOrder(name = "invoiceItems", sequence = "2")
     public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
         invoiceCalculationService.calculateAndInvoice(this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
         return this;
@@ -517,7 +507,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     // //////////////////////////////////////
 
     @Bulk
-    @MemberOrder(sequence = "1")
     public LeaseTerm verify() {
         update();
         // convenience code to automatically create terms but not for terms who
@@ -534,7 +523,6 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "3")
     public LeaseTerm createNext() {
         LocalDate newStartDate = getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
         return createNext(newStartDate);

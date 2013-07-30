@@ -29,8 +29,6 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberGroups;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -40,6 +38,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalChained;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -66,8 +65,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE tax == :tax "
                         + "&& endDate == :endDate")
 })
-@MemberGroups({ "General", "Dates", "Related" })
-public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalMutable<TaxRate> {
+public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalChained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
         super("tax, startDate desc nullsLast", Status.LOCKED, Status.UNLOCKED);
@@ -94,7 +92,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     private Tax tax;
 
     @Title
-    @MemberOrder(sequence = "1")
     public Tax getTax() {
         return tax;
     }
@@ -107,7 +104,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     private LocalDate startDate;
 
-    @MemberOrder(name = "Dates", sequence = "2")
     @Optional
     @Disabled
     public LocalDate getStartDate() {
@@ -120,7 +116,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     private LocalDate endDate;
 
-    @MemberOrder(name = "Dates", sequence = "3")
     @Optional
     @Disabled
     public LocalDate getEndDate() {
@@ -133,14 +128,14 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "endDate", sequence = "1")
+    private WithIntervalMutable.ChangeDates<TaxRate> changeDates = new WithIntervalMutable.ChangeDates<TaxRate>(this);
+
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public TaxRate changeDates(
-            final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
+        changeDates.changeDates(startDate, endDate);
         return this;
     }
 
@@ -164,14 +159,15 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return startDate.isBefore(endDate) ? null : "Start date must be before end date";
+        return changeDates.validateChangeDates(startDate, endDate);
     }
+
 
     // //////////////////////////////////////
 
     @Hidden
     @Override
-    public WithInterval<?> getParentWithInterval() {
+    public WithInterval<?> getWithIntervalParent() {
         return null;
     }
 
@@ -198,7 +194,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     private BigDecimal percentage;
 
     @Title
-    @MemberOrder(sequence = "4")
     @Column(scale = 2)
     public BigDecimal getPercentage() {
         return percentage;
@@ -215,7 +210,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     private TaxRate previous;
 
     @Hidden(where = Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.1")
     @Named("Previous Rate")
     @Disabled
     @Optional
@@ -234,7 +228,6 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     private TaxRate next;
 
     @Hidden(where = Where.ALL_TABLES)
-    @MemberOrder(name = "Related", sequence = "9.2")
     @Named("Next Rate")
     @Disabled
     @Optional

@@ -23,8 +23,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import org.apache.isis.applib.annotation.MemberOrder;
-
 public class EstatioDomainObjectTest_toString {
 
     public static class WithCodeGetterImpl implements WithCodeGetter {
@@ -96,7 +94,6 @@ public class EstatioDomainObjectTest_toString {
 
         private WithCodeGetter withCode;
 
-        @MemberOrder(sequence = "1")
         public WithCodeGetter getWithCode() {
             return withCode;
         }
@@ -109,7 +106,6 @@ public class EstatioDomainObjectTest_toString {
         
         private WithDescriptionGetter withDescription;
         
-        @MemberOrder(sequence = "1")
         public WithDescriptionGetter getWithDescription() {
             return withDescription;
         }
@@ -122,7 +118,6 @@ public class EstatioDomainObjectTest_toString {
         
         private WithNameGetter withName;
         
-        @MemberOrder(sequence = "1")
         public WithNameGetter getWithName() {
             return withName;
         }
@@ -135,7 +130,6 @@ public class EstatioDomainObjectTest_toString {
         
         private WithReferenceGetter withReference;
         
-        @MemberOrder(sequence = "1")
         public WithReferenceGetter getWithReference() {
             return withReference;
         }
@@ -148,7 +142,6 @@ public class EstatioDomainObjectTest_toString {
         
         private WithTitleGetter withTitle;
         
-        @MemberOrder(sequence = "1")
         public WithTitleGetter getWithTitle() {
             return withTitle;
         }

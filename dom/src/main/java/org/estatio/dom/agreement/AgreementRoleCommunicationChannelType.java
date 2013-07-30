@@ -20,9 +20,12 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -52,7 +55,6 @@ public class AgreementRoleCommunicationChannelType extends EstatioRefDataObject<
 
     private String title;
 
-    @MemberOrder(sequence = "1")
     @Title
     public String getTitle() {
         return title;
@@ -67,13 +69,24 @@ public class AgreementRoleCommunicationChannelType extends EstatioRefDataObject<
     @javax.jdo.annotations.Column(name="APPLIESTO_ID")
     private AgreementType appliesTo;
 
-    @MemberOrder(sequence = "2")
     public AgreementType getAppliesTo() {
         return appliesTo;
     }
 
     public void setAppliesTo(final AgreementType agreementType) {
         this.appliesTo = agreementType;
+    }
+    
+    // //////////////////////////////////////
+
+    @Programmatic
+    public Predicate<? super AgreementRoleCommunicationChannel> matchingCommunicationChannel() {
+        return new Predicate<AgreementRoleCommunicationChannel>() {
+            @Override
+            public boolean apply(final AgreementRoleCommunicationChannel arcc) {
+                return arcc != null && Objects.equal(arcc.getType(), this) ? true : false;
+            }
+        };
     }
 
     // //////////////////////////////////////

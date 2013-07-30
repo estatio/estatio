@@ -20,7 +20,6 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.util.TitleBuffer;
 
@@ -38,7 +37,6 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
 
     private String phoneNumber;
 
-    @MemberOrder(sequence = "1")
     public String getPhoneNumber() {
         return phoneNumber;
     }

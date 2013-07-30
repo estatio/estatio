@@ -23,7 +23,6 @@ import java.util.TreeSet;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.WithReferenceComparable;
@@ -49,7 +48,6 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
     @javax.jdo.annotations.Unique(name = "CHARGE_GROUP_REFERENCE_UNIQUE_IDX")
     private String reference;
 
-    @MemberOrder(sequence = "1")
     @Title(sequence = "1")
     public String getReference() {
         return reference;
@@ -64,7 +62,6 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
     private String description;
 
     @Title(sequence = "2", prepend = "-")
-    @MemberOrder(sequence = "2")
     public String getDescription() {
         return description;
     }
@@ -78,7 +75,6 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
     @javax.jdo.annotations.Persistent(mappedBy = "group")
     private SortedSet<Charge> charges = new TreeSet<Charge>();
 
-    @MemberOrder(sequence = "1")
     public SortedSet<Charge> getCharges() {
         return charges;
     }

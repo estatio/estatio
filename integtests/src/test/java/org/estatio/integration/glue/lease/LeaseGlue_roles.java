@@ -18,8 +18,6 @@ package org.estatio.integration.glue.lease;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -40,7 +38,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
-import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
@@ -74,7 +71,7 @@ public class LeaseGlue_roles extends CukeGlueAbstract {
         final Lease lease = getVar("lease", null, Lease.class);
         assertThat(lease.getRoles().isEmpty(), is(true));
         for (AgreementRoleDesc ard : listOfActuals) {
-            final AgreementRole ar = lease.newRole(ard.type, ard.party, ard.startDate, ard.endDate);
+            final AgreementRole ar = lease.createRole(ard.type, ard.party, ard.startDate, ard.endDate);
             if(!Strings.isEmpty(ard.indicated)) {
                 putVar("agreementRole", "indicated", ar);
             }
@@ -93,71 +90,12 @@ public class LeaseGlue_roles extends CukeGlueAbstract {
         final Lease lease = getVar("lease", null, Lease.class);
 
         try {
-            wrap(lease).addRole(type, party, startDate, endDate);
+            wrap(lease).createInitialRole(type, party, startDate, endDate);
         } catch(Exception ex) {
             putVar("exception", "exception", ex);
         }
     }
 
-    @When("^.*remove.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".*  party \"([^\"]*)\"$")
-    public void when_remove_agreement_role_with_type_with_start_date_and_party(
-            @Transform(ERD.AgreementRoleType.class) final AgreementRoleType type, 
-            @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
-            @Transform(ETO.Party.class) final Party party) throws Throwable {
-      
-        nextTransaction();
-
-        final Lease lease = getVar("lease", null, Lease.class);
-
-        final AgreementRole existingRole = findAgreementRole(lease, type, startDate, party);
-        assertThat("Could not locate role in lease", existingRole, is(not(nullValue())));
-        
-        try {
-            wrap(lease).removeRole(existingRole);
-        } catch(Exception ex) {
-            putVar("exception", "exception", ex);
-        }
-    }
-
-    @When("^.* remove.* (\\d+).* agreement role$")
-    public void when_remove_nth_agreement_role(
-            final int index) throws Throwable {
-
-        nextTransaction();
-
-        final Lease lease = getVar("lease", null, Lease.class);
-
-        final AgreementRole existingRole = findAgreementRole(lease, index);
-        assertThat("Could not locate role in lease", existingRole, is(not(nullValue())));
-        
-        try {
-            wrap(lease).removeRole(existingRole);
-        } catch(Exception ex) {
-            putVar("exception", "exception", ex);
-        }
-    }
-
-    /**
-     * @param index - 1-based index into {@link Agreement#getRoles()}
-     */
-    private AgreementRole findAgreementRole(final Agreement<?> agreement, int index) {
-        int i = 0;
-        for (AgreementRole ar : agreement.getRoles()) {
-            if(++i == index) {
-                return ar;
-            }
-        }
-        return null;
-    }
-
-    private AgreementRole findAgreementRole(final Agreement<?> agreement, final AgreementRoleType type, final LocalDate startDate, final Party party) {
-        for (AgreementRole ar : agreement.getRoles()) {
-            if(ar.getType() == type && ar.getParty() == party && ar.getAgreement() == agreement && ar.getStartDate() == startDate) {
-                return ar;
-            }
-        }
-        return null;
-    }
 
 
     // //////////////////////////////////////

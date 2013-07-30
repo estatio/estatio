@@ -23,20 +23,14 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.WithStatus;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -62,7 +56,6 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     private Status status;
 
-    @MemberOrder(sequence = "4.5")
     @Disabled
     @Override
     public Status getStatus() {
@@ -80,7 +73,6 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
-    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -94,7 +86,6 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     private String name;
 
     @Title
-    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }
@@ -108,7 +99,6 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     private FinancialAccountType type;
 
     @Hidden
-    @MemberOrder(sequence = "1")
     public FinancialAccountType getType() {
         return type;
     }
@@ -121,7 +111,6 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     private Party owner;
 
-    @MemberOrder(sequence = "1")
     public Party getOwner() {
         return owner;
     }

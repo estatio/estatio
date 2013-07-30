@@ -25,14 +25,12 @@ import java.util.TreeSet;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.Index WHERE reference == :reference")
@@ -48,7 +46,6 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     @javax.jdo.annotations.Unique(name = "INDEX_REFERENCE_UNIQUE_IDX")
     private String reference;
 
-    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -63,7 +60,6 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     private String name;
 
     @Title
-    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }
@@ -77,7 +73,6 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     @javax.jdo.annotations.Persistent(mappedBy = "index")
     private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
-    @MemberOrder(name = "Bases", sequence = "3")
     public SortedSet<IndexBase> getIndexBases() {
         return indexBases;
     }

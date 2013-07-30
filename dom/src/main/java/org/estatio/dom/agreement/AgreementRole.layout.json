@@ -8,15 +8,8 @@
             "agreement": {},
             "party": {},
             "type": {},
-            "current": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "current": {},
+            "status": {}
           }
         }
       }
@@ -31,16 +24,13 @@
               "actions": {
                 "changeDates": {}
               }
-            },
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "parentWithInterval": {}
+            }
           }
         },
         "Related": {
           "members": {
-            "previous": {},
-            "next": {
+            "predecessor": {},
+            "successor": {
               "actions": {
                 "succeededBy": {},
                 "precededBy": {}
@@ -59,7 +49,7 @@
       "collections": {
         "communicationChannels": {
           "actions": {
-            "addCommunicationChannel": {}
+            "createInitialCommunicationChannel": {}
           }
         }
       }

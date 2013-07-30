@@ -28,16 +28,19 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
@@ -57,7 +60,6 @@ public class Property extends FixedAsset {
 
     private PropertyType propertyType;
 
-    @MemberOrder(name="Property",sequence = "1.3")
     public PropertyType getPropertyType() {
         return propertyType;
     }
@@ -71,7 +73,6 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate openingDate;
 
-    @MemberOrder(name="Dates",sequence = "1.4")
     public LocalDate getOpeningDate() {
         return openingDate;
     }
@@ -85,7 +86,6 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate acquireDate;
 
-    @MemberOrder(name="Dates",sequence = "1.5")
     @Optional
     public LocalDate getAcquireDate() {
         return acquireDate;
@@ -100,7 +100,6 @@ public class Property extends FixedAsset {
     private LocalDate disposalDate;
 
     @javax.jdo.annotations.Persistent
-    @MemberOrder(name="Dates",sequence = "1.6")
     @Optional
     public LocalDate getDisposalDate() {
         return disposalDate;
@@ -115,7 +114,6 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
-    @MemberOrder(name="Property",sequence = "1.7")
     public BigDecimal getArea() {
         return area;
     }
@@ -128,7 +126,6 @@ public class Property extends FixedAsset {
 
     private String city;
 
-    @MemberOrder(name="Location",sequence = "1.8")
     public String getCity() {
         return city;
     }
@@ -142,7 +139,6 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
-    @MemberOrder(name="Location",sequence = "1.9")
     public Country getCountry() {
         return country;
     }
@@ -157,7 +153,6 @@ public class Property extends FixedAsset {
     private SortedSet<Unit> units = new TreeSet<Unit>();
 
     @Render(Type.EAGERLY)
-    @MemberOrder(sequence = "2", name = "Units")
     public SortedSet<Unit> getUnits() {
         return units;
     }
@@ -169,19 +164,43 @@ public class Property extends FixedAsset {
     // //////////////////////////////////////
 
     @PublishedAction
-    @MemberOrder(name = "Units", sequence = "1")
     public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
         Unit unit = unitsRepo.newUnit(code, name);
         unit.setProperty(this);
         return unit;
     }
-    
+
+
     // //////////////////////////////////////
 
-    private Units unitsRepo;
-    public void injectUnits(final Units unitsRepo) {
+    /**
+     * For use by Api and by fixtures.
+     */
+    @Programmatic
+    public FixedAssetRole addRoleIfDoesNotExist(
+            @Named("party") Party party,
+            @Named("type") FixedAssetRoleType type,
+            @Named("Start Date") @Optional LocalDate startDate,
+            @Named("End Date") @Optional LocalDate endDate) {
+
+        FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
+        if (role == null) {
+            role = this.createRole(type, party, startDate, endDate);
+        }
+        return role;
+    }
+
+    // //////////////////////////////////////
+
+    private Units<?> unitsRepo;
+    public void injectUnits(final Units<?> unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
 
+    private FixedAssetRoles fixedAssetRoles;
+
+    public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
+        this.fixedAssetRoles = fixedAssetRoles;
+    }
 
 }

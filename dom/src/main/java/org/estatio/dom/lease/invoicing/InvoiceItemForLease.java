@@ -24,12 +24,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.agreement.AgreementRole;
@@ -80,7 +76,6 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
-    @MemberOrder(sequence = "11")
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
     }
@@ -167,13 +162,6 @@ public class InvoiceItemForLease extends InvoiceItem {
         this.invoices = invoices;
     }
 
-    private InvoiceItemsForLease invoiceItemsForLease;
-    
-    @Hidden
-    public void injectInvoiceItemsForLease(InvoiceItemsForLease invoiceItemsForLease) {
-        this.invoiceItemsForLease = invoiceItemsForLease;
-    }
-    
     // //////////////////////////////////////
 
     @Override

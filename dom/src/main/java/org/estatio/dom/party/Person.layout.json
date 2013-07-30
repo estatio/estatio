@@ -1,26 +1,19 @@
 {
   "columns": [
     {
-      "span": 2,
+      "span": 3,
       "memberGroups": {
         "General": {
           "members": {
             "reference": {},
-            "gender": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "gender": {},
+            "status": {}
           }
         }
       }
     },
     {
-      "span": 2,
+      "span": 3,
       "memberGroups": {
         "Name": {
           "members": {
@@ -37,7 +30,7 @@
       "memberGroups": {}
     },
     {
-      "span": 8,
+      "span": 6,
       "collections": {
         "agreements": {},
         "communicationChannels": {},

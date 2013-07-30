@@ -16,7 +16,6 @@
  */
 package org.estatio.dom.party;
 
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
 
@@ -26,7 +25,6 @@ public class Person extends Party {
     
     private String initials;
 
-    @MemberOrder(sequence = "3")
     @Optional
     public String getInitials() {
         return initials;
@@ -49,7 +47,6 @@ public class Person extends Party {
     
     private String firstName;
 
-    @MemberOrder(sequence = "3")
     @Optional
     public String getFirstName() {
         return firstName;
@@ -63,7 +60,6 @@ public class Person extends Party {
 
     private String lastName;
 
-    @MemberOrder(sequence = "4")
     public String getLastName() {
         return lastName;
     }
@@ -77,7 +73,6 @@ public class Person extends Party {
 
     private PersonGenderType gender;
 
-    @MemberOrder(sequence = "5")
     public PersonGenderType getGender() {
         return gender;
     }

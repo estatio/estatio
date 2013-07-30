@@ -6,15 +6,8 @@
         "General": {
           "members": {
             "tax": {},
-            "percentage": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "percentage": {},
+            "status": {}
           }
         }
       }
@@ -33,10 +26,7 @@
               "actions": {
                 "changeDates": {}
               }
-            },
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "parentWithInterval": {}
+            }
           }
         },
         "Related": {

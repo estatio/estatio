@@ -6,15 +6,8 @@
         "General": {
           "members": {
             "party": {},
-            "partyRegistrationType": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "partyRegistrationType": {},
+            "status": {}
           }
         }
       }
@@ -33,16 +26,7 @@
               "actions": {
                 "changeDates": {}
               }
-            },
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "parentWithInterval": {}
-          }
-        },
-        "Related": {
-          "members": {
-            "previous": {},
-            "next": {}
+            }
           }
         }
       }

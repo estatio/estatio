@@ -21,6 +21,7 @@ package org.estatio.dom;
 import java.util.Iterator;
 import java.util.SortedSet;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.name.Named;
@@ -44,7 +45,7 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
      * The start date of the interval.
      * 
      * <p>
-     * A value of <tt>null</tt> implies that the {@link #getParentWithInterval() parent}'s
+     * A value of <tt>null</tt> implies that the {@link #getWithIntervalParent() parent}'s
      * start date should be used.  If that is <tt>null</tt>, then implies 'the beginning of time'.
      */
     @Disabled
@@ -56,7 +57,7 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
      * The end date of the interval.
      * 
      * <p>
-     * A value of <tt>null</tt> implies that the {@link #getParentWithInterval() parent}'s
+     * A value of <tt>null</tt> implies that the {@link #getWithIntervalParent() parent}'s
      * end date should be used.  If that is <tt>null</tt>, then implies 'the end of time'.
      */
     @Optional
@@ -64,17 +65,26 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
     public LocalDate getEndDate();
     public void setEndDate(LocalDate endDate);
 
+    /**
+     * The parent "owning" object, if any, that is itself a {@link WithInterval}.
+     * 
+     * <p>
+     * Used to determine the {@link #getEffectiveStartDate() effective start date} and
+     * {@link #getEffectiveEndDate() effective end date} when the actual {@link #getStartDate() start date}
+     * and {@link #getEndDate() end date} are <tt>null</tt> (in other words the start/end date
+     * are inherited from the parent).
+     */
     @Hidden
-    public WithInterval<?> getParentWithInterval();
+    public WithInterval<?> getWithIntervalParent();
 
     /**
-     * Either the {@link #getStartDate() start date}, or the {@link #getParentWithInterval() parent}'s
+     * Either the {@link #getStartDate() start date}, or the {@link #getWithIntervalParent() parent}'s
      * start date (if any). 
      */
     @Hidden
     public LocalDate getEffectiveStartDate();
     /**
-     * Either the {@link #getEndDate() end date}, or the {@link #getParentWithInterval() parent}'s
+     * Either the {@link #getEndDate() end date}, or the {@link #getWithIntervalParent() parent}'s
      * end date (if any). 
      */
     @Hidden
@@ -86,31 +96,6 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
 
     
 
-    /**
-     * The interval that immediately precedes this one, if any.
-     * 
-     * <p>
-     * The predecessor's {@link #getEndDate() end date} is the day before this interval's
-     * {@link #getStartDate() start date}.
-     */
-    @Hidden(where=Where.ALL_TABLES)
-    @Disabled
-    @Optional
-    public T getPrevious();
-
-    /**
-     * The interval that immediately succeeds this one, if any.
-     * 
-     * <p>
-     * The successor's {@link #getStartDate() start date} is the day after this interval's
-     * {@link #getEndDate() end date}.
-     */
-    @Hidden(where=Where.ALL_TABLES)
-    @Disabled
-    @Optional
-    public T getNext();
-
-    
     
     public static class Util {
         private Util() {}
@@ -118,7 +103,7 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             if (wi.getStartDate() != null) {
                 return wi.getStartDate();
             } 
-            final WithInterval<?> parentWi = wi.getParentWithInterval();
+            final WithInterval<?> parentWi = wi.getWithIntervalParent();
             if (parentWi != null) {
                 return parentWi.getEffectiveStartDate();
             } 
@@ -128,7 +113,7 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             if (wi.getEndDate() != null) {
                 return wi.getEndDate();
             } 
-            final WithInterval<?> parentWi = wi.getParentWithInterval();
+            final WithInterval<?> parentWi = wi.getWithIntervalParent();
             if (parentWi != null) {
                 return parentWi.getEffectiveEndDate();
             } 
@@ -140,140 +125,28 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             return iterator.hasNext()? iterator.next(): null;
         }
     }
-
-    public interface Factory {
-        void newRole(LocalDate startDate, LocalDate endDate);
-    }
     
-    public static class SucceededBy {
-        
-        private final WithInterval<?> withInterval;
-        public SucceededBy(WithInterval<?> withInterval) {
-            this.withInterval = withInterval;
+    public static class Matching {
+        public static <T extends WithInterval<T>> Predicate<T> startDate(final LocalDate startDate) {
+            return new Predicate<T>() {
+                @Override
+                public boolean apply(final T ar) {
+                    return startDate != null && ar != null && Objects.equal(ar.getStartDate(), startDate) ? true : false;
+                }
+            };
         }
 
-        public void succeededBy(
-                final LocalDate startDate, 
-                final LocalDate endDate,
-                final WithInterval.Factory factory) {
-            final WithInterval<?> successor = withInterval.getNext();
-            if(successor != null) {
-                successor.setStartDate(endDate);
-            }
-            withInterval.setEndDate(startDate);
-            factory.newRole(startDate, endDate);
-
-        }
-                
-        public String validateSucceededBy(
-                final LocalDate startDate, 
-                final LocalDate endDate) {
-            if(withInterval.getStartDate() != null && !withInterval.getStartDate().isBefore(startDate)) {
-                return "Successor must start after existing";
-            }
-            final WithInterval<?> successor = withInterval.getNext();
-            if(successor != null) {
-                if (endDate == null) {
-                    return "An end date is required because a successor already exists";
+        public static <T extends WithInterval<T>> Predicate<T> endDate(final LocalDate endDate) {
+            return new Predicate<T>() {
+                @Override
+                public boolean apply(final T ar) {
+                    return endDate != null && ar != null && Objects.equal(ar.getEndDate(), endDate) ? true : false;
                 }
-                if(successor.getEndDate() != null && !endDate.isBefore(successor.getEndDate())) {
-                    return "Successor must end prior to existing successor";
-                }
-            }
-            return null;
-        }
-    }
-    
-    public static class PrecededBy {
-        
-        private final WithInterval<?> withInterval;
-        public PrecededBy(WithInterval<?> withInterval) {
-            this.withInterval = withInterval;
+            };
         }
 
-        public void precededBy(
-                final LocalDate startDate, 
-                final LocalDate endDate,
-                final WithInterval.Factory factory) {
-            
-            final WithInterval<?> predecessor = withInterval.getPrevious();
-            if(predecessor != null) {
-                predecessor.setEndDate(startDate);
-            }
-            withInterval.setStartDate(endDate);
-            factory.newRole(startDate, endDate);
-        }
-                
-        public String validatePrecededBy(
-                final LocalDate startDate, 
-                final LocalDate endDate) {
-            if(withInterval.getEndDate() != null && !withInterval.getEndDate().isAfter(endDate)) {
-                return "Predecessor must end before existing";
-            }
-            final WithInterval<?> predecessor = withInterval.getPrevious();
-            if(predecessor != null) {
-                if (startDate == null) {
-                    return "A start date is required because a predecessor already exists";
-                }
-                if(predecessor.getStartDate() != null && !startDate.isAfter(predecessor.getStartDate())) {
-                    return "Predecessor must start after existing predecessor";
-                }
-            }
-            return null;
-        }
 
     }
-    public static class UpdateDates {
-        
-        private final WithInterval<?> withInterval;
-        public UpdateDates(WithInterval<?> withInterval) {
-            this.withInterval = withInterval;
-        }
-        
-        public void updateDates(
-                final LocalDate startDate, 
-                final LocalDate endDate) {
-            
-            final WithInterval<?> predecessor = withInterval.getPrevious();
-            if(predecessor != null) {
-                predecessor.setEndDate(startDate);
-            }
-            final WithInterval<?> successor = withInterval.getNext();
-            if(successor != null) {
-                successor.setStartDate(endDate);
-            }
-            withInterval.setStartDate(startDate);
-            withInterval.setEndDate(endDate);
-        }
 
-        public String validateUpdateDates(
-                final LocalDate startDate, 
-                final LocalDate endDate) {
-
-            if(startDate != null && endDate != null && !startDate.isBefore(endDate)) {
-                return "Start date cannot be on/after the end date";
-            }
-            final WithInterval<?> predecessor = withInterval.getPrevious();
-            if (predecessor != null) {
-                if(startDate == null) {
-                    return "Start date cannot be set to null if there is a predecessor";
-                }
-                if(predecessor.getStartDate() != null && !predecessor.getStartDate().isBefore(startDate)) {
-                    return "Start date cannot be on/before start of current predecessor";
-                }
-            }
-            final WithInterval<?> successor = withInterval.getNext();
-            if (successor != null) {
-                if(endDate == null) {
-                    return "End date cannot be set to null if there is a successor";
-                }
-                if(successor.getEndDate() != null && !successor.getEndDate().isAfter(endDate)) {
-                    return "End date cannot be on/after end of current successor";
-                }
-            }
-            return null;
-        }
-
-    }
 
 }

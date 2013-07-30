@@ -8,18 +8,14 @@
             "collectionNumber": {},
             "invoiceNumber": {},
             "reference": {},
-            "source": {},
-            "currency": {},
-            "paymentMethod": {},
-            "lastItemSequence": {}
+            "lastItemSequence": {},
+            "status": {}
           }
         },
-        "Control": {
+        "Detail": {
           "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "source": {},
+            "paymentMethod": {}
           }
         }
       }
@@ -46,6 +42,7 @@
       "memberGroups": {
         "Amounts": {
           "members": {
+            "currency": {},
             "netAmount": {},
             "vatAmount": {},
             "grossAmount": {}

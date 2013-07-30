@@ -8,21 +8,14 @@
             "reference": {},
             "name": {},
             "bankAccount": {},
-            "agreementType": {}
+            "agreementType": {},
+            "status": {}
           }
         },
         "Parties": {
           "members": {
             "primaryParty": {},
             "secondaryParty": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
           }
         }
       }
@@ -38,10 +31,7 @@
                 "changeDates": {}
               }
             },
-            "terminationDate": {},
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "parentWithInterval": {}
+            "terminationDate": {}
           }
         },
         "Related": {
@@ -61,8 +51,7 @@
       "collections": {
         "roles": {
           "actions": {
-            "addRole": {},
-            "removeRole": {}
+            "createInitialRole": {}
           }
         }
       }

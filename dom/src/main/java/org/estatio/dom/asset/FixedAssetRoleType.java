@@ -18,6 +18,11 @@
  */
 package org.estatio.dom.asset;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.TitledEnum;
 import org.estatio.dom.utils.StringUtils;
 
@@ -32,4 +37,14 @@ public enum FixedAssetRoleType implements TitledEnum {
         return StringUtils.enumTitle(this.toString());
     }
     
+    @Programmatic
+    public Predicate<? super FixedAssetRole> matchingRole() {
+        return new Predicate<FixedAssetRole>() {
+            @Override
+            public boolean apply(final FixedAssetRole far) {
+                return far != null && Objects.equal(far.getType(), this) ? true : false;
+            }
+        };
+    }
+
 }

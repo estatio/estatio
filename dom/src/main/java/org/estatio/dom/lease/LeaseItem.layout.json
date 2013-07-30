@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 3,
       "memberGroups": {
         "General": {
           "members": {
@@ -11,15 +11,20 @@
             "status": {},
             "invoicingFrequency": {},
             "paymentMethod": {},
-            "charge": {},
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "id": {},
-            "locked": {},
-            "parentWithInterval": {},
-            "versionSequence": {}
+            "charge": {}
           }
         },
+        "Current Value": {
+          "members": {
+            "trialValue": {},
+            "approvedValue": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
         "Dates": {
           "members": {
             "startDate": {},
@@ -32,14 +37,8 @@
         },
         "Related": {
           "members": {
-            "next": {},
-            "previous": {}
-          }
-        },
-        "Current Value": {
-          "members": {
-            "trialValue": {},
-            "approvedValue": {}
+            "previous": {},
+            "next": {}
           }
         }
       }
@@ -49,11 +48,7 @@
       "memberGroups": {}
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 8,
+      "span": 6,
       "collections": {
         "terms": {
           "actions": {

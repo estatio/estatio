@@ -1,24 +1,34 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 3,
       "memberGroups": {
         "General": {
           "members": {
             "reference": {},
             "name": {},
-            "primaryParty": {},
-            "secondaryParty": {},
             "agreementType": {},
-            "effectiveEndDate": {},
-            "effectiveStartDate": {},
-            "id": {},
-            "locked": {},
-            "parentWithInterval": {},
             "status": {},
-            "versionSequence": {}
+            "type": {},
+            "paidBy": {
+              "actions": {
+                "paidBy": {},
+                "newMandate": {}
+              }
+            }
           }
         },
+        "Parties": {
+          "members": {
+            "primaryParty": {},
+            "secondaryParty": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
         "Dates": {
           "members": {
             "startDate": {},
@@ -39,17 +49,6 @@
             "previous": {},
             "next": {}
           }
-        },
-        "Lease Details": {
-          "members": {
-            "type": {},
-            "paidBy": {
-              "actions": {
-                "paidBy": {},
-                "newMandate": {}
-              }
-            }
-          }
         }
       }
     },
@@ -58,11 +57,7 @@
       "memberGroups": {}
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 8,
+      "span": 6,
       "collections": {
         "items": {
           "actions": {
@@ -71,8 +66,7 @@
         },
         "roles": {
           "actions": {
-            "addRole": {},
-            "removeRole": {}
+            "createInitialRole": {}
           }
         },
         "units": {

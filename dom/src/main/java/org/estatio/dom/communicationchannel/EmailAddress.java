@@ -20,7 +20,6 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -37,7 +36,6 @@ public class EmailAddress extends CommunicationChannel {
 
     private String address;
 
-    @MemberOrder(sequence = "1")
     public String getAddress() {
         return address;
     }

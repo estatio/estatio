@@ -26,7 +26,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -52,7 +51,6 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     private String reference;
 
     @Title
-    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -65,7 +63,6 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
 
     private String name;
 
-    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }
@@ -79,7 +76,6 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
-    @MemberOrder(sequence = "1")
     public SortedSet<TaxRate> getRates() {
         return rates;
     }

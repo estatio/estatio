@@ -8,15 +8,8 @@
             "owner": {},
             "reference": {},
             "type": {},
-            "name": {}
-          }
-        },
-        "Control": {
-          "members": {
-            "id": {},
-            "locked": {},
-            "status": {},
-            "versionSequence": {}
+            "name": {},
+            "status": {}
           }
         }
       }
