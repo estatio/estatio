@@ -212,6 +212,15 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
 
 
     // //////////////////////////////////////

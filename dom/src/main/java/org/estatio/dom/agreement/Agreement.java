@@ -52,7 +52,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalChained;
+import org.estatio.dom.Chained;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
@@ -79,7 +79,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
 @Bookmarkable
-public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, WithIntervalChained<Agreement<S>>, WithNameGetter {
+public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, WithNameGetter {
 
     public Agreement(S statusToLock, S statusToUnlock) {
         super("reference", statusToLock, statusToUnlock);
@@ -213,6 +213,16 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
     }
 
     // //////////////////////////////////////

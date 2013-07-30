@@ -7,7 +7,8 @@
           "members": {
             "party": {},
             "partyRegistrationType": {},
-            "status": {}
+            "status": {},
+            "current": {}
           }
         }
       }

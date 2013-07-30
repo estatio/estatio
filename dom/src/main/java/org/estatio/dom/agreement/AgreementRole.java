@@ -29,7 +29,6 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.inject.name.Named;
 
 import org.joda.time.LocalDate;
 
@@ -39,6 +38,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -255,6 +255,16 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
+
+    // //////////////////////////////////////
+
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
@@ -456,7 +466,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         if (type == null || communicationChannel == null) {
             return;
         }
-        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, clockService.now());
+        AgreementRoleCommunicationChannel arcc = findCommunicationChannel(type, getClockService().now());
         if (arcc != null) {
             return;
         }
@@ -476,20 +486,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    public boolean isCurrent() {
-        return isActiveOn(clockService.now());
-    }
+    
 
-    private boolean isActiveOn(LocalDate localDate) {
-        return getInterval().contains(localDate);
-    }
-
-    // //////////////////////////////////////
-
-    private ClockService clockService;
-
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
 
 }

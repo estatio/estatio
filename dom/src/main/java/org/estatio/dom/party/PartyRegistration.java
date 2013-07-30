@@ -197,6 +197,15 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
 
     // //////////////////////////////////////
 

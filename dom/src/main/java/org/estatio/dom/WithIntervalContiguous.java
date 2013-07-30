@@ -43,7 +43,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
      * {@link #getStartDate() start date}.
      * 
      * <p>
-     * Implementations where successive intervals are NOT contiguous should instead implement {@link WithIntervalChained}.
+     * Implementations where successive intervals are NOT contiguous should instead implement {@link Chained}.
      */
     @Hidden(where=Where.ALL_TABLES)
     @Disabled
@@ -58,7 +58,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
      * {@link #getEndDate() end date}.
      * 
      * <p>
-     * Implementations where successive intervals are NOT contiguous should instead implement {@link WithIntervalChained}.
+     * Implementations where successive intervals are NOT contiguous should instead implement {@link Chained}.
      */
     @Hidden(where=Where.ALL_TABLES)
     @Disabled

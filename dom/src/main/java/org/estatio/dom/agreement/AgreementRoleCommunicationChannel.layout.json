@@ -23,7 +23,8 @@
               "actions": {
                 "changeDates": {}
               }
-            }
+            },
+            "current": {}
           }
         },
         "Related": {

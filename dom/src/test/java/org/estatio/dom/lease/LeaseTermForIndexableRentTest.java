@@ -83,7 +83,7 @@ public class LeaseTermForIndexableRentTest {
 
         ib2 = new IndexBase();
         ib2.setFactor(BigDecimal.valueOf(1.373));
-        ib2.modifyPreviousBase(ib1);
+        ib2.modifyPrevious(ib1);
         ib2.setStartDate(new LocalDate(2011, 1, 1));
 
         ib2.setIndex(i);

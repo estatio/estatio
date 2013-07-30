@@ -66,12 +66,12 @@ public class IndexTest {
         ib1990.setStartDate(new LocalDate(1990, 1, 1));
 
         ib2000 = new IndexBase();
-        ib2000.modifyPreviousBase(ib1990);
+        ib2000.modifyPrevious(ib1990);
         ib2000.setFactor(BigDecimal.valueOf(1.345));
         ib2000.setStartDate(new LocalDate(2000, 1, 1));
 
         ib2010 = new IndexBase();
-        ib2010.modifyPreviousBase(ib2000);
+        ib2010.modifyPrevious(ib2000);
         ib2010.setFactor(BigDecimal.valueOf(1.234));
         ib2010.setStartDate(new LocalDate(2010, 1, 1));
 

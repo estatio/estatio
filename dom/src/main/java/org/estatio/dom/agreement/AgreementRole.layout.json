@@ -1,22 +1,16 @@
 {
   "columns": [
     {
-      "span": 3,
+      "span": 5,
       "memberGroups": {
         "General": {
           "members": {
-            "agreement": {},
-            "party": {},
             "type": {},
-            "current": {},
+            "party": {},
+            "agreement": {},
             "status": {}
           }
-        }
-      }
-    },
-    {
-      "span": 3,
-      "memberGroups": {
+        },
         "Dates": {
           "members": {
             "startDate": {},
@@ -24,7 +18,8 @@
               "actions": {
                 "changeDates": {}
               }
-            }
+            },
+            "current": {}
           }
         },
         "Related": {
@@ -42,10 +37,15 @@
     },
     {
       "span": 0,
+      "memberGroups": {
+      }
+    },
+    {
+      "span": 0,
       "memberGroups": {}
     },
     {
-      "span": 6,
+      "span": 7,
       "collections": {
         "communicationChannels": {
           "actions": {

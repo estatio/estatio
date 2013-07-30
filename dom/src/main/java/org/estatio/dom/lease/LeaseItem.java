@@ -256,6 +256,15 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         return getEndDate() == null ? getLease().getEndDate() : getEndDate();
     }
 
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
 
     // //////////////////////////////////////
 

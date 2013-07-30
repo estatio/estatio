@@ -6,9 +6,9 @@
         "General": {
           "members": {
             "leaseItem": {},
-            "status": {},
             "frequency": {},
-            "sequence": {}
+            "sequence": {},
+            "status": {}
           }
         }
       }
@@ -50,7 +50,8 @@
               "actions": {
                 "changeDates": {}
               }
-            }
+            },
+            "current": {}
           }
         },
         "Related": {

@@ -49,7 +49,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalChained;
+import org.estatio.dom.Chained;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.Invoice;
@@ -100,7 +100,7 @@ import org.estatio.services.clock.ClockService;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> implements WithIntervalMutable<LeaseTerm>, WithIntervalChained<LeaseTerm>, WithSequence {
+public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
@@ -277,6 +277,16 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     public LocalDateInterval getEffectiveInterval() {
         Lease lease = getLeaseItem().getLease();
         return LocalDateInterval.including(getStartDate(), getEndDate()).overlap(lease.getEffectiveInterval());
+    }
+
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
     }
 
     // //////////////////////////////////////

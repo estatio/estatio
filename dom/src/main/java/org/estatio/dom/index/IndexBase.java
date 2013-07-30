@@ -29,12 +29,13 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithStartDate {
+public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithStartDate, Chained<IndexBase> {
 
     public IndexBase() {
         super("index, startDate desc");
@@ -101,48 +102,49 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     }
 
     public String validateFactor(final BigDecimal factor) {
-        return (getPreviousBase() == null) ? null : (factor == null || factor.compareTo(BigDecimal.ZERO) == 0) ? "Factor is mandatory when there is a previous base" : null;
+        return (getPrevious() == null) ? null : (factor == null || factor.compareTo(BigDecimal.ZERO) == 0) ? "Factor is mandatory when there is a previous base" : null;
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUSBASE_ID")
-    @javax.jdo.annotations.Persistent(mappedBy = "nextBase")
-    private IndexBase previousBase;
+    @javax.jdo.annotations.Column(name="PREVIOUS_ID")
+    @javax.jdo.annotations.Persistent(mappedBy = "next")
+    private IndexBase previous;
 
     /**
-     * @see #getNextBase()
+     * @see #getNext()
      */
     @Optional
-    public IndexBase getPreviousBase() {
-        return previousBase;
+    public IndexBase getPrevious() {
+        return previous;
     }
 
-    public void setPreviousBase(final IndexBase previousBase) {
-        this.previousBase = previousBase;
+    public void setPrevious(final IndexBase previous) {
+        this.previous = previous;
     }
     
-    public void modifyPreviousBase(IndexBase previous) {
-        setPreviousBase(previous);
-        if (previous != null)
-            previous.setNextBase(this);
+    public void modifyPrevious(IndexBase previous) {
+        setPrevious(previous);
+        if (previous != null) {
+            previous.setNext(this);
+        }
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXTBASE_ID")
-    private IndexBase nextBase;
+    @javax.jdo.annotations.Column(name="NEXT_ID")
+    private IndexBase next;
 
     /**
-     * @see #getPreviousBase()
+     * @see #getPrevious()
      */
     @Optional
-    public IndexBase getNextBase() {
-        return nextBase;
+    public IndexBase getNext() {
+        return next;
     }
 
-    public void setNextBase(final IndexBase nextBase) {
-        this.nextBase = nextBase;
+    public void setNext(final IndexBase nextBase) {
+        this.next = nextBase;
     }
 
     // //////////////////////////////////////
@@ -182,7 +184,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     @Programmatic
     public BigDecimal factorForDate(LocalDate date) {
         if (date.isBefore(getStartDate())) {
-            return getFactor().multiply(getPreviousBase().factorForDate(date));
+            return getFactor().multiply(getPrevious().factorForDate(date));
         }
         return BigDecimal.ONE;
     }

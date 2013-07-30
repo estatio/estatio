@@ -8,8 +8,8 @@
             "reference": {},
             "name": {},
             "agreementType": {},
-            "status": {},
             "type": {},
+            "status": {},
             "paidBy": {
               "actions": {
                 "paidBy": {},
@@ -41,7 +41,8 @@
               "actions": {
                 "terminate": {}
               }
-            }
+            },
+            "current": {}
           }
         },
         "Related": {

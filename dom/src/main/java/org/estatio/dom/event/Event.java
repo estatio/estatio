@@ -18,14 +18,13 @@
  */
 package org.estatio.dom.event;
 
-import com.google.inject.name.Named;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -158,6 +157,15 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
 
     // //////////////////////////////////////
 

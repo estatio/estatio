@@ -23,11 +23,11 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
-public interface WithIntervalChained<T extends WithIntervalChained<T>> extends WithInterval<T> {
+public interface Chained<T extends Chained<T>> {
 
     
     /**
-     * The interval that precedes this one, if any (not necessarily contiguously)..
+     * The object (usually an {@link WithInterval}, but not necessarily) that precedes this one, if any (not necessarily contiguously)..
      * 
      * <p>
      * Implementations where successive intervals are contiguous should instead implement {@link WithIntervalContiguous}.
@@ -38,7 +38,7 @@ public interface WithIntervalChained<T extends WithIntervalChained<T>> extends W
     public T getPrevious();
 
     /**
-     * The interval that succeeds this one, if any (not necessarily contiguously).
+     * The object (usually an {@link WithInterval}, but not necessarily) that succeeds this one, if any (not necessarily contiguously).
      * 
      * <p>
      * Implementations where successive intervals are contiguous should instead implement {@link WithIntervalContiguous}.

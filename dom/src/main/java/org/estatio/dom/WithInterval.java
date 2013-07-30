@@ -24,7 +24,6 @@ import java.util.SortedSet;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.inject.name.Named;
 
 import org.joda.time.LocalDate;
 
@@ -94,7 +93,7 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
     public LocalDateInterval getInterval();
 
 
-    
+    public boolean isCurrent();
 
     
     public static class Util {

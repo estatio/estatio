@@ -43,7 +43,7 @@ public class IndexBases extends EstatioDomainService<IndexBase> {
     @MemberOrder(name="Indices", sequence = "2")
     public IndexBase newIndexBase(final @Named("Index") Index index, final @Named("Previous Base") IndexBase previousBase, final @Named("Start Date") LocalDate startDate, final @Named("Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance();
-        indexBase.modifyPreviousBase(previousBase);
+        indexBase.modifyPrevious(previousBase);
         indexBase.setStartDate(startDate);
         indexBase.setFactor(factor);
         indexBase.setIndex(index);

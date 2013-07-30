@@ -32,7 +32,8 @@
               "actions": {
                 "changeDates": {}
               }
-            }
+            },
+            "current": {}
           }
         },
         "Related": {

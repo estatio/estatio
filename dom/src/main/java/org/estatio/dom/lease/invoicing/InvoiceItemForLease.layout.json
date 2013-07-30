@@ -8,7 +8,8 @@
             "invoice": {},
             "leaseTerm": {},
             "sequence": {},
-            "status": {}
+            "status": {},
+            "current": {}
           }
         },
         "Details": {

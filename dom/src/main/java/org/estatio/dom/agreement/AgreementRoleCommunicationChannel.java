@@ -253,6 +253,16 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
+
+    // //////////////////////////////////////
+
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional

@@ -288,6 +288,15 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
+    // //////////////////////////////////////
+
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
 
     // //////////////////////////////////////
 

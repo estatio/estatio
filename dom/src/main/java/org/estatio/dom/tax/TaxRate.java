@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalChained;
+import org.estatio.dom.Chained;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -65,7 +65,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE tax == :tax "
                         + "&& endDate == :endDate")
 })
-public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements WithIntervalChained<TaxRate>, WithIntervalMutable<TaxRate> {
+public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
         super("tax, startDate desc nullsLast", Status.LOCKED, Status.UNLOCKED);
@@ -191,10 +191,20 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     // //////////////////////////////////////
 
+    public boolean isCurrent() {
+        return isActiveOn(getClockService().now());
+    }
+
+    private boolean isActiveOn(LocalDate localDate) {
+        return getInterval().contains(localDate);
+    }
+
+    // //////////////////////////////////////
+
     private BigDecimal percentage;
 
     @Title
-    @Column(scale = 2)
+    @javax.jdo.annotations.Column(scale = 2)
     public BigDecimal getPercentage() {
         return percentage;
     }
