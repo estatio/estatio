@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.estatio.integration.specs.agreement;
+package org.estatio.integration.specs;
 
 import cucumber.api.junit.Cucumber;
 
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
                 ,"json:target/cucumber.json"
         },
         glue={"classpath:org.estatio.integration.glue"},
-        //strict = true,
+        strict = true,
         tags = { "~@backlog", "~@ignore" }
         )
 public class RunSpecs {
