@@ -375,19 +375,19 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     private LeaseItems leaseItems;
 
-    public void injectLeaseItems(final LeaseItems leaseItems) {
+    public final void injectLeaseItems(final LeaseItems leaseItems) {
         this.leaseItems = leaseItems;
     }
 
     private LeaseUnits leaseUnits;
 
-    public void injectLeaseUnits(final LeaseUnits leaseUnits) {
+    public final void injectLeaseUnits(final LeaseUnits leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
 
     private FinancialAccounts financialAccounts;
 
-    public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
+    public final void injectFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
 

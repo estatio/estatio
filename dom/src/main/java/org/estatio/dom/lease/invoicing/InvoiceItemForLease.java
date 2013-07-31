@@ -146,19 +146,19 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     protected AgreementTypes agreementTypes;
 
-    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
+    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
 
     protected AgreementRoleTypes agreementRoleTypes;
 
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
     private Invoices invoices;
 
-    public void injectInvoices(Invoices invoices) {
+    public final void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
     }
 

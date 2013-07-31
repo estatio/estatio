@@ -27,18 +27,22 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -72,6 +76,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel, Status> implements WithIntervalContiguous<AgreementRoleCommunicationChannel>{
+
+    private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper = 
+            new WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel>(this);
+
+    // //////////////////////////////////////
 
     public AgreementRoleCommunicationChannel() {
         super("role, startDate desc nullsLast, type, communicationChannel", Status.LOCKED, Status.UNLOCKED);
@@ -189,14 +198,12 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     
     // //////////////////////////////////////
 
-    private WithIntervalContiguous.ChangeDates<AgreementRoleCommunicationChannel> changeDates = new WithIntervalContiguous.ChangeDates<AgreementRoleCommunicationChannel>(this);
-
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public AgreementRoleCommunicationChannel changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        changeDates.changeDates(startDate, endDate);
+        helper.changeDates(startDate, endDate);
         return this;
     }
 
@@ -220,7 +227,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return helper.validateChangeDates(startDate, endDate);
     }
 
 
@@ -268,11 +275,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     @Optional
     @Override
     public AgreementRoleCommunicationChannel getPredecessor() {
-        return WithInterval.Util.find(
-                getRole().getCommunicationChannels(),
-                Predicates.and(
-                        getType().matchingCommunicationChannel(),
-                        WithInterval.Matching.<AgreementRoleCommunicationChannel>endDate(getStartDate())));
+        return helper.getPredecessor(getRole().getCommunicationChannels(), getType().matchingCommunicationChannel());
     }
 
     @Hidden(where = Where.ALL_TABLES)
@@ -280,17 +283,17 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     @Optional
     @Override
     public AgreementRoleCommunicationChannel getSuccessor() {
-        return WithInterval.Util.find(
-                getRole().getCommunicationChannels(),
-                Predicates.and(
-                        getType().matchingCommunicationChannel(),
-                        WithInterval.Matching.<AgreementRoleCommunicationChannel>startDate(getEndDate())));
+        return helper.getSuccessor(getRole().getCommunicationChannels(), getType().matchingCommunicationChannel());
+    }
+
+    @Render(Type.EAGERLY)
+    @Override
+    public SortedSet<AgreementRoleCommunicationChannel> getTimeline() {
+        return helper.getTimeline(getRole().getCommunicationChannels(), getType().matchingCommunicationChannel());
     }
 
     // //////////////////////////////////////
 
-    private WithIntervalContiguous.SucceedPrecede<AgreementRoleCommunicationChannel> helper = 
-            new WithIntervalContiguous.SucceedPrecede<AgreementRoleCommunicationChannel>(this);
 
     static final class SiblingFactory implements WithIntervalContiguous.Factory<AgreementRoleCommunicationChannel> {
         private final AgreementRoleCommunicationChannel arcc;
@@ -325,7 +328,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     }
 
     public LocalDate default1SucceededBy() {
-        return getEffectiveEndDate();
+        return helper.default1SucceededBy();
     }
 
     public String validateSucceededBy(
@@ -370,9 +373,8 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
-
     public LocalDate default2PrecededBy() {
-        return getEffectiveStartDate();
+        return helper.default2PrecededBy();
     }
 
     public String validatePrecededBy(

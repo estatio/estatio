@@ -1,5 +1,5 @@
 @EstatioTransactionalObjectsFixture
-Feature: Manage AgreementRoles for an Agreement
+Feature: Create initial AgreementRole for an Agreement
 
    The first role in the roles collection of an agreement is added using the
    'addRole' action on the agreement.
@@ -43,11 +43,11 @@ Feature: Manage AgreementRoles for an Agreement
     Given the lease's roles collection contains:
           | type     | start date | end date | party  | agreement    |
           
-    When  I add a new agreement role of type "Landlord", start date "null", end date "2013-4-1", for party "PRET"
+    When  I add a new agreement role of type "Landlord", start date "null", end date "2013-3-31", for party "PRET"
      
     Then  the lease's roles collection should contain:
-          | type     | start date | end date | party  | agreement    |
-          | Landlord | null       | 2013-4-1 | PRET   | OXF-PRET-004 | 
+          | type     | start date | end date  | party  | agreement    |
+          | Landlord | null       | 2013-3-31 | PRET   | OXF-PRET-004 | 
 
 
   @integration
@@ -56,54 +56,67 @@ Feature: Manage AgreementRoles for an Agreement
     Given the lease's roles collection contains:
           | type     | start date | end date | party  | agreement    |
           
-    When  I add a new agreement role of type "Landlord", start date "2012-3-1", end date "2013-4-1", for party "PRET"
+    When  I add a new agreement role of type "Landlord", start date "2012-3-1", end date "2013-3-31", for party "PRET"
      
     Then  the lease's roles collection should contain:
-          | type     | start date | end date | party  | agreement    |
-          | Landlord | 2012-3-1   | 2013-4-1 | PRET   | OXF-PRET-004 | 
+          | type     | start date | end date  | party  | agreement    |
+          | Landlord | 2012-3-1   | 2013-3-31 | PRET   | OXF-PRET-004 | 
 
 
   @integration
   Scenario: Can add another role of a different type
   
     Given the lease's roles collection contains:
-          | type     | start date | end date | party  | agreement    |
-          | Landlord | 2012-3-1   | null     | PRET   | OXF-PRET-004 |
+          | type     | start date | end date  | party  | agreement    |
+          | Landlord | 2012-3-1   | null      | PRET   | OXF-PRET-004 |
            
-    When  I attempt to add a new agreement role of type "Tenant", start date "null", end date "2013-3-1", for party "POISON"
+    When  I attempt to add a new agreement role of type "Tenant", start date "null", end date "2013-2-28", for party "POISON"
      
     Then  the lease's roles collection should contain:
-          | type     | start date | end date | party  | agreement    |
-          | Landlord | 2012-3-1   | null     | PRET   | OXF-PRET-004 | 
-          | Tenant   | null       | 2013-3-1 | POISON | OXF-PRET-004 | 
+          | type     | start date | end date  | party  | agreement    |
+          | Landlord | 2012-3-1   | null      | PRET   | OXF-PRET-004 | 
+          | Tenant   | null       | 2013-2-28 | POISON | OXF-PRET-004 | 
 
 
   @integration
-  Scenario: Cannot add a first role of same type that starts/ends on same date
+  Scenario: Cannot add a first role that ends before it starts
   
     Given the lease's roles collection contains:
           | type     | start date | end date | party  | agreement    |
           
-    When  I attempt to add a new agreement role of type "Landlord", start date "2013-3-1", end date "2013-3-1", for party "PRET"
+    When  I attempt to add a new agreement role of type "Landlord", start date "2013-3-1", end date "2013-2-28", for party "PRET"
      
-    Then  the action is invalid with message "End date must be after start date"
+    Then  the action is invalid with message "End date cannot be earlier than start date"
     And   the lease's roles collection should contain:
           | type     | start date | end date | party  | agreement    |
+
+
+  @integration
+  Scenario: Can add a first role that starts/ends on same date
+  
+    Given the lease's roles collection contains:
+          | type     | start date | end date | party  | agreement    |
+          
+    When  I add a new agreement role of type "Landlord", start date "2013-3-1", end date "2013-3-1", for party "PRET"
+     
+    Then  the lease's roles collection should contain:
+          | type     | start date | end date | party  | agreement    |
+          | Landlord | 2013-3-1   | 2013-3-1 | PRET   | OXF-PRET-004 | 
 
 
   @integration
   Scenario: Cannot add a second role of same type when one already added, even if would be contiguous
   
     Given the lease's roles collection contains:
-          | type     | start date | end date | party  | agreement    |
-          | Landlord | 2012-3-1   | 2013-4-1 | PRET   | OXF-PRET-004 |
+          | type     | start date | end date  | party  | agreement    |
+          | Landlord | 2012-3-1   | 2013-3-31 | PRET   | OXF-PRET-004 |
            
-    When  I attempt to add a new agreement role of type "Landlord", start date "2013-4-1", end date "2014-5-1", for party "POISON" 
+    When  I attempt to add a new agreement role of type "Landlord", start date "2013-4-1", end date "2014-4-30", for party "POISON" 
     Then  the action is invalid with message "Add a successor/predecessor to existing agreement role"
     
     And   the lease's roles collection should contain:
-          | type     | start date | end date | party  | agreement    |
-          | Landlord | 2012-3-1   | 2013-4-1 | PRET   | OXF-PRET-004 | 
+          | type     | start date | end date  | party  | agreement    |
+          | Landlord | 2012-3-1   | 2013-3-31 | PRET   | OXF-PRET-004 | 
 
 
   @integration

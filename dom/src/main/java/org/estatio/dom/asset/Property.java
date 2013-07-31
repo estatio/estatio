@@ -193,13 +193,13 @@ public class Property extends FixedAsset {
     // //////////////////////////////////////
 
     private Units<?> unitsRepo;
-    public void injectUnits(final Units<?> unitsRepo) {
+    public final void injectUnits(final Units<?> unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
 
     private FixedAssetRoles fixedAssetRoles;
 
-    public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
+    public final void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
         this.fixedAssetRoles = fixedAssetRoles;
     }
 

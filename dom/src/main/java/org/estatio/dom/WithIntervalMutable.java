@@ -42,15 +42,16 @@ public interface WithIntervalMutable<T extends WithIntervalMutable<T>> extends W
 
     
     /**
-     * Helper class to delegate to implementations of {@link WithIntervalMutable#changeDates(LocalDate, LocalDate)}
+     * Helper class for implementations to delegate to.
      * 
      * <p>
-     * If the class implements {@link WithIntervalContiguous} then use {@link WithIntervalContiguous.ChangeDates} instead.
+     * If the class implements {@link WithIntervalContiguous} then use {@link WithIntervalContiguous.Helper} instead.
      */
-    public static class ChangeDates<T extends WithIntervalMutable<T>> {
+    public static class Helper<T extends WithIntervalMutable<T>> {
+        
         private T withInterval;
 
-        public ChangeDates(final T withInterval) {
+        public Helper(final T withInterval) {
             this.withInterval = withInterval;
         }
         

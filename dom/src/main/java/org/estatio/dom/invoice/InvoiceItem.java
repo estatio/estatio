@@ -362,7 +362,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     private Charges charges;
 
-    public void injectCharges(Charges charges) {
+    public final void injectCharges(Charges charges) {
         this.charges = charges;
     }
 

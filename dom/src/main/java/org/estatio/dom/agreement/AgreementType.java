@@ -118,13 +118,13 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     private AgreementRoleTypes agreementRoleTypes;
 
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
     private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
     
-    public void injectAgreementRoleCommunicationChannelTypes(final AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
+    public final void injectAgreementRoleCommunicationChannelTypes(final AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
         this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
     }
     

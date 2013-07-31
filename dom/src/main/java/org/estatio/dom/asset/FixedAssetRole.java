@@ -18,9 +18,12 @@
  */
 package org.estatio.dom.asset;
 
+import java.util.SortedSet;
+
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
@@ -31,8 +34,11 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
@@ -40,6 +46,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -72,6 +79,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalContiguous<FixedAssetRole> {
+
+    private WithIntervalContiguous.Helper<FixedAssetRole> helper = new WithIntervalContiguous.Helper<FixedAssetRole>(this);
+
+    // //////////////////////////////////////
 
     public FixedAssetRole() {
         super("asset, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
@@ -171,14 +182,12 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    private WithIntervalContiguous.ChangeDates<FixedAssetRole> changeDates = new WithIntervalContiguous.ChangeDates<FixedAssetRole>(this);
-
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public FixedAssetRole changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        changeDates.changeDates(startDate, endDate);
+        helper.changeDates(startDate, endDate);
         return this;
     }
 
@@ -202,7 +211,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return helper.validateChangeDates(startDate, endDate);
     }
 
 
@@ -249,11 +258,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     @Optional
     @Override
     public FixedAssetRole getPredecessor() {
-        return WithInterval.Util.find(
-                getAsset().getRoles(),
-                Predicates.and(
-                        getType().matchingRole(),
-                        WithInterval.Matching.<FixedAssetRole>endDate(getStartDate())));
+        return helper.getPredecessor(getAsset().getRoles(), getType().matchingRole());
     }
 
     @Hidden(where = Where.ALL_TABLES)
@@ -261,17 +266,17 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     @Optional
     @Override
     public FixedAssetRole getSuccessor() {
-        return WithInterval.Util.find(
-                getAsset().getRoles(),
-                Predicates.and(
-                        getType().matchingRole(),
-                        WithInterval.Matching.<FixedAssetRole>startDate(getEndDate())));
+        return helper.getSuccessor(getAsset().getRoles(), getType().matchingRole());
     }
 
+    @Render(Type.EAGERLY)
+    @Override
+    public SortedSet<FixedAssetRole> getTimeline() {
+        return helper.getTimeline(getAsset().getRoles(), getType().matchingRole());
+    }
 
     // //////////////////////////////////////
 
-    private WithIntervalContiguous.SucceedPrecede<FixedAssetRole> helper = new WithIntervalContiguous.SucceedPrecede<FixedAssetRole>(this);
 
     static final class SiblingFactory implements WithIntervalContiguous.Factory<FixedAssetRole> {
         private final FixedAssetRole far;
@@ -296,7 +301,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     }
 
     public LocalDate default1SucceededBy() {
-        return getEndDate();
+        return helper.default1SucceededBy();
     }
 
     public String validateSucceededBy(
@@ -328,7 +333,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     }
 
     public LocalDate default2PrecededBy() {
-        return getStartDate();
+        return helper.default2PrecededBy();
     }
 
     public String validatePrecededBy(

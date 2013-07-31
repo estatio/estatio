@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
  *
  *

@@ -39,6 +39,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -92,6 +93,8 @@ import org.estatio.services.clock.ClockService;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalContiguous<AgreementRole> {
 
+
+    private final WithIntervalContiguous.Helper<AgreementRole> helper = new WithIntervalContiguous.Helper<AgreementRole>(this);
 
     // //////////////////////////////////////
 
@@ -194,14 +197,13 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    private WithIntervalContiguous.ChangeDates<AgreementRole> changeDates = new WithIntervalContiguous.ChangeDates<AgreementRole>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public AgreementRole changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        changeDates.changeDates(startDate, endDate);
+        helper.changeDates(startDate, endDate);
         return this;
     }
 
@@ -213,19 +215,19 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return helper.default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return helper.default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return helper.validateChangeDates(startDate, endDate);
     }
 
     // //////////////////////////////////////
@@ -270,11 +272,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @Optional
     @Override
     public AgreementRole getPredecessor() {
-        return WithInterval.Util.find(
-                getAgreement().getRoles(),
-                Predicates.and(
-                        getType().matchingRole(),
-                        WithInterval.Matching.<AgreementRole>endDate(getStartDate())));
+        return helper.getPredecessor(getAgreement().getRoles(), getType().matchingRole());
     }
 
     @Hidden(where = Where.ALL_TABLES)
@@ -282,18 +280,18 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     @Optional
     @Override
     public AgreementRole getSuccessor() {
-        return WithInterval.Util.find(
-                getAgreement().getRoles(),
-                Predicates.and(
-                        getType().matchingRole(),
-                        WithInterval.Matching.<AgreementRole>startDate(getEndDate())));
+        return helper.getSuccessor(getAgreement().getRoles(), getType().matchingRole());
     }
 
+    @Render(Type.EAGERLY)
+    @Override
+    public SortedSet<AgreementRole> getTimeline() {
+        return helper.getTimeline(getAgreement().getRoles(), getType().matchingRole());
+    }
 
 
     // //////////////////////////////////////
 
-    private WithIntervalContiguous.SucceedPrecede<AgreementRole> helper = new WithIntervalContiguous.SucceedPrecede<AgreementRole>(this);
 
     static final class SiblingFactory implements WithIntervalContiguous.Factory<AgreementRole> {
         private final AgreementRole ar;
@@ -318,7 +316,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     public LocalDate default1SucceededBy() {
-        return getEndDate();
+        return helper.default1SucceededBy();
     }
 
     public String validateSucceededBy(
@@ -350,7 +348,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     public LocalDate default2PrecededBy() {
-        return getStartDate();
+        return helper.default2PrecededBy();
     }
 
     public String validatePrecededBy(
@@ -420,8 +418,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
             final CommunicationChannel communicationChannel,
             final LocalDate startDate,
             final LocalDate endDate) {
-        if (startDate != null && endDate != null && startDate.equals(endDate)) {
-            return "End date must be after start date";
+        if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            return "End date cannot be earlier than start date";
         }
         if (!Sets.filter(getCommunicationChannels(), type.matchingCommunicationChannel()).isEmpty()) {
             return "Add a successor/predecessor from existing communication channel";
@@ -483,10 +481,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         });
     }
 
-
-    // //////////////////////////////////////
-
-    
 
 
 }

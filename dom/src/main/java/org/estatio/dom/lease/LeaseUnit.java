@@ -151,7 +151,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<LeaseUnit> changeDates = new WithIntervalMutable.ChangeDates<LeaseUnit>(this);
+    private WithIntervalMutable.Helper<LeaseUnit> changeDates = new WithIntervalMutable.Helper<LeaseUnit>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
@@ -383,7 +383,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     private Tags tags;
 
-    public void injectTags(final Tags tags) {
+    public final void injectTags(final Tags tags) {
         this.tags = tags;
     }
 

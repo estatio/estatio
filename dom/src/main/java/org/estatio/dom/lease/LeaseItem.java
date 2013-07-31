@@ -89,6 +89,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private LeaseItemStatus status;
 
+    @Hidden(where=Where.PARENTED_TABLES)
     @Disabled
     @Override
     public LeaseItemStatus getStatus() {
@@ -147,6 +148,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private LeaseItemType type;
 
+    @Hidden(where=Where.PARENTED_TABLES)
     @Title(sequence = "2")
     public LeaseItemType getType() {
         return type;
@@ -176,6 +178,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
+    @Hidden(where=Where.PARENTED_TABLES)
     @Optional
     @Disabled
     @Override
@@ -190,7 +193,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<LeaseItem> changeDates = new WithIntervalMutable.ChangeDates<LeaseItem>(this);
+    private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<LeaseItem>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
@@ -314,7 +317,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @Disabled
     @Optional
     public BigDecimal getTrialValue() {
-        LeaseTerm currentTerm = currentTerm(clockService.now());
+        LeaseTerm currentTerm = currentTerm(getClockService().now());
         if (currentTerm != null)
             return currentTerm.getTrialValue();
         return null;
@@ -325,7 +328,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @Disabled
     @Optional
     public BigDecimal getApprovedValue() {
-        LeaseTerm currentTerm = currentTerm(clockService.now());
+        LeaseTerm currentTerm = currentTerm(getClockService().now());
         if (currentTerm != null)
             return currentTerm.getApprovedValue();
         return null;
@@ -422,20 +425,15 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private Charges charges;
 
-    public void injectCharges(Charges charges) {
+    public final void injectCharges(Charges charges) {
         this.charges = charges;
     }
 
     private LeaseTerms leaseTerms;
 
-    public void injectLeaseTerms(LeaseTerms leaseTerms) {
+    public final void injectLeaseTerms(LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
     }
 
-    private ClockService clockService;
-
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
 
 }

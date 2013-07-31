@@ -118,34 +118,14 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             } 
             return null;
         }
-        public static <T extends WithInterval<T>> T find(SortedSet<T> roles, Predicate<T> predicate) {
+        public static <T extends WithInterval<T>> T firstElseNull(SortedSet<T> roles, Predicate<T> predicate) {
             final Iterable<T> filter = Iterables.filter(roles, predicate);
             final Iterator<T> iterator = filter.iterator();
             return iterator.hasNext()? iterator.next(): null;
         }
     }
     
-    public static class Matching {
-        public static <T extends WithInterval<T>> Predicate<T> startDate(final LocalDate startDate) {
-            return new Predicate<T>() {
-                @Override
-                public boolean apply(final T ar) {
-                    return startDate != null && ar != null && Objects.equal(ar.getStartDate(), startDate) ? true : false;
-                }
-            };
-        }
 
-        public static <T extends WithInterval<T>> Predicate<T> endDate(final LocalDate endDate) {
-            return new Predicate<T>() {
-                @Override
-                public boolean apply(final T ar) {
-                    return endDate != null && ar != null && Objects.equal(ar.getEndDate(), endDate) ? true : false;
-                }
-            };
-        }
-
-
-    }
 
 
 }

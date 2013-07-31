@@ -128,7 +128,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<TaxRate> changeDates = new WithIntervalMutable.ChangeDates<TaxRate>(this);
+    private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<TaxRate>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override

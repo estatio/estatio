@@ -285,7 +285,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private Indices indices;
 
-    public void injectIndices(Indices indexes) {
+    public final void injectIndices(Indices indexes) {
         this.indices = indexes;
     }
 

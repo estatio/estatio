@@ -79,7 +79,7 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     }
     
     public LocalDate defaultStartDate() {
-        return clockService.now();
+        return getClockService().now();
     }
     
 
@@ -98,7 +98,7 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<Event> changeDates = new WithIntervalMutable.ChangeDates<Event>(this);
+    private WithIntervalMutable.Helper<Event> changeDates = new WithIntervalMutable.Helper<Event>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
@@ -178,14 +178,6 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     public void setDescription(final String description) {
         this.description = description;
     }
-
-    // //////////////////////////////////////
-
-    private ClockService clockService;
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
-
 
 
 }

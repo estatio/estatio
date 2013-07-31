@@ -137,7 +137,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<PartyRegistration> changeDates = new WithIntervalMutable.ChangeDates<PartyRegistration>(this);
+    private WithIntervalMutable.Helper<PartyRegistration> changeDates = new WithIntervalMutable.Helper<PartyRegistration>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override

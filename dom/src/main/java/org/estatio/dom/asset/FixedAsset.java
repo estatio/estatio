@@ -174,8 +174,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
-        if (startDate != null && endDate != null && startDate.equals(endDate)) {
-            return "End date must be after start date";
+        if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            return "End date cannot be earlier than start date";
         }
         if (!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
             return "Add a successor/predecessor from existing role";
@@ -248,7 +248,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     private LocationLookupService locationLookupService;
 
-    public void injectLocationLookupService(LocationLookupService locationLookupService) {
+    public final void injectLocationLookupService(LocationLookupService locationLookupService) {
         this.locationLookupService = locationLookupService;
     }
 

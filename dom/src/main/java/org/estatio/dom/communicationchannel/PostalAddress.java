@@ -187,13 +187,13 @@ public class PostalAddress extends CommunicationChannel {
 
     private States states;
 
-    public void injectStates(final States states) {
+    public final void injectStates(final States states) {
         this.states = states;
     }
 
     private Countries countries;
 
-    public void injectCountries(Countries countries) {
+    public final void injectCountries(Countries countries) {
         this.countries = countries;
     }
 

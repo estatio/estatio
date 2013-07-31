@@ -383,7 +383,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private Numerators numerators;
 
-    public void injectNumerators(Numerators numerators) {
+    public final void injectNumerators(Numerators numerators) {
         this.numerators = numerators;
     }
 

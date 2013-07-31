@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 6,
+      "span": 5,
       "memberGroups": {
         "General": {
           "members": {
@@ -10,12 +10,7 @@
             "communicationChannel": {},
             "status": {}
           }
-        }
-      }
-    },
-    {
-      "span": 6,
-      "memberGroups": {
+        },
         "Dates": {
           "members": {
             "startDate": {},
@@ -42,11 +37,18 @@
     },
     {
       "span": 0,
-      "memberGroups": {}
+      "memberGroups": {
+      }
     },
     {
       "span": 0,
-      "collections": {}
+      "memberGroups": {}
+    },
+    {
+      "span": 7,
+      "collections": {
+        "timeline": {}
+      }
     }
   ]
 }

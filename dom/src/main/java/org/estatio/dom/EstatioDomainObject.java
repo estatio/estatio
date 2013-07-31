@@ -50,7 +50,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
     protected ClockService getClockService() {
         return clockService;
     }
-    public void injectClockService(ClockService clockService) {
+    public final void injectClockService(ClockService clockService) {
         this.clockService = clockService;
     }
     
@@ -67,7 +67,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
      * with the {@link EventBusService}; Isis makes no guarantees as to whether
      * a subscribing domain object is in memory or not to receive the event.
      */
-    public void injectEventBusService(EventBusService eventBusService) {
+    public final void injectEventBusService(EventBusService eventBusService) {
         this.eventBusService = eventBusService;
     }
     

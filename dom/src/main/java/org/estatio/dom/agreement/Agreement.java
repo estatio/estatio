@@ -227,7 +227,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<Agreement<S>> changeDates = new WithIntervalMutable.ChangeDates<Agreement<S>>(this);
+    private WithIntervalMutable.Helper<Agreement<S>> changeDates = new WithIntervalMutable.Helper<Agreement<S>>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
@@ -410,8 +410,8 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
-        if(startDate != null && endDate != null && startDate.equals(endDate)) {
-            return "End date must be after start date";
+        if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            return "End date cannot be earlier than start date";
         }
         if(!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
             return "Add a successor/predecessor to existing agreement role";
@@ -470,25 +470,25 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     protected Agreements agreements;
 
-    public void injectAgreements(Agreements agreements) {
+    public final void injectAgreements(Agreements agreements) {
         this.agreements = agreements;
     }
 
     protected AgreementRoles agreementRoles;
 
-    public void injectAgreementRoles(final AgreementRoles agreementRoles) {
+    public final void injectAgreementRoles(final AgreementRoles agreementRoles) {
         this.agreementRoles = agreementRoles;
     }
 
     protected AgreementRoleTypes agreementRoleTypes;
 
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
     protected AgreementTypes agreementTypes;
 
-    public void injectAgreementTypes(AgreementTypes agreementTypes) {
+    public final void injectAgreementTypes(AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
 

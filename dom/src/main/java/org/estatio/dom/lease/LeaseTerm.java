@@ -213,7 +213,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.ChangeDates<LeaseTerm> changeDates = new WithIntervalMutable.ChangeDates<LeaseTerm>(this);
+    private WithIntervalMutable.Helper<LeaseTerm> changeDates = new WithIntervalMutable.Helper<LeaseTerm>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
@@ -521,7 +521,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         update();
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
-        if (getStartDate() != null && getStartDate().compareTo(clockService.now()) < 0) {
+        if (getStartDate() != null && getStartDate().compareTo(getClockService().now()) < 0) {
             createNext();
             next = getNext();
             if (next != null) {
@@ -547,7 +547,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
             return null;
 
         final LocalDate endDate = getLeaseItem().calculatedEndDate();
-        final LocalDate oneYearFromNow = clockService.now().plusYears(1);
+        final LocalDate oneYearFromNow = getClockService().now().plusYears(1);
         final LocalDate maxEndDate = ValueUtils.coalesce(endDate, oneYearFromNow);
         if (nextStartDate.isAfter(maxEndDate)) {
             // date is after end date, do nothing
@@ -606,20 +606,15 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     private InvoiceItemsForLease invoiceItemsForLease;
 
-    public void injectInvoiceItemsForLease(InvoiceItemsForLease invoiceItemsForLease) {
+    public final void injectInvoiceItemsForLease(InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
     }
 
     private InvoiceCalculationService invoiceCalculationService;
 
-    public void injectInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
+    public final void injectInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
 
-    private ClockService clockService;
-
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
 
 }

@@ -114,7 +114,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
 
     private TaxRates taxRates;
 
-    public void injectTaxRates(TaxRates taxRates) {
+    public final void injectTaxRates(TaxRates taxRates) {
         this.taxRates = taxRates;
     }
 

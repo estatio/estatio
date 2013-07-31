@@ -118,7 +118,7 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
 
     private IndexValues indexValues;
 
-    public void injectIndexValues(IndexValues indices) {
+    public final void injectIndexValues(IndexValues indices) {
         this.indexValues = indices;
     }
 
