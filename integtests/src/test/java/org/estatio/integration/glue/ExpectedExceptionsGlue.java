@@ -16,7 +16,7 @@
  */
 package org.estatio.integration.glue;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import cucumber.api.java.en.Then;
 
@@ -49,7 +49,7 @@ public class ExpectedExceptionsGlue extends CukeGlueAbstract {
         final Exception var = getVar("exception", "exception", Exception.class);
         if(var instanceof DisabledException) {
             final DisabledException ex = (DisabledException) var;
-            assertThat(ex.getMessage(), is(message));
+            assertThat(ex.getMessage(), containsString(message));
         } else {
             Assert.fail("Expected DisabledException to have been thrown; was instead: " + var);
         }
@@ -76,7 +76,7 @@ public class ExpectedExceptionsGlue extends CukeGlueAbstract {
         final Exception var = getVar("exception", "exception", Exception.class);
         if(var instanceof InvalidException) {
             final InvalidException ex = (InvalidException) var;
-            assertThat(ex.getMessage(), is(message));
+            assertThat(ex.getMessage(), containsString(message));
         } else {
             Assert.fail("Expected InvalidException to have been thrown; was instead: " + var);
         }
