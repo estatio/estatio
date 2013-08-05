@@ -125,6 +125,9 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
         public String validateSucceededBy(
                 final LocalDate startDate, 
                 final LocalDate endDate) {
+            if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+                return "End date cannot be earlier than start date";
+            }
             if(withInterval.getStartDate() != null && !withInterval.getStartDate().isBefore(startDate)) {
                 return "Successor must start after existing";
             }
@@ -163,6 +166,9 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
         public String validatePrecededBy(
                 final LocalDate startDate, 
                 final LocalDate endDate) {
+            if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+                return "End date cannot be earlier than start date";
+            }
             if(withInterval.getEndDate() != null && !withInterval.getEndDate().isAfter(endDate)) {
                 return "Predecessor must end before existing";
             }

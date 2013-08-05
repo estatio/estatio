@@ -284,7 +284,7 @@ Feature: For an Agreement, specify a successor or predecessor to an existing rol
           | Tenant   | 2013-4-1   | null     | PRET   | OXF-PRET-004 |
 
 
-  @integration
+  @integration @test
   Scenario: Cannot add a successor role for role that already has a successor of same party
   
     Given the lease's roles collection contains:
@@ -318,4 +318,47 @@ Feature: For an Agreement, specify a successor or predecessor to an existing rol
           | type     | start date | end date | party  | agreement    |
           | Tenant   | 2013-4-1   | 2014-4-30 | PRET   | OXF-PRET-004 | 
           | Tenant   | null       | 2013-3-31 | POISON | OXF-PRET-004 |
+
+
+
+
+  @integration
+  Scenario: Cannot add a successor role which ends before it starts
+
+    Given the lease's roles collection contains:
+          | type     | start date | end date  | party  | agreement    | indicated |
+          | Tenant   | 2013-4-1   | null      | POISON | OXF-PRET-004 |           |
+          | Tenant   | null       | 2013-3-31 | PRET   | OXF-PRET-004 | *         |
+    And   I want to add a successor to the indicated agreement role
+    
+    When  I attempt to invoke the action, with start date "2013-4-1", end date "2013-3-31", for party "TOPMODEL"
+
+    Then  the action is invalid with message "End date cannot be earlier than start date"
+    And   the lease's roles collection should contain:
+          | type     | start date | end date  | party    | agreement    |
+          | Tenant   | 2013-4-1   | null      | POISON   | OXF-PRET-004 |
+          | Tenant   | null       | 2013-3-31 | PRET     | OXF-PRET-004 |
+
+  @integration
+  Scenario: Cannot add a predecessor role which ends before it starts
+
+    Given the lease's roles collection contains:
+          | type     | start date | end date  | party  | agreement    | indicated |
+          | Tenant   | 2013-4-1   | null      | POISON | OXF-PRET-004 | *         |
+          | Tenant   | null       | 2013-3-31 | PRET   | OXF-PRET-004 |           |
+    And   I want to add a predecessor to the indicated agreement role
+    
+    When  I attempt to invoke the action, with start date "2013-4-1", end date "2013-3-31", for party "TOPMODEL"
+
+    Then  the action is invalid with message "End date cannot be earlier than start date"
+    And   the lease's roles collection should contain:
+          | type     | start date | end date  | party    | agreement    |
+          | Tenant   | 2013-4-1   | null      | POISON   | OXF-PRET-004 |
+          | Tenant   | null       | 2013-3-31 | PRET     | OXF-PRET-004 |
+
+
+
+
+
+
 
