@@ -57,7 +57,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         // TODO: description is annotated as optional,
         // so it doesn't really make sense for it to be part of the natural sort
         // order
-        super("type, description", Status.LOCKED, Status.UNLOCKED);
+        super("type, description", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////
@@ -147,10 +147,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         this.description = description;
     }
 
-    public String disableDescription() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
-    }
-
     // //////////////////////////////////////
 
     private boolean legal;
@@ -161,10 +157,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     public void setLegal(final boolean Legal) {
         this.legal = Legal;
-    }
-
-    public String disableLegal() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////

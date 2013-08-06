@@ -18,9 +18,13 @@
  */
 package org.estatio.dom.invoice;
 
+import org.estatio.dom.asset.Property;
+
 /**
  * The reason why the invoice was raised.
  */
 public interface InvoiceSource {
+
+    Property getProperty();
 
 }

@@ -50,10 +50,6 @@ public class BankAccount extends FinancialAccount {
         this.bank = bank;
     }
 
-    public String disableBank() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-    
     // //////////////////////////////////////
 
     private BankAccountType bankAccountType;
@@ -65,10 +61,6 @@ public class BankAccount extends FinancialAccount {
 
     public void setBankAccountType(final BankAccountType bankAccountType) {
         this.bankAccountType = bankAccountType;
-    }
-
-    public String disableBankAccountType() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
     }
 
     // //////////////////////////////////////
@@ -84,10 +76,6 @@ public class BankAccount extends FinancialAccount {
         this.country = country;
     }
 
-    public String disableCountry() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-
     // //////////////////////////////////////
 
     private String IBAN;
@@ -100,10 +88,6 @@ public class BankAccount extends FinancialAccount {
         this.IBAN = IBAN;
     }
 
-    public String disableIBAN() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-    
     // //////////////////////////////////////
     
     public void verifyIBAN() {
@@ -112,7 +96,7 @@ public class BankAccount extends FinancialAccount {
     }
 
     public String disableVerifyIBAN() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
+        return isLocked()? "Cannot modify when locked": null;
     }
 
     // //////////////////////////////////////
@@ -127,10 +111,6 @@ public class BankAccount extends FinancialAccount {
         this.nationalCheckCode = nationalCheckCode;
     }
 
-    public String disableNationalCheckCode() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-
     // //////////////////////////////////////
 
     private String nationalBankCode;
@@ -141,10 +121,6 @@ public class BankAccount extends FinancialAccount {
 
     public void setNationalBankCode(final String nationalBankCode) {
         this.nationalBankCode = nationalBankCode;
-    }
-
-    public String disableNationalBankCode() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
     }
 
     // //////////////////////////////////////
@@ -159,10 +135,6 @@ public class BankAccount extends FinancialAccount {
         this.branchCode = branchCode;
     }
 
-    public String disableBranchCode() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-    
     // //////////////////////////////////////
 
     private String accountNumber;
@@ -175,9 +147,5 @@ public class BankAccount extends FinancialAccount {
         this.accountNumber = accountNumber;
     }
 
-    public String disableAccountNumber() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-    
 
 }

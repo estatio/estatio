@@ -23,23 +23,38 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.asset.Property;
 
 public class NumeratorsTest_finders {
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     private FinderInteraction finderInteraction;
 
     private Numerators numerators;
+
+    @Ignoring
+    @Mock
+    Property mockProperty;
+
 
     @Before
     public void setup() {
@@ -67,14 +82,15 @@ public class NumeratorsTest_finders {
     @Test
     public void findNumeratorByType() {
 
-        numerators.findNumeratorByType(NumeratorType.COLLECTION_NUMBER);
+        numerators.findNumerator(NumeratorType.COLLECTION_NUMBER, mockProperty);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Numerator.class));
-        assertThat(finderInteraction.getQueryName(), is("findByType"));
+        assertThat(finderInteraction.getQueryName(), is("findByTypeAndProperty"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)NumeratorType.COLLECTION_NUMBER));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object)mockProperty));
 
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
     }
     
 

@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.asset.Property;
 
 public class NumeratorTest_beanProperties extends AbstractBeanPropertiesTest {
 
@@ -30,6 +31,7 @@ public class NumeratorTest_beanProperties extends AbstractBeanPropertiesTest {
 	public void test() {
 	    newPojoTester()
 	        .withFixture(statii())
+	        .withFixture(pojos(Property.class))
 	        .exercise(new Numerator());
 	}
 

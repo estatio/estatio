@@ -24,5 +24,8 @@
       "span": 8,
       "collections": {}
     }
-  ]
+  ],
+  "actions": {
+    "remove": {}
+  }
 }

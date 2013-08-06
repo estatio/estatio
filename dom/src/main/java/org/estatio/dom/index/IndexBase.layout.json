@@ -12,8 +12,8 @@
         },
         "Related": {
           "members": {
-            "previousBase": {},
-            "nextBase": {}
+            "next": {},
+            "previous": {}
           }
         }
       }
@@ -32,5 +32,7 @@
         "values": {}
       }
     }
-  ]
+  ],
+  "actions": {
+  }
 }

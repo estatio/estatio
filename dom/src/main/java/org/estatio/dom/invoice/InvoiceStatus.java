@@ -37,9 +37,4 @@ public enum InvoiceStatus implements Lockable {
         return this == NEW;
     }
 
-    @Override
-    public boolean isLocked() {
-        return this == APPROVED;
-    }
-
 }

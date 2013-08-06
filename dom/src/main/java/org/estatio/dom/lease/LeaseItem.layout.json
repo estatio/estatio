@@ -37,10 +37,7 @@
           }
         },
         "Related": {
-          "members": {
-            "previous": {},
-            "next": {}
-          }
+          "members": {}
         }
       }
     },
@@ -58,5 +55,11 @@
         }
       }
     }
-  ]
+  ],
+  "actions": {
+    "calculate": {},
+    "lock": {},
+    "unlock": {},
+    "verify": {}
+  }
 }

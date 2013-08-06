@@ -37,8 +37,7 @@
     },
     {
       "span": 0,
-      "memberGroups": {
-      }
+      "memberGroups": {}
     },
     {
       "span": 0,
@@ -50,5 +49,9 @@
         "timeline": {}
       }
     }
-  ]
+  ],
+  "actions": {
+    "lock": {},
+    "unlock": {}
+  }
 }

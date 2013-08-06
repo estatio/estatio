@@ -43,7 +43,7 @@ import org.estatio.services.clock.ClockService;
 public class Event extends EstatioTransactionalObject<Event, Status> implements WithIntervalMutable<Event>, WithDescriptionGetter {
 
     public Event() {
-        super("startDate desc nullsLast, id", Status.LOCKED, Status.UNLOCKED);
+        super("startDate desc nullsLast, id", Status.UNLOCKED, Status.LOCKED);
     }
     
     // //////////////////////////////////////
@@ -111,7 +111,7 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

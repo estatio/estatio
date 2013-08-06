@@ -61,5 +61,9 @@
       "span": 0,
       "collections": {}
     }
-  ]
+  ],
+  "actions": {
+    "lock": {},
+    "unlock": {}
+  }
 }

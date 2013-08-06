@@ -210,9 +210,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public BigDecimal getApprovedValue() {
-        return getStatus().isLocked()
-                ? getTrialValue()
-                : null;
+        return isLocked() ? getTrialValue() : null;
     }
 
     // //////////////////////////////////////

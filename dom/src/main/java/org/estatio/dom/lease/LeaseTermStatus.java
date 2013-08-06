@@ -35,9 +35,4 @@ public enum LeaseTermStatus implements Lockable {
         return this == NEW;
     }
 
-    @Override
-    public boolean isLocked() {
-        return this == APPROVED;
-    }
-
  }

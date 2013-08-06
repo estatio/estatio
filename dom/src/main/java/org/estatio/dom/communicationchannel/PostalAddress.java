@@ -34,8 +34,14 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Query(name = "findByAddress", language = "JDOQL", value = "SELECT FROM org.estatio.dom.communicationchannel.CommunicationChannel WHERE (address1 == :address1 && postalCode == :postalCode && city == :city && country == :country)")
-
+@javax.jdo.annotations.Query(
+        name = "findByAddress", language = "JDOQL", 
+        value = "SELECT FROM "
+                + "org.estatio.dom.communicationchannel.CommunicationChannel "
+                + "WHERE address1 == :address1 "
+                + "&& postalCode == :postalCode "
+                + "&& city == :city "
+                + "&& country == :country ")
 public class PostalAddress extends CommunicationChannel {
 
     /**
@@ -67,10 +73,6 @@ public class PostalAddress extends CommunicationChannel {
         this.address1 = address1;
     }
 
-    public String disableAddress1() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
-    }
-
     // //////////////////////////////////////
 
     private String address2;
@@ -83,10 +85,6 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setAddress2(final String address2) {
         this.address2 = address2;
-    }
-
-    public String disableAddress2() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////
@@ -102,10 +100,6 @@ public class PostalAddress extends CommunicationChannel {
         this.postalCode = postalCode;
     }
 
-    public String disablePostalCode() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
-    }
-
     // //////////////////////////////////////
 
     private String city;
@@ -117,10 +111,6 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setCity(final String city) {
         this.city = city;
-    }
-
-    public String disableCity() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////
@@ -139,10 +129,6 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setCountry(final Country country) {
         this.country = country;
-    }
-
-    public String disableCountry() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     public List<Country> choicesCountry() {
@@ -173,10 +159,6 @@ public class PostalAddress extends CommunicationChannel {
 
     public void setState(final State state) {
         this.state = state;
-    }
-
-    public String disableState() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     public List<State> choicesState() {

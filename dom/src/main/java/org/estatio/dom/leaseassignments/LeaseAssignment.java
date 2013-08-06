@@ -34,7 +34,7 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
     
     public LeaseAssignment() {
         // TODO: I made this up...
-        super("nextLease,assignmentDate", Status.LOCKED, Status.UNLOCKED);
+        super("nextLease,assignmentDate", Status.UNLOCKED, Status.LOCKED);
     }
     
     // //////////////////////////////////////

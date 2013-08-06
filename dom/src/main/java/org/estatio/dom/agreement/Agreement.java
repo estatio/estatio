@@ -81,8 +81,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable
 public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, WithNameGetter {
 
-    public Agreement(S statusToLock, S statusToUnlock) {
-        super("reference", statusToLock, statusToUnlock);
+    public Agreement(S statusWhenUnlocked, S statusWhenLockedIfAny) {
+        super("reference", statusWhenUnlocked, statusWhenLockedIfAny);
     }
 
     // //////////////////////////////////////
@@ -100,10 +100,6 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         this.reference = reference;
     }
 
-    public String disableReference() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
-    }
-
     // //////////////////////////////////////
 
     private String name;
@@ -117,10 +113,6 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     public void setName(final String name) {
         this.name = name;
-    }
-
-    public String disableName() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
     }
 
     // //////////////////////////////////////
@@ -240,7 +232,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked": null;
     }
 
     @Override

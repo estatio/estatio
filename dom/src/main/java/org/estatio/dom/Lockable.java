@@ -20,6 +20,5 @@ package org.estatio.dom;
 public interface Lockable {
 
     public boolean isUnlocked();
-    public boolean isLocked();
 
  }

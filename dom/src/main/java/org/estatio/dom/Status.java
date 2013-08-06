@@ -52,9 +52,5 @@ public enum Status implements TitledEnum, Lockable {
     public boolean isUnlocked() {
         return this == UNLOCKED;
     }
-    @Override
-    public boolean isLocked() {
-        return this == LOCKED;
-    }
 
  }

@@ -83,7 +83,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     // //////////////////////////////////////
 
     public AgreementRoleCommunicationChannel() {
-        super("role, startDate desc nullsLast, type, communicationChannel", Status.LOCKED, Status.UNLOCKED);
+        super("role, startDate desc nullsLast, type, communicationChannel", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////
@@ -210,7 +210,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

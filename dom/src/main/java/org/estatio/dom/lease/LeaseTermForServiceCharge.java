@@ -64,7 +64,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Override
     @Mask("")
     public BigDecimal getApprovedValue() {
-        return getStatus().isLocked() ? getTrialValue() : null;
+        return isLocked() ? getTrialValue() : null;
     }
 
     // //////////////////////////////////////

@@ -69,7 +69,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {
 
     public LeaseUnit() {
-        super("lease, startDate desc nullsLast, unit", Status.LOCKED, Status.UNLOCKED);
+        super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////
@@ -164,7 +164,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

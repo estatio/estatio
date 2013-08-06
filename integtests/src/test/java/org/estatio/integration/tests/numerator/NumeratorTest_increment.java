@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
@@ -36,6 +38,9 @@ import org.estatio.integration.tests.EstatioIntegrationTest;
 public class NumeratorTest_increment extends EstatioIntegrationTest {
 
     private Numerators numerators;
+    private Properties properties;
+    private Property property;
+    private Property property2;
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -45,15 +50,20 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         numerators = service(Numerators.class);
-        numerators.establishNumerator(NumeratorType.INVOICE_NUMBER);
+        properties = service(Properties.class);
+        property = properties.allProperties().get(0);
+        property2 = properties.allProperties().get(1);
+        numerators.createNumerator(NumeratorType.INVOICE_NUMBER, property, "ABC-%05d", new BigInteger("10"));
+        numerators.createNumerator(NumeratorType.INVOICE_NUMBER, property2, "DEF-%05d", new BigInteger("100"));
+        numerators.createNumerator(NumeratorType.COLLECTION_NUMBER, property, "ABC-%05d", new BigInteger("1000"));
     }
 
     @Test
     public void numerator_increment() throws Exception {
-        Numerator in = numerators.findNumeratorByType(NumeratorType.INVOICE_NUMBER);
-        assertThat(in.getLastIncrement(), is(BigInteger.ZERO));
-        assertThat(in.increment(), is(BigInteger.ONE));
-        assertThat(in.getLastIncrement(), is(BigInteger.ONE));
+        Numerator in = numerators.findNumerator(NumeratorType.INVOICE_NUMBER, property);
+        assertThat(in.getLastIncrement(), is(new BigInteger("10")));
+        assertThat(in.increment(), is("ABC-00011"));
+        assertThat(in.getLastIncrement(), is(new BigInteger("11")));
     }
 
 }

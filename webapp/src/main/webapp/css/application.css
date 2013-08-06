@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
  *
  *
@@ -18,11 +17,11 @@
  */
 
 
-.entityActions .cssMenuPanel .menuh a.Lease-lock {
-    background-color: #BF8B5C;
+.entityActions .cssMenuPanel .menuh li.lock a {
+    background-color: #CC1633;
     float: right;
 }
-.entityActions .cssMenuPanel .menuh a.Lease-unlock {
+.entityActions .cssMenuPanel .menuh li.unlock a {
     background-color: #51A95C;
     float: right;
 }

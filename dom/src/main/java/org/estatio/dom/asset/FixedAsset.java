@@ -68,7 +68,7 @@ import org.estatio.dom.party.Party;
 public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, Status> implements WithNameComparable<FixedAsset>, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
 
     public FixedAsset() {
-        super("name", Status.LOCKED, Status.UNLOCKED);
+        super("name", Status.UNLOCKED, Status.LOCKED);
     }
     
     

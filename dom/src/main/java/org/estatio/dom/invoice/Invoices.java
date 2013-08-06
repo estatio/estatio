@@ -24,8 +24,10 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -38,17 +40,47 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     // //////////////////////////////////////
-
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    
+    @ActionSemantics(Of.SAFE)
+    @DescribedAs("New invoices, to be approved")
     @MemberOrder(sequence = "1")
+    public List<Invoice> toBeApproved() {
+        return allMatches("findByStatus", "status", InvoiceStatus.NEW);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @DescribedAs("Approved invoices, to be collected")
+    @MemberOrder(sequence = "2")
+    public List<Invoice> toBeCollected() {
+        return allMatches("findByStatus", "status", InvoiceStatus.APPROVED);
+    }
+    
+    @ActionSemantics(Of.SAFE)
+    @DescribedAs("Collected invoices, to be invoiced")
+    @MemberOrder(sequence = "3")
+    public List<Invoice> toBeInvoiced() {
+        return allMatches("findByStatus", "status", InvoiceStatus.COLLECTED);
+    }
+    
+    @ActionSemantics(Of.SAFE)
+    @DescribedAs("Already invoiced")
+    @MemberOrder(sequence = "4")
+    public List<Invoice> previouslyInvoiced() {
+        return allMatches("findByStatus", "status", InvoiceStatus.INVOICED);
+    }
+    
+    
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public Invoice newInvoice() {
         Invoice invoice = newTransientInstance();
         persist(invoice);
         getContainer().flush();
         return invoice;
     }
-
-    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @Hidden

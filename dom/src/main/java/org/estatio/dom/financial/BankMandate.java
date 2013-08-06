@@ -36,7 +36,7 @@ public class BankMandate extends Agreement<Status> {
     
 
     public BankMandate() {
-        super(Status.LOCKED, Status.UNLOCKED);
+        super(Status.UNLOCKED, Status.LOCKED);
     }
     
     // //////////////////////////////////////
@@ -68,10 +68,6 @@ public class BankMandate extends Agreement<Status> {
         this.bankAccount = bankAccount;
     }
     
-    public String disableBankAccount() {
-        return getStatus().isLocked()? "Cannot modify when locked": null;
-    }
-
     // //////////////////////////////////////
 
     public Party getPrimaryParty() {

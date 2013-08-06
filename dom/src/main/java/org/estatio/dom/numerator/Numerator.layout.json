@@ -6,7 +6,8 @@
         "General": {
           "members": {
             "type": {},
-            "description": {},
+            "property": {},
+            "format": {},
             "lastIncrement": {},
             "status": {}
           }
@@ -25,5 +26,9 @@
       "span": 6,
       "collections": {}
     }
-  ]
+  ],
+  "actions": {
+    "lock": {},
+    "unlock": {}
+  }
 }

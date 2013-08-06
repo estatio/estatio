@@ -49,7 +49,7 @@ import org.estatio.dom.party.Party;
 public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount, Status> implements WithNameGetter, WithReferenceUnique  {
 
     public FinancialAccount() {
-        super("type, reference", Status.LOCKED, Status.UNLOCKED);
+        super("type, reference", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////

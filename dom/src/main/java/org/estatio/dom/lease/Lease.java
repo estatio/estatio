@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -65,7 +66,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
 
     public Lease() {
-        super(LeaseStatus.APPROVED, LeaseStatus.NEW);
+        super(LeaseStatus.NEW, LeaseStatus.APPROVED);
     }
     
     // //////////////////////////////////////
@@ -108,6 +109,24 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     }
 
     // //////////////////////////////////////
+    
+    /**
+     * The {@link Property} of the (first of the) {@link #getUnits() LeaseUnit}s.
+     * 
+     * <p>
+     * It is not possible for the {@link LeaseUnit}s to belong to different
+     * {@link Property properties}, and so it is sufficient to obtain the {@link Property}
+     * of the first such {@link LeaseUnit occupancy}. 
+     */
+    @Override
+    public Property getProperty() {
+        if(getUnits().isEmpty()) {
+            return null;
+        }
+        return getUnits().first().getUnit().getProperty();
+    }
+
+    // //////////////////////////////////////
 
     private LeaseType type;
 
@@ -134,7 +153,8 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     }
 
 
-    public LeaseUnit addUnit(@Named("unit") UnitForLease unit) {
+    public LeaseUnit addUnit(
+            final @Named("unit") UnitForLease unit) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
         units.add(leaseUnit);
@@ -390,5 +410,6 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     public final void injectFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
+
 
 }

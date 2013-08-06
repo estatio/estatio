@@ -30,6 +30,8 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
     @Override
     public void install() {
         
+        isisJdoSupport.executeUpdate("DELETE FROM NUMERATOR");
+        
         isisJdoSupport.executeUpdate("DELETE FROM INVOICEITEM");
         isisJdoSupport.executeUpdate("DELETE FROM INVOICE");
         
@@ -55,7 +57,6 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         isisJdoSupport.executeUpdate("DELETE FROM PERSON");
         isisJdoSupport.executeUpdate("DELETE FROM PARTY");
         
-        isisJdoSupport.executeUpdate("DELETE FROM NUMERATOR");
         isisJdoSupport.executeUpdate("DELETE FROM COMMUNICATIONCHANNEL");
         
     }

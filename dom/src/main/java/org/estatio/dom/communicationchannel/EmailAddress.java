@@ -44,8 +44,4 @@ public class EmailAddress extends CommunicationChannel {
         this.address = address;
     }
 
-    public String disableAddress() {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
-    }
-
 }

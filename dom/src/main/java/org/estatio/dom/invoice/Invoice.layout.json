@@ -15,6 +15,7 @@
         "Detail": {
           "members": {
             "source": {},
+            "property": {},
             "paymentMethod": {}
           }
         }
@@ -56,5 +57,14 @@
         "items": {}
       }
     }
-  ]
+  ],
+  "actions": {
+    "approve": {},
+    "assignCollectionNumber": {},
+    "assignInvoiceNumber": {},
+    "submitToCoda": {},
+    "lock": {},
+    "unlock": {},
+    "remove": {}
+  }
 }

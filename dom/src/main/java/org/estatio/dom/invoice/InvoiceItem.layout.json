@@ -6,7 +6,6 @@
         "General": {
           "members": {
             "invoice": {},
-            "leaseTerm": {},
             "sequence": {},
             "status": {},
             "current": {}
@@ -50,10 +49,5 @@
       "span": 12,
       "collections": {}
     }
-  ],
-  "actions": {
-    "verify": {},
-    "lock": {},
-    "unlock": {}
-  }
+  ]
 }

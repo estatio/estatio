@@ -104,7 +104,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
-        super("leaseItem, sequence", LeaseTermStatus.APPROVED, LeaseTermStatus.NEW);
+        super("leaseItem, sequence", LeaseTermStatus.NEW, LeaseTermStatus.APPROVED);
     }
 
     // //////////////////////////////////////
@@ -226,7 +226,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

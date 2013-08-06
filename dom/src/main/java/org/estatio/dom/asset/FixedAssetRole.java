@@ -85,7 +85,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     // //////////////////////////////////////
 
     public FixedAssetRole() {
-        super("asset, startDate desc nullsLast, type, party", Status.LOCKED, Status.UNLOCKED);
+        super("asset, startDate desc nullsLast, type, party", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////
@@ -194,7 +194,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

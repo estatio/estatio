@@ -42,5 +42,10 @@
       "span": 8,
       "collections": {}
     }
-  ]
+  ],
+  "actions": {
+    "newRate": {},
+    "lock": {},
+    "unlock": {}
+  }
 }

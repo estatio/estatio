@@ -82,7 +82,7 @@ import org.estatio.services.clock.ClockService;
 public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     public LeaseItem() {
-        super("lease, type, sequence desc", LeaseItemStatus.APPROVED, LeaseItemStatus.NEW);
+        super("lease, type, sequence desc", LeaseItemStatus.NEW, null);
     }
 
     // //////////////////////////////////////
@@ -206,7 +206,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

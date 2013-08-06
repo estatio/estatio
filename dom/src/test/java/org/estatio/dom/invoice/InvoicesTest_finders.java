@@ -19,7 +19,6 @@
 package org.estatio.dom.invoice;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -37,6 +36,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -59,7 +59,12 @@ public class InvoicesTest_finders {
         seller = new PartyForTesting();
         buyer = new PartyForTesting();
         paymentMethod = PaymentMethod.BANK_TRANSFER;
-        source = new InvoiceSource(){};
+        source = new InvoiceSource(){
+            @Override
+            public Property getProperty() {
+                return null;
+            }
+        };
         invoiceStatus = InvoiceStatus.APPROVED;
         dueDate = new LocalDate(2013,4,1);
         

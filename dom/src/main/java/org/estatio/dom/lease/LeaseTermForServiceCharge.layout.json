@@ -62,5 +62,11 @@
         }
       }
     }
-  ]
+  ],
+  "actions": {
+    "createNext": {},
+    "lock": {},
+    "unlock": {},
+    "verify": {}
+  }
 }

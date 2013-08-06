@@ -24,6 +24,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -50,11 +51,19 @@ public class Currencies extends EstatioDomainService<Currency> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "currencies.2")
-    public Currency findCurrencyByReference(@Named("reference") final String reference) {
+    public Currency findCurrencyByReference(
+            @Named("reference") final String reference) {
         String rexeg = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", rexeg);
     }
 
+    // //////////////////////////////////////
+
+    @Programmatic
+    public List<Currency> autoComplete(String searchArg) {
+        return allMatches("findByReferenceOrDescription", "searchArg", searchArg);
+    }
+    
     // //////////////////////////////////////
     
     @Prototype

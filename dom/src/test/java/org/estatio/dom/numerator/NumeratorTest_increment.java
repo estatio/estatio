@@ -33,11 +33,12 @@ public class NumeratorTest_increment {
     @Before
     public void setUp() throws Exception {
         numerator = new Numerator();
+        numerator.setFormat("XXX-%05d");
     }
 
     @Test
     public void happyCase() {
-        assertEquals(BigInteger.ONE, numerator.increment());
+        assertEquals("XXX-00001", numerator.increment());
         assertEquals(BigInteger.ONE, numerator.getLastIncrement());
     }
 

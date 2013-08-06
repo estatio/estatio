@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.currency;
 
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 
@@ -26,13 +27,22 @@ import org.estatio.dom.WithDescriptionUnique;
 import org.estatio.dom.WithReferenceComparable;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.currency.Currency " +
-        		"WHERE reference.matches(:reference)")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByReference", language = "JDOQL", 
+            value = "SELECT " +
+            		"FROM org.estatio.dom.currency.Currency " +
+            		"WHERE reference.matches(:reference)"),
+	@javax.jdo.annotations.Query(
+	        name = "findByReferenceOrDescription", language = "JDOQL", 
+	        value = "SELECT " +
+	                "FROM org.estatio.dom.currency.Currency " +
+	        "WHERE reference.matches(:searchArg) " + 
+	        "|| description.matches(:searchArg)")
+})
 @Bounded
 @Immutable
+@AutoComplete(repository=Currencies.class, action="autoComplete")
 public class Currency extends EstatioRefDataObject<Currency> implements WithReferenceComparable<Currency>, WithDescriptionUnique {
 
     public Currency() {

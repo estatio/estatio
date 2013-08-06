@@ -20,13 +20,11 @@ package org.estatio.dom;
 
 import javax.jdo.JDOHelper;
 
+import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.CssClass;
+import org.apache.isis.applib.annotation.Hidden;
 
 /**
  * A domain object that is mutable and can be changed by multiple users over time,
@@ -43,13 +41,22 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
  */
 public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> extends EstatioDomainObject<T> implements WithStatus<T,S> {
 
-    private final S statusToLock;
-    private final S statusToUnlock;
+    /**
+     * The status representing an unlocked - freely editable - object.
+     */
+    private final S statusWhenUnlocked;
+    /**
+     * The (single) status representing a locked (non-editable) object.
+     * 
+     * <p>
+     * This will be <tt>null</tt> if the subclass does not support explicit locking/unlocking.
+     */
+    private final S statusWhenLockedIfAny;
 
-    public EstatioTransactionalObject(String keyProperties, S statusToLock, S statusToUnlock) {
+    public EstatioTransactionalObject(String keyProperties, S statusWhenUnlocked, S statusWhenLockedIfAny) {
         super(keyProperties);
-        this.statusToLock = statusToLock;
-        this.statusToUnlock = statusToUnlock;
+        this.statusWhenUnlocked = statusWhenUnlocked;
+        this.statusWhenLockedIfAny = statusWhenLockedIfAny;
     }
 
     @Hidden
@@ -59,11 +66,11 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     }
 
     
-    
+
     // //////////////////////////////////////
     
     public void created() {
-        setStatus(statusToLock);
+        setStatus(statusWhenLockedIfAny);
     }
     
     // //////////////////////////////////////
@@ -76,38 +83,56 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
 
     // //////////////////////////////////////
     
+
     @Hidden
     @Override
     public boolean isLocked() {
-        return getStatus().isLocked();
+        return !getStatus().isUnlocked();
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
+    @CssClass("lock")
     @Override
     @SuppressWarnings("unchecked")
     public T lock() {
-        setStatus(statusToLock);
+        setStatus(statusWhenLockedIfAny);
         return (T) this;
     }
 
     @Override
     public boolean hideLock() {
-        return statusToLock == null || getStatus().isLocked();
+        return cannotExplicitlyLockAndUnlock();
     }
-    
+
+    @CssClass("unlock")
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     @SuppressWarnings("unchecked")
     public T unlock() {
-        setStatus(statusToUnlock);
+        setStatus(statusWhenUnlocked);
         return (T) this;
     }
     
     @Override
     public boolean hideUnlock() {
-        return statusToUnlock == null || getStatus().isUnlocked();
+        return cannotExplicitlyLockAndUnlock();
     }
 
+    private boolean cannotExplicitlyLockAndUnlock() {
+        return statusWhenLockedIfAny == null;
+    }
     
+    // //////////////////////////////////////
+
+    /**
+     * Disable (for all properties)
+     */
+    public String disabled(Identifier.Type type) {
+        if(type == Identifier.Type.PROPERTY_OR_COLLECTION) {
+            return isLocked()? "Cannot modify when locked": null;
+        }
+        return null;
+    }
+
 
 }

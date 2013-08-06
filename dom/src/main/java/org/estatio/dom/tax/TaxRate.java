@@ -68,7 +68,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
-        super("tax, startDate desc nullsLast", Status.LOCKED, Status.UNLOCKED);
+        super("tax, startDate desc nullsLast", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////
@@ -142,7 +142,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getStatus().isLocked() ? "Cannot modify when locked" : null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override

@@ -54,7 +54,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 public abstract class Party extends EstatioTransactionalObject<Party, Status> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
-        super("name", Status.LOCKED, Status.UNLOCKED);
+        super("name", Status.UNLOCKED, Status.LOCKED);
     }
 
     // //////////////////////////////////////
