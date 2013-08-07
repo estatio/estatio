@@ -48,6 +48,6 @@ public class PartyTest_communicationChannels extends EstatioIntegrationTest {
     
     @Test
     public void fixtureData() throws Exception {
-        Assert.assertThat(partyHelloWorld.getCommunicationChannels().size(), is(4));
+        Assert.assertThat(partyHelloWorld.getCommunicationChannels().size(), is(3));
     }
 }

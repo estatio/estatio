@@ -100,7 +100,8 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     private ChargeGroup group;
 
-    @javax.jdo.annotations.Column(name = "GROUP_ID", allowsNull="false")
+    // REVIEW: Api#putCharge() does not seem to populate this? (hence not mandatory)
+    @javax.jdo.annotations.Column(name = "GROUP_ID", allowsNull="true")
     public ChargeGroup getGroup() {
         return group;
     }

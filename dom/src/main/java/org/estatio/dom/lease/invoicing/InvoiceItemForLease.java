@@ -76,7 +76,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     // REVIEW: this is optional because of the #remove() method, 
     // also because the ordering of flushes in #attachToInvoice()
     //
-    // suspect this should be mandatory, however (ie get rid of #remve(),
+    // suspect this should be mandatory, however (ie get rid of #remove(),
     // and refactor #attachToInvoice())
     @javax.jdo.annotations.Column(name="LEASETERM_ID", allowsNull="true")
     @Disabled

@@ -97,7 +97,12 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     private Invoice invoice;
 
-    @javax.jdo.annotations.Column(name = "INVOICE_ID", allowsNull="false")
+    // REVIEW: this is optional because of the #remove() method, 
+    // also because the ordering of flushes in #attachToInvoice()
+    //
+    // suspect this should be mandatory, however (ie get rid of #remove(),
+    // and refactor #attachToInvoice())
+    @javax.jdo.annotations.Column(name = "INVOICE_ID", allowsNull="true")
     @Render(Type.EAGERLY)
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)

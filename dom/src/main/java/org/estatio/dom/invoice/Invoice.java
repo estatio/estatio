@@ -215,7 +215,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private Currency currency;
 
-    @javax.jdo.annotations.Column(name = "CURRENCY_ID", allowsNull="false")
+    // REVIEW: invoice generation is not populating this field.
+    @javax.jdo.annotations.Column(name = "CURRENCY_ID", allowsNull="true")
     @Hidden(where=Where.ALL_TABLES)
     @Disabled
     public Currency getCurrency() {
