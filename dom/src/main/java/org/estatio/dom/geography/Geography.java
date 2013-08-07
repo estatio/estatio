@@ -29,7 +29,8 @@ import org.estatio.dom.WithReferenceComparable;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Query(name = "findGeographyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
+@javax.jdo.annotations.Query(
+        name = "findGeographyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
 @Immutable
 public abstract class Geography extends EstatioRefDataObject<Geography> implements WithReferenceComparable<Geography>, WithNameUnique {
 
@@ -50,6 +51,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getReference() {
         return reference;
     }
@@ -64,6 +66,7 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
     @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX")
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getName() {
         return name;

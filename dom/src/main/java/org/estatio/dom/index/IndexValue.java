@@ -44,6 +44,7 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "2", prepend = ":")
     @Disabled
     @Override
@@ -58,9 +59,9 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="INDEXBASE_ID")
     private IndexBase indexBase;
 
+    @javax.jdo.annotations.Column(name="INDEXBASE_ID", allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "2")
     @Disabled
@@ -90,9 +91,9 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 4)
     private BigDecimal value;
 
+    @javax.jdo.annotations.Column(scale = 4, allowsNull="false")
     @Disabled
     public BigDecimal getValue() {
         return value;

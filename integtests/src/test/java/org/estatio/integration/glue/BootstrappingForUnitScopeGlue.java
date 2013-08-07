@@ -19,7 +19,6 @@ package org.estatio.integration.glue;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.jmock.Expectations;
 
 import org.apache.isis.core.specsupport.scenarios.InMemoryDB;
@@ -32,8 +31,6 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.PartyForTesting;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.EstatioSystemInitializer;
 
 public class BootstrappingForUnitScopeGlue extends CukeGlueAbstract {
 

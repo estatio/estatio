@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.asset;
 
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -51,18 +50,21 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Query(name = "findAssetsByReferenceOrName", language = "JDOQL", value = "SELECT FROM org.estatio.dom.asset.FixedAsset WHERE reference.matches(:regex) || name.matches(:regex)")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findAssetsByReferenceOrName", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.asset.FixedAsset "
+                        + "WHERE reference.matches(:regex) "
+                        + "|| name.matches(:regex) ")
+})
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, Status> implements WithNameComparable<FixedAsset>, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
@@ -75,6 +77,9 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     // //////////////////////////////////////
 
     private Status status;
+
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
 
     @Hidden
     @Override
@@ -93,9 +98,9 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     @javax.jdo.annotations.Unique(name = "FIXEDASSET_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
-    @Mask("AAAAAAAA")
     public String getReference() {
         return reference;
     }
@@ -111,6 +116,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     // @javax.jdo.annotations.Unique(name = "NAME_IDX")
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
     public String getName() {

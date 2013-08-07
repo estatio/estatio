@@ -54,6 +54,7 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
     @javax.jdo.annotations.Unique(name = "AGREEMENT_TYPE_TITLE_UNIQUE_IDX")
     private String title;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getTitle() {
         return title;
@@ -67,6 +68,7 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     private String implementationClassName;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
     public String getImplementationClassName() {
         return implementationClassName;

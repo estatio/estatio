@@ -20,18 +20,17 @@ package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.Status;
-import org.estatio.dom.WithDescriptionComparable;
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.asset.Property;
 
 @javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
@@ -56,6 +55,7 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
 
     private NumeratorType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence="1", append=", ")
     public NumeratorType getType() {
         return type;
@@ -69,6 +69,7 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
 
     private String format;
     
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence="2")
     public String getFormat() {
         return format;
@@ -81,9 +82,9 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
 
     // //////////////////////////////////////
     
-    @javax.jdo.annotations.Column(name="PROPERTY_ID")
     private Property property;
 
+    @javax.jdo.annotations.Column(name="PROPERTY_ID", allowsNull="true")
     public Property getProperty() {
         return property;
     }
@@ -97,6 +98,7 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     @javax.jdo.annotations.Persistent
     private BigInteger lastIncrement;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public BigInteger getLastIncrement() {
         return lastIncrement;
     }
@@ -108,6 +110,9 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     // //////////////////////////////////////
 
     private Status status;
+
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
 
     @Hidden
     @Override

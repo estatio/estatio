@@ -7,7 +7,6 @@
           "members": {
             "collectionNumber": {},
             "invoiceNumber": {},
-            "reference": {},
             "lastItemSequence": {},
             "status": {}
           }

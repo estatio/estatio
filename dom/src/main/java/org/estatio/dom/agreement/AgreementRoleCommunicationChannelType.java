@@ -55,6 +55,7 @@ public class AgreementRoleCommunicationChannelType extends EstatioRefDataObject<
 
     private String title;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getTitle() {
         return title;
@@ -66,9 +67,9 @@ public class AgreementRoleCommunicationChannelType extends EstatioRefDataObject<
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="APPLIESTO_ID")
     private AgreementType appliesTo;
 
+    @javax.jdo.annotations.Column(name="APPLIESTO_ID", allowsNull="false")
     public AgreementType getAppliesTo() {
         return appliesTo;
     }

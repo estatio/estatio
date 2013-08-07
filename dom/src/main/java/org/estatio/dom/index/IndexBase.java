@@ -43,9 +43,9 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="INDEX_ID")
     private Index index;
     
+    @javax.jdo.annotations.Column(name="INDEX_ID", allowsNull="false")
     @Title(sequence = "1", append = ", ")
     public Index getIndex() {
         return index;
@@ -60,6 +60,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "2")
     public LocalDate getStartDate() {
         return startDate;

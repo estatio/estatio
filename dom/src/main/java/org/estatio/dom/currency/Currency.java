@@ -54,6 +54,7 @@ public class Currency extends EstatioRefDataObject<Currency> implements WithRefe
     @javax.jdo.annotations.Unique(name = "CURRENCY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getReference() {
         return reference;
     }
@@ -67,6 +68,7 @@ public class Currency extends EstatioRefDataObject<Currency> implements WithRefe
     @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX")
     private String description;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getDescription() {
         return description;
     }

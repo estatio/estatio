@@ -60,6 +60,7 @@ public class Person extends Party {
 
     private String lastName;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getLastName() {
         return lastName;
     }
@@ -73,6 +74,7 @@ public class Person extends Party {
 
     private PersonGenderType gender;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public PersonGenderType getGender() {
         return gender;
     }

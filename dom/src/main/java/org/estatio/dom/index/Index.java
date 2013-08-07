@@ -46,6 +46,7 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     @javax.jdo.annotations.Unique(name = "INDEX_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getReference() {
         return reference;
     }
@@ -59,6 +60,7 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     @javax.jdo.annotations.Unique(name = "INDEX_NAME_UNIQUE_IDX")
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getName() {
         return name;

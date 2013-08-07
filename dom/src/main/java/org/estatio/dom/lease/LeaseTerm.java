@@ -109,10 +109,10 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "LEASEITEM_ID")
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
+    @javax.jdo.annotations.Column(name = "LEASEITEM_ID", allowsNull="false")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     @Title(sequence = "1", append = ":")
@@ -296,6 +296,9 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     /**
      * Disabled, is maintained through LeaseTermContributedActions
      */
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Disabled
     public LeaseTermStatus getStatus() {
         return status;
@@ -315,6 +318,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     private LeaseTermFrequency frequency;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public LeaseTermFrequency getFrequency() {
         return frequency;
     }

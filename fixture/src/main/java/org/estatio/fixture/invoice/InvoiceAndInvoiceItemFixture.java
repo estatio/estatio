@@ -20,6 +20,8 @@ package org.estatio.fixture.invoice;
 
 import java.util.SortedSet;
 
+import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -31,6 +33,8 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
@@ -48,16 +52,22 @@ public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
     }
 
     private void createInvoices() {
+        final Party buyer = parties.findPartyByReferenceOrName(BUYER_PARTY);
+        final Party seller = parties.findPartyByReferenceOrName(SELLER_PARTY);
+        final Lease lease = leases.findLeaseByReference(LEASE);
+        final Currency currency = currencies.findCurrencyByReference("EUR");
+        
         final Invoice invoice = invoices.newInvoice();
-        invoice.setBuyer(parties.findPartyByReferenceOrName(BUYER_PARTY));
-        invoice.setSeller(parties.findPartyByReferenceOrName(SELLER_PARTY));
+        invoice.setBuyer(buyer);
+        invoice.setSeller(seller);
         invoice.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         invoice.setStatus(InvoiceStatus.NEW);
-        
-        final Lease lease = leases.findLeaseByReference(LEASE);
+        invoice.setCurrency(currency);
         invoice.setSource(lease);
         invoice.setDueDate(START_DATE);
         invoice.setInvoiceDate(START_DATE);
+        
+        getContainer().flush();
 
         final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
         for (final LeaseTerm term : terms) {
@@ -78,6 +88,11 @@ public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
         this.parties = parties;
     }
 
+    private Currencies currencies;
+    public void injectCurrencies(Currencies currencies) {
+        this.currencies = currencies;
+    }
+    
     private Invoices invoices;
 
     public void injectInvoices(Invoices invoices) {

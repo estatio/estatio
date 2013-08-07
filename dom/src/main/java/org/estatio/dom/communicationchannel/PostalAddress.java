@@ -27,6 +27,7 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
+import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
@@ -63,6 +64,8 @@ public class PostalAddress extends CommunicationChannel {
 
     private String address1;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
+    @Mandatory
     @Title(sequence = "1", append = ", ")
     @Named("Address Line 1")
     public String getAddress1() {
@@ -77,6 +80,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private String address2;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Optional
     @Named("Address Line 2")
     public String getAddress2() {
@@ -91,6 +95,8 @@ public class PostalAddress extends CommunicationChannel {
 
     private String postalCode;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
+    @Mandatory
     @Title(sequence = "2", append = ", ")
     public String getPostalCode() {
         return postalCode;
@@ -104,6 +110,8 @@ public class PostalAddress extends CommunicationChannel {
 
     private String city;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
+    @Mandatory
     @Title(sequence = "3")
     public String getCity() {
         return city;
@@ -119,10 +127,10 @@ public class PostalAddress extends CommunicationChannel {
     // TODO: When no country has been selected, the UI renders
     // "no objects returned" and an ok button. After that it's impossible to to
     // a search again.
-    @javax.jdo.annotations.Column(name = "COUNTRY_ID")
     private Country country;
 
-    @Optional
+    @javax.jdo.annotations.Column(name = "COUNTRY_ID", allowsNull="true")
+    @Optional // TODO: make mandatory
     public Country getCountry() {
         return country;
     }
@@ -149,10 +157,10 @@ public class PostalAddress extends CommunicationChannel {
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "STATE_ID")
     private State state;
 
-    @Optional
+    @javax.jdo.annotations.Column(name = "STATE_ID", allowsNull="true")
+    @Optional // TODO: make mandatory
     public State getState() {
         return state;
     }

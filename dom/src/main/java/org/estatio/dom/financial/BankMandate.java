@@ -23,13 +23,14 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.Status;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 public class BankMandate extends Agreement<Status> {
@@ -43,6 +44,9 @@ public class BankMandate extends Agreement<Status> {
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+    
     @Hidden
     @Override
     public Status getStatus() {
@@ -57,9 +61,9 @@ public class BankMandate extends Agreement<Status> {
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="BANKACCOUNT_ID")
     private FinancialAccount bankAccount;
 
+    @javax.jdo.annotations.Column(name="BANKACCOUNT_ID", allowsNull="false")
     public FinancialAccount getBankAccount() {
         return bankAccount;
     }

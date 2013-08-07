@@ -64,6 +64,8 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
      */
     @SuppressWarnings("unused")
     private void truncateTablesSQL(IsisJdoSupport isisJdoSupport) {
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"STATE\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE COUNTRY");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE GEOGRAPHY");
         
         isisJdoSupport.executeUpdate("TRUNCATE TABLE CURRENCY");

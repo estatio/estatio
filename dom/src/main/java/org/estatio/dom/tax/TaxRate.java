@@ -75,6 +75,9 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden
     @Override
     public Status getStatus() {
@@ -88,9 +91,9 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
+    @javax.jdo.annotations.Column(name = "TAX_ID", allowsNull="false")
     @Title
     public Tax getTax() {
         return tax;

@@ -86,7 +86,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
             final String number) {
         final PhoneOrFaxNumber pn = newTransientInstance(PhoneOrFaxNumber.class);
         pn.setType(type);
-        pn.setNumber(number);
+        pn.setPhoneNumber(number);
         pn.setOwner(owner);
         persistIfNotAlready(pn);
         return pn;

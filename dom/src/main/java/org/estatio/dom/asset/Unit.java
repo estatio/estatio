@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
@@ -41,6 +41,7 @@ public class Unit extends FixedAsset {
 
     private UnitType unitType;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public UnitType getUnitType() {
         return unitType;
     }
@@ -52,9 +53,9 @@ public class Unit extends FixedAsset {
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     public BigDecimal getArea() {
         return area;
     }
@@ -65,9 +66,9 @@ public class Unit extends FixedAsset {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal storageArea;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     public BigDecimal getStorageArea() {
         return storageArea;
@@ -80,9 +81,9 @@ public class Unit extends FixedAsset {
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal salesArea;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     public BigDecimal getSalesArea() {
         return salesArea;
@@ -94,9 +95,9 @@ public class Unit extends FixedAsset {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal mezzanineArea;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     public BigDecimal getMezzanineArea() {
         return mezzanineArea;
@@ -109,9 +110,9 @@ public class Unit extends FixedAsset {
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal terraceArea;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     public BigDecimal getTerraceArea() {
         return terraceArea;
@@ -123,9 +124,9 @@ public class Unit extends FixedAsset {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PROPERTY_ID")
     private Property property;
 
+    @javax.jdo.annotations.Column(name = "PROPERTY_ID", allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public Property getProperty() {

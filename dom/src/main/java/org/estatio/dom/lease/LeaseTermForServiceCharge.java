@@ -26,6 +26,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Mask;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.utils.MathUtils;
@@ -35,9 +36,10 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedValue;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @Optional
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
@@ -48,9 +50,10 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedValue;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @Optional
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }
@@ -62,7 +65,6 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    @Mask("")
     public BigDecimal getApprovedValue() {
         return isLocked() ? getTrialValue() : null;
     }
@@ -70,7 +72,6 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    @Mask("")
     public BigDecimal getTrialValue() {
         return MathUtils.isNotZeroOrNull(getAuditedValue()) 
                 ? getAuditedValue() 

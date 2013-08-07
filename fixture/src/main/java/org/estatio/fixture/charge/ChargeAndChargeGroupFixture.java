@@ -22,6 +22,7 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
@@ -41,18 +42,20 @@ public class ChargeAndChargeGroupFixture extends AbstractFixture {
 
     private void createChargeAndChargeGroup(String reference, String description, String taxReference) {
         ChargeGroup chargeGroup = createChargeGroup(reference, description);
-        createCharge(reference, description, taxReference, chargeGroup);
+        String code = reference; // TODO: for want of anything better...
+        createCharge(reference, code, description, taxReference, chargeGroup);
     }
 
     private ChargeGroup createChargeGroup(String reference, String description) {
-        ChargeGroup cg = chargeGroups.newChargeGroup(reference, description);
-        return cg;
+        return chargeGroups.newChargeGroup(reference, description);
     }
 
-    private void createCharge(String reference, String description, String taxReference, ChargeGroup group) {
+    private void createCharge(String reference, String code, String description, String taxReference, ChargeGroup group) {
+        final Tax tax = taxRepository.findTaxByReference(taxReference);
         Charge c = chargeRepository.newCharge(reference);
         c.setDescription(description);
-        c.setTax(taxRepository.findTaxByReference(taxReference));
+        c.setCode(code);
+        c.setTax(tax);
         c.setGroup(group);
     }
 

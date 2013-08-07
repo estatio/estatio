@@ -65,6 +65,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden
     @Override
     public Status getStatus() {
@@ -80,6 +83,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     private BigInteger sequence;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
     public BigInteger getSequence() {
         return sequence;
@@ -91,9 +95,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "INVOICE_ID")
     private Invoice invoice;
 
+    @javax.jdo.annotations.Column(name = "INVOICE_ID", allowsNull="false")
     @Render(Type.EAGERLY)
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
@@ -108,9 +112,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "CHARGE_ID")
     private Charge charge;
 
+    @javax.jdo.annotations.Column(name = "CHARGE_ID", allowsNull="true")
     @Title(sequence = "2")
     @Disabled
     public Charge getCharge() {
@@ -128,9 +132,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal quantity;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Disabled
     public BigDecimal getQuantity() {
         return quantity;
@@ -142,9 +146,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal netAmount;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Disabled
     public BigDecimal getNetAmount() {
         return netAmount;
@@ -160,9 +164,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal vatAmount;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public BigDecimal getVatAmount() {
@@ -175,9 +179,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal grossAmount;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     @Disabled
     public BigDecimal getGrossAmount() {
         return grossAmount;
@@ -189,9 +193,9 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
+    @javax.jdo.annotations.Column(name = "TAX_ID", allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public Tax getTax() {
@@ -206,6 +210,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     private String description;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public String getDescription() {
@@ -221,6 +226,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public LocalDate getDueDate() {
         return dueDate;

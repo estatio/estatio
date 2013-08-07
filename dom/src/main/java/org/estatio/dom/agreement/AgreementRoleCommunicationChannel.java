@@ -90,6 +90,9 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden
     @Override
     public Status getStatus() {
@@ -104,9 +107,9 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "AGREEMENTROLE_ID")
     private AgreementRole role;
 
+    @javax.jdo.annotations.Column(name = "AGREEMENTROLE_ID", allowsNull="false")
     @Title(sequence="2")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -138,6 +141,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     private AgreementRoleCommunicationChannelType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence="1", append=":")
     @Disabled
     public AgreementRoleCommunicationChannelType getType() {
@@ -150,9 +154,9 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "COMMUNICATIONCHANNEL_ID")
     private CommunicationChannel communicationChannel;
 
+    @javax.jdo.annotations.Column(name = "COMMUNICATIONCHANNEL_ID", allowsNull="false")
     @Title(sequence="3", prepend=",")
     @Disabled
     public CommunicationChannel getCommunicationChannel() {

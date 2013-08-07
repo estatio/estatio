@@ -23,13 +23,20 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.Optional;
+
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
+    // //////////////////////////////////////
+
     private String turnoverRentRule;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
+    @Mandatory
     public String getTurnoverRentRule() {
         return turnoverRentRule;
     }
@@ -39,17 +46,19 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     }
 
     public String validateTurnoverRentRule(final String rule) {
-        if (rule == null || rule.trim().length() == 0)
-            return null;
+        if (rule == null || rule.trim().length() == 0) {
+            return "Rule cannot be empty";
+        }
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(rule);
-        return helper.isValid() ? null : "This is not a valid rule";
+        return helper.isValid() ? null : "'" + rule + "' is not a valid rule";
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal budgetedTurnover;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @Optional
     public BigDecimal getBudgetedTurnover() {
         return budgetedTurnover;
     }
@@ -60,9 +69,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal auditedTurnover;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @Optional
     public BigDecimal getAuditedTurnover() {
         return auditedTurnover;
     }
@@ -73,9 +83,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal contractualRent;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @Optional
     public BigDecimal getContractualRent() {
         return contractualRent;
     }
@@ -86,9 +97,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal turnoverRentValue;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @Optional
     public BigDecimal getTurnoverRentValue() {
         return turnoverRentValue;
     }

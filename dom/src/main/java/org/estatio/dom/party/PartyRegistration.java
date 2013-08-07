@@ -67,6 +67,9 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden
     @Override
     public Status getStatus() {
@@ -80,9 +83,9 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID")
     private Party party;
 
+    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull="false")
     public Party getParty() {
         return party;
     }
@@ -95,6 +98,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     private PartyRegistrationType partyRegistrationType;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public PartyRegistrationType getPartyRegistrationType() {
         return partyRegistrationType;
     }

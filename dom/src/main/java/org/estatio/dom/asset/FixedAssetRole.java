@@ -92,6 +92,9 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Disabled
     @Override
     public Status getStatus() {
@@ -105,9 +108,9 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "ASSET_ID")
     private FixedAsset asset;
 
+    @javax.jdo.annotations.Column(name = "ASSET_ID", allowsNull="false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -121,9 +124,9 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID")
     private Party party;
 
+    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull="false")
     @Title(sequence = "2", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -139,6 +142,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
 
     private FixedAssetRoleType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     @Title(sequence = "1")
     public FixedAssetRoleType getType() {

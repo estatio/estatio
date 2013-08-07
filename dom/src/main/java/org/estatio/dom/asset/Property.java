@@ -43,7 +43,7 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Query(
@@ -60,6 +60,7 @@ public class Property extends FixedAsset {
 
     private PropertyType propertyType;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public PropertyType getPropertyType() {
         return propertyType;
     }
@@ -73,6 +74,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate openingDate;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public LocalDate getOpeningDate() {
         return openingDate;
     }
@@ -86,7 +88,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate acquireDate;
 
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="true")
     public LocalDate getAcquireDate() {
         return acquireDate;
     }
@@ -97,10 +99,10 @@ public class Property extends FixedAsset {
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Persistent
     private LocalDate disposalDate;
 
-    @javax.jdo.annotations.Persistent
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="true")
     public LocalDate getDisposalDate() {
         return disposalDate;
     }
@@ -111,9 +113,9 @@ public class Property extends FixedAsset {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(scale = 2)
     private BigDecimal area;
 
+    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
     public BigDecimal getArea() {
         return area;
     }
@@ -126,6 +128,7 @@ public class Property extends FixedAsset {
 
     private String city;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getCity() {
         return city;
     }
@@ -136,9 +139,9 @@ public class Property extends FixedAsset {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
+    @javax.jdo.annotations.Column(name="COUNTRY_ID", allowsNull="true")
     public Country getCountry() {
         return country;
     }

@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.Optional;
 public interface WithStartDate {
 
     @Disabled
-    @Optional
     public LocalDate getStartDate();
     public void setStartDate(LocalDate startDate);
 

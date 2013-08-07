@@ -55,7 +55,7 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
@@ -80,6 +80,9 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
     
     private LeaseStatus status;
+
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
 
     @Disabled
     @Override
@@ -130,6 +133,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     private LeaseType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public LeaseType getType() {
         return type;
     }

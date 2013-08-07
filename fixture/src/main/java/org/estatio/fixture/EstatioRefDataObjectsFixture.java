@@ -43,9 +43,9 @@ public class EstatioRefDataObjectsFixture extends AbstractFixture {
             new CountriesAndStatesFixture(),
             new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
             new CurrencyFixture(),
+            new TaxesAndTaxRatesFixture(),
             new ChargeAndChargeGroupFixture(),
-            new IndexAndIndexBaseAndIndexValueFixture(),
-            new TaxesAndTaxRatesFixture()
+            new IndexAndIndexBaseAndIndexValueFixture()
         );
 
         final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();

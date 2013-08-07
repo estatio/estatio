@@ -106,6 +106,9 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden
     @Override
     public Status getStatus() {
@@ -119,9 +122,9 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "AGREEMENT_ID")
     private Agreement<?> agreement;
 
+    @javax.jdo.annotations.Column(name = "AGREEMENT_ID", allowsNull="false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Agreement<?> getAgreement() {
@@ -134,9 +137,9 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID")
     private Party party;
 
+    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull="false")
     @Title(sequence = "2", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Party getParty() {
@@ -149,9 +152,9 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "TYPE_ID")
     private AgreementRoleType type;
 
+    @javax.jdo.annotations.Column(name = "TYPE_ID", allowsNull="false")
     @Title(sequence = "1")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled

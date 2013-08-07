@@ -56,6 +56,7 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> i
 
     private String title;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getTitle() {
         return title;
@@ -67,9 +68,9 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> i
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="APPLIESTO_ID")
     private AgreementType appliesTo;
 
+    @javax.jdo.annotations.Column(name="APPLIESTO_ID", allowsNull="false")
     public AgreementType getAppliesTo() {
         return appliesTo;
     }

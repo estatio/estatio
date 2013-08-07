@@ -46,6 +46,7 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "1")
     public String getReference() {
         return reference;
@@ -57,11 +58,10 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    // REVIEW: the fixture data leaves this as null,
-    // but uses reference as the unique key instead.  Which is it?
-    //@javax.jdo.annotations.Unique(name = "CHARGE_CODE_UNIQUE_IDX")
     private String code;
 
+    @javax.jdo.annotations.Unique(name = "CHARGE_CODE_UNIQUE_IDX")
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getCode() {
         return code;
     }
@@ -72,9 +72,9 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "TAX_ID")
     private Tax tax;
 
+    @javax.jdo.annotations.Column(name = "TAX_ID", allowsNull="false")
     public Tax getTax() {
         return tax;
     }
@@ -87,6 +87,7 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     private String description;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getDescription() {
         return description;
     }
@@ -97,9 +98,9 @@ public class Charge extends EstatioRefDataObject<Charge> implements WithReferenc
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "GROUP_ID")
     private ChargeGroup group;
 
+    @javax.jdo.annotations.Column(name = "GROUP_ID", allowsNull="false")
     public ChargeGroup getGroup() {
         return group;
     }

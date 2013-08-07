@@ -50,6 +50,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     @javax.jdo.annotations.Unique(name = "TAX_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getReference() {
         return reference;
@@ -63,6 +64,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
 
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getName() {
         return name;
     }
@@ -86,7 +88,9 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
 
     // //////////////////////////////////////
 
-    public TaxRate newRate(@Named("Start Date") LocalDate startDate, @Named("Percentage") BigDecimal percentage) {
+    public TaxRate newRate(
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Percentage") BigDecimal percentage) {
         return taxRates.newRate(this, startDate, percentage);
     }
 

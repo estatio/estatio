@@ -32,6 +32,7 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         
         isisJdoSupport.executeUpdate("DELETE FROM NUMERATOR");
         
+        isisJdoSupport.executeUpdate("DELETE FROM INVOICEITEMFORLEASE");
         isisJdoSupport.executeUpdate("DELETE FROM INVOICEITEM");
         isisJdoSupport.executeUpdate("DELETE FROM INVOICE");
         
@@ -40,12 +41,18 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         isisJdoSupport.executeUpdate("DELETE FROM LEASEUNIT");
         isisJdoSupport.executeUpdate("DELETE FROM TAG");
         
+        isisJdoSupport.executeUpdate("DELETE FROM BANKMANDATE");
+        isisJdoSupport.executeUpdate("DELETE FROM LEASE");
+        
         isisJdoSupport.executeUpdate("DELETE FROM AGREEMENTROLECOMMUNICATIONCHANNEL");
         isisJdoSupport.executeUpdate("DELETE FROM AGREEMENTROLE");
         isisJdoSupport.executeUpdate("DELETE FROM AGREEMENT");
         
+        isisJdoSupport.executeUpdate("DELETE FROM BANKACCOUNT");
         isisJdoSupport.executeUpdate("DELETE FROM FINANCIALACCOUNT");
         
+        isisJdoSupport.executeUpdate("DELETE FROM UNIT");
+        isisJdoSupport.executeUpdate("DELETE FROM PROPERTY");
         isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET_COMMUNICATIONCHANNELS");
         isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSETROLE");
         isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET");

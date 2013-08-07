@@ -26,7 +26,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Query(
         name = "findByReference", language = "JDOQL", 
@@ -42,6 +42,7 @@ public class Country extends Geography {
     @javax.jdo.annotations.Index(unique="false")
     private String alpha2Code;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getAlpha2Code() {
         return alpha2Code;

@@ -37,6 +37,7 @@ public class AuditEntryForEstatio {
 
     private Long timestampEpoch;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
     public Long getTimestampEpoch() {
         return timestampEpoch;
@@ -57,6 +58,7 @@ public class AuditEntryForEstatio {
     
     private String user;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getUser() {
         return user;
     }
@@ -69,6 +71,7 @@ public class AuditEntryForEstatio {
 
     private String objectType;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence="3", prepend=":")
     public String getObjectType() {
         return objectType;
@@ -82,6 +85,7 @@ public class AuditEntryForEstatio {
 
     private String identifier;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getIdentifier() {
         return identifier;
     }
@@ -94,6 +98,7 @@ public class AuditEntryForEstatio {
     
     private String preValue;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getPreValue() {
         return preValue;
     }
@@ -106,6 +111,7 @@ public class AuditEntryForEstatio {
 
     private String postValue;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getPostValue() {
         return postValue;
     }

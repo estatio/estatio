@@ -64,6 +64,9 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Disabled
     @Override
     public Status getStatus() {
@@ -77,7 +80,6 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "OWNER")
     @javax.jdo.annotations.Persistent(
             extensions = {
                     @Extension(vendorName = "datanucleus",
@@ -86,6 +88,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
             })
     private CommunicationChannelOwner owner;
 
+    @javax.jdo.annotations.Column(name = "OWNER", allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public CommunicationChannelOwner getOwner() {
@@ -100,6 +103,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private CommunicationChannelType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
     public CommunicationChannelType getType() {
         return type;
@@ -111,14 +115,12 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     // //////////////////////////////////////
 
-    /**
-     * For import purposes only
-     */
     private String reference;
 
     /**
      * For import purposes only
      */
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Hidden
     public String getReference() {
         return reference;

@@ -58,13 +58,11 @@ public class WithIntervalContractTestAll_getStartDateAndEndDate_annotations {
             final Set<Method> startDateMethod = Reflections.getAllMethods(subtype, withGetterNamed("getStartDate"));
             for (Method method : startDateMethod) {
                 assertMethodAnnotated(subtype, method, Disabled.class);
-                assertMethodAnnotated(subtype, method, Optional.class);
             }
             
             final Set<Method> endDateMethod = Reflections.getAllMethods(subtype, withGetterNamed("getEndDate"));
             for (Method method : endDateMethod) {
                 assertMethodAnnotated(subtype, method, Disabled.class);
-                assertMethodAnnotated(subtype, method, Optional.class);
             }
             
         }

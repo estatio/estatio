@@ -31,17 +31,16 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 @Bookmarkable
 public class BankAccount extends FinancialAccount {
 
-    
-    @javax.jdo.annotations.Column(name="BANK_ID")
     private Party bank;
 
+    @javax.jdo.annotations.Column(name="BANK_ID", allowsNull="true")
     public Party getBank() {
         return bank;
     }
@@ -54,6 +53,7 @@ public class BankAccount extends FinancialAccount {
 
     private BankAccountType bankAccountType;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public BankAccountType getBankAccountType() {
         return bankAccountType;
@@ -65,9 +65,9 @@ public class BankAccount extends FinancialAccount {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
+    @javax.jdo.annotations.Column(name="COUNTRY_ID", allowsNull="true")
     public Country getCountry() {
         return country;
     }
@@ -80,6 +80,7 @@ public class BankAccount extends FinancialAccount {
 
     private String IBAN;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getIBAN() {
         return IBAN;
     }
@@ -103,6 +104,7 @@ public class BankAccount extends FinancialAccount {
     
     private String nationalCheckCode;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getNationalCheckCode() {
         return nationalCheckCode;
     }
@@ -115,6 +117,7 @@ public class BankAccount extends FinancialAccount {
 
     private String nationalBankCode;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getNationalBankCode() {
         return nationalBankCode;
     }
@@ -127,6 +130,7 @@ public class BankAccount extends FinancialAccount {
 
     private String branchCode;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getBranchCode() {
         return branchCode;
     }
@@ -139,6 +143,7 @@ public class BankAccount extends FinancialAccount {
 
     private String accountNumber;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getAccountNumber() {
         return accountNumber;
     }

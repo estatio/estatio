@@ -64,6 +64,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
      * The {@link Bookmark#getObjectType() object type} (either the class name or a unique alias of it) 
      * of the object to which this {@link Tag} belongs. 
      */
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getObjectType() {
         return objectType;
     }
@@ -83,6 +84,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
      * The combination of ({@link #getObjectType() objectType}, {@link #getName() name})
      * is unique.
      */
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public String getName() {
         return name;
@@ -104,6 +106,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
      * can be used to recreate a {@link Bookmark}, if required.
      */
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getObjectIdentifier() {
         return objectIdentifier;
     }
@@ -116,6 +119,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
 
     private String value;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getValue() {
         return value;

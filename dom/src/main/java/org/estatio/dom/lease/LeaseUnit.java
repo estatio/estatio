@@ -76,6 +76,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Disabled
     @Override
     public Status getStatus() {
@@ -89,9 +92,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "LEASE_ID")
     private Lease lease;
 
+    @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull="false")
     @Title(sequence = "1", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Lease getLease() {
@@ -104,9 +107,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "UNIT_ID")
     private UnitForLease unit;
 
+    @javax.jdo.annotations.Column(name = "UNIT_ID", allowsNull="false")
     @Title(sequence = "2", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public UnitForLease getUnit() {
@@ -225,9 +228,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "SIZETAG_ID")
     private Tag sizeTag;
 
+    @javax.jdo.annotations.Column(name = "SIZETAG_ID", allowsNull="true")
     @Hidden
     public Tag getSizeTag() {
         return sizeTag;
@@ -264,9 +267,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "BRANDTAG_ID")
     private Tag brandTag;
 
+    @javax.jdo.annotations.Column(name = "BRANDTAG_ID", allowsNull="true")
     @Hidden
     public Tag getBrandTag() {
         return brandTag;
@@ -303,9 +306,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "SECTORTAG_ID")
     private Tag sectorTag;
 
+    @javax.jdo.annotations.Column(name = "SECTORTAG_ID", allowsNull="true")
     @Hidden
     public Tag getSectorTag() {
         return sectorTag;
@@ -342,9 +345,9 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "ACTIVITYTAG_ID")
     private Tag activityTag;
 
+    @javax.jdo.annotations.Column(name = "ACTIVITYTAG_ID", allowsNull="true")
     @Hidden
     public Tag getActivityTag() {
         return activityTag;

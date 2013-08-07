@@ -89,6 +89,9 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private LeaseItemStatus status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden(where=Where.PARENTED_TABLES)
     @Disabled
     @Override
@@ -103,9 +106,9 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "LEASE_ID")
     private Lease lease;
 
+    @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
     public Lease getLease() {
@@ -120,6 +123,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private BigInteger sequence;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
     @Override
     public BigInteger getSequence() {
@@ -148,6 +152,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private LeaseItemType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden(where=Where.PARENTED_TABLES)
     @Title(sequence = "2")
     public LeaseItemType getType() {
@@ -273,6 +278,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private InvoicingFrequency invoicingFrequency;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
@@ -286,6 +292,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private PaymentMethod paymentMethod;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -297,9 +304,9 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "CHARGE_ID")
     private Charge charge;
 
+    @javax.jdo.annotations.Column(name = "CHARGE_ID", allowsNull="false")
     public Charge getCharge() {
         return charge;
     }

@@ -72,7 +72,7 @@ import org.estatio.dom.party.Party;
                         + "WHERE status == :status ")
 })
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> implements WithReferenceUnique {
+public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> {
 
     public Invoice() {
         super("invoiceNumber", InvoiceStatus.NEW, null);
@@ -86,9 +86,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "BUYER_ID")
     private Party buyer;
 
+    @javax.jdo.annotations.Column(name = "BUYER_ID", allowsNull="false")
     @Disabled
     public Party getBuyer() {
         return buyer;
@@ -100,9 +100,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "SELLER_ID")
     private Party seller;
 
+    @javax.jdo.annotations.Column(name = "SELLER_ID", allowsNull="false")
     @Disabled
     public Party getSeller() {
         return seller;
@@ -129,9 +129,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull="true")
     private String invoiceNumber;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Disabled
     public String getInvoiceNumber() {
         return invoiceNumber;
@@ -141,33 +141,20 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         this.invoiceNumber = invoiceNumber;
     }
 
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Unique(name = "INVOICE_REFERENCE_UNIQUE_IDX")
-    private String reference;
-
-    @Disabled
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
-    }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "SOURCE_ID")
-    @javax.jdo.annotations.Persistent(
-            extensions = { 
-                    @Extension(vendorName = "datanucleus", 
-                            key = "mapping-strategy", 
-                            value = "per-implementation") })
     private InvoiceSource source;
 
     /**
      * Polymorphic association to (any implementation of) {@link InvoiceSource}.
      */
+    @javax.jdo.annotations.Persistent(
+            extensions = { 
+                    @Extension(vendorName = "datanucleus", 
+                            key = "mapping-strategy", 
+                            value = "per-implementation") })
+    @javax.jdo.annotations.Column(name = "SOURCE_ID", allowsNull="false")
     @Disabled
     public InvoiceSource getSource() {
         return source;
@@ -182,6 +169,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     @javax.jdo.annotations.Persistent
     private LocalDate invoiceDate;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Disabled
     public LocalDate getInvoiceDate() {
         return invoiceDate;
@@ -196,6 +184,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public LocalDate getDueDate() {
         return dueDate;
@@ -209,6 +198,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private InvoiceStatus status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Disabled
     public InvoiceStatus getStatus() {
         return status;
@@ -221,9 +213,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "CURRENCY_ID")
     private Currency currency;
 
+    @javax.jdo.annotations.Column(name = "CURRENCY_ID", allowsNull="false")
     @Hidden(where=Where.ALL_TABLES)
     @Disabled
     public Currency getCurrency() {
@@ -238,6 +230,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private PaymentMethod paymentMethod;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -267,6 +260,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     @Persistent
     private BigInteger lastItemSequence;
 
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Hidden
     public BigInteger getLastItemSequence() {
         return lastItemSequence;

@@ -43,7 +43,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
@@ -71,9 +71,14 @@ import org.estatio.dom.party.Party;
 })
 public class InvoiceItemForLease extends InvoiceItem {
 
-    @javax.jdo.annotations.Column(name="LEASETERM_ID")
     private LeaseTerm leaseTerm;
 
+    // REVIEW: this is optional because of the #remove() method, 
+    // also because the ordering of flushes in #attachToInvoice()
+    //
+    // suspect this should be mandatory, however (ie get rid of #remve(),
+    // and refactor #attachToInvoice())
+    @javax.jdo.annotations.Column(name="LEASETERM_ID", allowsNull="true")
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
     public LeaseTerm getLeaseTerm() {
@@ -126,8 +131,6 @@ public class InvoiceItemForLease extends InvoiceItem {
                 invoice.setPaymentMethod(paymentMethod);
                 invoice.setStatus(InvoiceStatus.NEW);
             }
-//            Integer identityHashCode = System.identityHashCode(this);
-            // setSequence(BigInteger.valueOf(identityHashCode.longValue()));
             setSequence(invoice.nextItemSequence());
             this.setInvoice(invoice);
         }

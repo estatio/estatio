@@ -90,6 +90,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @DescribedAs("Unique reference code for this agreement")
     @Title
     public String getReference() {
@@ -276,9 +277,9 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "AGREEMENTTYPE_ID")
     private AgreementType agreementType;
 
+    @javax.jdo.annotations.Column(name = "AGREEMENTTYPE_ID", allowsNull="false")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public AgreementType getAgreementType() {

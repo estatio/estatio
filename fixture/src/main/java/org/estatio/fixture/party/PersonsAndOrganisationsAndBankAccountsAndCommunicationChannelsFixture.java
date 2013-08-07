@@ -18,17 +18,23 @@
  */
 package org.estatio.fixture.party;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
+import org.apache.isis.core.commons.ensure.Ensure;
 
 public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture extends AbstractFixture {
 
@@ -53,18 +59,28 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
     private Party createOrganisation(String input) {
         String[] values = input.split(";");
         Party party = organisations.newOrganisation(values[0], values[1]);
+        Ensure.ensureThatArg(party, is(not(nullValue())), "could not find party '" + values[0] + "', '" + values[1] + "'");
         financialAccounts.newBankAccount(party, values[2]);
+        getContainer().flush();
         if(defined(values, 3)) {
-            communicationChannelContributedActions.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, values[3], values[4], values[5], values[6], states.findStateByReference(values[7]), countries.findCountryByReference(values[8]));
+            final Country country = countries.findCountryByReference(values[8]);
+            final State state = states.findStateByReference(values[7]);
+            if(country != null && state != null) {
+                communicationChannelContributedActions.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, values[3], values[4], values[5], values[6], state, country);
+            }
+            getContainer().flush();
         }
         if(defined(values, 9)) {
             communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, values[9]);
+            getContainer().flush();
         }
         if(defined(values, 10)) {
             communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, values[10]);
+            getContainer().flush();
         }
         if(defined(values, 11)) {
             communicationChannelContributedActions.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, values[11]);
+            getContainer().flush();
         }
         return party;
     }

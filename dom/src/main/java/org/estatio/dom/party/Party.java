@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -61,6 +62,9 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Hidden
     @Override
     public Status getStatus() {
@@ -77,8 +81,8 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     @javax.jdo.annotations.Unique(name = "PARTY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
-    @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_IDX")
     public String getReference() {
         return reference;
     }
@@ -91,6 +95,7 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
 
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getName() {
         return name;

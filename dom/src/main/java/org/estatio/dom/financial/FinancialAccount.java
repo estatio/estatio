@@ -25,6 +25,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -56,6 +57,9 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     private Status status;
 
+    // @javax.jdo.annotations.Column(allowsNull="false")
+    @Optional
+
     @Disabled
     @Override
     public Status getStatus() {
@@ -73,6 +77,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public String getReference() {
         return reference;
     }
@@ -85,6 +90,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     private String name;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title
     public String getName() {
         return name;
@@ -98,6 +104,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     private FinancialAccountType type;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
     public FinancialAccountType getType() {
         return type;
@@ -111,6 +118,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     private Party owner;
 
+    @javax.jdo.annotations.Column(name="OWNER_ID", allowsNull="false")
     public Party getOwner() {
         return owner;
     }

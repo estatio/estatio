@@ -25,7 +25,7 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(name = "findByCountry", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE country == :country"),
@@ -35,9 +35,9 @@ import org.apache.isis.applib.annotation.Immutable;
 @Bounded
 public class State extends Geography {
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID")
     private Country country;
 
+    @javax.jdo.annotations.Column(name="COUNTRY_ID", allowsNull="false")
     public Country getCountry() {
         return country;
     }

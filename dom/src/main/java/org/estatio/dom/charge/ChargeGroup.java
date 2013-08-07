@@ -48,6 +48,7 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
     @javax.jdo.annotations.Unique(name = "CHARGE_GROUP_REFERENCE_UNIQUE_IDX")
     private String reference;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "1")
     public String getReference() {
         return reference;
@@ -61,6 +62,7 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
 
     private String description;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "2", prepend = "-")
     public String getDescription() {
         return description;
