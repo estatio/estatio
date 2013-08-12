@@ -144,7 +144,7 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
      * can be used to recreate a {@link Bookmark}, if required.
      */
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getObjectIdentifier() {
         return objectIdentifier;
     }
