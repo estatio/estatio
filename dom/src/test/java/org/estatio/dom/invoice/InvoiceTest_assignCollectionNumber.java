@@ -18,7 +18,8 @@
  */
 package org.estatio.dom.invoice;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
@@ -36,7 +37,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 
 public class InvoiceTest_assignCollectionNumber {
@@ -124,7 +124,7 @@ public class InvoiceTest_assignCollectionNumber {
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
         assertThat(invoice.hideAssignCollectionNumber(), is(false));
-        assertThat(invoice.disableAssignCollectionNumber(), is("No COLLECTION_NUMBER numerator found for invoice's property"));
+        assertThat(invoice.disableAssignCollectionNumber(), is("No Collection number numerator found for invoice's property"));
         
         invoice.assignCollectionNumber();
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
@@ -164,7 +164,7 @@ public class InvoiceTest_assignCollectionNumber {
     private void allowingMockNumeratorsRepoToReturn(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumerators).findNumerator(NumeratorType.COLLECTION_NUMBER, invoiceProperty);
+                allowing(mockNumerators).findNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, invoiceProperty);
                 will(returnValue(numerator));
             }
         });

@@ -23,9 +23,12 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Property;
@@ -43,20 +46,24 @@ public class Numerators extends EstatioDomainService<Numerator> {
     @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "numerators.1")
     public Numerator createNumerator(
-            final NumeratorType type, 
-            final Property property,
+            final @Named("Name") String numeratorName, 
+            final @Named("Scoped to") Object scopedTo,
             final @Named("Format") String format,
             final @Named("Last value") BigInteger lastIncrement) {
         
-        final Numerator existing = findNumerator(type, property);
+        final Numerator existing = findNumerator(numeratorName, scopedTo);
         if(existing != null) {
-            getContainer().warnUser("Numerator already exists for type/property");
+            getContainer().warnUser("Numerator already exists for name/scope");
             return existing;
         }
 
         final Numerator numerator = newTransientInstance();
-        numerator.setType(type);
-        numerator.setProperty(property);
+        numerator.setName(numeratorName);
+        if(scopedTo != null) {
+            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedTo);
+            numerator.setObjectType(bookmark.getObjectType());
+            numerator.setObjectIdentifier(bookmark.getIdentifier());
+        }
         numerator.setFormat(format);
         numerator.setLastIncrement(lastIncrement);
         persist(numerator);
@@ -71,8 +78,8 @@ public class Numerators extends EstatioDomainService<Numerator> {
     }
     
     public String validateCreateNumerator(
-            final NumeratorType type, 
-            final Property property,
+            final String numeratorName, 
+            final Object scopedTo,
             final String format,
             final BigInteger lastIncrement) {
         
@@ -89,9 +96,16 @@ public class Numerators extends EstatioDomainService<Numerator> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "numerators.2")
     public Numerator findNumerator(
-            final NumeratorType type, 
-            final Property property) {
-        return firstMatch("findByTypeAndProperty", "type", type, "property", property);
+            final @Named("Name") String numeratorName, 
+            final @Named("Scoped to") Object domainObject) {
+        if(domainObject != null) {
+            final Bookmark bookmark = bookmarkService.bookmarkFor(domainObject);
+            final String objectType = bookmark.getObjectType();
+            final String objectIdentifier = bookmark.getIdentifier();
+            return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", "name", numeratorName, "objectType", objectType, "objectIdentifier", objectIdentifier);
+        } else {
+            return firstMatch("findByName", "name", numeratorName);
+        }
     }
 
     // //////////////////////////////////////
@@ -103,4 +117,10 @@ public class Numerators extends EstatioDomainService<Numerator> {
         return allInstances();
     }
 
+    // //////////////////////////////////////
+
+    private BookmarkService bookmarkService;
+    public void injectBookmarkService(BookmarkService bookmarkService) {
+        this.bookmarkService = bookmarkService;
+    }
 }

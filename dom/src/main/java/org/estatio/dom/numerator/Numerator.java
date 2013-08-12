@@ -24,51 +24,143 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.tag.Tag;
 
+/**
+ * Generates a sequence of values (eg <tt>XYZ-00101</tt>, <tt>XYZ-00102</tt>, <tt>XYZ-00103</tt> etc)
+ * for a particular purpose.
+ * 
+ * <p>
+ * A numerator is {@link #getName() named}, and this name represents the purpose.  For example, it
+ * could be the invoice numbers of some Agreement or Property.
+ * 
+ * <p>
+ * The numerator may be global or may be scoped to a particular object.  If the latter, then the
+ * {@link #getObjectType() object type} and {@link #getObjectIdentifier() object identifier} identify
+ * the object to which the numerator has been scoped.  The values of these properties are taken from the
+ * applib {@link Bookmark}.
+ */
 @javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(
-        name = "findByTypeAndProperty", language = "JDOQL", 
-        value = "SELECT "
-                + "FROM org.estatio.dom.numerator.Numerator "
-                + "WHERE type == :type "
-                + "&& property == :property")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+    name = "findByNameAndObjectTypeAndObjectIdentifier", language = "JDOQL", 
+    value = "SELECT "
+            + "FROM org.estatio.dom.numerator.Numerator "
+            + "WHERE name == :name"
+            + "&& objectIdentifier == :objectIdentifier"
+            + "&& objectType == :objectType"
+            ),
+    @javax.jdo.annotations.Query(
+            name = "findByName", language = "JDOQL", 
+            value = "SELECT "
+                    + "FROM org.estatio.dom.numerator.Numerator "
+                    + "WHERE name == :name"
+            )
+})
+@Immutable
 public class Numerator extends EstatioTransactionalObject<Numerator, Status> implements Comparable<Numerator> {
 
     public Numerator() {
-        super("type,format", Status.UNLOCKED, Status.LOCKED);
+        super("name, objectType, objectIdentifier, format", Status.UNLOCKED, Status.LOCKED);
     }
 
-    
+
+    // //////////////////////////////////////
+
+    private String name;
+
+    /**
+     * The name of this numerator, for example <tt>invoice number</tt>.
+     * 
+     * <p>
+     * The combination of ({@link #getObjectType() objectType}, {@link #getName() name})
+     * is unique.
+     */
+    @javax.jdo.annotations.Column(allowsNull="false")
+    @Disabled
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String tagName) {
+        this.name = tagName;
+    }
+
     // //////////////////////////////////////
     
+    private String objectType;
 
-    private NumeratorType type;
+    /**
+     * The {@link Bookmark#getObjectType() object type} (either the class name or a unique alias of it) 
+     * of the object to which this {@link Numerator} belongs.
+     * 
+     * <p>
+     * If omitted, then the {@link Numerator} is taken to be global.
+     * 
+     * <p>
+     * If present, then the {@link #getObjectIdentifier() object identifier} must also be present.
+     * 
+     * <p>
+     * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
+     * can be used to recreate a {@link Bookmark}, if required.
+     */
+    @javax.jdo.annotations.Column(allowsNull="true")
+    public String getObjectType() {
+        return objectType;
+    }
 
+    public void setObjectType(final String objectType) {
+        this.objectType = objectType;
+    }
+
+    // //////////////////////////////////////
+    
+    private String objectIdentifier;
+
+    /**
+     * The {@link Bookmark#getIdentifier() identifier} of the object to which this {@link Numerator} belongs.
+     * 
+     * <p>
+     * If omitted, then the {@link Numerator} is taken to be global.
+     * 
+     * <p>
+     * If present, then the {@link #getObjectType() object type} must also be present.
+     * 
+     * <p>
+     * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
+     * can be used to recreate a {@link Bookmark}, if required.
+     */
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Title(sequence="1", append=", ")
-    public NumeratorType getType() {
-        return type;
+    public String getObjectIdentifier() {
+        return objectIdentifier;
     }
 
-    public void setType(final NumeratorType type) {
-        this.type = type;
+    public void setObjectIdentifier(final String bookmark) {
+        this.objectIdentifier = bookmark;
     }
+
 
     // //////////////////////////////////////
 
     private String format;
-    
+
+    /**
+     * The String format to use to generate the value. 
+     */
     @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence="2")
     public String getFormat() {
@@ -81,23 +173,13 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     
 
     // //////////////////////////////////////
-    
-    private Property property;
-
-    @javax.jdo.annotations.Column(name="PROPERTY_ID", allowsNull="true")
-    public Property getProperty() {
-        return property;
-    }
-
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
-
-    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private BigInteger lastIncrement;
 
+    /**
+     * The value used by the {@link Numerator} when {@link #increment() return a value}.
+     */
     @javax.jdo.annotations.Column(allowsNull="false")
     public BigInteger getLastIncrement() {
         return lastIncrement;

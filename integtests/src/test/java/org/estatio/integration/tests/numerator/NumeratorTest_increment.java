@@ -29,8 +29,8 @@ import org.junit.Test;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
@@ -53,14 +53,14 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
         properties = service(Properties.class);
         property = properties.allProperties().get(0);
         property2 = properties.allProperties().get(1);
-        numerators.createNumerator(NumeratorType.INVOICE_NUMBER, property, "ABC-%05d", new BigInteger("10"));
-        numerators.createNumerator(NumeratorType.INVOICE_NUMBER, property2, "DEF-%05d", new BigInteger("100"));
-        numerators.createNumerator(NumeratorType.COLLECTION_NUMBER, property, "ABC-%05d", new BigInteger("1000"));
+        numerators.createNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("10"));
+        numerators.createNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property2, "DEF-%05d", new BigInteger("100"));
+        numerators.createNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("1000"));
     }
 
     @Test
     public void numerator_increment() throws Exception {
-        Numerator in = numerators.findNumerator(NumeratorType.INVOICE_NUMBER, property);
+        Numerator in = numerators.findNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
         assertThat(in.getLastIncrement(), is(new BigInteger("10")));
         assertThat(in.increment(), is("ABC-00011"));
         assertThat(in.getLastIncrement(), is(new BigInteger("11")));

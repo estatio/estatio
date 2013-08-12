@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -31,6 +32,8 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
@@ -41,6 +44,7 @@ import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Constants;
 
 public class NumeratorsTest_finders {
 
@@ -50,15 +54,27 @@ public class NumeratorsTest_finders {
     private FinderInteraction finderInteraction;
 
     private Numerators numerators;
+    
+    @Mock
+    private BookmarkService mockBookmarkService;
 
     @Ignoring
     @Mock
     Property mockProperty;
 
+    private Bookmark propertyBookmark;
 
     @Before
     public void setup() {
 
+        propertyBookmark = new Bookmark("PROP", "123");
+        
+        context.checking(new Expectations() {
+            {
+                allowing(mockBookmarkService).bookmarkFor(mockProperty);
+                will(returnValue(propertyBookmark));
+            }
+        });
         numerators = new Numerators() {
 
             @Override
@@ -77,20 +93,22 @@ public class NumeratorsTest_finders {
                 return null;
             }
         };
+        numerators.injectBookmarkService(mockBookmarkService);
     }
 
     @Test
     public void findNumeratorByType() {
 
-        numerators.findNumerator(NumeratorType.COLLECTION_NUMBER, mockProperty);
+        numerators.findNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Numerator.class));
-        assertThat(finderInteraction.getQueryName(), is("findByTypeAndProperty"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)NumeratorType.COLLECTION_NUMBER));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("property"), is((Object)mockProperty));
+        assertThat(finderInteraction.getQueryName(), is("findByNameAndObjectTypeAndObjectIdentifier"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)Constants.INVOICE_NUMBER_NUMERATOR_NAME));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("objectType"), is((Object)"PROP"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("objectIdentifier"), is((Object)"123"));
 
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
     }
     
 

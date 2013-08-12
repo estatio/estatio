@@ -45,12 +45,10 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
 
@@ -329,46 +327,46 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     @Bulk
     public Invoice assignCollectionNumber() {
-        return assignNumber(NumeratorType.COLLECTION_NUMBER);
+        return assignNumber(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
     }
     
     public boolean hideAssignCollectionNumber() {
-        return hideAssignNumber(NumeratorType.COLLECTION_NUMBER);
+        return hideAssignNumber(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
     }
     
     public String disableAssignCollectionNumber() {
-        return disableAssignNumber(NumeratorType.COLLECTION_NUMBER);
+        return disableAssignNumber(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
     }
     
     // //////////////////////////////////////
 
     @Bulk
     public Invoice assignInvoiceNumber() {
-        return assignNumber(NumeratorType.INVOICE_NUMBER);
+        return assignNumber(Constants.INVOICE_NUMBER_NUMERATOR_NAME);
     }
     
     public boolean hideAssignInvoiceNumber() {
-        return hideAssignNumber(NumeratorType.INVOICE_NUMBER);
+        return hideAssignNumber(Constants.INVOICE_NUMBER_NUMERATOR_NAME);
     }
     public String disableAssignInvoiceNumber() {
-        return disableAssignNumber(NumeratorType.INVOICE_NUMBER);
+        return disableAssignNumber(Constants.INVOICE_NUMBER_NUMERATOR_NAME);
     }
     // //////////////////////////////////////
     
-    private Invoice assignNumber(NumeratorType numeratorType) {
+    private Invoice assignNumber(String numeratorName) {
         
         // bulk action, so need these guards
-        if(hideAssignNumber(numeratorType)) {
+        if(hideAssignNumber(numeratorName)) {
             return this;
         }
-        if(disableAssignNumber(numeratorType) != null) {
+        if(disableAssignNumber(numeratorName) != null) {
             return this;
         }
         
-        final Numerator numerator = findNumerator(numeratorType);
+        final Numerator numerator = findNumerator(numeratorName);
         
         
-        if(numeratorType == NumeratorType.COLLECTION_NUMBER) {
+        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
             setCollectionNumber(numerator.increment());
             this.setStatus(InvoiceStatus.COLLECTED);
         } else {
@@ -380,8 +378,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         return this;
     }
     
-    private boolean hideAssignNumber(final NumeratorType numeratorType) {
-        if(numeratorType == NumeratorType.COLLECTION_NUMBER) {
+    private boolean hideAssignNumber(final String numeratorName) {
+        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
             // only applies to direct debits
             return !getPaymentMethod().isDirectDebit();
         } else {
@@ -390,9 +388,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         }
     }
 
-    private String disableAssignNumber(final NumeratorType numeratorType) {
+    private String disableAssignNumber(final String numeratorName) {
         
-        if(numeratorType == NumeratorType.COLLECTION_NUMBER) {
+        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
             if(getCollectionNumber() != null) {
                 return "Collection number already assigned";
             }
@@ -402,11 +400,11 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
                 return "Invoice number already assigned";
             }
         }
-        final Numerator numerator = findNumerator(numeratorType);
+        final Numerator numerator = findNumerator(numeratorName);
         if(numerator == null) {
-            return "No " + numeratorType + " numerator found for invoice's property";
+            return "No " + numeratorName + " numerator found for invoice's property";
         }
-        if(numeratorType == NumeratorType.COLLECTION_NUMBER) {
+        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
             if (getStatus() != InvoiceStatus.APPROVED) {
                 return "Must be in status of 'approved'";
             }
@@ -419,8 +417,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         }
         return null;
     }
-    private Numerator findNumerator(final NumeratorType numeratorType) {
-        return numerators.findNumerator(numeratorType, getProperty());
+    private Numerator findNumerator(final String numeratorName) {
+        return numerators.findNumerator(numeratorName, getProperty());
     }
 
     // //////////////////////////////////////

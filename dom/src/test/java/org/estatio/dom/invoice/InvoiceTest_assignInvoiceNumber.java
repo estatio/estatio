@@ -18,7 +18,9 @@
  */
 package org.estatio.dom.invoice;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
@@ -36,7 +38,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.NumeratorType;
 import org.estatio.dom.numerator.Numerators;
 
 public class InvoiceTest_assignInvoiceNumber {
@@ -116,7 +117,7 @@ public class InvoiceTest_assignInvoiceNumber {
         invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
         
         assertThat(invoice.hideAssignInvoiceNumber(), is(false));
-        assertThat(invoice.disableAssignInvoiceNumber(), is("No INVOICE_NUMBER numerator found for invoice's property"));
+        assertThat(invoice.disableAssignInvoiceNumber(), is("No Invoice number numerator found for invoice's property"));
         
         invoice.assignInvoiceNumber();
         assertThat(invoice.getInvoiceNumber(), is(nullValue()));
@@ -129,7 +130,7 @@ public class InvoiceTest_assignInvoiceNumber {
         invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
         
         assertThat(invoice.hideAssignInvoiceNumber(), is(false));
-        assertThat(invoice.disableAssignInvoiceNumber(), is("No INVOICE_NUMBER numerator found for invoice's property"));
+        assertThat(invoice.disableAssignInvoiceNumber(), is("No Invoice number numerator found for invoice's property"));
         
         invoice.assignInvoiceNumber();
         assertThat(invoice.getInvoiceNumber(), is(nullValue()));
@@ -139,7 +140,7 @@ public class InvoiceTest_assignInvoiceNumber {
     private void allowingMockNumeratorsRepoToReturn(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumerators).findNumerator(with(equalTo(NumeratorType.INVOICE_NUMBER)), with(any(Property.class)));
+                allowing(mockNumerators).findNumerator(with(equalTo(Constants.INVOICE_NUMBER_NUMERATOR_NAME)), with(any(Property.class)));
                 will(returnValue(numerator));
             }
         });
