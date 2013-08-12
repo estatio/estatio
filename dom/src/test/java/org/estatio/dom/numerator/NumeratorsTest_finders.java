@@ -25,12 +25,10 @@ import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
@@ -41,8 +39,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
 
@@ -99,7 +95,7 @@ public class NumeratorsTest_finders {
     @Test
     public void findNumeratorByType() {
 
-        numerators.findNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty);
+        numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, mockProperty);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Numerator.class));

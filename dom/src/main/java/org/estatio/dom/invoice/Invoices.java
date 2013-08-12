@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.invoice;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -27,10 +28,15 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
 
 public class Invoices extends EstatioDomainService<Invoice> {
@@ -70,6 +76,65 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
     
     
+    // //////////////////////////////////////
+    
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="Other", sequence = "numerators.invoices.1")
+    public Numerator findCollectionNumberNumerator() {
+        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+    }
+
+    // //////////////////////////////////////
+
+    // (for administrators)
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="Other", sequence = "numerators.invoices.2")
+    @NotContributed
+    public Numerator createCollectionNumberNumerator(
+            final @Named("Format") String format,
+            final @Named("Last value") BigInteger lastIncrement) {
+        
+        return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
+    }
+    
+    public String default0CreateCollectionNumberNumerator() {
+        return "%09d";
+    }
+
+    public BigInteger default1CreateCollectionNumberNumerator() {
+        return BigInteger.ZERO;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="Other", sequence = "numerators.invoices.3")
+    public Numerator findInvoiceNumberNumerator(
+            final Property property) {
+        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
+    }
+    
+    // //////////////////////////////////////
+
+    // (for administrators)
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(name="Other", sequence = "numerators.invoices.4")
+    @NotContributed
+    public Numerator createInvoiceNumberNumerator(
+            final Property property,
+            final @Named("Format") String format,
+            final @Named("Last value") BigInteger lastIncrement) {
+        
+        return numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
+    }
+    
+    public String default1CreateInvoiceNumberNumerator() {
+        return "XXX-%06d";
+    }
+    
+    public BigInteger default2CreateInvoiceNumberNumerator() {
+        return BigInteger.ZERO;
+    }
 
     // //////////////////////////////////////
 
@@ -104,5 +169,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
         return allInstances();
     }
 
+
+    // //////////////////////////////////////
+
+    private Numerators numerators;
+    
+    public void injectNumerators(Numerators numerators) {
+        this.numerators = numerators;
+    }
 
 }

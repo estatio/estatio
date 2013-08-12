@@ -37,7 +37,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
 
 public class InvoiceTest_assignCollectionNumber {
 
@@ -45,7 +44,7 @@ public class InvoiceTest_assignCollectionNumber {
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Mock
-    Numerators mockNumerators;
+    Invoices mockInvoices;
     
     @Ignoring
     @Mock
@@ -83,13 +82,13 @@ public class InvoiceTest_assignCollectionNumber {
             }
         };
         invoice.setContainer(mockContainer);
-        invoice.injectNumerators(mockNumerators);
+        invoice.injectInvoices(mockInvoices);
         return invoice;
     }
 
     @Test
     public void happyCase_directDebit_and_collected_andWhenNoInvoiceNumberPreviouslyAssigned() {
-        allowingMockNumeratorsRepoToReturn(numerator);
+        allowingMockInvoicesRepoToReturn(numerator);
 
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
@@ -103,7 +102,7 @@ public class InvoiceTest_assignCollectionNumber {
 
     @Test
     public void whenInvoiceNumberAlreadyAssigned() {
-        allowingMockNumeratorsRepoToReturn(numerator);
+        allowingMockInvoicesRepoToReturn(numerator);
 
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
@@ -119,12 +118,12 @@ public class InvoiceTest_assignCollectionNumber {
     @Test
     public void whenNoProperty() {
         
-        allowingMockNumeratorsRepoToReturn(null);
+        allowingMockInvoicesRepoToReturn(null);
         
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
         assertThat(invoice.hideAssignCollectionNumber(), is(false));
-        assertThat(invoice.disableAssignCollectionNumber(), is("No Collection number numerator found for invoice's property"));
+        assertThat(invoice.disableAssignCollectionNumber(), is("No 'collection number' numerator found for invoice's property"));
         
         invoice.assignCollectionNumber();
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
@@ -132,7 +131,7 @@ public class InvoiceTest_assignCollectionNumber {
 
     @Test
     public void whenNotDirectDebit() {
-        allowingMockNumeratorsRepoToReturn(numerator);
+        allowingMockInvoicesRepoToReturn(numerator);
         
         invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
         
@@ -146,7 +145,7 @@ public class InvoiceTest_assignCollectionNumber {
     
     @Test
     public void whenNotCollected() {
-        allowingMockNumeratorsRepoToReturn(numerator);
+        allowingMockInvoicesRepoToReturn(numerator);
         
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
         
@@ -161,10 +160,10 @@ public class InvoiceTest_assignCollectionNumber {
     
 
 
-    private void allowingMockNumeratorsRepoToReturn(final Numerator numerator) {
+    private void allowingMockInvoicesRepoToReturn(final Numerator numerator) {
         context.checking(new Expectations() {
             {
-                allowing(mockNumerators).findNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, invoiceProperty);
+                allowing(mockInvoices).findCollectionNumberNumerator();
                 will(returnValue(numerator));
             }
         });

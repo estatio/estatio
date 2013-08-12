@@ -327,98 +327,82 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     @Bulk
     public Invoice assignCollectionNumber() {
-        return assignNumber(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+        
+        // bulk action, so need these guards
+        if(hideAssignCollectionNumber()) {
+            return this;
+        }
+        if(disableAssignCollectionNumber() != null) {
+            return this;
+        }
+        
+        final Numerator numerator = invoices.findCollectionNumberNumerator();
+        
+        setCollectionNumber(numerator.increment());
+        this.setStatus(InvoiceStatus.COLLECTED);
+        
+        informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
+        return this;
     }
     
     public boolean hideAssignCollectionNumber() {
-        return hideAssignNumber(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+        // only applies to direct debits
+        return !getPaymentMethod().isDirectDebit();
     }
     
     public String disableAssignCollectionNumber() {
-        return disableAssignNumber(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+        if(getCollectionNumber() != null) {
+            return "Collection number already assigned";
+        }
+        
+        final Numerator numerator = invoices.findCollectionNumberNumerator();
+        if(numerator == null) {
+            return "No 'collection number' numerator found for invoice's property";
+        }
+        
+        if (getStatus() != InvoiceStatus.APPROVED) {
+            return "Must be in status of 'approved'";
+        }
+        return null;
     }
     
     // //////////////////////////////////////
 
     @Bulk
     public Invoice assignInvoiceNumber() {
-        return assignNumber(Constants.INVOICE_NUMBER_NUMERATOR_NAME);
-    }
-    
-    public boolean hideAssignInvoiceNumber() {
-        return hideAssignNumber(Constants.INVOICE_NUMBER_NUMERATOR_NAME);
-    }
-    public String disableAssignInvoiceNumber() {
-        return disableAssignNumber(Constants.INVOICE_NUMBER_NUMERATOR_NAME);
-    }
-    // //////////////////////////////////////
-    
-    private Invoice assignNumber(String numeratorName) {
-        
         // bulk action, so need these guards
-        if(hideAssignNumber(numeratorName)) {
+        if(hideAssignInvoiceNumber()) {
             return this;
         }
-        if(disableAssignNumber(numeratorName) != null) {
+        if(disableAssignInvoiceNumber() != null) {
             return this;
         }
         
-        final Numerator numerator = findNumerator(numeratorName);
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
         
-        
-        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
-            setCollectionNumber(numerator.increment());
-            this.setStatus(InvoiceStatus.COLLECTED);
-        } else {
-            setInvoiceNumber(numerator.increment());
-            this.setStatus(InvoiceStatus.INVOICED);
-        }
+        setInvoiceNumber(numerator.increment());
+        this.setStatus(InvoiceStatus.INVOICED);
         
         informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
         return this;
     }
     
-    private boolean hideAssignNumber(final String numeratorName) {
-        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
-            // only applies to direct debits
-            return !getPaymentMethod().isDirectDebit();
-        } else {
-            // NumeratorType.INVOICE_NUMBER
-            return false;
-        }
+    public boolean hideAssignInvoiceNumber() {
+        return false;
     }
-
-    private String disableAssignNumber(final String numeratorName) {
-        
-        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
-            if(getCollectionNumber() != null) {
-                return "Collection number already assigned";
-            }
-        } else {
-            // NumeratorType.INVOICE_NUMBER
-            if(getInvoiceNumber() != null) {
-                return "Invoice number already assigned";
-            }
+    
+    public String disableAssignInvoiceNumber() {
+        if(getInvoiceNumber() != null) {
+            return "Invoice number already assigned";
         }
-        final Numerator numerator = findNumerator(numeratorName);
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
         if(numerator == null) {
-            return "No " + numeratorName + " numerator found for invoice's property";
+            return "No 'invoice number' numerator found for invoice's property";
         }
-        if(numeratorName.equals(Constants.COLLECTION_NUMBER_NUMERATOR_NAME)) {
-            if (getStatus() != InvoiceStatus.APPROVED) {
-                return "Must be in status of 'approved'";
-            }
-        } else {
-            // NumeratorType.INVOICE_NUMBER
-            if (getStatus() != InvoiceStatus.COLLECTED) {
-                return "Must be in status of 'collected'";
-            }
-            return null;
+        if (getStatus() != InvoiceStatus.COLLECTED) {
+            return "Must be in status of 'collected'";
         }
         return null;
-    }
-    private Numerator findNumerator(final String numeratorName) {
-        return numerators.findNumerator(numeratorName, getProperty());
     }
 
     // //////////////////////////////////////
@@ -469,10 +453,9 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    private Numerators numerators;
-
-    public final void injectNumerators(Numerators numerators) {
-        this.numerators = numerators;
+    
+    private Invoices invoices;
+    public final void injectInvoices(Invoices invoices) {
+        this.invoices = invoices;
     }
-
 }

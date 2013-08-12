@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.asset;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -25,9 +26,14 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.utils.StringUtils;
 
 public class Properties extends EstatioDomainService<Property> {
@@ -75,6 +81,7 @@ public class Properties extends EstatioDomainService<Property> {
         return findPropertiesByReference("*".concat(searchPhrase).concat("*"));
     }
 
+    
     // //////////////////////////////////////
 
     @Prototype
@@ -84,4 +91,5 @@ public class Properties extends EstatioDomainService<Property> {
         return allInstances();
     }
 
+    
 }

@@ -21,17 +21,18 @@ package org.estatio.dom.numerator;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.asset.Property;
 
 public class Numerators extends EstatioDomainService<Numerator> {
 
@@ -41,26 +42,56 @@ public class Numerators extends EstatioDomainService<Numerator> {
 
     // //////////////////////////////////////
 
-    
-    // is contributed (for administrators)
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "numerators.1")
-    public Numerator createNumerator(
-            final @Named("Name") String numeratorName, 
-            final @Named("Scoped to") Object scopedTo,
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        
-        final Numerator existing = findNumerator(numeratorName, scopedTo);
-        if(existing != null) {
-            getContainer().warnUser("Numerator already exists for name/scope");
-            return existing;
+    @Hidden
+    public Numerator createGlobalNumerator(
+            final String numeratorName, 
+            final String format,
+            final BigInteger lastIncrement) {
+
+        return findOrCreateNumerator(numeratorName, null, format, lastIncrement);
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Hidden
+    public Numerator createScopedNumerator(
+            final String numeratorName, 
+            final Object scopedTo,
+            final String format,
+            final BigInteger lastIncrement) {
+
+        return findOrCreateNumerator(numeratorName, scopedTo, format, lastIncrement);
+    }
+
+    private Numerator findOrCreateNumerator(
+            final String numeratorName, 
+            final Object scopedToIfAny, 
+            final String format, 
+            final BigInteger lastIncrement) {
+
+        // validate
+        try {
+            String.format(format, lastIncrement);
+        } catch(Exception ex) {
+            throw new ApplicationException("Invalid format string '" + format + "'");
         }
 
+        // existing?
+        final Numerator existingIfAny = findNumerator(numeratorName, scopedToIfAny);
+        if(existingIfAny != null) {
+            String msg = "'" + numeratorName + "' numerator already exists";
+            if(scopedToIfAny != null) {
+                msg += " for " + getContainer().titleOf(scopedToIfAny);
+            }
+            getContainer().warnUser(msg);
+            return existingIfAny;
+        }
+
+        // else create
         final Numerator numerator = newTransientInstance();
         numerator.setName(numeratorName);
-        if(scopedTo != null) {
-            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedTo);
+        if(scopedToIfAny != null) {
+            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
             numerator.setObjectType(bookmark.getObjectType());
             numerator.setObjectIdentifier(bookmark.getIdentifier());
         }
@@ -69,44 +100,40 @@ public class Numerators extends EstatioDomainService<Numerator> {
         persist(numerator);
         return numerator;
     }
-    
-    public String default2CreateNumerator() {
-        return "XXX-%05d";
-    }
-    public BigInteger default3CreateNumerator() {
-        return BigInteger.ZERO;
-    }
-    
-    public String validateCreateNumerator(
-            final String numeratorName, 
-            final Object scopedTo,
-            final String format,
-            final BigInteger lastIncrement) {
-        
-        try {
-            String.format(format, lastIncrement);
-        } catch(Exception ex) {
-            return "Invalid format string";
-        }
-        return null;
-    }
-    
+
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "numerators.2")
-    public Numerator findNumerator(
+    @NotContributed
+    public Numerator findGlobalNumerator(
+            final @Named("Name") String numeratorName) {
+        return findNumerator(numeratorName, null);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Other", sequence = "numerators.2")
+    @NotContributed
+    public Numerator findScopedNumerator(
             final @Named("Name") String numeratorName, 
-            final @Named("Scoped to") Object domainObject) {
-        if(domainObject != null) {
-            final Bookmark bookmark = bookmarkService.bookmarkFor(domainObject);
+            final @Named("Scoped to") Object scopedTo) {
+        return findNumerator(numeratorName, scopedTo);
+    }
+
+    private Numerator findNumerator(final String numeratorName, Object scopedToIfAny) {
+        if(scopedToIfAny == null) {
+            return firstMatch("findByName", "name", numeratorName);
+        } else {
+            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
             final String objectType = bookmark.getObjectType();
             final String objectIdentifier = bookmark.getIdentifier();
             return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", "name", numeratorName, "objectType", objectType, "objectIdentifier", objectIdentifier);
-        } else {
-            return firstMatch("findByName", "name", numeratorName);
         }
     }
+
 
     // //////////////////////////////////////
 
