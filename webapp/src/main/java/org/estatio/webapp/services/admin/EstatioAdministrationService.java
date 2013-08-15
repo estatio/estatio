@@ -18,6 +18,7 @@
  */
 package org.estatio.webapp.services.admin;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -32,6 +33,8 @@ import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
@@ -76,6 +79,9 @@ public class EstatioAdministrationService {
     public String installConstants() {
         AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
         fixture.install();
+        
+        invoices.createCollectionNumberNumerator("%09d", BigInteger.ZERO);
+        
         return "Constants successfully installed";
     }
 
@@ -145,4 +151,9 @@ public class EstatioAdministrationService {
         this.applicationSettingsService = applicationSettingsService;
     }
 
+    
+    private Invoices invoices;
+    public void injectInvoices(Invoices invoices) {
+        this.invoices = invoices;
+    }
 }

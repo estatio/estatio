@@ -87,7 +87,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     @Hidden
     @Override
     public boolean isLocked() {
-        return !getStatus().isUnlocked();
+        return getStatus()!=null? !getStatus().isUnlocked(): true;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

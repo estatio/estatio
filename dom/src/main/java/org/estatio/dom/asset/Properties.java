@@ -84,7 +84,6 @@ public class Properties extends EstatioDomainService<Property> {
     
     // //////////////////////////////////////
 
-    @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Assets", sequence = "99")
     public List<Property> allProperties() {

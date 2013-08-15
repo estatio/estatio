@@ -63,7 +63,7 @@ public class CommunicationChannelContributedActions extends EstatioDomainService
     }
     // TODO: doesn't seem to be called (Isis issue, I think)
     public CommunicationChannelType default1NewPostal() {
-        return choices1NewPhoneOrFax().get(0);
+        return choices1NewPostal().get(0);
     }
 
     // //////////////////////////////////////
@@ -83,7 +83,7 @@ public class CommunicationChannelContributedActions extends EstatioDomainService
         return CommunicationChannelType.matching(EmailAddress.class);
     }
     public CommunicationChannelType default1NewEmail() {
-        return choices1NewPhoneOrFax().get(0);
+        return choices1NewEmail().get(0);
     }
     public String validateNewEmail(
             final CommunicationChannelOwner owner,

@@ -24,7 +24,6 @@ import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
@@ -50,6 +49,7 @@ import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -247,7 +247,9 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("acquireDate") @Optional LocalDate acquireDate,
             @Named("disposalDate") @Optional LocalDate disposalDate,
             @Named("openingDate") @Optional LocalDate openingDate,
-            @Named("ownerReference") @Optional String ownerReference) {
+            @Named("ownerReference") @Optional String ownerReference,
+            @Named("numeratorFormat") @Optional String numeratorFormat
+            ) {
         Party owner = fetchParty(ownerReference);
         Property property = fetchProperty(reference, true);
         property.setName(name);
@@ -256,6 +258,8 @@ public class Api extends AbstractFactoryAndRepository {
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
+        if (numeratorFormat != null)
+            invoices.createInvoiceNumberNumerator(property, numeratorFormat, BigInteger.ZERO);
     }
 
     private Property fetchProperty(String reference, boolean createIfNotFond) {
@@ -570,22 +574,22 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("endDate") @Optional LocalDate endDate,
             @Named("status") @Optional String status,
             // end generic fields
-            @Named("reviewDate") @Optional LocalDate reviewDate, 
-            @Named("effectiveDate") @Optional LocalDate effectiveDate, 
-            @Named("baseValue") @Optional BigDecimal baseValue, 
-            @Named("indexedValue") @Optional BigDecimal indexedValue, 
+            @Named("reviewDate") @Optional LocalDate reviewDate,
+            @Named("effectiveDate") @Optional LocalDate effectiveDate,
+            @Named("baseValue") @Optional BigDecimal baseValue,
+            @Named("indexedValue") @Optional BigDecimal indexedValue,
             @Named("settledValue") @Optional BigDecimal settledValue,
-            @Named("levellingValue") @Optional BigDecimal levellingValue, 
-            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, 
-            @Named("indexReference") @Optional String indexReference, 
+            @Named("levellingValue") @Optional BigDecimal levellingValue,
+            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage,
+            @Named("indexReference") @Optional String indexReference,
             @Named("indexationFrequency") @Optional String indexationFrequency,
-            @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, 
-            @Named("baseIndexReference") @Optional String baseIndexReference, 
-            @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate, 
+            @Named("indexationPercentage") @Optional BigDecimal indexationPercentage,
+            @Named("baseIndexReference") @Optional String baseIndexReference,
+            @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate,
             @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate,
-            @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, 
-            @Named("nextIndexReference") @Optional String nextIndexReference, 
-            @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate, 
+            @Named("baseIndexValue") @Optional BigDecimal baseIndexValue,
+            @Named("nextIndexReference") @Optional String nextIndexReference,
+            @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
             @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
@@ -738,7 +742,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("endDate") @Optional LocalDate endDate) {
         BankMandate bankMandate = (BankMandate) agreements.findAgreementByReference(reference);
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(bankAccountReference);
-        if (bankAccount == null) throw new ApplicationException(String.format("BankAccount with reference %1$s not found", bankAccountReference));
+        if (bankAccount == null)
+            throw new ApplicationException(String.format("BankAccount with reference %1$s not found", bankAccountReference));
         if (bankMandate == null) {
             Party debtor = fetchParty(debtorReference);
             Party creditor = fetchParty(creditorReference);
@@ -810,12 +815,6 @@ public class Api extends AbstractFactoryAndRepository {
         this.persons = persons;
     }
 
-    private FixedAssetRoles fixedAssetRoles;
-
-    public void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRoles = fixedAssetRoles;
-    }
-
     private CommunicationChannelContributedActions communicationChannelContributedActions;
 
     public void injectCommunicationChannelContributedActions(final CommunicationChannelContributedActions communicationChannelContributedActions) {
@@ -874,6 +873,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
+    }
+
+    private Invoices invoices;
+
+    public void injectInvoices(Invoices invoices) {
+        this.invoices = invoices;
     }
 
 }

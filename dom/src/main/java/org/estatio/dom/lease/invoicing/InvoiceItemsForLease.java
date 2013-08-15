@@ -58,7 +58,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
      * @param leaseReference - not a {@link Lease}, because reference supports wildcards; there could be multiple leases to find.
      */
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Invoices", sequence="2")
+    @Hidden
     public List<InvoiceItemForLease> findInvoiceItemsByLease(
             final @Named("Lease reference") String leaseReference, 
             final @Named("Start Date") LocalDate startDate, 
