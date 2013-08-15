@@ -94,7 +94,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t01_putAsset() throws Exception {
-        api.putProperty("APIPROP", "Apiland", "SHOPPING_CENTER", null, null, null, "HELLOWORLD");
+        api.putProperty("APIPROP", "Apiland", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT");
         api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", null, null, null, null, null, null, null, null, null, null, null, null);
         Assert.assertThat(properties.findPropertiesByReference("APIPROP").size(), Is.is(1));
     }
