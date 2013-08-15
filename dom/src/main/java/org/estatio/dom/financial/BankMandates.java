@@ -53,18 +53,20 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
             final @Named("Start Date") LocalDate startDate,
             final @Optional @Named("End Date") LocalDate endDate,
             final @Optional @Named("Debtor") Party debtor,
-            final @Optional @Named("Creditor") Party creditor) {
+            final @Optional @Named("Creditor") Party creditor, 
+            final BankAccount bankAccount) {
         BankMandate mandate = newTransientInstance();
-        mandate.setAgreementType(agreementTypes.find(BankMandateConstants.AT_BANK_MANDATE));
+        mandate.setAgreementType(agreementTypes.find(FinancialConstants.AT_MANDATE));
         mandate.setReference(reference);
         mandate.setName(name);
         mandate.setStartDate(startDate);
         mandate.setEndDate(endDate);
+        mandate.setBankAccount(bankAccount);
         persistIfNotAlready(mandate);
 
-        final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(BankMandateConstants.ART_CREDITOR);
+        final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
         mandate.createInitialRole(artTenant, creditor, null, null);
-        final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(BankMandateConstants.ART_DEBTOR);
+        final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
         mandate.createInitialRole(artLandlord, debtor, null, null);
         return mandate;
     }

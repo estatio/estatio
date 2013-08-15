@@ -23,7 +23,6 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.Agreements;
-import org.estatio.dom.asset.FixedAssetRole;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.Properties;
@@ -75,7 +74,6 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.services.clock.ClockService;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -162,13 +160,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("description") String description,
             @Named("taxReference") String taxReference) {
         Tax tax = fetchTax(taxReference);
-        Charge charge = charges.findChargeByReference(reference);
-        if (charge == null) {
-            charge = charges.newCharge(reference);
-        }
-        charge.setDescription(description);
-        charge.setCode(code);
-        charge.setTax(tax);
+        charges.newCharge(reference, description, code, tax);
     }
 
     private Charge fetchCharge(String type, String chargeReference) {
@@ -521,24 +513,21 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("invoicingFrequency") @Optional String invoicingFrequency,
             @Named("paymentMethod") @Optional String paymentMethod) {
         Lease lease = fetchLease(leaseReference);
-        
+
         @SuppressWarnings("unused")
         Unit unit = fetchUnit(unitReference);
-        
+
         LeaseItemType itemType = fetchLeaseItemType(type);
         Charge charge = fetchCharge(type, chargeReference);
         //
         LeaseItem item = lease.findItem(itemType, startDate, sequence);
         if (item == null) {
-            item = lease.newItem(itemType);
+            item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod));
         }
         item.setStartDate(startDate);
         item.setEndDate(endDate);
         item.setType(itemType);
         item.setSequence(sequence);
-        item.setInvoicingFrequency(InvoicingFrequency.valueOf(invoicingFrequency));
-        item.setPaymentMethod(PaymentMethod.valueOf(paymentMethod));
-        item.setCharge(charge);
     }
 
     private LeaseItemType fetchLeaseItemType(String type) {
@@ -581,10 +570,23 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("endDate") @Optional LocalDate endDate,
             @Named("status") @Optional String status,
             // end generic fields
-            @Named("reviewDate") @Optional LocalDate reviewDate, @Named("effectiveDate") @Optional LocalDate effectiveDate, @Named("baseValue") @Optional BigDecimal baseValue, @Named("indexedValue") @Optional BigDecimal indexedValue, @Named("settledValue") @Optional BigDecimal settledValue,
-            @Named("levellingValue") @Optional BigDecimal levellingValue, @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, @Named("indexReference") @Optional String indexReference, @Named("indexationFrequency") @Optional String indexationFrequency,
-            @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, @Named("baseIndexReference") @Optional String baseIndexReference, @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate, @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate,
-            @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, @Named("nextIndexReference") @Optional String nextIndexReference, @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate, @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
+            @Named("reviewDate") @Optional LocalDate reviewDate, 
+            @Named("effectiveDate") @Optional LocalDate effectiveDate, 
+            @Named("baseValue") @Optional BigDecimal baseValue, 
+            @Named("indexedValue") @Optional BigDecimal indexedValue, 
+            @Named("settledValue") @Optional BigDecimal settledValue,
+            @Named("levellingValue") @Optional BigDecimal levellingValue, 
+            @Named("levellingPercentage") @Optional BigDecimal levellingPercentage, 
+            @Named("indexReference") @Optional String indexReference, 
+            @Named("indexationFrequency") @Optional String indexationFrequency,
+            @Named("indexationPercentage") @Optional BigDecimal indexationPercentage, 
+            @Named("baseIndexReference") @Optional String baseIndexReference, 
+            @Named("baseIndexStartDate") @Optional LocalDate baseIndexStartDate, 
+            @Named("baseIndexEndDate") @Optional LocalDate baseIndexEndDate,
+            @Named("baseIndexValue") @Optional BigDecimal baseIndexValue, 
+            @Named("nextIndexReference") @Optional String nextIndexReference, 
+            @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate, 
+            @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
@@ -731,14 +733,17 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("leaseReference") String leaseReference,
             @Named("debtorReference") String debtorReference,
             @Named("creditorReference") String creditorReference,
+            @Named("bankAccountReference") String bankAccountReference,
             @Named("startDate") LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate) {
         BankMandate bankMandate = (BankMandate) agreements.findAgreementByReference(reference);
+        BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(bankAccountReference);
+        if (bankAccount == null) throw new ApplicationException(String.format("BankAccount with reference %1$s not found", bankAccountReference));
         if (bankMandate == null) {
             Party debtor = fetchParty(debtorReference);
             Party creditor = fetchParty(creditorReference);
             Lease lease = fetchLease(leaseReference);
-            bankMandate = bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor);
+            bankMandate = bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
             lease.paidBy(bankMandate);
         }
     }
@@ -812,11 +817,11 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private CommunicationChannelContributedActions communicationChannelContributedActions;
-    
+
     public void injectCommunicationChannelContributedActions(final CommunicationChannelContributedActions communicationChannelContributedActions) {
         this.communicationChannelContributedActions = communicationChannelContributedActions;
     }
-    
+
     private CommunicationChannels communicationChannels;
 
     public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {

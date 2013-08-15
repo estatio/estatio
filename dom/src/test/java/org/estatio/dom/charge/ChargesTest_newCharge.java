@@ -84,7 +84,7 @@ public class ChargesTest_newCharge {
             }
         });
         
-        final Charge newCharge = charges.newCharge("REF-1");
+        final Charge newCharge = charges.newCharge("REF-1", "REF-1", "REF-1", null);
         assertThat(newCharge.getReference(), is("REF-1"));
     }
     
@@ -92,7 +92,7 @@ public class ChargesTest_newCharge {
     public void newCharge_whenDoesExist() {
         existingCharge = new Charge();
 
-        final Charge newCharge = charges.newCharge("REF-1");
+        final Charge newCharge = charges.newCharge("REF-1", "REF-1", "REF-1", null);
         assertThat(newCharge, is(existingCharge));
     }
 

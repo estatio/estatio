@@ -80,7 +80,7 @@ public class BankAccount extends FinancialAccount {
 
     private String IBAN;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="true")
     public String getIBAN() {
         return IBAN;
     }

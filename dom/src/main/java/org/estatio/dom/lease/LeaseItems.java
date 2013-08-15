@@ -18,7 +18,13 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigInteger;
 import java.util.List;
+
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -26,8 +32,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
-
-import org.estatio.dom.EstatioDomainService;
 
 @Hidden
 public class LeaseItems extends EstatioDomainService<LeaseItem> {
@@ -40,21 +44,37 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
-    public LeaseItem newLeaseItem(final Lease lease, final LeaseItemType type) {
+    public LeaseItem newLeaseItem(
+            final Lease lease,
+            final LeaseItemType type,
+            final Charge charge,
+            final InvoicingFrequency invoicingFrequency,
+            final PaymentMethod paymentMethod) {
         LeaseItem leaseItem = newTransientInstance();
         leaseItem.setType(type);
+        leaseItem.setCharge(charge);
+        leaseItem.setPaymentMethod(paymentMethod);
+        leaseItem.setInvoicingFrequency(invoicingFrequency);
         leaseItem.setLease(lease);
         persistIfNotAlready(leaseItem);
         return leaseItem;
     }
 
     // //////////////////////////////////////
-    
+
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<LeaseItem> allLeaseItems() {
         return allInstances();
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    @ActionSemantics(Of.SAFE)
+    public LeaseItem findLeaseItem(Lease lease, LeaseItemType type, LocalDate startDate, BigInteger sequence) {
+        return firstMatch("findByLeaseAndTypeAndStartDateAndSequence", "lease", lease, "type", type, "startDate", startDate, "sequence", sequence);
     }
 
 }

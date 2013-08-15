@@ -52,10 +52,7 @@ public class ChargeAndChargeGroupFixture extends AbstractFixture {
 
     private void createCharge(String reference, String code, String description, String taxReference, ChargeGroup group) {
         final Tax tax = taxRepository.findTaxByReference(taxReference);
-        Charge c = chargeRepository.newCharge(reference);
-        c.setDescription(description);
-        c.setCode(code);
-        c.setTax(tax);
+        Charge c = chargeRepository.newCharge(reference, description, code, tax);
         c.setGroup(group);
     }
 

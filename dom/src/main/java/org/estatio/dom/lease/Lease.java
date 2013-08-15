@@ -46,11 +46,13 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.invoice.InvoiceSource;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
@@ -179,23 +181,15 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.items = items;
     }
 
-    public LeaseItem newItem(LeaseItemType type) {
+    public LeaseItem newItem(LeaseItemType type, Charge charge, InvoicingFrequency invoicingFrequency, PaymentMethod paymentMethod) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
-        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type);
+        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod);
         return leaseItem;
     }
 
     @Hidden
-    public LeaseItem findItem(LeaseItemType type, LocalDate startDate, BigInteger sequence) {
-        // TODO: better/faster filter options? -> Use predicate
-        for (LeaseItem item : getItems()) {
-            LocalDate itemStartDate = item.getStartDate();
-            LeaseItemType itemType = item.getType();
-            if (itemType.equals(type) && itemStartDate.equals(startDate) && item.getSequence().equals(sequence)) {
-                return item;
-            }
-        }
-        return null;
+    public LeaseItem findItem(LeaseItemType itemType, LocalDate itemStartDate, BigInteger sequence) {
+        return leaseItems.findLeaseItem(this, itemType, itemStartDate, sequence);
     }
 
     @Hidden

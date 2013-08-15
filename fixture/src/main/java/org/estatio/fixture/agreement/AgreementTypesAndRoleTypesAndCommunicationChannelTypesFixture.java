@@ -25,7 +25,6 @@ import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 
@@ -39,10 +38,11 @@ public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture exten
         create(LeaseConstants.AT_LEASE, 
                 new String[]{LeaseConstants.ART_LANDLORD, LeaseConstants.ART_MANAGER, LeaseConstants.ART_TENANT},
                 new String[]{LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, LeaseConstants.ARCCT_INVOICE_ADDRESS});
+        
     }
 
     void create(final String atTitle, final String[] artTitles, final String[] arcctTitles) {
-        AgreementType at = createAgreementType(atTitle, BankMandate.class.getName(), getContainer());
+        AgreementType at = createAgreementType(atTitle, getContainer());
         for(String artTitle: artTitles) {
             createAgreementRoleType(artTitle, at, getContainer());
         }
@@ -51,10 +51,9 @@ public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture exten
         }
     }
 
-    private static AgreementType createAgreementType(final String title, final String implementationClassName, final DomainObjectContainer container) {
+    private static AgreementType createAgreementType(final String title, final DomainObjectContainer container) {
         final AgreementType agreementType = container.newTransientInstance(AgreementType.class);
         agreementType.setTitle(title);
-        agreementType.setImplementationClassName(implementationClassName);
         container.persist(agreementType);
         return agreementType;
     }

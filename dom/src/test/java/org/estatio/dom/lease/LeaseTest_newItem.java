@@ -33,7 +33,9 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.BankMandate;
+import org.estatio.dom.invoice.PaymentMethod;
 
 public class LeaseTest_newItem {
 
@@ -71,7 +73,7 @@ public class LeaseTest_newItem {
             }
         });
         
-        final LeaseItem newItem = lease.newItem(LeaseItemType.RENT);
+        final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER);
         assertThat(newItem, is(leaseItem));
         assertThat(leaseItem.getLease(), is(lease));
         

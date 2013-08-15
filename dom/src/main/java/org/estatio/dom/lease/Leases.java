@@ -23,6 +23,7 @@ import java.util.List;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
@@ -76,7 +77,8 @@ public class Leases extends EstatioDomainService<Lease> {
             }
         }
         Lease lease = newTransientInstance();
-        lease.setAgreementType(agreementTypes.find(LeaseConstants.AT_LEASE));
+        final AgreementType at = agreementTypes.find(LeaseConstants.AT_LEASE);
+        lease.setAgreementType(at);
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);

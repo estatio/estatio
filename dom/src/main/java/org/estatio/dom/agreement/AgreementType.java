@@ -43,7 +43,7 @@ import org.estatio.dom.utils.ClassUtils;
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
 @Bounded
-public class AgreementType extends EstatioRefDataObject<AgreementType> implements WithTitleComparable<AgreementType>, WithTitleUnique, PowerType<Agreement<?>> {
+public class AgreementType extends EstatioRefDataObject<AgreementType> implements WithTitleComparable<AgreementType>, WithTitleUnique {
 
     public AgreementType() {
         super("title");
@@ -64,19 +64,6 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
         this.title = title;
     }
 
-    // //////////////////////////////////////
-
-    private String implementationClassName;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
-    public String getImplementationClassName() {
-        return implementationClassName;
-    }
-
-    public void setImplementationClassName(final String implementationClassName) {
-        this.implementationClassName = implementationClassName;
-    }
 
     // //////////////////////////////////////
 
@@ -88,20 +75,6 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     // //////////////////////////////////////
 
-    @SuppressWarnings("unchecked")
-    @Programmatic
-    public Agreement<?> create(DomainObjectContainer container) {
-        try {
-            Class<? extends Agreement<?>> cls = (Class<? extends Agreement<?>>) ClassUtils.load(implementationClassName, Agreement.class);
-            Agreement<?> agreement = container.newTransientInstance(cls);
-            agreement.setAgreementType(this);
-            return agreement;
-        } catch (Exception ex) {
-            throw new ApplicationException(ex);
-        }
-    }
-
-    // //////////////////////////////////////
 
     @Programmatic
     @NotPersisted

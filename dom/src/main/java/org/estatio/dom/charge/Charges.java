@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.tax.Tax;
 import org.estatio.dom.utils.StringUtils;
 
 public class Charges extends EstatioDomainService<Charge> {
@@ -39,13 +40,16 @@ public class Charges extends EstatioDomainService<Charge> {
 
     @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.1")
-    public Charge newCharge(String reference) {
+    public Charge newCharge(String reference, String description, String code, Tax tax) {
         Charge charge = findChargeByReference(reference);
         if (charge == null) {
             charge = newTransientInstance();
             charge.setReference(reference);
             persist(charge);
         }
+        charge.setDescription(description);
+        charge.setCode(code);
+        charge.setTax(tax);
         return charge;
     }
 

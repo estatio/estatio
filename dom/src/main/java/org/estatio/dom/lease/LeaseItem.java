@@ -66,17 +66,17 @@ import org.estatio.services.clock.ClockService;
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndStartDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.LeaseItem " +
-                        "WHERE lease == :lease " +
-                        "&& startDate == :startDate"),
+                name = "findByLeaseAndTypeAndStartDate", 
+                language = "JDOQL", 
+                value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && type == :type && startDate == :startDate"),
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndEndDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.LeaseItem " +
-                        "WHERE lease == :lease " +
-                        "&& endDate == :endDate")
+                name = "findByLeaseAndTypeAndStartDateAndSequence", 
+                language = "JDOQL", 
+                value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && type == :type && startDate == :startDate && sequence == :sequence"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndTypeAndEndDate", 
+                language = "JDOQL", 
+                value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> implements WithIntervalMutable<LeaseItem>, WithSequence {
@@ -91,8 +91,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // @javax.jdo.annotations.Column(allowsNull="false")
     @Optional
-
-    @Hidden(where=Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     @Override
     public LeaseItemStatus getStatus() {
@@ -108,7 +107,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private Lease lease;
 
-    @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
     public Lease getLease() {
@@ -123,7 +122,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private BigInteger sequence;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Hidden
     @Override
     public BigInteger getSequence() {
@@ -152,8 +151,8 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private LeaseItemType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden(where=Where.PARENTED_TABLES)
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "2")
     public LeaseItemType getType() {
         return type;
@@ -183,7 +182,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Hidden(where=Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     @Optional
     @Disabled
     @Override
@@ -231,8 +230,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         return changeDates.validateChangeDates(startDate, endDate);
     }
 
-
-
     // //////////////////////////////////////
 
     @Hidden
@@ -278,7 +275,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private InvoicingFrequency invoicingFrequency;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
@@ -292,7 +289,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private PaymentMethod paymentMethod;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -306,7 +303,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private Charge charge;
 
-    @javax.jdo.annotations.Column(name = "CHARGE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "CHARGE_ID", allowsNull = "false")
     public Charge getCharge() {
         return charge;
     }
@@ -367,7 +364,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     public void setTerms(final SortedSet<LeaseTerm> terms) {
         this.terms = terms;
     }
-
 
     @Programmatic
     public LeaseTerm findTerm(LocalDate startDate) {
@@ -441,6 +437,5 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     public final void injectLeaseTerms(LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
     }
-
 
 }

@@ -39,13 +39,6 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @NotContributed
-    public Agreement<?> newAgreement(AgreementType agreementType, final String reference, final String name) {
-        return agreementType.create(getContainer());
-    }
-
-    // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     public Agreement<?> findAgreementByReference(String reference) {
