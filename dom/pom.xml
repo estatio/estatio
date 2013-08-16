@@ -218,7 +218,11 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>com.google</groupId>
             <artifactId>rfc-2445</artifactId>
-            <version>0.0.20110304</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
         </dependency>
 
         <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->

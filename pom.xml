@@ -543,7 +543,17 @@ language governing permissions and limitations under the License.
                 <version>0.9.6</version>
             </dependency>
 
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
+            </dependency>
 
+            <dependency>
+                <groupId>com.google</groupId>
+                <artifactId>rfc-2445</artifactId>
+                <version>0.0.20110304</version>
+            </dependency>
 
             <!-- testing dependencies -->
 
