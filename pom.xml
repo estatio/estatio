@@ -281,7 +281,10 @@ language governing permissions and limitations under the License.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>3.0.1</version>
+                    <configuration>
+                        <targetJdk>${compileSource}</targetJdk>
+                    </configuration>
                     <!-- goal:check binds to phase:verify (not currently configured, can be used to break build if any violations) -->
                     <!-- goal:check-cpd binds to phase:verify (not currently configured, can be used to break build if any CPD violations) -->
                     <!-- goal:pmd is a report so is configured in the reporting section -->
