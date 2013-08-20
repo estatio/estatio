@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
@@ -109,6 +110,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "numerators.invoices.3")
+    @NotContributed(As.ASSOCIATION)
     public Numerator findInvoiceNumberNumerator(
             final Property property) {
         return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);

@@ -101,7 +101,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
 
     @Override
     public boolean hideLock() {
-        return cannotExplicitlyLockAndUnlock();
+        return cannotExplicitlyLockAndUnlock() || isLocked();
     }
 
     @CssClass("unlock")
@@ -115,7 +115,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     
     @Override
     public boolean hideUnlock() {
-        return cannotExplicitlyLockAndUnlock();
+        return cannotExplicitlyLockAndUnlock() || !isLocked();
     }
 
     private boolean cannotExplicitlyLockAndUnlock() {
