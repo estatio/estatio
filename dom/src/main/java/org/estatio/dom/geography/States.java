@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.geography;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -59,7 +60,7 @@ public class States extends EstatioDomainService<State> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.3")
     public List<State> findStatesByCountry(final Country country) {
-        return allMatches("findByCountry", "country", country);
+        return country != null? allMatches("findByCountry", "country", country): Collections.<State>emptyList();
     }
 
     // //////////////////////////////////////

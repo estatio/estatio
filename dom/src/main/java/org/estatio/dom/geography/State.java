@@ -32,7 +32,6 @@ import org.apache.isis.applib.annotation.Immutable;
     @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE reference == :reference") 
 })
 @Immutable
-@Bounded
 public class State extends Geography {
 
     private Country country;

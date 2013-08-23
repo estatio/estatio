@@ -309,7 +309,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setTerraceArea(terraceArea);
         CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            communicationChannelContributedActions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, address1, null, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+            communicationChannelContributedActions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, null, postalCode, city);
         }
     }
 
@@ -341,7 +341,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         CommunicationChannel comm = property.findCommunicationChannelForType(null);
         if (comm == null) {
-            communicationChannelContributedActions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+            communicationChannelContributedActions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, address2, postalCode, city);
         }
     }
 

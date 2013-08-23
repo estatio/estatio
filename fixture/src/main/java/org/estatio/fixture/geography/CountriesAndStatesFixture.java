@@ -30,8 +30,49 @@ public class CountriesAndStatesFixture extends AbstractFixture {
     public void install() {
         Country countryGBR = createCountry("GBR", "GB", "United Kingdom");
         Country countryNED = createCountry("NLD", "NL", "Netherlands");
-        createState("NL-NH", "Noord-Holland", countryNED);
+        
+        createState("NL-DRN", "Drenthe", countryNED);
+        createState("NL-FLE", "Flevoland", countryNED);
+        createState("NL-FRI", "Friesland", countryNED);
+        createState("NL-GEL", "Gelderland", countryNED);
+        createState("NL-GRO", "Groningen", countryNED);
+        createState("NL-LIM", "Limburg", countryNED);
+        createState("NL-NBT", "Noord-Brabant", countryNED);
+        createState("NL-NOH", "Noord-Holland", countryNED);
+        createState("NL-OIJ", "Overijssel", countryNED);
+        createState("NL-UTR", "Utrecht", countryNED);
+        createState("NL-ZEL", "Zeeland", countryNED);
+        createState("NL-ZUH", "Zuid-Holland", countryNED);
+        
+        createState("GB-BED", "Bedfordshire", countryGBR);
+        createState("GB-BEK", "Berkshire", countryGBR);
+        createState("GB-BUK", "Buckinghamshire", countryGBR);
+        createState("GB-CMB", "Cambridgeshire", countryGBR);
+        createState("GB-CHE", "Cheshire", countryGBR);
+        createState("GB-COR", "Cornwall", countryGBR);
+        createState("GB-DBY", "Derbyshire", countryGBR);
+        createState("GB-DEV", "Devon", countryGBR);
+        createState("GB-DOR", "Dorset", countryGBR);
+        createState("GB-DUR", "Durham", countryGBR);
+        createState("GB-ESX", "Essex", countryGBR);
+        createState("GB-GLO", "Gloucestershire", countryGBR);
+        createState("GB-HAN", "Hampshire", countryGBR);
+        createState("GB-KNT", "Kent", countryGBR);
+        createState("GB-LAN", "Lancashire", countryGBR);
+        createState("GB-LEI", "Leicerstershire", countryGBR);
+        createState("GB-LIN", "Lincolnshire", countryGBR);
+        createState("GB-NFK", "Norfolk", countryGBR);
+        createState("GB-NTP", "Northamptonshire", countryGBR);
+        createState("GB-NTB", "Northumberland", countryGBR);
         createState("GB-OXF", "Oxfordshire", countryGBR);
+        createState("GB-RUT", "Rutland", countryGBR);
+        createState("GB-SHR", "Shropshire", countryGBR);
+        createState("GB-SOM", "Somerset", countryGBR);
+        createState("GB-STA", "Staffordshire", countryGBR);
+        createState("GB-SUF", "Suffolk", countryGBR);
+        createState("GB-WAR", "Warwickshire", countryGBR);
+        createState("GB-WIL", "Wiltshire", countryGBR);
+        createState("GB-WOR", "Worcerstershire", countryGBR);
     }
 
     private Country createCountry(final String reference, String alpha2Code, String name) {

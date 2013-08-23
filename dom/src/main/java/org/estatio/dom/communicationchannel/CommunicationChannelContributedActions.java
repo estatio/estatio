@@ -29,8 +29,10 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 
 @Hidden
 public class CommunicationChannelContributedActions extends EstatioDomainService<CommunicationChannel> {
@@ -47,23 +49,33 @@ public class CommunicationChannelContributedActions extends EstatioDomainService
     public CommunicationChannelOwner newPostal(
             final @Named("Owner") CommunicationChannelOwner owner, 
             final @Named("Type") CommunicationChannelType type,
+            final Country country, 
+            final State state, 
             final @Named("Address Line 1") String address1, 
             final @Named("Address Line 2") @Optional String address2, 
             final @Named("Postal Code") String postalCode, 
-            final @Named("City") String city, 
-            final State state, 
-            final Country country) {
+            final @Named("City") String city) {
         communicationChannels.newPostal(owner, type, address1, address2, postalCode, city, state, country);
         return owner;
     }
 
-    // TODO: doesn't seem to be called (Isis issue, I think)
     public List<CommunicationChannelType> choices1NewPostal() {
         return CommunicationChannelType.matching(PostalAddress.class);
     }
-    // TODO: doesn't seem to be called (Isis issue, I think)
     public CommunicationChannelType default1NewPostal() {
         return choices1NewPostal().get(0);
+    }
+    public Country default2NewPostal() {
+        return countries.allCountries().get(0);
+    }
+    public List<State> choices3NewPostal(
+            final CommunicationChannelOwner owner, 
+            final CommunicationChannelType type,
+            final Country country) {
+        return states.findStatesByCountry(country);
+    }
+    public State default3NewPostal() {
+        return states.findStatesByCountry(default2NewPostal()).get(0);
     }
 
     // //////////////////////////////////////
@@ -128,4 +140,13 @@ public class CommunicationChannelContributedActions extends EstatioDomainService
         this.communicationChannels = communicationChannels;
     }
 
+    private States states;
+    public void injectStates(States states) {
+        this.states = states;
+    }
+    
+    private Countries countries;
+    public void injectCountries(Countries countries) {
+        this.countries = countries;
+    }
 }

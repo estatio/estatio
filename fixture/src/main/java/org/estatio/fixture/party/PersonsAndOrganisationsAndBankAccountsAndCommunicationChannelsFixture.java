@@ -66,7 +66,7 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
             final Country country = countries.findCountryByReference(values[8]);
             final State state = states.findStateByReference(values[7]);
             if(country != null && state != null) {
-                communicationChannelContributedActions.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, values[3], values[4], values[5], values[6], state, country);
+                communicationChannelContributedActions.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, country, state, values[3], values[4], values[5], values[6]);
             }
             getContainer().flush();
         }
