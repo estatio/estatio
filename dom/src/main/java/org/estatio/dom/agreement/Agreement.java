@@ -29,9 +29,19 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Lockable;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -47,18 +57,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.Chained;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -214,10 +212,13 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
-        return getInterval().contains(localDate);
+    private boolean isActiveOn(LocalDate date) {
+        if (getTerminationDate() != null) {
+            return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
+        }
+        return getInterval().contains(date);
     }
-
+    
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Agreement<S>> changeDates = new WithIntervalMutable.Helper<Agreement<S>>(this);
@@ -450,8 +451,8 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     // //////////////////////////////////////
 
     @Programmatic
-    AgreementRole findRole(Party party, AgreementRoleType type, LocalDate startDate) {
-        return agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(this, party, type, startDate);
+    public AgreementRole findRole(Party party, AgreementRoleType type, LocalDate date) {
+        return agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(this, party, type, date);
     }
 
     @Programmatic

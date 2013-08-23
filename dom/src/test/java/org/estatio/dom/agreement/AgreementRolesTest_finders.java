@@ -101,16 +101,16 @@ public class AgreementRolesTest_finders {
     @Test
     public void findByAgreementAndPartyAndTypeAndStartDate() {
 
-        agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(agreement, party, type, date);
+        agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, type, date);
         
         // then
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
-        assertThat(finderInteraction.getQueryName(), is("findByAgreementAndPartyAndTypeAndStartDate"));
+        assertThat(finderInteraction.getQueryName(), is("findByAgreementAndPartyAndTypeAndContainsDate"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("agreement"), is((Object)agreement));
         assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object)party));
         assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)type));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object)date));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object)date));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
     }
 

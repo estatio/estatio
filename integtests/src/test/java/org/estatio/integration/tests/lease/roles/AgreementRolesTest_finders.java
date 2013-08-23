@@ -83,17 +83,17 @@ public class AgreementRolesTest_finders extends EstatioIntegrationTest {
         agreementRoleTypes = service(AgreementRoleTypes.class);
         leaseTerms = service(LeaseTerms.class);
         estatioSettingsService = service(EstatioSettingsService.class);
-        
+
         artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
-        
+
         leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
     }
 
     @Test
-    public void findByAgreementAndPartyAndTypeAndStartDate() throws Exception {
+    public void findByAgreementAndPartyAndTypeAndContainsDate() throws Exception {
         // given lease has tenant role
         Party party = parties.findPartyByReferenceOrName("TOPMODEL");
-        AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndStartDate(leaseTopModel, party, artTenant, null);
+        AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseTopModel, party, artTenant, LocalDate.now());
         Assert.assertNotNull(role);
     }
 

@@ -21,6 +21,8 @@ import java.math.BigInteger;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.FixedAssetRoleType;
@@ -545,6 +547,7 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeasePostalAddress(
             @Named("partyReference") String partyReference,
+            @Named("agreementRoleType") String agreementRoleType,
             @Named("leaseReference") @Optional String leaseReference,
             @Named("address1") @Optional String address1,
             @Named("address2") @Optional String address2,
@@ -552,16 +555,25 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("city") @Optional String city,
             @Named("stateCode") @Optional String stateCode,
             @Named("countryCode") @Optional String countryCode,
-            @Named("type") @Optional AgreementRoleCommunicationChannelType type) {
+            @Named("isInvoiceAddress") @Optional BigInteger isInvoiceAddress
+            ) {
         if (address1 != null && partyReference != null && leaseReference != null) {
             Lease lease = fetchLease(leaseReference);
             Party party = fetchParty(partyReference);
+            AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(isInvoiceAddress.compareTo(BigInteger.ZERO) == 0 ? LeaseConstants.ARCCT_INVOICE_ADDRESS : LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+            if (agreementRoleCommunicationChannelType == null)
+                throw new ApplicationException(String.format("AgreementRoleCommunicationChannelType not found."));
             PostalAddress address = (PostalAddress) postalAddresses.findByAddress(address1, postalCode, city, fetchCountry(countryCode));
             if (address == null) {
-                address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, fetchState(stateCode), fetchCountry(countryCode));
+                address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, fetchState(stateCode, false), fetchCountry(countryCode, false));
             }
-            AgreementRole role = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), clockService.now());
-            role.addCommunicationChannel(type, address);
+            AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleType);
+            if (art == null)
+                throw new ApplicationException(String.format("AgreementRoleType %s not found.", agreementRoleType));
+            AgreementRole role = lease.findRole(party, art, clockService.now());
+            if (role == null)
+                throw new ApplicationException(String.format("Role for %s, %s not found.", partyReference, agreementRoleType));
+            role.addCommunicationChannel(agreementRoleCommunicationChannelType, address);
         }
     }
 
@@ -879,6 +891,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
+    }
+
+    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+
+    public void injectAgreementRoleCommunicationChannelTypes(AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
+        this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
     }
 
 }

@@ -40,12 +40,19 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
-    public AgreementRole newAgreementRole(final Agreement<?> agreement, final Party party, final AgreementRoleType type, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
+    public AgreementRole newAgreementRole(
+            final Agreement<?> agreement,
+            final Party party,
+            final AgreementRoleType type,
+            final @Named("Start Date") LocalDate startDate,
+            final @Named("End Date") LocalDate endDate) {
         AgreementRole agreementRole = newTransientInstance();
         persistIfNotAlready(agreementRole);
         agreementRole.setStartDate(startDate);
         agreementRole.setEndDate(endDate);
-        agreementRole.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
+        agreementRole.setType(type); // must do before associate with agreement,
+                                     // since part of AgreementRole#compareTo
+                                     // impl.
         agreementRole.setParty(party);
         agreementRole.setAgreement(agreement);
         return agreementRole;
@@ -55,21 +62,32 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public AgreementRole findByAgreementAndPartyAndTypeAndStartDate(Agreement agreement, Party party, AgreementRoleType type, LocalDate startDate) {
-        return firstMatch("findByAgreementAndPartyAndTypeAndStartDate", "agreement", agreement, "party", party, "type", type, "startDate", startDate);
+    public AgreementRole findByAgreementAndPartyAndTypeAndContainsDate(
+            final Agreement<?> agreement,
+            final Party party,
+            final AgreementRoleType type,
+            final LocalDate date) {
+        return firstMatch("findByAgreementAndPartyAndTypeAndContainsDate", "agreement", agreement, "party", party, "type", type, "date", date);
     }
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public AgreementRole findByAgreementAndPartyAndTypeAndEndDate(Agreement agreement, Party party, AgreementRoleType type, LocalDate endDate) {
+    public AgreementRole findByAgreementAndPartyAndTypeAndEndDate(
+            final Agreement<?> agreement,
+            final Party party,
+            final AgreementRoleType type,
+            final LocalDate endDate) {
         return firstMatch("findByAgreementAndPartyAndTypeAndEndDate", "agreement", agreement, "party", party, "type", type, "endDate", endDate);
     }
 
     // //////////////////////////////////////
-    
+
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public AgreementRole findByAgreementAndTypeAndContainsDate(Agreement agreement, AgreementRoleType type, LocalDate date) {
+    public AgreementRole findByAgreementAndTypeAndContainsDate(
+            final Agreement<?> agreement,
+            final AgreementRoleType type,
+            final LocalDate date) {
         return firstMatch("findByAgreementAndTypeAndContainsDate", "agreement", agreement, "type", type, "date", date);
     }
 

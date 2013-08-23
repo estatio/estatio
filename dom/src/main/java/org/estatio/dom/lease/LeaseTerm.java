@@ -29,6 +29,19 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -46,21 +59,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.Chained;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -473,20 +471,19 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     @Programmatic
-    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
-        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(leaseTerm, startDate, dueDate);
+    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
-            ii = invoiceItemsForLease.newInvoiceItem();
-            ii.modifyLeaseTerm(this);
+            ii = invoiceItemsForLease.newInvoiceItem(this, startDate, dueDate);
         }
         return ii;
     }
 
     @Programmatic
-    public InvoiceItemForLease findUnapprovedInvoiceItemFor(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
+    public InvoiceItemForLease findUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && leaseTerm.equals(invoiceItem.getLeaseTerm()) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && this.equals(invoiceItem.getLeaseTerm()) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
                 return invoiceItem;
             }
         }

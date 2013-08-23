@@ -66,29 +66,22 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByAgreementAndPartyAndTypeAndStartDate", language = "JDOQL",
+                name = "findByAgreementAndPartyAndTypeAndContainsDate", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.agreement.AgreementRole " +
                         "WHERE agreement == :agreement " +
                         "&& party == :party " +
                         "&& type == :type " +
-                        "&& startDate == :startDate"),
-        @javax.jdo.annotations.Query(
-                name = "findByAgreementAndPartyAndTypeAndEndDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.AgreementRole " +
-                        "WHERE agreement == :agreement " +
-                        "&& party == :party " +
-                        "&& type == :type " +
-                        "&& endDate == :endDate"),
+                        "&& (startDate == null || startDate <= :date) " +
+                        "&& (endDate == null || endDate > :date) "),
         @javax.jdo.annotations.Query(
                 name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.agreement.AgreementRole " +
                         "WHERE agreement == :agreement " +
                         "&& type == :type " +
-                        "&& (startDate == null | startDate < :date) " +
-                        "&& (endDate == null | endDate > :date) ")
+                        "&& (startDate == null || startDate < :date) " +
+                        "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalContiguous<AgreementRole> {

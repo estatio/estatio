@@ -122,8 +122,8 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public BigDecimal getTrialValue() {
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         BigDecimal calculatedTurnoverRent = helper.calculateRent(getAuditedTurnover());
-        if (calculatedTurnoverRent.compareTo(contractualRent) > 0)
-            return calculatedTurnoverRent.subtract(contractualRent);
+        if (getContractualRent() != null && calculatedTurnoverRent.compareTo(getContractualRent()) > 0)
+            return calculatedTurnoverRent.subtract(getContractualRent());
         return BigDecimal.ZERO;
     }
 

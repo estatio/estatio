@@ -210,23 +210,23 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         // unapproved doesn't work
         LeaseTerm leaseTopModelRentTerm0 = (LeaseTerm) leaseTopModelRentItem.getTerms().first();
         leaseTopModelRentTerm0.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
-        Assert.assertNull(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(leaseTopModelRentTerm0, new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)));
+        Assert.assertNull(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 6, 1)));
         
         // let's approve
         leaseTopModelRentTerm0.lock();
         // partial period
         leaseTopModelRentTerm0.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
-        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(leaseTopModelRentTerm0, new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(4239.13).setScale(2, RoundingMode.HALF_UP)));
         // full term
         leaseTopModelRentTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(leaseTopModelRentTerm0, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(5000.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(5000.00).setScale(2, RoundingMode.HALF_UP)));
         // invoice after effective date
         leaseTopModelRentTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
-        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(leaseTopModelRentTerm0, new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(5050.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(5050.00).setScale(2, RoundingMode.HALF_UP)));
         // invoice after effective date with mock
         estatioSettingsService.updateEpochDate(new LocalDate(2011, 1, 1));
         leaseTopModelRentTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1));
-        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(leaseTopModelRentTerm0, new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 4, 1)).getNetAmount(), is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
         
         // remove
         leaseTopModelRentTerm0.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
@@ -244,17 +244,17 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         leaseTopModelServiceChargeTerm0.lock();
         // partial period
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
-        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(leaseTopModelServiceChargeTerm0, new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1)).getNetAmount(), is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
         // full period
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
-        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(leaseTopModelServiceChargeTerm0, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(1500.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1)).getNetAmount(), is(new BigDecimal(1500.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile without mock
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
-        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(leaseTopModelServiceChargeTerm0, new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile with mock date
         estatioSettingsService.updateEpochDate(new LocalDate(2011, 10, 1));
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1));
-        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(leaseTopModelServiceChargeTerm0, new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
+        assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(new LocalDate(2010, 10, 1), new LocalDate(2011, 10, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
         estatioSettingsService.updateEpochDate(null);
     }
 

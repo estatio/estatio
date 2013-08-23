@@ -43,7 +43,7 @@ public final class LocalDateInterval {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
     }
 
-    private LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
+    public LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
         this.ending = ending;
         startInstant = startDate == null ? OPEN_START_INSTANT : startDate.toInterval().getStartMillis();
         endInstant = endDate == null ? OPEN_END_INSTANT : ending == IntervalEnding.EXCLUDING_END_DATE ? endDate.toInterval().getStartMillis() : endDate.toInterval().getEndMillis();

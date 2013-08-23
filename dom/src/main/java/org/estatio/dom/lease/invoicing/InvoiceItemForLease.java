@@ -24,10 +24,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -41,44 +37,50 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL", 
-        value = "SELECT " + 
-                "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
-                "WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " + 
-                "&& dueDate == :dueDate " + 
-                "&& startDate == :startDate"),
-    @javax.jdo.annotations.Query(
-        name = "findByInvoiceAndLeaseTermAndStartDate", language = "JDOQL", 
-        value = "SELECT " + 
-                "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
-                "WHERE invoice == :invoice " + 
-                "&& leaseTerm == :leaseTerm " + 
-                "&& startDate == :startDate"),
-    @javax.jdo.annotations.Query(
-        name = "findByInvoiceAndLeaseTermAndEndDate", language = "JDOQL", 
-        value = "SELECT " + 
-                "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " + 
-                "WHERE invoice == :invoice " + 
-                "&& leaseTerm == :leaseTerm " + 
-                "&& endDate == :endDate")
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " +
+                        "&& dueDate == :dueDate " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByInvoiceAndLeaseTermAndStartDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE invoice == :invoice " +
+                        "&& leaseTerm == :leaseTerm " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByInvoiceAndLeaseTermAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE invoice == :invoice " +
+                        "&& leaseTerm == :leaseTerm " +
+                        "&& endDate == :endDate")
 })
 public class InvoiceItemForLease extends InvoiceItem {
 
     private LeaseTerm leaseTerm;
 
-    // REVIEW: this is optional because of the #remove() method, 
+    // REVIEW: this is optional because of the #remove() method,
     // also because the ordering of flushes in #attachToInvoice()
     //
     // suspect this should be mandatory, however (ie get rid of #remove(),
     // and refactor #attachToInvoice())
-    @javax.jdo.annotations.Column(name="LEASETERM_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "LEASETERM_ID", allowsNull = "true")
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
     public LeaseTerm getLeaseTerm() {
@@ -106,6 +108,22 @@ public class InvoiceItemForLease extends InvoiceItem {
             return;
         }
         currentLeaseTerm.removeFromInvoiceItems(this);
+    }
+
+    // //////////////////////////////////////
+
+    private LocalDateInterval effectiveInterval() {
+        return getInterval().overlap(getLeaseTerm().getInterval());
+    }
+
+    @Override
+    public LocalDate getEffectiveStartDate() {
+        return effectiveInterval().startDate();
+    }
+
+    @Override
+    public LocalDate getEffectiveEndDate() {
+        return effectiveInterval().endDate();
     }
 
     // //////////////////////////////////////
@@ -170,24 +188,26 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Override
     public int compareTo(InvoiceItem other) {
         int compare = super.compareTo(other);
-        if(compare != 0) {
+        if (compare != 0) {
             return compare;
         }
-        if(other instanceof InvoiceItemForLease) {
+        if (other instanceof InvoiceItemForLease) {
             return ORDERING_BY_LEASE_TERM.compare(this, (InvoiceItemForLease) other);
-        } 
+        }
         return getClass().getName().compareTo(other.getClass().getName());
     }
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
         public int compare(InvoiceItemForLease p, InvoiceItemForLease q) {
             // unnecessary, but keeps findbugs happy...
-            if(p == null && q == null) return 0;
-            if(p == null) return -1;
-            if(q == null) return +1;
+            if (p == null && q == null)
+                return 0;
+            if (p == null)
+                return -1;
+            if (q == null)
+                return +1;
             return Ordering.natural().nullsFirst().compare(p.getLeaseTerm(), q.getLeaseTerm());
         }
     };
-
 
 }

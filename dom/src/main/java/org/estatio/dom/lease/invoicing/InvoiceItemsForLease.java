@@ -29,8 +29,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.datanucleus.store.scostore.SetStore;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.utils.StringUtils;
 
 public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
@@ -44,9 +46,12 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public InvoiceItemForLease newInvoiceItem() {
+    public InvoiceItemForLease newInvoiceItem(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
         InvoiceItemForLease invoiceItem = newTransientInstance();
-        persist(invoiceItem);
+        invoiceItem.setStartDate(startDate);
+        invoiceItem.setDueDate(dueDate);
+        invoiceItem.modifyLeaseTerm(leaseTerm);
+        persistIfNotAlready(invoiceItem);
         return invoiceItem;
     }
 

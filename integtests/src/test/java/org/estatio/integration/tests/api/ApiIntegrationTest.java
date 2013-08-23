@@ -133,8 +133,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t05b_putLeasePostalAddress() throws Exception {
-        final AgreementRoleCommunicationChannelType arcttInvoiceAddress = agreementRoleCommunicationChannelTypes.findByTitle(LeaseConstants.ARCCT_INVOICE_ADDRESS);
-        api.putLeasePostalAddress("APITENANT", "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", arcttInvoiceAddress);
+        api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
         final Lease l = leases.findLeaseByReference("APILEASE");
         final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
         final AgreementRole ar = l.findRoleWithType(artTenant, clockService.now());
