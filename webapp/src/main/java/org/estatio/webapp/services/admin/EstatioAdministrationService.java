@@ -21,6 +21,14 @@ package org.estatio.webapp.services.admin;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.fixture.EstatioFixture;
+import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
+import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
+import org.estatio.fixturescripts.FixtureScript;
+import org.estatio.services.settings.EstatioSettingsService;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
@@ -31,24 +39,8 @@ import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsService;
 import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.fixture.EstatioFixture;
-import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
-import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
-import org.estatio.fixturescripts.FixtureScript;
-import org.estatio.services.settings.EstatioSettingsService;
-import org.estatio.webapp.services.scheduler.SchedulerServiceForEstatio;
-
 @Named("Administration")
 public class EstatioAdministrationService {
-
-    @MemberOrder(sequence = "1")
-    public void initializeSchedulerJobs() {
-        scheduler.initializeJobs();
-    }
 
     @Prototype
     @MemberOrder(sequence = "2")
@@ -79,9 +71,9 @@ public class EstatioAdministrationService {
     public String installConstants() {
         AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
         fixture.install();
-        
+
         invoices.createCollectionNumberNumerator("%09d", BigInteger.ZERO);
-        
+
         return "Constants successfully installed";
     }
 
@@ -101,11 +93,10 @@ public class EstatioAdministrationService {
         return FixtureScript.GenerateTopModelInvoice;
     }
 
-    
     public List<ApplicationSetting> listAllSettings() {
         return applicationSettingsService.listAll();
     }
-    
+
     // //////////////////////////////////////
 
     private static void installFixtures(final Object fixture) {
@@ -115,17 +106,11 @@ public class EstatioAdministrationService {
     }
 
     // //////////////////////////////////////
-    
+
     private DomainObjectContainer container;
 
     public void setContainer(DomainObjectContainer container) {
         this.container = container;
-    }
-
-    private SchedulerServiceForEstatio scheduler;
-
-    public void injectSchedulerService(SchedulerServiceForEstatio scheduler) {
-        this.scheduler = scheduler;
     }
 
     private Indices indices;
@@ -145,14 +130,15 @@ public class EstatioAdministrationService {
     public void injectSettingsService(EstatioSettingsService settingsService) {
         this.settingsService = settingsService;
     }
-    
+
     private ApplicationSettingsService applicationSettingsService;
+
     public void injectApplicationSettingsService(ApplicationSettingsService applicationSettingsService) {
         this.applicationSettingsService = applicationSettingsService;
     }
 
-    
     private Invoices invoices;
+
     public void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
     }
