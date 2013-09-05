@@ -18,8 +18,4 @@ package org.estatio.dom.communicationchannel;
 
 public class CommunicationChannelOwnerForTesting implements CommunicationChannelOwner {
 
-    @Override
-    public void addToCommunicationChannels(CommunicationChannel communicationChannel) {
-    }
-
 }

@@ -56,6 +56,8 @@ import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
@@ -401,11 +403,11 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     public List<CommunicationChannel> choices1CreateInitialCommunicationChannel() {
-        return Lists.newArrayList(getParty().getCommunicationChannels());
+        return Lists.newArrayList(communicationChannelContributions.communicationChannels(getParty()));
     }
 
     public CommunicationChannel default1CreateInitialCommunicationChannel() {
-        final SortedSet<CommunicationChannel> partyChannels = getParty().getCommunicationChannels();
+        final SortedSet<CommunicationChannel> partyChannels = communicationChannelContributions.communicationChannels(getParty());
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
@@ -420,7 +422,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         if (!Sets.filter(getCommunicationChannels(), type.matchingCommunicationChannel()).isEmpty()) {
             return "Add a successor/predecessor from existing communication channel";
         }
-        final SortedSet<CommunicationChannel> partyChannels = getParty().getCommunicationChannels();
+        final SortedSet<CommunicationChannel> partyChannels = communicationChannelContributions.communicationChannels(getParty());
         if(!partyChannels.contains(communicationChannel)) {
             return "Communication channel must be one of those of this party";
         }
@@ -477,6 +479,13 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         });
     }
 
+
+    // //////////////////////////////////////
+
+    private CommunicationChannelContributions communicationChannelContributions;
+    public void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
+        this.communicationChannelContributions = communicationChannelContributions;
+    }
 
 
 }

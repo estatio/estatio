@@ -40,12 +40,12 @@ import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.financial.contributed.FinancialAccountContributedActions;
+import org.estatio.dom.financial.contributed.FinancialAccountContributions;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.index.IndexBases;
@@ -123,7 +123,7 @@ public class EstatioSystemInitializer {
                     new Invoices(), 
                     new InvoiceItemsForLease(), 
                     new CommunicationChannels(),
-                    new CommunicationChannelContributedActions(),
+                    new CommunicationChannelContributions(),
                     new PostalAddresses(),
                     new Taxes(), 
                     new TaxRates(), 
@@ -139,7 +139,7 @@ public class EstatioSystemInitializer {
                     new InvoiceCalculationService(), 
                     new ApplicationSettingsServiceJdo(), 
                     new EstatioSettingsServiceJdo(), 
-                    new FinancialAccountContributedActions(),
+                    new FinancialAccountContributions(),
                     new EventBusServiceJdo());
         }
 

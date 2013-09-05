@@ -80,7 +80,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     // @javax.jdo.annotations.Column(allowsNull="false")
     @Optional
-
+    
     @Hidden
     @Override
     public Status getStatus() {
@@ -212,44 +212,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Join(column = "FIXEDASSET_ID", generateForeignKey = "false")
-    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
-
-    @Render(Type.EAGERLY)
-    public SortedSet<CommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
-
-    public void addToCommunicationChannels(final CommunicationChannel communicationChannel) {
-        if (communicationChannel == null || getCommunicationChannels().contains(communicationChannel)) {
-            return;
-        }
-        getCommunicationChannels().add(communicationChannel);
-    }
-
-    public void removeFromCommunicationChannels(final CommunicationChannel communicationChannel) {
-        if (communicationChannel == null || !getCommunicationChannels().contains(communicationChannel)) {
-            return;
-        }
-        getCommunicationChannels().remove(communicationChannel);
-    }
-
-    @Programmatic
-    public CommunicationChannel findCommunicationChannelForType(CommunicationChannelType type) {
-        for (CommunicationChannel c : communicationChannels) {
-            if (c.getType().equals(type)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    // //////////////////////////////////////
 
 
     private LocationLookupService locationLookupService;

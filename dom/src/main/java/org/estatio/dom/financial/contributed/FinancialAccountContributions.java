@@ -33,7 +33,7 @@ import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.party.Party;
 
 @Hidden
-public class FinancialAccountContributedActions extends AbstractContainedObject {
+public class FinancialAccountContributions extends AbstractContainedObject {
 
     @NotInServiceMenu
     @MemberOrder(name = "Financial Accounts", sequence = "13")

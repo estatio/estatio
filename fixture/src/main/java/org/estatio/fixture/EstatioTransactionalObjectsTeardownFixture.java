@@ -51,20 +51,22 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         isisJdoSupport.executeUpdate("DELETE FROM BANKACCOUNT");
         isisJdoSupport.executeUpdate("DELETE FROM FINANCIALACCOUNT");
         
+        isisJdoSupport.executeUpdate("DELETE FROM COMMUNICATIONCHANNEL");
+        
         isisJdoSupport.executeUpdate("DELETE FROM UNIT");
         isisJdoSupport.executeUpdate("DELETE FROM PROPERTY");
-        isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET_COMMUNICATIONCHANNELS");
+        //isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET_COMMUNICATIONCHANNELS");
         isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSETROLE");
         isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET");
         
         
-        isisJdoSupport.executeUpdate("DELETE FROM PARTY_COMMUNICATIONCHANNELS");
+        //isisJdoSupport.executeUpdate("DELETE FROM PARTY_COMMUNICATIONCHANNELS");
         isisJdoSupport.executeUpdate("DELETE FROM PARTYREGISTRATION");
         isisJdoSupport.executeUpdate("DELETE FROM ORGANISATION");
         isisJdoSupport.executeUpdate("DELETE FROM PERSON");
         isisJdoSupport.executeUpdate("DELETE FROM PARTY");
         
-        isisJdoSupport.executeUpdate("DELETE FROM COMMUNICATIONCHANNEL");
+        
         
     }
 

@@ -48,7 +48,12 @@ import org.estatio.dom.WithReferenceGetter;
                 value = "SELECT "
                         + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
                         + "WHERE reference == :reference "
-                        + "&& type == :type")
+                        + "&& type == :type"),
+        @javax.jdo.annotations.Query(
+                name = "findByOwner", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
+                        + "WHERE owner == :owner ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel, Status> implements WithNameGetter, WithReferenceGetter {
@@ -80,15 +85,24 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     // //////////////////////////////////////
 
+    private CommunicationChannelOwner owner;
+
     @javax.jdo.annotations.Persistent(
             extensions = {
                     @Extension(vendorName = "datanucleus",
-                            key = "mapping-strategy",
-                            value = "identity")
+                        key = "mapping-strategy",
+                        value = "per-implementation"),
+                    @Extension(vendorName = "datanucleus",
+                        key = "implementation-classes",
+                        value = "org.estatio.dom.party.Organisation,org.estatio.dom.party.Person,org.estatio.dom.asset.Property,org.estatio.dom.asset.Unit")
             })
-    private CommunicationChannelOwner owner;
-
-    @javax.jdo.annotations.Column(name = "OWNER", allowsNull="false")
+    @javax.jdo.annotations.Columns({
+        @javax.jdo.annotations.Column(name="OWNER_ORGANISATION_ID"),
+        @javax.jdo.annotations.Column(name="OWNER_PERSON_ID"),
+        @javax.jdo.annotations.Column(name="OWNER_PROPERTY_ID"),
+        @javax.jdo.annotations.Column(name="OWNER_UNIT_ID")
+    })
+    @Optional // not really, but cannot set @Column(allowNulls="false") for a polymorphic relationship
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public CommunicationChannelOwner getOwner() {
@@ -161,12 +175,4 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         this.legal = Legal;
     }
 
-    // //////////////////////////////////////
-
-    /**
-     * Isis callback
-     */
-    public void persisting() {
-        owner.addToCommunicationChannels(this);
-    }
 }

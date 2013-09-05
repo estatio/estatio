@@ -35,7 +35,7 @@ import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.communicationchannel.PostalAddress;
@@ -307,9 +307,9 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setStorageArea(storageArea);
         unit.setMezzanineArea(mezzanineArea);
         unit.setTerraceArea(terraceArea);
-        CommunicationChannel cc = unit.findCommunicationChannelForType(CommunicationChannelType.POSTAL_ADDRESS);
+        CommunicationChannel cc = communicationChannelContributions.findCommunicationChannelForType(unit, CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            communicationChannelContributedActions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, null, postalCode, city);
+            communicationChannelContributions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, null, postalCode, city);
         }
     }
 
@@ -335,13 +335,13 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("postalCode") @Optional String postalCode,
             @Named("stateCode") @Optional String stateCode,
             @Named("countryCode") String countryCode) {
-        Property property = properties.findPropertyByReference(propertyReference);
+        final Property property = properties.findPropertyByReference(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
-        CommunicationChannel comm = property.findCommunicationChannelForType(null);
+        final CommunicationChannel comm = communicationChannelContributions.findCommunicationChannelForType(property, null);
         if (comm == null) {
-            communicationChannelContributedActions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, address2, postalCode, city);
+            communicationChannelContributions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, address2, postalCode, city);
         }
     }
 
@@ -827,10 +827,10 @@ public class Api extends AbstractFactoryAndRepository {
         this.persons = persons;
     }
 
-    private CommunicationChannelContributedActions communicationChannelContributedActions;
+    private CommunicationChannelContributions communicationChannelContributions;
 
-    public void injectCommunicationChannelContributedActions(final CommunicationChannelContributedActions communicationChannelContributedActions) {
-        this.communicationChannelContributedActions = communicationChannelContributedActions;
+    public void injectCommunicationChannelContributedActions(final CommunicationChannelContributions communicationChannelContributedActions) {
+        this.communicationChannelContributions = communicationChannelContributedActions;
     }
 
     private CommunicationChannels communicationChannels;

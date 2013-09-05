@@ -114,35 +114,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Join(column = "PARTY_ID", generateForeignKey = "false")
-    @javax.jdo.annotations.Element(column = "COMMUNICATIONCHANNEL_ID", generateForeignKey = "false")
-    private SortedSet<CommunicationChannel> communicationChannels = new TreeSet<CommunicationChannel>();
-
-    @Render(Type.EAGERLY)
-    public SortedSet<CommunicationChannel> getCommunicationChannels() {
-        return communicationChannels;
-    }
-
-    public void setCommunicationChannels(final SortedSet<CommunicationChannel> communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
-
-    public void addToCommunicationChannels(final CommunicationChannel communicationChannel) {
-        if (communicationChannel == null || getCommunicationChannels().contains(communicationChannel)) {
-            return;
-        }
-        getCommunicationChannels().add(communicationChannel);
-    }
-
-    public void removeFromCommunicationChannels(final CommunicationChannel communicationChannel) {
-        if (communicationChannel == null || !getCommunicationChannels().contains(communicationChannel)) {
-            return;
-        }
-        getCommunicationChannels().remove(communicationChannel);
-    }
-
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 

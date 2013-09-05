@@ -68,6 +68,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {
 
+    private static final String TAG_NAME_ACTIVITY = "ACTIVITY";
+    private static final String TAG_NAME_SECTOR = "SECTOR";
+    private static final String TAG_NAME_BRAND = "BRAND";
+    private static final String TAG_NAME_SIZE = "SIZE";
+
     public LeaseUnit() {
         super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
     }
@@ -248,12 +253,12 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     public void setSize(final String size) {
         final Tag existingTag = getSizeTag();
-        Tag tag = tags.tagFor(existingTag, this, "size", size);
+        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_SIZE, size);
         setSizeTag(tag);
     }
 
     public List<String> choicesSize() {
-        return tags.choices(this, "size");
+        return tags.choices(this, TAG_NAME_SIZE);
     }
 
     public LeaseUnit newSize(@Named("Tag") @Optional final String size) {
@@ -287,12 +292,12 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     public void setBrand(final String brand) {
         final Tag existingTag = getBrandTag();
-        Tag tag = tags.tagFor(existingTag, this, "brand", brand);
+        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_BRAND, brand);
         setBrandTag(tag);
     }
 
     public List<String> choicesBrand() {
-        return tags.choices(this, "brand");
+        return tags.choices(this, TAG_NAME_BRAND);
     }
 
     public LeaseUnit newBrand(@Named("Tag") @Optional final String brand) {
@@ -326,12 +331,12 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     public void setSector(final String sector) {
         final Tag existingTag = getSectorTag();
-        Tag tag = tags.tagFor(existingTag, this, "sector", sector);
+        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_SECTOR, sector);
         setSectorTag(tag);
     }
 
     public List<String> choicesSector() {
-        return tags.choices(this, "sector");
+        return tags.choices(this, TAG_NAME_SECTOR);
     }
 
     public LeaseUnit newSector(@Named("Tag") @Optional final String sector) {
@@ -365,12 +370,12 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     public void setActivity(final String activity) {
         final Tag existingTag = getActivityTag();
-        Tag tag = tags.tagFor(existingTag, this, "activity", activity);
+        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_ACTIVITY, activity);
         setActivityTag(tag);
     }
 
     public List<String> choicesActivity() {
-        return tags.choices(this, "activity");
+        return tags.choices(this, TAG_NAME_ACTIVITY);
     }
 
     public LeaseUnit newActivity(@Named("Tag") @Optional final String activity) {

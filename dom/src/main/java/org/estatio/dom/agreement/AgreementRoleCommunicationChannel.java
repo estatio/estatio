@@ -51,6 +51,7 @@ import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -323,11 +324,11 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     }
 
     public List<CommunicationChannel> choices0SucceededBy() {
-        return Lists.newArrayList(getRole().getParty().getCommunicationChannels());
+        return Lists.newArrayList(communicationChannelsForRolesParty());
     }
 
     public CommunicationChannel default0SucceededBy() {
-        final SortedSet<CommunicationChannel> partyChannels = getRole().getParty().getCommunicationChannels();
+        final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
@@ -351,7 +352,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         if (successor != null && communicationChannel == successor.getCommunicationChannel()) {
             return "Successor's communication channel cannot be the same as that of existing successor";
         }
-        final SortedSet<CommunicationChannel> partyChannels = getRole().getParty().getCommunicationChannels();
+        final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
         if(!partyChannels.contains(communicationChannel)) {
             return "Successor's communication channel must be one of those of the parent role's party";
         }
@@ -369,11 +370,11 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     }
 
     public List<CommunicationChannel> choices0PrecededBy() {
-        return Lists.newArrayList(getRole().getParty().getCommunicationChannels());
+        return Lists.newArrayList(communicationChannelsForRolesParty());
     }
 
     public CommunicationChannel default0PrecededBy() {
-        final SortedSet<CommunicationChannel> partyChannels = getRole().getParty().getCommunicationChannels();
+        final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
@@ -397,11 +398,26 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         if (predecessor != null && communicationChannel == predecessor.getCommunicationChannel()) {
             return "Predecessor's communication channel cannot be the same as that of existing predecessor";
         }
-        final SortedSet<CommunicationChannel> partyChannels = getRole().getParty().getCommunicationChannels();
+        final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
         if(!partyChannels.contains(communicationChannel)) {
             return "Predecessor's communication channel must be one of those of the parent role's party";
         }
         return null;
     }
+
+    // //////////////////////////////////////
+    
+    private SortedSet<CommunicationChannel> communicationChannelsForRolesParty() {
+        return communicationChannelContributions.communicationChannels(getRole().getParty());
+    }
+
+    
+    // //////////////////////////////////////
+
+    private CommunicationChannelContributions communicationChannelContributions;
+    public void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
+        this.communicationChannelContributions = communicationChannelContributions;
+    }
+
 
 }

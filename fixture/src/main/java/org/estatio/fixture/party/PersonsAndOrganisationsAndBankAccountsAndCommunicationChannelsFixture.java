@@ -21,7 +21,7 @@ package org.estatio.fixture.party;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
-import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -115,9 +115,9 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
         this.persons = persons;
     }
 
-    private CommunicationChannelContributedActions communicationChannelContributedActions;
+    private CommunicationChannelContributions communicationChannelContributedActions;
 
-    public void injectCommunicationChannels(CommunicationChannelContributedActions communicationChannelContributedActions) {
+    public void injectCommunicationChannels(CommunicationChannelContributions communicationChannelContributedActions) {
         this.communicationChannelContributedActions = communicationChannelContributedActions;
     }
 

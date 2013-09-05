@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
@@ -33,6 +34,7 @@ import org.estatio.integration.tests.EstatioIntegrationTest;
 public class PartyTest_communicationChannels extends EstatioIntegrationTest {
 
     private Parties parties;
+    private CommunicationChannelContributions communicationChannelContributions;
     private Party partyHelloWorld;
 
     @BeforeClass
@@ -43,11 +45,12 @@ public class PartyTest_communicationChannels extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         parties = service(Parties.class);
+        communicationChannelContributions = service(CommunicationChannelContributions.class);
         partyHelloWorld = parties.findPartyByReferenceOrName("HELLOWORLD");
     }
     
     @Test
     public void fixtureData() throws Exception {
-        Assert.assertThat(partyHelloWorld.getCommunicationChannels().size(), is(3));
+        Assert.assertThat(communicationChannelContributions.communicationChannels(partyHelloWorld).size(), is(3));
     }
 }

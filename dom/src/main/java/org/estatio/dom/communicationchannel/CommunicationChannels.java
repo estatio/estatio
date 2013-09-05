@@ -18,10 +18,16 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.List;
+import java.util.SortedSet;
+
+import com.google.common.collect.Sets;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
@@ -97,8 +103,17 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public CommunicationChannel findByReferenceAndType(String reference, CommunicationChannelType type) {
+    public CommunicationChannel findByReferenceAndType(
+            final String reference, final CommunicationChannelType type) {
         return firstMatch("findByReferenceAndType", "reference", reference, "type", type);
     }
+
+    public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
+        return Sets.newTreeSet(allMatches("findByOwner", "owner", owner));
+    }
+    
+    
+
+
 
 }

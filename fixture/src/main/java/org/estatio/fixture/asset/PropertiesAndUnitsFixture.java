@@ -28,7 +28,7 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributedActions;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
@@ -102,9 +102,9 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         this.parties = parties;
     }
 
-    private CommunicationChannelContributedActions communicationChannelContributedActions;
+    private CommunicationChannelContributions communicationChannelContributedActions;
     
-    public void injectCommunicationChannelContributedActions(final CommunicationChannelContributedActions communicationChannelContributedActions) {
+    public void injectCommunicationChannelContributedActions(final CommunicationChannelContributions communicationChannelContributedActions) {
         this.communicationChannelContributedActions = communicationChannelContributedActions;
     }
 

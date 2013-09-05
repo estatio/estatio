@@ -19,12 +19,16 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 
@@ -33,12 +37,13 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
+import org.estatio.dom.party.Party;
 
 @Hidden
-public class CommunicationChannelContributedActions extends EstatioDomainService<CommunicationChannel> {
+public class CommunicationChannelContributions extends EstatioDomainService<CommunicationChannel> {
 
-    public CommunicationChannelContributedActions() {
-        super(CommunicationChannelContributedActions.class, CommunicationChannel.class);
+    public CommunicationChannelContributions() {
+        super(CommunicationChannelContributions.class, CommunicationChannel.class);
     }
 
     // //////////////////////////////////////
@@ -134,6 +139,30 @@ public class CommunicationChannelContributedActions extends EstatioDomainService
 
     
     // //////////////////////////////////////
+    
+    @ActionSemantics(Of.SAFE)
+    @NotInServiceMenu
+    @NotContributed(As.ACTION)
+    public SortedSet<CommunicationChannel> communicationChannels(final CommunicationChannelOwner owner) {
+        return communicationChannels.findByOwner(owner);
+    }
+
+    
+    // //////////////////////////////////////
+    
+    @NotContributed
+    @Programmatic
+    public CommunicationChannel findCommunicationChannelForType(final CommunicationChannelOwner owner, final CommunicationChannelType type) {
+        final SortedSet<CommunicationChannel> communicationChannels = this.communicationChannels(owner);
+        for (CommunicationChannel c : communicationChannels) {
+            if (c.getType().equals(type)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    // //////////////////////////////////////
 
     private CommunicationChannels communicationChannels;
     public void injectCommunicationChannels(CommunicationChannels communicationChannels) {
@@ -149,4 +178,5 @@ public class CommunicationChannelContributedActions extends EstatioDomainService
     public void injectCountries(Countries countries) {
         this.countries = countries;
     }
+
 }
