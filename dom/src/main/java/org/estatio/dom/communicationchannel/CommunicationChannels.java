@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
@@ -101,13 +102,13 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
+    @NotInServiceMenu
     public CommunicationChannel findByReferenceAndType(
             final String reference, final CommunicationChannelType type) {
         return firstMatch("findByReferenceAndType", "reference", reference, "type", type);
     }
 
+    @Programmatic
     public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
         return Sets.newTreeSet(allMatches("findByOwner", "owner", owner));
     }

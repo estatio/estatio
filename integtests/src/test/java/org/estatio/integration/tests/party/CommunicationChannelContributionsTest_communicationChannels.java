@@ -31,7 +31,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
-public class PartyTest_communicationChannels extends EstatioIntegrationTest {
+public class CommunicationChannelContributionsTest_communicationChannels extends EstatioIntegrationTest {
 
     private Parties parties;
     private CommunicationChannelContributions communicationChannelContributions;

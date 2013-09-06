@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.core.commons.lang.StringUtils;
+import org.apache.isis.core.commons.lang.StringExtensions;
 
 import org.estatio.services.clock.ClockService;
 
@@ -40,7 +40,7 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
     @Override
     public String getId() {
         // eg "agreementRoles";
-        return StringUtils.camelLowerFirst(serviceType.getSimpleName());
+        return StringExtensions.asCamelLowerFirst(serviceType.getSimpleName());
     }
 
     public String iconName() {
