@@ -39,8 +39,8 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -61,8 +61,25 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE reference.matches(:reference)"),
-        @javax.jdo.annotations.Query(name = "findByAssetAndActiveOnDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.lease.Lease WHERE units.contains(lu) && (terminationDate == null || terminationDate <= :activeOnDate) && (lu.unit == :asset || lu.unit.property == :asset) VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Lease "
+                        + "WHERE reference.matches(:reference)"),
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Lease "
+                        + "WHERE reference.matches(:referenceOrName)"
+                        +    "|| name.matches(:referenceOrName)"),
+        @javax.jdo.annotations.Query(
+                name = "findByAssetAndActiveOnDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Lease "
+                        + "WHERE units.contains(lu) "
+                        + "&& (terminationDate == null || terminationDate <= :activeOnDate) "
+                        + "&& (lu.unit == :asset || lu.unit.property == :asset) "
+                        + "VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
 @Bookmarkable
 public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 

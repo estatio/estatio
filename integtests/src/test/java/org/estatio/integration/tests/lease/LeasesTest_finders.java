@@ -55,7 +55,7 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
 
     @Test
     public void findLeasesByReference_whenWildcard() throws Exception {
-        final List<Lease> matchingLeases = leases.findLeasesByReference("OXF*");
+        final List<Lease> matchingLeases = leases.findLeases("OXF*");
         assertThat(matchingLeases.size(), is(4));
     }
 }

@@ -24,12 +24,12 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
-import org.datanucleus.store.scostore.SetStore;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
@@ -65,10 +65,10 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<InvoiceItemForLease> findInvoiceItemsByLease(
-            final @Named("Lease reference") String leaseReference, 
+            final @Named("Lease reference or name") @DescribedAs("May include wildcards '*' and '?'") String leaseReferenceOrName,
             final @Named("Start Date") LocalDate startDate, 
             final @Named("Due Date") LocalDate dueDate) {
-        return allMatches("findByLeaseAndStartDateAndDueDate", "leaseReference", StringUtils.wildcardToRegex(leaseReference), "startDate", startDate, "dueDate", dueDate);
+        return allMatches("findByLeaseAndStartDateAndDueDate", "leaseReferenceOrName", StringUtils.wildcardToRegex(leaseReferenceOrName), "startDate", startDate, "dueDate", dueDate);
     }
 
     

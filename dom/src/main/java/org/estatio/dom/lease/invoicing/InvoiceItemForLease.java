@@ -53,7 +53,8 @@ import org.apache.isis.applib.annotation.Where;
                 name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
-                        "WHERE leaseTerm.leaseItem.lease.reference.matches(:leaseReference) " +
+                        "WHERE (leaseTerm.leaseItem.lease.reference.matches(:leaseReferenceOrName) " +
+                        "   || leaseTerm.leaseItem.lease.name.matches(:leaseReferenceOrName)) " +
                         "&& dueDate == :dueDate " +
                         "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(

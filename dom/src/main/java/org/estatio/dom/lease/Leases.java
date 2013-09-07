@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 public class Leases extends EstatioDomainService<Lease> {
@@ -99,21 +100,26 @@ public class Leases extends EstatioDomainService<Lease> {
     // //////////////////////////////////////
 
     
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "2")
-    public Lease findLeaseByReference(@Named("Reference") String reference) {
+    @Programmatic
+    public Lease findLeaseByReference(String reference) {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Lease> findLeasesByReference(@Named("Reference") String reference) {
-        return allMatches("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+    public List<Lease> findLeases(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+    }
+    public String default0FindLeases() {
+        return "*xxx-yyy*";
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findLeasesByAsset(FixedAsset fixedAsset, @Named("Active On Date") LocalDate activeOnDate) {
+    public List<Lease> findLeasesByAsset(
+            final FixedAsset fixedAsset, 
+            final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
@@ -132,15 +138,17 @@ public class Leases extends EstatioDomainService<Lease> {
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "6")
-    public List<InvoiceItemForLease> calculate(final @Named("Lease reference") String leaseReference, final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, final @Named("Run Type") InvoiceRunType runType) {
-        List<Lease> leases = findLeasesByReference(leaseReference);
+    public List<InvoiceItemForLease> calculate(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName, 
+            final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, final @Named("Run Type") InvoiceRunType runType) {
+        final List<Lease> leases = findLeases(referenceOrName);
         for (Lease lease : leases) {
             lease.calculate(startDate, dueDate, runType);
         }
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
-        return invoiceItemsForLease.findInvoiceItemsByLease(leaseReference, startDate, dueDate);
+        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName, startDate, dueDate);
     }
 
 
