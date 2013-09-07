@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -52,11 +53,20 @@ public class Organisations extends EstatioDomainService<Organisation> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Parties", sequence = "5")
+    @Programmatic
     public Organisation findOrganisation(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
         return firstMatch("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+    }
+    
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Parties", sequence = "5")
+    public List<Organisation> findOrganisations(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+    }
+    public String default0FindOrganisations() {
+        return "*prop*";
     }
 
     // //////////////////////////////////////
