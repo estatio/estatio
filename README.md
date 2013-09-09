@@ -85,11 +85,24 @@ and build using maven:
 
 The clone is approx 3Mb, and takes approximately 1 minute to build.
 
+## Configure Estatio (JDBC URL) ##
+
+Before Estatio can be run, you must configure its JDBC URL; typically this lives in the `webapp/src/main/webapp/WEB-INF/persistor.properties` properties file.
+
+You can do this most easily by copying a set of property entries from `webapp/src/main/webapp/WEB-INF/persistor-SAMPLE.properties`.
+
+For example, to run against an in-memory HSQLDB, the `persistor.properties` file should consist of:
+
+    isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName=org.hsqldb.jdbcDriver
+    isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL=jdbc:hsqldb:mem:test
+    isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName=sa
+    isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword=
+ 
+The JDBC driver for HSQLDB is on the classpath.  If you want to connect to some other database, be sure to update the `pom.xml` to add the driver as a `<dependency>`.
+
 ## Run Estatio ##
 
-By default Estatio is configured to use an in-memory HSQLDB database.  (This can be changed by editing the JDBC properties in `webapp/src/main/webapp/WEB-INF/persistor.properties` properties file).
-
-You can run Estatio either using the standalone (self-hosting) version of the WAR, or using mvn jetty plugin.
+You can run Estatio either using the standalone (self-hosting) version of the WAR, or using `mvn jetty plugin`.
 
 ### Running as a self-hosting JAR
 

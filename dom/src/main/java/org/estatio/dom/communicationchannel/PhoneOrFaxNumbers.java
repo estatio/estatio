@@ -18,10 +18,10 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.EstatioDomainService;
-
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.EstatioDomainService;
 
 @Hidden
 public class PhoneOrFaxNumbers extends EstatioDomainService<PhoneOrFaxNumber> {
@@ -32,7 +32,7 @@ public class PhoneOrFaxNumbers extends EstatioDomainService<PhoneOrFaxNumber> {
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
+    @Programmatic
     public PhoneOrFaxNumber findByPhoneOrFaxNumber(final CommunicationChannelOwner owner, final String phoneNumber) {
         return firstMatch("findByPhoneNumber", "owner", owner, "phoneNumber", phoneNumber);
     }

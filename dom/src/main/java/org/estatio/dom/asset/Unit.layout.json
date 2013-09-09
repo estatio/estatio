@@ -53,6 +53,7 @@
     }
   ],
   "actions": {
+    "activeLeasesOnDate": {},
     "lock": {},
     "unlock": {}
   }

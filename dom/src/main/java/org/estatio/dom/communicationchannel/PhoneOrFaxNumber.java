@@ -34,17 +34,11 @@ import org.apache.isis.applib.util.TitleBuffer;
 @javax.jdo.annotations.Index(name="PHONENUMBER_IDX", members={"phoneNumber"})
 public class PhoneOrFaxNumber extends CommunicationChannel {
 
-    @Title
-    @Override
-    public String getName() {
-        return new TitleBuffer("Phone").append(getPhoneNumber()).toString();
-    }
-
-    // //////////////////////////////////////
 
     private String phoneNumber;
 
     @javax.jdo.annotations.Column(allowsNull="true")
+    @Title(prepend="Phone")
     @Mandatory
     public String getPhoneNumber() {
         return phoneNumber;

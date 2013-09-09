@@ -18,10 +18,11 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
-
-import org.apache.isis.applib.annotation.Hidden;
 
 @Hidden
 public class PostalAddresses extends EstatioDomainService<PostalAddress> {
@@ -32,7 +33,13 @@ public class PostalAddresses extends EstatioDomainService<PostalAddress> {
 
     // //////////////////////////////////////
 
-    public CommunicationChannel findByAddress(CommunicationChannelOwner owner, String address1, String postalCode, String city, Country country) {
+    @Programmatic
+    public CommunicationChannel findByAddress(
+            final CommunicationChannelOwner owner, 
+            final String address1, 
+            final String postalCode, 
+            final String city, 
+            final Country country) {
         return firstMatch("findByAddress", "owner", owner, "address1", address1, "postalCode", postalCode, "city", city, "country", country);
     }
 

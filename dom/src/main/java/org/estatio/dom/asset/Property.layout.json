@@ -62,6 +62,8 @@
     }
   ],
   "actions": {
+    "activeLeasesOnDate": {},
+    "findInvoiceNumberNumerator": {},
     "lock": {},
     "unlock": {}
   }

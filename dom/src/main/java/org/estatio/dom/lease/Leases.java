@@ -33,6 +33,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
+import org.estatio.services.clock.ClockService;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -117,15 +118,18 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findLeasesByAsset(
+    public List<Lease> activeLeasesOnDate(
             final FixedAsset fixedAsset, 
             final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
-
-    public List<FixedAsset> autoComplete0FindLeasesByAsset(final String searchPhrase) {
+    public List<FixedAsset> autoComplete0ActiveLeasesOnDate(final String searchPhrase) {
         return fixedAssets.findAssetsByReferenceOrName(searchPhrase);
     }
+    public LocalDate default1ActiveLeasesOnDate() {
+        return getClockService().now();
+    }
+
 
     // //////////////////////////////////////
 
@@ -168,31 +172,33 @@ public class Leases extends EstatioDomainService<Lease> {
 
     private Invoices invoices;
 
-    public void injectInvoices(final Invoices invoices) {
+    public final void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
     
     private InvoiceItemsForLease invoiceItemsForLease;
     
-    public void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
+    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
     }
 
     private FixedAssets fixedAssets;
 
-    public void injectFixedAssets(FixedAssets fixedAssets) {
+    public final void injectFixedAssets(FixedAssets fixedAssets) {
         this.fixedAssets = fixedAssets;
     }
 
     private AgreementTypes agreementTypes;
 
-    public void injectAgreementTypes(final AgreementTypes agreementTypes) {
+    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
 
     private AgreementRoleTypes agreementRoleTypes;
 
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
+    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
+    
+    
 }

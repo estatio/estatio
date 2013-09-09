@@ -34,17 +34,13 @@ import org.apache.isis.applib.annotation.Title;
 
 public class EmailAddress extends CommunicationChannel {
 
-    @Title
-    @Override
-    public String getName() {
-        return getEmailAddress();
-    }
 
     // //////////////////////////////////////
 
     private String emailAddress;
 
     @javax.jdo.annotations.Column(allowsNull="true")
+    @Title
     @Mandatory
     public String getEmailAddress() {
         return emailAddress;

@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
@@ -72,6 +73,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     // @javax.jdo.annotations.Column(allowsNull="false")
     @Optional
 
+    @MemberOrder(sequence="5")
     @Disabled
     @Override
     public Status getStatus() {
@@ -83,6 +85,14 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         this.status = status;
     }
 
+    // //////////////////////////////////////
+    
+    @MemberOrder(sequence="2")
+    @Hidden(where = Where.OBJECT_FORMS)
+    public String getName() {
+        return getContainer().titleOf(this);
+    }
+    
     // //////////////////////////////////////
 
     private CommunicationChannelOwner owner;
@@ -117,8 +127,9 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private CommunicationChannelType type;
 
+    @MemberOrder(sequence="1")
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
+    @Hidden(where=Where.OBJECT_FORMS)
     public CommunicationChannelType getType() {
         return type;
     }
@@ -144,16 +155,12 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         this.reference = reference;
     }
 
-    // //////////////////////////////////////
-
-    @Title
-    @Hidden(where = Where.OBJECT_FORMS)
-    public abstract String getName();
 
     // //////////////////////////////////////
 
     private String description;
 
+    @Hidden(where=Where.ALL_TABLES)
     @Optional
     public String getDescription() {
         return description;
@@ -167,6 +174,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private boolean legal;
 
+    @MemberOrder(sequence="3")
     public boolean isLegal() {
         return legal;
     }

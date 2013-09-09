@@ -18,10 +18,10 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.EstatioDomainService;
-
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.EstatioDomainService;
 
 @Hidden
 public class EmailAddresses extends EstatioDomainService<EmailAddress> {
@@ -32,8 +32,10 @@ public class EmailAddresses extends EstatioDomainService<EmailAddress> {
 
     // //////////////////////////////////////
 
-    @NotInServiceMenu
-    public EmailAddress findByEmailAddress(final CommunicationChannelOwner owner, final String emailAddress) {
+    @Programmatic
+    public EmailAddress findByEmailAddress(
+            final CommunicationChannelOwner owner, 
+            final String emailAddress) {
         return firstMatch("findByEmailAddress", "owner", owner, "emailAddress", emailAddress);
     }
 }

@@ -47,23 +47,6 @@ import org.apache.isis.applib.util.TitleBuffer;
 @javax.jdo.annotations.Index(name="POSTAL_ADDRESS_IDX", members={"owner", "address1","postalCode","city","country"})
 public class PostalAddress extends CommunicationChannel {
 
-    /**
-     * This is NOT the <tt>@Title</tt>, because the title omits the
-     * <i>address2</i> attribute.
-     * 
-     * TODO: is this inconsistency intentional?
-     */
-    @Override
-    public String getName() {
-        TitleBuffer title = new TitleBuffer(getAddress1());
-        title.append(", ", getAddress2());
-        title.append(", ", getPostalCode());
-        title.append(", ", getCity());
-        return title.toString();
-    }
-
-    // //////////////////////////////////////
-
     private String address1;
 
     @javax.jdo.annotations.Column(allowsNull="true")
@@ -83,6 +66,7 @@ public class PostalAddress extends CommunicationChannel {
     private String address2;
 
     @javax.jdo.annotations.Column(allowsNull="true")
+    @Title(sequence = "2", append = ", ")
     @Optional
     @Named("Address Line 2")
     public String getAddress2() {
@@ -99,7 +83,7 @@ public class PostalAddress extends CommunicationChannel {
 
     @javax.jdo.annotations.Column(allowsNull="true")
     @Mandatory
-    @Title(sequence = "2", append = ", ")
+    @Title(sequence = "3", append = ", ")
     public String getPostalCode() {
         return postalCode;
     }
@@ -114,7 +98,7 @@ public class PostalAddress extends CommunicationChannel {
 
     @javax.jdo.annotations.Column(allowsNull="true")
     @Mandatory
-    @Title(sequence = "3")
+    @Title(sequence = "4")
     public String getCity() {
         return city;
     }
