@@ -18,7 +18,7 @@
  */
 package org.estatio.integration.tests.assets;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -60,10 +60,33 @@ public class PropertiesTest_finders extends EstatioIntegrationTest {
     }
     
     @Test
-    public void findPropertiesByReference() throws Exception {
-        assertNotNull(properties.findPropertiesByReference("OXF"));
+    public void findProperties_withReference() throws Exception {
+        final List<Property> props = properties.findProperties("OXF");
+        assertNotNull(props);
+        assertThat(props.size(), is(1));
     }
 
+    @Test
+    public void findProperties_withName() throws Exception {
+        final List<Property> props = properties.findProperties("Oxford Super Mall");
+        assertNotNull(props);
+        assertThat(props.size(), is(1));
+    }
+    
+    @Test
+    public void findProperties_withWildcard() throws Exception {
+        final List<Property> props = properties.findProperties("Oxford*");
+        assertNotNull(props);
+        assertThat(props.size(), is(1));
+    }
+    
+    @Test
+    public void findProperties_wildcard_returningMultiple() throws Exception {
+        final List<Property> props = properties.findProperties("*");
+        assertNotNull(props);
+        assertThat(props.size(), is(2));
+    }
+    
     @Test
     public void allProperties_property_getUnits() throws Exception {
         List<Property> allProperties = properties.allProperties();

@@ -32,22 +32,19 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.lease.Lease;
 
-public class InvoiceItemsForLease_finders {
+public class InvoiceItemsForLeaseTest_finders {
 
     private FinderInteraction finderInteraction;
 
     private InvoiceItemsForLease invoiceItems;
 
-    private Lease lease;
     private LocalDate startDate;
     private LocalDate dueDate;
 
     @Before
     public void setup() {
 
-        lease = new Lease();
         startDate = new LocalDate(2013,4,1);
         dueDate = new LocalDate(2013,5,2);
         
@@ -80,7 +77,7 @@ public class InvoiceItemsForLease_finders {
         
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(InvoiceItemForLease.class));
         assertThat(finderInteraction.getQueryName(), is("findByLeaseAndStartDateAndDueDate"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("leaseReference"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("leaseReferenceOrName"), is((Object)".*REF.1.*"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object)startDate));
         assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate"), is((Object)dueDate));
         

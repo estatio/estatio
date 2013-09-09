@@ -23,10 +23,12 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
@@ -65,11 +67,15 @@ public class Properties extends EstatioDomainService<Property> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Assets", sequence = "2")
-    public List<Property> findPropertiesByReference(final @Named("Reference") String reference) {
-        return allMatches("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+    public List<Property> findProperties(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+    }
+    public String default0FindProperties() {
+        return "*xxx*";
     }
 
-    @Hidden
+    @Programmatic
     public Property findPropertyByReference(final String reference) {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
@@ -78,7 +84,7 @@ public class Properties extends EstatioDomainService<Property> {
 
     @Hidden
     public List<Property> autoComplete(String searchPhrase) {
-        return findPropertiesByReference("*".concat(searchPhrase).concat("*"));
+        return findProperties("*".concat(searchPhrase).concat("*"));
     }
 
     

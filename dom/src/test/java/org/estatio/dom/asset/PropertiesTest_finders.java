@@ -62,14 +62,14 @@ public class PropertiesTest_finders {
 
     
     @Test
-    public void findPropertiesByReference() {
+    public void findProperties() {
 
-        properties.findPropertiesByReference("*REF?1*");
+        properties.findProperties("*REF?1*");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)".*REF.1.*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
     
@@ -93,8 +93,8 @@ public class PropertiesTest_finders {
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Property.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*X.yz.*"));
+        assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)".*X.yz.*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
     

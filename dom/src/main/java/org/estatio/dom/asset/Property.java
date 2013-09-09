@@ -46,11 +46,19 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.asset.Property " +
-        		"WHERE reference.matches(:reference)")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.Property "
+                        + "WHERE reference.matches(:referenceOrName)"
+                        + "|| name.matches(:referenceOrName)"),
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.Property "
+                        + "WHERE reference.matches(:reference)")
+})
 @AutoComplete(repository = Properties.class)
 @Bookmarkable
 public class Property extends FixedAsset {
