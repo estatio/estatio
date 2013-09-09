@@ -50,8 +50,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT "
                         + "FROM org.estatio.dom.tax.TaxRate "
                         + "WHERE tax == :tax"
-                        + "  && startDate >= :date"
-                        + "  && (endDate == null || endDate <= :date)"),
+                        + "  && startDate <= :date"
+                        + "  && (endDate == null || endDate >= :date)"),
         @javax.jdo.annotations.Query(
                 name = "findByTaxAndStartDate", language = "JDOQL",
                 value = "SELECT "

@@ -40,6 +40,8 @@ import org.estatio.dom.lease.LeaseUnits;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
@@ -69,6 +71,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
     private PhoneOrFaxNumbers phoneOrFaxNumbers;
     private EmailAddresses emailAddresses;
     private Countries countries;
+    private Taxes taxes;
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -90,6 +93,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         emailAddresses = service(EmailAddresses.class);
         postalAddresses = service(PostalAddresses.class);
         countries = service(Countries.class);
+        taxes = service(Taxes.class);
 
     }
 
@@ -99,6 +103,9 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         api.putState("NH", "NH", "NLD");
         api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
         api.putCharge("APICHARGE", "APICHARGE", "API CHARGE", "APITAX");
+        api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21), new LocalDate(1980, 1, 1));
+        Tax tax = taxes.findTaxByReference("APITAX");
+        Assert.assertNotNull(tax.percentageFor(LocalDate.now()));
     }
 
     @Test
