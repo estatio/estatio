@@ -77,7 +77,7 @@ public class ETO  {
             try {
                 return ScenarioExecution.current().getVar("party", id, org.estatio.dom.party.Party.class);
             } catch(IllegalStateException e) {
-                return ScenarioExecution.current().service(Parties.class).findPartyByReferenceOrName(id);
+                return ScenarioExecution.current().service(Parties.class).findPartyByReference(id);
             }
         }
     }

@@ -79,7 +79,7 @@ public class PropertiesTest_finders extends EstatioIntegrationTest {
 
     @Test
     public void findRole() throws Exception {
-        Party party = parties.findPartyByReferenceOrName("HELLOWORLD");
+        Party party = parties.findPartyByReference("HELLOWORLD");
         Property property = properties.findPropertyByReference("OXF");
         FixedAssetRole propertyActor = fixedAssetRoles.findRole(property, party, FixedAssetRoleType.PROPERTY_OWNER);
         Assert.assertNotNull(propertyActor);

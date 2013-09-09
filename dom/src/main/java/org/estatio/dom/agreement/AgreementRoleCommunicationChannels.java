@@ -19,7 +19,10 @@
 package org.estatio.dom.agreement;
 
 import org.estatio.dom.EstatioDomainService;
+import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 
 @Hidden
@@ -29,5 +32,10 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
         super(AgreementRoleCommunicationChannels.class, AgreementRoleCommunicationChannel.class);
     }
 
+    @Hidden
+    @ActionSemantics(Of.SAFE)
+    public AgreementRoleCommunicationChannel findByRoleAndTypeAndContainsDate(AgreementRole role, AgreementRoleCommunicationChannelType type, LocalDate date) {
+        return firstMatch("findByRoleAndTypeAndContainsDate", "role", role, "type", type, "date", date);
+    }
 
 }

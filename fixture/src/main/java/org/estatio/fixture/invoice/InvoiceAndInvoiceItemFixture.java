@@ -52,8 +52,8 @@ public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
     }
 
     private void createInvoices() {
-        final Party buyer = parties.findPartyByReferenceOrName(BUYER_PARTY);
-        final Party seller = parties.findPartyByReferenceOrName(SELLER_PARTY);
+        final Party buyer = parties.findPartyByReference(BUYER_PARTY);
+        final Party seller = parties.findPartyByReference(SELLER_PARTY);
         final Lease lease = leases.findLeaseByReference(LEASE);
         final Currency currency = currencies.findCurrencyByReference("EUR");
         

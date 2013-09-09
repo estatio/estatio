@@ -38,6 +38,8 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.EmailAddresses;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.financial.BankAccount;
@@ -210,7 +212,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("firstName") String firstName,
             @Named("lastName") String lastName) {
         // TODO Add check for return type
-        Person person = (Person) parties.findPartyByReferenceOrName(reference);
+        Person person = (Person) parties.findPartyByReference(reference);
         if (person == null) {
             person = persons.newPerson(initials, firstName, lastName);
             person.setReference(reference);
@@ -223,7 +225,7 @@ public class Api extends AbstractFactoryAndRepository {
     public void putOrganisation(
             @Named("reference") String reference,
             @Named("name") String name) {
-        Organisation org = (Organisation) parties.findPartyByReferenceOrName(reference);
+        Organisation org = (Organisation) parties.findPartyByReference(reference);
         if (org == null) {
             org = organisations.newOrganisation(reference, name);
             org.setReference(reference);
@@ -232,7 +234,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private Party fetchParty(String partyReference) {
-        Party party = parties.findPartyByReferenceOrName(partyReference);
+        Party party = parties.findPartyByReference(partyReference);
         if (party == null) {
             throw new ApplicationException(String.format("Party with reference %s not found.", partyReference));
         }
@@ -358,50 +360,17 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("stateCode") @Optional String stateCode,
             @Named("countryCode") @Optional String countryCode,
             @Named("phoneNumber") @Optional String phoneNumber,
-            @Named("faxNumber") @Optional String faxNumber) {
+            @Named("faxNumber") @Optional String faxNumber,
+            @Named("emailAddress") @Optional String emailAddress
+            ) {
         Party party = fetchParty(partyReference);
-        // Address
-        if (address1 != null) {
-            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
-            if (comm == null) {
-                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
-                comm.setReference(reference);
-            }
-        }
-        // Phone
-        if (phoneNumber != null) {
-            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
-            if (comm == null) {
-                comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
-                comm.setReference(reference);
-            }
-        }
-        // Fax
-        if (faxNumber != null) {
-            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
-            if (comm == null) {
-                comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, faxNumber);
-                comm.setReference(reference);
-            }
-        }
-    }
+        if (party == null)
+            throw new ApplicationException(String.format("Party with reference [%s] not found", partyReference));
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    public void putPartyPostalAddress(
-            @Named("partyReference") String partyReference,
-            @Named("reference") @Optional String reference,
-            @Named("address1") @Optional String address1,
-            @Named("address2") @Optional String address2,
-            @Named("city") @Optional String city,
-            @Named("postalCode") @Optional String postalCode,
-            @Named("stateCode") @Optional String stateCode,
-            @Named("countryCode") @Optional String countryCode,
-            @Named("phoneNumber") @Optional String phoneNumber,
-            @Named("faxNumber") @Optional String faxNumber) {
-        Party party = fetchParty(partyReference);
         // Address
         if (address1 != null) {
-            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.POSTAL_ADDRESS);
+            Country country = fetchCountry(countryCode);
+            PostalAddress comm = (PostalAddress) postalAddresses.findByAddress(party, address1, postalCode, city, country);
             if (comm == null) {
                 comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
                 comm.setReference(reference);
@@ -409,7 +378,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         // Phone
         if (phoneNumber != null) {
-            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.PHONE_NUMBER);
+            CommunicationChannel comm = phoneOrFaxNumbers.findByPhoneOrFaxNumber(party, phoneNumber);
             if (comm == null) {
                 comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
                 comm.setReference(reference);
@@ -417,12 +386,21 @@ public class Api extends AbstractFactoryAndRepository {
         }
         // Fax
         if (faxNumber != null) {
-            CommunicationChannel comm = communicationChannels.findByReferenceAndType(reference, CommunicationChannelType.FAX_NUMBER);
+            CommunicationChannel comm = phoneOrFaxNumbers.findByPhoneOrFaxNumber(party, faxNumber);
             if (comm == null) {
                 comm = communicationChannels.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, faxNumber);
                 comm.setReference(reference);
             }
         }
+        //Email
+        if (emailAddress != null) {
+            CommunicationChannel comm = emailAddresses.findByEmailAddress(party, emailAddress);
+            if (comm == null) {
+                comm = communicationChannels.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
+                comm.setReference(reference);
+            }
+        }
+ 
     }
 
     // //////////////////////////////////////
@@ -563,7 +541,7 @@ public class Api extends AbstractFactoryAndRepository {
             AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(isInvoiceAddress.compareTo(BigInteger.ZERO) == 0 ? LeaseConstants.ARCCT_INVOICE_ADDRESS : LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
             if (agreementRoleCommunicationChannelType == null)
                 throw new ApplicationException(String.format("AgreementRoleCommunicationChannelType not found."));
-            PostalAddress address = (PostalAddress) postalAddresses.findByAddress(address1, postalCode, city, fetchCountry(countryCode));
+            PostalAddress address = (PostalAddress) postalAddresses.findByAddress(party, address1, postalCode, city, fetchCountry(countryCode));
             if (address == null) {
                 address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, fetchState(stateCode, false), fetchCountry(countryCode, false));
             }
@@ -727,7 +705,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("branchCode") @Optional String branchCode,
             @Named("accountNumber") @Optional String accountNumber) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
-        Party owner = parties.findPartyByReferenceOrName(ownerReference);
+        Party owner = parties.findPartyByReference(ownerReference);
         if (owner == null)
             return;
         if (bankAccount == null) {
@@ -843,6 +821,18 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectPostalAddresses(PostalAddresses postalAddresses) {
         this.postalAddresses = postalAddresses;
+    }
+
+    private EmailAddresses emailAddresses;
+
+    public void injectEmailAddresses(EmailAddresses emailAddresses) {
+        this.emailAddresses = emailAddresses;
+    }
+
+    private PhoneOrFaxNumbers phoneOrFaxNumbers;
+
+    public void setPhoneOrFaxNumbers(PhoneOrFaxNumbers phoneOrFaxNumbers) {
+        this.phoneOrFaxNumbers = phoneOrFaxNumbers;
     }
 
     private Leases leases;

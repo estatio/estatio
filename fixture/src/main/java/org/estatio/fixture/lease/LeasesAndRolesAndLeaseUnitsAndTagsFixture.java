@@ -41,7 +41,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
     @Override
     public void install() {
 
-        manager = parties.findPartyByReferenceOrName("JDOE");
+        manager = parties.findPartyByReference("JDOE");
         createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true);
         createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true);
         createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
@@ -76,7 +76,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
     }
 
     private Party findPartyByReferenceOrNameElseNull(String partyReference) {
-        return partyReference != null? parties.findPartyByReferenceOrName(partyReference): null;
+        return partyReference != null? parties.findPartyByReference(partyReference): null;
     }
 
 

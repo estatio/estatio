@@ -25,26 +25,7 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
@@ -52,33 +33,55 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByRoleAndTypeAndStartDate", language = "JDOQL", 
-            value = "SELECT " +
-                    "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
-                    "WHERE role == :agreementRole " +
-                    "&& type == :type " +
-                    "&& startDate == :startDate"),
-    @javax.jdo.annotations.Query(
-            name = "findByRoleAndTypeAndEndDate", language = "JDOQL", 
-            value = "SELECT " +
-                    "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
-                    "WHERE role == :agreementRole " +
-                    "&& type == :type " +
-                    "&& endDate == :endDate")
+        @javax.jdo.annotations.Query(
+                name = "findByRoleAndTypeAndStartDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
+                        "WHERE role == :agreementRole " +
+                        "&& type == :type " +
+                        "&& startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByRoleAndTypeAndEndDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
+                        "WHERE role == :agreementRole " +
+                        "&& type == :type " +
+                        "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByRoleAndTypeAndContainsDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
+                        "WHERE role == :role " +
+                        "&& type == :type " +
+                        "&& (startDate == null || startDate <= :date) " +
+                        "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel, Status> implements WithIntervalContiguous<AgreementRoleCommunicationChannel>{
+public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel, Status> implements WithIntervalContiguous<AgreementRoleCommunicationChannel> {
 
-    private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper = 
+    private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =
             new WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel>(this);
 
     // //////////////////////////////////////
@@ -93,7 +96,6 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // @javax.jdo.annotations.Column(allowsNull="false")
     @Optional
-
     @Hidden
     @Override
     public Status getStatus() {
@@ -105,13 +107,12 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         this.status = status;
     }
 
-
     // //////////////////////////////////////
 
     private AgreementRole role;
 
-    @javax.jdo.annotations.Column(name = "AGREEMENTROLE_ID", allowsNull="false")
-    @Title(sequence="2")
+    @javax.jdo.annotations.Column(name = "AGREEMENTROLE_ID", allowsNull = "false")
+    @Title(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     public AgreementRole getRole() {
@@ -142,8 +143,8 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     private AgreementRoleCommunicationChannelType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Title(sequence="1", append=":")
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Title(sequence = "1", append = ":")
     @Disabled
     public AgreementRoleCommunicationChannelType getType() {
         return type;
@@ -157,8 +158,8 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     private CommunicationChannel communicationChannel;
 
-    @javax.jdo.annotations.Column(name = "COMMUNICATIONCHANNEL_ID", allowsNull="false")
-    @Title(sequence="3", prepend=",")
+    @javax.jdo.annotations.Column(name = "COMMUNICATIONCHANNEL_ID", allowsNull = "false")
+    @Title(sequence = "3", prepend = ",")
     @Disabled
     public CommunicationChannel getCommunicationChannel() {
         return communicationChannel;
@@ -200,7 +201,6 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         this.endDate = localDate;
     }
 
-    
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -235,7 +235,6 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return helper.validateChangeDates(startDate, endDate);
     }
 
-
     // //////////////////////////////////////
 
     @Hidden
@@ -243,7 +242,6 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     public AgreementRole getWithIntervalParent() {
         return getRole();
     }
-
 
     @Hidden
     @Override
@@ -299,7 +297,6 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     // //////////////////////////////////////
 
-
     static final class SiblingFactory implements WithIntervalContiguous.Factory<AgreementRoleCommunicationChannel> {
         private final AgreementRoleCommunicationChannel arcc;
         private final CommunicationChannel cc;
@@ -353,13 +350,12 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
             return "Successor's communication channel cannot be the same as that of existing successor";
         }
         final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
-        if(!partyChannels.contains(communicationChannel)) {
+        if (!partyChannels.contains(communicationChannel)) {
             return "Successor's communication channel must be one of those of the parent role's party";
         }
 
         return null;
     }
-
 
     public AgreementRoleCommunicationChannel precededBy(
             final CommunicationChannel communicationChannel,
@@ -399,25 +395,24 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
             return "Predecessor's communication channel cannot be the same as that of existing predecessor";
         }
         final SortedSet<CommunicationChannel> partyChannels = communicationChannelsForRolesParty();
-        if(!partyChannels.contains(communicationChannel)) {
+        if (!partyChannels.contains(communicationChannel)) {
             return "Predecessor's communication channel must be one of those of the parent role's party";
         }
         return null;
     }
 
     // //////////////////////////////////////
-    
+
     private SortedSet<CommunicationChannel> communicationChannelsForRolesParty() {
         return communicationChannelContributions.communicationChannels(getRole().getParty());
     }
 
-    
     // //////////////////////////////////////
 
     private CommunicationChannelContributions communicationChannelContributions;
-    public void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
+
+    public final void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
         this.communicationChannelContributions = communicationChannelContributions;
     }
-
 
 }

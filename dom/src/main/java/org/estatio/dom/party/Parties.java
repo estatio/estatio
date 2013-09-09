@@ -39,7 +39,6 @@ public class Parties extends EstatioDomainService<Party> {
         super(Parties.class, Party.class);
     }
 
-    
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
@@ -55,14 +54,19 @@ public class Parties extends EstatioDomainService<Party> {
         return firstMatch("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
+    @Hidden
+    @ActionSemantics(Of.SAFE)
+    public Party findPartyByReference(final String reference) {
+        return firstMatch("findByReference", "reference", reference);
+    }
 
     // //////////////////////////////////////
 
     @Hidden
     public List<Party> autoComplete(String searchPhrase) {
-        return searchPhrase.length()>2 
-                ? findParties("*"+searchPhrase+"*") 
-                : Lists.<Party>newArrayList();
+        return searchPhrase.length() > 2
+                ? findParties("*" + searchPhrase + "*")
+                : Lists.<Party> newArrayList();
     }
 
     // //////////////////////////////////////

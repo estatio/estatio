@@ -76,6 +76,7 @@ import org.apache.isis.applib.annotation.Where;
                         " && role.party == :party" +
                         " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
+@javax.jdo.annotations.Index(name="REFERENCE_IDX", members={"reference"})
 @Bookmarkable
 public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, WithNameGetter {
 

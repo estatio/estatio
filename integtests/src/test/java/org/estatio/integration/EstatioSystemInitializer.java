@@ -31,6 +31,7 @@ import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementTypes;
@@ -42,6 +43,8 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.EmailAddresses;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -113,9 +116,10 @@ public class EstatioSystemInitializer {
                     new Organisations(), 
                     new Agreements(), 
                     new AgreementTypes(),
-                    new AgreementRoleTypes(), 
+                    new AgreementRoles(),
+                    new AgreementRoleCommunicationChannels(),
                     new AgreementRoleCommunicationChannelTypes(), 
-                    new AgreementRoles(), 
+                    new AgreementRoleTypes(), 
                     new Leases(), 
                     new LeaseTerms(), 
                     new LeaseItems(), 
@@ -125,6 +129,8 @@ public class EstatioSystemInitializer {
                     new CommunicationChannels(),
                     new CommunicationChannelContributions(),
                     new PostalAddresses(),
+                    new EmailAddresses(),
+                    new PhoneOrFaxNumbers(),
                     new Taxes(), 
                     new TaxRates(), 
                     new Tags(), 

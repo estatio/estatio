@@ -41,9 +41,9 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        Party owner1 = parties.findPartyByReferenceOrName("HELLOWORLD");
-        Party owner2 = parties.findPartyByReferenceOrName("ACME");
-        Party manager = parties.findPartyByReferenceOrName("JDOE");
+        Party owner1 = parties.findPartyByReference("HELLOWORLD");
+        Party owner2 = parties.findPartyByReference("ACME");
+        Party manager = parties.findPartyByReference("JDOE");
 
         Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1, manager, 51.74579, -1.24334);
         State state = states.findStateByReference("GB-OXF");

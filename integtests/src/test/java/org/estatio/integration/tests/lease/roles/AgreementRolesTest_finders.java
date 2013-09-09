@@ -92,7 +92,7 @@ public class AgreementRolesTest_finders extends EstatioIntegrationTest {
     @Test
     public void findByAgreementAndPartyAndTypeAndContainsDate() throws Exception {
         // given lease has tenant role
-        Party party = parties.findPartyByReferenceOrName("TOPMODEL");
+        Party party = parties.findPartyByReference("TOPMODEL");
         AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseTopModel, party, artTenant, LocalDate.now());
         Assert.assertNotNull(role);
     }

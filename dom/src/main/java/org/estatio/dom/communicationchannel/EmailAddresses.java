@@ -19,21 +19,21 @@
 package org.estatio.dom.communicationchannel;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.geography.Country;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 @Hidden
-public class PostalAddresses extends EstatioDomainService<PostalAddress> {
+public class EmailAddresses extends EstatioDomainService<EmailAddress> {
 
-    public PostalAddresses() {
-        super(PostalAddresses.class, PostalAddress.class);
+    public EmailAddresses() {
+        super(EmailAddresses.class, EmailAddress.class);
     }
 
     // //////////////////////////////////////
 
-    public CommunicationChannel findByAddress(CommunicationChannelOwner owner, String address1, String postalCode, String city, Country country) {
-        return firstMatch("findByAddress", "owner", owner, "address1", address1, "postalCode", postalCode, "city", city, "country", country);
+    @NotInServiceMenu
+    public EmailAddress findByEmailAddress(final CommunicationChannelOwner owner, final String emailAddress) {
+        return firstMatch("findByEmailAddress", "owner", owner, "emailAddress", emailAddress);
     }
-
 }

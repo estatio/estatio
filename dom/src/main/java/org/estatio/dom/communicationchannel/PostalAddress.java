@@ -37,12 +37,14 @@ import org.apache.isis.applib.util.TitleBuffer;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Query(
         name = "findByAddress", language = "JDOQL", 
-        value = "SELECT FROM "
-                + "org.estatio.dom.communicationchannel.CommunicationChannel "
-                + "WHERE address1 == :address1 "
-                + "&& postalCode == :postalCode "
-                + "&& city == :city "
-                + "&& country == :country ")
+        value = "SELECT FROM " +
+                "org.estatio.dom.communicationchannel.CommunicationChannel " +
+                "WHERE owner == :owner" +
+                "&& address1 == :address1 " +
+                "&& postalCode == :postalCode " +
+                "&& city == :city " +
+                "&& country == :country ")
+@javax.jdo.annotations.Index(name="POSTAL_ADDRESS_IDX", members={"owner", "address1","postalCode","city","country"})
 public class PostalAddress extends CommunicationChannel {
 
     /**

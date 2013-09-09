@@ -59,8 +59,8 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
         parties = service(Parties.class);
         leases = service(Leases.class);
         
-        seller = parties.findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
-        buyer = parties.findPartyByReferenceOrName(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
+        seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
+        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
     }
     

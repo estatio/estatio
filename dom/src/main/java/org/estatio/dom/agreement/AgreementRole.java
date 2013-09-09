@@ -26,10 +26,18 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import org.estatio.api.Api;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -39,28 +47,12 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.filter.Filter;
-
-import org.estatio.api.Api;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetRoleType;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -88,7 +80,6 @@ import org.estatio.services.clock.ClockService;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalContiguous<AgreementRole> {
 
-
     private final WithIntervalContiguous.Helper<AgreementRole> helper = new WithIntervalContiguous.Helper<AgreementRole>(this);
 
     // //////////////////////////////////////
@@ -103,7 +94,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // @javax.jdo.annotations.Column(allowsNull="false")
     @Optional
-
     @Hidden
     @Override
     public Status getStatus() {
@@ -119,7 +109,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private Agreement<?> agreement;
 
-    @javax.jdo.annotations.Column(name = "AGREEMENT_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "AGREEMENT_ID", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Agreement<?> getAgreement() {
@@ -134,7 +124,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Party getParty() {
@@ -149,7 +139,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private AgreementRoleType type;
 
-    @javax.jdo.annotations.Column(name = "TYPE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "TYPE_ID", allowsNull = "false")
     @Title(sequence = "1")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
@@ -194,7 +184,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     // //////////////////////////////////////
-
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
@@ -287,19 +276,17 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return helper.getTimeline(getAgreement().getRoles(), getType().matchingRole());
     }
 
-
     // //////////////////////////////////////
-
 
     static final class SiblingFactory implements WithIntervalContiguous.Factory<AgreementRole> {
         private final AgreementRole ar;
         private final Party party;
-        
+
         public SiblingFactory(AgreementRole ar, Party party) {
             this.ar = ar;
             this.party = party;
         }
-        
+
         @Override
         public AgreementRole newRole(LocalDate startDate, LocalDate endDate) {
             return ar.getAgreement().createRole(ar.getType(), party, startDate, endDate);
@@ -336,7 +323,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return null;
     }
 
-
     public AgreementRole precededBy(
             final Party party,
             final @Named("Start date") @Optional LocalDate startDate,
@@ -370,7 +356,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-
     @javax.jdo.annotations.Persistent(mappedBy = "role")
     private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
 
@@ -384,9 +369,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         this.communicationChannels = communinationChannels;
     }
 
-    
     // //////////////////////////////////////
-
 
     @Named("Create Initial")
     public AgreementRole createInitialCommunicationChannel(
@@ -397,7 +380,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, endDate);
         return this;
     }
-    
+
     public List<AgreementRoleCommunicationChannelType> choices0CreateInitialCommunicationChannel() {
         return getAgreement().getAgreementType().getRoleChannelTypesApplicableTo();
     }
@@ -416,25 +399,24 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
             final CommunicationChannel communicationChannel,
             final LocalDate startDate,
             final LocalDate endDate) {
-        if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             return "End date cannot be earlier than start date";
         }
         if (!Sets.filter(getCommunicationChannels(), type.matchingCommunicationChannel()).isEmpty()) {
             return "Add a successor/predecessor from existing communication channel";
         }
         final SortedSet<CommunicationChannel> partyChannels = communicationChannelContributions.communicationChannels(getParty());
-        if(!partyChannels.contains(communicationChannel)) {
+        if (!partyChannels.contains(communicationChannel)) {
             return "Communication channel must be one of those of this party";
         }
         return null;
     }
-    
-    
+
     @Programmatic
     public AgreementRoleCommunicationChannel createAgreementRoleCommunicationChannel(
-            final AgreementRoleCommunicationChannelType type, 
-            final CommunicationChannel cc, 
-            final LocalDate startDate, 
+            final AgreementRoleCommunicationChannelType type,
+            final CommunicationChannel cc,
+            final LocalDate startDate,
             final LocalDate endDate) {
         final AgreementRoleCommunicationChannel arcc = newTransientInstance(AgreementRoleCommunicationChannel.class);
         arcc.setType(type);
@@ -442,7 +424,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         arcc.setEndDate(endDate);
         arcc.setStatus(Status.UNLOCKED);
         arcc.setCommunicationChannel(cc);
-        
+
         // JDO will take care of bidir relationship
         arcc.setRole(this);
         persistIfNotAlready(arcc);
@@ -457,7 +439,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
      */
     @Programmatic
     public void addCommunicationChannel(
-            final AgreementRoleCommunicationChannelType type, 
+            final AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel) {
         if (type == null || communicationChannel == null) {
             return;
@@ -466,26 +448,25 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         if (arcc != null) {
             return;
         }
-        
+
         createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, null);
     }
 
     private AgreementRoleCommunicationChannel findCommunicationChannel(final AgreementRoleCommunicationChannelType type, final LocalDate date) {
-        return firstMatch(AgreementRoleCommunicationChannel.class, new Filter<AgreementRoleCommunicationChannel>() {
-            @Override
-            public boolean accept(AgreementRoleCommunicationChannel t) {
-                return t.getType() == type && getInterval().contains(date);
-            }
-        });
+        return agreementRoleCommunicationChannels.findByRoleAndTypeAndContainsDate(this, type, date);
     }
-
 
     // //////////////////////////////////////
 
     private CommunicationChannelContributions communicationChannelContributions;
-    public void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
+
+    public final void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
         this.communicationChannelContributions = communicationChannelContributions;
     }
 
+    private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
 
+    public final void injectAgreementRoleCommunicationChannels(AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
+        this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
+    }
 }

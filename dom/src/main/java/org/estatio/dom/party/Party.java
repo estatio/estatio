@@ -23,6 +23,13 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithNameComparable;
+import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
@@ -32,24 +39,20 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({ 
+    @javax.jdo.annotations.Query( 
+            name = "findByReferenceOrName", language = "JDOQL",
+            value = "SELECT FROM org.estatio.dom.party.Party " +
+            		"WHERE reference.matches(:referenceOrName) || name.matches(:referenceOrName)"),
     @javax.jdo.annotations.Query(
-            name = "findByReferenceOrName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.party.Party "
-                    + "WHERE reference.matches(:referenceOrName) "
-                    +    "|| name.matches(:referenceOrName)") })
-@javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
+            name = "findByReference", language = "JDOQL", 
+            value = "SELECT FROM org.estatio.dom.party.Party " + 
+                    "WHERE reference == :reference") })
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
+})
 @AutoComplete(repository = Parties.class, action = "autoComplete")
 @Bookmarkable
 public abstract class Party extends EstatioTransactionalObject<Party, Status> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {

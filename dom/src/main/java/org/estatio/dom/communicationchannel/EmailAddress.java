@@ -25,26 +25,33 @@ import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Query(
+        name = "findByEmailAddress", language = "JDOQL", 
+        value = "SELECT FROM org.estatio.dom.communicationchannel.EmailAddress " + 
+                "WHERE owner == :owner && " +
+                "emailAddress == :emailAddress")
+    @javax.jdo.annotations.Index(name="EMAILADDRESS_IDX", members={"emailAddress"})
+
 public class EmailAddress extends CommunicationChannel {
 
     @Title
     @Override
     public String getName() {
-        return getAddress();
+        return getEmailAddress();
     }
 
     // //////////////////////////////////////
 
-    private String address;
+    private String emailAddress;
 
     @javax.jdo.annotations.Column(allowsNull="true")
     @Mandatory
-    public String getAddress() {
-        return address;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public void setAddress(final String address) {
-        this.address = address;
+    public void setEmailAddress(final String address) {
+        this.emailAddress = address;
     }
 
 }

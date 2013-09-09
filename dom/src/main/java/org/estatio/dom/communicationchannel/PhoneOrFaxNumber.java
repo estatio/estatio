@@ -26,6 +26,12 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@javax.jdo.annotations.Query(
+    name = "findByPhoneNumber", language = "JDOQL", 
+    value = "SELECT FROM org.estatio.dom.communicationchannel.PhoneOrFaxNumber " + 
+            "WHERE owner == :owner && " +
+            "phoneNumber == :phoneNumber")
+@javax.jdo.annotations.Index(name="PHONENUMBER_IDX", members={"phoneNumber"})
 public class PhoneOrFaxNumber extends CommunicationChannel {
 
     @Title

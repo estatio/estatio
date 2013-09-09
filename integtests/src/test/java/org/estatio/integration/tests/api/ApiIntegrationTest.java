@@ -21,6 +21,28 @@ package org.estatio.integration.tests.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.estatio.api.Api;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.Units;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.EmailAddresses;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
+import org.estatio.dom.communicationchannel.PostalAddresses;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.estatio.services.clock.ClockService;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -29,26 +51,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import org.estatio.api.Api;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Unit;
-import org.estatio.dom.asset.Units;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseUnits;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.party.Parties;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.tests.EstatioIntegrationTest;
-import org.estatio.services.clock.ClockService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiIntegrationTest extends EstatioIntegrationTest {
@@ -61,9 +63,12 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
     private CommunicationChannels communicationChannels;
     private Units<?> units;
     private LeaseUnits leaseUnits;
-    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
     private AgreementRoleTypes agreementRoleTypes;
     private ClockService clockService;
+    private PostalAddresses postalAddresses;
+    private PhoneOrFaxNumbers phoneOrFaxNumbers;
+    private EmailAddresses emailAddresses;
+    private Countries countries;
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -79,11 +84,15 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         communicationChannels = service(CommunicationChannels.class);
         units = (Units<?>) service(Units.class);
         leaseUnits = service(LeaseUnits.class);
-        agreementRoleCommunicationChannelTypes = service(AgreementRoleCommunicationChannelTypes.class);
         agreementRoleTypes = service(AgreementRoleTypes.class);
         clockService = service(ClockService.class);
+        phoneOrFaxNumbers = service(PhoneOrFaxNumbers.class);
+        emailAddresses = service(EmailAddresses.class);
+        postalAddresses = service(PostalAddresses.class);
+        countries = service(Countries.class);
+
     }
-    
+
     @Test
     public void t00_refData() throws Exception {
         api.putCountry("NLD", "NL", "Netherlands");
@@ -108,10 +117,19 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t03_putPartyCommunicationChannels() {
-        api.putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210");
+        api.putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210", "test@api.local");
         Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.POSTAL_ADDRESS));
         Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.FAX_NUMBER));
         Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.PHONE_NUMBER));
+    }
+
+    @Test
+    public void t03_putPartyCommunicationChannelsWithoutReference() {
+        api.putPartyCommunicationChannels("APITENANT", null, "NewAddress1", "NewAddress2", "NewCity", "NewPostalCode", "NH", "NLD", "+31222222222", "+31333333333", "test@example.com");
+        Party party = parties.findPartyByReference("APITENANT");
+        Assert.assertNotNull(postalAddresses.findByAddress(party, "NewAddress1", "NewPostalCode", "NewCity", countries.findCountryByReference("NLD")));
+        Assert.assertNotNull(phoneOrFaxNumbers.findByPhoneOrFaxNumber(party, "+31222222222"));
+        Assert.assertNotNull(emailAddresses.findByEmailAddress(party, "test@example.com"));
     }
 
     @Test
@@ -133,6 +151,15 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t05b_putLeasePostalAddress() throws Exception {
+        api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
+        final Lease l = leases.findLeaseByReference("APILEASE");
+        final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        final AgreementRole ar = l.findRoleWithType(artTenant, clockService.now());
+        Assert.assertThat(ar.getCommunicationChannels().size(), Is.is(1));
+    }
+
+    @Test
+    public void t05b_putLeasePostalAddress_idempotent() throws Exception {
         api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
         final Lease l = leases.findLeaseByReference("APILEASE");
         final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);

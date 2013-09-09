@@ -67,7 +67,9 @@ public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
 
         IndexBase base2000 = createIndexBase(index, base1995, 2011, 1.373);
         createIndexValues(base2000, 2011, new double[] { 101.2, 101.5, 101.9, 102.4, 102.5, 102.6, 102.9, 103.2, 103.2, 103.6, 103.7, 104 }, 102.7);
-        createIndexValues(base2000, 2012, new double[] { 104.4, 104.8, 105.2, 105.7, 105.6, 105.8, 105.9, 106.4, 106.4, 106.4, 106.2, 106.5 }, 0);
+        createIndexValues(base2000, 2012, new double[] { 104.4, 104.8, 105.2, 105.7, 105.6, 105.8, 105.9, 106.4, 106.4, 106.4, 106.2, 106.5 }, 105.8);
+        createIndexValues(base2000, 2013, new double[] { 106.7, 106.7, 106.9, 106.9, 106.9, 107.1, 107.2 }, 0);
+
     }
 
     private Index createIndex(String reference, String name) {

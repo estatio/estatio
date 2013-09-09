@@ -52,7 +52,7 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
     @Before
     public void setUp() throws Exception {
         parties = service(Parties.class);
-        party = parties.findPartyByReferenceOrName("HELLOWORLD");
+        party = parties.findPartyByReference("HELLOWORLD");
         
         financialAccounts = service(FinancialAccounts.class);
     }

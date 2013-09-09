@@ -46,7 +46,7 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
     public void setUp() throws Exception {
         parties = service(Parties.class);
         communicationChannelContributions = service(CommunicationChannelContributions.class);
-        partyHelloWorld = parties.findPartyByReferenceOrName("HELLOWORLD");
+        partyHelloWorld = parties.findPartyByReference("HELLOWORLD");
     }
     
     @Test

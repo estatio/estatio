@@ -27,7 +27,7 @@ public class PartyGlue extends CukeGlueAbstract {
 
     @Given(".*there is.* party \"([^\"]*)\"$")
     public void given_party(final String partyReference) throws Throwable {
-        final Party party = service(Parties.class).findPartyByReferenceOrName(partyReference);
+        final Party party = service(Parties.class).findPartyByReference(partyReference);
         putVar("party", partyReference, party);
     }
     

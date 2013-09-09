@@ -46,13 +46,13 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
     public PostalAddress newPostal(
-            final CommunicationChannelOwner owner, 
+            final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
-            final String address1, 
-            final String address2, 
-            final String postalCode, 
-            final String city, 
-            final State state, 
+            final String address1,
+            final String address2,
+            final String postalCode,
+            final String city,
+            final State state,
             final Country country) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
         pa.setType(type);
@@ -77,7 +77,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
             final String address) {
         final EmailAddress ea = newTransientInstance(EmailAddress.class);
         ea.setType(type);
-        ea.setAddress(address);
+        ea.setEmailAddress(address);
         ea.setOwner(owner);
         persistIfNotAlready(ea);
         return ea;
@@ -99,7 +99,6 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
         return pn;
     }
 
-
     // //////////////////////////////////////
 
     @NotInServiceMenu
@@ -112,9 +111,5 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
         return Sets.newTreeSet(allMatches("findByOwner", "owner", owner));
     }
-    
-    
-
-
 
 }
