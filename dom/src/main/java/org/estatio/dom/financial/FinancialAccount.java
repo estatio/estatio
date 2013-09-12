@@ -46,6 +46,9 @@ import org.estatio.dom.party.Party;
             name = "findByTypeAndParty", language = "JDOQL", 
             value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE type == :type && owner == :owner")
 })
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX", members="reference")
+})
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
 public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount, Status> implements WithNameGetter, WithReferenceUnique  {
 
@@ -74,7 +77,6 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")

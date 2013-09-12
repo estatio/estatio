@@ -271,7 +271,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (property == null) {
             if (!createIfNotFond)
                 throw new ApplicationException(String.format("Property with reference %s not found.", reference));
-            property = properties.newProperty(reference, null);
+            property = properties.newProperty(reference, null, PropertyType.MIXED, null, null, null);
         }
         return property;
     }
@@ -299,7 +299,7 @@ public class Api extends AbstractFactoryAndRepository {
         Property property = fetchProperty(propertyReference, false);
         Unit unit = units.findUnitByReference(reference);
         if (unit == null) {
-            unit = property.newUnit(reference, name);
+            unit = property.newUnit(reference, name, UnitType.BOUTIQUE);
         }
         // set attributes
         unit.setName(name);

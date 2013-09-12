@@ -13,12 +13,12 @@
         "Location": {
           "members": {
             "city": {},
+            "country": {},
             "location": {
               "actions": {
                 "lookupLocation": {}
               }
-            },
-            "country": {}
+            }
           }
         },
         "Property": {
@@ -29,8 +29,8 @@
         },
         "Dates": {
           "members": {
-            "openingDate": {},
             "acquireDate": {},
+            "openingDate": {},
             "disposalDate": {}
           }
         }

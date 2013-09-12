@@ -31,11 +31,13 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 
@@ -62,9 +64,6 @@ import org.estatio.dom.party.Party;
 @AutoComplete(repository = Properties.class)
 @Bookmarkable
 public class Property extends FixedAsset {
-
-
-    // //////////////////////////////////////
 
     private PropertyType propertyType;
 
@@ -175,10 +174,22 @@ public class Property extends FixedAsset {
     // //////////////////////////////////////
 
     @PublishedAction
-    public Unit newUnit(@Named("Code") final String code, @Named("Name") final String name) {
-        Unit unit = unitsRepo.newUnit(code, name);
+    public Unit newUnit(
+            @Named("Code") final String code, 
+            @Named("Name") final String name, 
+            final UnitType unitType) {
+        Unit unit = unitsRepo.newUnit(code, name, unitType);
         unit.setProperty(this);
         return unit;
+    }
+    public String default0NewUnit() {
+        return this.getReference() + "-000";
+    }
+    public String default1NewUnit() {
+        return "000";
+    }
+    public UnitType default2NewUnit() {
+        return UnitType.BOUTIQUE;
     }
 
 

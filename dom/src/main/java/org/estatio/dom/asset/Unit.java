@@ -27,17 +27,40 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+//TODO: make name abstract in FixedAsset, then define subclass-specific constraint:
+//@javax.jdo.annotations.Unique(name="UNIT_NAME_UNQ_IDX", members={"property","name"})
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class Unit extends FixedAsset {
+
+
+// TODO: make name abstract in FixedAsset 
+// (in order to be able to define subclass-specific constraint, see above)
+
+//    private String name;
+//
+//    @javax.jdo.annotations.Column(allowsNull="false")
+//    @DescribedAs("Unique name for this property")
+//    @Title(sequence = "2")
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(final String name) {
+//        this.name = name;
+//    }
+
+    // //////////////////////////////////////
 
     private UnitType unitType;
 

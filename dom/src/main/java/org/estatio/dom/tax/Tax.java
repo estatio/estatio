@@ -37,6 +37,7 @@ import org.estatio.dom.WithReferenceUnique;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.Tax WHERE reference.matches(:reference)")
+@javax.jdo.annotations.Unique(name = "TAX_REFERENCE_UNIQUE_IDX", members="reference")
 @Bounded
 @Immutable
 public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
@@ -47,7 +48,6 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "TAX_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")

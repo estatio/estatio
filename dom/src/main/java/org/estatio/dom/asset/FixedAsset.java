@@ -65,6 +65,7 @@ import org.estatio.dom.party.Party;
                         + "WHERE reference.matches(:regex) "
                         + "|| name.matches(:regex) ")
 })
+@javax.jdo.annotations.Unique(name="FIXEDASSET_REFERENCE_UNIQUE_IDX", members={"reference"})
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, Status> implements WithNameComparable<FixedAsset>, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
@@ -73,7 +74,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
         super("name", Status.UNLOCKED, Status.LOCKED);
     }
     
-    
+
     // //////////////////////////////////////
 
     private Status status;
@@ -95,7 +96,6 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "FIXEDASSET_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
@@ -111,9 +111,19 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     // //////////////////////////////////////
 
-    // TODO when I added this annotation, per the @DescribedAs, then the
-    // fixtures failed to load...
-    // @javax.jdo.annotations.Unique(name = "NAME_IDX")
+//    /**
+//     * Although both {@link Property} and {@link Unit} (the two subclasses) have
+//     * a name, they are mapped separately because they have different uniqueness
+//     * constraints.
+//     *
+//     * <p>
+//     * For {@link Property}, the {@link Property#getName() name} by itself is unique.
+//     * 
+//     * <p>
+//     * For {@link Unit}, the combination of ({@link Unit#getProperty() property}, {@link Unit#getName() name}) is unique.
+//     */
+    //public abstract String getName();
+    
     private String name;
 
     @javax.jdo.annotations.Column(allowsNull="false")
@@ -127,6 +137,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
         this.name = name;
     }
 
+        
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent

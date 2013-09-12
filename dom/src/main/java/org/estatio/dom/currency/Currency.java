@@ -40,6 +40,9 @@ import org.estatio.dom.WithReferenceComparable;
 	        "WHERE reference.matches(:searchArg) " + 
 	        "|| description.matches(:searchArg)")
 })
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX", members="description")
+})
 @Bounded
 @Immutable
 @AutoComplete(repository=Currencies.class, action="autoComplete")
@@ -51,7 +54,6 @@ public class Currency extends EstatioRefDataObject<Currency> implements WithRefe
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "CURRENCY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
@@ -65,7 +67,6 @@ public class Currency extends EstatioRefDataObject<Currency> implements WithRefe
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX")
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull="false")

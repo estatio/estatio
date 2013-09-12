@@ -25,8 +25,8 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
@@ -40,14 +40,11 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Assets", sequence = "1")
-    public Unit newUnit(final @Named("Reference") String reference, final @Named("Name") String name) {
-        return newUnit(reference, name, UnitType.BOUTIQUE);
-    }
-
-    @Hidden
-    public Unit newUnit(final String reference, final String name, final UnitType type) {
+    @Programmatic
+    public Unit newUnit(
+            String reference, 
+            String name,
+            final UnitType type) {
         final Unit unit = newTransientInstance();
         unit.setReference(reference);
         unit.setName(name);

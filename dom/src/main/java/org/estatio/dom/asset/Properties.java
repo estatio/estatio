@@ -21,6 +21,8 @@ package org.estatio.dom.asset;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -28,11 +30,13 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.geography.Country;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
@@ -49,18 +53,28 @@ public class Properties extends EstatioDomainService<Property> {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Assets", sequence = "1")
-    public Property newProperty(final @Named("Reference") String reference, final @Named("Name") String name) {
-        return newProperty(reference, name, PropertyType.MIXED);
-    }
-
-    @Hidden
-    public Property newProperty(final String reference, final String name, final PropertyType propertyType) {
+    public Property newProperty(
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name,
+            final PropertyType propertyType, 
+            final @Named("City") @Optional String city, 
+            final @Optional Country country, 
+            final @Named("Acquire date") @Optional LocalDate acquireDate) {
         final Property property = newTransientInstance();
+        
         property.setReference(reference);
         property.setName(name);
         property.setPropertyType(propertyType);
+        
+        property.setCity(city);
+        property.setCountry(country);
+        property.setAcquireDate(acquireDate);
+        
         persistIfNotAlready(property);
         return property;
+    }
+    public PropertyType default2NewProperty() {
+        return PropertyType.MIXED;
     }
 
     // //////////////////////////////////////

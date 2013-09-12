@@ -73,27 +73,15 @@ public class PropertiesTest_newProperty {
             }
         });
         
-        final Property newProperty = properties.newProperty("REF-1", "Name-1", PropertyType.CINEMA);
+        final Property newProperty = properties.newProperty("REF-1", "Name-1", PropertyType.CINEMA, null, null, null);
         assertThat(newProperty.getReference(), is("REF-1"));
         assertThat(newProperty.getName(), is("Name-1"));
         assertThat(newProperty.getPropertyType(), is(PropertyType.CINEMA));
     }
-
+    
     @Test
-    public void newProperty_withDefaultPropertyType() {
-        final Property property = new Property();
-        context.checking(new Expectations() {
-            {
-                oneOf(mockContainer).newTransientInstance(Property.class);
-                will(returnValue(property));
-                
-                oneOf(mockContainer).persistIfNotAlready(property);
-            }
-        });
-        
-        final Property newProperty = properties.newProperty("REF-1", "Name-1");
-        assertThat(newProperty.getReference(), is("REF-1"));
-        assertThat(newProperty.getName(), is("Name-1"));
-        assertThat(newProperty.getPropertyType(), is(PropertyType.MIXED));
+    public void defaults() {
+        assertThat(properties.default2NewProperty(), is(PropertyType.MIXED));
     }
+
 }

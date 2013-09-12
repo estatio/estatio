@@ -38,9 +38,14 @@ import org.estatio.dom.utils.ClassUtils;
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
         name = "findByTitle", language = "JDOQL", 
-        value = "SELECT FROM org.estatio.dom.agreement.AgreementType WHERE title == :title")
+        value = "SELECT "
+                + "FROM org.estatio.dom.agreement.AgreementType "
+                + "WHERE title == :title")
 })
 @javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "AGREEMENT_TYPE_TITLE_UNIQUE_IDX", members="title")
+})
 @Immutable
 @Bounded
 public class AgreementType extends EstatioRefDataObject<AgreementType> implements WithTitleComparable<AgreementType>, WithTitleUnique {
@@ -51,7 +56,6 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "AGREEMENT_TYPE_TITLE_UNIQUE_IDX")
     private String title;
 
     @javax.jdo.annotations.Column(allowsNull="false")

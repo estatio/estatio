@@ -53,6 +53,9 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Indices({
     @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
 })
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "PARTY_REFERENCE_UNIQUE_IDX", members="reference")
+})
 @AutoComplete(repository = Parties.class, action = "autoComplete")
 @Bookmarkable
 public abstract class Party extends EstatioTransactionalObject<Party, Status> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
@@ -81,7 +84,6 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "PARTY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")

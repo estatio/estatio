@@ -28,6 +28,7 @@ import org.estatio.dom.asset.FixedAssetRoleType;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
+import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
@@ -65,7 +66,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
     }
 
     private Property createPropertyAndUnits(final String reference, String name, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager, double lat, double lng) {
-        Property property = properties.newProperty(reference, name, type);
+        Property property = properties.newProperty(reference, name, type, null, null, null);
         property.setOpeningDate(openingDate);
         property.setAcquireDate(acquireDate);
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
@@ -73,9 +74,14 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         // property.setLocation(new Location(lat, lng));
         for (int i = 0; i < numberOfUnits; i++) {
             int unitNumber = i + 1;
-            property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber).setArea(new BigDecimal((i + 1) * 100));
+            property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
         }
         return property;
+    }
+
+    private UnitType unitType(int n) {
+        final UnitType[] unitTypes = UnitType.values();
+        return unitTypes[n % unitTypes.length];
     }
 
     private States states;

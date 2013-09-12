@@ -22,6 +22,7 @@ import org.estatio.dom.Status;
 
 public class FixedAssetForTesting extends FixedAsset {
 
+
     @Override
     public Status getStatus() {
         return null;
@@ -30,5 +31,6 @@ public class FixedAssetForTesting extends FixedAsset {
     @Override
     public void setStatus(Status newStatus) {
     }
+
 
 }

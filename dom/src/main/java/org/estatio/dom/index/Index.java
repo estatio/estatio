@@ -33,7 +33,14 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.Index WHERE reference == :reference")
+@javax.jdo.annotations.Query(
+        name = "findByReference", language = "JDOQL", 
+        value = "SELECT "
+                + "FROM org.estatio.dom.index.Index "
+                + "WHERE reference == :reference")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "INDEX_NAME_UNIQUE_IDX", members="name")
+})
 @Immutable
 public class Index extends EstatioRefDataObject<Index> implements WithReferenceComparable<Index>, WithNameUnique {
 
@@ -43,7 +50,6 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "INDEX_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
@@ -57,7 +63,6 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "INDEX_NAME_UNIQUE_IDX")
     private String name;
 
     @javax.jdo.annotations.Column(allowsNull="false")

@@ -32,6 +32,9 @@ import org.estatio.dom.WithReferenceComparable;
 @javax.jdo.annotations.Query(
         name = "findGeographyByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.Geography WHERE reference == :reference") 
 @Immutable
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX", members="name")
+})
 public abstract class Geography extends EstatioRefDataObject<Geography> implements WithReferenceComparable<Geography>, WithNameUnique {
 
     public Geography() {
@@ -41,7 +44,6 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     /**
@@ -63,7 +65,6 @@ public abstract class Geography extends EstatioRefDataObject<Geography> implemen
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX")
     private String name;
 
     @javax.jdo.annotations.Column(allowsNull="false")

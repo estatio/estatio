@@ -72,7 +72,7 @@ language governing permissions and limitations under the License.
         
         <danhaywood-isis-wicket-excel.version>1.2.0</danhaywood-isis-wicket-excel.version>
         <danhaywood-isis-wicket-fullcalendar.version>1.2.0</danhaywood-isis-wicket-fullcalendar.version>
-        <danhaywood-isis-wicket-gmap3.version>1.2.0</danhaywood-isis-wicket-gmap3.version>
+        <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
 
         <!-- must be consistent with the version defined by the JDO Objectstore -->
