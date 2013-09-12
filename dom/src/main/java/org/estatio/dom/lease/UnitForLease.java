@@ -36,8 +36,16 @@ import org.estatio.dom.asset.Unit;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Queries({ 
     @javax.jdo.annotations.Query(
+            name = "findByReferenceOrName", language = "JDOQL", 
+            value = "SELECT "
+                    + "FROM org.estatio.dom.lease.UnitForLease "
+                    + "WHERE (reference.matches(:referenceOrName) "
+                    + "    || name.matches(:referenceOrName))"), 
+    @javax.jdo.annotations.Query(
             name = "findByReference", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.lease.UnitForLease WHERE reference.matches(:reference)") 
+            value = "SELECT "
+                    + "FROM org.estatio.dom.lease.UnitForLease "
+                    + "WHERE reference.matches(:reference)") 
 })
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class UnitForLease extends Unit {

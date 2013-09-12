@@ -89,11 +89,11 @@ public class Leases extends EstatioDomainService<Lease> {
         
         if(tenant != null) {
             final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
-            lease.createInitialRole(artTenant, tenant, null, null);
+            lease.newRole(artTenant, tenant, null, null);
         }
         if(landlord != null) {
             final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
-            lease.createInitialRole(artLandlord, landlord, null, null);
+            lease.newRole(artLandlord, landlord, null, null);
         }
         return lease;
     }

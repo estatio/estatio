@@ -391,8 +391,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         this.roles = actors;
     }
 
-    @Named("Create Initial")
-    public Agreement<S> createInitialRole(
+    public Agreement<S> newRole(
             final @Named("Type") AgreementRoleType type,
             final Party party,
             final @Named("Start date") @Optional LocalDate startDate,
@@ -400,7 +399,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         createRole(type, party, startDate, endDate);
         return this;
     }
-    public String validateCreateInitialRole(
+    public String validateNewRole(
             final AgreementRoleType type,
             final Party party,
             final LocalDate startDate,
@@ -414,20 +413,20 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         return null;
     }
 
-    public List<AgreementRoleType> choices0CreateInitialRole() {
+    public List<AgreementRoleType> choices0NewRole() {
         return agreementRoleTypes.findApplicableTo(getAgreementType());
     }
     
-    public LocalDate default2CreateInitialRole() {
+    public LocalDate default2NewRole() {
         return getEffectiveStartDate();
     }
     
-    public LocalDate default3CreateInitialRole() {
+    public LocalDate default3NewRole() {
         return getEffectiveEndDate();
     }
 
     /**
-     * Provided for BDD "glue"; delegated to by {@link #createInitialRole(AgreementRoleType, Party, LocalDate, LocalDate)}.
+     * Provided for BDD "glue"; delegated to by {@link #newRole(AgreementRoleType, Party, LocalDate, LocalDate)}.
      */
     @Programmatic
     public AgreementRole createRole(final AgreementRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {

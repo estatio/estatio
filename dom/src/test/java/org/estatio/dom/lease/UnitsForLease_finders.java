@@ -88,13 +88,13 @@ public class UnitsForLease_finders {
     @Test
     public void findUnitsByReference() {
         
-        unitsForLease.findUnitsByReference("*REF?1*");
+        unitsForLease.findUnits("*REF?1*");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(UnitForLease.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)".*REF.1.*"));
         
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }

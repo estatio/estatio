@@ -60,7 +60,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
 
         if(createManagerRole) {
-            lease.createInitialRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
+            lease.newRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
         }
         if(createLeaseUnitAndTags) {
             LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);

@@ -77,7 +77,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         final Index index = indices.findIndexByReference(indexReference);
         LeaseTermForIndexableRent leaseTerm;
         if (sequence.equals(BigInteger.ONE)) {
-            leaseTerm = (LeaseTermForIndexableRent) leaseItem.createInitialTerm();
+            leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm();
         } else {
             LeaseTerm currentTerm = leaseItem.findTermWithSequence(sequence.subtract(BigInteger.ONE));
             leaseTerm = (LeaseTermForIndexableRent) leaseItem.createNextTerm(currentTerm);

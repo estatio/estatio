@@ -674,7 +674,7 @@ public class Api extends AbstractFactoryAndRepository {
             LeaseTerm term = item.findTermWithSequence(sequence);
             if (term == null) {
                 if (sequence.equals(BigInteger.ONE)) {
-                    term = item.createInitialTerm();
+                    term = item.newTerm();
                 } else {
                     LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
                     term = item.createNextTerm(previousTerm);

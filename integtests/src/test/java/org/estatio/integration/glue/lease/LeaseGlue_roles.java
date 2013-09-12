@@ -90,7 +90,7 @@ public class LeaseGlue_roles extends CukeGlueAbstract {
         final Lease lease = getVar("lease", null, Lease.class);
 
         try {
-            wrap(lease).createInitialRole(type, party, startDate, endDate);
+            wrap(lease).newRole(type, party, startDate, endDate);
         } catch(Exception ex) {
             putVar("exception", "exception", ex);
         }

@@ -377,12 +377,12 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    public LeaseTerm createInitialTerm() {
+    public LeaseTerm newTerm() {
         LeaseTerm term = leaseTerms.newLeaseTerm(this);
         return term;
     }
 
-    public String disableCreateInitialTerm() {
+    public String disableNewTerm() {
         return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 

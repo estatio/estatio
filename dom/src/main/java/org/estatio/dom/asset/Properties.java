@@ -79,14 +79,9 @@ public class Properties extends EstatioDomainService<Property> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Assets", sequence = "2")
-    public List<Property> findProperties(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+    @Programmatic
+    public List<Property> findProperties(String referenceOrName) {
         return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
-    }
-    public String default0FindProperties() {
-        return "*xxx*";
     }
 
     @Programmatic

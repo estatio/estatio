@@ -372,7 +372,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     // //////////////////////////////////////
 
     @Named("Create Initial")
-    public AgreementRole createInitialCommunicationChannel(
+    public AgreementRole newCommunicationChannel(
             final @Named("Type") AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel,
             final @Named("Start date") @Optional LocalDate startDate,
@@ -381,20 +381,20 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return this;
     }
 
-    public List<AgreementRoleCommunicationChannelType> choices0CreateInitialCommunicationChannel() {
+    public List<AgreementRoleCommunicationChannelType> choices0NewCommunicationChannel() {
         return getAgreement().getAgreementType().getRoleChannelTypesApplicableTo();
     }
 
-    public List<CommunicationChannel> choices1CreateInitialCommunicationChannel() {
+    public List<CommunicationChannel> choices1NewCommunicationChannel() {
         return Lists.newArrayList(communicationChannelContributions.communicationChannels(getParty()));
     }
 
-    public CommunicationChannel default1CreateInitialCommunicationChannel() {
+    public CommunicationChannel default1NewCommunicationChannel() {
         final SortedSet<CommunicationChannel> partyChannels = communicationChannelContributions.communicationChannels(getParty());
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
-    public String validateCreateInitialCommunicationChannel(
+    public String validateNewCommunicationChannel(
             final AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel,
             final LocalDate startDate,

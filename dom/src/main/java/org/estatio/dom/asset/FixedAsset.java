@@ -176,8 +176,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     }
 
 
-    @Named("Create Initial")
-    public FixedAsset createInitialRole(
+    public FixedAsset newRole(
             final @Named("Type") FixedAssetRoleType type,
             final Party party,
             final @Named("Start date") @Optional LocalDate startDate,
@@ -186,7 +185,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
         return this;
     }
     
-    public String validateCreateInitialRole(
+    public String validateNewRole(
             final FixedAssetRoleType type,
             final Party party,
             final LocalDate startDate,

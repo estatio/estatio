@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -57,9 +58,13 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Assets", sequence = "2")
-    public List<T> findUnitsByReference(final @Named("Reference") String reference) {
+    public List<T> findUnits(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
         // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
-        return allMatches("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+    }
+    public String default0FindUnits() {
+        return "AAA-00000*";
     }
 
     @ActionSemantics(Of.SAFE)
@@ -72,7 +77,7 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
 
     @Hidden
     public List<T> autoComplete(String searchPhrase) {
-        return findUnitsByReference("*".concat(searchPhrase).concat("*"));
+        return findUnits("*".concat(searchPhrase).concat("*"));
     }
     
     // //////////////////////////////////////
