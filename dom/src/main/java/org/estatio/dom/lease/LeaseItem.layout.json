@@ -14,17 +14,6 @@
             "charge": {}
           }
         },
-        "Current Value": {
-          "members": {
-            "trialValue": {},
-            "approvedValue": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 3,
-      "memberGroups": {
         "Dates": {
           "members": {
             "startDate": {},
@@ -35,9 +24,17 @@
             },
             "current": {}
           }
-        },
-        "Related": {
-          "members": {}
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
+        "Current Value": {
+          "members": {
+            "trialValue": {},
+            "approvedValue": {}
+          }
         }
       }
     },

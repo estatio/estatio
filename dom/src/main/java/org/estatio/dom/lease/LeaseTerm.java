@@ -122,6 +122,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         this.leaseItem = leaseItem;
     }
 
+    
     // //////////////////////////////////////
 
     private BigInteger sequence;

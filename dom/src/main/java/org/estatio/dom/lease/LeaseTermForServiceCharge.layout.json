@@ -5,10 +5,22 @@
       "memberGroups": {
         "General": {
           "members": {
-            "leaseItem": {},
+            "type": {},
+             "leaseItem": {},
             "frequency": {},
             "sequence": {},
             "status": {}
+          }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "current": {}
           }
         }
       }
@@ -21,30 +33,19 @@
             "budgetedValue": {},
             "auditedValue": {}
           }
-        },
-        "Values": {
-          "members": {
-            "trialValue": {},
-            "approvedValue": {}
-          }
         }
       }
     },
     {
       "span": 4,
       "memberGroups": {
-        "Dates": {
+        "Values": {
           "members": {
-            "startDate": {},
-            "endDate": {
-              "actions": {
-                "changeDates": {}
-              }
-            },
-            "current": {}
+            "trialValue": {},
+            "approvedValue": {}
           }
         },
-        "Related": {
+         "Related": {
           "members": {
             "previous": {},
             "next": {}

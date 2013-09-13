@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 3,
+      "span": 4,
       "memberGroups": {
         "General": {
           "members": {
@@ -9,12 +9,7 @@
             "gender": {},
             "status": {}
           }
-        }
-      }
-    },
-    {
-      "span": 3,
-      "memberGroups": {
+        },
         "Name": {
           "members": {
             "name": {},
@@ -27,10 +22,15 @@
     },
     {
       "span": 0,
+      "memberGroups": {
+      }
+    },
+    {
+      "span": 0,
       "memberGroups": {}
     },
     {
-      "span": 6,
+      "span": 8,
       "collections": {
         "agreements": {},
         "communicationChannels": {},

@@ -152,7 +152,6 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     private LeaseItemType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "2")
     public LeaseItemType getType() {
         return type;

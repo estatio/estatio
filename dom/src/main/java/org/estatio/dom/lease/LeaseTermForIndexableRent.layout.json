@@ -5,10 +5,22 @@
       "memberGroups": {
         "General": {
           "members": {
+            "type": {},
             "leaseItem": {},
             "frequency": {},
             "sequence": {},
             "status": {}
+          }
+        },
+         "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "current": {}
           }
         }
       }
@@ -28,7 +40,12 @@
             "levellingPercentage": {},
             "levellingValue": {}
           }
-        },
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
         "Values": {
           "members": {
             "trialValue": {},
@@ -36,22 +53,6 @@
             "baseValue": {},
             "indexedValue": {},
             "settledValue": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Dates": {
-          "members": {
-            "startDate": {},
-            "endDate": {
-              "actions": {
-                "changeDates": {}
-              }
-            },
-            "current": {}
           }
         },
         "Related": {

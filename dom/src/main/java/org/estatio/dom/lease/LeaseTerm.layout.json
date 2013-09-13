@@ -1,0 +1,47 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "type": {},
+            "leaseItem": {},
+            "frequency": {},
+            "sequence": {},
+            "status": {},
+            "effectiveDate": {},
+            "trialValue": {},
+            "approvedValue": {},
+            "baseValue": {},
+            "startDate": {},
+            "endDate": {},
+            "current": {},
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 12,
+      "collections": {
+        "invoiceItems": {}
+      }
+    }
+  ],
+  "actions": {
+    "createNext": {},
+    "lock": {},
+    "unlock": {},
+    "verify": {}
+  }
+}
