@@ -437,28 +437,48 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    static Predicate<AgreementRole> whetherOfType(final AgreementRoleType art) {
+    /**
+     * A {@link Predicate} that tests whether the role's {@link AgreementRole#getType() type}
+     * is the specified value.
+     */
+    public static Predicate<AgreementRole> whetherTypeIs(final AgreementRoleType art) {
+        return new Predicate<AgreementRole>(){
+
+            @Override
+            public boolean apply(AgreementRole input) {
+                return input != null && input.getType() == art;
+            }};
+    }
+
+    
+    /**
+     * A {@link Predicate} that tests whether the role's {@link AgreementRole#getAgreement() agreement}'s
+     * {@link Agreement#getAgreementType() type} is the specified value.
+     */
+    public static Predicate<AgreementRole> whetherAgreementTypeIs(final AgreementType at) {
+        return new Predicate<AgreementRole>(){
+            
+            @Override
+            public boolean apply(AgreementRole input) {
+                return input != null && input.getAgreement().getAgreementType() == at;
+            }};
+    }
+    
+    /**
+     * A {@link Predicate} that tests whether the role's {@link AgreementRole#isCurrent() current}
+     * status is the specified value.
+     */
+    public static Predicate<AgreementRole> whetherCurrentIs(final boolean current) {
         return new Predicate<AgreementRole>() {
             public boolean apply(AgreementRole candidate) {
-                if (candidate == null) {
-                    return false;
-                } 
-                return candidate.getType() == art;
+                return candidate != null && candidate.isCurrent() == current;
             }
         };
     }
 
-    static Predicate<AgreementRole> whetherCurrent() {
-        return new Predicate<AgreementRole>() {
-            public boolean apply(AgreementRole candidate) {
-                if (candidate == null) {
-                    return false;
-                } 
-                return candidate.isCurrent();
-            }
-        };
-    }
-
+    /**
+     * A {@link Function} that obtains the role's {@link AgreementRole#getParty() party} attribute.
+     */
     static Function<AgreementRole, Party> partyOf() {
         return new Function<AgreementRole, Party>() {
             public Party apply(AgreementRole agreementRole) {
@@ -467,6 +487,9 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         };
     }
 
+    /**
+     * A {@link Function} that obtains the role's {@link AgreementRole#getEffectiveEndDate() effective end date} attribute.
+     */
     static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
         return new Function<AgreementRole, LocalDate>() {
             @Override
@@ -474,6 +497,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
                 return input != null? input.getEffectiveEndDate(): null;
             }};
     }
+    
 
     // //////////////////////////////////////
 

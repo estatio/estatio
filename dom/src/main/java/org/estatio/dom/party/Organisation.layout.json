@@ -23,11 +23,25 @@
     {
       "span": 8,
       "collections": {
-        "agreements": {},
-        "communicationChannels": {},
+        "leases": {
+            "actions": {
+                "listAllLeases": {}
+            }
+        },
+        "communicationChannels": {
+          "actions": {}
+        },
+        "bankMandates": {
+            "actions": {
+                "listAllMandates": {}
+            }
+        },
+        "financialAccounts": {
+          "actions": {}
+        },
         "registrations": {
           "actions": {
-            "addRegistration": {}
+            "newRegistration": {}
           }
         }
       }

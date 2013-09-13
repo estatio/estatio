@@ -118,15 +118,15 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findActiveLeasesOnDate(
+    public List<Lease> findLeasesActiveOnDate(
             final FixedAsset fixedAsset, 
             final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
-    public List<FixedAsset> autoComplete0FindActiveLeasesOnDate(final String searchPhrase) {
+    public List<FixedAsset> autoComplete0FindLeasesActiveOnDate(final String searchPhrase) {
         return fixedAssets.findAssetsByReferenceOrName(searchPhrase);
     }
-    public LocalDate default1FindActiveLeasesOnDate() {
+    public LocalDate default1FindLeasesActiveOnDate() {
         return getClockService().now();
     }
 

@@ -147,11 +147,11 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     protected AgreementRole findCurrentOrMostRecentAgreementRole(AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType = 
-                Iterables.filter(getRoles(), AgreementRole.whetherOfType(agreementRoleType));
+                Iterables.filter(getRoles(), AgreementRole.whetherTypeIs(agreementRoleType));
         
         // try to find the one that is current...
         Iterable<AgreementRole> roles = 
-                Iterables.filter(rolesOfType, AgreementRole.whetherCurrent());
+                Iterables.filter(rolesOfType, AgreementRole.whetherCurrentIs(true));
         
         // ... else the most recently ended one
         if(Iterables.isEmpty(roles)) {

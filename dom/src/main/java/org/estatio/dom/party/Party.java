@@ -18,22 +18,38 @@
  */
 package org.estatio.dom.party;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.estatio.dom.financial.FinancialConstants;
+import org.estatio.dom.lease.LeaseConstants;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -122,7 +138,7 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<AgreementRole> agreements = new TreeSet<AgreementRole>();
 
-    @Render(Type.EAGERLY)
+    @Hidden
     public SortedSet<AgreementRole> getAgreements() {
         return agreements;
     }
@@ -133,12 +149,53 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
 
     // //////////////////////////////////////
 
-    // TODO: is this in scope, or can we remove?
-    // if in scope, is it a bidir requiring mappedBy?
+    @NotPersisted
+    @Render(Type.EAGERLY)
+    public Collection<AgreementRole> getLeases() {
+        return listCurrentAgreementsOfType(LeaseConstants.AT_LEASE);
+    }
+    
+    @NotPersisted
+    @Render(Type.EAGERLY)
+    public Collection<AgreementRole> getBankMandates() {
+        return listCurrentAgreementsOfType(FinancialConstants.AT_MANDATE);
+    }
+
+    private Collection<AgreementRole> listCurrentAgreementsOfType(final String art) {
+        final AgreementType agreementType = agreementTypes.find(art);
+        return Lists.newArrayList(
+                Iterables.filter(getAgreements(), 
+                    Predicates.and(
+                        AgreementRole.whetherAgreementTypeIs(agreementType), 
+                        AgreementRole.whetherCurrentIs(true))));
+    }
+
+    @Named("List All")
+    public Collection<AgreementRole> listAllLeases() {
+        return listAgreementsOfType(LeaseConstants.AT_LEASE);
+    }
+    
+    @Named("List All")
+    public Collection<AgreementRole> listAllMandates() {
+        return listAgreementsOfType(FinancialConstants.AT_MANDATE);
+    }
+    
+    private Collection<AgreementRole> listAgreementsOfType(final String art) {
+        final AgreementType agreementType = agreementTypes.find(art);
+        return Lists.newArrayList(
+                Iterables.filter(getAgreements(), 
+                     AgreementRole.whetherAgreementTypeIs(agreementType)));
+    }
+
+
+    
+    // //////////////////////////////////////
+
+    // TODO: EST-86.  is a bidir mapping required?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
-    @Render(Type.EAGERLY)
+    @Hidden
     public SortedSet<PartyRegistration> getRegistrations() {
         return registrations;
     }
@@ -147,8 +204,16 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
         this.registrations = registrations;
     }
 
-    public Party addRegistration() {
+    @Hidden
+    public Party newRegistration() {
         return this;
+    }
+
+    // //////////////////////////////////////
+    
+    private AgreementTypes agreementTypes;
+    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
+        this.agreementTypes = agreementTypes;
     }
 
 }

@@ -40,7 +40,11 @@ public class Charges extends EstatioDomainService<Charge> {
 
     @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.1")
-    public Charge newCharge(String reference, String description, String code, Tax tax) {
+    public Charge newCharge(
+            final @Named("Reference") String reference, 
+            final @Named("Description") String description, 
+            final @Named("Code") String code, 
+            final Tax tax) {
         Charge charge = findChargeByReference(reference);
         if (charge == null) {
             charge = newTransientInstance();
