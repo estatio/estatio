@@ -26,6 +26,9 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -38,6 +41,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -429,6 +433,46 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         persistIfNotAlready(arcc);
 
         return arcc;
+    }
+
+    // //////////////////////////////////////
+
+    static Predicate<AgreementRole> whetherOfType(final AgreementRoleType art) {
+        return new Predicate<AgreementRole>() {
+            public boolean apply(AgreementRole candidate) {
+                if (candidate == null) {
+                    return false;
+                } 
+                return candidate.getType() == art;
+            }
+        };
+    }
+
+    static Predicate<AgreementRole> whetherCurrent() {
+        return new Predicate<AgreementRole>() {
+            public boolean apply(AgreementRole candidate) {
+                if (candidate == null) {
+                    return false;
+                } 
+                return candidate.isCurrent();
+            }
+        };
+    }
+
+    static Function<AgreementRole, Party> partyOf() {
+        return new Function<AgreementRole, Party>() {
+            public Party apply(AgreementRole agreementRole) {
+                return agreementRole != null ? agreementRole.getParty() : null;
+            }
+        };
+    }
+
+    static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
+        return new Function<AgreementRole, LocalDate>() {
+            @Override
+            public LocalDate apply(AgreementRole input) {
+                return input != null? input.getEffectiveEndDate(): null;
+            }};
     }
 
     // //////////////////////////////////////

@@ -77,7 +77,7 @@ public class LeaseTest_paidBy {
     private Party tenant;
     private AgreementRoleType tenantAgreementRoleType;
     private AgreementRoleType debtorAgreementRoleType;
-    private AgreementRole tenantAgreementRole;
+    private AgreementRole arTenant;
 
     private AgreementType bankMandateAgreementType;
 
@@ -119,10 +119,10 @@ public class LeaseTest_paidBy {
         });
         
         tenant = new PartyForTesting();
-        tenantAgreementRole = new AgreementRole();
-        tenantAgreementRole.setParty(tenant);
-        tenantAgreementRole.setType(tenantAgreementRoleType);
-        tenantAgreementRole.injectClockService(mockClockService);
+        arTenant = new AgreementRole();
+        arTenant.setParty(tenant);
+        arTenant.setType(tenantAgreementRoleType);
+        arTenant.injectClockService(mockClockService);
 
         bankMandate = new BankMandate();
         someOtherBankMandate = new BankMandate();
@@ -131,6 +131,7 @@ public class LeaseTest_paidBy {
         lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
         lease.injectAgreements(mockAgreements);
         lease.injectAgreementTypes(mockAgreementTypes);
+        lease.injectClockService(mockClockService);
     }
     
 
@@ -152,8 +153,8 @@ public class LeaseTest_paidBy {
     public void whenSecondaryPartyIsKnownButNoMandates_isDisabled() {
 
         // given
-        tenantAgreementRole.setAgreement(lease);
-        lease.getRoles().add(tenantAgreementRole);
+        arTenant.setAgreement(lease);
+        lease.getRoles().add(arTenant);
 
         context.checking(new Expectations() {
             {
@@ -172,10 +173,10 @@ public class LeaseTest_paidBy {
     public void whenSecondaryPartyIsKnownButNotCurrent_isDisabled() {
         
         // given
-        tenantAgreementRole.setAgreement(lease);
-        lease.getRoles().add(tenantAgreementRole);
+        arTenant.setAgreement(lease);
+        lease.getRoles().add(arTenant);
 
-        tenantAgreementRole.setEndDate(new LocalDate(2013,4,1));
+        arTenant.setEndDate(new LocalDate(2013,4,1));
         
         context.checking(new Expectations() {
             {
@@ -197,8 +198,8 @@ public class LeaseTest_paidBy {
     public void whenSecondaryPartyIsKnownAndHasMandates_canInvoke() {
 
         // given
-        tenantAgreementRole.setAgreement(lease);
-        lease.getRoles().add(tenantAgreementRole);
+        arTenant.setAgreement(lease);
+        lease.getRoles().add(arTenant);
 
         context.checking(new Expectations() {
             {
@@ -238,8 +239,8 @@ public class LeaseTest_paidBy {
     public void whenPrereqs_butValidateWithOtherBankMandate_isInvalid() {
         
         // given
-        tenantAgreementRole.setAgreement(lease);
-        lease.getRoles().add(tenantAgreementRole);
+        arTenant.setAgreement(lease);
+        lease.getRoles().add(arTenant);
         
         context.checking(new Expectations() {
             {

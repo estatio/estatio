@@ -75,11 +75,11 @@ public class BankMandate extends Agreement<Status> {
     // //////////////////////////////////////
 
     public Party getPrimaryParty() {
-        return findParty(FinancialConstants.ART_CREDITOR);
+        return findCurrentOrMostRecentParty(FinancialConstants.ART_CREDITOR);
     }
 
     public Party getSecondaryParty() {
-        return findParty(FinancialConstants.ART_DEBTOR);
+        return findCurrentOrMostRecentParty(FinancialConstants.ART_DEBTOR);
     }
 
 

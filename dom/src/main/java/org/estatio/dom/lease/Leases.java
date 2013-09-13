@@ -113,20 +113,20 @@ public class Leases extends EstatioDomainService<Lease> {
         return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
     public String default0FindLeases() {
-        return "*xxx-yyy*";
+        return "AAA-BBBBBBB*";
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> activeLeasesOnDate(
+    public List<Lease> findActiveLeasesOnDate(
             final FixedAsset fixedAsset, 
             final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
-    public List<FixedAsset> autoComplete0ActiveLeasesOnDate(final String searchPhrase) {
+    public List<FixedAsset> autoComplete0FindActiveLeasesOnDate(final String searchPhrase) {
         return fixedAssets.findAssetsByReferenceOrName(searchPhrase);
     }
-    public LocalDate default1ActiveLeasesOnDate() {
+    public LocalDate default1FindActiveLeasesOnDate() {
         return getClockService().now();
     }
 

@@ -82,11 +82,6 @@ public class AgreementTest_findParty  {
         }
         
         @Override
-        public Party findParty(String agreementRoleTypeTitle) {
-            return super.findParty(agreementRoleTypeTitle);
-        }
-
-        @Override
         public Status getStatus() {
             return null;
         }
@@ -155,7 +150,7 @@ public class AgreementTest_findParty  {
         agreement.getRoles().add(debtorAr);
         agreement.getRoles().add(debtorAr2);
         
-        assertThat(agreement.findParty("Creditor"), is(creditor));
+        assertThat(agreement.findCurrentOrMostRecentParty("Creditor"), is(creditor));
     }
 
 }

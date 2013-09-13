@@ -99,7 +99,7 @@ public class LeasesTest_finders {
     @Test
     public void findLeasesByAssetAndDate() {
         
-        leases.activeLeasesOnDate(asset, date);
+        leases.findActiveLeasesOnDate(asset, date);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Lease.class));

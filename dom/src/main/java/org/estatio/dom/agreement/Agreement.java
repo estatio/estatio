@@ -18,6 +18,9 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -29,6 +32,8 @@ import javax.jdo.annotations.VersionStrategy;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
 import org.estatio.dom.Chained;
@@ -42,6 +47,7 @@ import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -123,32 +129,49 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     // //////////////////////////////////////
 
-    protected Party findParty(final String agreementRoleTypeTitle) {
+    protected Party findCurrentOrMostRecentParty(final String agreementRoleTypeTitle) {
         final AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleTypeTitle);
-        return findParty(art);
+        return findCurrentOrMostRecentParty(art);
     }
 
-    protected Party findParty(AgreementRoleType agreementRoleType) {
-        final Predicate<AgreementRole> currentAgreementRoleOfType = currentAgreementRoleOfType(agreementRoleType);
-        final Iterable<Party> parties = Iterables.transform(Iterables.filter(getRoles(), currentAgreementRoleOfType), partyOfAgreementRole());
-        return ValueUtils.firstElseNull(parties);
+    protected Party findCurrentOrMostRecentParty(final AgreementRoleType art) {
+        final AgreementRole currentOrMostRecentRole = findCurrentOrMostRecentAgreementRole(art);
+        return partyOf(currentOrMostRecentRole);
     }
 
-    private static Function<AgreementRole, Party> partyOfAgreementRole() {
-        return new Function<AgreementRole, Party>() {
-            public Party apply(AgreementRole agreementRole) {
-                return agreementRole != null ? agreementRole.getParty() : null;
-            }
-        };
+    protected AgreementRole findCurrentOrMostRecentAgreementRole(final String agreementRoleTypeTitle) {
+        final AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleTypeTitle);
+        return findCurrentOrMostRecentAgreementRole(art);
     }
 
-    private static Predicate<AgreementRole> currentAgreementRoleOfType(final AgreementRoleType art) {
-        return new Predicate<AgreementRole>() {
-            public boolean apply(AgreementRole candidate) {
-                return candidate != null ? candidate.getType() == art && candidate.isCurrent() : false;
-            }
-        };
+    protected AgreementRole findCurrentOrMostRecentAgreementRole(AgreementRoleType agreementRoleType) {
+        // all available roles
+        final Iterable<AgreementRole> rolesOfType = 
+                Iterables.filter(getRoles(), AgreementRole.whetherOfType(agreementRoleType));
+        
+        // try to find the one that is current...
+        Iterable<AgreementRole> roles = 
+                Iterables.filter(rolesOfType, AgreementRole.whetherCurrent());
+        
+        // ... else the most recently ended one
+        if(Iterables.isEmpty(roles)) {
+            final List<AgreementRole> rolesInList = Lists.newArrayList(rolesOfType);
+            roles = orderRolesByEffectiveEndDateReverseNullsFirst().leastOf(rolesInList, 1);
+        }
+        
+        // and return the party
+        final AgreementRole currentOrMostRecentRole = ValueUtils.firstElseNull(roles);
+        return currentOrMostRecentRole;
     }
+
+    protected Party partyOf(final AgreementRole agreementRole) {
+        return AgreementRole.partyOf().apply(agreementRole);
+    }
+
+    private static Ordering<AgreementRole> orderRolesByEffectiveEndDateReverseNullsFirst() {
+        return Ordering.natural().onResultOf(AgreementRole.effectiveEndDateOf()).reverse().nullsFirst();
+    }
+
 
     // //////////////////////////////////////
 

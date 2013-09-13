@@ -37,12 +37,14 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.asset.Property;
@@ -121,13 +123,25 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     @Override
     @NotPersisted
     public Party getPrimaryParty() {
-        return findParty(LeaseConstants.ART_LANDLORD);
+        final AgreementRole ar = getPrimaryAgreementRole();
+        return partyOf(ar);
     }
 
     @Override
     @NotPersisted
     public Party getSecondaryParty() {
-        return findParty(LeaseConstants.ART_TENANT);
+        final AgreementRole ar = getSecondaryAgreementRole();
+        return partyOf(ar);
+    }
+    
+    @Programmatic
+    protected AgreementRole getPrimaryAgreementRole() {
+        return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_LANDLORD);
+    }
+    
+    @Programmatic
+    protected AgreementRole getSecondaryAgreementRole() {
+        return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_TENANT);
     }
 
     // //////////////////////////////////////
@@ -270,15 +284,15 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<BankMandate> existingBankMandatesForTenant() {
-        final Party tenant = getSecondaryParty();
-
-        if (tenant != null) {
-            final AgreementType bankMandateAgreementType = bankMandateAgreementType();
-            final AgreementRoleType debtorRoleType = debtorRoleType();
-
-            return (List) agreements.findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
+        final AgreementRole tenantRole = getSecondaryAgreementRole();
+        if(tenantRole == null || !tenantRole.isCurrent()) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+        final Party tenant = partyOf(tenantRole);
+        final AgreementType bankMandateAgreementType = bankMandateAgreementType();
+        final AgreementRoleType debtorRoleType = debtorRoleType();
+
+        return (List) agreements.findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
     }
 
     // //////////////////////////////////////
@@ -302,8 +316,8 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     }
 
     public String disableNewMandate(final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
-        final Party tenant = getSecondaryParty();
-        if (tenant == null) {
+        final AgreementRole tenantRole = getSecondaryAgreementRole();
+        if(tenantRole == null || !tenantRole.isCurrent()) {
             return "Could not determine the tenant (secondary party) of this lease";
         }
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();

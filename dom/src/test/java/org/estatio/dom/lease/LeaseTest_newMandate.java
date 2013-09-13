@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -26,7 +25,6 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.SortedSet;
 
 import com.google.common.collect.Lists;
 
@@ -42,7 +40,6 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -154,6 +151,7 @@ public class LeaseTest_newMandate {
         lease.injectAgreementTypes(mockAgreementTypes);
         lease.injectFinancialAccounts(mockFinancialAccounts);
         lease.setContainer(mockContainer);
+        lease.injectClockService(mockClockService);
     }
     
 
