@@ -141,7 +141,6 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     @javax.jdo.annotations.Column(name = "TYPE_ID", allowsNull = "false")
     @Title(sequence = "1")
-    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public AgreementRoleType getType() {
         return type;
