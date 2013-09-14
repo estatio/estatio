@@ -18,7 +18,8 @@
  */
 package org.estatio.services.appsettings;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
@@ -28,11 +29,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsService;
 import org.apache.isis.applib.services.settings.SettingAbstract;
@@ -41,6 +37,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
 public class EstatioSettingsServiceTest {
@@ -50,16 +47,13 @@ public class EstatioSettingsServiceTest {
         @Override
         public void updateEpochDate(LocalDate epochDate) {
         }
-        ApplicationSettingsService getApplicationSettings() {
-            return applicationSettings;
-        }
     }
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Mock
-    private ApplicationSettingsService  mockApplicationSettingsService;
+    private ApplicationSettingsServiceForEstatio  mockApplicationSettingsService;
     
     @ClassUnderTest
     private EstatioSettingsServiceForTesting estatioSettingsService;
@@ -85,11 +79,18 @@ public class EstatioSettingsServiceTest {
         }
     }
     
+    @Before
+    public void setUp() throws Exception {
+        estatioSettingsService.injectApplicationSettings(mockApplicationSettingsService);        
+    }
+    
     @Test
     public void happyCase() {
         final LocalDate date = new LocalDate(2013,4,1);
         context.checking(new Expectations() {
             {
+                oneOf(mockApplicationSettingsService).installDefaultsIfRequired();
+                
                 oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);
                 will(returnValue(new ApplicationSettingForTesting(date.toString(SettingAbstract.DATE_FORMATTER), SettingType.LOCAL_DATE)));
             }
@@ -102,6 +103,8 @@ public class EstatioSettingsServiceTest {
     public void whenNull() {
         context.checking(new Expectations() {
             {
+                oneOf(mockApplicationSettingsService).installDefaultsIfRequired();
+                
                 oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);
                 will(returnValue(null));
             }

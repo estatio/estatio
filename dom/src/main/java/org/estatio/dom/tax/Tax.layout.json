@@ -22,7 +22,11 @@
     {
       "span": 8,
       "collections": {
-        "rates": {}
+        "rates": {
+            "actions": {
+                "newRate": {}
+            }
+        }
       }
     }
   ],

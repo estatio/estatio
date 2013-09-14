@@ -61,7 +61,7 @@ public class ChargesTest_newCharge {
         
         charges = new Charges() {
             @Override
-            public Charge findChargeByReference(String reference) {
+            public Charge findCharge(String reference) {
                 return existingCharge;
             }
         };    

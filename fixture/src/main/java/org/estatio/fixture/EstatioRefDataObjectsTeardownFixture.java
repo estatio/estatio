@@ -42,19 +42,19 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
     public void install() {
         
         isisJdoSupport.deleteAll(
-        State.class,
-        Country.class,
-        Currency.class,
-        Charge.class,
-        ChargeGroup.class,
-        TaxRate.class,
-        Tax.class,
-        AgreementRoleCommunicationChannelType.class,
-        AgreementRoleType.class,
-        AgreementType.class,
-        IndexValue.class,
-        IndexBase.class,
-        Index.class
+            State.class,
+            Country.class,
+            Currency.class,
+            Charge.class,
+            ChargeGroup.class,
+            TaxRate.class,
+            Tax.class,
+            AgreementRoleCommunicationChannelType.class,
+            AgreementRoleType.class,
+            AgreementType.class,
+            IndexValue.class,
+            IndexBase.class,
+            Index.class
         );
 
     }

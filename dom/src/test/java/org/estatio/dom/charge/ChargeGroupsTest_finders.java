@@ -66,7 +66,7 @@ public class ChargeGroupsTest_finders {
     @Test
     public void findByReference() {
 
-        chargeGroups.findChargeGroupByReference("*REF?1*");
+        chargeGroups.findChargeGroup("*REF?1*");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(ChargeGroup.class));

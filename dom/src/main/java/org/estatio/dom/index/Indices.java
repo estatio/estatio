@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 
@@ -46,20 +47,19 @@ public class Indices extends EstatioDomainService<Index> {
     }
 
     // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Indices", sequence = "4")
-    public Index findIndexByReference(final @Named("Reference") String reference) {
-        return firstMatch("findByReference", "reference", reference);
-    }
-
-    // //////////////////////////////////////
-
+    
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "5")
     public List<Index> allIndices() {
         return allInstances();
     }
+    // //////////////////////////////////////
+
+    @Hidden
+    public Index findIndex(final @Named("Reference") String reference) {
+        return firstMatch("findByReference", "reference", reference);
+    }
+
 
 
 

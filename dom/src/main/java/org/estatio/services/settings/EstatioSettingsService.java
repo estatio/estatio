@@ -18,44 +18,87 @@
  */
 package org.estatio.services.settings;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.ApplicationSettingsService;
+import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingJdo;
 
-public abstract class EstatioSettingsService {
+import org.estatio.dom.ApplicationSettingKey;
+
+
+/**
+ * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch date}.
+ * 
+ * <p>
+ * Delegates to injected {@link ApplicationSettingsServiceForEstatio application settings service}
+ * to actually do the persistence.  Also ensures that any {@link ApplicationSettingKey defaults for keys} 
+ * have been installed if required.
+ */
+@Hidden
+public class EstatioSettingsService {
 
     /**
-     * The 'beginning of time' so far as Estatio is concerned.
-     * 
-     * <p>
-     * This is used, for example, by the <tt>InvoiceCalculationService</tt>; it
-     * doesn't go looking for invoices prior to this date because they won't
-     * exist in the system.
-     * 
-     * <p>
-     * One of the design principles for Estatio was to ensure that it would not
-     * require invoices from the predecessor system.
+     * @see ApplicationSettingKey#epochDate
      */
-    public final static String EPOCH_DATE_KEY = "epochDate";
+    public final static String EPOCH_DATE_KEY = ApplicationSettingKey.epochDate.name();
 
+    /**
+     * @see ApplicationSettingKey#epochDate
+     */
     @Hidden
     public LocalDate fetchEpochDate() {
-        final ApplicationSetting epochDate = applicationSettings.find(EPOCH_DATE_KEY);
+        getApplicationSettings().installDefaultsIfRequired();
+        final ApplicationSetting epochDate = applicationSettingsService.find(EPOCH_DATE_KEY);
         return epochDate != null ? epochDate.valueAsLocalDate() : null;
     }
 
-    public abstract void updateEpochDate(LocalDate epochDate);
-    
+    /**
+     * @see ApplicationSettingKey#epochDate
+     */
+    @Hidden
+    public void updateEpochDate(
+            final LocalDate newEpochDate) {
+        getApplicationSettings().installDefaultsIfRequired();
+        final ApplicationSettingJdo setting = find(EPOCH_DATE_KEY);
+        if(setting!=null) {
+            if(newEpochDate != null) {
+                setting.updateAsLocalDate(newEpochDate);
+            } else {
+                setting.delete(true);
+            }
+        } else {
+            if(newEpochDate != null) {
+                getApplicationSettings().newLocalDate(EPOCH_DATE_KEY, "Cutover date to Estatio", newEpochDate);
+            } else {
+                // no-op
+            }
+        }
+    }
+
+    @Hidden
+    public List<ApplicationSetting> listAll() {
+        return applicationSettingsService.listAll();
+    }
+
+    private ApplicationSettingJdo find(String key) {
+        return (ApplicationSettingJdo) getApplicationSettings().find(key);
+    }
 
 
     // //////////////////////////////////////
 
-    protected ApplicationSettingsService applicationSettings;
+    protected ApplicationSettingsServiceForEstatio applicationSettingsService;
 
-    public void setApplicationSettings(ApplicationSettingsService applicationSettings) {
-        this.applicationSettings = applicationSettings;
+    private ApplicationSettingsServiceForEstatio getApplicationSettings() {
+        return (ApplicationSettingsServiceForEstatio) applicationSettingsService;
     }
+
+    public final void injectApplicationSettings(ApplicationSettingsServiceForEstatio applicationSettings) {
+        this.applicationSettingsService = applicationSettings;
+    }
+
 
 }

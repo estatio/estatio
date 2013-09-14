@@ -68,7 +68,7 @@ public class StatesTest_finders {
     @Test
     public void findStateByReference() {
 
-        states.findStateByReference("*REF?1*");
+        states.findState("*REF?1*");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));

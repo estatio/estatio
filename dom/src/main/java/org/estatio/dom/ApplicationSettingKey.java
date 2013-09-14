@@ -23,6 +23,18 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
+    /**
+     * The 'beginning of time' so far as Estatio is concerned.
+     * 
+     * <p>
+     * This is used, for example, by the <tt>InvoiceCalculationService</tt>; it
+     * doesn't go looking for invoices prior to this date because they won't
+     * exist in the system.
+     * 
+     * <p>
+     * One of the design principles for Estatio was to ensure that it would not
+     * require invoices from the predecessor system.
+     */
     epochDate(LocalDate.class, "Epoch date", new LocalDate(2013,4,1));
     
     private final Object defaultValue;

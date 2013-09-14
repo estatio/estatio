@@ -30,10 +30,30 @@ public class ClockService {
         return Clock.getTimeAsLocalDate();
     }
 
+    // //////////////////////////////////////
+
     public LocalDate beginningOfMonth() {
-        final LocalDate now = now();
-        final int dayOfMonth = now.getDayOfMonth();
-        return now.minusDays(dayOfMonth-1);
+        return beginningOfMonth(now());
+    }
+
+    static LocalDate beginningOfMonth(final LocalDate date) {
+        final int dayOfMonth = date.getDayOfMonth();
+        return date.minusDays(dayOfMonth-1);
+    }
+
+    // //////////////////////////////////////
+
+    public LocalDate beginningOfQuarter() {
+        final LocalDate date = now();
+        return beginningOfQuarter(date);
+    }
+
+    static LocalDate beginningOfQuarter(final LocalDate date) {
+        final LocalDate beginningOfMonth = beginningOfMonth(date);
+        final int monthOfYear = beginningOfMonth.getMonthOfYear();
+        final int quarter = (monthOfYear-1)/3; // 0, 1, 2, 3
+        final int monthStartOfQuarter = quarter*3+1;
+        return beginningOfMonth.minusMonths(monthOfYear-monthStartOfQuarter);
     }
 
 }

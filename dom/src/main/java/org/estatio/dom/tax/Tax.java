@@ -28,6 +28,8 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.WithReferenceComparable;
@@ -78,6 +80,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
     private SortedSet<TaxRate> rates = new TreeSet<TaxRate>();
 
+    @Render(Type.EAGERLY)
     public SortedSet<TaxRate> getRates() {
         return rates;
     }

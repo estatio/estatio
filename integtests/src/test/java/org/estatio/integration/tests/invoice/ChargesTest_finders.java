@@ -37,7 +37,7 @@ public class ChargesTest_finders extends EstatioIntegrationTest {
     
     @Test
     public void findChargeByReference() throws Exception {
-        Charge charge = charges.findChargeByReference("RENT");
+        Charge charge = charges.findCharge("RENT");
         Assert.assertEquals(charge.getReference(), "RENT");
     }
 

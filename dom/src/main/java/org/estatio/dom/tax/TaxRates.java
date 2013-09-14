@@ -24,6 +24,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 
@@ -37,6 +38,8 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
 
     // //////////////////////////////////////
 
+    
+    @MemberOrder(name="Other", sequence = "taxStuff.taxes.3")
     @ActionSemantics(Of.SAFE)
     public List<TaxRate> allTaxRates() {
         return allInstances();

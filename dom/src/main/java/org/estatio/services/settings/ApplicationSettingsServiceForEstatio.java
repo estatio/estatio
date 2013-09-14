@@ -21,26 +21,21 @@ package org.estatio.services.settings;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
+import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdoHidden;
 
 import org.estatio.dom.ApplicationSettingCreator;
 
-@Hidden
-public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsServiceJdo  {
-
+public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsServiceJdoHidden  {
 
     @Override
-    @Hidden
-    public ApplicationSetting find(@Named("Key") String key) {
+    public ApplicationSetting find(String key) {
         installDefaultsIfRequired();
         return super.find(key);
     }
 
     @Override
-    @MemberOrder(sequence = "1")
     public List<ApplicationSetting> listAll() {
         installDefaultsIfRequired();
         return super.listAll();
@@ -48,15 +43,20 @@ public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsSer
 
     
     private boolean installedDefaults;
-    private void installDefaultsIfRequired() {
-        // horrid, but cannot use @PostConstruct since no container injected, and no Isis session available
+    /**
+     * Not API.
+     * 
+     * <p>
+     * horrid, but cannot use @PostConstruct since no container injected, and no Isis session available
+     */
+    @Hidden
+    public void installDefaultsIfRequired() {
         if(!installedDefaults) {
             installedDefaults = true;
             installDefaults();
         }
     }
 
-    // @PostConstruct
     private void installDefaults() {
         createSettingsIfRequired(org.estatio.dom.ApplicationSettingKey.values());
         createSettingsIfRequired(org.estatio.dom.lease.ApplicationSettingKey.values());
@@ -64,15 +64,15 @@ public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsSer
     }
 
     private void createSettingsIfRequired(ApplicationSettingCreator[] values) {
-        for(org.estatio.dom.ApplicationSettingCreator sd: values) {
-            create(sd);
+        for(org.estatio.dom.ApplicationSettingCreator creator: values) {
+            createIfRequired(creator);
         }
     }
 
-    private void create(org.estatio.dom.ApplicationSettingCreator sd) {
-        ApplicationSetting find = find(sd.name());
+    private void createIfRequired(org.estatio.dom.ApplicationSettingCreator creator) {
+        ApplicationSetting find = find(creator.name());
         if(find == null) {
-            sd.create(this);
+            creator.create(this);
         }
     }
 

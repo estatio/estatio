@@ -275,7 +275,9 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
         Lease lease = getLeaseItem().getLease();
-        return LocalDateInterval.including(getStartDate(), getEndDate()).overlap(lease.getEffectiveInterval());
+        final LocalDateInterval startToEndDate = LocalDateInterval.including(getStartDate(), getEndDate());
+        final LocalDateInterval leaseEffectiveInterval = lease.getEffectiveInterval();
+        return startToEndDate.overlap(leaseEffectiveInterval);
     }
 
     // //////////////////////////////////////

@@ -46,7 +46,7 @@ public class StatesTest_finders extends EstatioIntegrationTest {
     
     @Test
     public void stateCanBeFound() throws Exception {
-        final Country country = countries.findCountryByReference("NLD");
+        final Country country = countries.findCountry("NLD");
         final List<State> statesInCountry = states.findStatesByCountry(country);
         assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
         for (State state : statesInCountry) {

@@ -140,7 +140,7 @@ public class InvoiceItemForLease extends InvoiceItem {
             Party seller = role.getParty();
             Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
-            Invoice invoice = invoices.findMatchingInvoice(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
+            Invoice invoice = invoices.findInvoiceByVarious(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
             if (invoice == null) {
                 invoice = invoices.newInvoice();
                 invoice.setBuyer(buyer);

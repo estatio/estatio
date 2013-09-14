@@ -125,14 +125,24 @@ public final class LocalDateInterval {
     /**
      * Gets the overlap between this interval and another interval.
      * 
-     * @param interval
+     * @param otherInterval
      * @return
      */
-    public LocalDateInterval overlap(LocalDateInterval interval) {
-        Interval interval2 = asInterval().overlap(interval.asInterval());
-        if (interval2 == null)
+    public LocalDateInterval overlap(LocalDateInterval otherInterval) {
+//        // REVIEW: I added this guard because I was getting an NPE 
+//        // (this method can be called with an interval that was itself 
+//        // returned from this method earlier)
+        if(otherInterval == null) {
             return null;
-        return new LocalDateInterval(interval2);
+        }
+        
+        final Interval thisAsInterval = asInterval();
+        final Interval otherAsInterval = otherInterval.asInterval();
+        Interval overlap = thisAsInterval.overlap(otherAsInterval);
+        if (overlap == null) {
+            return null;
+        }
+        return new LocalDateInterval(overlap);
     }
 
     /**

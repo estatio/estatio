@@ -39,7 +39,9 @@ public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.chargeGroups.1")
-    public ChargeGroup newChargeGroup(@Named("Reference") String reference, @Named("description") String description) {
+    public ChargeGroup newChargeGroup(
+            final @Named("Reference") String reference, 
+            final @Named("description") String description) {
         final ChargeGroup chargeGroup = newTransientInstance();
         chargeGroup.setReference(reference);
         chargeGroup.setDescription(description);
@@ -51,7 +53,8 @@ public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.chargeGroups.2")
-    public ChargeGroup findChargeGroupByReference(@Named("Reference") String reference) {
+    public ChargeGroup findChargeGroup(
+            final @Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", regex);
     }

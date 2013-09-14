@@ -38,7 +38,7 @@ public class CountriesTest_finders extends EstatioIntegrationTest {
     
     @Test
     public void findCountryByReference() throws Exception {
-        assertThat(countries.findCountryByReference("NLD").getReference(), is("NLD"));
+        assertThat(countries.findCountry("NLD").getReference(), is("NLD"));
     }
 
 }

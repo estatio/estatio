@@ -21,29 +21,115 @@ package org.estatio.webapp.services.admin;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.services.settings.ApplicationSetting;
+import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
+
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
 import org.estatio.fixturescripts.FixtureScript;
 import org.estatio.services.settings.EstatioSettingsService;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.ApplicationSettingsService;
-import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 @Named("Administration")
 public class EstatioAdministrationService {
 
-    @Prototype
+    @MemberOrder(sequence = "1")
+    public void updateEpochDate(
+            final @Named("Epoch Date") @Optional LocalDate epochDate) {
+        settingsService.updateEpochDate(epochDate);
+    }
+    public LocalDate default0UpdateEpochDate() {
+        return settingsService.fetchEpochDate();
+    }
+
+    // //////////////////////////////////////
+
     @MemberOrder(sequence = "2")
+    public List<ApplicationSetting> listAllSettings() {
+        return settingsService.listAll();
+    }
+
+    // //////////////////////////////////////
+    
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "numerators.invoices.1")
+    public Numerator findCollectionNumberNumerator() {
+        return invoices.findCollectionNumberNumerator();
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "numerators.invoices.2")
+    @NotContributed
+    public Numerator createCollectionNumberNumerator(
+            final @Named("Format") String format,
+            final @Named("Last value") BigInteger lastIncrement) {
+        
+        return invoices.createCollectionNumberNumerator(format, lastIncrement);
+    }
+    
+    public String default0CreateCollectionNumberNumerator() {
+        return "%09d";
+    }
+
+    public BigInteger default1CreateCollectionNumberNumerator() {
+        return BigInteger.ZERO;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "numerators.invoices.3")
+    @NotContributed(As.ASSOCIATION)
+    public Numerator findInvoiceNumberNumerator(
+            final Property property) {
+        return invoices.findInvoiceNumberNumerator(property);
+    }
+    
+    // //////////////////////////////////////
+
+    // (for administrators)
+    @ActionSemantics(Of.IDEMPOTENT)
+    @MemberOrder(sequence = "numerators.invoices.4")
+    @NotContributed
+    public Numerator createInvoiceNumberNumerator(
+            final Property property,
+            final @Named("Format") String format,
+            final @Named("Last value") BigInteger lastIncrement) {
+        return invoices.createCollectionNumberNumerator(format, lastIncrement);
+    }
+    
+    public String default1CreateInvoiceNumberNumerator() {
+        return "XXX-%06d";
+    }
+    
+    public BigInteger default2CreateInvoiceNumberNumerator() {
+        return BigInteger.ZERO;
+    }
+
+    
+    
+    // //////////////////////////////////////
+
+    @Prototype
+    @MemberOrder(sequence = "3")
     public String installDemoFixtures() {
         installFixtures(container.newTransientInstance(EstatioFixture.class));
         return "Demo fixtures successfully installed";
@@ -52,9 +138,11 @@ public class EstatioAdministrationService {
     public String disableInstallDemoFixtures() {
         return !propertiesService.allProperties().isEmpty() ? "Demo fixtures already installed" : null;
     }
+    
+    // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "4")
     public String installIndexFixture() {
         installFixtures(container.newTransientInstance(IndexAndIndexBaseAndIndexValueFixture.class));
         return "Index fixture successfully installed";
@@ -67,21 +155,18 @@ public class EstatioAdministrationService {
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "5")
     public String installConstants() {
         AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
         fixture.install();
 
-        invoices.createCollectionNumberNumerator("%09d", BigInteger.ZERO);
+        createCollectionNumberNumerator("%09d", BigInteger.ZERO);
 
         return "Constants successfully installed";
     }
 
-    @Prototype
-    @MemberOrder(sequence = "5")
-    public void updateEpochDate(@Named("Epoch Date") LocalDate epochDate) {
-        settingsService.updateEpochDate(epochDate);
-    }
+    // //////////////////////////////////////
+
 
     @MemberOrder(sequence = "9")
     @Prototype
@@ -93,9 +178,6 @@ public class EstatioAdministrationService {
         return FixtureScript.GenerateTopModelInvoice;
     }
 
-    public List<ApplicationSetting> listAllSettings() {
-        return applicationSettingsService.listAll();
-    }
 
     // //////////////////////////////////////
 
@@ -115,31 +197,26 @@ public class EstatioAdministrationService {
 
     private Indices indices;
 
-    public void injectIndices(Indices indices) {
+    public final void injectIndices(Indices indices) {
         this.indices = indices;
     }
 
     private Properties propertiesService;
 
-    public void injectProperties(Properties propertiesService) {
+    public final void injectProperties(Properties propertiesService) {
         this.propertiesService = propertiesService;
     }
 
     private EstatioSettingsService settingsService;
 
-    public void injectSettingsService(EstatioSettingsService settingsService) {
+    public final void injectSettingsService(EstatioSettingsService settingsService) {
         this.settingsService = settingsService;
     }
 
-    private ApplicationSettingsService applicationSettingsService;
-
-    public void injectApplicationSettingsService(ApplicationSettingsService applicationSettingsService) {
-        this.applicationSettingsService = applicationSettingsService;
-    }
-
     private Invoices invoices;
-
+    
     public void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
     }
+
 }

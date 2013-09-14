@@ -72,7 +72,8 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioRefDataObjectsFixture;
 import org.estatio.services.bookmarks.BookmarkServiceForEstatio;
 import org.estatio.services.clock.ClockService;
-import org.estatio.services.settings.EstatioSettingsServiceJdo;
+import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
+import org.estatio.services.settings.EstatioSettingsService;
 
 /**
  * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on the current thread,
@@ -143,8 +144,8 @@ public class EstatioSystemInitializer {
                     new Api(), 
                     new IsisJdoSupportImpl(), 
                     new InvoiceCalculationService(), 
-                    new ApplicationSettingsServiceJdo(), 
-                    new EstatioSettingsServiceJdo(), 
+                    new ApplicationSettingsServiceForEstatio(), 
+                    new EstatioSettingsService(), 
                     new FinancialAccountContributions(),
                     new EventBusServiceJdo());
         }

@@ -54,7 +54,8 @@ public class Countries extends EstatioDomainService<Country> {
      */
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Other", sequence = "geography.countries.2")
-    public Country findCountryByReference(@Named("Reference") String reference) {
+    public Country findCountry(
+            final @Named("Reference") String reference) {
         if (reference == null) {
             return null;
         }

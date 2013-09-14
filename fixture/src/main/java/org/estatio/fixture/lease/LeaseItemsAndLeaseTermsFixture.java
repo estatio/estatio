@@ -74,7 +74,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
     }
 
     private LeaseTerm createLeaseTermForRent(LeaseItem leaseItem, BigInteger sequence, LocalDate startDate, LocalDate endDate, BigDecimal baseValue, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate, LocalDate effectiveDate, String indexReference) {
-        final Index index = indices.findIndexByReference(indexReference);
+        final Index index = indices.findIndex(indexReference);
         LeaseTermForIndexableRent leaseTerm;
         if (sequence.equals(BigInteger.ONE)) {
             leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm();
@@ -122,7 +122,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
     }
 
     private LeaseItem findOrCreateLeaseItem(Lease lease, final String chargeReference, LeaseItemType leaseItemType, final InvoicingFrequency invoicingFrequency) {
-        final Charge charge = charges.findChargeByReference(chargeReference);
+        final Charge charge = charges.findCharge(chargeReference);
         return findOrCreateLeaseItem(lease, charge, leaseItemType, invoicingFrequency);
     }
 

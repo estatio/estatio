@@ -47,8 +47,8 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         Party manager = parties.findPartyByReference("JDOE");
 
         Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1, manager, 51.74579, -1.24334);
-        State state = states.findStateByReference("GB-OXF");
-        Country country = countries.findCountryByReference("GBR");
+        State state = states.findState("GB-OXF");
+        Country country = countries.findCountry("GBR");
 
         communicationChannelContributedActions.newPostal(prop1, CommunicationChannelType.POSTAL_ADDRESS, country, state, "1 Market Street", null, "OX1 3HL", "Oxford");
         communicationChannelContributedActions.newPhoneOrFax(prop1, CommunicationChannelType.PHONE_NUMBER, "+44 123 456789");
@@ -56,8 +56,8 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         communicationChannelContributedActions.newEmail(prop1, CommunicationChannelType.EMAIL_ADDRESS, "info@oxford.example.com");
 
         Property prop2 = createPropertyAndUnits("KAL", "Winkelcentrum Kalvertoren", PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), owner2, manager, 52.37597, 4.90814);
-        Country c2 = countries.findCountryByReference("NLD");
-        State s2 = states.findStateByReference("NL-NH");
+        Country c2 = countries.findCountry("NLD");
+        State s2 = states.findState("NL-NH");
 
         communicationChannelContributedActions.newPostal(prop2, CommunicationChannelType.POSTAL_ADDRESS, c2, s2, "Kalverstraat 12", null, "1017 AA", "Amsterdam");
         communicationChannelContributedActions.newPhoneOrFax(prop2, CommunicationChannelType.PHONE_NUMBER, "+31 123 456789");

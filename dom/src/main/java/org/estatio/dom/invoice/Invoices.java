@@ -39,6 +39,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
 
 public class Invoices extends EstatioDomainService<Invoice> {
 
@@ -51,113 +52,61 @@ public class Invoices extends EstatioDomainService<Invoice> {
     @ActionSemantics(Of.SAFE)
     @DescribedAs("New invoices, to be approved")
     @MemberOrder(sequence = "1")
-    public List<Invoice> toBeApproved() {
+    public List<Invoice> findInvoicesToBeApproved() {
         return allMatches("findByStatus", "status", InvoiceStatus.NEW);
     }
 
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Approved invoices, to be collected")
     @MemberOrder(sequence = "2")
-    public List<Invoice> toBeCollected() {
+    public List<Invoice> findInvoicesToBeCollected() {
         return allMatches("findByStatus", "status", InvoiceStatus.APPROVED);
     }
     
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Collected invoices, to be invoiced")
     @MemberOrder(sequence = "3")
-    public List<Invoice> toBeInvoiced() {
+    public List<Invoice> findInvoicesToBeInvoiced() {
         return allMatches("findByStatus", "status", InvoiceStatus.COLLECTED);
     }
     
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Already invoiced")
     @MemberOrder(sequence = "4")
-    public List<Invoice> previouslyInvoiced() {
+    public List<Invoice> findInvoicesPreviouslyInvoiced() {
         return allMatches("findByStatus", "status", InvoiceStatus.INVOICED);
-    }
-    
-    
-    // //////////////////////////////////////
-    
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "numerators.invoices.1")
-    public Numerator findCollectionNumberNumerator() {
-        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
-    }
-
-    // //////////////////////////////////////
-
-    // (for administrators)
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "numerators.invoices.2")
-    @NotContributed
-    public Numerator createCollectionNumberNumerator(
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        
-        return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
-    }
-    
-    public String default0CreateCollectionNumberNumerator() {
-        return "%09d";
-    }
-
-    public BigInteger default1CreateCollectionNumberNumerator() {
-        return BigInteger.ZERO;
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "numerators.invoices.3")
-    @NotContributed(As.ASSOCIATION)
-    public Numerator findInvoiceNumberNumerator(
-            final Property property) {
-        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
-    }
-    
-    // //////////////////////////////////////
-
-    // (for administrators)
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "numerators.invoices.4")
-    @NotContributed
-    public Numerator createInvoiceNumberNumerator(
-            final Property property,
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        
-        return numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
-    }
-    
-    public String default1CreateInvoiceNumberNumerator() {
-        return "XXX-%06d";
-    }
-    
-    public BigInteger default2CreateInvoiceNumberNumerator() {
-        return BigInteger.ZERO;
     }
 
     // //////////////////////////////////////
 
     @Programmatic
-    @ActionSemantics(Of.NON_IDEMPOTENT)
     public Invoice newInvoice() {
         Invoice invoice = newTransientInstance();
         persist(invoice);
         return invoice;
     }
 
-    @ActionSemantics(Of.SAFE)
     @Hidden
-    public Invoice findMatchingInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, InvoiceSource source, InvoiceStatus invoiceStatus, LocalDate dueDate) {
-        final List<Invoice> invoices = findMatchingInvoices(seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
-        return invoices.isEmpty() ? null : invoices.get(0);
+    public Invoice findInvoiceByVarious(
+            Party seller, 
+            Party buyer, 
+            PaymentMethod paymentMethod, 
+            InvoiceSource source, 
+            InvoiceStatus invoiceStatus, 
+            LocalDate dueDate) {
+        final List<Invoice> invoices = findInvoicesByVarious(seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
+        return ValueUtils.firstElseNull(invoices);
     }
 
-    @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, InvoiceSource source, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+    public List<Invoice> findInvoicesByVarious(
+            Party seller, 
+            Party buyer, 
+            PaymentMethod 
+            paymentMethod, 
+            InvoiceSource source, 
+            InvoiceStatus invoiceStatus, 
+            LocalDate dueDate) {
         return allMatches("findMatchingInvoices", "seller", seller, "buyer", buyer, "paymentMethod", paymentMethod, "source", source, "status", invoiceStatus, "dueDate", dueDate);
     }
 
@@ -171,6 +120,34 @@ public class Invoices extends EstatioDomainService<Invoice> {
         return allInstances();
     }
 
+    // //////////////////////////////////////
+
+    @Hidden
+    public Numerator findCollectionNumberNumerator() {
+        return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+    }
+
+    @Hidden
+    public Numerator createCollectionNumberNumerator(
+            final String format,
+            final BigInteger lastIncrement) {
+        return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
+    }
+
+    @Hidden
+    public Numerator findInvoiceNumberNumerator(
+            final Property property) {
+        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
+    }
+
+    @Hidden
+    public Numerator createInvoiceNumberNumerator(
+            final Property property,
+            final String format,
+            final BigInteger lastIncrement) {
+        
+        return numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
+    }
 
     // //////////////////////////////////////
 

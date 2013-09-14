@@ -31,7 +31,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class ClockServiceTest_beginningOfMonth {
+public class ClockServiceTest_beginningOfQuarter {
 
     private ClockService clockService;
     protected LocalDate now;
@@ -41,13 +41,28 @@ public class ClockServiceTest_beginningOfMonth {
     public static Collection<Object[]> data() {
       return Arrays.asList(
               new Object[][] { 
+                      { new LocalDate(2013,1,15), new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,1,1),  new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,1,31),  new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,2,15), new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,2,1),  new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,2,28),  new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,3,15), new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,3,1),  new LocalDate(2013,1,1)}, 
+                      { new LocalDate(2013,3,31),  new LocalDate(2013,1,1)}, 
                       { new LocalDate(2013,4,15), new LocalDate(2013,4,1)}, 
                       { new LocalDate(2013,4,1),  new LocalDate(2013,4,1)}, 
                       { new LocalDate(2013,4,30),  new LocalDate(2013,4,1)}, 
+                      { new LocalDate(2013,5,15),  new LocalDate(2013,4,1)}, 
+                      { new LocalDate(2013,5,1),  new LocalDate(2013,4,1)}, 
+                      { new LocalDate(2013,5,31),  new LocalDate(2013,4,1)}, 
+                      { new LocalDate(2013,6,15),  new LocalDate(2013,4,1)}, 
+                      { new LocalDate(2013,6,1),  new LocalDate(2013,4,1)}, 
+                      { new LocalDate(2013,6,30),  new LocalDate(2013,4,1)}, 
               });
     }
     
-    public ClockServiceTest_beginningOfMonth(LocalDate date, LocalDate expected) {
+    public ClockServiceTest_beginningOfQuarter(LocalDate date, LocalDate expected) {
         this.now = date;
         this.expected = expected;
     }
@@ -64,7 +79,7 @@ public class ClockServiceTest_beginningOfMonth {
     
     @Test
     public void test() throws Exception {
-        assertThat(clockService.beginningOfMonth(), is(expected));
+        assertThat(clockService.beginningOfQuarter(), is(expected));
     }
 
 

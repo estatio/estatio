@@ -24,6 +24,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -38,6 +39,7 @@ public class Charges extends EstatioDomainService<Charge> {
     
     // //////////////////////////////////////
 
+    @NotContributed
     @ActionSemantics(Of.IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.1")
     public Charge newCharge(
@@ -45,7 +47,7 @@ public class Charges extends EstatioDomainService<Charge> {
             final @Named("Description") String description, 
             final @Named("Code") String code, 
             final Tax tax) {
-        Charge charge = findChargeByReference(reference);
+        Charge charge = findCharge(reference);
         if (charge == null) {
             charge = newTransientInstance();
             charge.setReference(reference);
@@ -61,7 +63,7 @@ public class Charges extends EstatioDomainService<Charge> {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.2")
-    public Charge findChargeByReference(@Named("Reference") String reference) {
+    public Charge findCharge(@Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", regex);
     }

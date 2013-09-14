@@ -25,6 +25,9 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -53,12 +56,14 @@ public class States extends EstatioDomainService<State> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.2")
-    public State findStateByReference(final @Named("Reference") String reference) {
+    public State findState(final @Named("Reference") String reference) {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
+    @Named("States")
+    @NotInServiceMenu
+    @NotContributed(As.ACTION)
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "geography.states.3")
     public List<State> findStatesByCountry(final Country country) {
         return country != null? allMatches("findByCountry", "country", country): Collections.<State>emptyList();
     }

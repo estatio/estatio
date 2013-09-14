@@ -87,10 +87,9 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
-//@Hidden
+@Named("Migration")
 public class Api extends AbstractFactoryAndRepository {
 
-    // {{ Id, iconName
     @Override
     public String getId() {
         return "api";
@@ -100,14 +99,15 @@ public class Api extends AbstractFactoryAndRepository {
         return "Api";
     }
 
-    // }}
+    // //////////////////////////////////////
+
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putCountry(
             @Named("code") String code,
             @Named("alpha2Code") String alpha2Code,
             @Named("name") String name) {
-        Country country = countries.findCountryByReference(code);
+        Country country = countries.findCountry(code);
         if (country == null) {
             country = countries.newCountry(code, name);
         }
@@ -120,7 +120,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private Country fetchCountry(String countryCode, boolean exception) {
-        Country country = countries.findCountryByReference(countryCode);
+        Country country = countries.findCountry(countryCode);
         if (country == null && exception) {
             throw new ApplicationException(String.format("Country with code %1$s not found", countryCode));
         }
@@ -135,7 +135,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") String name,
             @Named("countryCode") String countryCode) {
         Country country = fetchCountry(countryCode);
-        State state = states.findStateByReference(countryCode);
+        State state = states.findState(countryCode);
         if (state == null) {
             state = states.newState(code, name, country);
         }
@@ -143,12 +143,8 @@ public class Api extends AbstractFactoryAndRepository {
         state.setCountry(country);
     }
 
-    private State fetchState(String stateCode) {
-        return fetchState(stateCode, true);
-    }
-
     private State fetchState(String stateCode, boolean exception) {
-        State country = states.findStateByReference(stateCode);
+        State country = states.findState(stateCode);
         if (country == null && exception) {
             throw new ApplicationException(String.format("State with code %1$s not found", stateCode));
         }
@@ -168,7 +164,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private Charge fetchCharge(String type, String chargeReference) {
-        Charge charge = charges.findChargeByReference(chargeReference);
+        Charge charge = charges.findCharge(chargeReference);
         if (charge == null) {
             throw new ApplicationException(String.format("Type with reference %s not found.", type));
         }
@@ -311,7 +307,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setTerraceArea(terraceArea);
         CommunicationChannel cc = communicationChannelContributions.findCommunicationChannelForType(unit, CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            communicationChannelContributions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, null, postalCode, city);
+            communicationChannelContributions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, null, postalCode, city);
         }
     }
 
@@ -343,7 +339,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         final CommunicationChannel comm = communicationChannelContributions.findCommunicationChannelForType(property, null);
         if (comm == null) {
-            communicationChannelContributions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountryByReference(countryCode), states.findStateByReference(stateCode), address1, address2, postalCode, city);
+            communicationChannelContributions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, address2, postalCode, city);
         }
     }
 
@@ -372,7 +368,7 @@ public class Api extends AbstractFactoryAndRepository {
             Country country = fetchCountry(countryCode);
             PostalAddress comm = (PostalAddress) postalAddresses.findByAddress(party, address1, postalCode, city, country);
             if (comm == null) {
-                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findStateByReference(stateCode), countries.findCountryByReference(countryCode));
+                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findState(stateCode), countries.findCountry(countryCode));
                 comm.setReference(reference);
             }
         }
@@ -584,7 +580,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
-            Index index = indices.findIndexByReference(indexReference);
+            Index index = indices.findIndex(indexReference);
             LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
             term.setIndex(index);
             term.setFrequency(indexationFreq);

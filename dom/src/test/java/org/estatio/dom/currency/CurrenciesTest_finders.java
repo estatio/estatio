@@ -66,7 +66,7 @@ public class CurrenciesTest_finders {
     @Test
     public void findCurrencyByReference() {
 
-        currencies.findCurrencyByReference("*REF?1*");
+        currencies.findCurrency("*REF?1*");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Currency.class));

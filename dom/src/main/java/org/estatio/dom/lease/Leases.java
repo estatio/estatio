@@ -144,7 +144,9 @@ public class Leases extends EstatioDomainService<Lease> {
     @MemberOrder(sequence = "6")
     public List<InvoiceItemForLease> calculate(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName, 
-            final @Named("Period Start Date") LocalDate startDate, final @Named("Due date") LocalDate dueDate, final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Due date") LocalDate dueDate, 
+            final @Named("Run Type") InvoiceRunType runType) {
         final List<Lease> leases = findLeases(referenceOrName);
         for (Lease lease : leases) {
             lease.calculate(startDate, dueDate, runType);
@@ -153,6 +155,15 @@ public class Leases extends EstatioDomainService<Lease> {
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
         return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName, startDate, dueDate);
+    }
+    public String default0Calculate() {
+        return "AAA-*";
+    }
+    public LocalDate default1Calculate() {
+        return getClockService().beginningOfQuarter();
+    }
+    public LocalDate default2Calculate() {
+        return getClockService().beginningOfQuarter();
     }
 
 

@@ -64,7 +64,7 @@ public class IndicesTest_finders {
     @Test
     public void findIndexByReference() {
 
-        indices.findIndexByReference("REF-1");
+        indices.findIndex("REF-1");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Index.class));

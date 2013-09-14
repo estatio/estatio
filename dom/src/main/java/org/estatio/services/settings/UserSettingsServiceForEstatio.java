@@ -16,10 +16,8 @@
  */
 package org.estatio.services.settings;
 
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.objectstore.jdo.applib.service.settings.UserSettingsServiceJdo;
+import org.apache.isis.objectstore.jdo.applib.service.settings.UserSettingsServiceJdoHidden;
 
-@Named("Settings")
-public class UserSettingsServiceForEstatio extends UserSettingsServiceJdo {
+public class UserSettingsServiceForEstatio extends UserSettingsServiceJdoHidden {
 
 }
