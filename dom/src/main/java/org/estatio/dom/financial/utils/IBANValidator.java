@@ -22,11 +22,10 @@ import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
 
-
 public class IBANValidator {
 
     private static final BigDecimal NINETYSEVEN = BigDecimal.valueOf(97);
-    
+
     public static int checksum(String iban) {
         String tmp = (iban.substring(4) + iban.substring(0, 4)).toUpperCase();
         StringBuffer digits = new StringBuffer();
@@ -52,17 +51,13 @@ public class IBANValidator {
         return ibanTemplate.substring(0, 2) + pp + ibanTemplate.substring(4);
     }
 
-    public boolean valid(String iban) {
-		if (iban == null || iban.length() < 15 || iban.length() > 32 ) {
+    public static boolean valid(String iban) {
+        if (iban == null || iban.length() < 15 || iban.length() > 32) {
             return false;
         }
-		
-	    @SuppressWarnings({"unused"}) // findbugs still flags this unused reference...
-	    String countryCode = iban.substring(0, 2);
-		//TODO validate country; 
-	    
-		int checksum = checksum(iban);
-		return (checksum == 1);
-	}
+
+        int checksum = checksum(iban);
+        return (checksum == 1);
+    }
 
 }

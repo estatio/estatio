@@ -23,24 +23,25 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-
 import org.estatio.dom.financial.utils.IBANHelper;
+import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable
 public class BankAccount extends FinancialAccount {
 
     private Party bank;
 
-    @javax.jdo.annotations.Column(name="BANK_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "BANK_ID", allowsNull = "true")
     public Party getBank() {
         return bank;
     }
@@ -53,7 +54,7 @@ public class BankAccount extends FinancialAccount {
 
     private BankAccountType bankAccountType;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public BankAccountType getBankAccountType() {
         return bankAccountType;
@@ -67,7 +68,7 @@ public class BankAccount extends FinancialAccount {
 
     private Country country;
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "COUNTRY_ID", allowsNull = "true")
     public Country getCountry() {
         return country;
     }
@@ -80,7 +81,7 @@ public class BankAccount extends FinancialAccount {
 
     private String IBAN;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getIBAN() {
         return IBAN;
     }
@@ -90,21 +91,27 @@ public class BankAccount extends FinancialAccount {
     }
 
     // //////////////////////////////////////
-    
-    public void verifyIBAN() {
-        IBANHelper ibanHelper = new IBANHelper(getIBAN());
-        ibanHelper.update(this);
-    }
 
-    public String disableVerifyIBAN() {
-        return isLocked()? "Cannot modify when locked": null;
+    public boolean isValidIBAN() {
+        return IBANValidator.valid(getIBAN());
     }
 
     // //////////////////////////////////////
-    
+
+    public BankAccount verifyIBAN() {
+        IBANHelper.verifyAndUpdate(this);
+        return this;
+    }
+
+    public String disableVerifyIBAN() {
+        return isLocked() ? "Cannot modify when locked" : null;
+    }
+
+    // //////////////////////////////////////
+
     private String nationalCheckCode;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getNationalCheckCode() {
         return nationalCheckCode;
     }
@@ -117,7 +124,7 @@ public class BankAccount extends FinancialAccount {
 
     private String nationalBankCode;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getNationalBankCode() {
         return nationalBankCode;
     }
@@ -130,7 +137,7 @@ public class BankAccount extends FinancialAccount {
 
     private String branchCode;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getBranchCode() {
         return branchCode;
     }
@@ -143,7 +150,7 @@ public class BankAccount extends FinancialAccount {
 
     private String accountNumber;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -151,6 +158,5 @@ public class BankAccount extends FinancialAccount {
     public void setAccountNumber(final String accountNumber) {
         this.accountNumber = accountNumber;
     }
-
 
 }

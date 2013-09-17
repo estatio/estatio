@@ -29,20 +29,29 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
+        name = "findByReference", language = "JDOQL",
         value = "SELECT " +
-        		"FROM org.estatio.dom.geography.Country " +
-        		"WHERE reference.matches(:reference)")
+                "FROM org.estatio.dom.geography.Country " +
+                "WHERE reference.matches(:reference)")
 @Immutable
 @Bounded
 public class Country extends Geography {
 
     // not possible because Country is rolled-up to Geography.
-    //@javax.jdo.annotations.Unique
-    @javax.jdo.annotations.Index(unique="false")
+    // @javax.jdo.annotations.Unique
+    @javax.jdo.annotations.Index(unique = "false")
     private String alpha2Code;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    public Country() {
+    };
+
+    public Country(String reference, String alpha2Code, String name) {
+        setReference(reference);
+        setName(name);
+        setAlpha2Code(alpha2Code);
+    }
+
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title
     public String getAlpha2Code() {
         return alpha2Code;
@@ -51,6 +60,5 @@ public class Country extends Geography {
     public void setAlpha2Code(final String alpha2Code) {
         this.alpha2Code = alpha2Code;
     }
-
 
 }

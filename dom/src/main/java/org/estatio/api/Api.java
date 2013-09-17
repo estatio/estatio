@@ -696,10 +696,12 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("bankAccountType") @Optional String bankAccountType,
             @Named("ownerReference") String ownerReference,
             @Named("iban") @Optional String iban,
+            @Named("countryCode") @Optional String countryCode,
             @Named("nationalCheckCode") @Optional String nationalCheckCode,
             @Named("nationalBankCode") @Optional String nationalBankCode,
             @Named("branchCode") @Optional String branchCode,
-            @Named("accountNumber") @Optional String accountNumber) {
+            @Named("accountNumber") @Optional String accountNumber
+            ) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
         Party owner = parties.findPartyByReference(ownerReference);
         if (owner == null)
@@ -711,9 +713,11 @@ public class Api extends AbstractFactoryAndRepository {
         bankAccount.setAccountNumber(accountNumber);
         bankAccount.setBranchCode(branchCode);
         bankAccount.setName(name);
+        bankAccount.setCountry(fetchCountry(countryCode, false));
         bankAccount.setNationalBankCode(nationalBankCode);
         bankAccount.setNationalCheckCode(nationalCheckCode);
         bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
+        bankAccount.verifyIBAN();
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

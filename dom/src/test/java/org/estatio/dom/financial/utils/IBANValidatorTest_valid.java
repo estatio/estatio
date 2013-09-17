@@ -26,23 +26,33 @@ import org.junit.Test;
 
 public class IBANValidatorTest_valid {
 
-    private IBANValidator validator;
-
     @Before
     public void setUp() throws Exception {
-        validator = new IBANValidator();
     }
 
     @Test
     public void happyCase() {
-        assertThat(validator.valid("NL26INGB0680433600"), is(true));
-        assertThat(validator.valid("NL07INGB0697694704"), is(true));
-        assertThat(validator.valid("IT69N0347501601000051986922"), is(true));
-        assertThat(validator.valid("IT93Q0347501601000051768165"), is(true));
+        assertThat(IBANValidator.valid("NL26INGB0680433600"), is(true));
+        assertThat(IBANValidator.valid("NL07INGB0697694704"), is(true));
+        assertThat(IBANValidator.valid("IT69N0347501601000051986922"), is(true));
+        assertThat(IBANValidator.valid("IT93Q0347501601000051768165"), is(true));
     }
-    
+
     @Test
     public void sadCase() {
-        assertThat(validator.valid("NLXXINGB0680433600"), is(false));
+        assertThat(IBANValidator.valid("NLXXINGB0680433600"), is(false));
+        assertThat(IBANValidator.valid(""), is(false));
+        assertThat(IBANValidator.valid("rubbish"), is(false));
     }
+
+    @Test
+    public void checksum() {
+        assertThat(IBANValidator.checksum("IT93Q0347501601000051768165"), is(1));
+    }
+
+    @Test
+    public void fixChecksum() {
+        assertThat(IBANValidator.fixChecksum("IT00Q0347501601000051768165"), is("IT93Q0347501601000051768165"));
+    }
+
 }

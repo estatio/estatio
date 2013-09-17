@@ -21,16 +21,19 @@ package org.estatio.dom.financial;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.estatio.dom.geography.Country;
 import org.junit.Before;
 import org.junit.Test;
 
 public class BankAccountTest_checkAccount {
 
     private BankAccount account;
+    private Country country;
 
     @Before
     public void setUp() throws Exception {
         account = new BankAccount();
+        country = new Country("NLD", "NL", "Netherlands");
     }
 
     @Test
@@ -39,4 +42,14 @@ public class BankAccountTest_checkAccount {
         account.verifyIBAN();
         assertThat(account.getAccountNumber(), is("0580744434"));
     }
+
+    @Test
+    public void happyCase2() {
+        account.setCountry(country);
+        account.setNationalBankCode("ABNA");
+        account.setAccountNumber("0580744434");
+        account.verifyIBAN();
+        assertThat(account.getIBAN(), is("NL31ABNA0580744434"));
+    }
+
 }
