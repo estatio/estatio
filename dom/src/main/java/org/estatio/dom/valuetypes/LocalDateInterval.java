@@ -129,13 +129,9 @@ public final class LocalDateInterval {
      * @return
      */
     public LocalDateInterval overlap(LocalDateInterval otherInterval) {
-//        // REVIEW: I added this guard because I was getting an NPE 
-//        // (this method can be called with an interval that was itself 
-//        // returned from this method earlier)
         if(otherInterval == null) {
             return null;
         }
-        
         final Interval thisAsInterval = asInterval();
         final Interval otherAsInterval = otherInterval.asInterval();
         Interval overlap = thisAsInterval.overlap(otherAsInterval);

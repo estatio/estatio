@@ -128,7 +128,7 @@ public class InvoiceCalculationService {
             result = calculate(leaseTerm, intervalStartDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
             results.add(result);
             intervalStartDate = result.getFrequencyInterval().endDateExcluding();
-        } while (result.getFrequencyInterval().endDateExcluding().isBefore(frequencyInterval.endDateExcluding()));
+        } while (frequencyInterval.endDateExcluding() != null && result.getFrequencyInterval().endDateExcluding().isBefore(frequencyInterval.endDateExcluding()));
 
         return results;
     }
