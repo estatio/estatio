@@ -49,6 +49,7 @@ import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.contributed.FinancialAccountContributions;
 import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.StateContributions;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValues;
@@ -107,6 +108,7 @@ public class EstatioSystemInitializer {
                     new WrapperFactoryDefault(), 
                     new Countries(), 
                     new States(), 
+                    new StateContributions(), 
                     new Currencies(), 
                     new Indices(), 
                     new IndexBases(), 

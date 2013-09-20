@@ -24,9 +24,9 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -47,7 +47,7 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
 
     // //////////////////////////////////////
     
-    @Hidden
+    @Programmatic
     public TaxRate newRate(final Tax tax, final LocalDate startDate, final BigDecimal percentage) {
         TaxRate currentRate = tax.taxRateFor(startDate);
         TaxRate rate;
@@ -68,9 +68,8 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
         return rate;
     }
 
-    // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public TaxRate findTaxRateByTaxAndDate(final Tax tax, final LocalDate date) {
         return firstMatch("findByTaxAndDate", "tax", tax, "date", date);
     }

@@ -33,6 +33,8 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -111,10 +113,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") String name) {
         Country country = countries.findCountry(code);
         if (country == null) {
-            country = countries.newCountry(code, name);
+            country = countries.createCountry(code, alpha2Code, name);
         }
-        country.setName(name);
-        country.setAlpha2Code(alpha2Code);
     }
 
     private Country fetchCountry(String countryCode) {
@@ -133,13 +133,13 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putState(
-            @Named("code") String code,
+            @Named("code") String reference,
             @Named("name") String name,
             @Named("countryCode") String countryCode) {
         Country country = fetchCountry(countryCode);
         State state = states.findState(countryCode);
         if (state == null) {
-            state = states.newState(code, name, country);
+            state = states.newState(reference, name, country);
         }
         state.setName(name);
         state.setCountry(country);
@@ -160,46 +160,50 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("code") String code,
             @Named("reference") String reference,
             @Named("description") String description,
-            @Named("taxReference") String taxReference) {
-        Tax tax = fetchTax(taxReference);
-        charges.newCharge(reference, description, code, tax);
+            @Named("taxReference") String taxReference,
+            @Named("chargeGroupReference") String chargeGroupReference) {
+        Tax tax = fetchTaxIfAny(taxReference);
+        ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference);
+        charges.newCharge(reference, description, code, tax, chargeGroup);
     }
 
-    private Charge fetchCharge(String type, String chargeReference) {
+    private Charge fetchCharge(String chargeReference) {
         Charge charge = charges.findCharge(chargeReference);
         if (charge == null) {
-            throw new ApplicationException(String.format("Type with reference %s not found.", type));
+            throw new ApplicationException(String.format("Charge with reference %s not found.", chargeReference));
         }
         return charge;
     }
 
+    private ChargeGroup fetchOrCreateChargeGroup(String chargeGroupReference) {
+        ChargeGroup chargeGroup = chargeGroups.findChargeGroup(chargeGroupReference);
+        if (chargeGroup == null) {
+            chargeGroup = chargeGroups.createChargeGroup(chargeGroupReference, null);
+        }
+        return chargeGroup;
+    }
+    
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putTax(
             @Named("reference") String reference,
             @Named("name") String name,
-            @Named("description") String decription,
             @Named("percentage") BigDecimal percentage,
             @Named("startDate") LocalDate startDate) {
-        Tax tax = fetchTax(reference);
+        Tax tax = fetchTaxIfAny(reference);
         if (tax == null) {
-            tax = taxes.newTax(reference);
+            tax = taxes.newTax(reference, name);
             tax.setName(name);
         }
         tax.newRate(startDate, percentage);
     }
 
-    private Tax fetchTax(String reference) {
-        return fetchTax(reference, false);
+    private Tax fetchTaxIfAny(String reference) {
+        return taxes.findTaxByReference(reference);
     }
 
-    private Tax fetchTax(String reference, boolean exception) {
-        Tax tax = taxes.findTaxByReference(reference);
-        if (tax == null && exception)
-            throw new ApplicationException(String.format("Tax with reference %1$s not found", reference));
-        return tax;
-    }
+    
 
     // //////////////////////////////////////
 
@@ -486,7 +490,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("leaseReference") String leaseReference,
             @Named("tenantReference") String tenantReference,
             @Named("unitReference") @Optional String unitReference,
-            @Named("type") @Optional String type,
+            @Named("type") @Optional String leaseItemTypeName,
             @Named("sequence") BigInteger sequence,
             @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate,
@@ -500,8 +504,8 @@ public class Api extends AbstractFactoryAndRepository {
         @SuppressWarnings("unused")
         Unit unit = fetchUnit(unitReference);
 
-        LeaseItemType itemType = fetchLeaseItemType(type);
-        Charge charge = fetchCharge(type, chargeReference);
+        LeaseItemType itemType = fetchLeaseItemType(leaseItemTypeName);
+        Charge charge = fetchCharge(chargeReference);
         //
         LeaseItem item = lease.findItem(itemType, startDate, sequence);
         if (item == null) {
@@ -876,6 +880,12 @@ public class Api extends AbstractFactoryAndRepository {
         this.charges = charges;
     }
 
+    private ChargeGroups chargeGroups;
+    
+    public void injectChargeGroups(final ChargeGroups chargeGroups) {
+        this.chargeGroups = chargeGroups;
+    }
+    
     private Indices indices;
 
     public void injectIndices(final Indices indices) {

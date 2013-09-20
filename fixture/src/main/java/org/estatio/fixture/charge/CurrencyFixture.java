@@ -19,8 +19,8 @@
 package org.estatio.fixture.charge;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
+
 import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.currency.Currency;
 
 public class CurrencyFixture extends AbstractFixture {
 
@@ -29,9 +29,8 @@ public class CurrencyFixture extends AbstractFixture {
         createCurrency("EUR", "Euro");
     }
 
-    private void createCurrency(String reference, String despription) {
-        Currency currency = currencies.newCurrency(reference);
-        currency.setDescription(despription);
+    private void createCurrency(String reference, String description) {
+        currencies.newCurrency(reference, description);
     }
 
     // //////////////////////////////////////

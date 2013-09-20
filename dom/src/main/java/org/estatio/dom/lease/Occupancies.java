@@ -40,7 +40,9 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
     // @Hidden
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
-    public Occupancy newLeaseUnit(Lease lease, UnitForLease unit) {
+    public Occupancy newOccupancy(
+            final Lease lease, 
+            final UnitForLease unit) {
         Occupancy lu = newTransientInstance(Occupancy.class);
         lu.setLease(lease);
         lu.setUnit(unit);
@@ -52,7 +54,10 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public Occupancy findByLeaseAndUnitAndStartDate(final Lease lease, final Unit unit, LocalDate startDate) {
+    public Occupancy findByLeaseAndUnitAndStartDate(
+            final Lease lease, 
+            final Unit unit, 
+            final LocalDate startDate) {
          return firstMatch("findByLeaseAndUnitAndStartDate", "lease", lease, "unit", unit, "startDate", startDate);
     }
 

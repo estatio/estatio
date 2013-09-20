@@ -22,9 +22,10 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
@@ -37,27 +38,29 @@ public class Taxes extends EstatioDomainService<Tax> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "taxStuff.taxes.1")
-    public Tax newTax(final @Named("Reference") String reference) {
-        final Tax tax = newTransientInstance();
-        tax.setReference(reference);
-        persist(tax);
-        return tax;
-    }
-
-    // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "taxStuff.taxes.2")
+    @MemberOrder(name="Other", sequence = "taxStuff.taxes.1")
     public List<Tax> allTaxes() {
         return allInstances();
     }
 
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(name="Other", sequence = "taxStuff.taxes.2")
+    public Tax newTax(
+            final @Named("Reference") String reference,
+            final @Named("Name") @Optional String name) {
+        final Tax tax = newTransientInstance();
+        tax.setReference(reference);
+        tax.setName(name);
+        persist(tax);
+        return tax;
+    }
+
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public Tax findTaxByReference(final String reference) {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }

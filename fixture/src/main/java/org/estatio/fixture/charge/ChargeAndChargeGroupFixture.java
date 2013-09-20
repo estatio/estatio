@@ -47,30 +47,32 @@ public class ChargeAndChargeGroupFixture extends AbstractFixture {
     }
 
     private ChargeGroup createChargeGroup(String reference, String description) {
-        return chargeGroups.newChargeGroup(reference, description);
+        return chargeGroups.createChargeGroup(reference, description);
     }
 
-    private void createCharge(String reference, String code, String description, String taxReference, ChargeGroup group) {
+    private void createCharge(String reference, String code, String description, String taxReference, ChargeGroup chargeGroup) {
         final Tax tax = taxRepository.findTaxByReference(taxReference);
-        Charge c = chargeRepository.newCharge(reference, description, code, tax);
-        c.setGroup(group);
+        Charge c = charges.createCharge(reference, description, code, tax, chargeGroup);
+        c.setGroup(chargeGroup);
     }
+
+    // //////////////////////////////////////
 
     private ChargeGroups chargeGroups;
     
-    public void setChargeGroups(ChargeGroups chargeGroups) {
+    public final void injectChargeGroups(ChargeGroups chargeGroups) {
         this.chargeGroups = chargeGroups;
     }
     
-    private Charges chargeRepository;
+    private Charges charges;
 
-    public void setChargeRepository(Charges chargeRepository) {
-        this.chargeRepository = chargeRepository;
+    public final void injectChargeRepository(Charges chargeRepository) {
+        this.charges = chargeRepository;
     }
 
     private Taxes taxRepository;
 
-    public void setTaxRepository(Taxes taxes) {
+    public final void injectTaxRepository(Taxes taxes) {
         this.taxRepository = taxes;
     }
 

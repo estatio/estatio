@@ -198,7 +198,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     public Occupancy addOccupancy(
             final @Named("unit") UnitForLease unit) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
-        Occupancy leaseUnit = occupanciesRepo.newLeaseUnit(this, unit);
+        Occupancy leaseUnit = occupanciesRepo.newOccupancy(this, unit);
         occupancies.add(leaseUnit);
         return leaseUnit;
     }

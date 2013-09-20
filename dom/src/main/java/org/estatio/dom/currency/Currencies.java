@@ -24,8 +24,8 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
@@ -38,38 +38,43 @@ public class Currencies extends EstatioDomainService<Currency> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "currencies.1")
-    public Currency newCurrency(final @Named("reference") String reference) {
+    public List<Currency> allCurrencies() {
+        return allInstances();
+    }
+    
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(name="Other", sequence = "currencies.2")
+    public List<Currency> newCurrency(
+            final @Named("Reference") String reference, 
+            final @Named("Description") @Optional String description) {
+        createCurrency(reference, description);
+        return allCurrencies();
+    }
+
+    // //////////////////////////////////////
+    
+    private Currency createCurrency(final String reference, final String description) {
         final Currency currency = newTransientInstance();
         currency.setReference(reference);
+        currency.setDescription(description);
         persist(currency);
         return currency;
     }
-    
-    // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "currencies.2")
+    @Programmatic
     public Currency findCurrency(
-            @Named("Reference") final String reference) {
+            final String reference) {
         String rexeg = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", rexeg);
     }
 
-    // //////////////////////////////////////
 
     @Programmatic
     public List<Currency> autoComplete(String searchArg) {
         return allMatches("findByReferenceOrDescription", "searchArg", searchArg);
     }
     
-    // //////////////////////////////////////
     
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "currencies.99")
-    public List<Currency> allCurrencies() {
-        return allInstances();
-    }
 }

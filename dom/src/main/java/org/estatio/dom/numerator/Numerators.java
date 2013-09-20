@@ -24,11 +24,9 @@ import java.util.List;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
@@ -42,8 +40,42 @@ public class Numerators extends EstatioDomainService<Numerator> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    @Hidden
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Other", sequence = "numerators.1")
+    public List<Numerator> allNumerators() {
+        return allInstances();
+    }
+
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public Numerator findGlobalNumerator(
+            final @Named("Name") String numeratorName) {
+        return findNumerator(numeratorName, null);
+    }
+    
+    @Programmatic
+    public Numerator findScopedNumerator(
+            final @Named("Name") String numeratorName, 
+            final @Named("Scoped to") Object scopedTo) {
+        return findNumerator(numeratorName, scopedTo);
+    }
+
+    private Numerator findNumerator(final String numeratorName, Object scopedToIfAny) {
+        if(scopedToIfAny == null) {
+            return firstMatch("findByName", "name", numeratorName);
+        } else {
+            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
+            final String objectType = bookmark.getObjectType();
+            final String objectIdentifier = bookmark.getIdentifier();
+            return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", "name", numeratorName, "objectType", objectType, "objectIdentifier", objectIdentifier);
+        }
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
     public Numerator createGlobalNumerator(
             final String numeratorName, 
             final String format,
@@ -52,8 +84,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
         return findOrCreateNumerator(numeratorName, null, format, lastIncrement);
     }
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    @Hidden
+    @Programmatic
     public Numerator createScopedNumerator(
             final String numeratorName, 
             final Object scopedTo,
@@ -102,47 +133,6 @@ public class Numerators extends EstatioDomainService<Numerator> {
     }
 
 
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "numerators.2")
-    @NotContributed
-    public Numerator findGlobalNumerator(
-            final @Named("Name") String numeratorName) {
-        return findNumerator(numeratorName, null);
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "numerators.2")
-    @NotContributed
-    public Numerator findScopedNumerator(
-            final @Named("Name") String numeratorName, 
-            final @Named("Scoped to") Object scopedTo) {
-        return findNumerator(numeratorName, scopedTo);
-    }
-
-    private Numerator findNumerator(final String numeratorName, Object scopedToIfAny) {
-        if(scopedToIfAny == null) {
-            return firstMatch("findByName", "name", numeratorName);
-        } else {
-            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
-            final String objectType = bookmark.getObjectType();
-            final String objectIdentifier = bookmark.getIdentifier();
-            return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", "name", numeratorName, "objectType", objectType, "objectIdentifier", objectIdentifier);
-        }
-    }
-
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "numerators.3")
-    public List<Numerator> allNumerators() {
-        return allInstances();
-    }
 
     // //////////////////////////////////////
 

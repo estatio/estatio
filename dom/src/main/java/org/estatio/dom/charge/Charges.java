@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -39,14 +40,34 @@ public class Charges extends EstatioDomainService<Charge> {
     
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.1")
+    public List<Charge> allCharges() {
+        return allInstances();
+    }
+
     @NotContributed
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.1")
-    public Charge newCharge(
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.2")
+    public List<Charge> newCharge(
             final @Named("Reference") String reference, 
             final @Named("Description") String description, 
             final @Named("Code") String code, 
-            final Tax tax) {
+            final Tax tax, 
+            final ChargeGroup chargeGroup) {
+        createCharge(reference, description, code, tax, chargeGroup);
+        return allCharges();
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public Charge createCharge(
+            final String reference, 
+            final String description, 
+            final String code, 
+            final Tax tax, 
+            final ChargeGroup chargeGroup) {
         Charge charge = findCharge(reference);
         if (charge == null) {
             charge = newTransientInstance();
@@ -56,26 +77,16 @@ public class Charges extends EstatioDomainService<Charge> {
         charge.setDescription(description);
         charge.setCode(code);
         charge.setTax(tax);
+        charge.setGroup(chargeGroup);
         return charge;
     }
 
     // //////////////////////////////////////
     
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.2")
-    public Charge findCharge(@Named("Reference") String reference) {
+    @Programmatic
+    public Charge findCharge(final String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", regex);
     }
-
-    // //////////////////////////////////////
-    
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.charges.99")
-    public List<Charge> allCharges() {
-        return allInstances();
-    }
-
 
 }

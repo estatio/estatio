@@ -74,7 +74,7 @@ public class ChargeGroupsTest_newChargeGroup {
             }
         });
         
-        final ChargeGroup newChargeGroup = chargeGroups.newChargeGroup("REF-1", "desc-1");
+        final ChargeGroup newChargeGroup = chargeGroups.createChargeGroup("REF-1", "desc-1");
         assertThat(newChargeGroup.getReference(), is("REF-1"));
         assertThat(newChargeGroup.getDescription(), is("desc-1"));
     }

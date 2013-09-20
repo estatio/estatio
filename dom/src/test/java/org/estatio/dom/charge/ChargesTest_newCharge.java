@@ -19,7 +19,6 @@
 package org.estatio.dom.charge;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -43,6 +42,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.tax.Tax;
 
 public class ChargesTest_newCharge {
 
@@ -55,9 +55,15 @@ public class ChargesTest_newCharge {
     private Charges charges;
 
     private Charge existingCharge;
+
+    private ChargeGroup chargeGroup;
+    private Tax tax;
     
     @Before
     public void setup() {
+        
+        chargeGroup = new ChargeGroup();
+        tax = new Tax();
         
         charges = new Charges() {
             @Override
@@ -84,15 +90,19 @@ public class ChargesTest_newCharge {
             }
         });
         
-        final Charge newCharge = charges.newCharge("REF-1", "REF-1", "REF-1", null);
-        assertThat(newCharge.getReference(), is("REF-1"));
+        final Charge newCharge = charges.createCharge("CG-REF", "CG-Description", "CG-Code", tax, chargeGroup);
+        assertThat(newCharge.getReference(), is("CG-REF"));
+        assertThat(newCharge.getDescription(), is("CG-Description"));
+        assertThat(newCharge.getCode(), is("CG-Code"));
+        assertThat(newCharge.getTax(), is(tax));
+        assertThat(newCharge.getGroup(), is(chargeGroup));
     }
     
     @Test
     public void newCharge_whenDoesExist() {
         existingCharge = new Charge();
 
-        final Charge newCharge = charges.newCharge("REF-1", "REF-1", "REF-1", null);
+        final Charge newCharge = charges.createCharge("CG-REF", "Some other description", "Some other code", null, null);
         assertThat(newCharge, is(existingCharge));
     }
 

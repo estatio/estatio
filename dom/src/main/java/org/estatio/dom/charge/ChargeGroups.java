@@ -24,10 +24,11 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.utils.ValueUtils;
 
 public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
 
@@ -37,35 +38,37 @@ public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.1.1")
+    public List<ChargeGroup> allChargeGroups() {
+        return allInstances();
+    }
+
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.chargeGroups.1")
-    public ChargeGroup newChargeGroup(
+    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.1.2")
+    public List<ChargeGroup> newChargeGroup(
             final @Named("Reference") String reference, 
-            final @Named("description") String description) {
+            final @Named("Description") String description) {
+        createChargeGroup(reference, description);
+        return allChargeGroups();
+    }
+    
+    // //////////////////////////////////////
+
+    @Programmatic
+    public ChargeGroup createChargeGroup(final String reference, final String description) {
         final ChargeGroup chargeGroup = newTransientInstance();
         chargeGroup.setReference(reference);
-        chargeGroup.setDescription(description);
+        chargeGroup.setDescription(ValueUtils.coalesce(description, reference));
         persist(chargeGroup);
         return chargeGroup;
     }
     
-    // //////////////////////////////////////
-    
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.chargeGroups.2")
+    @Programmatic
     public ChargeGroup findChargeGroup(
-            final @Named("Reference") String reference) {
+            final String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", regex);
-    }
-
-    // //////////////////////////////////////
-    
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.chargeGroups.99")
-    public List<ChargeGroup> allChargeGroups() {
-        return allInstances();
     }
 
 

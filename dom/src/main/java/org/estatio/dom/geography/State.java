@@ -21,15 +21,22 @@ package org.estatio.dom.geography;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(name = "findByCountry", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE country == :country"),
-    @javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.geography.State WHERE reference == :reference") 
+    @javax.jdo.annotations.Query(
+        name = "findByCountry", language = "JDOQL", 
+        value = "SELECT "
+                + "FROM org.estatio.dom.geography.State "
+                + "WHERE country == :country"),
+    @javax.jdo.annotations.Query(
+        name = "findByReference", language = "JDOQL", 
+        value = "SELECT "
+                + "FROM org.estatio.dom.geography.State "
+                + "WHERE reference == :reference") 
 })
 @Immutable
 public class State extends Geography {

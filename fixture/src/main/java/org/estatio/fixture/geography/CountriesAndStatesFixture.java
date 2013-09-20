@@ -76,9 +76,7 @@ public class CountriesAndStatesFixture extends AbstractFixture {
     }
 
     private Country createCountry(final String reference, String alpha2Code, String name) {
-        Country country = countries.newCountry(reference, name);
-        country.setAlpha2Code(alpha2Code);
-        return country;
+        return countries.createCountry(reference, alpha2Code, name);
     }
 
     private State createState(final String reference, String name, Country country) {

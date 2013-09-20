@@ -18,6 +18,9 @@
  */
 package org.estatio.integration.tests.api;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -28,12 +31,19 @@ import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
+import org.estatio.dom.charge.ChargeGroups;
+import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.communicationchannel.EmailAddresses;
 import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -79,7 +89,10 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
     private PhoneOrFaxNumbers phoneOrFaxNumbers;
     private EmailAddresses emailAddresses;
     private Countries countries;
+    private States states;
     private Taxes taxes;
+    private ChargeGroups chargeGroups;
+    private Charges charges;
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -91,6 +104,9 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         api = service(Api.class);
         leases = service(Leases.class);
         properties = service(Properties.class);
+        states = service(States.class);
+        chargeGroups = service(ChargeGroups.class);
+        charges = service(Charges.class);
         parties = service(Parties.class);
         communicationChannels = service(CommunicationChannels.class);
         units = (Units<?>) service(Units.class);
@@ -107,13 +123,47 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t00_refData() throws Exception {
+        
+        // country
         api.putCountry("NLD", "NL", "Netherlands");
-        api.putState("NH", "NH", "NLD");
-        api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
-        api.putCharge("APICHARGE", "APICHARGE", "API CHARGE", "APITAX");
-        api.putTax("APITAX", "APITAX", "APITAX", BigDecimal.valueOf(21), new LocalDate(1980, 1, 1));
-        Tax tax = taxes.findTaxByReference("APITAX");
+
+        Country netherlands = countries.findCountry("NLD");
+        Assert.assertNotNull(netherlands);
+        assertThat(netherlands.getReference(), is("NLD"));
+        assertThat(netherlands.getAlpha2Code(), is("NL"));
+        assertThat(netherlands.getName(), is("Netherlands"));
+        
+        // state
+        api.putState("NH", "North Holland", "NLD");
+        State state = states.findState("NH");
+        Assert.assertNotNull(state);
+        assertThat(state.getReference(), is("NH"));
+        assertThat(state.getName(), is("North Holland"));
+        assertThat(state.getCountry(), is(netherlands));
+        
+        api.putTax("APITAXREF", "APITAX Name", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
+        api.putTax("APITAXREF", "APITAX Name", BigDecimal.valueOf(21), new LocalDate(1980, 1, 1));
+        
+        final Tax tax = taxes.findTaxByReference("APITAXREF");
+        Assert.assertNotNull(tax);
+        assertThat(tax.getReference(), is("APITAXREF"));
+        assertThat(tax.getName(), is("APITAX Name"));
         Assert.assertNotNull(tax.percentageFor(LocalDate.now()));
+        
+        api.putCharge("APICHARGECODE", "APICHARGEREF", "API CHARGE", "APITAXREF", "APICHARGEGROUP");
+        
+        final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
+        Assert.assertNotNull(chargeGroup);
+        assertThat(chargeGroup.getReference(), is("APICHARGEGROUP"));
+        assertThat(chargeGroup.getDescription(), is("APICHARGEGROUP"));
+        
+        final Charge charge = charges.findCharge("APICHARGEREF");
+        Assert.assertNotNull(charge);
+        assertThat(charge.getReference(), is("APICHARGEREF"));
+        assertThat(charge.getCode(), is("APICHARGECODE"));
+        assertThat(charge.getDescription(), is("API CHARGE"));
+        assertThat(charge.getTax(), is(tax));
+        assertThat(charge.getGroup(), is(chargeGroup));
     }
 
     @Test
@@ -184,7 +234,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGE", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.APPROVED.name());
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.APPROVED.name());
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 

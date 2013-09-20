@@ -30,7 +30,7 @@ public class TaxesAndTaxRatesFixture extends AbstractFixture {
 
     @Override
     public void install() {
-       Tax tax = taxes.newTax("IT-VATSTD");
+       Tax tax = taxes.newTax("IT-VATSTD", "Value Added Tax (Standard)");
        tax.newRate(new LocalDate(1980,1,1), BigDecimal.valueOf(19)).newRate(new LocalDate(2011,9,17), BigDecimal.valueOf(21));
     }
 

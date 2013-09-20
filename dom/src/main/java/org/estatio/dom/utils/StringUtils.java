@@ -21,6 +21,7 @@ package org.estatio.dom.utils;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 
 public class StringUtils {
@@ -79,5 +80,6 @@ public class StringUtils {
         }
         return Character.toUpperCase(str.charAt(0)) + str.substring(1);
     }
+
 
 }

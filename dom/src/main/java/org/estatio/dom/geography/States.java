@@ -25,10 +25,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
@@ -43,8 +40,21 @@ public class States extends EstatioDomainService<State> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.1")
+    public List<State> allStates() {
+        return allInstances();
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name="Other", sequence = "geography.states.2")
     public State newState(final @Named("Reference") String reference, final @Named("Name") String name, final Country country) {
         final State state = newTransientInstance();
+        return createState(reference, name, country, state);
+    }
+
+    // //////////////////////////////////////
+    
+    @Programmatic
+    public State createState(final String reference, final String name, final Country country, final State state) {
         state.setReference(reference);
         state.setName(name);
         state.setCountry(country);
@@ -52,29 +62,15 @@ public class States extends EstatioDomainService<State> {
         return state;
     }
 
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "geography.states.2")
+    @Programmatic
     public State findState(final @Named("Reference") String reference) {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
-    @Named("States")
-    @NotInServiceMenu
-    @NotContributed(As.ACTION)
-    @ActionSemantics(Of.SAFE)
+    @Programmatic
     public List<State> findStatesByCountry(final Country country) {
         return country != null? allMatches("findByCountry", "country", country): Collections.<State>emptyList();
     }
 
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @Prototype
-    @MemberOrder(name="Other", sequence = "geography.states.99")
-    public List<State> allStates() {
-        return allInstances();
-    }
 
 }

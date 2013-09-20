@@ -23,21 +23,28 @@ import java.util.TreeSet;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithReferenceUnique;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
-        value = "SELECT " +
-        		"FROM org.estatio.dom.charge.ChargeGroup " +
-        		"WHERE reference.matches(:reference)")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByReference", language = "JDOQL", 
+            value = "SELECT " +
+                    "FROM org.estatio.dom.charge.ChargeGroup " +
+            "WHERE reference.matches(:reference)")
+})
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "CHARGEGROUP_REFERENCE_UNIQUE_IDX", members="reference")
+})
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements WithReferenceComparable<ChargeGroup> {
-
+public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements WithReferenceComparable<ChargeGroup>, WithReferenceUnique {
 
     public ChargeGroup() {
         super("reference");
@@ -45,7 +52,6 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
     
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "CHARGE_GROUP_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
@@ -77,6 +83,7 @@ public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements Wi
     @javax.jdo.annotations.Persistent(mappedBy = "group")
     private SortedSet<Charge> charges = new TreeSet<Charge>();
 
+    @Render(Type.EAGERLY)
     public SortedSet<Charge> getCharges() {
         return charges;
     }
