@@ -282,6 +282,10 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setUnitSizeName(unitSizeName);
         return this;
     }
+    public String disableNewUnitSize(
+            final String unitSizeName) {
+        return isLocked() ? "Cannot modify when locked" : null;
+    }
     
     
     // //////////////////////////////////////
@@ -368,6 +372,11 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setActivityName(activityName);
         return this;
     }
+    public String disableNewSector(
+            final String sectorName,
+            final String activityName) {
+        return isLocked() ? "Cannot modify when locked" : null;
+    }
     
     @DescribedAs("Assign to new activity (in an existing sector)")
     public LeaseUnit newActivity(
@@ -376,9 +385,16 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setActivityName(activityName);
         return this;
     }
+    public String disableNewActivity(
+            final String sectorName,
+            final String activityName) {
+        return isLocked() ? "Cannot modify when locked" : null;
+    }
     public List<String> choices0NewActivity() {
         return sectors.findUniqueNames();
     }
+
+    // //////////////////////////////////////
 
     private Brand brand;
     
@@ -418,8 +434,10 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setBrandName(brandName);
         return this;
     }
-
-    // //////////////////////////////////////
+    public String disableNewBrand(
+            final String brandName) {
+        return isLocked() ? "Cannot modify when locked" : null;
+    }
 
 
     // //////////////////////////////////////
@@ -435,6 +453,13 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setActivityName(activityName);
         setBrandName(brandName);
         return this;
+    }
+    public String disableUpdateTags(
+            final String unitSizeName, 
+            final String sectorName, 
+            final String activityName,
+            final String brandName) {
+        return isLocked() ? "Cannot modify when locked" : null;
     }
     public String default0UpdateTags() {
         return getUnitSizeName();

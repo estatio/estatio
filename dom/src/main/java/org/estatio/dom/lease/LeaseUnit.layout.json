@@ -62,8 +62,8 @@
     }
   ],
   "actions": {
-    "updateTags": {},
     "lock": {},
-    "unlock": {}
+    "unlock": {},
+    "updateTags": {}
   }
 }
