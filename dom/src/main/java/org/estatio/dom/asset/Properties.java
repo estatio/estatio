@@ -52,7 +52,7 @@ public class Properties extends EstatioDomainService<Property> {
 
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Assets", sequence = "1")
+    @MemberOrder(name="Fixed Assets", sequence = "1")
     public Property newProperty(
             final @Named("Reference") String reference, 
             final @Named("Name") String name,
@@ -100,7 +100,7 @@ public class Properties extends EstatioDomainService<Property> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Assets", sequence = "99")
+    @MemberOrder(name="Fixed Assets", sequence = "99")
     public List<Property> allProperties() {
         return allInstances();
     }

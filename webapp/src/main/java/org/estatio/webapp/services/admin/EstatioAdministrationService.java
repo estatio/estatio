@@ -24,22 +24,16 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
@@ -49,7 +43,7 @@ import org.estatio.services.settings.EstatioSettingsService;
 @Named("Administration")
 public class EstatioAdministrationService {
 
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "aaa.1")
     public void updateEpochDate(
             final @Named("Epoch Date") @Optional LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
@@ -60,71 +54,11 @@ public class EstatioAdministrationService {
 
     // //////////////////////////////////////
 
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "aaa.2")
     public List<ApplicationSetting> listAllSettings() {
         return settingsService.listAll();
     }
 
-    // //////////////////////////////////////
-    
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "numerators.invoices.1")
-    public Numerator findCollectionNumberNumerator() {
-        return invoices.findCollectionNumberNumerator();
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "numerators.invoices.2")
-    @NotContributed
-    public Numerator createCollectionNumberNumerator(
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        
-        return invoices.createCollectionNumberNumerator(format, lastIncrement);
-    }
-    
-    public String default0CreateCollectionNumberNumerator() {
-        return "%09d";
-    }
-
-    public BigInteger default1CreateCollectionNumberNumerator() {
-        return BigInteger.ZERO;
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "numerators.invoices.3")
-    @NotContributed(As.ASSOCIATION)
-    public Numerator findInvoiceNumberNumerator(
-            final Property property) {
-        return invoices.findInvoiceNumberNumerator(property);
-    }
-    
-    // //////////////////////////////////////
-
-    // (for administrators)
-    @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(sequence = "numerators.invoices.4")
-    @NotContributed
-    public Numerator createInvoiceNumberNumerator(
-            final Property property,
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        return invoices.createCollectionNumberNumerator(format, lastIncrement);
-    }
-    
-    public String default1CreateInvoiceNumberNumerator() {
-        return "XXX-%06d";
-    }
-    
-    public BigInteger default2CreateInvoiceNumberNumerator() {
-        return BigInteger.ZERO;
-    }
-
-    
     
     // //////////////////////////////////////
 
@@ -160,7 +94,7 @@ public class EstatioAdministrationService {
         AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
         fixture.install();
 
-        createCollectionNumberNumerator("%09d", BigInteger.ZERO);
+        invoices.createCollectionNumberNumerator("%09d", BigInteger.ZERO);
 
         return "Constants successfully installed";
     }

@@ -57,7 +57,7 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
     // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Assets", sequence = "2")
+    @MemberOrder(name="Fixed Assets", sequence = "2")
     public List<T> findUnits(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
         // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
@@ -84,7 +84,7 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Assets", sequence = "99")
+    @MemberOrder(name="Fixed Assets", sequence = "99")
     public List<T> allUnits() {
         return allInstances();
     }

@@ -33,6 +33,15 @@
             "openingDate": {},
             "disposalDate": {}
           }
+        },
+        "Invoicing": {
+          "members": {
+            "invoiceNumbers": {
+              "actions": {
+                "create": {}
+              }
+            }
+          }
         }
       }
     },
@@ -50,7 +59,7 @@
         "communicationChannels": {},
         "roles": {
           "actions": {
-            "createInitialRole": {}
+            "newRole": {}
           }
         },
         "units": {
@@ -62,9 +71,9 @@
     }
   ],
   "actions": {
-    "activeLeasesOnDate": {},
-    "findInvoiceNumberNumerator": {},
     "lock": {},
-    "unlock": {}
+    "unlock": {},
+    "activeLeasesOnDate": {},
+    "findInvoiceNumberNumerator": {}
   }
 }

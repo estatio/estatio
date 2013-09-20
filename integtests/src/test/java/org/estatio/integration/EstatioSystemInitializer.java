@@ -53,6 +53,7 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
@@ -128,6 +129,7 @@ public class EstatioSystemInitializer {
                     new LeaseItems(), 
                     new LeaseUnits(), 
                     new Invoices(), 
+                    new InvoiceNumeratorContributions(), 
                     new InvoiceItemsForLease(), 
                     new CommunicationChannels(),
                     new CommunicationChannelContributions(),

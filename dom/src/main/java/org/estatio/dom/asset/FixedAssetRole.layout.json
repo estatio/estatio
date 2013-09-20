@@ -5,9 +5,9 @@
       "memberGroups": {
         "General": {
           "members": {
+            "type": {},
             "asset": {},
             "party": {},
-            "type": {},
             "status": {}
           }
         },

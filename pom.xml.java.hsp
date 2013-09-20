@@ -71,7 +71,75 @@
               <cell name="invoice" pattern="org.estatio.dom.invoice.?" vexpanded="false" visibility="public" drill="false" />
             </row>
             <row>
-              <cell name="party_and_agreement" pattern="org.estatio.dom.party_and_agreement.*" vexpanded="false" visibility="public" drill="false" />
+              <cell name="party_and_agreement" pattern="org.estatio.dom.party_and_agreement.*" vexpanded="false" visibility="public" drill="false">
+                <grid>
+                  <row>
+                    <cell name="AgreementRoleCommunicationChannels" pattern="org.estatio.dom.party_and_agreement.AgreementRoleCommunicationChannels" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRolesTest_finders" pattern="org.estatio.dom.party_and_agreement.AgreementRolesTest_finders" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRolesTest_getId_and_iconName" pattern="org.estatio.dom.party_and_agreement.AgreementRolesTest_getId_and_iconName" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRolesTest_newAgreementRole" pattern="org.estatio.dom.party_and_agreement.AgreementRolesTest_newAgreementRole" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTest_addRole" pattern="org.estatio.dom.party_and_agreement.AgreementTest_addRole" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTest_inject" pattern="org.estatio.dom.party_and_agreement.AgreementTest_inject" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AgreementRoleCommunicationChannel" pattern="org.estatio.dom.party_and_agreement.AgreementRoleCommunicationChannel" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoles" pattern="org.estatio.dom.party_and_agreement.AgreementRoles" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleTest_compareTo" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTest_compareTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleTest_isCurrent" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTest_isCurrent" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementsTest_finders" pattern="org.estatio.dom.party_and_agreement.AgreementsTest_finders" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementsTest_newAgreement" pattern="org.estatio.dom.party_and_agreement.AgreementsTest_newAgreement" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.AgreementTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTest_findParty" pattern="org.estatio.dom.party_and_agreement.AgreementTest_findParty" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTest_getEffectiveInterval" pattern="org.estatio.dom.party_and_agreement.AgreementTest_getEffectiveInterval" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTypeTest_create" pattern="org.estatio.dom.party_and_agreement.AgreementTypeTest_create" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AgreementForTesting" pattern="org.estatio.dom.party_and_agreement.AgreementForTesting" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRole" pattern="org.estatio.dom.party_and_agreement.AgreementRole" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Agreements" pattern="org.estatio.dom.party_and_agreement.Agreements" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="Agreement" pattern="org.estatio.dom.party_and_agreement.Agreement" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTypesTest_finders" pattern="org.estatio.dom.party_and_agreement.AgreementTypesTest_finders" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AgreementRoleCommunicationChannelTypes" pattern="org.estatio.dom.party_and_agreement.AgreementRoleCommunicationChannelTypes" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleTypesTest_finders" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTypesTest_finders" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleTypeTest_applicableTo" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTypeTest_applicableTo" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleTypeTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTypeTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTypes" pattern="org.estatio.dom.party_and_agreement.AgreementTypes" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementTypeTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.AgreementTypeTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="OrganisationsTest_finders" pattern="org.estatio.dom.party_and_agreement.OrganisationsTest_finders" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PersonsTest_finders" pattern="org.estatio.dom.party_and_agreement.PersonsTest_finders" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AgreementType" pattern="org.estatio.dom.party_and_agreement.AgreementType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Organisations" pattern="org.estatio.dom.party_and_agreement.Organisations" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="OrganisationTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.OrganisationTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PartiesTest_finders" pattern="org.estatio.dom.party_and_agreement.PartiesTest_finders" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PartyTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.PartyTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Persons" pattern="org.estatio.dom.party_and_agreement.Persons" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PersonTest_beanProperties" pattern="org.estatio.dom.party_and_agreement.PersonTest_beanProperties" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AgreementRoleTypes" pattern="org.estatio.dom.party_and_agreement.AgreementRoleTypes" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Organisation" pattern="org.estatio.dom.party_and_agreement.Organisation" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Parties" pattern="org.estatio.dom.party_and_agreement.Parties" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PartyForTesting" pattern="org.estatio.dom.party_and_agreement.PartyForTesting" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PartyRegistration" pattern="org.estatio.dom.party_and_agreement.PartyRegistration" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Person" pattern="org.estatio.dom.party_and_agreement.Person" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PersonGenderTypeTest_title" pattern="org.estatio.dom.party_and_agreement.PersonGenderTypeTest_title" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                  <row>
+                    <cell name="AgreementRoleCommunicationChannelType" pattern="org.estatio.dom.party_and_agreement.AgreementRoleCommunicationChannelType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="AgreementRoleType" pattern="org.estatio.dom.party_and_agreement.AgreementRoleType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="Party" pattern="org.estatio.dom.party_and_agreement.Party" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PartyRegistrationType" pattern="org.estatio.dom.party_and_agreement.PartyRegistrationType" vexpanded="false" visibility="public" drill="false" />
+                    <cell name="PersonGenderType" pattern="org.estatio.dom.party_and_agreement.PersonGenderType" vexpanded="false" visibility="public" drill="false" />
+                  </row>
+                </grid>
+              </cell>
             </row>
             <row>
               <cell name="communicationchannel" pattern="org.estatio.dom.communicationchannel.?" vexpanded="false" visibility="public" drill="false" />
