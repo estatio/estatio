@@ -40,7 +40,7 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         
         isisJdoSupport.executeUpdate("DELETE FROM LEASETERM");
         isisJdoSupport.executeUpdate("DELETE FROM LEASEITEM");
-        isisJdoSupport.executeUpdate("DELETE FROM LEASEUNIT");
+        isisJdoSupport.executeUpdate("DELETE FROM OCCUPANCY");
         
         isisJdoSupport.executeUpdate("DELETE FROM BANKMANDATE");
         isisJdoSupport.executeUpdate("DELETE FROM LEASE");

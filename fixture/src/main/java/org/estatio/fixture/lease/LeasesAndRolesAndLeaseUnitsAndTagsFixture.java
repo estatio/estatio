@@ -27,8 +27,8 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseUnit;
-import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Parties;
@@ -63,7 +63,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
             lease.newRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
         }
         if(createLeaseUnitAndTags) {
-            LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
+            Occupancy lu = leaseUnits.newLeaseUnit(lease, unit);
             lu.setBrandName(tenantReference);
             lu.setSectorName("OTHER");
             lu.setActivityName("OTHER");
@@ -92,9 +92,9 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
         this.leases = leases;
     }
 
-    private LeaseUnits leaseUnits;
+    private Occupancies leaseUnits;
 
-    public void injectLeaseUnits(final LeaseUnits leaseUnits) {
+    public void injectLeaseUnits(final Occupancies leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
 

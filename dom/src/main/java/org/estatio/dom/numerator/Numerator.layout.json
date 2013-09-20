@@ -5,18 +5,25 @@
       "memberGroups": {
         "General": {
           "members": {
-            "type": {},
-            "property": {},
+            "name": {},
             "format": {},
-            "lastIncrement": {},
-            "status": {}
+            "lastIncrement": {}
+          }
+        },
+        "Scoping": {
+          "members": {
+            "scoped": {},
+            "lookup": {},
+            "objectType": {},
+            "objectIdentifier": {}
           }
         }
       }
     },
     {
       "span": 0,
-      "memberGroups": {}
+      "memberGroups": {
+      }
     },
     {
       "span": 0,

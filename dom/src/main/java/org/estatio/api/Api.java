@@ -59,14 +59,15 @@ import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseUnit;
-import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Organisation;
@@ -78,6 +79,7 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.services.clock.ClockService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
@@ -465,9 +467,9 @@ public class Api extends AbstractFactoryAndRepository {
         if (unitReference != null && unit == null) {
             throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
         }
-        LeaseUnit leaseUnit = leaseUnits.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
+        Occupancy leaseUnit = leaseUnits.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
         if (leaseUnit == null) {
-            leaseUnit = lease.addUnit(unit);
+            leaseUnit = lease.addOccupancy(unit);
             leaseUnit.setStartDate(startDate);
         }
 
@@ -491,7 +493,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("chargeReference") @Optional String chargeReference,
             @Named("nextDueDate") @Optional LocalDate nextDueDate,
             @Named("invoicingFrequency") @Optional String invoicingFrequency,
-            @Named("paymentMethod") @Optional String paymentMethod) {
+            @Named("paymentMethod") @Optional String paymentMethod,
+            @Named("status") @Optional String status) {
         Lease lease = fetchLease(leaseReference);
 
         @SuppressWarnings("unused")
@@ -504,6 +507,9 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod));
         }
+        
+        final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.APPROVED);
+        item.setStatus(leaseItemStatus);
         item.setStartDate(startDate);
         item.setEndDate(endDate);
         item.setType(itemType);
@@ -554,7 +560,12 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForIndexableRent(
             // start generic fields
-            @Named("leaseReference") String leaseReference, @Named("tenantReference") String tenantReference, @Named("unitReference") @Optional String unitReference, @Named("itemSequence") BigInteger itemSequence, @Named("itemType") String itemType, @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("leaseReference") String leaseReference, 
+            @Named("tenantReference") String tenantReference, 
+            @Named("unitReference") @Optional String unitReference, 
+            @Named("itemSequence") BigInteger itemSequence, 
+            @Named("itemType") String itemType, 
+            @Named("itemStartDate") LocalDate itemStartDate,
             @Named("sequence") BigInteger sequence,
             @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate,
@@ -847,9 +858,9 @@ public class Api extends AbstractFactoryAndRepository {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    private LeaseUnits leaseUnits;
+    private Occupancies leaseUnits;
 
-    public void injectLeaseUnits(final LeaseUnits leaseUnits) {
+    public void injectLeaseUnits(final Occupancies leaseUnits) {
         this.leaseUnits = leaseUnits;
     }
 

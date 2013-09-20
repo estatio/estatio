@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 
-public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<LeaseUnit> {
+public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<Occupancy> {
 
     private Lease lease1;
     private Lease lease2;
@@ -51,7 +51,7 @@ public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<Le
     
     @SuppressWarnings("unchecked")
     @Override
-    protected List<List<LeaseUnit>> orderedTuples() {
+    protected List<List<Occupancy>> orderedTuples() {
         return listOf(
                 listOf(
                         newLeaseUnit(null, null, null),
@@ -71,11 +71,11 @@ public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<Le
                 );
     }
 
-    private LeaseUnit newLeaseUnit(
+    private Occupancy newLeaseUnit(
             Lease lease,
             LocalDate startDate,
             UnitForLease unit) {
-        final LeaseUnit ib = new LeaseUnit();
+        final Occupancy ib = new Occupancy();
         ib.setLease(lease);
         ib.setUnit(unit);
         ib.setStartDate(startDate);

@@ -51,15 +51,15 @@ import org.estatio.dom.asset.Unit;
 public class UnitForLease extends Unit {
 
     @javax.jdo.annotations.Persistent(mappedBy = "unit", defaultFetchGroup = "false")
-    private SortedSet<LeaseUnit> leases = new TreeSet<LeaseUnit>();
+    private SortedSet<Occupancy> leases = new TreeSet<Occupancy>();
 
     @Render(Type.EAGERLY)
     @MemberOrder(sequence = "2.2")
-    public SortedSet<LeaseUnit> getLeases() {
+    public SortedSet<Occupancy> getLeases() {
         return leases;
     }
 
-    public void setLeases(final SortedSet<LeaseUnit> leases) {
+    public void setLeases(final SortedSet<Occupancy> leases) {
         this.leases = leases;
     }
 

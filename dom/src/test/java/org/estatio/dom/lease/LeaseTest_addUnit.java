@@ -40,7 +40,7 @@ public class LeaseTest_addUnit {
     private DomainObjectContainer mockContainer;
 
     private Lease lease;
-    private LeaseUnits leaseUnits;
+    private Occupancies leaseUnits;
 
     private UnitForLease unit;
 
@@ -50,25 +50,25 @@ public class LeaseTest_addUnit {
         unit = new UnitForLease();
         
         // this is actually a mini-integration test...
-        leaseUnits = new LeaseUnits();
+        leaseUnits = new Occupancies();
         leaseUnits.setContainer(mockContainer);
         
         lease = new Lease();
-        lease.injectLeaseUnits(leaseUnits);
+        lease.injectOccupancies(leaseUnits);
     }
     
     @Test
     public void test() {
-        final LeaseUnit leaseUnit = new LeaseUnit();
+        final Occupancy leaseUnit = new Occupancy();
         context.checking(new Expectations() {
             {
-                oneOf(mockContainer).newTransientInstance(LeaseUnit.class);
+                oneOf(mockContainer).newTransientInstance(Occupancy.class);
                 will(returnValue(leaseUnit));
                 oneOf(mockContainer).persistIfNotAlready(leaseUnit);
             }
         });
         
-        final LeaseUnit addedUnit = lease.addUnit(unit);
+        final Occupancy addedUnit = lease.addOccupancy(unit);
         assertThat(addedUnit, is(leaseUnit));
         assertThat(leaseUnit.getLease(), is(lease));
         assertThat(leaseUnit.getUnit(), is(unit));

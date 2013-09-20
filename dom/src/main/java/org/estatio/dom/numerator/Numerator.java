@@ -27,15 +27,13 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.tag.Tag;
 
 /**
  * Generates a sequence of values (eg <tt>XYZ-00101</tt>, <tt>XYZ-00102</tt>, <tt>XYZ-00103</tt> etc)
@@ -72,13 +70,12 @@ import org.estatio.dom.tag.Tag;
         )
 })
 @Immutable
-public class Numerator extends EstatioTransactionalObject<Numerator, Status> implements Comparable<Numerator> {
+public class Numerator extends EstatioTransactionalObject<Numerator, Status> implements Comparable<Numerator>, BookmarkHolder {
 
     public Numerator() {
         super("name, objectType, objectIdentifier, format", Status.UNLOCKED, Status.LOCKED);
     }
 
-    
     @Override
     public Status getLockable() {
         return getStatus();
@@ -90,6 +87,25 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     }
 
 
+    // //////////////////////////////////////
+    
+    public String title() {
+        if(isScoped()) {
+            return format(getLastIncrement());
+        } else {
+            return getName();
+        }
+    }
+
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.NotPersistent
+    @NotPersisted
+    public boolean isScoped() {
+        return getObjectType() != null;
+    }
+    
     // //////////////////////////////////////
 
     private String name;
@@ -137,6 +153,9 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     public void setObjectType(final String objectType) {
         this.objectType = objectType;
     }
+    public boolean hideObjectType() {
+        return !isScoped();
+    }
 
     // //////////////////////////////////////
     
@@ -163,6 +182,9 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     public void setObjectIdentifier(final String bookmark) {
         this.objectIdentifier = bookmark;
     }
+    public boolean hideObjectIdentifier() {
+        return !isScoped();
+    }
 
 
     // //////////////////////////////////////
@@ -173,7 +195,6 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
      * The String format to use to generate the value. 
      */
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Title(sequence="2")
     public String getFormat() {
         return format;
     }
@@ -182,6 +203,9 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
         this.format = format;
     }
     
+    String format(final BigInteger n) {
+        return String.format(getFormat(), n);
+    }
 
     // //////////////////////////////////////
 
@@ -219,8 +243,9 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
 
     @Programmatic
     public String increment() {
-        return String.format(getFormat(), incrementCounter());
+        return format(incrementCounter());
     }
+
 
     private BigInteger incrementCounter() {
         BigInteger last = getLastIncrement();
@@ -232,7 +257,13 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
         return next;
     }
 
+    // //////////////////////////////////////
 
+    @Programmatic
+    @Override
+    public Bookmark bookmark() {
+        return isScoped() ? new Bookmark(getObjectType(), getObjectIdentifier()) : null;
+    }
 
 
 }

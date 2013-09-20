@@ -21,6 +21,7 @@ package org.estatio.dom;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotPersisted;
 
 
@@ -44,27 +45,23 @@ import org.apache.isis.applib.annotation.NotPersisted;
  * <p>
  * For this reason, the property is now declared simply as {@link Lockable}; subclasses should downcast as need be. 
  */
- */
 public interface WithLockable<T,L extends Lockable> {
 
     @javax.jdo.annotations.NotPersistent
     @NotPersisted
-    @Disabled
+    @Hidden
     public L getLockable();
-    
     public void setLockable(L lockable);
 
-    @Disabled
+    @Hidden
     public boolean isLocked();
     
     @ActionSemantics(Of.IDEMPOTENT)
     public T lock();
-    
     public boolean hideLock();
 
     @ActionSemantics(Of.IDEMPOTENT)
     public T unlock();
-    
     public boolean hideUnlock();
     
 }

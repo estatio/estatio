@@ -35,4 +35,8 @@ public enum LeaseItemStatus implements Lockable {
         return this == NEW;
     }
 
+    public static LeaseItemStatus valueOfElse(String status, LeaseItemStatus statusElse) {
+        return status != null? valueOf(status): statusElse;
+    }
+
  }

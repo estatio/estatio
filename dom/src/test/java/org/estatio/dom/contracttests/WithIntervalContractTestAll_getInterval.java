@@ -35,7 +35,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
-import org.estatio.dom.lease.LeaseUnit;
+import org.estatio.dom.lease.Occupancy;
 
 /**
  * Automatically tests all domain objects implementing {@link WithInterval}.
@@ -65,10 +65,10 @@ public class WithIntervalContractTestAll_getInterval extends WithIntervalContrac
         });
         map.put(InvoiceItem.class,
                 new WIInstantiator<InvoiceItemForTesting>(InvoiceItemForTesting.class));
-        map.put(LeaseUnit.class,
-                new WIInstantiator<LeaseUnit>(LeaseUnit.class) {
-                    public LeaseUnit newWithIntervalWithParent() throws Exception {
-                        LeaseUnit lt = newWithInterval();
+        map.put(Occupancy.class,
+                new WIInstantiator<Occupancy>(Occupancy.class) {
+                    public Occupancy newWithIntervalWithParent() throws Exception {
+                        Occupancy lt = newWithInterval();
                         lt.setLease(new Lease());
                         return lt;
                     };

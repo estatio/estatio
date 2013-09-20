@@ -34,9 +34,16 @@ import org.estatio.dom.communicationchannel.EmailAddresses;
 import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.geography.Countries;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.dom.lease.LeaseTermStatus;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -45,6 +52,7 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
+
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -64,7 +72,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
     private Parties parties;
     private CommunicationChannels communicationChannels;
     private Units<?> units;
-    private LeaseUnits leaseUnits;
+    private Occupancies leaseUnits;
     private AgreementRoleTypes agreementRoleTypes;
     private ClockService clockService;
     private PostalAddresses postalAddresses;
@@ -86,7 +94,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         parties = service(Parties.class);
         communicationChannels = service(CommunicationChannels.class);
         units = (Units<?>) service(Units.class);
-        leaseUnits = service(LeaseUnits.class);
+        leaseUnits = service(Occupancies.class);
         agreementRoleTypes = service(AgreementRoleTypes.class);
         clockService = service(ClockService.class);
         phoneOrFaxNumbers = service(PhoneOrFaxNumbers.class);
@@ -176,16 +184,20 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", "RENT", BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGE", null, "QUARTERLY_IN_ADVANCE", "DIRECT_DEBIT");
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGE", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.APPROVED.name());
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 
     @Test
     public void t07_putLeaseTermWorks() throws Exception {
-        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", "YEARLY",
+        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), LeaseItemType.RENT.name(), START_DATE, 
+                BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), LeaseTermStatus.NEW.name(), 
+                null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", LeaseTermFrequency.YEARLY.name(),
                 null, null, null, null, null, null, null, null, null);
-        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), "RENT", START_DATE, BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), "NEW", null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null,
-                "APIINDEX", "YEARLY", null, null, null, null, null, null, null, null, null);
+        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), LeaseItemType.RENT.name(), START_DATE, 
+                BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), LeaseTermStatus.NEW.name(), 
+                null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", LeaseTermFrequency.YEARLY.name(), 
+                null, null, null, null, null, null, null, null, null);
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
     }

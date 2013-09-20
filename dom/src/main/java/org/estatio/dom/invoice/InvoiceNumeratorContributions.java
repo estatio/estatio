@@ -45,7 +45,7 @@ public class InvoiceNumeratorContributions extends EstatioDomainService<Invoice>
     @ActionSemantics(Of.IDEMPOTENT)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
-    public Numerator invoiceNumbers(
+    public Numerator lastInvoiceNumber(
             final Property property) {
         return invoices.findInvoiceNumberNumerator(property);
     }
@@ -54,22 +54,16 @@ public class InvoiceNumeratorContributions extends EstatioDomainService<Invoice>
 
     @ActionSemantics(Of.IDEMPOTENT)
     @NotInServiceMenu
-    public Numerator create(
+    public Numerator createNumerator(
             final Property property,
             final @Named("Format") String format,
             final @Named("Last value") BigInteger lastIncrement) {
         return invoices.createInvoiceNumberNumerator(property, format, lastIncrement);
     }
-    public String disableCreate(
-            final Property property, 
-            final String format,
-            final BigInteger lastIncrement) {
-        return invoices.disableCreateInvoiceNumberNumerator(property, format, lastIncrement);
-    }
-    public String default1Create() {
+    public String default1CreateNumerator() {
         return invoices.default1CreateInvoiceNumberNumerator();
     }
-    public BigInteger default2Create() {
+    public BigInteger default2CreateNumerator() {
         return invoices.default2CreateInvoiceNumberNumerator();
     }
 

@@ -75,10 +75,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& unit == :unit "
                         + "&& endDate == :endDate")
 })
-@Named("Occupancy")
-public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit>, Taggable {
+public class Occupancy extends EstatioTransactionalObject<Occupancy, Status> implements WithIntervalMutable<Occupancy>, Taggable {
 
-    public LeaseUnit() {
+    public Occupancy() {
         super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
     }
 
@@ -172,11 +171,11 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<LeaseUnit> changeDates = new WithIntervalMutable.Helper<LeaseUnit>(this);
+    private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<Occupancy>(this);
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
-    public LeaseUnit changeDates(
+    public Occupancy changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
         return changeDates.changeDates(startDate, endDate);
@@ -281,7 +280,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setUnitSize(unitSize);
     }
 
-    public LeaseUnit newUnitSize(final @Named("UnitSize") @Optional String unitSizeName) {
+    public Occupancy newUnitSize(final @Named("UnitSize") @Optional String unitSizeName) {
         setUnitSizeName(unitSizeName);
         return this;
     }
@@ -368,7 +367,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     }
     
     @DescribedAs("Assign to new sector and activity")
-    public LeaseUnit newSector(
+    public Occupancy newSector(
             final @Named("Sector") String sectorName, 
             final @Named("Activity") String activityName) {
         setSectorName(sectorName);
@@ -382,7 +381,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     }
     
     @DescribedAs("Assign to new activity (in an existing sector)")
-    public LeaseUnit newActivity(
+    public Occupancy newActivity(
             final @Named("Sector") String sectorName,
             final @Named("Activity") String activityName) {
         setActivityName(activityName);
@@ -433,7 +432,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         setBrand(brand);
     }
     
-    public LeaseUnit newBrand(final @Named("Brand") @Optional String brandName) {
+    public Occupancy newBrand(final @Named("Brand") @Optional String brandName) {
         setBrandName(brandName);
         return this;
     }
@@ -446,7 +445,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     // //////////////////////////////////////
     
     @DescribedAs("Update unit size, sector, activity and/or brand")
-    public LeaseUnit updateTags(
+    public Occupancy updateTags(
             final @Named("Unit size") @Optional String unitSizeName, 
             final @Named("Sector") @Optional String sectorName, 
             final @Named("Activity") @Optional String activityName,

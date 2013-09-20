@@ -36,9 +36,9 @@
         },
         "Invoicing": {
           "members": {
-            "invoiceNumbers": {
+            "lastInvoiceNumber": {
               "actions": {
-                "create": {}
+                "createNumerator": {}
               }
             }
           }
@@ -73,7 +73,6 @@
   "actions": {
     "lock": {},
     "unlock": {},
-    "activeLeasesOnDate": {},
-    "findInvoiceNumberNumerator": {}
+    "activeLeasesOnDate": {}
   }
 }

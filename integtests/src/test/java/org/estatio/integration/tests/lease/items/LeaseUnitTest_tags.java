@@ -26,7 +26,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseUnit;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
@@ -42,14 +42,14 @@ public class LeaseUnitTest_tags extends EstatioIntegrationTest {
     private Leases leases;
     
     private Lease leaseTopModel;
-    private LeaseUnit leaseUnit;
+    private Occupancy leaseUnit;
 
     @Before
     public void setup() {
         leases = service(Leases.class);
         
         leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        leaseUnit = leaseTopModel.getUnits().first();
+        leaseUnit = leaseTopModel.getOccupancies().first();
     }
 
     @Test

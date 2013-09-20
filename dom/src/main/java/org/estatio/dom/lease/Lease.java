@@ -153,19 +153,19 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
     
     /**
-     * The {@link Property} of the (first of the) {@link #getUnits() LeaseUnit}s.
+     * The {@link Property} of the (first of the) {@link #getOccupancies() LeaseUnit}s.
      * 
      * <p>
-     * It is not possible for the {@link LeaseUnit}s to belong to different
+     * It is not possible for the {@link Occupancy}s to belong to different
      * {@link Property properties}, and so it is sufficient to obtain the {@link Property}
-     * of the first such {@link LeaseUnit occupancy}. 
+     * of the first such {@link Occupancy occupancy}. 
      */
     @Override
     public Property getProperty() {
-        if(getUnits().isEmpty()) {
+        if(getOccupancies().isEmpty()) {
             return null;
         }
-        return getUnits().first().getUnit().getProperty();
+        return getOccupancies().first().getUnit().getProperty();
     }
 
     // //////////////////////////////////////
@@ -184,23 +184,22 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
-    private SortedSet<LeaseUnit> units = new TreeSet<LeaseUnit>();
+    private SortedSet<Occupancy> occupancies = new TreeSet<Occupancy>();
 
     @Render(Type.EAGERLY)
-    public SortedSet<LeaseUnit> getUnits() {
-        return units;
+    public SortedSet<Occupancy> getOccupancies() {
+        return occupancies;
     }
 
-    public void setUnits(final SortedSet<LeaseUnit> units) {
-        this.units = units;
+    public void setOccupancies(final SortedSet<Occupancy> units) {
+        this.occupancies = units;
     }
 
-
-    public LeaseUnit addUnit(
+    public Occupancy addOccupancy(
             final @Named("unit") UnitForLease unit) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
-        LeaseUnit leaseUnit = leaseUnits.newLeaseUnit(this, unit);
-        units.add(leaseUnit);
+        Occupancy leaseUnit = occupanciesRepo.newLeaseUnit(this, unit);
+        occupancies.add(leaseUnit);
         return leaseUnit;
     }
 
@@ -411,8 +410,9 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     public Lease terminate(
-            @Named("Termination Date") LocalDate terminationDate, 
-            @Named("Are you sure?") @Optional Boolean confirm) {
+            final @Named("Termination Date") LocalDate terminationDate, 
+            final @Named("Are you sure?") @Optional Boolean confirm) {
+        // TODO: how is 'confirm' used?  isn't there meant to be a validate?
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);
             if (term == null)
@@ -434,10 +434,10 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.leaseItems = leaseItems;
     }
 
-    private LeaseUnits leaseUnits;
+    private Occupancies occupanciesRepo;
 
-    public final void injectLeaseUnits(final LeaseUnits leaseUnits) {
-        this.leaseUnits = leaseUnits;
+    public final void injectOccupancies(final Occupancies occupancies) {
+        this.occupanciesRepo = occupancies;
     }
 
     private FinancialAccounts financialAccounts;

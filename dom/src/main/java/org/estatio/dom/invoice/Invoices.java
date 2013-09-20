@@ -166,12 +166,6 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final @Named("Last value") BigInteger lastIncrement) {
         return numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
     }
-    public String disableCreateInvoiceNumberNumerator(
-            final Property property, 
-            final String format,
-            final BigInteger lastIncrement) {
-        return findInvoiceNumberNumerator(property) != null? "Already exists": null;
-    }
     public String default1CreateInvoiceNumberNumerator() {
         return "XXX-%06d";
     }

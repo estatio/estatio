@@ -29,10 +29,10 @@ import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
 
 @Hidden
-public class LeaseUnits extends EstatioDomainService<LeaseUnit> {
+public class Occupancies extends EstatioDomainService<Occupancy> {
 
-    public LeaseUnits() {
-        super(LeaseUnits.class, LeaseUnit.class);
+    public Occupancies() {
+        super(Occupancies.class, Occupancy.class);
     }
 
     // //////////////////////////////////////
@@ -40,8 +40,8 @@ public class LeaseUnits extends EstatioDomainService<LeaseUnit> {
     // @Hidden
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
-    public LeaseUnit newLeaseUnit(Lease lease, UnitForLease unit) {
-        LeaseUnit lu = newTransientInstance(LeaseUnit.class);
+    public Occupancy newLeaseUnit(Lease lease, UnitForLease unit) {
+        Occupancy lu = newTransientInstance(Occupancy.class);
         lu.setLease(lease);
         lu.setUnit(unit);
         persistIfNotAlready(lu);
@@ -52,7 +52,7 @@ public class LeaseUnits extends EstatioDomainService<LeaseUnit> {
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public LeaseUnit findByLeaseAndUnitAndStartDate(final Lease lease, final Unit unit, LocalDate startDate) {
+    public Occupancy findByLeaseAndUnitAndStartDate(final Lease lease, final Unit unit, LocalDate startDate) {
          return firstMatch("findByLeaseAndUnitAndStartDate", "lease", lease, "unit", unit, "startDate", startDate);
     }
 

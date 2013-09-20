@@ -57,7 +57,7 @@ import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.LeaseUnits;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
@@ -127,7 +127,7 @@ public class EstatioSystemInitializer {
                     new Leases(), 
                     new LeaseTerms(), 
                     new LeaseItems(), 
-                    new LeaseUnits(), 
+                    new Occupancies(), 
                     new Invoices(), 
                     new InvoiceNumeratorContributions(), 
                     new InvoiceItemsForLease(), 

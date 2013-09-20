@@ -45,7 +45,7 @@ public class LeaseUnits_finders {
 
     private FinderInteraction finderInteraction;
 
-    private LeaseUnits leaseUnits;
+    private Occupancies leaseUnits;
 
     private Lease lease;
     private Unit unit;
@@ -58,7 +58,7 @@ public class LeaseUnits_finders {
         unit = new UnitForLease();
         startDate = new LocalDate(2013,4,1);
         
-        leaseUnits = new LeaseUnits() {
+        leaseUnits = new Occupancies() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -66,7 +66,7 @@ public class LeaseUnits_finders {
                 return null;
             }
             @Override
-            protected List<LeaseUnit> allInstances() {
+            protected List<Occupancy> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -85,7 +85,7 @@ public class LeaseUnits_finders {
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(LeaseUnit.class));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
         assertThat(finderInteraction.getQueryName(), is("findByLeaseAndUnitAndStartDate"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object)lease));
         assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object)unit));

@@ -33,12 +33,14 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
 
@@ -82,6 +84,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
             LeaseTerm currentTerm = leaseItem.findTermWithSequence(sequence.subtract(BigInteger.ONE));
             leaseTerm = (LeaseTermForIndexableRent) leaseItem.createNextTerm(currentTerm);
         }
+        leaseTerm.setStatus(LeaseTermStatus.NEW); // unlocked, so can calculate
         leaseTerm.modifyStartDate(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBaseValue(baseValue);
@@ -130,8 +133,8 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
             li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT);
-            // li = leaseItems.newLeaseItem(lease, leaseItemType);
             li.setType(leaseItemType);
+            li.setStatus(LeaseItemStatus.APPROVED);
             li.setStartDate(lease.getStartDate());
             li.setEndDate(lease.getEndDate());
             li.setSequence(BigInteger.valueOf(1));
