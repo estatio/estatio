@@ -66,21 +66,27 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         super("type, description", Status.UNLOCKED, Status.LOCKED);
     }
 
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @MemberOrder(sequence="5")
     @Disabled
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

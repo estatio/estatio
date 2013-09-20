@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
+import org.estatio.dom.Status;
+
 
 public class CommunicationChannelTest_compareTo extends ComparableContractTest_compareTo<CommunicationChannel> {
 
@@ -47,10 +49,7 @@ public class CommunicationChannelTest_compareTo extends ComparableContractTest_c
     }
 
     private CommunicationChannel newCommunicationChannel(CommunicationChannelType type) {
-        final CommunicationChannel cc = new CommunicationChannel(){
-            public String getName() {
-                return null;
-            }};
+        final CommunicationChannel cc = new CommunicationChannel(){};
         cc.setType(type);
         return cc;
     }

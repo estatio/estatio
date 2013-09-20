@@ -22,9 +22,6 @@ import java.util.SortedSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Sets;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -34,7 +31,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -46,7 +42,6 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -88,20 +83,26 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
         super("asset, startDate desc nullsLast, type, party", Status.UNLOCKED, Status.LOCKED);
     }
 
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

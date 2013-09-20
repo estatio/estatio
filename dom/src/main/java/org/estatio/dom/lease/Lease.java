@@ -90,6 +90,16 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         super(LeaseStatus.NEW, LeaseStatus.APPROVED);
     }
     
+    @Override
+    public LeaseStatus getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(LeaseStatus lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     @Override
@@ -102,16 +112,12 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     
     private LeaseStatus status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
-    @Override
     public LeaseStatus getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final LeaseStatus status) {
         this.status = status;
     }

@@ -78,6 +78,17 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
         super("name, objectType, objectIdentifier, format", Status.UNLOCKED, Status.LOCKED);
     }
 
+    
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
 
     // //////////////////////////////////////
 
@@ -193,16 +204,12 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }
@@ -224,6 +231,7 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
         setLastIncrement(next);
         return next;
     }
+
 
 
 

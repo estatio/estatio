@@ -42,7 +42,7 @@ public class LeaseUnitTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Brand.class))
             .withFixture(statii())
 	        .exercise(new LeaseUnit(),
-	                FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName"));
+	                FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName", "lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

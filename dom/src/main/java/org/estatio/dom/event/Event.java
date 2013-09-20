@@ -34,7 +34,6 @@ import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
 
 // TODO: is this in scope?
 
@@ -45,18 +44,26 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     public Event() {
         super("startDate desc nullsLast, id", Status.UNLOCKED, Status.LOCKED);
     }
-    
+
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
     @Disabled
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

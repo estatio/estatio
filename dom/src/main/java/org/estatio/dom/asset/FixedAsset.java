@@ -38,7 +38,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -50,9 +49,7 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -74,21 +71,26 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
         super("name", Status.UNLOCKED, Status.LOCKED);
     }
     
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
 
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-    
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

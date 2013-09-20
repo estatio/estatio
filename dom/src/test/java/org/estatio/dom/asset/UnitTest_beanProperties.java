@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class UnitTest_beanProperties extends AbstractBeanPropertiesTest {
@@ -34,7 +35,7 @@ public class UnitTest_beanProperties extends AbstractBeanPropertiesTest {
 			.withFixture(pojos(Property.class))
 			.withFixture(pojos(Location.class))
             .withFixture(statii())
-			.exercise(new Unit());
+			.exercise(new Unit(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

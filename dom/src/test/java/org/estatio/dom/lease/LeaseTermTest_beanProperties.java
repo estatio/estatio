@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class LeaseTermTest_beanProperties extends AbstractBeanPropertiesTest {
@@ -32,7 +33,7 @@ public class LeaseTermTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(LeaseItem.class))
 	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
             .withFixture(statii())
-	        .exercise(new LeaseTermForTesting());
+	        .exercise(new LeaseTermForTesting(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

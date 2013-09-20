@@ -39,7 +39,7 @@ public class LeaseTermForIndexableRentTest_beanProperties extends AbstractBeanPr
 	        .exercise(new LeaseTermForIndexableRent(),
 	                // TODO: bug in PojoTester; claims there's interference between 
 	                // startDate and baseIndexStartDate, however are just the same datatype
-	                FilterSet.excluding("baseIndexStartDate"));
+	                FilterSet.excluding("baseIndexStartDate", "lockable"));
 	}
 
 	

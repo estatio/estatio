@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
@@ -74,6 +75,16 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     public Invoice() {
         super("invoiceNumber", InvoiceStatus.NEW, null);
+    }
+
+    @Override
+    public InvoiceStatus getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(InvoiceStatus lockable) {
+        setStatus(lockable);
     }
 
     // //////////////////////////////////////
@@ -196,9 +207,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private InvoiceStatus status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public InvoiceStatus getStatus() {
         return status;

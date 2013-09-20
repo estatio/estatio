@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class TaxRateTest_beanProperties extends AbstractBeanPropertiesTest {
@@ -32,7 +33,7 @@ public class TaxRateTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Tax.class))
 	        .withFixture(pojos(TaxRate.class))
             .withFixture(statii())
-	        .exercise(new TaxRate());
+	        .exercise(new TaxRate(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

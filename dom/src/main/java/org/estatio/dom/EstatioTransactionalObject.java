@@ -39,7 +39,7 @@ import org.apache.isis.applib.annotation.Hidden;
  * }
  * </pre>
  */
-public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> extends EstatioDomainObject<T> implements WithStatus<T,S> {
+public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> extends EstatioDomainObject<T> implements WithLockable<T,S> {
 
     /**
      * The status representing an unlocked - freely editable - object.
@@ -64,13 +64,14 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
         return id;
     }
+    
 
     
 
     // //////////////////////////////////////
     
     public void created() {
-        setStatus(statusWhenLockedIfAny);
+        setLockable(statusWhenLockedIfAny);
     }
     
     // //////////////////////////////////////
@@ -87,7 +88,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     @Hidden
     @Override
     public boolean isLocked() {
-        return getStatus()!=null? !getStatus().isUnlocked(): true;
+        return getLockable()!=null? !getLockable().isUnlocked(): true;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -95,7 +96,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     @Override
     @SuppressWarnings("unchecked")
     public T lock() {
-        setStatus(statusWhenLockedIfAny);
+        setLockable(statusWhenLockedIfAny);
         return (T) this;
     }
 
@@ -109,7 +110,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     @Override
     @SuppressWarnings("unchecked")
     public T unlock() {
-        setStatus(statusWhenUnlocked);
+        setLockable(statusWhenUnlocked);
         return (T) this;
     }
     

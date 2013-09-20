@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
@@ -40,7 +41,7 @@ public class LeaseTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(AgreementType.class))
 	        .withFixture(pojos(BankMandate.class))
             .withFixture(statii())
-	        .exercise(new Lease());
+	        .exercise(new Lease(), FilterSet.excluding("lockable"));
 	}
 
 

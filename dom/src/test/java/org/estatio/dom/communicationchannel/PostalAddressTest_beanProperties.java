@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -35,7 +36,7 @@ public class PostalAddressTest_beanProperties extends AbstractBeanPropertiesTest
 			.withFixture(pojos(State.class))
             .withFixture(statii())
             .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
-			.exercise(new PostalAddress());
+			.exercise(new PostalAddress(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

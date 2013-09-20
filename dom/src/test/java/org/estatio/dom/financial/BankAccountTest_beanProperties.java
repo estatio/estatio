@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -35,7 +36,7 @@ public class BankAccountTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Country.class))
 	        .withFixture(pojos(Party.class, PartyForTesting.class))
 	        .withFixture(statii())
-	        .exercise(new BankAccount());
+	        .exercise(new BankAccount(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

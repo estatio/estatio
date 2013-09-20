@@ -37,17 +37,25 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
         super("nextLease,assignmentDate", Status.UNLOCKED, Status.LOCKED);
     }
     
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+    
     // //////////////////////////////////////
 
     private Status status;
 
     @Hidden
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
@@ -85,20 +86,27 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         super("lease, type, sequence desc", LeaseItemStatus.NEW, null);
     }
 
+    @Override
+    public LeaseItemStatus getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(LeaseItemStatus lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private LeaseItemStatus status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
-    @Override
     public LeaseItemStatus getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final LeaseItemStatus status) {
         this.status = status;
     }

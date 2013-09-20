@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
@@ -42,7 +43,7 @@ public class InvoiceTest_beanProperties extends AbstractBeanPropertiesTest {
 	        // the reason is that the DN enhancer doesn't seem to enhance it
 	        .withFixture(pojos(InvoiceSource.class, Lease.class))
             .withFixture(statii())
-	        .exercise(new Invoice());
+	        .exercise(new Invoice(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

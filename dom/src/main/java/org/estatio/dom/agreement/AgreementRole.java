@@ -28,19 +28,8 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
-import org.estatio.api.Api;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 import org.joda.time.LocalDate;
 
@@ -57,6 +46,16 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.api.Api;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -92,19 +91,26 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         super("agreement, startDate desc nullsLast, type, party", Status.UNLOCKED, Status.LOCKED);
     }
 
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

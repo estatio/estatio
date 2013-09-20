@@ -34,6 +34,7 @@ import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -90,19 +91,26 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         super("role, startDate desc nullsLast, type, communicationChannel", Status.UNLOCKED, Status.LOCKED);
     }
 
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

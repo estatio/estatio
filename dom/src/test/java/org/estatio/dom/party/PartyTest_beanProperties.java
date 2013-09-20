@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class PartyTest_beanProperties extends AbstractBeanPropertiesTest {
@@ -30,7 +31,7 @@ public class PartyTest_beanProperties extends AbstractBeanPropertiesTest {
 	public void test() {
 	    newPojoTester()
             .withFixture(statii())
-	        .exercise(new PartyForTesting());
+	        .exercise(new PartyForTesting(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

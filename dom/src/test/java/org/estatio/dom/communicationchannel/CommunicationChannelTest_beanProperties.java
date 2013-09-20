@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class CommunicationChannelTest_beanProperties extends AbstractBeanPropertiesTest {
@@ -31,7 +32,7 @@ public class CommunicationChannelTest_beanProperties extends AbstractBeanPropert
         newPojoTester()
             .withFixture(statii())
             .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
-            .exercise(new CommunicationChannelForTesting());
+            .exercise(new CommunicationChannelForTesting(), FilterSet.excluding("lockable"));
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

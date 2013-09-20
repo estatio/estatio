@@ -23,7 +23,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.Status;
 import org.estatio.dom.agreement.Agreement;
@@ -39,21 +38,27 @@ public class BankMandate extends Agreement<Status> {
     public BankMandate() {
         super(Status.UNLOCKED, Status.LOCKED);
     }
-    
+
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-    
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Hidden
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

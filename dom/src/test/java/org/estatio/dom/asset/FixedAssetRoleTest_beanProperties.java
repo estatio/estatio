@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.party.Party;
@@ -36,7 +37,7 @@ public class FixedAssetRoleTest_beanProperties extends AbstractBeanPropertiesTes
             .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
             .withFixture(pojos(Party.class, PartyForTesting.class))
             .withFixture(statii())
-            .exercise(pojo);
+            .exercise(pojo, FilterSet.excluding("lockable"));
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })

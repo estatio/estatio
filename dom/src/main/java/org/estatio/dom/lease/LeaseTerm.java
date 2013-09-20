@@ -42,6 +42,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -103,6 +104,16 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
         super("leaseItem, sequence", LeaseTermStatus.NEW, LeaseTermStatus.APPROVED);
+    }
+
+    @Override
+    public LeaseTermStatus getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(LeaseTermStatus lockable) {
+        setStatus(lockable);
     }
 
     // //////////////////////////////////////
@@ -294,12 +305,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     private LeaseTermStatus status;
 
-    /**
-     * Disabled, is maintained through LeaseTermContributedActions
-     */
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     public LeaseTermStatus getStatus() {
         return status;

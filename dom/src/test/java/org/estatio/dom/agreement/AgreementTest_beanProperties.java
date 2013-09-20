@@ -21,11 +21,7 @@ package org.estatio.dom.agreement;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementType;
 
 public class AgreementTest_beanProperties extends AbstractBeanPropertiesTest {
 
@@ -35,7 +31,7 @@ public class AgreementTest_beanProperties extends AbstractBeanPropertiesTest {
         newPojoTester()
             .withFixture(pojos(Agreement.class, AgreementForTesting.class))
             .withFixture(pojos(AgreementType.class))
-            .exercise(agreement, FilterSet.excluding("status"));
+            .exercise(agreement, FilterSet.excluding("status","lockable"));
     }
 
 }

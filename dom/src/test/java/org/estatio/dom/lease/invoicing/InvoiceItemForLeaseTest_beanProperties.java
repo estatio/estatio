@@ -20,6 +20,7 @@ package org.estatio.dom.lease.invoicing;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
+import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
@@ -40,7 +41,7 @@ public class InvoiceItemForLeaseTest_beanProperties extends AbstractBeanProperti
 	        .withFixture(pojos(Invoice.class))
 	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
             .withFixture(statii())
-	        .exercise(new InvoiceItemForLease());
+	        .exercise(new InvoiceItemForLease(), FilterSet.excluding("lockable"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

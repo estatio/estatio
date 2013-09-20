@@ -41,7 +41,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
     public AgreementRole newAgreementRole(
-            final Agreement<?> agreement,
+            final Agreement agreement,
             final Party party,
             final AgreementRoleType type,
             final @Named("Start Date") LocalDate startDate,
@@ -63,7 +63,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public AgreementRole findByAgreementAndPartyAndTypeAndContainsDate(
-            final Agreement<?> agreement,
+            final Agreement agreement,
             final Party party,
             final AgreementRoleType type,
             final LocalDate date) {
@@ -73,7 +73,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public AgreementRole findByAgreementAndPartyAndTypeAndEndDate(
-            final Agreement<?> agreement,
+            final Agreement agreement,
             final Party party,
             final AgreementRoleType type,
             final LocalDate endDate) {
@@ -85,7 +85,7 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public AgreementRole findByAgreementAndTypeAndContainsDate(
-            final Agreement<?> agreement,
+            final Agreement agreement,
             final AgreementRoleType type,
             final LocalDate date) {
         return firstMatch("findByAgreementAndTypeAndContainsDate", "agreement", agreement, "type", type, "date", date);

@@ -39,11 +39,19 @@ public class AgreementForTesting extends Agreement<Status> {
     }
 
     @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     public Status getStatus() {
         return null;
     }
 
-    @Override
     public void setStatus(Status newStatus) {
     }
 

@@ -36,6 +36,7 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
+
     private BigDecimal budgetedValue;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull="true")

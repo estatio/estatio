@@ -20,7 +20,6 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -49,9 +48,7 @@ import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.Sectors;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.lease.tags.UnitSizes;
-import org.estatio.dom.tag.Tag;
 import org.estatio.dom.tag.Taggable;
-import org.estatio.dom.tag.Tags;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -85,20 +82,26 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
         super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
     }
 
+    @Override
+    public Status getLockable() {
+        return getStatus();
+    }
+
+    @Override
+    public void setLockable(Status lockable) {
+        setStatus(lockable);
+    }
+
     // //////////////////////////////////////
 
     private Status status;
 
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    @Optional
-
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
-    @Override
     public Status getStatus() {
         return status;
     }
 
-    @Override
     public void setStatus(final Status status) {
         this.status = status;
     }

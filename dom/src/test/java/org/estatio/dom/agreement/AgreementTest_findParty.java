@@ -72,6 +72,16 @@ public class AgreementTest_findParty  {
         }
 
         @Override
+        public Status getLockable() {
+            return getStatus();
+        }
+
+        @Override
+        public void setLockable(Status lockable) {
+            setStatus(lockable);
+        }
+
+        @Override
         public Party getPrimaryParty() {
             return null;
         }
@@ -81,12 +91,10 @@ public class AgreementTest_findParty  {
             return null;
         }
         
-        @Override
         public Status getStatus() {
             return null;
         }
 
-        @Override
         public void setStatus(Status newStatus) {
         }
     }
