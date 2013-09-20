@@ -20,35 +20,73 @@ package org.estatio.dom.tag;
 
 import java.util.List;
 
+import org.junit.Before;
+
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
+
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.WithNameComparable;
 
 
 public class TagTest_compareTo extends ComparableContractTest_compareTo<Tag> {
 
+    public static class SomeTaggableObject extends EstatioDomainObject<SomeTaggableObject> 
+                                implements Taggable, WithNameComparable<SomeTaggableObject> {
+
+        public SomeTaggableObject() {
+            super("name");
+        }
+        
+        public SomeTaggableObject(String name) {
+            this();
+            setName(name);
+        }
+
+        private String name;
+        @Override
+        public String getName() {
+            return name;
+        }
+        @Override
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+    
+    private Taggable taggable1;
+    private Taggable taggable2;
+    
+    @Before
+    public void setUp() throws Exception {
+        taggable1 = new SomeTaggableObject("A");
+        taggable2 = new SomeTaggableObject("B");
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     protected List<List<Tag>> orderedTuples() {
         return listOf(
                 listOf(
-                        newLeaseItem(null, null),
-                        newLeaseItem("com.mycompany.Boo", null),
-                        newLeaseItem("com.mycompany.Boo", null),
-                        newLeaseItem("com.mycompany.Foo", null)
+                        newTag(null, null),
+                        newTag(taggable1, null),
+                        newTag(taggable1, null),
+                        newTag(taggable2, null)
                         ),
                 listOf(
-                        newLeaseItem("com.mycompany.Boo", null),
-                        newLeaseItem("com.mycompany.Boo", "Abc"),
-                        newLeaseItem("com.mycompany.Boo", "Abc"),
-                        newLeaseItem("com.mycompany.Foo", "Def")
+                        newTag(taggable1, null),
+                        newTag(taggable1, "Abc"),
+                        newTag(taggable1, "Abc"),
+                        newTag(taggable1, "Def")
                         )
                 );
     }
 
-    private Tag newLeaseItem(
-            String appliesToClassName, 
-            String name) {
+    private Tag newTag(
+            final Taggable taggable, 
+            final String name) {
         final Tag tag = new Tag();
-        tag.setObjectType(appliesToClassName);
+        
+        tag.setTaggable(taggable);
         tag.setName(name);
         return tag;
     }

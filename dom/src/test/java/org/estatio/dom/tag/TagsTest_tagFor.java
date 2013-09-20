@@ -54,7 +54,7 @@ public class TagsTest_tagFor {
 
     private Tag tag;
     @Mock
-    private EstatioDomainObject<?> mockCustomer;
+    private Taggable mockCustomer;
     @Mock
     private DomainObjectContainer mockContainer;
     @Mock
@@ -66,9 +66,7 @@ public class TagsTest_tagFor {
     public void setup() {
         tag = new Tag();
         tag.setName("theme");
-        
-        tag.setObjectType("CUS");
-        tag.setObjectIdentifier("123");
+        tag.setTaggable(mockCustomer);
         tag.setValue("lightTheme");
         
         tags = new Tags();
@@ -122,6 +120,8 @@ public class TagsTest_tagFor {
     @Test
     public void whenTagIsNull_andTagValueIsNotNull_thenTagCreatedAndSet() {
         final Tag newTag = new Tag();
+        newTag.injectBookmarkService(mockBookmarkService);
+        
         context.checking(new Expectations() {
             {
                 oneOf(mockContainer).newTransientInstance(Tag.class);
@@ -129,13 +129,14 @@ public class TagsTest_tagFor {
                 
                 oneOf(mockBookmarkService).bookmarkFor(mockCustomer);
                 will(returnValue(new Bookmark("CXS", "456")));
+                
                 oneOf(mockContainer).persist(newTag);
             }
         });
+
         tag = tags.tagFor(null, mockCustomer, "theme", "darkTheme");
         assertThat(tag, is(not(nullValue())));
-        assertThat(tag.getObjectType(), is("CXS"));
-        assertThat(tag.getObjectIdentifier(), is("456"));
+        assertThat(tag.getTaggable(), is(mockCustomer));
         assertThat(tag.getName(), is("theme"));
         assertThat(tag.getValue(), is("darkTheme"));
     }

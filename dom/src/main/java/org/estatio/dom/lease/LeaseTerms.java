@@ -116,12 +116,6 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     
     // //////////////////////////////////////
 
-    private IsisJdoSupport isisJdoSupport;
-
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
-    }
-
     private ClockService clockService;
 
     public void injectClockService(final ClockService clockService) {

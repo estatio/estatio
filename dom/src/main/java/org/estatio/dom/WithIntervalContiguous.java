@@ -190,7 +190,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
         public T getPredecessor(SortedSet<T> siblings, Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
-                    Predicates.and(
+                    Predicates.<T>and(
                             filter,
                             endDatePreceding(withInterval.getStartDate())));
         }
@@ -198,7 +198,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
         public T getSuccessor(SortedSet<T> siblings, Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
-                    Predicates.and(
+                    Predicates.<T>and(
                             filter,
                             startDateFollowing(withInterval.getEndDate())));
 

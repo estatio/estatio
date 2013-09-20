@@ -57,19 +57,19 @@ import org.estatio.dom.tag.Tag;
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
-    name = "findByNameAndObjectTypeAndObjectIdentifier", language = "JDOQL", 
-    value = "SELECT "
-            + "FROM org.estatio.dom.numerator.Numerator "
-            + "WHERE name == :name"
-            + "&& objectIdentifier == :objectIdentifier"
-            + "&& objectType == :objectType"
-            ),
+        name = "findByNameAndObjectTypeAndObjectIdentifier", language = "JDOQL", 
+        value = "SELECT "
+                + "FROM org.estatio.dom.numerator.Numerator "
+                + "WHERE name == :name"
+                + "&& objectIdentifier == :objectIdentifier"
+                + "&& objectType == :objectType"
+                ),
     @javax.jdo.annotations.Query(
-            name = "findByName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.numerator.Numerator "
-                    + "WHERE name == :name"
-            )
+        name = "findByName", language = "JDOQL", 
+        value = "SELECT "
+                + "FROM org.estatio.dom.numerator.Numerator "
+                + "WHERE name == :name"
+        )
 })
 @Immutable
 public class Numerator extends EstatioTransactionalObject<Numerator, Status> implements Comparable<Numerator> {

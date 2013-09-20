@@ -24,7 +24,10 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.tag.Tag;
+import org.estatio.dom.lease.tags.Activity;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.Sector;
+import org.estatio.dom.lease.tags.UnitSize;
 
 public class LeaseUnitTest_beanProperties extends AbstractBeanPropertiesTest {
 
@@ -33,13 +36,13 @@ public class LeaseUnitTest_beanProperties extends AbstractBeanPropertiesTest {
 	    newPojoTester()
 	        .withFixture(pojos(Lease.class))
 	        .withFixture(pojos(UnitForLease.class))
-	        .withFixture(pojos(Tag.class))
+	        .withFixture(pojos(UnitSize.class))
+	        .withFixture(pojos(Sector.class))
+	        .withFixture(pojos(Activity.class))
+	        .withFixture(pojos(Brand.class))
             .withFixture(statii())
 	        .exercise(new LeaseUnit(),
-	                FilterSet.excluding("size", "sector", "activity", "brand",
-	                        // TODO: bug in PojoTester; claims there's interference between 
-	                        // these fields, however are just the same datatype
-	                        "sectorTag", "activityTag"));
+	                FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName"));
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })

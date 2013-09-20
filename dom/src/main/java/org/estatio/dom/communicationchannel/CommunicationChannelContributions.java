@@ -80,7 +80,9 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
         return states.findStatesByCountry(country);
     }
     public State default3NewPostal() {
-        return states.findStatesByCountry(default2NewPostal()).get(0);
+        final Country country = default2NewPostal();
+        final List<State> statesInCountry = states.findStatesByCountry(country);
+        return statesInCountry.size()>0?statesInCountry.get(0):null;
     }
 
     // //////////////////////////////////////

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.geography;
+package org.estatio.dom.lease.tags;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 
@@ -24,56 +24,46 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithNameUnique;
-import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithNameGetter;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
-            name = "findGeographyByReference", language = "JDOQL", 
+            name = "findBySectorAndName", language = "JDOQL", 
             value = "SELECT "
-                    + "FROM org.estatio.dom.geography.Geography "
-                    + "WHERE reference == :reference") 
+                    + "FROM org.estatio.dom.lease.tags.Activity "
+                    + "WHERE sector == :sector "
+                    + "   && name == :name")
+})
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(name = "ACTIVITY_NAME_UNIQUE_IDX", members={"sector","name"})
 })
 @Immutable
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX", members="name")
-})
-public abstract class Geography extends EstatioRefDataObject<Geography> implements WithReferenceComparable<Geography>, WithNameUnique {
+public class Activity extends EstatioRefDataObject<Activity> implements WithNameGetter {
 
-    public Geography() {
-        super("reference");
+    public Activity() {
+        super("sector,name");
     }
-    
 
     // //////////////////////////////////////
-
-    private String reference;
-
-    /**
-     * As per ISO standards for <a href=
-     * "http://www.commondatahub.com/live/geography/country/iso_3166_country_codes"
-     * >countries</a> and <a href=
-     * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
-     * >states</a>.
-     */
-    @javax.jdo.annotations.Column(allowsNull="false")
-    public String getReference() {
-        return reference;
+    
+    private Sector sector;
+    @javax.jdo.annotations.Column(name="SECTOR_ID", allowsNull="false")
+    @Title(sequence="1")
+    public Sector getSector() {
+        return sector;
     }
-
-    public void setReference(final String reference) {
-        this.reference = reference;
+    public void setSector(Sector sector) {
+        this.sector = sector;
     }
-
-
+    
     // //////////////////////////////////////
 
     private String name;
 
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Title
+    @Title(prepend=":", sequence="2")
     public String getName() {
         return name;
     }

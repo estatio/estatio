@@ -18,58 +18,81 @@
  */
 package org.estatio.dom.tag;
 
+import javax.jdo.annotations.Extension;
+
 import com.google.common.base.Function;
 
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkHolder;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
-
 /**
- * Represents a general purpose mechanism for tagging any entity with a named (string) value.
+ * Represents a general purpose mechanism for tagging any entity with a named
+ * (string) value.
  * 
  * <p>
- * For example, we wish to tag <tt>LeaseUnit</tt>s with a <i>brand</i>.  This is modelled
- * by <tt>LeaseUnit</tt> having a reference of type <tt>Tag</tt>.  The tag's {@link #objectType} is
- * set to the fully qualified class name of <tt>LeaseUnit</tt>, and the tag's {@link #getName()} is set to &quot;brand&quot;.
+ * For example, we wish to tag <tt>LeaseUnit</tt>s with a <i>brand</i>. This is
+ * modelled by <tt>LeaseUnit</tt> having a reference of type <tt>Tag</tt>. The
+ * tag's {@link #getObjectType() object type} is set to the fully qualified
+ * class name of <tt>LeaseUnit</tt>, and the tag's {@link #getName()} is set to
+ * &quot;brand&quot;.
  */
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Unique(name="tag_bookmark_and_name", members={"objectType","name","objectIdentifier"})
+@javax.jdo.annotations.Unique(name = "tag_bookmark_and_name", members = { "taggable", "name" })
 @Immutable
-public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, BookmarkHolder {
+public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
 
     public Tag() {
-        super("objectType, name, objectIdentifier, value");
+        super("taggable, name");
     }
-    
+
     // //////////////////////////////////////
 
     public static final Function<Tag, String> GET_VALUE = new Function<Tag, String>() {
         public String apply(Tag tag) {
-            return tag != null? tag.getValue(): null;
+            return tag != null ? tag.getValue() : null;
         }
     };
+
+    // //////////////////////////////////////
+
+    private Taggable taggable;
     
+    /**
+     * Polymorphic association to (any implementation of) {@link Taggable}.
+     */
+    @javax.jdo.annotations.Persistent(
+            extensions = {
+                    @Extension(vendorName = "datanucleus",
+                            key = "mapping-strategy",
+                            value = "per-implementation") })
+    @javax.jdo.annotations.Column(name = "TAGGABLE_ID", allowsNull = "false")
+    public Taggable getTaggable() {
+        return taggable;
+    }
+
+    public void setTaggable(Taggable taggable) {
+        this.taggable = taggable;
+    }
+
     // //////////////////////////////////////
 
     private String objectType;
-
-    /**
-     * The {@link Bookmark#getObjectType() object type} (either the class name or a unique alias of it) 
-     * of the object to which this {@link Tag} belongs. 
-     */
-    @javax.jdo.annotations.Column(allowsNull="false")
+    
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Disabled
     public String getObjectType() {
         return objectType;
     }
-
-    public void setObjectType(final String objectType) {
+    
+    public void setObjectType(String objectType) {
         this.objectType = objectType;
     }
 
@@ -78,13 +101,14 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
     private String name;
 
     /**
-     * The name of this tag, for example <tt>Brand</tt> for a <tt>LeaseUnit</tt>.
+     * The name of this tag, for example <tt>Brand</tt> for a <tt>LeaseUnit</tt>
+     * .
      * 
      * <p>
-     * The combination of ({@link #getObjectType() objectType}, {@link #getName() name})
-     * is unique.
+     * The combination of ({@link #getObjectType() objectType},
+     * {@link #getName() name}) is unique.
      */
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public String getName() {
         return name;
@@ -93,33 +117,13 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
     public void setName(final String tagName) {
         this.name = tagName;
     }
-    
-    // //////////////////////////////////////
-
-    private String objectIdentifier;
-
-    /**
-     * The {@link Bookmark#getIdentifier() identifier} to the object that has this
-     * tagged.
-     * 
-     * <p>
-     * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
-     * can be used to recreate a {@link Bookmark}, if required.
-     */
-    @javax.jdo.annotations.Column(allowsNull="false")
-    public String getObjectIdentifier() {
-        return objectIdentifier;
-    }
-
-    public void setObjectIdentifier(final String bookmark) {
-        this.objectIdentifier = bookmark;
-    }
 
     // //////////////////////////////////////
+
 
     private String value;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title
     public String getValue() {
         return value;
@@ -130,14 +134,12 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter, Bo
     }
 
     // //////////////////////////////////////
-    
-    /**
-     * Implementation of {@link BookmarkHolder}.
-     */
-    @Programmatic
-    public Bookmark bookmark() {
-        return new Bookmark(getObjectType(), getObjectIdentifier());
-    }
 
+
+    private BookmarkService bookmarkService;
+
+    public final void injectBookmarkService(BookmarkService bookmarkService) {
+        this.bookmarkService = bookmarkService;
+    }
 
 }

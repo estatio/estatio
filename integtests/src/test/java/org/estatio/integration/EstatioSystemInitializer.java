@@ -22,7 +22,6 @@ import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.core.wrapper.WrapperFactoryDefault;
-import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
@@ -62,11 +61,14 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.UnitsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.lease.tags.Activities;
+import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.Sectors;
+import org.estatio.dom.lease.tags.UnitSizes;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Persons;
-import org.estatio.dom.tag.Tags;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioRefDataObjectsFixture;
@@ -134,7 +136,11 @@ public class EstatioSystemInitializer {
                     new PhoneOrFaxNumbers(),
                     new Taxes(), 
                     new TaxRates(), 
-                    new Tags(), 
+                    //new Tags() ... instead, UnitSizes, Sectors, Activities and Brands
+                    new UnitSizes(),
+                    new Sectors(),
+                    new Activities(),
+                    new Brands(),
                     new BookmarkServiceForEstatio(), 
                     new Charges(),
                     new ChargeGroups(), 

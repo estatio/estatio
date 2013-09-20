@@ -64,9 +64,9 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
         }
         if(createLeaseUnitAndTags) {
             LeaseUnit lu = leaseUnits.newLeaseUnit(lease, unit);
-            lu.setBrand(tenantReference);
-            lu.setActivity("OTHER");
-            lu.setSector("OTHER");
+            lu.setBrandName(tenantReference);
+            lu.setSectorName("OTHER");
+            lu.setActivityName("OTHER");
         }
         
         if (leases.findLeaseByReference(reference) == null) {

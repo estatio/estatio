@@ -20,15 +20,18 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -38,7 +41,16 @@ import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.lease.tags.Activities;
+import org.estatio.dom.lease.tags.Activity;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.Brands;
+import org.estatio.dom.lease.tags.Sector;
+import org.estatio.dom.lease.tags.Sectors;
+import org.estatio.dom.lease.tags.UnitSize;
+import org.estatio.dom.lease.tags.UnitSizes;
 import org.estatio.dom.tag.Tag;
+import org.estatio.dom.tag.Taggable;
 import org.estatio.dom.tag.Tags;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -66,12 +78,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& unit == :unit "
                         + "&& endDate == :endDate")
 })
-public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit> {
-
-    private static final String TAG_NAME_ACTIVITY = "ACTIVITY";
-    private static final String TAG_NAME_SECTOR = "SECTOR";
-    private static final String TAG_NAME_BRAND = "BRAND";
-    private static final String TAG_NAME_SIZE = "SIZE";
+@Named("Occupancy")
+public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> implements WithIntervalMutable<LeaseUnit>, Taggable {
 
     public LeaseUnit() {
         super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
@@ -102,6 +110,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull="false")
     @Title(sequence = "1", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
+    @Disabled
     public Lease getLease() {
         return lease;
     }
@@ -117,6 +126,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     @javax.jdo.annotations.Column(name = "UNIT_ID", allowsNull="false")
     @Title(sequence = "2", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
+    @Disabled
     public UnitForLease getUnit() {
         return unit;
     }
@@ -131,7 +141,7 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
     private LocalDate startDate;
 
     @Optional
-    @Disabled
+    @Disabled(reason="Change using ")
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -233,166 +243,250 @@ public class LeaseUnit extends EstatioTransactionalObject<LeaseUnit, Status> imp
 
     // //////////////////////////////////////
 
-    private Tag sizeTag;
 
-    @javax.jdo.annotations.Column(name = "SIZETAG_ID", allowsNull="true")
+    private UnitSize unitSize;
+
+    @javax.jdo.annotations.Column(name = "UNITSIZE_ID", allowsNull="true")
     @Hidden
-    public Tag getSizeTag() {
-        return sizeTag;
+    public UnitSize getUnitSize() {
+        return unitSize;
     }
 
-    public void setSizeTag(final Tag sizeTag) {
-        this.sizeTag = sizeTag;
+    public void setUnitSize(final UnitSize unitSize) {
+        this.unitSize = unitSize;
     }
 
-    @Optional
-    public String getSize() {
-        final Tag existingTag = getSizeTag();
-        return existingTag != null ? existingTag.getValue() : null;
+    @javax.jdo.annotations.NotPersistent
+    @NotPersisted
+    @Disabled
+    @Named("UnitSize")
+    public String getUnitSizeName() {
+        return getUnitSize() != null? getUnitSize().getName(): null;
+    }
+    public void setUnitSizeName(final String unitSizeName) {
+        if(unitSizeName == null) {
+            setUnitSize(null);
+            return;
+        }
+        UnitSize unitSize = unitSizes.findByName(unitSizeName);
+        if(unitSize == null) {
+            unitSize = newTransientInstance(UnitSize.class);
+            unitSize.setName(unitSizeName);
+            setUnitSize(unitSize);
+            persistIfNotAlready(unitSize);
+        }
+        setUnitSize(unitSize);
     }
 
-    public void setSize(final String size) {
-        final Tag existingTag = getSizeTag();
-        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_SIZE, size);
-        setSizeTag(tag);
-    }
-
-    public List<String> choicesSize() {
-        return tags.choices(this, TAG_NAME_SIZE);
-    }
-
-    public LeaseUnit newSize(@Named("Tag") @Optional final String size) {
-        setSize(size);
+    public LeaseUnit newUnitSize(final @Named("UnitSize") @Optional String unitSizeName) {
+        setUnitSizeName(unitSizeName);
         return this;
     }
-
-    public String default0NewSize() {
-        return getSize();
-    }
-
+    
+    
     // //////////////////////////////////////
+    
+    
+    private Sector sector;
 
-    private Tag brandTag;
-
-    @javax.jdo.annotations.Column(name = "BRANDTAG_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "SECTOR_ID", allowsNull="true")
     @Hidden
-    public Tag getBrandTag() {
-        return brandTag;
+    public Sector getSector() {
+        return sector;
     }
 
-    public void setBrandTag(final Tag brandTag) {
-        this.brandTag = brandTag;
+    public void setSector(final Sector sector) {
+        this.sector = sector;
     }
 
-    @Optional
-    public String getBrand() {
-        final Tag existingTag = getBrandTag();
-        return existingTag != null ? existingTag.getValue() : null;
+    @javax.jdo.annotations.NotPersistent
+    @NotPersisted
+    @Disabled
+    @Named("Sector")
+    public String getSectorName() {
+        return getSector() != null? getSector().getName(): null;
     }
-
-    public void setBrand(final String brand) {
-        final Tag existingTag = getBrandTag();
-        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_BRAND, brand);
-        setBrandTag(tag);
-    }
-
-    public List<String> choicesBrand() {
-        return tags.choices(this, TAG_NAME_BRAND);
-    }
-
-    public LeaseUnit newBrand(@Named("Tag") @Optional final String brand) {
-        setBrand(brand);
-        return this;
-    }
-
-    public String default0NewBrand() {
-        return getBrand();
-    }
-
-    // //////////////////////////////////////
-
-    private Tag sectorTag;
-
-    @javax.jdo.annotations.Column(name = "SECTORTAG_ID", allowsNull="true")
-    @Hidden
-    public Tag getSectorTag() {
-        return sectorTag;
-    }
-
-    public void setSectorTag(final Tag sectorTag) {
-        this.sectorTag = sectorTag;
-    }
-
-    @Optional
-    public String getSector() {
-        final Tag existingTag = getSectorTag();
-        return existingTag != null ? existingTag.getValue() : null;
-    }
-
-    public void setSector(final String sector) {
-        final Tag existingTag = getSectorTag();
-        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_SECTOR, sector);
-        setSectorTag(tag);
-    }
-
-    public List<String> choicesSector() {
-        return tags.choices(this, TAG_NAME_SECTOR);
-    }
-
-    public LeaseUnit newSector(@Named("Tag") @Optional final String sector) {
+    public void setSectorName(final String sectorName) {
+        if(sectorName == null) {
+            setSector(null);
+            setActivityName(null);
+            return;
+        }
+        Sector sector = sectors.findByName(sectorName);
+        if(sector == null) {
+            sector = newTransientInstance(Sector.class);
+            sector.setName(sectorName);
+            setSector(sector);
+            persistIfNotAlready(sector);
+        }
         setSector(sector);
-        return this;
-    }
-
-    public String default0NewSector() {
-        return getSector();
     }
 
     // //////////////////////////////////////
 
-    private Tag activityTag;
 
-    @javax.jdo.annotations.Column(name = "ACTIVITYTAG_ID", allowsNull="true")
+    private Activity activity;
+    
+    @javax.jdo.annotations.Column(name = "ACTIVITY_ID", allowsNull="true")
     @Hidden
-    public Tag getActivityTag() {
-        return activityTag;
+    public Activity getActivity() {
+        return activity;
     }
-
-    public void setActivityTag(final Tag activityTag) {
-        this.activityTag = activityTag;
+    
+    public void setActivity(final Activity activity) {
+        this.activity = activity;
     }
-
-    @Optional
-    public String getActivity() {
-        final Tag existingTag = getActivityTag();
-        return existingTag != null ? existingTag.getValue() : null;
+    
+    @javax.jdo.annotations.NotPersistent
+    @NotPersisted
+    @Named("Activity")
+    @Disabled
+    public String getActivityName() {
+        return getActivity() != null? getActivity().getName(): null;
     }
-
-    public void setActivity(final String activity) {
-        final Tag existingTag = getActivityTag();
-        Tag tag = tags.tagFor(existingTag, this, TAG_NAME_ACTIVITY, activity);
-        setActivityTag(tag);
-    }
-
-    public List<String> choicesActivity() {
-        return tags.choices(this, TAG_NAME_ACTIVITY);
-    }
-
-    public LeaseUnit newActivity(@Named("Tag") @Optional final String activity) {
+    public void setActivityName(final String activityName) {
+        if(activityName == null) {
+            setActivity(null);
+            return;
+        }
+        Activity activity = activities.findBySectorAndName(getSector(), activityName);
+        if(activity == null) {
+            activity = newTransientInstance(Activity.class);
+            activity.setSector(getSector());
+            activity.setName(activityName);
+            setActivity(activity);
+            persistIfNotAlready(activity);
+        }
         setActivity(activity);
+    }
+    
+    @DescribedAs("Assign to new sector and activity")
+    public LeaseUnit newSector(
+            final @Named("Sector") String sectorName, 
+            final @Named("Activity") String activityName) {
+        setSectorName(sectorName);
+        setActivityName(activityName);
         return this;
     }
+    
+    @DescribedAs("Assign to new activity (in an existing sector)")
+    public LeaseUnit newActivity(
+            final @Named("Sector") String sectorName,
+            final @Named("Activity") String activityName) {
+        setActivityName(activityName);
+        return this;
+    }
+    public List<String> choices0NewActivity() {
+        return sectors.findUniqueNames();
+    }
 
-    public String default0NewActivity() {
-        return getActivity();
+    private Brand brand;
+    
+    @javax.jdo.annotations.Column(name = "BRAND_ID", allowsNull="true")
+    @Hidden
+    public Brand getBrand() {
+        return brand;
+    }
+    
+    public void setBrand(final Brand brand) {
+        this.brand = brand;
+    }
+    
+    @javax.jdo.annotations.NotPersistent
+    @NotPersisted
+    @Disabled
+    @Named("Brand")
+    public String getBrandName() {
+        return getBrand() != null? getBrand().getName(): null;
+    }
+    public void setBrandName(final String brandName) {
+        if(brandName == null) {
+            setBrand(null);
+            return;
+        }
+        Brand brand = brands.findByName(brandName);
+        if(brand == null) {
+            brand = newTransientInstance(Brand.class);
+            brand.setName(brandName);
+            setBrand(brand);
+            persistIfNotAlready(brand);
+        }
+        setBrand(brand);
+    }
+    
+    public LeaseUnit newBrand(final @Named("Brand") @Optional String brandName) {
+        setBrandName(brandName);
+        return this;
     }
 
     // //////////////////////////////////////
 
-    private Tags tags;
 
-    public final void injectTags(final Tags tags) {
-        this.tags = tags;
+    // //////////////////////////////////////
+    
+    @DescribedAs("Update unit size, sector, activity and/or brand")
+    public LeaseUnit updateTags(
+            final @Named("Unit size") @Optional String unitSizeName, 
+            final @Named("Sector") @Optional String sectorName, 
+            final @Named("Activity") @Optional String activityName,
+            final @Named("Brand") @Optional String brandName) {
+        setUnitSizeName(unitSizeName);
+        setSectorName(sectorName);
+        setActivityName(activityName);
+        setBrandName(brandName);
+        return this;
     }
+    public String default0UpdateTags() {
+        return getUnitSizeName();
+    }
+    public List<String> choices0UpdateTags() {
+        return unitSizes.findUniqueNames();
+    }
+    public String default1UpdateTags() {
+        return getSectorName();
+    }
+    public List<String> choices1UpdateTags() {
+        return sectors.findUniqueNames();
+    }
+    public String default2UpdateTags() {
+        return getActivityName();
+    }
+    public List<String> choices2UpdateTags(
+            final String unitSizeName, 
+            final String sectorName) {
+        final Sector sector = sectors.findByName(sectorName);
+        return activities.findUniqueNames(sector);
+    }
+    public String default3UpdateTags() {
+        return getBrandName();
+    }
+    public List<String> choices3UpdateTags() {
+        return brands.findUniqueNames();
+    }
+
+    
+    // //////////////////////////////////////
+
+
+    private UnitSizes unitSizes;
+    public final void injectUnitSizes(final UnitSizes unitSizes) {
+        this.unitSizes = unitSizes;
+    }
+    
+    private Brands brands;
+    public final void injectBrands(final Brands brands) {
+        this.brands = brands;
+    }
+    
+    private Sectors sectors;
+    public final void injectSectors(final Sectors sectors) {
+        this.sectors = sectors;
+    }
+
+    private Activities activities;
+    public final void injectActivities(final Activities activities) {
+        this.activities = activities;
+    }
+    
 
 }

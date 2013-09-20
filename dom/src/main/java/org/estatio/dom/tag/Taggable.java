@@ -18,17 +18,16 @@
  */
 package org.estatio.dom.tag;
 
-import org.junit.Test;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class TagTest_beanProperties extends AbstractBeanPropertiesTest {
+/**
+ * Entities that implement this interface may have arbitrary {@link Tag}s associated with them.
+ * 
+ * <p>
+ * This interface decouples {@link Tag}s module from the entities that are being tagged, making
+ * it reusable across any ({@link Taggable}) entity.
+ */
+public interface Taggable {
 
-	@Test
-	public void test() {
-	    newPojoTester()
-	        .withFixture(Taggable.class, new Taggable(){}, new Taggable(){})
-	        .exercise(new Tag());
-	}
 
 }

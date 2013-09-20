@@ -473,10 +473,10 @@ public class Api extends AbstractFactoryAndRepository {
 
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
-        leaseUnit.setSize(size);
-        leaseUnit.setBrand(brand);
-        leaseUnit.setSector(sector);
-        leaseUnit.setActivity(activity);
+        leaseUnit.setUnitSizeName(size);
+        leaseUnit.setBrandName(brand);
+        leaseUnit.setSectorName(sector);
+        leaseUnit.setActivityName(activity);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)

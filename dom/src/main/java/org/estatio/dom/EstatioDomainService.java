@@ -20,11 +20,15 @@ package org.estatio.dom;
 
 import java.util.List;
 
+import javax.jdo.Query;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.core.commons.lang.StringExtensions;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
+import org.estatio.dom.lease.tags.Sector;
 import org.estatio.services.clock.ClockService;
 
 public abstract class EstatioDomainService<T> extends AbstractFactoryAndRepository {
@@ -72,6 +76,10 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
         return firstMatch(newQueryDefault(queryName, paramArgs));
     }
     
+    protected T uniqueMatch(final String queryName, final Object... paramArgs) {
+        return uniqueMatch(newQueryDefault(queryName, paramArgs));
+    }
+    
     protected List<T> allMatches(final String queryName, final Object... paramArgs) {
         return allMatches(newQueryDefault(queryName, paramArgs));
     }
@@ -79,6 +87,14 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
     protected List<T> allInstances() {
         return allInstances(getEntityType());
     }
+
+    // //////////////////////////////////////
+    
+    protected Query newQuery(final String jdoql) {
+        return isisJdoSupport.getJdoPersistenceManager().newQuery(jdoql);
+    }
+
+
 
     // //////////////////////////////////////
 
@@ -106,6 +122,11 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
     public void injectEventBusService(EventBusService eventBusService) {
         this.eventBusService = eventBusService;
         eventBusService.register(this);
+    }
+
+    protected IsisJdoSupport isisJdoSupport;
+    public final void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
+        this.isisJdoSupport = isisJdoSupport;
     }
 
 }
