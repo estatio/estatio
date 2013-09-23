@@ -29,16 +29,15 @@ language governing permissions and limitations under the License.
     This ruleset checks the code for discouraged programming constructs.
   </description>
   
-  <rule ref="rulesets/basic.xml">
+  <rule ref="codequality/pmd-rulesets/basic.xml">
     <exclude name="EmptyCatchBlock"/>
   </rule>
-  <rule ref="rulesets/basic.xml/EmptyCatchBlock">
+  <rule ref="codequality/pmd-rulesets/basic.xml/EmptyCatchBlock">
     <properties>
       <property name="allowCommentedBlocks" value="true"/>
     </properties>
   </rule>
-
-  <rule ref="rulesets/unusedcode.xml"/>
-
-  <rule ref="rulesets/imports.xml"/>
+  
+  <rule ref="codequality/pmd-rulesets/unusedcode.xml"/>
+  <rule ref="codequality/pmd-rulesets/imports.xml"/>
 </ruleset>

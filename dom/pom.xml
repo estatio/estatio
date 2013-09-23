@@ -35,11 +35,17 @@ language governing permissions and limitations under the License.
 
     <properties>
         <siteBaseDir>..</siteBaseDir>
+        <!-- targetJdk required as a workaround for pmd error, 
+            see https://issues.apache.org/jira/browse/ACCUMULO-443
+            and http://jira.codehaus.org/browse/MPMD-86 -->
+            <!-- 
+        <targetJdk>1.6</targetJdk>
+             -->
     </properties>
 
     <build>
         <plugins>
-            <!-- Test coverage: cobertura -->
+            <!-- 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
@@ -48,7 +54,7 @@ language governing permissions and limitations under the License.
                 <configuration>
                     <instrumentation>
                         <ignores>
-                            <!-- http://jira.codehaus.org/browse/MCOBERTURA-52 -->
+                            /* http://jira.codehaus.org/browse/MCOBERTURA-52 */ 
                             <ignore>org[.]estatio[.].*[.]jdo.*</ignore>
                         </ignores>
                         <excludes>
@@ -56,9 +62,8 @@ language governing permissions and limitations under the License.
                         </excludes>
                     </instrumentation>
                 </configuration>
-                <!-- goal:check binds to phase:verify (not currently configured, can be used to break build if code coverage < threshold) -->
-                <!-- goal:cobertura is a report so is configured in the reporting section; invokes phase:test before running itself -->
             </plugin>
+            -->
 
             <plugin>
                 <groupId>org.datanucleus</groupId>
@@ -258,6 +263,7 @@ language governing permissions and limitations under the License.
             </activation>
             <build>
                 <plugins>
+                <!-- 
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>cobertura-maven-plugin</artifactId>
@@ -275,6 +281,7 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
+                 -->
 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -315,12 +322,11 @@ language governing permissions and limitations under the License.
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
-                        <version>2.5</version>
+                        <version>3.0.1</version>
                         <configuration>
                             <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                             <minimumTokens>100</minimumTokens>
                             <linkXref>true</linkXref>
-                            <targetJdk>${compileTarget}</targetJdk>
                             <rulesets>
                                 <ruleset>${pmd.ruleset}</ruleset>
                             </rulesets>
@@ -342,6 +348,7 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>

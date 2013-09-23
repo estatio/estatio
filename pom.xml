@@ -22,6 +22,24 @@ language governing permissions and limitations under the License.
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
+    
+    <!--
+    to run unit tests with clover code coverage:
+    mvn clean clover2:setup test clover2:aggregate clover2:clover -o
+    '5m46s
+    target/site/clover/* (html site)
+    
+    to run metrics (targets dom project only):
+    mvn clean verify -P metrics-on -o
+    '1m42s
+    dom/target/checkstyle-result.xml
+    dom/target/findBugs.xml and dom/target/findBugsXml.xml
+    dom/target/pmd.xml
+
+    to build webapp:
+    mvn clean install -DskipTests -o
+    target/site/clover\clover.xml
+    -->
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
@@ -82,12 +100,12 @@ language governing permissions and limitations under the License.
         <siteBaseDir>.</siteBaseDir>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <trunkBaseDir>${project.build.directory}/${siteBaseDir}/..</trunkBaseDir>
 
-        <!-- targetJdk required as a workaround for pmd error, see https://issues.apache.org/jira/browse/ACCUMULO-443 -->
-        <targetJdk>1.6</targetJdk>
-        <checkstyle.configLocation>${trunkBaseDir}/docs/codequality/checkstyle.xml</checkstyle.configLocation>
-        <pmd.ruleset>${trunkBaseDir}/docs/codequality/pmd.xml</pmd.ruleset>
+        <checkstyle.configLocation>${siteBaseDir}/codequality/checkstyle.xml</checkstyle.configLocation>
+        <pmd.ruleset>${siteBaseDir}/codequality/pmd.xml</pmd.ruleset>
+        
+        <clover.version>3.1.12</clover.version>
+        <maven.clover.licenseLocation>${siteBaseDir}/codequality/clover.license</maven.clover.licenseLocation>
     </properties>
 
     <repositories>
@@ -430,6 +448,7 @@ language governing permissions and limitations under the License.
                     </executions>
                 </plugin>
 
+
             </plugins>
         </pluginManagement>
         <plugins>
@@ -444,6 +463,23 @@ language governing permissions and limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+            <!-- as per https://confluence.atlassian.com/display/CLOVER/Clover-for-Maven+2+and+3+User%27s+Guide#Clover-for-Maven2and3User%27sGuide-RunningGoalsviapom.xml -->
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-clover2-plugin</artifactId>
+                <version>${clover.version}</version>
+                <configuration>
+                    <instrumentation>statement</instrumentation>
+                    <includes>
+                        <include>org/estatio/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>org/estatio/api/Api.java</exclude>
+                        <exclude>org/estatio/fixture/**</exclude>
+                        <exclude>org/estatio/fixturescripts/**</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -571,12 +607,6 @@ language governing permissions and limitations under the License.
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.estatio.thirdparty.org.junit.extensions</groupId>
-                <artifactId>cpsuite</artifactId>
-                <version>1.2.6</version>
             </dependency>
 
             <dependency>
@@ -734,7 +764,7 @@ language governing permissions and limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.5</version>
+                <version>3.0.1</version>
                 <configuration>
                     <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                     <minimumTokens>100</minimumTokens>
@@ -813,15 +843,29 @@ language governing permissions and limitations under the License.
         </plugins>
     </reporting>
 
-    <modules>
-        <module>cpsuite</module>
-        <module>dom</module>
-        <module>fixture</module>
-        <module>integtests</module>
-        <module>webapp</module>
-    </modules>
 
     <profiles>
+        <profile>
+            <id>regular-build</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>dom</module>
+                <module>fixture</module>
+                <module>integtests</module>
+                <module>webapp</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>metrics-on</id>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <modules>
+                <module>dom</module>
+            </modules>
+        </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->
         <profile>
             <id>m2e</id>
