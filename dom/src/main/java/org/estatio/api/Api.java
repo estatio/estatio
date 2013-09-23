@@ -480,7 +480,7 @@ public class Api extends AbstractFactoryAndRepository {
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
         leaseUnit.setUnitSizeName(size);
-        leaseUnit.setBrandName(brand);
+        leaseUnit.setBrandName(brand.replaceAll("\\p{C}", "").trim());
         leaseUnit.setSectorName(sector);
         leaseUnit.setActivityName(activity);
     }

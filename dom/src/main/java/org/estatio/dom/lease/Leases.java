@@ -143,12 +143,13 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "6")
     public List<InvoiceItemForLease> calculate(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName, 
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Period Start Date") LocalDate startDate, 
             final @Named("Due date") LocalDate dueDate, 
             final @Named("Run Type") InvoiceRunType runType) {
         final List<Lease> leases = findLeases(referenceOrName);
         for (Lease lease : leases) {
+            lease.verify();
             lease.calculate(startDate, dueDate, runType);
         }
         // As a convenience, we now go find them and display them.
