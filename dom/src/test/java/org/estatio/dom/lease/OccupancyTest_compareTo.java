@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 
 
-public class LeaseUnitTest_compareTo extends ComparableContractTest_compareTo<Occupancy> {
+public class OccupancyTest_compareTo extends ComparableContractTest_compareTo<Occupancy> {
 
     private Lease lease1;
     private Lease lease2;

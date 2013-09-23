@@ -224,13 +224,16 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseTerm> changeDates = new WithIntervalMutable.Helper<LeaseTerm>(this);
+    WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseTerm changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return changeDates.changeDates(startDate, endDate);
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -241,19 +244,19 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
 

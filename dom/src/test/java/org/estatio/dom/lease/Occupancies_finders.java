@@ -41,11 +41,11 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
-public class LeaseUnits_finders {
+public class Occupancies_finders {
 
     private FinderInteraction finderInteraction;
 
-    private Occupancies leaseUnits;
+    private Occupancies occupancies;
 
     private Lease lease;
     private Unit unit;
@@ -58,7 +58,7 @@ public class LeaseUnits_finders {
         unit = new UnitForLease();
         startDate = new LocalDate(2013,4,1);
         
-        leaseUnits = new Occupancies() {
+        occupancies = new Occupancies() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -81,7 +81,7 @@ public class LeaseUnits_finders {
     @Test
     public void findByLeaseAndUnitAndStartDate() {
         
-        leaseUnits.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
+        occupancies.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         

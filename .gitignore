@@ -5,6 +5,7 @@ db/
 target/
 target-ide/
 logs/
+.clover/
 .settings/
 .project
 .classpath
@@ -13,6 +14,7 @@ datanucleus.log
 .idea
 *.log
 *.lck
+
 
 
 # os specific files

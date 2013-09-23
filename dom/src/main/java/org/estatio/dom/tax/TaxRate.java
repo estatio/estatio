@@ -40,6 +40,7 @@ import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.Chained;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -138,14 +139,16 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<TaxRate>(this);
+    WithIntervalMutable.Helper<TaxRate> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public TaxRate changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        changeDates.changeDates(startDate, endDate);
-        return this;
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -156,19 +159,19 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
 
     @Override
     public LocalDate default0ChangeDates() {
-        return getStartDate();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return getEndDate();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
 

@@ -50,6 +50,7 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.event.Event;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -205,13 +206,16 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<LeaseItem>(this);
+    WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public LeaseItem changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return changeDates.changeDates(startDate, endDate);
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -222,19 +226,19 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
     // //////////////////////////////////////

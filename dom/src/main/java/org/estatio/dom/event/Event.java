@@ -33,6 +33,7 @@ import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 // TODO: is this in scope?
@@ -106,13 +107,16 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Event> changeDates = new WithIntervalMutable.Helper<Event>(this);
+    WithIntervalMutable.Helper<Event> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public Event changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return changeDates.changeDates(startDate, endDate);
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -123,19 +127,19 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
     // //////////////////////////////////////

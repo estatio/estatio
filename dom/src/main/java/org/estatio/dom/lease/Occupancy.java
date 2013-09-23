@@ -172,13 +172,16 @@ public class Occupancy extends EstatioTransactionalObject<Occupancy, Status> imp
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<Occupancy>(this);
+    WithIntervalMutable.Helper<Occupancy> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public Occupancy changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return changeDates.changeDates(startDate, endDate);
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -189,19 +192,19 @@ public class Occupancy extends EstatioTransactionalObject<Occupancy, Status> imp
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
 

@@ -148,13 +148,16 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<PartyRegistration> changeDates = new WithIntervalMutable.Helper<PartyRegistration>(this);
+    WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public PartyRegistration changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return changeDates.changeDates(startDate, endDate);
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -165,19 +168,19 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
 

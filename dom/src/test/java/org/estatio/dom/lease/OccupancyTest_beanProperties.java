@@ -29,7 +29,7 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.UnitSize;
 
-public class LeaseUnitTest_beanProperties extends AbstractBeanPropertiesTest {
+public class OccupancyTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {

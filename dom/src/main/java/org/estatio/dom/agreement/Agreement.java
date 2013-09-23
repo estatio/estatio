@@ -48,6 +48,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import org.datanucleus.query.evaluator.memory.GetClassMethodEvaluator;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -238,6 +239,12 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     private boolean isActiveOn(LocalDate date) {
         if (getTerminationDate() != null) {
+            // REVIEW: this seems to be wrong.
+            // I imagine it should be
+            // return LocalDateInterval.including(this.getStartDate(), this.getTerminationDate()).contains(date);
+            //
+            // or...
+            // perhaps getInterval() should take into account the termination date (ie move the if into getInterval?)
             return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
         }
         return getInterval().contains(date);
@@ -246,13 +253,16 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Agreement<S>> changeDates = new WithIntervalMutable.Helper<Agreement<S>>(this);
+    WithIntervalMutable.Helper<Agreement<S>> getChangeDates() {
+        return changeDates;
+    }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
     public Agreement<S> changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return changeDates.changeDates(startDate, endDate);
+        return getChangeDates().changeDates(startDate, endDate);
     }
 
     public String disableChangeDates(
@@ -263,19 +273,19 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     @Override
     public LocalDate default0ChangeDates() {
-        return changeDates.default0ChangeDates();
+        return getChangeDates().default0ChangeDates();
     }
 
     @Override
     public LocalDate default1ChangeDates() {
-        return changeDates.default1ChangeDates();
+        return getChangeDates().default1ChangeDates();
     }
 
     @Override
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return changeDates.validateChangeDates(startDate, endDate);
+        return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
     // //////////////////////////////////////
@@ -452,7 +462,11 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
      * Provided for BDD "glue"; delegated to by {@link #newRole(AgreementRoleType, Party, LocalDate, LocalDate)}.
      */
     @Programmatic
-    public AgreementRole createRole(final AgreementRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
+    public AgreementRole createRole(
+            final AgreementRoleType type, 
+            final Party party, 
+            final LocalDate startDate, 
+            final LocalDate endDate) {
         final AgreementRole role = newTransientInstance(AgreementRole.class);
         role.setStartDate(startDate);
         role.setEndDate(endDate);
