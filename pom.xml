@@ -27,6 +27,7 @@ language governing permissions and limitations under the License.
     to run unit tests with clover code coverage:
     mvn clean clover2:setup test clover2:aggregate clover2:clover -o
     '5m46s
+    target/site/clover/clover.xml
     target/site/clover/* (html site)
     
     to run metrics (targets dom project only):
@@ -38,7 +39,7 @@ language governing permissions and limitations under the License.
 
     to build webapp:
     mvn clean install -DskipTests -o
-    target/site/clover\clover.xml
+    
     -->
 
     <groupId>org.estatio</groupId>

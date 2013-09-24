@@ -81,7 +81,7 @@ import org.estatio.dom.party.Party;
                         + "WHERE units.contains(lu) "
                         + "&& (terminationDate == null || terminationDate <= :activeOnDate) "
                         + "&& (lu.unit == :asset || lu.unit.property == :asset) "
-                        + "VARIABLES org.estatio.dom.lease.LeaseUnit lu") })
+                        + "VARIABLES org.estatio.dom.lease.Occupancy lu") })
 @Bookmarkable
 public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
