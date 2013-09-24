@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
+import org.estatio.fixture.EstatioTransactionalObjectsTeardownFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
 public class InvoicesTest_collectionNumberNumerator extends EstatioIntegrationTest {
@@ -40,6 +41,7 @@ public class InvoicesTest_collectionNumberNumerator extends EstatioIntegrationTe
 
     @BeforeClass
     public static void setupTransactionalData() {
+        scenarioExecution().install(new EstatioTransactionalObjectsTeardownFixture());
     }
 
     @Before
