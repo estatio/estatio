@@ -1,7 +1,10 @@
 Estatio: an open source estate management system.
 =================================================
 
-[![Build Status](https://estatio.ci.cloudbees.com/job/github=estatio=estatio/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio/)
+## Build Status ##
+* [![Tests](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-01-tests/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-01-tests/)
+* [![Code Analysis](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-02-analysis/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-02-analysis/)
+* [![Packaging](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-03-packaging/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-03-packaging/)
 
 Estatio is modern and flexible property management software. It offers real estate professionals and service providers the power and flexibility to manage their business in a superior, flexible and cost-effective manner.
 
