@@ -45,26 +45,6 @@ language governing permissions and limitations under the License.
 
     <build>
         <plugins>
-            <!-- 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.2</version>
-                <inherited>true</inherited>
-                <configuration>
-                    <instrumentation>
-                        <ignores>
-                            /* http://jira.codehaus.org/browse/MCOBERTURA-52 */ 
-                            <ignore>org[.]estatio[.].*[.]jdo.*</ignore>
-                        </ignores>
-                        <excludes>
-                            <exclude>org/estatio/**/*Test*.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                </configuration>
-            </plugin>
-            -->
-
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
@@ -263,14 +243,22 @@ language governing permissions and limitations under the License.
             </activation>
             <build>
                 <plugins>
-                <!-- 
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>2.6</version>
+                        <inherited>true</inherited>
                         <configuration>
                             <formats>
                                 <format>xml</format>
                             </formats>
+                            <instrumentation>
+                                <excludes>
+                                    <exclude>org/estatio/fixture/**/*.class</exclude>
+                                    <exclude>org/estatio/api/Api.class</exclude>
+                                    <exclude>org/estatio/**/*Test*.class</exclude>
+                                </excludes>
+                            </instrumentation>
                         </configuration>
                         <executions>
                             <execution>
@@ -281,8 +269,7 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
-                 -->
-
+ 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -348,6 +335,7 @@ language governing permissions and limitations under the License.
                             </execution>
                         </executions>
                     </plugin>
+
 
                 </plugins>
             </build>
