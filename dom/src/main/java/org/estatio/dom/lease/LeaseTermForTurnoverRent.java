@@ -122,8 +122,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public BigDecimal getTrialValue() {
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         BigDecimal calculatedTurnoverRent = helper.calculateRent(getAuditedTurnover());
-        if (getContractualRent() != null && calculatedTurnoverRent.compareTo(getContractualRent()) > 0)
+        if (getContractualRent() != null && 
+            calculatedTurnoverRent.compareTo(getContractualRent()) > 0) {
             return calculatedTurnoverRent.subtract(getContractualRent());
+        }
         return BigDecimal.ZERO;
     }
 
@@ -135,7 +137,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         // TODO: Should not be hardcoded searching for rent and should return a
         // collection. Also move the value of rent to a different field
         if (rentItem != null) {
-            BigDecimal contractualRent = rentItem.valueForPeriod(getLeaseItem().getInvoicingFrequency(), getStartDate(), getStartDate().plusYears(2));
+            final BigDecimal contractualRent = rentItem.valueForPeriod(
+                    getLeaseItem().getInvoicingFrequency(), 
+                    getStartDate(), 
+                    getStartDate().plusYears(2));
             setContractualRent(contractualRent);
         }
     }

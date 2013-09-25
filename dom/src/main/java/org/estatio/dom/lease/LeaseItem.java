@@ -44,17 +44,14 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.event.Event;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -74,14 +71,22 @@ import org.estatio.services.clock.ClockService;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndStartDateAndSequence", 
                 language = "JDOQL", 
-                value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && type == :type && startDate == :startDate && sequence == :sequence"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItem "
+                        + "WHERE lease == :lease "
+                        +    "&& type == :type "
+                        +    "&& startDate == :startDate "
+                        +    "&& sequence == :sequence"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndEndDate", 
                 language = "JDOQL", 
                 value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> implements WithIntervalMutable<LeaseItem>, WithSequence {
+public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> 
+                       implements WithIntervalMutable<LeaseItem>, WithSequence {
+
+    private static final int PAGE_SIZE = 15;
 
     public LeaseItem() {
         super("lease, type, sequence desc", LeaseItemStatus.NEW, null);
@@ -93,7 +98,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     }
 
     @Override
-    public void setLockable(LeaseItemStatus lockable) {
+    public void setLockable(final LeaseItemStatus lockable) {
         setStatus(lockable);
     }
 
@@ -144,7 +149,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     }
 
     @Programmatic
-    public LeaseTerm findTermWithSequence(BigInteger sequence) {
+    public LeaseTerm findTermWithSequence(final BigInteger sequence) {
         // for (LeaseTerm term : getTerms()) {
         // if (sequence.equals(term.getSequence())) {
         // return term;
@@ -278,7 +283,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 
@@ -332,10 +337,8 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @Disabled
     @Optional
     public BigDecimal getTrialValue() {
-        LeaseTerm currentTerm = currentTerm(getClockService().now());
-        if (currentTerm != null)
-            return currentTerm.getTrialValue();
-        return null;
+        final LeaseTerm currentTerm = currentTerm(getClockService().now());
+        return currentTerm != null ? currentTerm.getTrialValue() : null;
     }
 
     // //////////////////////////////////////
@@ -344,15 +347,13 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     @Optional
     public BigDecimal getApprovedValue() {
         LeaseTerm currentTerm = currentTerm(getClockService().now());
-        if (currentTerm != null)
-            return currentTerm.getApprovedValue();
-        return null;
+        return currentTerm != null ? currentTerm.getApprovedValue() : null;
     }
 
     // //////////////////////////////////////
 
     @Programmatic
-    public LeaseTerm currentTerm(LocalDate date) {
+    public LeaseTerm currentTerm(final LocalDate date) {
         for (LeaseTerm term : getTerms()) {
             if (term.getInterval().contains(date)) {
                 return term;
@@ -367,7 +368,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     private SortedSet<LeaseTerm> terms = new TreeSet<LeaseTerm>();
 
     @Render(Type.EAGERLY)
-    @Paged(15)
+    @Paged(PAGE_SIZE)
     public SortedSet<LeaseTerm> getTerms() {
         return terms;
     }
@@ -377,7 +378,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     }
 
     @Programmatic
-    public LeaseTerm findTerm(LocalDate startDate) {
+    public LeaseTerm findTerm(final LocalDate startDate) {
         for (LeaseTerm term : getTerms()) {
             if (startDate.equals(term.getStartDate())) {
                 return term;
@@ -400,7 +401,7 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
     // //////////////////////////////////////
 
     @Programmatic
-    public LeaseTerm createNextTerm(LeaseTerm currentTerm) {
+    public LeaseTerm createNextTerm(final LeaseTerm currentTerm) {
         LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm);
         return term;
     }
@@ -420,14 +421,18 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     // //////////////////////////////////////
 
-    public LeaseItem calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
+    public LeaseItem calculate(
+            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Due date") LocalDate dueDate, 
+            final @Named("Run Type") InvoiceRunType runType) {
         for (LeaseTerm term : getTerms()) {
             term.calculate(startDate, dueDate, runType);
         }
         return this;
     }
 
-    BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
+    BigDecimal valueForPeriod(
+            final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
         BigDecimal total = new BigDecimal(0);
         for (LeaseTerm term : getTerms()) {
             total = total.add(term.valueForPeriod(frequency, periodStartDate, dueDate));
@@ -439,13 +444,13 @@ public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemSt
 
     private Charges charges;
 
-    public final void injectCharges(Charges charges) {
+    public final void injectCharges(final Charges charges) {
         this.charges = charges;
     }
 
     private LeaseTerms leaseTerms;
 
-    public final void injectLeaseTerms(LeaseTerms leaseTerms) {
+    public final void injectLeaseTerms(final LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
     }
 

@@ -55,15 +55,19 @@ public class Organisations extends EstatioDomainService<Organisation> {
 
     @Programmatic
     public Organisation findOrganisation(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
-        return firstMatch("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
+        return firstMatch("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Parties", sequence = "5")
     public List<Organisation> findOrganisations(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
+        return allMatches("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
     public String default0FindOrganisations() {
         return "*prop*";

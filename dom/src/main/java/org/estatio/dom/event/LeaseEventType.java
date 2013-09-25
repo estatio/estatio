@@ -34,7 +34,7 @@ public enum LeaseEventType implements Titled {
 
     private String title;
 
-    private LeaseEventType(String title) {
+    private LeaseEventType(final String title) {
         this.title = title;
     }
 

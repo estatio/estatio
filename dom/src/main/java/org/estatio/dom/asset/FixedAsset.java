@@ -65,7 +65,9 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Unique(name="FIXEDASSET_REFERENCE_UNIQUE_IDX", members={"reference"})
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
-public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, Status> implements WithNameComparable<FixedAsset>, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
+public abstract class FixedAsset 
+        extends EstatioTransactionalObject<FixedAsset, Status> 
+        implements WithNameComparable<FixedAsset>, WithReferenceUnique, Locatable,  CommunicationChannelOwner {
 
     public FixedAsset() {
         super("name", Status.UNLOCKED, Status.LOCKED);
@@ -77,7 +79,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -122,7 +124,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 //     * For {@link Property}, the {@link Property#getName() name} by itself is unique.
 //     * 
 //     * <p>
-//     * For {@link Unit}, the combination of ({@link Unit#getProperty() property}, {@link Unit#getName() name}) is unique.
+//     * For {@link Unit}, the combination of ({@link Unit#getProperty() property}, {@link Unit#getName() name}) 
+//     * is unique.
 //     */
     //public abstract String getName();
     
@@ -152,13 +155,13 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(final Location location) {
         this.location = location;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Named("Lookup")
-    public FixedAsset lookupLocation(@Named("Address") String address) {
+    public FixedAsset lookupLocation(final @Named("Address") String address) {
         setLocation(locationLookupService.lookup(address));
         return this;
     }
@@ -203,7 +206,8 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
     
 
     @Programmatic
-    public FixedAssetRole createRole(final FixedAssetRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
+    public FixedAssetRole createRole(
+            final FixedAssetRoleType type, final Party party, final LocalDate startDate, final LocalDate endDate) {
         final FixedAssetRole role = newTransientInstance(FixedAssetRole.class);
         role.setStartDate(startDate);
         role.setEndDate(endDate);
@@ -228,7 +232,7 @@ public abstract class FixedAsset extends EstatioTransactionalObject<FixedAsset, 
 
     private LocationLookupService locationLookupService;
 
-    public final void injectLocationLookupService(LocationLookupService locationLookupService) {
+    public final void injectLocationLookupService(final LocationLookupService locationLookupService) {
         this.locationLookupService = locationLookupService;
     }
 

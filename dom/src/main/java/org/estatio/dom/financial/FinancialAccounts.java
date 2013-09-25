@@ -41,11 +41,11 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     // //////////////////////////////////////
 
     @Hidden
-    public BankAccount newBankAccount(final @Named("Owner") Party owner, final @Named("IBAN") String IBAN) {
+    public BankAccount newBankAccount(final @Named("Owner") Party owner, final @Named("IBAN") String iban) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
-        bankAccount.setIBAN(IBAN);
-        bankAccount.setName(IBAN);
-        bankAccount.setReference(IBAN);
+        bankAccount.setIBAN(iban);
+        bankAccount.setName(iban);
+        bankAccount.setReference(iban);
         persistIfNotAlready(bankAccount);
         bankAccount.setOwner(owner);
         return bankAccount;
@@ -55,7 +55,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
-    public FinancialAccount findAccountByReference(@Named("Reference") String reference) {
+    public FinancialAccount findAccountByReference(final @Named("Reference") String reference) {
         String regex = StringUtils.wildcardToRegex(reference);
         return firstMatch("findByReference", "reference", regex);
     }
@@ -64,7 +64,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Hidden
-    public List<BankAccount> findBankAccountsByParty(Party party) {
+    public List<BankAccount> findBankAccountsByParty(final Party party) {
         return (List)allMatches("findByTypeAndParty", "type", FinancialAccountType.BANK_ACCOUNT, "owner", party);
     }
 

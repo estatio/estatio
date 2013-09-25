@@ -31,7 +31,8 @@ public interface ApplicationSettingCreator {
 
     static class Helper {
         private Helper(){}
-        public static void create(final ApplicationSettingCreator creator, ApplicationSettingsServiceRW appSettings) {
+        public static void create(
+                final ApplicationSettingCreator creator, final ApplicationSettingsServiceRW appSettings) {
             final Class<?> dataType = creator.getDataType();
             final String key = getKey(creator);
             final String description = creator.getDescription();

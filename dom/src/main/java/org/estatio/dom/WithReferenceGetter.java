@@ -29,12 +29,12 @@ public interface WithReferenceGetter {
         public static ToStringEvaluator evaluator() {
             return new ToStringEvaluator() {
                 @Override
-                public boolean canEvaluate(Object o) {
+                public boolean canEvaluate(final Object o) {
                     return o instanceof WithReferenceGetter;
                 }
                 
                 @Override
-                public String evaluate(Object o) {
+                public String evaluate(final Object o) {
                     return ((WithReferenceGetter)o).getReference();
                 }
             };

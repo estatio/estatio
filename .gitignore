@@ -14,7 +14,7 @@ datanucleus.log
 .idea
 *.log
 *.lck
-
+.checkstyle-cachefile
 
 
 # os specific files

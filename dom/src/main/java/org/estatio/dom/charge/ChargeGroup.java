@@ -27,8 +27,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
 @javax.jdo.annotations.PersistenceCapable

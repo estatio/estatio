@@ -33,7 +33,6 @@ import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 // TODO: is this in scope?
@@ -52,7 +51,7 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -174,7 +173,7 @@ public class Event extends EstatioTransactionalObject<Event, Status> implements 
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 

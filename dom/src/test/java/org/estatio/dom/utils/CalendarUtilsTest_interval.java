@@ -25,11 +25,12 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.hamcrest.core.Is;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
+
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class CalendarUtilsTest_interval {
 

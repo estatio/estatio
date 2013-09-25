@@ -23,7 +23,7 @@ public final class ClassUtils {
     private ClassUtils(){}
 
     @SuppressWarnings("unchecked")
-    public static <T> Class<? extends T> load(String clsName, Class<T> cls)  {
+    public static <T> Class<? extends T> load(final String clsName, final Class<T> cls)  {
         Class<?> clsx;
         try {
             clsx = Thread.currentThread().getContextClassLoader().loadClass(clsName);

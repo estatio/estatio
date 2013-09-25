@@ -27,18 +27,10 @@ import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.party.Party;
 
 public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> extends WithIntervalMutable<T>, Comparable<T> {
 
@@ -100,7 +92,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
     public static class Helper<T extends WithIntervalContiguous<T>> {
         
         private final T withInterval;
-        public Helper(T withInterval) {
+        public Helper(final T withInterval) {
             this.withInterval = withInterval;
         }
 
@@ -187,7 +179,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
 
         // //////////////////////////////////////
 
-        public T getPredecessor(SortedSet<T> siblings, Predicate<? super T> filter) {
+        public T getPredecessor(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
                     Predicates.<T>and(
@@ -195,7 +187,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
                             endDatePreceding(withInterval.getStartDate())));
         }
 
-        public T getSuccessor(SortedSet<T> siblings, Predicate<? super T> filter) {
+        public T getSuccessor(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
                     Predicates.<T>and(
@@ -208,7 +200,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
             return new Predicate<T>() {
                 @Override
                 public boolean apply(final T ar) {
-                    return date != null && ar != null && Objects.equal(ar.getStartDate(), date.plusDays(1)) ? true : false;
+                    return date != null && ar != null && Objects.equal(ar.getStartDate(), date.plusDays(1));
                 }
             };
         }
@@ -217,14 +209,14 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> ext
             return new Predicate<T>() {
                 @Override
                 public boolean apply(final T ar) {
-                    return date != null && ar != null && Objects.equal(ar.getEndDate(), date.minusDays(1)) ? true : false;
+                    return date != null && ar != null && Objects.equal(ar.getEndDate(), date.minusDays(1));
                 }
             };
         }
 
         // //////////////////////////////////////
 
-        public SortedSet<T> getTimeline(SortedSet<T> siblings, Predicate<? super T> filter) {
+        public SortedSet<T> getTimeline(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return Sets.newTreeSet(Sets.filter(siblings, filter));
         }
         

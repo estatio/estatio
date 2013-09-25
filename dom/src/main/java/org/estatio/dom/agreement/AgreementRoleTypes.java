@@ -41,7 +41,7 @@ public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> 
     }
 
     @NotContributed
-    public List<AgreementRoleType> findApplicableTo(AgreementType agreementType) {
+    public List<AgreementRoleType> findApplicableTo(final AgreementType agreementType) {
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 

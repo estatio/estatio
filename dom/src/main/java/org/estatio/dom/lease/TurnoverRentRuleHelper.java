@@ -25,9 +25,10 @@ public class TurnoverRentRuleHelper {
 
     private String rules[];
 
-    public TurnoverRentRuleHelper(String rule) {
-        if (rule != null && rule.trim().length() != 0)
+    public TurnoverRentRuleHelper(final String rule) {
+        if (rule != null && rule.trim().length() != 0) {
             rules = rule.split(";");
+        }
     }
 
     public boolean isValid() {
@@ -36,17 +37,19 @@ public class TurnoverRentRuleHelper {
 
     private boolean isValidRule() {
         // check for uneven rules
-        if (rules == null || rules.length % 2 == 0)
+        if (rules == null || rules.length % 2 == 0) {
             return false;
+        }
         // check for numeric values
         for (String rule : rules) {
-            if (!isNumeric(rule))
+            if (!isNumeric(rule)) {
                 return false;
+            }
         }
         return true;
     }
 
-    public BigDecimal calculateRent(BigDecimal turnover) {
+    public BigDecimal calculateRent(final BigDecimal turnover) {
         BigDecimal total = BigDecimal.ZERO;
         BigDecimal prevCap = BigDecimal.ZERO;
         BigDecimal cap = BigDecimal.ZERO;
@@ -57,17 +60,19 @@ public class TurnoverRentRuleHelper {
                 base = BigDecimal.ZERO;
                 if (i == rules.length - 1) {
                     // the last or single item
-                    percentage = new BigDecimal(rules[i]).divide(BigDecimal.valueOf(100));
-                    if (turnover.compareTo(prevCap) > 0)
+                    percentage = new BigDecimal(rules[i]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
+                    if (turnover.compareTo(prevCap) > 0) {
                         base = turnover.subtract(prevCap);
+                    }
                 } else {
-                    percentage = new BigDecimal(rules[i + 1]).divide(BigDecimal.valueOf(100));
+                    percentage = new BigDecimal(rules[i + 1]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
                     cap = new BigDecimal(rules[i]);
                     if (turnover.compareTo(cap) > 0) {
                         base = cap.subtract(prevCap);
                     } else {
-                        if (turnover.compareTo(prevCap) > 0)
+                        if (turnover.compareTo(prevCap) > 0) {
                             base = turnover.subtract(prevCap);
+                        }
                     }
                 }
                 total = total.add(base.multiply(percentage).setScale(2, RoundingMode.HALF_UP));
@@ -77,8 +82,8 @@ public class TurnoverRentRuleHelper {
         return total.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public static boolean isNumeric(String str) {
-        return str.matches("-?\\d+(\\.\\d+)?"); // match a number with optional
-                                                // '-' and decimal.
+    public static boolean isNumeric(final String str) {
+        // match a number with optional '-' and decimal.
+        return str.matches("-?\\d+(\\.\\d+)?");
     }
 }

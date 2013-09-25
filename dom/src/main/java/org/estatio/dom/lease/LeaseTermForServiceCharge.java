@@ -25,7 +25,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -83,7 +82,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     @Override
     @Programmatic
-    public BigDecimal valueForDueDate(LocalDate dueDate) {
+    public BigDecimal valueForDueDate(final LocalDate dueDate) {
         // use the audited value after the end of the term and only when its
         // available
         if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
@@ -104,7 +103,10 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         super.initialize();
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPrevious();
         if (previousTerm != null) {
-            this.setBudgetedValue(MathUtils.isNotZeroOrNull(previousTerm.getAuditedValue()) ? previousTerm.getAuditedValue() : previousTerm.getBudgetedValue());
+            this.setBudgetedValue(
+                    MathUtils.isNotZeroOrNull(previousTerm.getAuditedValue())
+                            ? previousTerm.getAuditedValue()
+                            : previousTerm.getBudgetedValue());
         }
     }
 

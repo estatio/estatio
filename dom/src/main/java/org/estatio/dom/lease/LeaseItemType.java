@@ -33,7 +33,7 @@ public enum LeaseItemType implements PowerType<LeaseTerm>{
 
     private final Class<? extends LeaseTerm> clss;
 
-    private LeaseItemType(Class<? extends LeaseTerm> clss) {
+    private LeaseItemType(final Class<? extends LeaseTerm> clss) {
         this.clss = clss;
     }
 
@@ -43,7 +43,7 @@ public enum LeaseItemType implements PowerType<LeaseTerm>{
 
     // //////////////////////////////////////
     
-    public LeaseTerm create(DomainObjectContainer container){ 
+    public LeaseTerm create(final DomainObjectContainer container){ 
         try {
             LeaseTerm term = container.newTransientInstance(clss);
             return term;

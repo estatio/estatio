@@ -19,6 +19,15 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.ApplicationException;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -68,9 +77,9 @@ import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Organisations;
@@ -81,15 +90,6 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.services.clock.ClockService;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 
 @Named("Migration")
 public class Api extends AbstractFactoryAndRepository {

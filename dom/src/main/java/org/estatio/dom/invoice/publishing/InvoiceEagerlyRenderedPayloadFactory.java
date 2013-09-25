@@ -31,7 +31,10 @@ public class InvoiceEagerlyRenderedPayloadFactory implements PayloadFactory {
 
     @Override
     @Programmatic
-    public EventPayload payloadFor(Identifier actionIdentifier, Object target, List<Object> arguments, Object result) {
+    public EventPayload payloadFor(
+            final Identifier actionIdentifier, 
+            final Object target, final List<Object> arguments, 
+            final Object result) {
         return new InvoiceEagerlyRenderedPayload(actionIdentifier, (Invoice)target, arguments, result);
     }
 

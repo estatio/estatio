@@ -859,7 +859,7 @@ language governing permissions and limitations under the License.
             </modules>
         </profile>
         <profile>
-            <id>metrics-on</id>
+            <id>analysis</id>
             <properties>
                 <maven.test.skip>true</maven.test.skip>
             </properties>

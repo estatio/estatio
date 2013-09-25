@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -72,7 +71,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 

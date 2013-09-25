@@ -18,10 +18,10 @@ package org.estatio.dom.contracttests;
 
 import java.math.BigInteger;
 
+import org.apache.isis.core.unittestsupport.bidir.Instantiator;
+
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
-
-import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 
 public class InstantiatorForLeaseTerm implements Instantiator {
 

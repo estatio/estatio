@@ -24,7 +24,6 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
-import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

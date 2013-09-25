@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import java.util.List;
 import java.util.SortedSet;
 
 import com.google.common.collect.Sets;
@@ -26,7 +25,6 @@ import com.google.common.collect.Sets;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Programmatic;
 

@@ -53,7 +53,8 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
      */
     private final S statusWhenLockedIfAny;
 
-    public EstatioTransactionalObject(String keyProperties, S statusWhenUnlocked, S statusWhenLockedIfAny) {
+    public EstatioTransactionalObject(
+            final String keyProperties, final S statusWhenUnlocked, final S statusWhenLockedIfAny) {
         super(keyProperties);
         this.statusWhenUnlocked = statusWhenUnlocked;
         this.statusWhenLockedIfAny = statusWhenLockedIfAny;
@@ -128,7 +129,7 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
     /**
      * Disable (for all properties)
      */
-    public String disabled(Identifier.Type type) {
+    public String disabled(final Identifier.Type type) {
         if(type == Identifier.Type.PROPERTY_OR_COLLECTION) {
             return isLocked()? "Cannot modify when locked": null;
         }

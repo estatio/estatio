@@ -43,14 +43,14 @@ public class Tags extends EstatioDomainService<Tag> {
     // //////////////////////////////////////
 
     @Programmatic
-    public List<String> choices(Taggable domainObject, String tagName) {
+    public List<String> choices(final Taggable domainObject, final String tagName) {
         final List<Tag> tags = doChoices(domainObject, tagName);
         final Iterable<String> tagNames = Iterables.transform(tags, Tag.GET_VALUE);
         final TreeSet<String> uniqueSortedTagNames = Sets.newTreeSet(tagNames);
         return Lists.newArrayList(uniqueSortedTagNames);
     }
 
-    protected List<Tag> doChoices(Taggable taggable, String tagName) {
+    protected List<Tag> doChoices(final Taggable taggable, final String tagName) {
         return allMatches(Tag.class, appliesTo(taggable, tagName));
     }
 
@@ -74,8 +74,6 @@ public class Tags extends EstatioDomainService<Tag> {
             if(tag != null) {
                 // remove existing
                 remove(tag);
-            } else {
-                // do nothing
             }
             return null;
         } else {

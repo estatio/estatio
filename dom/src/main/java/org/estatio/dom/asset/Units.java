@@ -43,8 +43,8 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
 
     @Programmatic
     public Unit newUnit(
-            String reference, 
-            String name,
+            final String reference, 
+            final String name,
             final UnitType type) {
         final Unit unit = newTransientInstance();
         unit.setReference(reference);
@@ -59,9 +59,11 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Fixed Assets", sequence = "2")
     public List<T> findUnits(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
         // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+        return allMatches("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
     public String default0FindUnits() {
         return "AAA-00000*";
@@ -76,7 +78,7 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
     // //////////////////////////////////////
 
     @Hidden
-    public List<T> autoComplete(String searchPhrase) {
+    public List<T> autoComplete(final String searchPhrase) {
         return findUnits("*".concat(searchPhrase).concat("*"));
     }
     

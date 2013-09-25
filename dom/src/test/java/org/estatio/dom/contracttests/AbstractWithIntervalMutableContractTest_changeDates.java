@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.contracttests;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
@@ -31,9 +31,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithIntervalMutable.Helper;
 
 public abstract class AbstractWithIntervalMutableContractTest_changeDates<T extends WithIntervalMutable<T>>  {
 

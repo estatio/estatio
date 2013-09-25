@@ -44,14 +44,17 @@ public class Parties extends EstatioDomainService<Party> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "6")
     public List<Party> findParties(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
+        return allMatches("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     @Hidden
     @ActionSemantics(Of.SAFE)
     public Party findPartyByReferenceOrName(final String referenceOrName) {
-        return firstMatch("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+        return firstMatch("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
     @Hidden
@@ -63,7 +66,7 @@ public class Parties extends EstatioDomainService<Party> {
     // //////////////////////////////////////
 
     @Hidden
-    public List<Party> autoComplete(String searchPhrase) {
+    public List<Party> autoComplete(final String searchPhrase) {
         return searchPhrase.length() > 2
                 ? findParties("*" + searchPhrase + "*")
                 : Lists.<Party> newArrayList();

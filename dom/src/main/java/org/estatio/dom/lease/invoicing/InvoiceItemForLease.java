@@ -24,6 +24,12 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -38,11 +44,6 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -140,7 +141,8 @@ public class InvoiceItemForLease extends InvoiceItem {
             Party seller = role.getParty();
             Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
             PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
-            Invoice invoice = invoices.findInvoiceByVarious(seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
+            Invoice invoice = invoices.findInvoiceByVarious(
+                    seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
             if (invoice == null) {
                 invoice = invoices.newInvoice();
                 invoice.setBuyer(buyer);
@@ -180,14 +182,14 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     private Invoices invoices;
 
-    public final void injectInvoices(Invoices invoices) {
+    public final void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
 
     // //////////////////////////////////////
 
     @Override
-    public int compareTo(InvoiceItem other) {
+    public int compareTo(final InvoiceItem other) {
         int compare = super.compareTo(other);
         if (compare != 0) {
             return compare;
@@ -199,14 +201,17 @@ public class InvoiceItemForLease extends InvoiceItem {
     }
 
     public final static Ordering<InvoiceItemForLease> ORDERING_BY_LEASE_TERM = new Ordering<InvoiceItemForLease>() {
-        public int compare(InvoiceItemForLease p, InvoiceItemForLease q) {
+        public int compare(final InvoiceItemForLease p, final InvoiceItemForLease q) {
             // unnecessary, but keeps findbugs happy...
-            if (p == null && q == null)
+            if (p == null && q == null) {
                 return 0;
-            if (p == null)
+            }
+            if (p == null) {
                 return -1;
-            if (q == null)
+            }
+            if (q == null) {
                 return +1;
+            }
             return Ordering.natural().nullsFirst().compare(p.getLeaseTerm(), q.getLeaseTerm());
         }
     };

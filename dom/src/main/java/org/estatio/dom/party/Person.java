@@ -90,7 +90,8 @@ public class Person extends Party {
     // //////////////////////////////////////
 
     public String validate() {
-        return getFirstName().isEmpty() || getInitials().isEmpty() ? "At least the first name or initials have to be filled in" : null;
+        return getFirstName().isEmpty() || getInitials().isEmpty() ? 
+                "At least the first name or initials have to be filled in" : null;
     }
 
     public void updating() {

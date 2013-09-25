@@ -19,10 +19,6 @@
 package org.estatio.dom.contracttests;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.Unique;

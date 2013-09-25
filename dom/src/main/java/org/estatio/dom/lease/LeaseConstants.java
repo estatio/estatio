@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.lease;
 
+import java.math.BigDecimal;
+
 public final class LeaseConstants {
 
     private LeaseConstants() {}
@@ -30,4 +32,8 @@ public final class LeaseConstants {
 
     public final static String ARCCT_INVOICE_ADDRESS = "Invoice Address";
     public final static String ARCCT_ADMINISTRATION_ADDRESS = "Administration Address";
+
+
+    public static final BigDecimal PERCENTAGE_DIVISOR = BigDecimal.valueOf(100);
+
 }

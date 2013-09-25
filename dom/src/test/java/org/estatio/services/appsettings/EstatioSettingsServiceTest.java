@@ -30,7 +30,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.ApplicationSettingsService;
 import org.apache.isis.applib.services.settings.SettingAbstract;
 import org.apache.isis.applib.services.settings.SettingType;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;

@@ -35,21 +35,25 @@ public final class LocalDateInterval {
         INCLUDING_END_DATE, EXCLUDING_END_DATE
     }
 
-    public static LocalDateInterval excluding(LocalDate startDate, LocalDate endDate) {
+    public static LocalDateInterval excluding(final LocalDate startDate, final LocalDate endDate) {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.EXCLUDING_END_DATE);
     }
 
-    public static LocalDateInterval including(LocalDate startDate, LocalDate endDate) {
+    public static LocalDateInterval including(final LocalDate startDate, final LocalDate endDate) {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
     }
 
-    public LocalDateInterval(LocalDate startDate, LocalDate endDate, IntervalEnding ending) {
+    public LocalDateInterval(final LocalDate startDate, final LocalDate endDate, final IntervalEnding ending) {
         this.ending = ending;
         startInstant = startDate == null ? OPEN_START_INSTANT : startDate.toInterval().getStartMillis();
-        endInstant = endDate == null ? OPEN_END_INSTANT : ending == IntervalEnding.EXCLUDING_END_DATE ? endDate.toInterval().getStartMillis() : endDate.toInterval().getEndMillis();
+        endInstant = endDate == null 
+                        ? OPEN_END_INSTANT 
+                        : ending == IntervalEnding.EXCLUDING_END_DATE 
+                            ? endDate.toInterval().getStartMillis() 
+                            : endDate.toInterval().getEndMillis();
     }
 
-    public LocalDateInterval(Interval interval) {
+    public LocalDateInterval(final Interval interval) {
         if (interval != null) {
             startInstant = interval.getStartMillis();
             endInstant = interval.getEndMillis();
@@ -61,8 +65,9 @@ public final class LocalDateInterval {
     }
 
     public LocalDate startDate() {
-        if (startInstant == OPEN_START_INSTANT || startInstant == 0)
+        if (startInstant == OPEN_START_INSTANT || startInstant == 0) {
             return null;
+        }
         return new LocalDate(startInstant);
     }
 
@@ -70,11 +75,12 @@ public final class LocalDateInterval {
         return endDate(ending);
     }
 
-    public LocalDate endDate(IntervalEnding ending) {
+    public LocalDate endDate(final IntervalEnding ending) {
         // REVIEW: is the following line correct, using startInstant?  looks like a copy-n-paste error?
         // if it isn't, please replace this text with an explanatory comment...
-        if (endInstant == OPEN_END_INSTANT || startInstant == 0)
+        if (endInstant == OPEN_END_INSTANT || startInstant == 0) {
             return null;
+        }
         LocalDate date = new LocalDate(endInstant);
         return adjustDate(date, ending);
     }
@@ -87,7 +93,7 @@ public final class LocalDateInterval {
         return adjustDate(startDate(), ending);
     }
 
-    private LocalDate adjustDate(LocalDate date, IntervalEnding ending) {
+    private LocalDate adjustDate(final LocalDate date, final IntervalEnding ending) {
         return ending == IntervalEnding.INCLUDING_END_DATE ? date.minusDays(1) : date;
 
     }
@@ -98,7 +104,7 @@ public final class LocalDateInterval {
      * @param localDateInterval
      * @return
      */
-    public boolean contains(LocalDateInterval localDateInterval) {
+    public boolean contains(final LocalDateInterval localDateInterval) {
         return asInterval().contains(localDateInterval.asInterval());
     }
 
@@ -108,7 +114,7 @@ public final class LocalDateInterval {
      * @param localDate
      * @return
      */
-    public boolean contains(LocalDate localDate) {
+    public boolean contains(final LocalDate localDate) {
         return asInterval().contains(localDate.toInterval());
     }
 
@@ -118,7 +124,7 @@ public final class LocalDateInterval {
      * @param interval
      * @return
      */
-    public boolean overlaps(LocalDateInterval interval) {
+    public boolean overlaps(final LocalDateInterval interval) {
         return asInterval().overlaps(interval.asInterval());
     }
 
@@ -128,7 +134,7 @@ public final class LocalDateInterval {
      * @param otherInterval
      * @return
      */
-    public LocalDateInterval overlap(LocalDateInterval otherInterval) {
+    public LocalDateInterval overlap(final LocalDateInterval otherInterval) {
         if(otherInterval == null) {
             return null;
         }
@@ -147,7 +153,7 @@ public final class LocalDateInterval {
      * @param interval
      * @return
      */
-    public boolean within(LocalDateInterval interval) {
+    public boolean within(final LocalDateInterval interval) {
         return interval.asInterval().contains(asInterval());
     }
 

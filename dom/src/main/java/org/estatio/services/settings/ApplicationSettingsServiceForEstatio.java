@@ -21,7 +21,6 @@ package org.estatio.services.settings;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingsServiceJdoHidden;
 
@@ -30,7 +29,7 @@ import org.estatio.dom.ApplicationSettingCreator;
 public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsServiceJdoHidden  {
 
     @Override
-    public ApplicationSetting find(String key) {
+    public ApplicationSetting find(final String key) {
         installDefaultsIfRequired();
         return super.find(key);
     }
@@ -63,13 +62,13 @@ public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsSer
         createSettingsIfRequired(org.estatio.dom.invoice.ApplicationSettingKey.values());
     }
 
-    private void createSettingsIfRequired(ApplicationSettingCreator[] values) {
+    private void createSettingsIfRequired(final ApplicationSettingCreator[] values) {
         for(org.estatio.dom.ApplicationSettingCreator creator: values) {
             createIfRequired(creator);
         }
     }
 
-    private void createIfRequired(org.estatio.dom.ApplicationSettingCreator creator) {
+    private void createIfRequired(final ApplicationSettingCreator creator) {
         ApplicationSetting find = find(creator.name());
         if(find == null) {
             creator.create(this);

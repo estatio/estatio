@@ -21,9 +21,10 @@ package org.estatio.dom.financial;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.estatio.dom.geography.Country;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.estatio.dom.geography.Country;
 
 public class BankAccountTest_checkAccount {
 

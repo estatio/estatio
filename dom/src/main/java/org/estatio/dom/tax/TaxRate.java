@@ -20,7 +20,6 @@ package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -35,12 +34,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
-import org.estatio.dom.Chained;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.party.PartyRegistration;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -66,7 +64,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE tax == :tax "
                         + "&& endDate == :endDate")
 })
-public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
+public class TaxRate 
+    extends EstatioTransactionalObject<TaxRate, Status> 
+    implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
         super("tax, startDate desc nullsLast", Status.UNLOCKED, Status.LOCKED);
@@ -78,7 +78,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -207,7 +207,7 @@ public class TaxRate extends EstatioTransactionalObject<TaxRate, Status> impleme
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 

@@ -62,14 +62,17 @@ public class Numerators extends EstatioDomainService<Numerator> {
         return findNumerator(numeratorName, scopedTo);
     }
 
-    private Numerator findNumerator(final String numeratorName, Object scopedToIfAny) {
+    private Numerator findNumerator(final String numeratorName, final Object scopedToIfAny) {
         if(scopedToIfAny == null) {
             return firstMatch("findByName", "name", numeratorName);
         } else {
             final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
             final String objectType = bookmark.getObjectType();
             final String objectIdentifier = bookmark.getIdentifier();
-            return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", "name", numeratorName, "objectType", objectType, "objectIdentifier", objectIdentifier);
+            return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", 
+                    "name", numeratorName, 
+                    "objectType", objectType, 
+                    "objectIdentifier", objectIdentifier);
         }
     }
 
@@ -137,7 +140,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
     // //////////////////////////////////////
 
     private BookmarkService bookmarkService;
-    public void injectBookmarkService(BookmarkService bookmarkService) {
+    public void injectBookmarkService(final BookmarkService bookmarkService) {
         this.bookmarkService = bookmarkService;
     }
 }

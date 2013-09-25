@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.services.clock.ClockService;
@@ -70,7 +69,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Leases", sequence="20")
-    public List<LeaseTerm> leaseTermsToBeApproved(LocalDate date) {
+    public List<LeaseTerm> leaseTermsToBeApproved(final LocalDate date) {
         return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
     }
 
@@ -82,7 +81,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     // //////////////////////////////////////
 
     @Hidden
-    public LeaseTerm findLeaseTermByLeaseItemAndSequence(LeaseItem leaseItem, BigInteger sequence) {
+    public LeaseTerm findLeaseTermByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
         return firstMatch("findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence);
     }
 

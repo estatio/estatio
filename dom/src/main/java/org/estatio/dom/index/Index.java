@@ -91,7 +91,7 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     // //////////////////////////////////////
 
     @Programmatic
-    public BigDecimal getIndexValueForDate(LocalDate date) {
+    public BigDecimal getIndexValueForDate(final LocalDate date) {
         if (date != null) {
             IndexValue indexValue = indexValues.findIndexValueByIndexAndStartDate(this, date);
             return indexValue == null ? null : indexValue.getValue();
@@ -100,9 +100,10 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     }
 
     @Programmatic
-    public BigDecimal getRebaseFactorForDates(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
-        if (baseIndexStartDate == null || nextIndexStartDate == null)
+    public BigDecimal getRebaseFactorForDates(final LocalDate baseIndexStartDate, final LocalDate nextIndexStartDate) {
+        if (baseIndexStartDate == null || nextIndexStartDate == null) {
             return null;
+        }
         IndexValue nextIndexValue = indexValues.findIndexValueByIndexAndStartDate(this, nextIndexStartDate);
         // TODO: check efficiency.. seems to retrieve every single index value
         // for the last 15 years...
@@ -114,7 +115,10 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
     }
 
     @Programmatic
-    public void initialize(IndexationCalculator indexationCalculator, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate) {
+    public void initialize(
+            final IndexationCalculator indexationCalculator, 
+            final LocalDate baseIndexStartDate, 
+            final LocalDate nextIndexStartDate) {
         indexationCalculator.setBaseIndexValue(getIndexValueForDate(baseIndexStartDate));
         indexationCalculator.setNextIndexValue(getIndexValueForDate(nextIndexStartDate));
         indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
@@ -125,8 +129,8 @@ public class Index extends EstatioRefDataObject<Index> implements WithReferenceC
 
     private IndexValues indexValues;
 
-    public final void injectIndexValues(IndexValues indices) {
-        this.indexValues = indices;
+    public final void injectIndexValues(final IndexValues indexValues) {
+        this.indexValues = indexValues;
     }
 
 }

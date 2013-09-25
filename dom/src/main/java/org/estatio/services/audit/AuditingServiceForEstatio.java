@@ -42,12 +42,16 @@ public class AuditingServiceForEstatio extends EstatioDomainService<AuditEntryFo
 
     @Override
     @Programmatic
-    public void audit(String user, long currentTimestampEpoch, String objectType, String identifier, String preValue, String postValue) {
+    public void audit(
+            final String user, 
+            final long currentTimestampEpoch, 
+            final String objectType, final String objectIdentifier, 
+            final String preValue, final String postValue) {
         AuditEntryForEstatio auditEntry = newTransientInstance();
         auditEntry.setTimestampEpoch(currentTimestampEpoch);
         auditEntry.setUser(user);
         auditEntry.setObjectType(objectType);
-        auditEntry.setIdentifier(identifier);
+        auditEntry.setIdentifier(objectIdentifier);
         auditEntry.setPreValue(preValue);
         auditEntry.setPostValue(postValue);
         persist(auditEntry);

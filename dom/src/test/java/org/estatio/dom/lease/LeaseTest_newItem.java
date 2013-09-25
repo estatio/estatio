@@ -19,7 +19,6 @@
 package org.estatio.dom.lease;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.hamcrest.Matchers;
@@ -34,7 +33,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.invoice.PaymentMethod;
 
 public class LeaseTest_newItem {

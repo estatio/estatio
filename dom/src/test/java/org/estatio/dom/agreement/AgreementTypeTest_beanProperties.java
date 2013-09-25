@@ -21,7 +21,6 @@ package org.estatio.dom.agreement;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.agreement.AgreementType;
 
 public class AgreementTypeTest_beanProperties extends AbstractBeanPropertiesTest {
 

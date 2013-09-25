@@ -26,6 +26,8 @@ import org.apache.isis.applib.clock.Clock;
 @Hidden
 public class ClockService {
 
+    private static final int MONTHS_IN_QUARTER = 3;
+
     public LocalDate now() {
         return Clock.getTimeAsLocalDate();
     }
@@ -51,8 +53,8 @@ public class ClockService {
     static LocalDate beginningOfQuarter(final LocalDate date) {
         final LocalDate beginningOfMonth = beginningOfMonth(date);
         final int monthOfYear = beginningOfMonth.getMonthOfYear();
-        final int quarter = (monthOfYear-1)/3; // 0, 1, 2, 3
-        final int monthStartOfQuarter = quarter*3+1;
+        final int quarter = (monthOfYear-1)/MONTHS_IN_QUARTER; // 0, 1, 2, 3
+        final int monthStartOfQuarter = quarter*MONTHS_IN_QUARTER+1;
         return beginningOfMonth.minusMonths(monthOfYear-monthStartOfQuarter);
     }
 

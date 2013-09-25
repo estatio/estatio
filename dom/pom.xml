@@ -234,13 +234,7 @@ language governing permissions and limitations under the License.
 
     <profiles>
         <profile>
-            <id>metrics-on</id>
-            <activation>
-                <property>
-                    <name>metrics</name>
-                    <value>on</value>
-                </property>
-            </activation>
+            <id>analysis</id>
             <build>
                 <plugins>
                     <plugin>
@@ -262,7 +256,7 @@ language governing permissions and limitations under the License.
                         </configuration>
                         <executions>
                             <execution>
-                                <phase>package</phase>
+                                <phase>verify</phase>
                                 <goals>
                                     <goal>cobertura</goal>
                                 </goals>
@@ -275,6 +269,7 @@ language governing permissions and limitations under the License.
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <configuration>
                             <configLocation>${checkstyle.configLocation}</configLocation>
+                            <excludes>org/estatio/api/**</excludes>
                         </configuration>
                         <executions>
                             <execution>

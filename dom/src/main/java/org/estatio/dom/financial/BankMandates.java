@@ -20,12 +20,6 @@ package org.estatio.dom.financial;
 
 import java.util.List;
 
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.party.Party;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -35,6 +29,12 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
+
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.party.Party;
 
 public class BankMandates extends EstatioDomainService<BankMandate> {
 

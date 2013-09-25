@@ -89,7 +89,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -252,7 +252,7 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 
@@ -287,13 +287,13 @@ public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, S
         private final FixedAssetRole far;
         private final Party party;
         
-        public SiblingFactory(FixedAssetRole far, Party party) {
+        public SiblingFactory(final FixedAssetRole far, final Party party) {
             this.far = far;
             this.party = party;
         }
         
         @Override
-        public FixedAssetRole newRole(LocalDate startDate, LocalDate endDate) {
+        public FixedAssetRole newRole(final LocalDate startDate, final LocalDate endDate) {
             return far.getAsset().createRole(far.getType(), party, startDate, endDate);
         }
     }

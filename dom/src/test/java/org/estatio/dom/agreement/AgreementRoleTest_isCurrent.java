@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.services.clock.ClockService;
 
 public class AgreementRoleTest_isCurrent {

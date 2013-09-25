@@ -45,12 +45,10 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -83,7 +81,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     }
 
     @Override
-    public void setLockable(InvoiceStatus lockable) {
+    public void setLockable(final InvoiceStatus lockable) {
         setStatus(lockable);
     }
 
@@ -132,7 +130,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         return collectionNumber;
     }
 
-    public void setCollectionNumber(String collectionNumber) {
+    public void setCollectionNumber(final String collectionNumber) {
         this.collectionNumber = collectionNumber;
     }
 
@@ -274,14 +272,16 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         return lastItemSequence;
     }
 
-    public void setLastItemSequence(BigInteger lastItemSequence) {
+    public void setLastItemSequence(final BigInteger lastItemSequence) {
         this.lastItemSequence = lastItemSequence;
     }
 
     
     @Programmatic
     public BigInteger nextItemSequence() {
-        BigInteger nextItemSequence = getLastItemSequence() == null ? BigInteger.ONE : getLastItemSequence().add(BigInteger.ONE);
+        BigInteger nextItemSequence = getLastItemSequence() == null 
+                ? BigInteger.ONE 
+                : getLastItemSequence().add(BigInteger.ONE);
         setLastItemSequence(nextItemSequence);
         return nextItemSequence;
     }
@@ -464,7 +464,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     
     private Invoices invoices;
-    public final void injectInvoices(Invoices invoices) {
+    public final void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
 }

@@ -31,12 +31,12 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
     private final String description;
     private final Class<?> dataType;
     
-    private ApplicationSettingKey(Class<?> dataType, String description, Object defaultValue) {
+    private ApplicationSettingKey(final Class<?> dataType, final String description, final Object defaultValue) {
         this.dataType = dataType;
         this.description = description;
         this.defaultValue = defaultValue;
     }
-    public void create(ApplicationSettingsServiceRW appSettings) {
+    public void create(final ApplicationSettingsServiceRW appSettings) {
         Helper.create(this, appSettings);
     }
     public Class<?> getDataType() {

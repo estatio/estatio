@@ -43,7 +43,7 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
     

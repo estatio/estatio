@@ -46,7 +46,7 @@ public class Brands extends EstatioDomainService<Brand> {
     }
 
     @Hidden
-    public Brand findByName(String name) {
+    public Brand findByName(final String name) {
         return firstMatch("findByName", "name", name);
     }
 

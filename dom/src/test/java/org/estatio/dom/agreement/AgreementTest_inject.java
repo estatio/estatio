@@ -18,27 +18,16 @@
  */
 package org.estatio.dom.agreement;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.party.PartyForTesting;
 
 public class AgreementTest_inject {
 

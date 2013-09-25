@@ -39,7 +39,6 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;
-import org.estatio.dom.index.Indices;
 import org.estatio.services.clock.ClockService;
 
 public class LeaseTermForIndexableRentTest {

@@ -96,7 +96,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     }
 
     @Override
-    public void setLockable(LeaseStatus lockable) {
+    public void setLockable(final LeaseStatus lockable) {
         setStatus(lockable);
     }
 
@@ -217,19 +217,26 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.items = items;
     }
 
-    public LeaseItem newItem(LeaseItemType type, Charge charge, InvoicingFrequency invoicingFrequency, PaymentMethod paymentMethod) {
+    public LeaseItem newItem(
+            final LeaseItemType type, 
+            final Charge charge, 
+            final InvoicingFrequency invoicingFrequency, 
+            final PaymentMethod paymentMethod) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod);
         return leaseItem;
     }
 
     @Hidden
-    public LeaseItem findItem(LeaseItemType itemType, LocalDate itemStartDate, BigInteger sequence) {
+    public LeaseItem findItem(
+            final LeaseItemType itemType, 
+            final LocalDate itemStartDate, 
+            final BigInteger sequence) {
         return leaseItems.findLeaseItem(this, itemType, itemStartDate, sequence);
     }
 
     @Hidden
-    public LeaseItem findFirstItemOfType(LeaseItemType type) {
+    public LeaseItem findFirstItemOfType(final LeaseItemType type) {
         for (LeaseItem item : getItems()) {
             if (item.getType().equals(type)) {
                 return item;
@@ -297,12 +304,16 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         final AgreementType bankMandateAgreementType = bankMandateAgreementType();
         final AgreementRoleType debtorRoleType = debtorRoleType();
 
-        return (List) agreements.findByAgreementTypeAndRoleTypeAndParty(bankMandateAgreementType, debtorRoleType, tenant);
+        return (List) agreements.findByAgreementTypeAndRoleTypeAndParty(
+                bankMandateAgreementType, debtorRoleType, tenant);
     }
 
     // //////////////////////////////////////
 
-    public Lease newMandate(final BankAccount bankAccount, final @Named("Start Date") LocalDate startDate, final @Named("End Date") LocalDate endDate) {
+    public Lease newMandate(
+            final BankAccount bankAccount, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("End Date") LocalDate endDate) {
         final BankMandate bankMandate = newTransientInstance(BankMandate.class);
         final AgreementType bankMandateAgreementType = bankMandateAgreementType();
         final AgreementRoleType debtorRoleType = debtorRoleType();
@@ -349,7 +360,8 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         return getClockService().now().plusYears(1);
     }
 
-    public String validateNewMandate(final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
+    public String validateNewMandate(
+            final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
         if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
@@ -400,7 +412,10 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     @Bulk
-    public Lease calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
+    public Lease calculate(
+            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Due date") LocalDate dueDate, 
+            final @Named("Run Type") InvoiceRunType runType) {
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, dueDate, runType);
         }
@@ -415,12 +430,14 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         // TODO: how is 'confirm' used?  isn't there meant to be a validate?
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);
-            if (term == null)
+            if (term == null) {
                 term = item.getTerms().last();
+            }
             if (term != null) {
                 term.modifyEndDate(terminationDate);
-                if (term.getNext() != null)
+                if (term.getNext() != null) {
                     term.getNext().remove();
+                }
             }
         }
         return this;
@@ -442,7 +459,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     private FinancialAccounts financialAccounts;
 
-    public final void injectFinancialAccounts(FinancialAccounts financialAccounts) {
+    public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
 

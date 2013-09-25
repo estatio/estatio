@@ -21,7 +21,6 @@ package org.estatio.dom.utils;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 
 public class StringUtils {
@@ -31,40 +30,40 @@ public class StringUtils {
 
     private static Function<String, String> LOWER_CASE_THEN_CAPITALIZE = new Function<String, String>() {
         @Override
-        public String apply(String input) {
+        public String apply(final String input) {
             return input != null? StringUtils.capitalize(input.toLowerCase()): null;
         }
     };
 
     private static Function<String, String> UPPER_CASE = new Function<String, String>() {
         @Override
-        public String apply(String input) {
+        public String apply(final String input) {
             return input != null? input.toUpperCase(): null;
         }
     };
 
-    public static String enumTitle(String string) {
+    public static String enumTitle(final String string) {
         if(string == null) {
             return null;
         }
         return Joiner.on(" ").join(Iterables.transform(Splitter.on("_").split(string), LOWER_CASE_THEN_CAPITALIZE));
     }
 
-    public static String enumDeTitle(String string) {
+    public static String enumDeTitle(final String string) {
         if(string == null) {
             return null;
         }
         return Joiner.on("_").join(Iterables.transform(Splitter.on(" ").split(string), UPPER_CASE));
     }
 
-    public static String wildcardToCaseInsensitiveRegex(String pattern) {
+    public static String wildcardToCaseInsensitiveRegex(final String pattern) {
         if(pattern == null) {
             return null;
         }
         return "(?i)".concat(wildcardToRegex(pattern));
     }
 
-    public static String wildcardToRegex(String pattern) {
+    public static String wildcardToRegex(final String pattern) {
         if(pattern == null) {
             return null;
         }

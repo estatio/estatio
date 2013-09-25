@@ -32,17 +32,23 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(name = "findByReference", language = "JDOQL", value = "SELECT FROM org.estatio.dom.tax.Tax WHERE reference.matches(:reference)")
+@javax.jdo.annotations.Query(
+        name = "findByReference", language = "JDOQL", 
+        value = "SELECT "
+                + "FROM org.estatio.dom.tax.Tax "
+                + "WHERE reference.matches(:reference)")
 @javax.jdo.annotations.Unique(name = "TAX_REFERENCE_UNIQUE_IDX", members="reference")
 @Bounded
 @Immutable
-public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
+public class Tax
+        extends EstatioRefDataObject<Tax>
+        implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
 
     public Tax() {
         super("reference");
@@ -100,7 +106,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     // //////////////////////////////////////
 
     @Programmatic
-    public TaxRate taxRateFor(LocalDate date) {
+    public TaxRate taxRateFor(final LocalDate date) {
         TaxRate rate = taxRates.findTaxRateByTaxAndDate(this, date);
         return rate;
     }
@@ -108,7 +114,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
     // //////////////////////////////////////
 
     @Programmatic
-    public BigDecimal percentageFor(LocalDate date) {
+    public BigDecimal percentageFor(final LocalDate date) {
         TaxRate rate = taxRateFor(date);
         if (rate == null) {
             return null;
@@ -121,7 +127,7 @@ public class Tax extends EstatioRefDataObject<Tax> implements WithReferenceCompa
 
     private TaxRates taxRates;
 
-    public final void injectTaxRates(TaxRates taxRates) {
+    public final void injectTaxRates(final TaxRates taxRates) {
         this.taxRates = taxRates;
     }
 

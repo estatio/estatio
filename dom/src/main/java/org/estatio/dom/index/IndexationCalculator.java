@@ -39,8 +39,10 @@ public class IndexationCalculator {
     private BigDecimal indexedValue;
     private BigDecimal indexationPercentage;
 
-    public IndexationCalculator(Index index, LocalDate baseIndexStartDate,LocalDate nextIndexStartDate, BigDecimal baseValue) {
-        super();
+    public IndexationCalculator(
+            final Index index, 
+            final LocalDate baseIndexStartDate, final LocalDate nextIndexStartDate, 
+            final BigDecimal baseValue) {
         this.index = index;
         this.baseIndexStartDate = baseIndexStartDate;
         this.nextIndexStartDate = nextIndexStartDate;
@@ -67,7 +69,7 @@ public class IndexationCalculator {
         return indexationPercentage;
     }
 
-    public void calculate(Indexable input) {
+    public void calculate(final Indexable input) {
         this.calculate();
         input.setBaseIndexValue(baseIndexValue);
         input.setNextIndexValue(nextIndexValue);
@@ -79,22 +81,27 @@ public class IndexationCalculator {
         if (index != null){
             index.initialize(this, baseIndexStartDate, nextIndexStartDate);
             if (this.baseIndexValue != null && this.nextIndexValue !=null && baseValue != null){
-                indexationFactor = nextIndexValue.divide(baseIndexValue, 4, RoundingMode.HALF_UP).multiply(rebaseFactor).setScale(3, RoundingMode.HALF_UP);
-                indexationPercentage = (indexationFactor.subtract(BigDecimal.ONE)).multiply(ONE_HUNDRED).setScale(1);
-                indexedValue = baseValue.multiply(indexationFactor).setScale(2, RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP);
+                indexationFactor = nextIndexValue.divide(baseIndexValue, 4, RoundingMode.HALF_UP)
+                                        .multiply(rebaseFactor)
+                                        .setScale(3, RoundingMode.HALF_UP);
+                indexationPercentage = (indexationFactor.subtract(BigDecimal.ONE))
+                                            .multiply(ONE_HUNDRED).setScale(1);
+                indexedValue = baseValue.multiply(indexationFactor)
+                                    .setScale(2, RoundingMode.HALF_UP)
+                                    .setScale(4, RoundingMode.HALF_UP);
             }
         }
     }
 
-    public void setBaseIndexValue(BigDecimal baseIndexValue) {
+    public void setBaseIndexValue(final BigDecimal baseIndexValue) {
         this.baseIndexValue = baseIndexValue;
     }
 
-    public void setNextIndexValue(BigDecimal nextIndexValue) {
+    public void setNextIndexValue(final BigDecimal nextIndexValue) {
         this.nextIndexValue = nextIndexValue;
     }
 
-    public void setRebaseFactor(BigDecimal rebaseFactor) {
+    public void setRebaseFactor(final BigDecimal rebaseFactor) {
         this.rebaseFactor = rebaseFactor;
     }
 

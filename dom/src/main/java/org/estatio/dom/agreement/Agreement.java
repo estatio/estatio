@@ -18,9 +18,6 @@
  */
 package org.estatio.dom.agreement;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -29,26 +26,11 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
-import org.datanucleus.query.evaluator.memory.GetClassMethodEvaluator;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -64,6 +46,18 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Lockable;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -87,7 +81,7 @@ import org.apache.isis.applib.annotation.Where;
 @Bookmarkable
 public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, WithNameGetter {
 
-    public Agreement(S statusWhenUnlocked, S statusWhenLockedIfAny) {
+    public Agreement(final S statusWhenUnlocked, final S statusWhenLockedIfAny) {
         super("reference", statusWhenUnlocked, statusWhenLockedIfAny);
     }
 
@@ -145,7 +139,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         return findCurrentOrMostRecentAgreementRole(art);
     }
 
-    protected AgreementRole findCurrentOrMostRecentAgreementRole(AgreementRoleType agreementRoleType) {
+    protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType = 
                 Iterables.filter(getRoles(), AgreementRole.whetherTypeIs(agreementRoleType));
@@ -237,7 +231,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate date) {
+    private boolean isActiveOn(final LocalDate date) {
         if (getTerminationDate() != null) {
             // REVIEW: this seems to be wrong.
             // I imagine it should be
@@ -488,12 +482,12 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
     // //////////////////////////////////////
 
     @Programmatic
-    public AgreementRole findRole(Party party, AgreementRoleType type, LocalDate date) {
+    public AgreementRole findRole(final Party party, final AgreementRoleType type, final LocalDate date) {
         return agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(this, party, type, date);
     }
 
     @Programmatic
-    public AgreementRole findRoleWithType(AgreementRoleType agreementRoleType, LocalDate date) {
+    public AgreementRole findRoleWithType(final AgreementRoleType agreementRoleType, final LocalDate date) {
         return agreementRoles.findByAgreementAndTypeAndContainsDate(this, agreementRoleType, date);
     }
 
@@ -501,7 +495,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     protected Agreements agreements;
 
-    public final void injectAgreements(Agreements agreements) {
+    public final void injectAgreements(final Agreements agreements) {
         this.agreements = agreements;
     }
 
@@ -519,7 +513,7 @@ public abstract class Agreement<S extends Lockable> extends EstatioTransactional
 
     protected AgreementTypes agreementTypes;
 
-    public final void injectAgreementTypes(AgreementTypes agreementTypes) {
+    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }
 

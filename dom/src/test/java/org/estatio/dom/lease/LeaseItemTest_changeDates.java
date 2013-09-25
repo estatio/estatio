@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
-import org.estatio.dom.event.Event;
 
 public class LeaseItemTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<LeaseItem> {
 

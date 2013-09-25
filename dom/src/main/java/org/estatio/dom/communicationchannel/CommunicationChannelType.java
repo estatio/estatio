@@ -39,7 +39,7 @@ public enum CommunicationChannelType implements TitledEnum {
 
     private Class<? extends CommunicationChannel> cls;
 
-    private CommunicationChannelType(Class<? extends CommunicationChannel> cls) {
+    private CommunicationChannelType(final Class<? extends CommunicationChannel> cls) {
         this.cls = cls;
     }
 
@@ -51,7 +51,7 @@ public enum CommunicationChannelType implements TitledEnum {
         return Lists.newArrayList(Iterables.filter(Arrays.asList(values()), new Predicate<CommunicationChannelType>(){
 
             @Override
-            public boolean apply(CommunicationChannelType input) {
+            public boolean apply(final CommunicationChannelType input) {
                 return input.cls == cls;
             }}));
     }

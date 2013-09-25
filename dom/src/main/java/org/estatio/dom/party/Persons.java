@@ -39,7 +39,10 @@ public class Persons extends EstatioDomainService<Person> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Parties", sequence = "1")
-    public Person newPerson(final @Named("initials") @Optional String initials, final @Named("firstName") @Optional String firstName, final @Named("lastName") String lastName) {
+    public Person newPerson(
+            final @Named("initials") @Optional String initials, 
+            final @Named("First name") @Optional String firstName, 
+            final @Named("Last name") String lastName) {
         final Person person = newTransientInstance(Person.class);
         person.setInitials(initials);
         person.setLastName(lastName);

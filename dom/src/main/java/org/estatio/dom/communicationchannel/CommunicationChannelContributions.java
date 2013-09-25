@@ -27,17 +27,16 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
-import org.estatio.dom.party.Party;
 
 @Hidden
 public class CommunicationChannelContributions extends EstatioDomainService<CommunicationChannel> {
@@ -167,17 +166,17 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
     // //////////////////////////////////////
 
     private CommunicationChannels communicationChannels;
-    public void injectCommunicationChannels(CommunicationChannels communicationChannels) {
+    public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {
         this.communicationChannels = communicationChannels;
     }
 
     private States states;
-    public void injectStates(States states) {
+    public void injectStates(final States states) {
         this.states = states;
     }
     
     private Countries countries;
-    public void injectCountries(Countries countries) {
+    public void injectCountries(final Countries countries) {
         this.countries = countries;
     }
 

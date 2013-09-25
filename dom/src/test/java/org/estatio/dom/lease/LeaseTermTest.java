@@ -22,10 +22,6 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.services.clock.ClockService;
 import org.hamcrest.Description;
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
@@ -40,6 +36,11 @@ import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {
 

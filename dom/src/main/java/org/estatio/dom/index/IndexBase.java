@@ -37,6 +37,8 @@ import org.estatio.dom.WithStartDate;
 @Immutable
 public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithStartDate, Chained<IndexBase> {
 
+    private static final int FACTOR_SCALE = 4;
+
     public IndexBase() {
         super("index, startDate desc");
     }
@@ -90,7 +92,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(scale = 4)
+    @javax.jdo.annotations.Column(scale = FACTOR_SCALE)
     private BigDecimal factor;
 
     @Optional
@@ -124,7 +126,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
         this.previous = previous;
     }
     
-    public void modifyPrevious(IndexBase previous) {
+    public void modifyPrevious(final IndexBase previous) {
         setPrevious(previous);
         if (previous != null) {
             previous.setNext(this);
@@ -183,7 +185,7 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     // //////////////////////////////////////
 
     @Programmatic
-    public BigDecimal factorForDate(LocalDate date) {
+    public BigDecimal factorForDate(final LocalDate date) {
         if (date.isBefore(getStartDate())) {
             return getFactor().multiply(getPrevious().factorForDate(date));
         }

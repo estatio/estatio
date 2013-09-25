@@ -27,14 +27,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -50,6 +42,14 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -97,7 +97,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -127,7 +127,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return role;
     }
 
-    public void setRole(AgreementRole agreementRole) {
+    public void setRole(final AgreementRole agreementRole) {
         this.role = agreementRole;
     }
 
@@ -158,7 +158,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return type;
     }
 
-    public void setType(AgreementRoleCommunicationChannelType type) {
+    public void setType(final AgreementRoleCommunicationChannelType type) {
         this.type = type;
     }
 
@@ -173,7 +173,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return communicationChannel;
     }
 
-    public void setCommunicationChannel(CommunicationChannel communicationChannel) {
+    public void setCommunicationChannel(final CommunicationChannel communicationChannel) {
         this.communicationChannel = communicationChannel;
     }
 
@@ -190,7 +190,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     }
 
     @Override
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
 
@@ -205,7 +205,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
     }
 
     @Override
-    public void setEndDate(LocalDate localDate) {
+    public void setEndDate(final LocalDate localDate) {
         this.endDate = localDate;
     }
 
@@ -275,7 +275,7 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 
@@ -309,13 +309,13 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
         private final AgreementRoleCommunicationChannel arcc;
         private final CommunicationChannel cc;
 
-        public SiblingFactory(AgreementRoleCommunicationChannel arcc, CommunicationChannel cc) {
+        public SiblingFactory(final AgreementRoleCommunicationChannel arcc, final CommunicationChannel cc) {
             this.arcc = arcc;
             this.cc = cc;
         }
 
         @Override
-        public AgreementRoleCommunicationChannel newRole(LocalDate startDate, LocalDate endDate) {
+        public AgreementRoleCommunicationChannel newRole(final LocalDate startDate, final LocalDate endDate) {
             return arcc.getRole().createAgreementRoleCommunicationChannel(arcc.getType(), cc, startDate, endDate);
         }
     }
@@ -419,8 +419,8 @@ public class AgreementRoleCommunicationChannel extends EstatioTransactionalObjec
 
     private CommunicationChannelContributions communicationChannelContributions;
 
-    public final void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
-        this.communicationChannelContributions = communicationChannelContributions;
+    public final void injectCommunicationChannelContributions(final CommunicationChannelContributions ccc) {
+        this.communicationChannelContributions = ccc;
     }
 
 }

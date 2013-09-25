@@ -18,33 +18,22 @@
  */
 package org.estatio.dom.tag;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-
-import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
 
 public class TagsTest_tagFor {
 
@@ -120,7 +109,6 @@ public class TagsTest_tagFor {
     @Test
     public void whenTagIsNull_andTagValueIsNotNull_thenTagCreatedAndSet() {
         final Tag newTag = new Tag();
-        newTag.injectBookmarkService(mockBookmarkService);
         
         context.checking(new Expectations() {
             {

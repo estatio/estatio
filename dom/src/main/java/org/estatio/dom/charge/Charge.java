@@ -18,15 +18,15 @@
  */
 package org.estatio.dom.charge;
 
+import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Title;
+
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithCodeGetter;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.tax.Tax;
-
-import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(

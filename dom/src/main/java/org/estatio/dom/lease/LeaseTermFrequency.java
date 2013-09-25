@@ -29,7 +29,7 @@ public enum LeaseTermFrequency {
     YEARLY("RRULE:FREQ=YEARLY;INTERVAL=1"),
     NO_FREQUENCY(null);
 
-    private LeaseTermFrequency(String rrule) {
+    private LeaseTermFrequency(final String rrule) {
         this.rrule = rrule;
     }
     
@@ -46,7 +46,7 @@ public enum LeaseTermFrequency {
 
     // //////////////////////////////////////
 
-    public LocalDate nextDate(LocalDate date) {
+    public LocalDate nextDate(final LocalDate date) {
         return CalendarUtils.nextDate(date, this.rrule);
     }
     

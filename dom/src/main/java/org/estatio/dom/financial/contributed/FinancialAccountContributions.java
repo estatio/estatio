@@ -52,7 +52,7 @@ public class FinancialAccountContributions extends AbstractContainedObject {
         // TODO: replace with JDOQL
         return allMatches(FinancialAccount.class, new Filter<FinancialAccount>() {
             @Override
-            public boolean accept(FinancialAccount t) {
+            public boolean accept(final FinancialAccount t) {
                 return t.getOwner() == owner;
             }
         });

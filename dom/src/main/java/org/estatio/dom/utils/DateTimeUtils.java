@@ -41,7 +41,7 @@ public class DateTimeUtils {
         }
     }
 
-    public static String periodToString(Period period) {
+    public static String periodToString(final Period period) {
         StringBuilder sb = new StringBuilder();
         Period leftOver = period;
         int y = leftOver.getYears();

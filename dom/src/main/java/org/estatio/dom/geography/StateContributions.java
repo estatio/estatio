@@ -21,8 +21,8 @@ package org.estatio.dom.geography;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
@@ -49,7 +49,7 @@ public class StateContributions extends EstatioDomainService<State> {
     // //////////////////////////////////////
 
     private States states;
-    public final void injectStates(States states) {
+    public final void injectStates(final States states) {
         this.states = states;
     }
 

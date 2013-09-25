@@ -67,6 +67,11 @@ language governing permissions and limitations under the License.
 
         <property name="cacheFile" value="${checkstyle.cache.file}"/>
 
+        <!-- not available in eclipse-cs
+        <module name="JavadocDeprecated"/>
+        -->
+        <module name="MissingOverride"/>
+        
         <!-- ************************************************************** -->
         <!-- Checks that are different from the sun coding conventions ones -->
         <!-- ************************************************************** -->
@@ -155,7 +160,9 @@ language governing permissions and limitations under the License.
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <module name="EmptyStatement"/>
+        <!-- 
         <module name="DoubleCheckedLocking"/>  
+         -->
         <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
@@ -172,39 +179,52 @@ language governing permissions and limitations under the License.
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!-- 
-        <module name="DesignForExtension"/>
-        <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
-        <module name="InterfaceIsType"/>
+        
+        
+        
+        
         <module name="VisibilityModifier"/>
          -->
+         <!-- too many violations... 
+         <module name="DesignForExtension"/>
+          -->
+         <module name="FinalClass"/>
+         <module name="HideUtilityClassConstructor"/>
+         <module name="InterfaceIsType"/>
 
+         
+         <module name="CyclomaticComplexity">
+            <property name="max" value="12"/>
+         </module>
+         <module name="NPathComplexity">
+            <property name="max" value="160"/>
+        </module>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->
         <!-- 
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
         <module name="GenericIllegalRegexp">
             <property name="format" value="\s+$"/>
             <property name="message" value="Line has trailing spaces."/>
         </module>
+         -->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
-         -->
+        <module name="FinalParameters"/>
          
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
         <!-- 
-        <module name="EmptyForIteratorPad"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
-        <module name="TabCharacter"/>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
+        <module name="TabCharacter"/>
          -->
+        <module name="EmptyForIteratorPad"/>
 
 
         <!-- Modifier Checks                                    -->
@@ -220,7 +240,7 @@ language governing permissions and limitations under the License.
             <property name="max" value="120"/>
         </module>
         <module name="MethodLength">
-            <property name="max" value="20"/>
+            <property name="max" value="30"/>
         </module>
         <module name="ParameterNumber">
             <property name="max" value="6"/>
@@ -230,12 +250,13 @@ language governing permissions and limitations under the License.
     
     
 
-    <!-- Checks for Size Violations.                    -->
-    <!-- See http://checkstyle.sf.net/config_sizes.html -->
-    <!-- 
-     -->
     <module name="FileLength">
         <property name="max" value="1500"/>
+    </module>
+
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+        <property name="fileExtensions" value="java,xml"/>
     </module>
 
 </module>

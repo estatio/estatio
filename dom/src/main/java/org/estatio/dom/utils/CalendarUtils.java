@@ -34,7 +34,7 @@ public class CalendarUtils {
     private CalendarUtils() {
     }
 
-    public static Interval intervalMatching(LocalDate startDate, String rrule) {
+    public static Interval intervalMatching(final LocalDate startDate, final String rrule) {
         Interval interval =  intervalContaining(startDate, rrule);
         if (interval.getStart().toLocalDate().equals(startDate)) {
             return interval;
@@ -42,15 +42,17 @@ public class CalendarUtils {
         return null;
     }
     
-    public static Interval intervalContaining(LocalDate containingDate, String rrule) {
+    public static Interval intervalContaining(final LocalDate containingDate, final String rrule) {
         return currentInterval(containingDate, rrule, START_DATE_DEFAULT);
     }
     
-    public static Interval currentInterval(LocalDate date, String rrule, LocalDate startDate) {
+    public static Interval currentInterval(
+            final LocalDate date, 
+            final String rrule, 
+            LocalDate startDate) {
         LocalDate nextDate;
 
-        if (date == null || startDate == null || rrule == null)
-        {
+        if (date == null || startDate == null || rrule == null) {
             return null;
         }
 
@@ -60,22 +62,24 @@ public class CalendarUtils {
             while (iter.hasNext()) {
                 nextDate = iter.next();
                 if (nextDate.compareTo(date) > 0) {
-                    return new Interval(startDate.toInterval().getStartMillis(), nextDate.toInterval().getStartMillis());
+                    return new Interval(
+                            startDate.toInterval().getStartMillis(), 
+                            nextDate.toInterval().getStartMillis());
                 }
                 startDate = nextDate;
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            // TODO - what's meant to happen here???
             e.printStackTrace();
         }
         return null;
     }
 
-    public static LocalDate nextDate(LocalDate date, String rrule) {
+    public static LocalDate nextDate(final LocalDate date, final String rrule) {
         return date == null || rrule == null ? null : currentInterval(date, rrule, date).getEnd().toLocalDate();
     }
 
-    public static boolean isBetween(LocalDate date, LocalDate startDate, LocalDate endDate) {
+    public static boolean isBetween(final LocalDate date, final LocalDate startDate, final LocalDate endDate) {
         if (startDate != null && date.compareTo(startDate) >= 0 && (endDate == null || date.compareTo(endDate) <= 0)) {
             return true;
         }

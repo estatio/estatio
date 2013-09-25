@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.reflections.Reflections;
 
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.WithInterval;
 

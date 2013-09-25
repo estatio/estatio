@@ -30,11 +30,11 @@ import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -225,7 +225,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public BigDecimal getTrialValue() {
-        return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
+        return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
     }
 
     // ///////////////////////////////////////////
@@ -247,15 +247,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         }
     }
 
-    private BigDecimal firstValue(BigDecimal... values) {
-        for (BigDecimal value : values) {
-            if (value != null && value.compareTo(BigDecimal.ZERO) != 0) {
-                return value;
-            }
-        }
-        return BigDecimal.ZERO;
-    }
-
     @Programmatic
     @Override
     public void update() {
@@ -263,35 +254,42 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         if (getStatus().isUnlocked()) {
             LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
             if (previousTerm != null) {
-                BigDecimal newBaseValue = firstValue(previousTerm.getTrialValue(), previousTerm.getIndexedValue(), previousTerm.getBaseValue());
+                BigDecimal newBaseValue = MathUtils.firstNonZero(
+                        previousTerm.getTrialValue(), 
+                        previousTerm.getIndexedValue(), 
+                        previousTerm.getBaseValue());
                 if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
                     setBaseValue(newBaseValue);
                 }
             }
-            IndexationCalculator calculator = new IndexationCalculator(getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
+            final IndexationCalculator calculator = new IndexationCalculator(
+                    getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
             calculator.calculate(this);
         }
     }
 
     @Override
     @Programmatic
-    public BigDecimal valueForDueDate(LocalDate dueDate) {
+    public BigDecimal valueForDueDate(final LocalDate dueDate) {
         // use the indexed value on or after the effective date, use the base
         // otherwise
-        if (getEffectiveDate() == null)
-            return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
-        if (getStartDate().compareTo(getEffectiveDate()) == 0)
-            return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
-        if (dueDate.compareTo(getEffectiveDate()) >= 0)
-            return firstValue(getSettledValue(), getIndexedValue(), getBaseValue());
-        return firstValue(getBaseValue(), getSettledValue());
+        if (getEffectiveDate() == null) {
+            return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
+        }
+        if (getStartDate().compareTo(getEffectiveDate()) == 0) {
+            return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
+        }
+        if (dueDate.compareTo(getEffectiveDate()) >= 0) {
+            return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
+        }
+        return MathUtils.firstNonZero(getBaseValue(), getSettledValue());
     }
 
     // ///////////////////////////////////////////
 
     private Indices indices;
 
-    public final void injectIndices(Indices indexes) {
+    public final void injectIndices(final Indices indexes) {
         this.indices = indexes;
     }
 

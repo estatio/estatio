@@ -28,17 +28,13 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.geography.Country;
@@ -200,10 +196,10 @@ public class Property extends FixedAsset {
      */
     @Programmatic
     public FixedAssetRole addRoleIfDoesNotExist(
-            @Named("party") Party party,
-            @Named("type") FixedAssetRoleType type,
-            @Named("Start Date") @Optional LocalDate startDate,
-            @Named("End Date") @Optional LocalDate endDate) {
+            final @Named("party") Party party,
+            final @Named("type") FixedAssetRoleType type,
+            final @Named("Start Date") @Optional LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate) {
 
         FixedAssetRole role = fixedAssetRoles.findRole(this, party, type, startDate, endDate);
         if (role == null) {

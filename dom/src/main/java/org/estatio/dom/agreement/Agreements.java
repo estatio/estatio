@@ -21,9 +21,9 @@ package org.estatio.dom.agreement;
 import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NotContributed;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
@@ -41,14 +41,19 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
 
     @ActionSemantics(Of.SAFE)
-    public Agreement<?> findAgreementByReference(String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+    public Agreement<?> findAgreementByReference(final String reference) {
+        return firstMatch("findByReference", 
+                "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public List<Agreement> findByAgreementTypeAndRoleTypeAndParty(AgreementType agreementType, AgreementRoleType agreementRoleType, Party party) {
-        return allMatches("findByAgreementTypeAndRoleTypeAndParty", "agreementType", agreementType, "roleType", agreementRoleType, "party", party);
+    public List<Agreement> findByAgreementTypeAndRoleTypeAndParty(
+            final AgreementType agreementType, final AgreementRoleType agreementRoleType, final Party party) {
+        return allMatches("findByAgreementTypeAndRoleTypeAndParty", 
+                "agreementType", agreementType, 
+                "roleType", agreementRoleType, 
+                "party", party);
     }
 
 }

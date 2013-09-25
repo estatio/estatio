@@ -20,8 +20,8 @@ package org.estatio.dom.contracttests;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.ComparableByTitleContractTestAbstract_compareTo;
+import org.estatio.dom.WithTitleComparable;
 
 
 /**

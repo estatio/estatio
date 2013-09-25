@@ -29,12 +29,12 @@ public interface WithTitleGetter {
         public static ToStringEvaluator evaluator() {
             return new ToStringEvaluator() {
                 @Override
-                public boolean canEvaluate(Object o) {
+                public boolean canEvaluate(final Object o) {
                     return o instanceof WithTitleGetter;
                 }
                 
                 @Override
-                public String evaluate(Object o) {
+                public String evaluate(final Object o) {
                     return ((WithTitleGetter)o).getTitle();
                 }
             };

@@ -49,7 +49,9 @@ import org.estatio.dom.party.Party;
     @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX", members="reference")
 })
 @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public abstract class FinancialAccount extends EstatioTransactionalObject<FinancialAccount, Status> implements WithNameGetter, WithReferenceUnique  {
+public abstract class FinancialAccount 
+        extends EstatioTransactionalObject<FinancialAccount, Status> 
+        implements WithNameGetter, WithReferenceUnique  {
 
     public FinancialAccount() {
         super("type, reference", Status.UNLOCKED, Status.LOCKED);
@@ -61,7 +63,7 @@ public abstract class FinancialAccount extends EstatioTransactionalObject<Financ
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 

@@ -22,10 +22,10 @@ import java.math.BigInteger;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.estatio.dom.EstatioDomainService;
@@ -71,7 +71,7 @@ public class InvoiceNumeratorContributions extends EstatioDomainService<Invoice>
 
     private Invoices invoices;
     
-    public void injectInvoices(Invoices invoices) {
+    public void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
 

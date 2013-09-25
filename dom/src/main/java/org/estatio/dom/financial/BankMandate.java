@@ -45,7 +45,7 @@ public class BankMandate extends Agreement<Status> {
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 

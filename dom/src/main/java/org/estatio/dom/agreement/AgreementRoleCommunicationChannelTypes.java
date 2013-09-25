@@ -41,7 +41,7 @@ public class AgreementRoleCommunicationChannelTypes extends EstatioDomainService
     }
 
     @NotContributed
-    public List<AgreementRoleCommunicationChannelType> findApplicableTo(AgreementType agreementType) {
+    public List<AgreementRoleCommunicationChannelType> findApplicableTo(final AgreementType agreementType) {
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 

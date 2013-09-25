@@ -29,12 +29,12 @@ public interface WithCodeGetter {
         public static ToStringEvaluator evaluator() {
             return new ToStringEvaluator() {
                 @Override
-                public boolean canEvaluate(Object o) {
+                public boolean canEvaluate(final Object o) {
                     return o instanceof WithCodeGetter;
                 }
                 
                 @Override
-                public String evaluate(Object o) {
+                public String evaluate(final Object o) {
                     return ((WithCodeGetter)o).getCode();
                 }
             };

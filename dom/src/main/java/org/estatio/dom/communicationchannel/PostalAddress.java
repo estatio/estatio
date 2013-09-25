@@ -22,16 +22,15 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
-
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.TitleBuffer;
+
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -169,7 +168,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private Countries countries;
 
-    public final void injectCountries(Countries countries) {
+    public final void injectCountries(final Countries countries) {
         this.countries = countries;
     }
 

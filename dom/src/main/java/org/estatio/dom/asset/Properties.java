@@ -18,28 +18,20 @@
  */
 package org.estatio.dom.asset;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.services.bookmark.Bookmark;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.utils.StringUtils;
 
 public class Properties extends EstatioDomainService<Property> {
@@ -80,19 +72,21 @@ public class Properties extends EstatioDomainService<Property> {
     // //////////////////////////////////////
 
     @Programmatic
-    public List<Property> findProperties(String referenceOrName) {
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+    public List<Property> findProperties(final String referenceOrName) {
+        return allMatches("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
     @Programmatic
     public Property findPropertyByReference(final String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", 
+                "reference", StringUtils.wildcardToRegex(reference));
     }
 
     // //////////////////////////////////////
 
     @Hidden
-    public List<Property> autoComplete(String searchPhrase) {
+    public List<Property> autoComplete(final String searchPhrase) {
         return findProperties("*".concat(searchPhrase).concat("*"));
     }
 

@@ -24,39 +24,48 @@ import org.apache.commons.lang.StringUtils;
 
 public class IBANValidator {
 
-    private static final BigDecimal NINETYSEVEN = BigDecimal.valueOf(97);
+    private static final int IBAN_LENGTH_MAX = 32;
 
-    public static int checksum(String iban) {
-        String tmp = (iban.substring(4) + iban.substring(0, 4)).toUpperCase();
+    private static final int IBAN_LENGTH_MIN = 15;
+
+    private static final int SUFFIX_OFFSET = 4;
+    
+    private static final int A_ASCII = 97;
+    private static final int BASE_TEN = 10;
+
+    public static int checksum(final String iban) {
+        String tmp = (iban.substring(SUFFIX_OFFSET) + iban.substring(0, SUFFIX_OFFSET)).toUpperCase();
         StringBuffer digits = new StringBuffer();
         for (int i = 0; i < tmp.length(); i++) {
             char c = tmp.charAt(i);
-            if (c >= '0' && c <= '9')
+            if (c >= '0' && c <= '9') {
                 digits.append(c);
-            else if (c >= 'A' && c <= 'Z') {
-                int n = c - 'A' + 10;
-                digits.append((char) ('0' + n / 10));
-                digits.append((char) ('0' + (n % 10)));
-            } else
+            } else if (c >= 'A' && c <= 'Z') {
+                int n = c - 'A' + BASE_TEN;
+                digits.append((char) ('0' + n / BASE_TEN));
+                digits.append((char) ('0' + (n % BASE_TEN)));
+            } else {
                 return -1;
+            }
         }
         BigDecimal n = new BigDecimal(digits.toString());
-        int remainder = n.remainder(NINETYSEVEN).intValue();
-        return remainder;
+        return n.remainder(BigDecimal.valueOf(A_ASCII)).intValue();
     }
 
-    public static String fixChecksum(String ibanTemplate) {
+    public static String fixChecksum(final String ibanTemplate) {
         int remainder = checksum(ibanTemplate);
-        String pp = StringUtils.leftPad(String.valueOf(98 - remainder), 2, '0');
-        return ibanTemplate.substring(0, 2) + pp + ibanTemplate.substring(4);
+        String pp = StringUtils.leftPad(String.valueOf(1+A_ASCII - remainder), 2, '0');
+        return ibanTemplate.substring(0, 2) + pp + ibanTemplate.substring(SUFFIX_OFFSET);
     }
 
-    public static boolean valid(String iban) {
-        if (iban == null || iban.length() < 15 || iban.length() > 32) {
+    public static boolean valid(final String iban) {
+        if (iban == null || 
+            iban.length() < IBAN_LENGTH_MIN || 
+            iban.length() > IBAN_LENGTH_MAX) {
             return false;
         }
 
-        int checksum = checksum(iban);
+        final int checksum = checksum(iban);
         return (checksum == 1);
     }
 

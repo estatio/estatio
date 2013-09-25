@@ -20,20 +20,15 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.PowerType;
+import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
-import org.estatio.dom.utils.ClassUtils;
 
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(

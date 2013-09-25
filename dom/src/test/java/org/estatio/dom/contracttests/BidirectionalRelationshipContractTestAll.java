@@ -24,15 +24,15 @@ import org.apache.isis.core.unittestsupport.bidir.BidirectionalRelationshipContr
 import org.apache.isis.core.unittestsupport.bidir.Instantiator;
 import org.apache.isis.core.unittestsupport.bidir.InstantiatorSimple;
 
-import org.estatio.dom.WithCodeComparable;
-import org.estatio.dom.WithDescriptionComparable;
-import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.InstantiatorForComparableByCode;
 import org.estatio.dom.InstantiatorForComparableByDescription;
 import org.estatio.dom.InstantiatorForComparableByName;
 import org.estatio.dom.InstantiatorForComparableByReference;
 import org.estatio.dom.InstantiatorForWithStartDate;
+import org.estatio.dom.WithCodeComparable;
+import org.estatio.dom.WithDescriptionComparable;
+import org.estatio.dom.WithNameComparable;
+import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;

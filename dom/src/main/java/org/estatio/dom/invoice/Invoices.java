@@ -87,26 +87,32 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Hidden
     public Invoice findInvoiceByVarious(
-            Party seller, 
-            Party buyer, 
-            PaymentMethod paymentMethod, 
-            InvoiceSource source, 
-            InvoiceStatus invoiceStatus, 
-            LocalDate dueDate) {
-        final List<Invoice> invoices = findInvoicesByVarious(seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
+            final Party seller, 
+            final Party buyer, 
+            final PaymentMethod paymentMethod, 
+            final InvoiceSource source, 
+            final InvoiceStatus invoiceStatus, 
+            final LocalDate dueDate) {
+        final List<Invoice> invoices = findInvoicesByVarious(
+                seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
         return ValueUtils.firstElseNull(invoices);
     }
 
     @Hidden
     public List<Invoice> findInvoicesByVarious(
-            Party seller, 
-            Party buyer, 
-            PaymentMethod 
-            paymentMethod, 
-            InvoiceSource source, 
-            InvoiceStatus invoiceStatus, 
-            LocalDate dueDate) {
-        return allMatches("findMatchingInvoices", "seller", seller, "buyer", buyer, "paymentMethod", paymentMethod, "source", source, "status", invoiceStatus, "dueDate", dueDate);
+            final Party seller, 
+            final Party buyer, 
+            final PaymentMethod paymentMethod, 
+            final InvoiceSource source, 
+            final InvoiceStatus invoiceStatus, 
+            final LocalDate dueDate) {
+        return allMatches("findMatchingInvoices", 
+                "seller", seller, 
+                "buyer", buyer, 
+                "paymentMethod", paymentMethod, 
+                "source", source, 
+                "status", invoiceStatus, 
+                "dueDate", dueDate);
     }
 
 
@@ -164,7 +170,8 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final Property property,
             final @Named("Format") String format,
             final @Named("Last value") BigInteger lastIncrement) {
-        return numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
+        return numerators.createScopedNumerator(
+                Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
     }
     public String default1CreateInvoiceNumberNumerator() {
         return "XXX-%06d";
@@ -177,7 +184,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     private Numerators numerators;
     
-    public void injectNumerators(Numerators numerators) {
+    public void injectNumerators(final Numerators numerators) {
         this.numerators = numerators;
     }
 

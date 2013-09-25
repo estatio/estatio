@@ -83,7 +83,7 @@ public class EstatioSettingsService {
         return applicationSettingsService.listAll();
     }
 
-    private ApplicationSettingJdo find(String key) {
+    private ApplicationSettingJdo find(final String key) {
         return (ApplicationSettingJdo) getApplicationSettings().find(key);
     }
 
@@ -96,7 +96,7 @@ public class EstatioSettingsService {
         return (ApplicationSettingsServiceForEstatio) applicationSettingsService;
     }
 
-    public final void injectApplicationSettings(ApplicationSettingsServiceForEstatio applicationSettings) {
+    public final void injectApplicationSettings(final ApplicationSettingsServiceForEstatio applicationSettings) {
         this.applicationSettingsService = applicationSettings;
     }
 

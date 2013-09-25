@@ -45,7 +45,7 @@ public class Country extends Geography {
     public Country() {
     };
 
-    public Country(String reference, String alpha2Code, String name) {
+    public Country(final String reference, final String alpha2Code, final String name) {
         setReference(reference);
         setName(name);
         setAlpha2Code(alpha2Code);

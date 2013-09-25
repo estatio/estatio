@@ -27,7 +27,6 @@ import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceSource;
-import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 

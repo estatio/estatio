@@ -46,7 +46,7 @@ public class UnitSizes extends EstatioDomainService<UnitSize> {
     }
 
     @Hidden
-    public UnitSize findByName(String name) {
+    public UnitSize findByName(final String name) {
         return uniqueMatch("findByName", "name", name);
     }
 

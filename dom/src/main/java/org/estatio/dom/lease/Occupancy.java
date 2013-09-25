@@ -75,7 +75,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& unit == :unit "
                         + "&& endDate == :endDate")
 })
-public class Occupancy extends EstatioTransactionalObject<Occupancy, Status> implements WithIntervalMutable<Occupancy>, Taggable {
+public class Occupancy 
+        extends EstatioTransactionalObject<Occupancy, Status> 
+        implements WithIntervalMutable<Occupancy>, Taggable {
 
     public Occupancy() {
         super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
@@ -87,7 +89,7 @@ public class Occupancy extends EstatioTransactionalObject<Occupancy, Status> imp
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -241,7 +243,7 @@ public class Occupancy extends EstatioTransactionalObject<Occupancy, Status> imp
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 

@@ -20,6 +20,19 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -33,20 +46,6 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.DateTimeUtils;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.services.clock.ClockService;
-
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 
 public class Leases extends EstatioDomainService<Lease> {
 
@@ -67,8 +66,10 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Named("Reference") String reference, 
             final @Named("Name") String name, 
             final @Named("Start Date") LocalDate startDate, 
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate, 
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") 
+            String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
+            LocalDate endDate, 
             final @Optional @Named("Landlord") Party landlord, 
             final @Optional @Named("Tentant") Party tenant) {
         LocalDate calculatedEndDate = endDate;
@@ -102,15 +103,18 @@ public class Leases extends EstatioDomainService<Lease> {
 
     
     @Programmatic
-    public Lease findLeaseByReference(String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+    public Lease findLeaseByReference(final String reference) {
+        return firstMatch("findByReference", 
+                "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
+        return allMatches("findByReferenceOrName", 
+                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
     public String default0FindLeases() {
         return "AAA-BBBBBBB*";
@@ -196,7 +200,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     private FixedAssets fixedAssets;
 
-    public final void injectFixedAssets(FixedAssets fixedAssets) {
+    public final void injectFixedAssets(final FixedAssets fixedAssets) {
         this.fixedAssets = fixedAssets;
     }
 

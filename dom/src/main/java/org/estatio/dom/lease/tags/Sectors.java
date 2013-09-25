@@ -46,7 +46,7 @@ public class Sectors extends EstatioDomainService<Sector> {
     }
 
     @Hidden
-    public Sector findByName(String name) {
+    public Sector findByName(final String name) {
         return uniqueMatch("findByName", "name", name);
     }
 

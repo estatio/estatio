@@ -46,7 +46,8 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public InvoiceItemForLease newInvoiceItem(LeaseTerm leaseTerm, LocalDate startDate, LocalDate dueDate) {
+    public InvoiceItemForLease newInvoiceItem(
+            final LeaseTerm leaseTerm, final LocalDate startDate, final LocalDate dueDate) {
         InvoiceItemForLease invoiceItem = newTransientInstance();
         invoiceItem.setStartDate(startDate);
         invoiceItem.setDueDate(dueDate);
@@ -60,17 +61,22 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     /**
      * 
-     * @param leaseReference - not a {@link Lease}, because reference supports wildcards; there could be multiple leases to find.
+     * @param leaseReference
+     *            - not a {@link Lease}, because reference supports wildcards;
+     *            there could be multiple leases to find.
      */
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<InvoiceItemForLease> findInvoiceItemsByLease(
-            final @Named("Lease reference or name") @DescribedAs("May include wildcards '*' and '?'") String leaseReferenceOrName,
+            final @Named("Lease reference or name") @DescribedAs("May include wildcards '*' and '?'") 
+            String leaseReferenceOrName,
             final @Named("Start Date") LocalDate startDate, 
             final @Named("Due Date") LocalDate dueDate) {
-        return allMatches("findByLeaseAndStartDateAndDueDate", "leaseReferenceOrName", StringUtils.wildcardToRegex(leaseReferenceOrName), "startDate", startDate, "dueDate", dueDate);
+        return allMatches("findByLeaseAndStartDateAndDueDate",
+                "leaseReferenceOrName", StringUtils.wildcardToRegex(leaseReferenceOrName),
+                "startDate", startDate,
+                "dueDate", dueDate);
     }
-
     
     // //////////////////////////////////////
     

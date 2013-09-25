@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.agreement;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

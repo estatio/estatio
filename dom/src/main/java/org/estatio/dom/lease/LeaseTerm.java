@@ -29,20 +29,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -60,6 +46,20 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -99,7 +99,9 @@ import org.apache.isis.applib.annotation.Where;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
+public abstract class LeaseTerm 
+        extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> 
+        implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
@@ -112,7 +114,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     @Override
-    public void setLockable(LeaseTermStatus lockable) {
+    public void setLockable(final LeaseTermStatus lockable) {
         setStatus(lockable);
     }
 
@@ -300,7 +302,7 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 
@@ -470,10 +472,12 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     @Programmatic
-    public void removeUnapprovedInvoiceItemsForDate(LocalDate startDate, LocalDate dueDate) {
+    public void removeUnapprovedInvoiceItemsForDate(final LocalDate startDate, final LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && 
+                    startDate.equals(invoiceItem.getStartDate()) && 
+                    dueDate.equals(invoiceItem.getDueDate())) {
                 invoiceItem.setInvoice(null);
                 invoiceItem.clearLeaseTerm();
                 getContainer().flush();
@@ -483,7 +487,9 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     @Programmatic
-    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(
+            final LocalDate startDate, 
+            final LocalDate dueDate) {
         InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
             ii = invoiceItemsForLease.newInvoiceItem(this, startDate, dueDate);
@@ -492,10 +498,15 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     @Programmatic
-    public InvoiceItemForLease findUnapprovedInvoiceItemFor(LocalDate startDate, LocalDate dueDate) {
+    public InvoiceItemForLease findUnapprovedInvoiceItemFor(
+            final LocalDate startDate, 
+            final LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && this.equals(invoiceItem.getLeaseTerm()) && startDate.equals(invoiceItem.getStartDate()) && dueDate.equals(invoiceItem.getDueDate())) {
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && 
+                    this.equals(invoiceItem.getLeaseTerm()) && 
+                    startDate.equals(invoiceItem.getStartDate()) && 
+                    dueDate.equals(invoiceItem.getDueDate())) {
                 return invoiceItem;
             }
         }
@@ -503,11 +514,13 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     }
 
     @Programmatic
-    public BigDecimal invoicedValueFor(LocalDate startDate) {
+    public BigDecimal invoicedValueFor(final LocalDate startDate) {
         BigDecimal invoicedValue = new BigDecimal(0);
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || invoiceItem.getStartDate() == null || invoiceItem.getStartDate().compareTo(startDate) != 0) {
+            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || 
+                    invoiceItem.getStartDate() == null || 
+                    invoiceItem.getStartDate().compareTo(startDate) != 0) {
                 continue;
             }
             invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
@@ -518,12 +531,18 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     // //////////////////////////////////////
 
     @Hidden
-    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate) {
+    public LeaseTerm calculate(
+            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Due Date") LocalDate dueDate) {
         return calculate(startDate, dueDate, InvoiceRunType.NORMAL_RUN);
     }
 
-    public LeaseTerm calculate(@Named("Period Start Date") LocalDate startDate, @Named("Due Date") LocalDate dueDate, @Named("Run Type") InvoiceRunType runType) {
-        invoiceCalculationService.calculateAndInvoice(this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
+    public LeaseTerm calculate(
+            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Due Date") LocalDate dueDate, 
+            final @Named("Run Type") InvoiceRunType runType) {
+        invoiceCalculationService.calculateAndInvoice(
+                this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
         return this;
     }
 
@@ -547,17 +566,21 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     // //////////////////////////////////////
 
     public LeaseTerm createNext() {
-        LocalDate newStartDate = getEndDate() == null ? this.getFrequency().nextDate(this.getStartDate()) : this.getEndDate().plusDays(1);
+        final LocalDate newStartDate = getEndDate() == null
+                ? this.getFrequency().nextDate(this.getStartDate())
+                : this.getEndDate().plusDays(1);
         return createNext(newStartDate);
     }
 
-    LeaseTerm createNext(LocalDate nextStartDate) {
+    LeaseTerm createNext(final LocalDate nextStartDate) {
         if (getNext() != null) {
             return null;
         }
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null && terminationDate.isBefore(nextStartDate))
+        if (terminationDate != null && 
+            terminationDate.isBefore(nextStartDate)) {
             return null;
+        }
 
         final LocalDate endDate = getLeaseItem().calculatedEndDate();
         final LocalDate oneYearFromNow = getClockService().now().plusYears(1);
@@ -594,20 +617,23 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
     protected void update() {
         // terminate the last term
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null && next == null)
-            if (getEndDate() == null || getEndDate().compareTo(terminationDate) > 0)
+        if (terminationDate != null && next == null) {
+            if (getEndDate() == null || getEndDate().compareTo(terminationDate) > 0) {
                 setEndDate(terminationDate);
+            }
+        }
     }
 
     // //////////////////////////////////////
 
     @Programmatic
-    public BigDecimal valueForDueDate(LocalDate dueDate) {
+    public BigDecimal valueForDueDate(final LocalDate dueDate) {
         return getTrialValue();
     }
 
     @Programmatic
-    BigDecimal valueForPeriod(InvoicingFrequency frequency, LocalDate periodStartDate, LocalDate dueDate) {
+    BigDecimal valueForPeriod(
+            final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
         if (getStatus().isUnlocked()) {
             BigDecimal value = invoiceCalculationService.calculatedValue(this, periodStartDate, dueDate, frequency);
             return value;
@@ -619,13 +645,13 @@ public abstract class LeaseTerm extends EstatioTransactionalObject<LeaseTerm, Le
 
     private InvoiceItemsForLease invoiceItemsForLease;
 
-    public final void injectInvoiceItemsForLease(InvoiceItemsForLease invoiceItemsForLease) {
+    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
     }
 
     private InvoiceCalculationService invoiceCalculationService;
 
-    public final void injectInvoiceCalculationService(InvoiceCalculationService invoiceCalculationService) {
+    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
 

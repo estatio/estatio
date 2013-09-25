@@ -41,7 +41,7 @@ public enum LeaseType {
 
     private final String title;
 
-    private LeaseType(String title) {
+    private LeaseType(final String title) {
         this.title = title;
     }
 

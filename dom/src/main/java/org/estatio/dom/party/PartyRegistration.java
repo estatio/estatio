@@ -56,7 +56,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class PartyRegistration extends EstatioTransactionalObject<PartyRegistration, Status> implements WithIntervalMutable<PartyRegistration> {
+public class PartyRegistration
+        extends EstatioTransactionalObject<PartyRegistration, Status>
+        implements WithIntervalMutable<PartyRegistration> {
 
     public PartyRegistration() {
         // TODO: I made this up...
@@ -69,7 +71,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -147,7 +149,8 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<PartyRegistration> changeDates = new WithIntervalMutable.Helper<PartyRegistration>(this);
+    private WithIntervalMutable.Helper<PartyRegistration> changeDates = 
+            new WithIntervalMutable.Helper<PartyRegistration>(this);
     WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
         return changeDates;
     }
@@ -216,7 +219,7 @@ public class PartyRegistration extends EstatioTransactionalObject<PartyRegistrat
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 

@@ -23,11 +23,8 @@ import javax.jdo.annotations.Extension;
 import com.google.common.base.Function;
 
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -56,7 +53,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
     // //////////////////////////////////////
 
     public static final Function<Tag, String> GET_VALUE = new Function<Tag, String>() {
-        public String apply(Tag tag) {
+        public String apply(final Tag tag) {
             return tag != null ? tag.getValue() : null;
         }
     };
@@ -78,7 +75,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
         return taggable;
     }
 
-    public void setTaggable(Taggable taggable) {
+    public void setTaggable(final Taggable taggable) {
         this.taggable = taggable;
     }
 
@@ -92,7 +89,7 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
         return objectType;
     }
     
-    public void setObjectType(String objectType) {
+    public void setObjectType(final String objectType) {
         this.objectType = objectType;
     }
 
@@ -136,10 +133,5 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
     // //////////////////////////////////////
 
 
-    private BookmarkService bookmarkService;
-
-    public final void injectBookmarkService(BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
-    }
 
 }

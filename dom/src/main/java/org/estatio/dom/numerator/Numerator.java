@@ -70,7 +70,9 @@ import org.estatio.dom.Status;
         )
 })
 @Immutable
-public class Numerator extends EstatioTransactionalObject<Numerator, Status> implements Comparable<Numerator>, BookmarkHolder {
+public class Numerator 
+        extends EstatioTransactionalObject<Numerator, Status> 
+        implements Comparable<Numerator>, BookmarkHolder {
 
     public Numerator() {
         super("name, objectType, objectIdentifier, format", Status.UNLOCKED, Status.LOCKED);
@@ -82,7 +84,7 @@ public class Numerator extends EstatioTransactionalObject<Numerator, Status> imp
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 

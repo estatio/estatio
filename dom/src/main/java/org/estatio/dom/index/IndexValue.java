@@ -35,6 +35,8 @@ import org.estatio.dom.WithStartDate;
 @javax.jdo.annotations.Query(name = "findByIndexAndStartDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.IndexValue WHERE indexBase.index == :index && startDate >= :startDate")
 public class IndexValue extends EstatioRefDataObject<IndexValue> implements WithStartDate {
 
+    public static final int VALUE_SCALE = 4;
+
     public IndexValue() {
         super("indexBase, startDate desc");
     }
@@ -93,7 +95,7 @@ public class IndexValue extends EstatioRefDataObject<IndexValue> implements With
 
     private BigDecimal value;
 
-    @javax.jdo.annotations.Column(scale = 4, allowsNull="false")
+    @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull="false")
     @Disabled
     public BigDecimal getValue() {
         return value;

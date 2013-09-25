@@ -18,14 +18,13 @@
  */
 package org.estatio.dom.lease;
 
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.index.Index;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class LeaseTermForIndexableRentTest_beanProperties extends AbstractBeanPropertiesTest {
 

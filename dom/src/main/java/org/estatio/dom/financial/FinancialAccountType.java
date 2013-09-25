@@ -30,7 +30,7 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
 
     private final Class<? extends FinancialAccount> clss;
 
-    private FinancialAccountType(Class<? extends FinancialAccount> clss) {
+    private FinancialAccountType(final Class<? extends FinancialAccount> clss) {
         this.clss = clss;
     }
 
@@ -40,7 +40,7 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
 
     // //////////////////////////////////////
 
-    public FinancialAccount create(DomainObjectContainer container){ 
+    public FinancialAccount create(final DomainObjectContainer container){ 
         try {
             FinancialAccount account = container.newTransientInstance(clss);
             return account;

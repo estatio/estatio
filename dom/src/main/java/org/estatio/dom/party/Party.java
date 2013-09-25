@@ -19,41 +19,35 @@
 package org.estatio.dom.party;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
-
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
@@ -61,7 +55,7 @@ import org.apache.isis.applib.annotation.Title;
     @javax.jdo.annotations.Query( 
             name = "findByReferenceOrName", language = "JDOQL",
             value = "SELECT FROM org.estatio.dom.party.Party " +
-            		"WHERE reference.matches(:referenceOrName) || name.matches(:referenceOrName)"),
+                    "WHERE reference.matches(:referenceOrName) || name.matches(:referenceOrName)"),
     @javax.jdo.annotations.Query(
             name = "findByReference", language = "JDOQL", 
             value = "SELECT FROM org.estatio.dom.party.Party " + 
@@ -74,7 +68,9 @@ import org.apache.isis.applib.annotation.Title;
 })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
 @Bookmarkable
-public abstract class Party extends EstatioTransactionalObject<Party, Status> implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
+public abstract class Party
+        extends EstatioTransactionalObject<Party, Status>
+        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
 
     public Party() {
         super("name", Status.UNLOCKED, Status.LOCKED);
@@ -86,7 +82,7 @@ public abstract class Party extends EstatioTransactionalObject<Party, Status> im
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 

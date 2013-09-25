@@ -97,7 +97,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -257,7 +257,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 
@@ -291,13 +291,13 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         private final AgreementRole ar;
         private final Party party;
 
-        public SiblingFactory(AgreementRole ar, Party party) {
+        public SiblingFactory(final AgreementRole ar, final Party party) {
             this.ar = ar;
             this.party = party;
         }
 
         @Override
-        public AgreementRole newRole(LocalDate startDate, LocalDate endDate) {
+        public AgreementRole newRole(final LocalDate startDate, final LocalDate endDate) {
             return ar.getAgreement().createRole(ar.getType(), party, startDate, endDate);
         }
     }
@@ -451,7 +451,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return new Predicate<AgreementRole>(){
 
             @Override
-            public boolean apply(AgreementRole input) {
+            public boolean apply(final AgreementRole input) {
                 return input != null && input.getType() == art;
             }};
     }
@@ -465,7 +465,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return new Predicate<AgreementRole>(){
             
             @Override
-            public boolean apply(AgreementRole input) {
+            public boolean apply(final AgreementRole input) {
                 return input != null && input.getAgreement().getAgreementType() == at;
             }};
     }
@@ -476,7 +476,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
      */
     public static Predicate<AgreementRole> whetherCurrentIs(final boolean current) {
         return new Predicate<AgreementRole>() {
-            public boolean apply(AgreementRole candidate) {
+            public boolean apply(final AgreementRole candidate) {
                 return candidate != null && candidate.isCurrent() == current;
             }
         };
@@ -487,19 +487,20 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
      */
     static Function<AgreementRole, Party> partyOf() {
         return new Function<AgreementRole, Party>() {
-            public Party apply(AgreementRole agreementRole) {
+            public Party apply(final AgreementRole agreementRole) {
                 return agreementRole != null ? agreementRole.getParty() : null;
             }
         };
     }
 
     /**
-     * A {@link Function} that obtains the role's {@link AgreementRole#getEffectiveEndDate() effective end date} attribute.
+     * A {@link Function} that obtains the role's {@link AgreementRole#getEffectiveEndDate() effective end date} 
+     * attribute.
      */
     static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
         return new Function<AgreementRole, LocalDate>() {
             @Override
-            public LocalDate apply(AgreementRole input) {
+            public LocalDate apply(final AgreementRole input) {
                 return input != null? input.getEffectiveEndDate(): null;
             }};
     }
@@ -525,7 +526,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         createAgreementRoleCommunicationChannel(type, communicationChannel, startDate, null);
     }
 
-    private AgreementRoleCommunicationChannel findCommunicationChannel(final AgreementRoleCommunicationChannelType type, final LocalDate date) {
+    private AgreementRoleCommunicationChannel findCommunicationChannel(
+            final AgreementRoleCommunicationChannelType type, final LocalDate date) {
         return agreementRoleCommunicationChannels.findByRoleAndTypeAndContainsDate(this, type, date);
     }
 
@@ -533,13 +535,15 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private CommunicationChannelContributions communicationChannelContributions;
 
-    public final void injectCommunicationChannelContributions(CommunicationChannelContributions communicationChannelContributions) {
+    public final void injectCommunicationChannelContributions(
+            final CommunicationChannelContributions communicationChannelContributions) {
         this.communicationChannelContributions = communicationChannelContributions;
     }
 
     private AgreementRoleCommunicationChannels agreementRoleCommunicationChannels;
 
-    public final void injectAgreementRoleCommunicationChannels(AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
+    public final void injectAgreementRoleCommunicationChannels(
+            final AgreementRoleCommunicationChannels agreementRoleCommunicationChannels) {
         this.agreementRoleCommunicationChannels = agreementRoleCommunicationChannels;
     }
 }

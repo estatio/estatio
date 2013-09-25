@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
-import org.estatio.dom.party.PartyRegistration;
 
 public class TaxRateTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<TaxRate> {
 

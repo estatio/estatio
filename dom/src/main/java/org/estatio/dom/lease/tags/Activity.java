@@ -54,7 +54,7 @@ public class Activity extends EstatioRefDataObject<Activity> implements WithName
     public Sector getSector() {
         return sector;
     }
-    public void setSector(Sector sector) {
+    public void setSector(final Sector sector) {
         this.sector = sector;
     }
     

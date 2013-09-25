@@ -92,7 +92,7 @@ public class IBANHelper {
 
         private String format;
 
-        private IBANFormat(String format) {
+        private IBANFormat(final String format) {
             this.format = format;
         }
 
@@ -101,18 +101,17 @@ public class IBANHelper {
         }
     }
 
-    public static void verifyAndUpdate(BankAccount account) {
+    public static void verifyAndUpdate(final BankAccount account) {
         if (!IBANValidator.valid(account.getIBAN())) {
             // not a valid account, see if we can fetch
             assembleIBAN(account);
-        } else
-        {
+        } else {
             // break into separate parts
             disassembleIBAN(account);
         }
     }
 
-    public static void disassembleIBAN(BankAccount account) {
+    public static void disassembleIBAN(final BankAccount account) {
         String iban = account.getIBAN();
         IBANFormat format = IBANFormat.valueOf(iban.substring(0, 2));
         if (format != null) {
@@ -123,7 +122,7 @@ public class IBANHelper {
         }
     }
 
-    public static void assembleIBAN(BankAccount account) {
+    public static void assembleIBAN(final BankAccount account) {
         Country country = account.getCountry();
         if (country != null) {
             IBANFormat format = IBANFormat.valueOf(country.getAlpha2Code());
@@ -142,7 +141,8 @@ public class IBANHelper {
         }
     }
 
-    private static String partWithCharacter(String format, String iban, String character) {
+    private static String partWithCharacter(
+            final String format, final String iban, final String character) {
         int beginIndex = format.indexOf(character);
         int endIndex = format.lastIndexOf(character);
         if (beginIndex > -1 && endIndex >= beginIndex) {
@@ -151,7 +151,10 @@ public class IBANHelper {
         return "";
     }
 
-    private static String injectPartWithCharacter(String ibanFormat, String character, String replacement) {
+    private static String injectPartWithCharacter(
+            String ibanFormat,
+            final String character, 
+            final String replacement) {
         int beginIndex = ibanFormat.indexOf(character);
         int endIndex = ibanFormat.lastIndexOf(character);
         String pattern = "";

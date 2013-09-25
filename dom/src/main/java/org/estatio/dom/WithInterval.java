@@ -21,7 +21,6 @@ package org.estatio.dom;
 import java.util.Iterator;
 import java.util.SortedSet;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -29,13 +28,9 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
@@ -118,7 +113,8 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             } 
             return null;
         }
-        public static <T extends WithInterval<T>> T firstElseNull(SortedSet<T> roles, Predicate<T> predicate) {
+        public static <T extends WithInterval<T>> T firstElseNull(
+                final SortedSet<T> roles, final Predicate<T> predicate) {
             final Iterable<T> filter = Iterables.filter(roles, predicate);
             final Iterator<T> iterator = filter.iterator();
             return iterator.hasNext()? iterator.next(): null;

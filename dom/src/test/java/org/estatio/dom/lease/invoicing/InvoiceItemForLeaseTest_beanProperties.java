@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import org.junit.Test;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
@@ -27,9 +29,6 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.tax.Tax;
-
-import org.junit.Ignore;
-import org.junit.Test;
 
 public class InvoiceItemForLeaseTest_beanProperties extends AbstractBeanPropertiesTest {
 

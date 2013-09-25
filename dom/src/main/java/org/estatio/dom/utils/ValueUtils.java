@@ -28,11 +28,11 @@ public class ValueUtils {
     /**
      * First non-null value.
      */
-    public static <T> T coalesce(T eitherThis, T orThat) {
+    public static <T> T coalesce(final T eitherThis, final T orThat) {
         return eitherThis != null ? eitherThis : orThat;
     }
 
-    public static <T> T firstElseNull(Iterable<T> iterable) {
+    public static <T> T firstElseNull(final Iterable<T> iterable) {
         Iterator<T> iterator = iterable.iterator();
         return iterator.hasNext() ? iterator.next() : null;
     }

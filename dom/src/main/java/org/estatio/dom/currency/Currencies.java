@@ -72,7 +72,7 @@ public class Currencies extends EstatioDomainService<Currency> {
 
 
     @Programmatic
-    public List<Currency> autoComplete(String searchArg) {
+    public List<Currency> autoComplete(final String searchArg) {
         return allMatches("findByReferenceOrDescription", "searchArg", searchArg);
     }
     

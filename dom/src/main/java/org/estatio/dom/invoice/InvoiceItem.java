@@ -47,6 +47,7 @@ import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -67,7 +68,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
     }
 
     @Override
-    public void setLockable(Status lockable) {
+    public void setLockable(final Status lockable) {
         setStatus(lockable);
     }
 
@@ -95,7 +96,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         return sequence;
     }
 
-    public void setSequence(BigInteger sequence) {
+    public void setSequence(final BigInteger sequence) {
         this.sequence = sequence;
     }
 
@@ -311,7 +312,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(LocalDate localDate) {
+    private boolean isActiveOn(final LocalDate localDate) {
         return getInterval().contains(localDate);
     }
 
@@ -347,7 +348,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
         if (getTax() != null) {
             BigDecimal percentage = tax.percentageFor(getDueDate());
             if (percentage != null) {
-                BigDecimal rate = percentage.divide(BigDecimal.valueOf(100));
+                BigDecimal rate = percentage.divide(LeaseConstants.PERCENTAGE_DIVISOR);
                 vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
             }
         }
@@ -379,7 +380,7 @@ public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem
 
     private Charges charges;
 
-    public final void injectCharges(Charges charges) {
+    public final void injectCharges(final Charges charges) {
         this.charges = charges;
     }
 

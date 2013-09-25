@@ -18,17 +18,11 @@
  */
 package org.estatio.dom;
 
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.collect.ImmutableMap;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
-import org.reflections.Reflections;
 
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;

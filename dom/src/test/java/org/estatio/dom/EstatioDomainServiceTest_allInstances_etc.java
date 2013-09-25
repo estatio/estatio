@@ -18,24 +18,16 @@
  */
 package org.estatio.dom;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.filter.Filter;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 public class EstatioDomainServiceTest_allInstances_etc {
 

@@ -36,7 +36,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
 
     private final String keyProperties;
 
-    public EstatioDomainObject(String keyProperties) {
+    public EstatioDomainObject(final String keyProperties) {
         this.keyProperties = keyProperties;
     }
 
@@ -50,7 +50,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
     protected ClockService getClockService() {
         return clockService;
     }
-    public final void injectClockService(ClockService clockService) {
+    public final void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
     
@@ -67,7 +67,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
      * with the {@link EventBusService}; Isis makes no guarantees as to whether
      * a subscribing domain object is in memory or not to receive the event.
      */
-    public final void injectEventBusService(EventBusService eventBusService) {
+    public final void injectEventBusService(final EventBusService eventBusService) {
         this.eventBusService = eventBusService;
     }
     
@@ -79,7 +79,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> exte
     }
 
     @Override
-    public int compareTo(T other) {
+    public int compareTo(final T other) {
         return ObjectContracts.compare(this, other, keyProperties);
     }
 
