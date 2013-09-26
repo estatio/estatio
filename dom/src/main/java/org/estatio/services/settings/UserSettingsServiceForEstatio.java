@@ -18,6 +18,12 @@ package org.estatio.services.settings;
 
 import org.apache.isis.objectstore.jdo.applib.service.settings.UserSettingsServiceJdoHidden;
 
+/**
+ * Estatio-specific version of {@link UserSettingsServiceJdoHidden}.
+ * 
+ * <p>
+ * Currently performs no customisation; for symmetry with {@link ApplicationSettingsServiceForEstatio}.
+ */
 public class UserSettingsServiceForEstatio extends UserSettingsServiceJdoHidden {
 
 }

@@ -132,29 +132,36 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     @Hidden
     public void attachToInvoice() {
-        Lease lease = getLeaseTerm().getLeaseItem().getLease();
-        if (lease != null) {
-            final AgreementRoleType landlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
-            final AgreementRoleType tenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        final Lease lease = getLeaseTerm().getLeaseItem().getLease();
+        if (lease == null) {
+            return;
+        } 
+        final AgreementRoleType landlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
+        final AgreementRoleType tenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
-            AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
-            Party seller = role.getParty();
-            Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
-            PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
-            Invoice invoice = invoices.findInvoiceByVarious(
-                    seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
-            if (invoice == null) {
-                invoice = invoices.newInvoice();
-                invoice.setBuyer(buyer);
-                invoice.setSeller(seller);
-                invoice.setSource(lease);
-                invoice.setDueDate(getDueDate());
-                invoice.setPaymentMethod(paymentMethod);
-                invoice.setStatus(InvoiceStatus.NEW);
-            }
-            setSequence(invoice.nextItemSequence());
-            this.setInvoice(invoice);
+        final AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
+        final Party seller = role.getParty();
+        final Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
+        final PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
+        Invoice invoice = invoices.findInvoiceByVarious(
+                seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
+        if (invoice == null) {
+            invoice = createInvoice(seller, buyer, paymentMethod, lease);
         }
+        setSequence(invoice.nextItemSequence());
+        this.setInvoice(invoice);
+    }
+
+    private Invoice createInvoice(final Party seller, final Party buyer, final PaymentMethod paymentMethod, final Lease lease) {
+        Invoice invoice;
+        invoice = invoices.newInvoice();
+        invoice.setBuyer(buyer);
+        invoice.setSeller(seller);
+        invoice.setSource(lease);
+        invoice.setDueDate(getDueDate());
+        invoice.setPaymentMethod(paymentMethod);
+        invoice.setStatus(InvoiceStatus.NEW);
+        return invoice;
     }
 
     // //////////////////////////////////////

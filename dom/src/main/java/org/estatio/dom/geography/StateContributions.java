@@ -29,6 +29,12 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.estatio.dom.EstatioDomainService;
 
+/**
+ * Decouples {@link Country} from {@link State}s.
+ * 
+ * <p>
+ * TODO: no good reason to do this; they are in the same cluster.  Map in the usual fashion. 
+ */
 @Hidden
 public class StateContributions extends EstatioDomainService<State> {
 

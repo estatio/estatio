@@ -104,7 +104,10 @@ language governing permissions and limitations under the License.
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
+     
+        <!-- TODO: instate at some point (though only for public methods   
         <module name="JavadocType"/>
+        -->
         <!-- 
         <module name="JavadocMethod"/>
         <module name="JavadocVariable"/>
@@ -117,8 +120,6 @@ language governing permissions and limitations under the License.
         <module name="PackageName"/>
         <module name="TypeName"/>
         <module name="LocalFinalVariableName"/>
-        <!-- 
-         -->
 
 
         <!-- Checks for Headers                              -->
@@ -142,11 +143,10 @@ language governing permissions and limitations under the License.
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sf.net/config_import.html -->
         <module name="AvoidStarImport"/>
-        <module name="IllegalImport"/>  <!-- defaults to sun.* packages -->
+        <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
-        <!-- 
-         -->
+
     
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
@@ -160,14 +160,15 @@ language governing permissions and limitations under the License.
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <module name="EmptyStatement"/>
-        <!-- 
-        <module name="DoubleCheckedLocking"/>  
-         -->
         <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
+        
+        <!-- not supported in maven 
+        <module name="DoubleCheckedLocking"/>  
+         -->
         <!-- 
         <module name="AvoidInlineConditionals"/>
         <module name="EqualsHashCode"/>
@@ -179,9 +180,6 @@ language governing permissions and limitations under the License.
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
         <!-- 
-        
-        
-        
         
         <module name="VisibilityModifier"/>
          -->

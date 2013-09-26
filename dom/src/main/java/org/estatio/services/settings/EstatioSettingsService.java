@@ -72,9 +72,7 @@ public class EstatioSettingsService {
         } else {
             if(newEpochDate != null) {
                 getApplicationSettings().newLocalDate(EPOCH_DATE_KEY, "Cutover date to Estatio", newEpochDate);
-            } else {
-                // no-op
-            }
+            } // else no-op
         }
     }
 

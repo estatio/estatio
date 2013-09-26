@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
  *
  *
@@ -26,6 +25,11 @@ import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettin
 
 import org.estatio.dom.ApplicationSettingCreator;
 
+/**
+ * Estatio-specific version of {@link ApplicationSettingsServiceHidden} that automatically 
+ * {@link #installDefaultsIfRequired() installs defaults} and lets {@link ApplicationSetting setting}s
+ * be {@link #find(String) found} and {@link #listAll() retrieved}.
+ */
 public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsServiceJdoHidden  {
 
     @Override

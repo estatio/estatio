@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright 2012-2013 Eurocommercial Properties NV
  *
  *
@@ -23,6 +22,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
+    
     /**
      * The 'beginning of time' so far as Estatio is concerned.
      * 
