@@ -47,7 +47,6 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.api.Api;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithInterval;
@@ -514,7 +513,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     // //////////////////////////////////////
 
     /**
-     * Called by {@link Api}.
+     * Called by migration API.
      */
     @Programmatic
     public void addCommunicationChannel(

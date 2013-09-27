@@ -44,7 +44,7 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.DateTimeUtils;
+import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 
 public class Leases extends EstatioDomainService<Lease> {
@@ -63,6 +63,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
+            // CHECKSTYLE:OFF
             final @Named("Reference") String reference, 
             final @Named("Name") String name, 
             final @Named("Start Date") LocalDate startDate, 
@@ -71,10 +72,12 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
             LocalDate endDate, 
             final @Optional @Named("Landlord") Party landlord, 
-            final @Optional @Named("Tentant") Party tenant) {
+            final @Optional @Named("Tentant") Party tenant
+            // CHECKSTYLE:ON
+            ) {
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
-            final Period p = DateTimeUtils.stringToPeriod(duration);
+            final Period p = JodaPeriodUtils.asPeriod(duration);
             if (p != null) {
                 calculatedEndDate = startDate.plus(p).minusDays(1);
             }

@@ -16,7 +16,9 @@
  */
 package org.estatio.dom.invoice;
 
-public class Constants {
+public final class Constants {
+    
+    private Constants(){}
 
     public static final String INVOICE_NUMBER_NUMERATOR_NAME = "Invoice number";
     public static final String COLLECTION_NUMBER_NUMERATOR_NAME = "Collection number";

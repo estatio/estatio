@@ -193,40 +193,50 @@ public class InvoiceCalculationService {
             final LocalDate dueDate, 
             final CalculationResult calculationResult, 
             final InvoicingFrequency invoicingFrequency) {
-        if (calculationResult != null) {
-            BigDecimal invoicedValue;
-            LocalDate epochDate = estatioSettingsService.fetchEpochDate();
+        if (calculationResult == null) {
+            return;
+        } 
+        final LocalDate epochDate = estatioSettingsService.fetchEpochDate();
 
-            if (epochDate != null && calculationResult.frequencyInterval.startDate().compareTo(epochDate) < 0) {
-                CalculationResult mockResult = calculate(
-                        leaseTerm, 
-                        calculationResult.frequencyInterval.startDate(), 
-                        calculationResult.frequencyInterval.startDate(), 
-                        invoicingFrequency);
-                invoicedValue = mockResult.getCalculatedValue();
-            } else {
-                invoicedValue = leaseTerm.invoicedValueFor(calculationResult.frequencyInterval.startDate());
-            }
-            BigDecimal newValue = calculationResult.value.subtract(invoicedValue);
-            if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                InvoiceItemForLease invoiceItem = 
-                        leaseTerm.findOrCreateUnapprovedInvoiceItemFor(
-                                calculationResult.frequencyInterval.startDate(), dueDate);
-                invoiceItem.setNetAmount(newValue);
-                invoiceItem.setQuantity(BigDecimal.ONE);
-                LeaseItem leaseItem = leaseTerm.getLeaseItem();
-                Charge charge = leaseItem.getCharge();
-                invoiceItem.setCharge(charge);
-                invoiceItem.setDescription(charge.getDescription());
-                invoiceItem.setDueDate(dueDate);
-                invoiceItem.setStartDate(calculationResult.frequencyInterval.startDate());
-                invoiceItem.setEndDate(calculationResult.frequencyInterval.endDateExcluding());
-                Tax tax = charge.getTax();
-                invoiceItem.setTax(tax);
-                invoiceItem.attachToInvoice();
-                invoiceItem.verify();
-            }
+        final LocalDate startDate = calculationResult.frequencyInterval.startDate();
+        BigDecimal invoicedValue;
+        if (epochDate != null && startDate.compareTo(epochDate) < 0) {
+            CalculationResult mockResult = calculate(
+                    leaseTerm, 
+                    startDate, 
+                    startDate, 
+                    invoicingFrequency);
+            invoicedValue = mockResult.getCalculatedValue();
+        } else {
+            invoicedValue = leaseTerm.invoicedValueFor(startDate);
         }
+        BigDecimal newValue = calculationResult.value.subtract(invoicedValue);
+        if (newValue.compareTo(BigDecimal.ZERO) != 0) {
+            createInvoiceItem(leaseTerm, dueDate, calculationResult, newValue);
+        }
+    }
+
+    private void createInvoiceItem(
+            final LeaseTerm leaseTerm, 
+            final LocalDate dueDate, 
+            final CalculationResult calculationResult, 
+            final BigDecimal newValue) {
+        InvoiceItemForLease invoiceItem = 
+                leaseTerm.findOrCreateUnapprovedInvoiceItemFor(
+                        calculationResult.frequencyInterval.startDate(), dueDate);
+        invoiceItem.setNetAmount(newValue);
+        invoiceItem.setQuantity(BigDecimal.ONE);
+        LeaseItem leaseItem = leaseTerm.getLeaseItem();
+        Charge charge = leaseItem.getCharge();
+        invoiceItem.setCharge(charge);
+        invoiceItem.setDescription(charge.getDescription());
+        invoiceItem.setDueDate(dueDate);
+        invoiceItem.setStartDate(calculationResult.frequencyInterval.startDate());
+        invoiceItem.setEndDate(calculationResult.frequencyInterval.endDateExcluding());
+        Tax tax = charge.getTax();
+        invoiceItem.setTax(tax);
+        invoiceItem.attachToInvoice();
+        invoiceItem.verify();
     }
 
     // //////////////////////////////////////

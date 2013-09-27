@@ -59,6 +59,7 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
     @MemberOrder(name="CommunicationChannels", sequence="1")
     @NotInServiceMenu
     public CommunicationChannelOwner newPostal(
+            // CHECKSTYLE:OFF
             final @Named("Owner") CommunicationChannelOwner owner, 
             final @Named("Type") CommunicationChannelType type,
             final Country country, 
@@ -66,7 +67,9 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
             final @Named("Address Line 1") String address1, 
             final @Named("Address Line 2") @Optional String address2, 
             final @Named("Postal Code") String postalCode, 
-            final @Named("City") String city) {
+            final @Named("City") String city
+            // CHECKSTYLE:ON
+            ) {
         communicationChannels.newPostal(owner, type, address1, address2, postalCode, city, state, country);
         return owner;
     }

@@ -29,7 +29,7 @@ public interface ApplicationSettingCreator {
     String getDescription();
     Object getDefaultValue();
 
-    static class Helper {
+    final static class Helper {
         private Helper(){}
         public static void create(
                 final ApplicationSettingCreator creator, final ApplicationSettingsServiceRW appSettings) {

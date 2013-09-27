@@ -20,11 +20,18 @@ package org.estatio.dom;
 
 import org.apache.isis.applib.util.ObjectContracts.ToStringEvaluator;
 
+
+/**
+ * Indicates that the implementing class has a {@link #getReference() reference}.
+ */
 public interface WithReferenceGetter {
 
     public String getReference();
     
-    public static class ToString {
+    /**
+     * Utility class for obtaining the string value of an object that implements {@link WithReferenceGetter}. 
+     */
+    public final static class ToString {
         private ToString() {}
         public static ToStringEvaluator evaluator() {
             return new ToStringEvaluator() {

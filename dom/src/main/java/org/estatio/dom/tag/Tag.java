@@ -25,7 +25,6 @@ import com.google.common.base.Function;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
@@ -44,7 +43,9 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Unique(name = "tag_bookmark_and_name", members = { "taggable", "name" })
 @Immutable
-public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
+public class Tag 
+        extends EstatioRefDataObject<Tag> 
+        implements WithNameGetter {
 
     public Tag() {
         super("taggable, name");
@@ -129,8 +130,6 @@ public class Tag extends EstatioRefDataObject<Tag> implements WithNameGetter {
     public void setValue(final String value) {
         this.value = value;
     }
-
-    // //////////////////////////////////////
 
 
 

@@ -22,7 +22,9 @@ import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
 
-public class IBANValidator {
+public final class IBANValidator {
+    
+    private IBANValidator(){}
 
     private static final int IBAN_LENGTH_MAX = 32;
 

@@ -51,35 +51,40 @@ public class TurnoverRentRuleHelper {
 
     public BigDecimal calculateRent(final BigDecimal turnover) {
         BigDecimal total = BigDecimal.ZERO;
+        if (isValid() && turnover != null) {
+            total = doCalculateRent(turnover);
+        }
+        return total.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal doCalculateRent(final BigDecimal turnover) {
+        BigDecimal total = BigDecimal.ZERO;
         BigDecimal prevCap = BigDecimal.ZERO;
         BigDecimal cap = BigDecimal.ZERO;
         BigDecimal percentage;
-        BigDecimal base;
-        if (isValid() && turnover != null) {
-            for (int i = 0; i < rules.length; i = i + 2) {
-                base = BigDecimal.ZERO;
-                if (i == rules.length - 1) {
-                    // the last or single item
-                    percentage = new BigDecimal(rules[i]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
+        for (int i = 0; i < rules.length; i = i + 2) {
+            BigDecimal base = BigDecimal.ZERO;
+            if (i == rules.length - 1) {
+                // the last or single item
+                percentage = new BigDecimal(rules[i]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
+                if (turnover.compareTo(prevCap) > 0) {
+                    base = turnover.subtract(prevCap);
+                }
+            } else {
+                percentage = new BigDecimal(rules[i + 1]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
+                cap = new BigDecimal(rules[i]);
+                if (turnover.compareTo(cap) > 0) {
+                    base = cap.subtract(prevCap);
+                } else {
                     if (turnover.compareTo(prevCap) > 0) {
                         base = turnover.subtract(prevCap);
                     }
-                } else {
-                    percentage = new BigDecimal(rules[i + 1]).divide(LeaseConstants.PERCENTAGE_DIVISOR);
-                    cap = new BigDecimal(rules[i]);
-                    if (turnover.compareTo(cap) > 0) {
-                        base = cap.subtract(prevCap);
-                    } else {
-                        if (turnover.compareTo(prevCap) > 0) {
-                            base = turnover.subtract(prevCap);
-                        }
-                    }
                 }
-                total = total.add(base.multiply(percentage).setScale(2, RoundingMode.HALF_UP));
-                prevCap = cap;
             }
+            total = total.add(base.multiply(percentage).setScale(2, RoundingMode.HALF_UP));
+            prevCap = cap;
         }
-        return total.setScale(2, RoundingMode.HALF_UP);
+        return total;
     }
 
     public static boolean isNumeric(final String str) {

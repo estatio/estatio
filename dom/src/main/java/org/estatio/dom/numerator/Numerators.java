@@ -122,6 +122,14 @@ public class Numerators extends EstatioDomainService<Numerator> {
         }
 
         // else create
+        return createNumerator(numeratorName, scopedToIfAny, format, lastIncrement);
+    }
+
+    private Numerator createNumerator(
+            final String numeratorName, 
+            final Object scopedToIfAny, 
+            final String format, 
+            final BigInteger lastIncrement) {
         final Numerator numerator = newTransientInstance();
         numerator.setName(numeratorName);
         if(scopedToIfAny != null) {

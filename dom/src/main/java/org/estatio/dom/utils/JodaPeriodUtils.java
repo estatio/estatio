@@ -22,10 +22,15 @@ import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
-public class DateTimeUtils {
+/**
+ * Utilities for manipulating parsing JODA {@link Period}s.
+ */
+public final class JodaPeriodUtils {
+    
+    private JodaPeriodUtils(){}
 
-    public static Period stringToPeriod(String inputString) {
-        inputString = inputString.replaceAll(" ", "").toLowerCase();
+    public static Period asPeriod(final String inputStr) {
+        final String inputStrNormalized = inputStr.replaceAll(" ", "").toLowerCase();
         PeriodFormatter formatter = new PeriodFormatterBuilder().
                 appendYears().appendSuffix("y").
                 appendMonths().appendSuffix("m").
@@ -34,14 +39,13 @@ public class DateTimeUtils {
                 appendMinutes().appendSuffix("min").
                 toFormatter();
         try {
-            Period p = formatter.parsePeriod(inputString);
-            return p;
+            return formatter.parsePeriod(inputStrNormalized);
         } catch (Exception e) {
             return null;
         }
     }
 
-    public static String periodToString(final Period period) {
+    public static String asString(final Period period) {
         StringBuilder sb = new StringBuilder();
         Period leftOver = period;
         int y = leftOver.getYears();

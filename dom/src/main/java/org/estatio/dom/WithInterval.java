@@ -91,7 +91,7 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
     public boolean isCurrent();
 
     
-    public static class Util {
+    public final static class Util {
         private Util() {}
         public static LocalDate effectiveStartDateOf(final WithInterval<?> wi) {
             if (wi.getStartDate() != null) {

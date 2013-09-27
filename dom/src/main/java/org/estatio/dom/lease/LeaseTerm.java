@@ -465,6 +465,9 @@ public abstract class LeaseTerm
             // TODO: this term is outside the scope of the lease termination
             // date and there are invoice items related to it so the amount
             // should be credited
+            
+            @SuppressWarnings("unused")
+            int dummy=0;
         } else {
             this.modifyPrevious(null);
             this.setLeaseItem(null);

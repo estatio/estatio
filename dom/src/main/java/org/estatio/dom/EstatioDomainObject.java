@@ -28,7 +28,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
         extends AbstractDomainObject 
         implements Comparable<T> {
 
-    private static ObjectContracts estatioObjectContracts = 
+    private static ObjectContracts ESTATIO_OBJECT_CONTRACTS = 
             new ObjectContracts()
                 .with(WithCodeGetter.ToString.evaluator())
                 .with(WithDescriptionGetter.ToString.evaluator())
@@ -77,7 +77,7 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
 
     @Override
     public String toString() {
-        return estatioObjectContracts.toStringOf(this, keyProperties());
+        return ESTATIO_OBJECT_CONTRACTS.toStringOf(this, keyProperties());
     }
 
     @Override

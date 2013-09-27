@@ -21,7 +21,7 @@ package org.estatio.dom.utils;
 import java.util.Iterator;
 
 
-public class ValueUtils {
+public final class ValueUtils {
     
     private ValueUtils(){}
 

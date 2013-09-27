@@ -79,15 +79,15 @@ public class BankAccount extends FinancialAccount {
 
     // //////////////////////////////////////
 
-    private String IBAN;
+    private String iban;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     public String getIBAN() {
-        return IBAN;
+        return iban;
     }
 
-    public void setIBAN(final String IBAN) {
-        this.IBAN = IBAN;
+    public void setIBAN(final String iban) {
+        this.iban = iban;
     }
 
     // //////////////////////////////////////

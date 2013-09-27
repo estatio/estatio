@@ -48,13 +48,16 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public BankMandate newBankMandate(
+            // CHECKSTYLE:OFF
             final @Named("Reference") String reference,
             final @Named("Name") String name,
             final @Named("Start Date") LocalDate startDate,
             final @Optional @Named("End Date") LocalDate endDate,
             final @Optional @Named("Debtor") Party debtor,
             final @Optional @Named("Creditor") Party creditor, 
-            final BankAccount bankAccount) {
+            final BankAccount bankAccount
+            // CHECKSTYLE:ON
+            ) {
         BankMandate mandate = newTransientInstance();
         mandate.setAgreementType(agreementTypes.find(FinancialConstants.AT_MANDATE));
         mandate.setReference(reference);

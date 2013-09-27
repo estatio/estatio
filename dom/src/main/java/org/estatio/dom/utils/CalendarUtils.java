@@ -24,7 +24,7 @@ import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-public class CalendarUtils {
+public final class CalendarUtils {
 
     /**
      * TODO: EST-112
@@ -49,24 +49,22 @@ public class CalendarUtils {
     public static Interval currentInterval(
             final LocalDate date, 
             final String rrule, 
-            LocalDate startDate) {
-        LocalDate nextDate;
-
+            final LocalDate startDate) {
         if (date == null || startDate == null || rrule == null) {
             return null;
         }
-
-        LocalDateIterator iter;
         try {
-            iter = LocalDateIteratorFactory.createLocalDateIterator(rrule, startDate, true);
+            LocalDate thisDate = startDate;
+            final LocalDateIterator iter = 
+                    LocalDateIteratorFactory.createLocalDateIterator(rrule, thisDate, true);
             while (iter.hasNext()) {
-                nextDate = iter.next();
+                LocalDate nextDate = iter.next();
                 if (nextDate.compareTo(date) > 0) {
                     return new Interval(
-                            startDate.toInterval().getStartMillis(), 
+                            thisDate.toInterval().getStartMillis(), 
                             nextDate.toInterval().getStartMillis());
                 }
-                startDate = nextDate;
+                thisDate = nextDate;
             }
         } catch (Exception e) {
             // TODO - what's meant to happen here???

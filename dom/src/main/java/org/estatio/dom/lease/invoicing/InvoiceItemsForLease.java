@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.utils.StringUtils;
 
@@ -62,7 +61,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     /**
      * 
      * @param leaseReference
-     *            - not a {@link Lease}, because reference supports wildcards;
+     *            - not a <tt>Lease</tt>, because reference supports wildcards;
      *            there could be multiple leases to find.
      */
     @ActionSemantics(Of.SAFE)

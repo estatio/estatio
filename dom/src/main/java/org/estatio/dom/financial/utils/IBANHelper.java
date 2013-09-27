@@ -21,7 +21,9 @@ package org.estatio.dom.financial.utils;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.geography.Country;
 
-public class IBANHelper {
+public final class IBANHelper {
+    
+    private IBANHelper(){}
 
     public enum IBANFormat {
         AL("ALkk aaas sssx cccc cccc cccc cccc"),
@@ -152,7 +154,7 @@ public class IBANHelper {
     }
 
     private static String injectPartWithCharacter(
-            String ibanFormat,
+            final String ibanFormat,
             final String character, 
             final String replacement) {
         int beginIndex = ibanFormat.indexOf(character);
@@ -160,9 +162,10 @@ public class IBANHelper {
         String pattern = "";
         if (beginIndex > -1 && endIndex >= beginIndex) {
             pattern = ibanFormat.substring(beginIndex, endIndex + 1);
-            ibanFormat = ibanFormat.replace(pattern, replacement);
+            return ibanFormat.replace(pattern, replacement);
+        } else {
+            return ibanFormat;
         }
-        return ibanFormat;
     }
 
 }

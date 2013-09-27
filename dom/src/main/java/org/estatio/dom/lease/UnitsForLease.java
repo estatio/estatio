@@ -18,11 +18,10 @@
  */
 package org.estatio.dom.lease;
 
-import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 
 /**
- * By subclassing, in effect defines the factory for the implementation of {@link Unit}.
+ * By subclassing, in effect defines the factory for the implementation of <tt>Unit</tt>.
  */
 public class UnitsForLease extends Units<UnitForLease> {
 

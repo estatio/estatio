@@ -63,6 +63,8 @@ language governing permissions and limitations under the License.
     <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
     <module name="Translation"/>
 
+    <module name="SuppressionCommentFilter"/>
+
     <module name="TreeWalker">
 
         <property name="cacheFile" value="${checkstyle.cache.file}"/>
