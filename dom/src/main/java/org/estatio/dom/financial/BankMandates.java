@@ -48,7 +48,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public BankMandate newBankMandate(
-            // CHECKSTYLE:OFF
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
             final @Named("Reference") String reference,
             final @Named("Name") String name,
             final @Named("Start Date") LocalDate startDate,

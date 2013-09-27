@@ -63,7 +63,27 @@ language governing permissions and limitations under the License.
     <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
     <module name="Translation"/>
 
-    <module name="SuppressionCommentFilter"/>
+    <!--
+    eg:
+    //CHECKSTYLE.OFF: IllegalCatch - Much more readable than catching 7 exceptions
+    catch (Exception e)
+    //CHECKSTYLE.ON: IllegalCatch 
+     -->
+    <module name="SuppressionCommentFilter">
+        <property name="offCommentFormat" value="CHECKSTYLE.OFF\: ([\w\|]+)"/>
+        <property name="onCommentFormat" value="CHECKSTYLE.ON\: ([\w\|]+)"/>
+        <property name="checkFormat" value="$1"/>
+    </module>
+
+    <!--
+    eg:
+    // CHECKSTYLE IGNORE check FOR NEXT 1 LINES
+    public void onClick(View view) { ... }     -->    
+    <module name="SuppressWithNearbyCommentFilter">
+        <property name="commentFormat" value="CHECKSTYLE.IGNORE (\w+) FOR NEXT (\d+) LINES"/>
+        <property name="checkFormat" value="$1"/>
+        <property name="influenceFormat" value="$2"/>
+    </module>
 
     <module name="TreeWalker">
 

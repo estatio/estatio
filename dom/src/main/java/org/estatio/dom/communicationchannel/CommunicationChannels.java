@@ -44,7 +44,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
     public PostalAddress newPostal(
-            // CHECKSTYLE:OFF
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String address1,
@@ -53,7 +53,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
             final String city,
             final State state,
             final Country country
-            // CHECKSTYLE:ON
+            // CHECKSTYLE:ON ParameterNumber
             ) {
         final PostalAddress pa = newTransientInstance(PostalAddress.class);
         pa.setType(type);

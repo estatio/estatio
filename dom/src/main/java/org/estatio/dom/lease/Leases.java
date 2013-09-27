@@ -63,7 +63,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
-            // CHECKSTYLE:OFF
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
             final @Named("Reference") String reference, 
             final @Named("Name") String name, 
             final @Named("Start Date") LocalDate startDate, 

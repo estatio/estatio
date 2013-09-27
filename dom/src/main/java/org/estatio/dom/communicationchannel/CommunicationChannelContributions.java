@@ -59,7 +59,7 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
     @MemberOrder(name="CommunicationChannels", sequence="1")
     @NotInServiceMenu
     public CommunicationChannelOwner newPostal(
-            // CHECKSTYLE:OFF
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
             final @Named("Owner") CommunicationChannelOwner owner, 
             final @Named("Type") CommunicationChannelType type,
             final Country country, 
