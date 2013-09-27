@@ -229,7 +229,9 @@ language governing permissions and limitations under the License.
             <property name="message" value="Line has trailing spaces."/>
         </module>
          -->
+         <!-- removed; we detect these in other ways. 
         <module name="TodoComment"/>
+          -->
         <module name="UpperEll"/>
         <module name="FinalParameters"/>
          
