@@ -195,19 +195,22 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.occupancies = units;
     }
 
-    public Occupancy addOccupancy(
+    public Occupancy occupy(
             final @Named("unit") UnitForLease unit) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
-        Occupancy leaseUnit = occupanciesRepo.newOccupancy(this, unit);
-        occupancies.add(leaseUnit);
-        return leaseUnit;
+        Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit);
+        occupancies.add(occupancy);
+        return occupancy;
     }
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
+    /**
+     * Added to the default fetch group in an attempt to resolve pre-prod error, EST-233. 
+     */
+    @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup="true")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseItem> getItems() {
         return items;

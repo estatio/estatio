@@ -473,7 +473,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         Occupancy leaseUnit = leaseUnits.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
         if (leaseUnit == null) {
-            leaseUnit = lease.addOccupancy(unit);
+            leaseUnit = lease.occupy(unit);
             leaseUnit.setStartDate(startDate);
         }
 
