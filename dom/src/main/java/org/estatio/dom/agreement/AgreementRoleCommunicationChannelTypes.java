@@ -26,7 +26,8 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.estatio.dom.EstatioDomainService;
 
 @Hidden
-public class AgreementRoleCommunicationChannelTypes extends EstatioDomainService<AgreementRoleCommunicationChannelType> {
+public class AgreementRoleCommunicationChannelTypes 
+        extends EstatioDomainService<AgreementRoleCommunicationChannelType> {
 
     public AgreementRoleCommunicationChannelTypes() {
         super(AgreementRoleCommunicationChannelTypes.class, AgreementRoleCommunicationChannelType.class);

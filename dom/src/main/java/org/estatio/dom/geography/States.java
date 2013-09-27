@@ -30,7 +30,11 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-public class States extends EstatioDomainService<State> {
+/**
+ * Domain service acting as a repository and factory of geographic {@link State}s.
+ */
+public class States 
+        extends EstatioDomainService<State> {
 
     public States() {
         super(States.class, State.class);
@@ -44,9 +48,14 @@ public class States extends EstatioDomainService<State> {
         return allInstances();
     }
 
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.2")
-    public State newState(final @Named("Reference") String reference, final @Named("Name") String name, final Country country) {
+    public State newState(
+            final @Named("Reference") String reference, 
+            final @Named("Name") String name, 
+            final Country country) {
         final State state = newTransientInstance();
         return createState(reference, name, country, state);
     }

@@ -32,6 +32,17 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 
+/**
+ * Represents an externally-defined index (eg the retail price index) which provides values for a sequence of dates
+ * (typically monthly).  The values are decimals representing an increase in percentage points, eg 1.05 to mean a
+ * 5% increase.
+ * 
+ * <p>
+ * Periodically the index will be rebased, to reset the percentage point back to 1.00.  Therefore the index does not
+ * hold {@link IndexValue index value}s directly, instead it {@link #getIndexBases() holds} a succession of
+ * {@link IndexBase}s.  It is the {@link IndexBase}s that {@link IndexBase#getValues() hold} the {@link IndexValue}s.
+ * The rebasing {@link IndexBase#getFactor() factor} is held in {@link IndexBase}.
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Query(
         name = "findByReference", language = "JDOQL", 
@@ -42,7 +53,9 @@ import org.estatio.dom.WithReferenceComparable;
     @javax.jdo.annotations.Unique(name = "INDEX_NAME_UNIQUE_IDX", members="name")
 })
 @Immutable
-public class Index extends EstatioRefDataObject<Index> implements WithReferenceComparable<Index>, WithNameUnique {
+public class Index 
+        extends EstatioRefDataObject<Index> 
+        implements WithReferenceComparable<Index>, WithNameUnique {
 
     public Index() {
         super("reference");

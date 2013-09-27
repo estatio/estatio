@@ -43,7 +43,8 @@ import org.estatio.dom.WithTitleUnique;
 })
 @Immutable
 @Bounded
-public class AgreementType extends EstatioRefDataObject<AgreementType> implements WithTitleComparable<AgreementType>, WithTitleUnique {
+public class AgreementType extends EstatioRefDataObject<AgreementType> 
+        implements WithTitleComparable<AgreementType>, WithTitleUnique {
 
     public AgreementType() {
         super("title");
@@ -98,7 +99,8 @@ public class AgreementType extends EstatioRefDataObject<AgreementType> implement
 
     private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
     
-    public final void injectAgreementRoleCommunicationChannelTypes(final AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
+    public final void injectAgreementRoleCommunicationChannelTypes(
+            final AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
         this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
     }
     

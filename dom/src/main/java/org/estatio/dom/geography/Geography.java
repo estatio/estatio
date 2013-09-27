@@ -40,7 +40,9 @@ import org.estatio.dom.WithReferenceComparable;
 @javax.jdo.annotations.Uniques({
     @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX", members="name")
 })
-public abstract class Geography extends EstatioRefDataObject<Geography> implements WithReferenceComparable<Geography>, WithNameUnique {
+public abstract class Geography 
+        extends EstatioRefDataObject<Geography> 
+        implements WithReferenceComparable<Geography>, WithNameUnique {
 
     public Geography() {
         super("reference");

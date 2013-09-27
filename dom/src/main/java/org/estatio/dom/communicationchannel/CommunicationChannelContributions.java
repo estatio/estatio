@@ -38,6 +38,14 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
+/**
+ * Domain service that contributes actions to create a new 
+ * {@link #newPostal(CommunicationChannelOwner, CommunicationChannelType, Country, State, String, String, String, 
+ * String) postal address}, {@link #newEmail(CommunicationChannelOwner, CommunicationChannelType, String) email} or
+ * {@link #newPhoneOrFax(CommunicationChannelOwner, CommunicationChannelType, String) phone/fax}, and contributes
+ * a collection to list the {@link #communicationChannels(CommunicationChannelOwner) communication channels} of a
+ * particular {@link CommunicationChannelOwner}. 
+ */
 @Hidden
 public class CommunicationChannelContributions extends EstatioDomainService<CommunicationChannel> {
 
@@ -153,7 +161,9 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
     
     @NotContributed
     @Programmatic
-    public CommunicationChannel findCommunicationChannelForType(final CommunicationChannelOwner owner, final CommunicationChannelType type) {
+    public CommunicationChannel findCommunicationChannelForType(
+            final CommunicationChannelOwner owner, 
+            final CommunicationChannelType type) {
         final SortedSet<CommunicationChannel> communicationChannels = this.communicationChannels(owner);
         for (CommunicationChannel c : communicationChannels) {
             if (c.getType().equals(type)) {

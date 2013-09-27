@@ -44,7 +44,9 @@ import org.estatio.dom.WithReferenceUnique;
 })
 @Immutable
 @Bounded
-public class ChargeGroup extends EstatioRefDataObject<ChargeGroup> implements WithReferenceComparable<ChargeGroup>, WithReferenceUnique {
+public class ChargeGroup
+        extends EstatioRefDataObject<ChargeGroup>
+        implements WithReferenceComparable<ChargeGroup>, WithReferenceUnique {
 
     public ChargeGroup() {
         super("reference");

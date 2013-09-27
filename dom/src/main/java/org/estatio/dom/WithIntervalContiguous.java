@@ -32,7 +32,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
-public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> extends WithIntervalMutable<T>, Comparable<T> {
+public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> 
+        extends WithIntervalMutable<T>, Comparable<T> {
 
     
     /**

@@ -35,11 +35,18 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-// TODO: is this in scope?
 
+/**
+ * An event that has or is scheduled to occur at some point in time or over a period of time.
+ * 
+ * <p>
+ * NB: not currently in scope.
+ */
 //@PersistenceCapable
 //@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
-public class Event extends EstatioTransactionalObject<Event, Status> implements WithIntervalMutable<Event>, WithDescriptionGetter {
+public class Event 
+        extends EstatioTransactionalObject<Event, Status> 
+        implements WithIntervalMutable<Event>, WithDescriptionGetter {
 
     public Event() {
         super("startDate desc nullsLast, id", Status.UNLOCKED, Status.LOCKED);

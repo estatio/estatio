@@ -27,9 +27,16 @@ import org.apache.isis.applib.services.publish.EventPayloadForActionInvocation;
 
 import org.estatio.dom.invoice.Invoice;
 
+/**
+ * Describes the payload for publishing an {@link Invoice} using Isis'. 
+ */
 public class InvoiceEagerlyRenderedPayload extends EventPayloadForActionInvocation<Invoice> {
 
-    public InvoiceEagerlyRenderedPayload(final Identifier actionIdentifier, final Invoice target, final List<? extends Object> arguments, final Object result) {
+    public InvoiceEagerlyRenderedPayload(
+            final Identifier actionIdentifier, 
+            final Invoice target, 
+            final List<? extends Object> arguments, 
+            final Object result) {
         super(actionIdentifier, target, arguments, result);
     }
 

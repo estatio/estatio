@@ -79,7 +79,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @javax.jdo.annotations.Index(name="REFERENCE_IDX", members={"reference"})
 @Bookmarkable
-public abstract class Agreement<S extends Lockable> extends EstatioTransactionalObject<Agreement<S>, S> implements WithReferenceComparable<Agreement<S>>, WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, WithNameGetter {
+public abstract class Agreement<S extends Lockable> 
+        extends EstatioTransactionalObject<Agreement<S>, S> 
+        implements WithReferenceComparable<Agreement<S>>, 
+                   WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, 
+                   WithNameGetter {
 
     public Agreement(final S statusWhenUnlocked, final S statusWhenLockedIfAny) {
         super("reference", statusWhenUnlocked, statusWhenLockedIfAny);

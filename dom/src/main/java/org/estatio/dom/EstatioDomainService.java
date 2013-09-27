@@ -35,7 +35,9 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
     private final Class<? extends EstatioDomainService<T>> serviceType;
     private final Class<T> entityType;
 
-    protected EstatioDomainService(final Class<? extends EstatioDomainService<T>> serviceType, final Class<T> objectType) {
+    protected EstatioDomainService(
+            final Class<? extends EstatioDomainService<T>> serviceType, 
+            final Class<T> objectType) {
         this.serviceType = serviceType;
         this.entityType = objectType;
     }

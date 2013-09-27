@@ -36,7 +36,9 @@ import org.estatio.dom.tax.Tax;
                 "WHERE reference.matches(:reference)")
 @Bounded
 @Immutable
-public class Charge extends EstatioRefDataObject<Charge> implements WithReferenceGetter, WithCodeGetter, WithDescriptionGetter {
+public class Charge 
+        extends EstatioRefDataObject<Charge> 
+        implements WithReferenceGetter, WithCodeGetter, WithDescriptionGetter {
 
     public Charge() {
         super("code");

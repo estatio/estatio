@@ -31,7 +31,11 @@ import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 
-public class IndexValues extends EstatioDomainService<IndexValue> {
+/**
+ * Domain service acting as a repository of {@link IndexValue}s.
+ */
+public class IndexValues 
+        extends EstatioDomainService<IndexValue> {
 
     public IndexValues() {
         super(IndexValues.class, IndexValue.class);
@@ -41,7 +45,10 @@ public class IndexValues extends EstatioDomainService<IndexValue> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Indices", sequence = "3")
-    public IndexValue newIndexValue(final @Named("Index Base") IndexBase indexBase, final @Named("Start Date") LocalDate startDate, final @Named("Value") BigDecimal value) {
+    public IndexValue newIndexValue(
+            final @Named("Index Base") IndexBase indexBase, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Value") BigDecimal value) {
         IndexValue indexValue = newTransientInstance();
         indexValue.setStartDate(startDate);
         indexValue.setValue(value);
@@ -51,9 +58,14 @@ public class IndexValues extends EstatioDomainService<IndexValue> {
     }
     
 
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Indices", sequence = "6")
-    public IndexValue findIndexValueByIndexAndStartDate(final Index index, final @Named("Start Date") LocalDate startDate) {
-        return firstMatch("findByIndexAndStartDate", "index", index, "startDate", startDate);
+    public IndexValue findIndexValueByIndexAndStartDate(
+            final Index index, 
+            final @Named("Start Date") LocalDate startDate) {
+        return firstMatch("findByIndexAndStartDate", 
+                "index", index, 
+                "startDate", startDate);
     }
 
     // //////////////////////////////////////

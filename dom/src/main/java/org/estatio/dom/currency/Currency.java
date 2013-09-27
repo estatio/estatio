@@ -26,19 +26,25 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithDescriptionUnique;
 import org.estatio.dom.WithReferenceComparable;
 
+/**
+ * Represents the {@link Currency} of some amount of money.
+ * 
+ * <p>
+ * Used for taxes, indices, invoices, charges.
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
             name = "findByReference", language = "JDOQL", 
             value = "SELECT " +
-            		"FROM org.estatio.dom.currency.Currency " +
-            		"WHERE reference.matches(:reference)"),
-	@javax.jdo.annotations.Query(
-	        name = "findByReferenceOrDescription", language = "JDOQL", 
-	        value = "SELECT " +
-	                "FROM org.estatio.dom.currency.Currency " +
-	        "WHERE reference.matches(:searchArg) " + 
-	        "|| description.matches(:searchArg)")
+                    "FROM org.estatio.dom.currency.Currency " +
+                    "WHERE reference.matches(:reference)"),
+    @javax.jdo.annotations.Query(
+            name = "findByReferenceOrDescription", language = "JDOQL", 
+            value = "SELECT " +
+                    "FROM org.estatio.dom.currency.Currency " +
+                    "WHERE reference.matches(:searchArg) " + 
+                    "|| description.matches(:searchArg)")
 })
 @javax.jdo.annotations.Uniques({
     @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX", members="description")
@@ -46,7 +52,9 @@ import org.estatio.dom.WithReferenceComparable;
 @Bounded
 @Immutable
 @AutoComplete(repository=Currencies.class, action="autoComplete")
-public class Currency extends EstatioRefDataObject<Currency> implements WithReferenceComparable<Currency>, WithDescriptionUnique {
+public class Currency 
+        extends EstatioRefDataObject<Currency> 
+        implements WithReferenceComparable<Currency>, WithDescriptionUnique {
 
     public Currency() {
         super("reference");

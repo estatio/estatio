@@ -23,6 +23,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Immutable;
 
+/**
+ * Represents a geographic {@link State} {@link #getCountry() within} a {@link Country}.
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
@@ -39,7 +42,8 @@ import org.apache.isis.applib.annotation.Immutable;
                 + "WHERE reference == :reference") 
 })
 @Immutable
-public class State extends Geography {
+public class State 
+        extends Geography {
 
     private Country country;
 

@@ -45,6 +45,10 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+/**
+ * A lease-specific subclass of {@link InvoiceItem}, referring {@link #getLeaseTerm() back} to the {@link LeaseTerm}
+ * that acts as the <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.  
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
@@ -152,7 +156,11 @@ public class InvoiceItemForLease extends InvoiceItem {
         this.setInvoice(invoice);
     }
 
-    private Invoice createInvoice(final Party seller, final Party buyer, final PaymentMethod paymentMethod, final Lease lease) {
+    private Invoice createInvoice(
+            final Party seller, 
+            final Party buyer, 
+            final PaymentMethod paymentMethod, 
+            final Lease lease) {
         Invoice invoice;
         invoice = invoices.newInvoice();
         invoice.setBuyer(buyer);

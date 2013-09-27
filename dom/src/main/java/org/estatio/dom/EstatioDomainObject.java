@@ -24,7 +24,9 @@ import org.apache.isis.applib.util.ObjectContracts;
 
 import org.estatio.services.clock.ClockService;
 
-public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> extends AbstractDomainObject implements Comparable<T> {
+public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>> 
+        extends AbstractDomainObject 
+        implements Comparable<T> {
 
     private static ObjectContracts estatioObjectContracts = 
             new ObjectContracts()

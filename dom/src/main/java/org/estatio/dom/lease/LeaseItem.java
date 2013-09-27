@@ -53,6 +53,15 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+/**
+ * An item component of an {@link #getLease() owning} {@link Lease}.  Each is of a {@link #getType() particular} 
+ * {@link LeaseItemType}; Estatio currently defines three such: {@link LeaseItemType#RENT (indexable) rent}, 
+ * {@link LeaseItemType#TURNOVER_RENT turnover rent} and {@link LeaseItemType#SERVICE_CHARGE service charge}
+ * 
+ * <p>
+ * Each item gives rise to a succession of {@link LeaseTerm}s, typically generated on a quarterly basis.  The lease 
+ * terms (by implementing <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s. 
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Indices({
@@ -67,7 +76,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndStartDate", 
                 language = "JDOQL", 
-                value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && type == :type && startDate == :startDate"),
+                value = "SELECT FROM org.estatio.dom.lease.LeaseItem "
+                        + "WHERE lease == :lease "
+                        + "   && type == :type "
+                        + "   && startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndStartDateAndSequence", 
                 language = "JDOQL", 
@@ -83,8 +95,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> 
-                       implements WithIntervalMutable<LeaseItem>, WithSequence {
+public class LeaseItem 
+        extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> 
+        implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     private static final int PAGE_SIZE = 15;
 

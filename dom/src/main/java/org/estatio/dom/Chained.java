@@ -27,10 +27,12 @@ public interface Chained<T extends Chained<T>> {
 
     
     /**
-     * The object (usually an {@link WithInterval}, but not necessarily) that precedes this one, if any (not necessarily contiguously)..
+     * The object (usually an {@link WithInterval}, but not necessarily) that precedes this one, if any (not 
+     * necessarily contiguously)..
      * 
      * <p>
-     * Implementations where successive intervals are contiguous should instead implement {@link WithIntervalContiguous}.
+     * Implementations where successive intervals are contiguous should instead implement 
+     * {@link WithIntervalContiguous}.
      */
     @Hidden(where=Where.ALL_TABLES)
     @Disabled
@@ -38,10 +40,12 @@ public interface Chained<T extends Chained<T>> {
     public T getPrevious();
 
     /**
-     * The object (usually an {@link WithInterval}, but not necessarily) that succeeds this one, if any (not necessarily contiguously).
+     * The object (usually an {@link WithInterval}, but not necessarily) that succeeds this one, if any (not 
+     * necessarily contiguously).
      * 
      * <p>
-     * Implementations where successive intervals are contiguous should instead implement {@link WithIntervalContiguous}.
+     * Implementations where successive intervals are contiguous should instead implement 
+     * {@link WithIntervalContiguous}.
      */
     @Hidden(where=Where.ALL_TABLES)
     @Disabled

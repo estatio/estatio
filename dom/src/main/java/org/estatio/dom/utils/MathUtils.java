@@ -21,10 +21,13 @@ package org.estatio.dom.utils;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+/**
+ * General-purpose math utilities.
+ */
 public final class MathUtils {
-	
-	private MathUtils() {}
-	
+    
+    private MathUtils() {}
+    
     public static BigDecimal round(final BigDecimal input, final int precision) {
         final MathContext mc = new MathContext(precision+1);
         return input.round(mc);

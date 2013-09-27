@@ -51,12 +51,21 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+/**
+ * Represents a line-item of an {@link #getInvoice() owning} {@link Invoice}.
+ * 
+ * <p>
+ * This class is, in fact, abstract.  The <tt>InvoiceItemForLease</tt> subclass decouples the <tt>invoice</tt> module
+ * from the <tt>lease</tt> module, and provides a many-to-many between the two concepts.
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem extends EstatioTransactionalObject<InvoiceItem, Status> implements WithInterval<InvoiceItem>, WithDescriptionGetter {
+public abstract class InvoiceItem 
+        extends EstatioTransactionalObject<InvoiceItem, Status> 
+        implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
         super("invoice, startDate desc nullsLast, charge, description, sequence", null, null);

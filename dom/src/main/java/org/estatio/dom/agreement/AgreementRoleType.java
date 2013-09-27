@@ -46,7 +46,8 @@ import org.estatio.dom.WithTitleComparable;
 })
 @Immutable
 @Bounded
-public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> implements WithTitleComparable<AgreementRoleType> {
+public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> 
+        implements WithTitleComparable<AgreementRoleType> {
 
     public AgreementRoleType() {
         super("title");

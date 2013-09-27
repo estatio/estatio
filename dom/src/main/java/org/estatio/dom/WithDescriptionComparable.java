@@ -18,6 +18,7 @@ package org.estatio.dom;
 
 
 
-public interface WithDescriptionComparable<T extends WithDescriptionComparable<T>> extends Comparable<T>, WithDescriptionGetter {
+public interface WithDescriptionComparable<T extends WithDescriptionComparable<T>> 
+        extends Comparable<T>, WithDescriptionGetter {
     void setDescription(String description);
 }

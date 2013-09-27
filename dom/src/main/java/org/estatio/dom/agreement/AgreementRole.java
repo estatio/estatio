@@ -81,9 +81,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> implements WithIntervalContiguous<AgreementRole> {
+public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> 
+        implements WithIntervalContiguous<AgreementRole> {
 
-    private final WithIntervalContiguous.Helper<AgreementRole> helper = new WithIntervalContiguous.Helper<AgreementRole>(this);
+    private final WithIntervalContiguous.Helper<AgreementRole> helper = 
+                new WithIntervalContiguous.Helper<AgreementRole>(this);
 
     // //////////////////////////////////////
 
@@ -366,7 +368,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "role")
-    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = new TreeSet<AgreementRoleCommunicationChannel>();
+    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = 
+            new TreeSet<AgreementRoleCommunicationChannel>();
 
     @Disabled
     @Render(Type.EAGERLY)
@@ -399,7 +402,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
     }
 
     public CommunicationChannel default1NewCommunicationChannel() {
-        final SortedSet<CommunicationChannel> partyChannels = communicationChannelContributions.communicationChannels(getParty());
+        final SortedSet<CommunicationChannel> partyChannels = 
+                communicationChannelContributions.communicationChannels(getParty());
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
@@ -414,7 +418,8 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         if (!Sets.filter(getCommunicationChannels(), type.matchingCommunicationChannel()).isEmpty()) {
             return "Add a successor/predecessor from existing communication channel";
         }
-        final SortedSet<CommunicationChannel> partyChannels = communicationChannelContributions.communicationChannels(getParty());
+        final SortedSet<CommunicationChannel> partyChannels = 
+                communicationChannelContributions.communicationChannels(getParty());
         if (!partyChannels.contains(communicationChannel)) {
             return "Communication channel must be one of those of this party";
         }

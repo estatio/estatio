@@ -31,7 +31,11 @@ import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 
-public class IndexBases extends EstatioDomainService<IndexBase> {
+/**
+ * Domain service acting as a repository of {@link IndexBase}s.
+ */
+public class IndexBases 
+        extends EstatioDomainService<IndexBase> {
 
     public IndexBases() {
         super(IndexBases.class, IndexBase.class);
@@ -41,7 +45,11 @@ public class IndexBases extends EstatioDomainService<IndexBase> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Indices", sequence = "2")
-    public IndexBase newIndexBase(final @Named("Index") Index index, final @Named("Previous Base") IndexBase previousBase, final @Named("Start Date") LocalDate startDate, final @Named("Factor") BigDecimal factor) {
+    public IndexBase newIndexBase(
+            final @Named("Index") Index index, 
+            final @Named("Previous Base") IndexBase previousBase, 
+            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance();
         indexBase.modifyPrevious(previousBase);
         indexBase.setStartDate(startDate);

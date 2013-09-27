@@ -31,7 +31,8 @@ import org.apache.isis.applib.annotation.NotPersisted;
  * Note: originally the {@link #getStatus() status'} type was declared as a generic type (<tt>S extends Locable</tt>).
  * However, suspect that the JDO enhancer has a bug, because getting the exception:
  * <pre>
- * java.lang.VerifyError: (class: org/estatio/dom/lease/Lease, method: setStatus signature: (Lorg/estatio/dom/Lockable;)V) Incompatible argument to function
+ * java.lang.VerifyError: (class: org/estatio/dom/lease/Lease, method: setStatus signature: 
+ *      (Lorg/estatio/dom/Lockable;)V) Incompatible argument to function
  *     at java.lang.Class.getDeclaredConstructors0(Native Method)
  *     at java.lang.Class.privateGetDeclaredConstructors(Unknown Source)
  *     at java.lang.Class.getConstructor0(Unknown Source)

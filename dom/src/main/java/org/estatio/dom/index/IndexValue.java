@@ -31,9 +31,19 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
 
+/**
+ * Holds the {@link #getValue() value} of an {@link #getIndexBase() index (base)} from a particular
+ * {@link #getStartDate() point in time} (until succeeded by some other value).
+ */
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(name = "findByIndexAndStartDate", language = "JDOQL", value = "SELECT FROM org.estatio.dom.index.IndexValue WHERE indexBase.index == :index && startDate >= :startDate")
-public class IndexValue extends EstatioRefDataObject<IndexValue> implements WithStartDate {
+@javax.jdo.annotations.Query(
+        name = "findByIndexAndStartDate", language = "JDOQL", 
+        value = "SELECT FROM org.estatio.dom.index.IndexValue "
+                + "WHERE indexBase.index == :index "
+                + "   && startDate >= :startDate")
+public class IndexValue 
+        extends EstatioRefDataObject<IndexValue> 
+        implements WithStartDate {
 
     public static final int VALUE_SCALE = 4;
 

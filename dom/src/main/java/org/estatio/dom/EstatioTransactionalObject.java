@@ -39,7 +39,9 @@ import org.apache.isis.applib.annotation.Hidden;
  * }
  * </pre>
  */
-public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> extends EstatioDomainObject<T> implements WithLockable<T,S> {
+public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> 
+        extends EstatioDomainObject<T> 
+        implements WithLockable<T,S> {
 
     /**
      * The status representing an unlocked - freely editable - object.

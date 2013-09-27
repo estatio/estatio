@@ -32,10 +32,19 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithStartDate;
+import org.estatio.dom.utils.MathUtils;
 
+/**
+ * Represents the periodic rebasing of an {@link Index}, and {@link #getValues() holds} the {@link IndexValue value}s
+ * until the {@link #getNext() next} rebasing. 
+ * 
+ * @see Index
+ */
 @javax.jdo.annotations.PersistenceCapable
 @Immutable
-public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithStartDate, Chained<IndexBase> {
+public class IndexBase 
+        extends EstatioRefDataObject<IndexBase> 
+        implements WithStartDate, Chained<IndexBase> {
 
     private static final int FACTOR_SCALE = 4;
 
@@ -105,7 +114,12 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
     }
 
     public String validateFactor(final BigDecimal factor) {
-        return (getPrevious() == null) ? null : (factor == null || factor.compareTo(BigDecimal.ZERO) == 0) ? "Factor is mandatory when there is a previous base" : null;
+        if (getPrevious() == null) {
+            return null;
+        }
+        return MathUtils.isZeroOrNull(factor)  
+            ? "Factor is mandatory when there is a previous base" 
+            : null;
     }
 
     // //////////////////////////////////////
@@ -186,10 +200,9 @@ public class IndexBase extends EstatioRefDataObject<IndexBase> implements WithSt
 
     @Programmatic
     public BigDecimal factorForDate(final LocalDate date) {
-        if (date.isBefore(getStartDate())) {
-            return getFactor().multiply(getPrevious().factorForDate(date));
-        }
-        return BigDecimal.ONE;
+        return date.isBefore(getStartDate()) 
+                ? getFactor().multiply(getPrevious().factorForDate(date)) 
+                : BigDecimal.ONE;
     }
 
 }

@@ -45,6 +45,10 @@ import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+/**
+ * Identifies the {@link #getParty() party} that plays a particular {@link #getType() type} of role with respect to
+ * a {@link #getAsset() fixed asset}, for a particular {@link #getInterval() interval of time}.
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
@@ -73,9 +77,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class FixedAssetRole extends EstatioTransactionalObject<FixedAssetRole, Status> implements WithIntervalContiguous<FixedAssetRole> {
+public class FixedAssetRole 
+        extends EstatioTransactionalObject<FixedAssetRole, Status> 
+        implements WithIntervalContiguous<FixedAssetRole> {
 
-    private WithIntervalContiguous.Helper<FixedAssetRole> helper = new WithIntervalContiguous.Helper<FixedAssetRole>(this);
+    private WithIntervalContiguous.Helper<FixedAssetRole> helper = 
+            new WithIntervalContiguous.Helper<FixedAssetRole>(this);
 
     // //////////////////////////////////////
 

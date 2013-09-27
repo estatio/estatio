@@ -80,7 +80,9 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRoleCommunicationChannel extends EstatioTransactionalObject<AgreementRoleCommunicationChannel, Status> implements WithIntervalContiguous<AgreementRoleCommunicationChannel> {
+public class AgreementRoleCommunicationChannel 
+        extends EstatioTransactionalObject<AgreementRoleCommunicationChannel, Status> 
+        implements WithIntervalContiguous<AgreementRoleCommunicationChannel> {
 
     private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =
             new WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel>(this);

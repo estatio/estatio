@@ -24,8 +24,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 
+/**
+ * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.
+ */
 @Hidden
-public class PostalAddresses extends EstatioDomainService<PostalAddress> {
+public class PostalAddresses 
+        extends EstatioDomainService<PostalAddress> {
 
     public PostalAddresses() {
         super(PostalAddresses.class, PostalAddress.class);
@@ -40,7 +44,12 @@ public class PostalAddresses extends EstatioDomainService<PostalAddress> {
             final String postalCode, 
             final String city, 
             final Country country) {
-        return firstMatch("findByAddress", "owner", owner, "address1", address1, "postalCode", postalCode, "city", city, "country", country);
+        return firstMatch("findByAddress", 
+                "owner", owner, 
+                "address1", address1, 
+                "postalCode", postalCode, 
+                "city", city, 
+                "country", country);
     }
 
 }

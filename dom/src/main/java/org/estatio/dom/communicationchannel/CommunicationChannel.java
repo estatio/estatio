@@ -37,6 +37,13 @@ import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 
+/**
+ * Represents a mechanism for communicating with its {@link CommunicationChannelOwner owner}.
+ *
+ * <p>
+ * This is an abstract entity; concrete subclasses are {@link PostalAddress postal}, {@link PhoneOrFaxNumber phone/fax}
+ *  and {@link EmailAddress email}.
+ */
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
@@ -56,7 +63,9 @@ import org.estatio.dom.WithReferenceGetter;
                         + "WHERE owner == :owner ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class CommunicationChannel extends EstatioTransactionalObject<CommunicationChannel, Status> implements WithNameGetter, WithReferenceGetter {
+public abstract class CommunicationChannel 
+        extends EstatioTransactionalObject<CommunicationChannel, Status> 
+        implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
         // TODO: description is annotated as optional,
@@ -102,6 +111,10 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
 
     private CommunicationChannelOwner owner;
 
+    /**
+     * nb: annotated as <tt>@Optional</tt>, but this is a workaround because cannot set 
+     * <tt>@Column(allowNulls="false")</tt> for a polymorphic relationship.
+     */
     @javax.jdo.annotations.Persistent(
             extensions = {
                     @Extension(vendorName = "datanucleus",
@@ -109,7 +122,10 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
                         value = "per-implementation"),
                     @Extension(vendorName = "datanucleus",
                         key = "implementation-classes",
-                        value = "org.estatio.dom.party.Organisation,org.estatio.dom.party.Person,org.estatio.dom.asset.Property,org.estatio.dom.asset.Unit")
+                        value = "org.estatio.dom.party.Organisation"
+                                + ",org.estatio.dom.party.Person"
+                                + ",org.estatio.dom.asset.Property"
+                                + ",org.estatio.dom.asset.Unit")
             })
     @javax.jdo.annotations.Columns({
         @javax.jdo.annotations.Column(name="OWNER_ORGANISATION_ID"),
@@ -117,7 +133,7 @@ public abstract class CommunicationChannel extends EstatioTransactionalObject<Co
         @javax.jdo.annotations.Column(name="OWNER_PROPERTY_ID"),
         @javax.jdo.annotations.Column(name="OWNER_UNIT_ID")
     })
-    @Optional // not really, but cannot set @Column(allowNulls="false") for a polymorphic relationship
+    @Optional 
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public CommunicationChannelOwner getOwner() {
