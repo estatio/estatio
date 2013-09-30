@@ -3,30 +3,43 @@
     {
       "span": 4,
       "memberGroups": {
-        "General": {
+        "Owner": {
           "members": {
-            "name": {},
-            "address1": {},
-            "address2": {},
-            "city": {},
-            "state": {},
-            "postalCode": {},
-            "country": {}
+            "owner": {},
+            "description": {}
           }
         }
       }
     },
     {
-      "span": 0,
-      "memberGroups": {}
+      "span": 4,
+      "memberGroups": {
+        "Postal Address": {
+          "members": {
+            "name": {},
+            "address1": {},
+            "address2": {},
+            "city": {},
+            "postalCode": {}
+          }
+        },
+        "Country": {
+          "members": {
+            "state": {},
+            "country": {
+                "actions": {
+                    "updateCountryAndState": {}
+                }
+            }
+          }
+        }
+      }
     },
     {
-      "span": 6,
+      "span": 4,
       "memberGroups": {
-        "Detail": {
+        "Status": {
           "members": {
-            "owner": {},
-            "description": {},
             "legal": {},
             "status": {},
             "type": {},

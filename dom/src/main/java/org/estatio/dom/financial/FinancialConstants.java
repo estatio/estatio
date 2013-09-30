@@ -29,7 +29,8 @@ public final class FinancialConstants {
     public final static String ART_DEBTOR = "Debtor";
     public final static String ART_OWNER = "Owner";
 
-    // TODO: change these to correct
+    // TODO: what are the AgreementRoleCommunicationChannelTypes for BankMandates 
+    // (or more generally, any subtype of Agreement defined by the financial module)?
     public final static String ARCCT_FOO_ADDRESS = "Foo Address";
     public final static String ARCCT_BAR_ADDRESS = "Bar Address";
 

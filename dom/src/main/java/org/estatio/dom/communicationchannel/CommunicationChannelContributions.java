@@ -58,8 +58,8 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="CommunicationChannels", sequence="1")
     @NotInServiceMenu
+    // CHECKSTYLE.OFF: ParameterNumber - Wicket viewer does not support aggregate value types
     public CommunicationChannelOwner newPostal(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
             final @Named("Owner") CommunicationChannelOwner owner, 
             final @Named("Type") CommunicationChannelType type,
             final Country country, 
@@ -68,11 +68,11 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
             final @Named("Address Line 2") @Optional String address2, 
             final @Named("Postal Code") String postalCode, 
             final @Named("City") String city
-            // CHECKSTYLE:ON
             ) {
         communicationChannels.newPostal(owner, type, address1, address2, postalCode, city, state, country);
         return owner;
     }
+    // CHECKSTYLE.ON: ParameterNumber
 
     public List<CommunicationChannelType> choices1NewPostal() {
         return CommunicationChannelType.matching(PostalAddress.class);

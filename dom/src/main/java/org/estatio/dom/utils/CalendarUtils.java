@@ -18,11 +18,15 @@
  */
 package org.estatio.dom.utils;
 
+import java.text.ParseException;
+
 import com.google.ical.compat.jodatime.LocalDateIterator;
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+
+import org.estatio.dom.EstatioApplicationException;
 
 public final class CalendarUtils {
 
@@ -66,9 +70,8 @@ public final class CalendarUtils {
                 }
                 thisDate = nextDate;
             }
-        } catch (Exception e) {
-            // TODO - what's meant to happen here???
-            e.printStackTrace();
+        } catch (final ParseException ex) {
+            throw new EstatioApplicationException("Unable to parse rrule >>" + rrule + "<<", ex);
         }
         return null;
     }

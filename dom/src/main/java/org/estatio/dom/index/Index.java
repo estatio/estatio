@@ -121,7 +121,7 @@ public class Index
         // TODO: check efficiency.. seems to retrieve every single index value
         // for the last 15 years...
         if (nextIndexValue != null) {
-            BigDecimal rebaseFactor = nextIndexValue.getIndexBase().factorForDate(baseIndexStartDate);
+            final BigDecimal rebaseFactor = nextIndexValue.getIndexBase().factorForDate(baseIndexStartDate);
             return rebaseFactor;
         }
         return null;

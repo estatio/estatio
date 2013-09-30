@@ -213,7 +213,6 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("initials") @Optional String initials,
             @Named("firstName") String firstName,
             @Named("lastName") String lastName) {
-        // TODO Add check for return type
         Person person = (Person) parties.findPartyByReference(reference);
         if (person == null) {
             person = persons.newPerson(initials, firstName, lastName);

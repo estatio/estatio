@@ -41,6 +41,9 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
+
 import junit.framework.AssertionFailedError;
 
 public final class PojoTester {
@@ -371,22 +374,28 @@ public final class PojoTester {
 			}
 			checkMethodVisibility(property, getterName, getterMethod);
 
+			List<Object> earlierGetterOriginalValues = Lists.newArrayList();
+	        for (Method earlierGetter : earlierGetters) {
+                final Object earlierValue = earlierGetter.invoke(bean);
+                earlierGetterOriginalValues.add(earlierValue);
+            }
+
 			Object value = null;
 			for (int i = 0; i < 3; i++) {
 				value = factory.getNext();
 				invokeSetterAndGetter(bean, property, setterMethod,
 						getterMethod, value);
-			}
 
-			// compare with the methods we have called earlier
-			if (!getterMethod.getReturnType().equals(boolean.class)) {
-				for (Method earlierGetter : earlierGetters) {
-					final Object earlierValue = earlierGetter.invoke(bean);
-					if (earlierValue.equals(value)) {
-						throw new TestException(setterName
-								+ " interferes with " + earlierGetter.getName());
-					}
-				}
+				// check hasn't changed value of any of the earlier getters
+				int j=0;
+	            for (Method earlierGetter : earlierGetters) {
+	                final Object earlierGetterCurrentValue = earlierGetter.invoke(bean);
+	                final Object earlierGetterOriginalValue = earlierGetterOriginalValues.get(j++);
+                    if(!Objects.equal(earlierGetterOriginalValue, earlierGetterCurrentValue)) {
+	                    throw new TestException(setterName
+	                            + " interferes with " + earlierGetter.getName());
+	                }
+	            }
 			}
 
 			// finally store this getter to be tested against the next property

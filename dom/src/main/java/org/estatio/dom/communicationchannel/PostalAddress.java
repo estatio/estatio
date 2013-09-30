@@ -22,12 +22,13 @@ import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
@@ -108,14 +109,12 @@ public class PostalAddress extends CommunicationChannel {
 
     // //////////////////////////////////////
 
-    // TODO: Country does not render as dropdown
-    // TODO: When no country has been selected, the UI renders
-    // "no objects returned" and an ok button. After that it's impossible to to
-    // a search again.
     private Country country;
 
+    // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
     @javax.jdo.annotations.Column(name = "COUNTRY_ID", allowsNull="true")
-    @Optional // TODO: make mandatory
+    @Mandatory
+    @Disabled(reason="Update using action") 
     public Country getCountry() {
         return country;
     }
@@ -124,28 +123,14 @@ public class PostalAddress extends CommunicationChannel {
         this.country = country;
     }
 
-    public List<Country> choicesCountry() {
-        return countries.allCountries();
-    }
-
-    public void modifyCountry(final Country country) {
-        setCountry(country);
-        if (getState() != null && getState().getCountry() != country) {
-            setState(null);
-        }
-    }
-    
-    public void clearCountry() {
-        setCountry(null);
-        setState(null);
-    }
-    
     // //////////////////////////////////////
 
     private State state;
 
+    // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
     @javax.jdo.annotations.Column(name = "STATE_ID", allowsNull="true")
-    @Optional // TODO: make mandatory
+    @Mandatory
+    @Disabled(reason="Update using action") 
     public State getState() {
         return state;
     }
@@ -157,19 +142,41 @@ public class PostalAddress extends CommunicationChannel {
     public List<State> choicesState() {
         return states.findStatesByCountry(getCountry());
     }
-    
+
+    // //////////////////////////////////////
+
+    @Named("Update")
+    @MemberOrder(sequence = "1")
+    public PostalAddress updateCountryAndState(
+            final Country country, 
+            final State state) {
+        setCountry(country);
+        setState(state);
+        return this;
+    }
+    public String disableUpdateCountryAndState(
+            final Country country, 
+            final State state) {
+        return isLocked() ? "Cannot modify when locked": null;
+    }
+
+    public Country default0UpdateCountryAndState() {
+        return getCountry();
+    }
+    public State default1UpdateCountryAndState() {
+        return getState();
+    }
+    public List<State> choices1UpdateCountryAndState(
+            final Country country) {
+        return states.findStatesByCountry(country);
+    }
+
     // //////////////////////////////////////
 
     private States states;
 
     public final void injectStates(final States states) {
         this.states = states;
-    }
-
-    private Countries countries;
-
-    public final void injectCountries(final Countries countries) {
-        this.countries = countries;
     }
 
 }

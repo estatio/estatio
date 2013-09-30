@@ -1,27 +1,31 @@
 {
   "columns": [
     {
-      "span": 6,
+      "span": 4,
       "memberGroups": {
-        "General": {
+        "Owner": {
           "members": {
-            "name": {},
-            "address": {}
+            "owner": {},
+            "description": {}
           }
         }
       }
     },
     {
-      "span": 0,
-      "memberGroups": {}
+      "span": 4,
+      "memberGroups": {
+        "Email": {
+          "members": {
+            "emailAddress": {}
+          }
+        }
+      }
     },
     {
-      "span": 6,
+      "span": 4,
       "memberGroups": {
-        "Detail": {
+        "Status": {
           "members": {
-            "owner": {},
-            "description": {},
             "legal": {},
             "status": {},
             "type": {},

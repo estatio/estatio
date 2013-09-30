@@ -67,7 +67,6 @@ public class InvoiceCalculationService {
 
     // //////////////////////////////////////
 
-    // TODO: [JWA] Should injected services by default be not contributed?
     @NotContributed
     public void calculateAndInvoice(
             final LeaseTerm leaseTerm, 
