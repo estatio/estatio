@@ -30,43 +30,44 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
     @Override
     public void install() {
         
-        isisJdoSupport.executeUpdate("DELETE FROM NUMERATOR");
+        deleteFrom("NUMERATOR");
         
-        isisJdoSupport.executeUpdate("DELETE FROM INVOICEITEMFORLEASE");
-        isisJdoSupport.executeUpdate("DELETE FROM INVOICEITEM");
-        isisJdoSupport.executeUpdate("DELETE FROM INVOICE");
+        deleteFrom("INVOICEITEMFORLEASE");
+        deleteFrom("INVOICEITEM");
+        deleteFrom("INVOICE");
         
-        isisJdoSupport.executeUpdate("DELETE FROM TAG");
+        deleteFrom("TAG");
         
-        isisJdoSupport.executeUpdate("DELETE FROM LEASETERM");
-        isisJdoSupport.executeUpdate("DELETE FROM LEASEITEM");
-        isisJdoSupport.executeUpdate("DELETE FROM OCCUPANCY");
+        deleteFrom("LEASETERM");
+        deleteFrom("LEASEITEM");
+        deleteFrom("OCCUPANCY");
         
-        isisJdoSupport.executeUpdate("DELETE FROM BANKMANDATE");
-        isisJdoSupport.executeUpdate("DELETE FROM LEASE");
+        deleteFrom("BANKMANDATE");
+        deleteFrom("LEASE");
         
-        isisJdoSupport.executeUpdate("DELETE FROM AGREEMENTROLECOMMUNICATIONCHANNEL");
-        isisJdoSupport.executeUpdate("DELETE FROM AGREEMENTROLE");
-        isisJdoSupport.executeUpdate("DELETE FROM AGREEMENT");
+        deleteFrom("AGREEMENTROLECOMMUNICATIONCHANNEL");
+        deleteFrom("AGREEMENTROLE");
+        deleteFrom("AGREEMENT");
         
-        isisJdoSupport.executeUpdate("DELETE FROM BANKACCOUNT");
-        isisJdoSupport.executeUpdate("DELETE FROM FINANCIALACCOUNT");
+        deleteFrom("BANKACCOUNT");
+        deleteFrom("FINANCIALACCOUNT");
         
-        isisJdoSupport.executeUpdate("DELETE FROM COMMUNICATIONCHANNEL");
+        deleteFrom("COMMUNICATIONCHANNEL");
         
-        isisJdoSupport.executeUpdate("DELETE FROM UNIT");
-        isisJdoSupport.executeUpdate("DELETE FROM PROPERTY");
-        isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSETROLE");
-        isisJdoSupport.executeUpdate("DELETE FROM FIXEDASSET");
-        
-        
-        isisJdoSupport.executeUpdate("DELETE FROM PARTYREGISTRATION");
-        isisJdoSupport.executeUpdate("DELETE FROM ORGANISATION");
-        isisJdoSupport.executeUpdate("DELETE FROM PERSON");
-        isisJdoSupport.executeUpdate("DELETE FROM PARTY");
+        deleteFrom("UNIT");
+        deleteFrom("PROPERTY");
+        deleteFrom("FIXEDASSETROLE");
+        deleteFrom("FIXEDASSET");
         
         
-        
+        deleteFrom("PARTYREGISTRATION");
+        deleteFrom("ORGANISATION");
+        deleteFrom("PERSON");
+        deleteFrom("PARTY");
+    }
+
+    private void deleteFrom(final String table) {
+        isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
     }
 
     private IsisJdoSupport isisJdoSupport;
