@@ -47,7 +47,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     // //////////////////////////////////////
-    
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "1")
+    public List<Invoice> invoices(Property property, InvoiceStatus status) {
+        return allMatches("findByPropertyAndStatus", "property", property, "status", status);
+    }
+
     @ActionSemantics(Of.SAFE)
     @DescribedAs("New invoices, to be approved")
     @MemberOrder(sequence = "1")
@@ -61,14 +67,14 @@ public class Invoices extends EstatioDomainService<Invoice> {
     public List<Invoice> findInvoicesToBeCollected() {
         return allMatches("findByStatus", "status", InvoiceStatus.APPROVED);
     }
-    
+
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Collected invoices, to be invoiced")
     @MemberOrder(sequence = "3")
     public List<Invoice> findInvoicesToBeInvoiced() {
         return allMatches("findByStatus", "status", InvoiceStatus.COLLECTED);
     }
-    
+
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Already invoiced")
     @MemberOrder(sequence = "4")
@@ -87,11 +93,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Hidden
     public Invoice findInvoiceByVarious(
-            final Party seller, 
-            final Party buyer, 
-            final PaymentMethod paymentMethod, 
-            final InvoiceSource source, 
-            final InvoiceStatus invoiceStatus, 
+            final Party seller,
+            final Party buyer,
+            final PaymentMethod paymentMethod,
+            final InvoiceSource source,
+            final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
         final List<Invoice> invoices = findInvoicesByVarious(
                 seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
@@ -100,21 +106,20 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @Hidden
     public List<Invoice> findInvoicesByVarious(
-            final Party seller, 
-            final Party buyer, 
-            final PaymentMethod paymentMethod, 
-            final InvoiceSource source, 
-            final InvoiceStatus invoiceStatus, 
+            final Party seller,
+            final Party buyer,
+            final PaymentMethod paymentMethod,
+            final InvoiceSource source,
+            final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
-        return allMatches("findMatchingInvoices", 
-                "seller", seller, 
-                "buyer", buyer, 
-                "paymentMethod", paymentMethod, 
-                "source", source, 
-                "status", invoiceStatus, 
+        return allMatches("findMatchingInvoices",
+                "seller", seller,
+                "buyer", buyer,
+                "paymentMethod", paymentMethod,
+                "source", source,
+                "status", invoiceStatus,
                 "dueDate", dueDate);
     }
-
 
     // //////////////////////////////////////
 
@@ -128,7 +133,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Administration", sequence = "numerators.invoices.1")
+    @MemberOrder(name = "Administration", sequence = "numerators.invoices.1")
     public Numerator findCollectionNumberNumerator() {
         return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
     }
@@ -136,17 +141,19 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Administration", sequence = "numerators.invoices.2")
+    @MemberOrder(name = "Administration", sequence = "numerators.invoices.2")
     @NotContributed
     public Numerator createCollectionNumberNumerator(
             final @Named("Format") String format,
             final @Named("Last value") BigInteger lastIncrement) {
-        
+
         return numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, format, lastIncrement);
     }
+
     public String default0CreateCollectionNumberNumerator() {
         return "%09d";
     }
+
     public BigInteger default1CreateCollectionNumberNumerator() {
         return BigInteger.ZERO;
     }
@@ -154,7 +161,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Administration", sequence = "numerators.invoices.3")
+    @MemberOrder(name = "Administration", sequence = "numerators.invoices.3")
     @NotContributed
     public Numerator findInvoiceNumberNumerator(
             final Property property) {
@@ -164,7 +171,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    @MemberOrder(name="Administration", sequence = "numerators.invoices.4")
+    @MemberOrder(name = "Administration", sequence = "numerators.invoices.4")
     @NotContributed
     public Numerator createInvoiceNumberNumerator(
             final Property property,
@@ -173,9 +180,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
         return numerators.createScopedNumerator(
                 Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, format, lastIncrement);
     }
+
     public String default1CreateInvoiceNumberNumerator() {
         return "XXX-%06d";
     }
+
     public BigInteger default2CreateInvoiceNumberNumerator() {
         return BigInteger.ZERO;
     }
@@ -183,7 +192,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     private Numerators numerators;
-    
+
     public void injectNumerators(final Numerators numerators) {
         this.numerators = numerators;
     }

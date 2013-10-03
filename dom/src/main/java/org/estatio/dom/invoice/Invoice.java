@@ -27,6 +27,12 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -44,25 +50,25 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.party.Party;
-
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findMatchingInvoices", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice "
-                        + "WHERE source == :source "
-                        + "&& seller == :seller "
-                        + "&& buyer == :buyer "
-                        + "&& paymentMethod == :paymentMethod "
-                        + "&& status == :status "
-                        + "&& dueDate == :dueDate"),
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE source == :source " +
+                        "&& seller == :seller " +
+                        "&& buyer == :buyer " +
+                        "&& paymentMethod == :paymentMethod " +
+                        "&& status == :status " +
+                        "&& dueDate == :dueDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByPropertyAndStatus", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE status == :status && " +
+                        "source.occupancies.contains(o) &&" +
+                        "o.unit.property == :property " +
+                        "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice "
@@ -95,7 +101,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private Party buyer;
 
-    @javax.jdo.annotations.Column(name = "BUYER_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "BUYER_ID", allowsNull = "false")
     @Disabled
     public Party getBuyer() {
         return buyer;
@@ -109,7 +115,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private Party seller;
 
-    @javax.jdo.annotations.Column(name = "SELLER_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "SELLER_ID", allowsNull = "false")
     @Disabled
     public Party getSeller() {
         return seller;
@@ -121,7 +127,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     private String collectionNumber;
 
     @Optional
@@ -138,7 +144,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private String invoiceNumber;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Disabled
     public String getInvoiceNumber() {
         return invoiceNumber;
@@ -148,7 +154,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         this.invoiceNumber = invoiceNumber;
     }
 
-
     // //////////////////////////////////////
 
     private InvoiceSource source;
@@ -157,11 +162,11 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
      * Polymorphic association to (any implementation of) {@link InvoiceSource}.
      */
     @javax.jdo.annotations.Persistent(
-            extensions = { 
-                    @Extension(vendorName = "datanucleus", 
-                            key = "mapping-strategy", 
+            extensions = {
+                    @Extension(vendorName = "datanucleus",
+                            key = "mapping-strategy",
                             value = "per-implementation") })
-    @javax.jdo.annotations.Column(name = "SOURCE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "SOURCE_ID", allowsNull = "false")
     @Disabled
     public InvoiceSource getSource() {
         return source;
@@ -176,7 +181,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     @javax.jdo.annotations.Persistent
     private LocalDate invoiceDate;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Disabled
     public LocalDate getInvoiceDate() {
         return invoiceDate;
@@ -191,7 +196,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public LocalDate getDueDate() {
         return dueDate;
@@ -205,7 +210,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private InvoiceStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public InvoiceStatus getStatus() {
         return status;
@@ -215,14 +220,13 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         this.status = status;
     }
 
-
     // //////////////////////////////////////
 
     private Currency currency;
 
     // REVIEW: invoice generation is not populating this field.
-    @javax.jdo.annotations.Column(name = "CURRENCY_ID", allowsNull="true")
-    @Hidden(where=Where.ALL_TABLES)
+    @javax.jdo.annotations.Column(name = "CURRENCY_ID", allowsNull = "true")
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public Currency getCurrency() {
         return currency;
@@ -236,7 +240,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private PaymentMethod paymentMethod;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -266,7 +270,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     @Persistent
     private BigInteger lastItemSequence;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Hidden
     public BigInteger getLastItemSequence() {
         return lastItemSequence;
@@ -276,11 +280,10 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         this.lastItemSequence = lastItemSequence;
     }
 
-    
     @Programmatic
     public BigInteger nextItemSequence() {
-        BigInteger nextItemSequence = getLastItemSequence() == null 
-                ? BigInteger.ONE 
+        BigInteger nextItemSequence = getLastItemSequence() == null
+                ? BigInteger.ONE
                 : getLastItemSequence().add(BigInteger.ONE);
         setLastItemSequence(nextItemSequence);
         return nextItemSequence;
@@ -317,7 +320,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-
     @Bulk
     public Invoice approve() {
         setStatus(InvoiceStatus.APPROVED);
@@ -329,83 +331,83 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     }
 
     public String disableApprove() {
-        return getStatus() != InvoiceStatus.NEW? "Can only approve 'new' invoices": null;
+        return getStatus() != InvoiceStatus.NEW ? "Can only approve 'new' invoices" : null;
     }
 
     // //////////////////////////////////////
 
     @Bulk
     public Invoice assignCollectionNumber() {
-        
+
         // bulk action, so need these guards
-        if(hideAssignCollectionNumber()) {
+        if (hideAssignCollectionNumber()) {
             return this;
         }
-        if(disableAssignCollectionNumber() != null) {
+        if (disableAssignCollectionNumber() != null) {
             return this;
         }
-        
+
         final Numerator numerator = invoices.findCollectionNumberNumerator();
-        
+
         setCollectionNumber(numerator.increment());
         this.setStatus(InvoiceStatus.COLLECTED);
-        
+
         informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
         return this;
     }
-    
+
     public boolean hideAssignCollectionNumber() {
         // only applies to direct debits
         return !getPaymentMethod().isDirectDebit();
     }
-    
+
     public String disableAssignCollectionNumber() {
-        if(getCollectionNumber() != null) {
+        if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
-        
+
         final Numerator numerator = invoices.findCollectionNumberNumerator();
-        if(numerator == null) {
+        if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
-        
+
         if (getStatus() != InvoiceStatus.APPROVED) {
             return "Must be in status of 'approved'";
         }
         return null;
     }
-    
+
     // //////////////////////////////////////
 
     @Bulk
     public Invoice assignInvoiceNumber() {
         // bulk action, so need these guards
-        if(hideAssignInvoiceNumber()) {
+        if (hideAssignInvoiceNumber()) {
             return this;
         }
-        if(disableAssignInvoiceNumber() != null) {
+        if (disableAssignInvoiceNumber() != null) {
             return this;
         }
-        
+
         final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
-        
+
         setInvoiceNumber(numerator.increment());
         this.setStatus(InvoiceStatus.INVOICED);
-        
+
         informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
         return this;
     }
-    
+
     public boolean hideAssignInvoiceNumber() {
         return false;
     }
-    
+
     public String disableAssignInvoiceNumber() {
-        if(getInvoiceNumber() != null) {
+        if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
         final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
-        if(numerator == null) {
+        if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
         if (getStatus() != InvoiceStatus.COLLECTED) {
@@ -415,7 +417,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     }
 
     // //////////////////////////////////////
-    
+
     /**
      * Derived from the {@link #getSource() invoice source}.
      */
@@ -446,9 +448,6 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
         }
     }
 
-
-
-
     // //////////////////////////////////////
 
     @Prototype
@@ -462,8 +461,8 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     // //////////////////////////////////////
 
-    
     private Invoices invoices;
+
     public final void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
