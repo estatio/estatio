@@ -18,13 +18,18 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -33,15 +38,18 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.Status;
-import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Activities;
-import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.lease.tags.UnitSizes;
+import org.estatio.dom.lease.tags.Activity;
+import org.estatio.dom.lease.tags.Sector;
+import org.estatio.dom.lease.tags.Sectors;
 
 public class OccupancyTest_activityName {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    private Sectors mockSectors;
 
     @Mock
     private Activities mockActivities;
@@ -50,13 +58,18 @@ public class OccupancyTest_activityName {
     private DomainObjectContainer mockContainer;
 
     private Occupancy occupancy;
+    private Sector sector;
     private Activity activity;
     
     @Before
     public void setup() {
         occupancy = new Occupancy();
+        occupancy.injectSectors(mockSectors);
         occupancy.injectActivities(mockActivities);
         occupancy.setContainer(mockContainer);
+        
+        sector = new Sector();
+        sector.setName("FOOD");
         
         activity = new Activity();
         activity.setName("RESTAURANT");
@@ -97,11 +110,11 @@ public class OccupancyTest_activityName {
         assertThat(occupancy.getActivity(), is(nullValue()));
     }
 
-    @Ignore
     @Test
     public void setActivityName_whenNotNull_alreadyExists() {
         
         // given
+        occupancy.setSector(sector);
         occupancy.setActivity(activity);
         assertThat(occupancy.getActivity(), is(not(nullValue())));
 
@@ -110,7 +123,7 @@ public class OccupancyTest_activityName {
         existingActivity.setName("RESTAURANT");
         context.checking(new Expectations() {
             {
-                //oneOf(mockActivities).findByName("RESTAURANT");
+                oneOf(mockActivities).findBySectorAndName(sector, "RESTAURANT");
                 will(returnValue(existingActivity));
             }
         });
@@ -122,11 +135,11 @@ public class OccupancyTest_activityName {
         assertThat(occupancy.getActivity(), is(existingActivity));
     }
     
-    @Ignore
     @Test
     public void setActivityName_whenNotNull_doesNotExist() {
         
         // given
+        occupancy.setSector(sector);
         occupancy.setActivity(activity);
         assertThat(occupancy.getActivity(), is(not(nullValue())));
         
@@ -134,7 +147,7 @@ public class OccupancyTest_activityName {
         final Activity newActivity = new Activity();
         context.checking(new Expectations() {
             {
-                //oneOf(mockActivities).findByName("RESTAURANT");
+                oneOf(mockActivities).findBySectorAndName(sector, "RESTAURANT");
                 will(returnValue(null));
                 
                 oneOf(mockContainer).newTransientInstance(Activity.class);
@@ -149,41 +162,60 @@ public class OccupancyTest_activityName {
         // then
         assertThat(occupancy.getActivityName(), is("RESTAURANT"));
         assertThat(occupancy.getActivity(), is(newActivity));
+        assertThat(newActivity.getSector(), is(sector));
     }
     
     // //////////////////////////////////////
 
-    @Ignore
     @Test
     public void newActivity() {
         // given
-        final String[] arg = new String[1];
+        final String[] pSectorName = new String[1];
+        final String[] pActivityName = new String[1];
         occupancy = new Occupancy() {
             @Override
+            public void setSectorName(String sectorName) {
+                pSectorName[0] = sectorName;
+            }
+            @Override
             public void setActivityName(String activityName) {
-                arg[0] = activityName;
+                pActivityName[0] = activityName;
             }
         };
         // when
-        //occupancy.newActivity("RESTAURANT");
-        // then (delegates to the setActivity)
-        assertThat(arg[0], is("RESTAURANT"));
+        occupancy.newActivity("FOOD", "RESTAURANT");
+        // then (delegates to the setSectorName and setActivityName)
+        assertThat(pSectorName[0], is("FOOD"));
+        assertThat(pActivityName[0], is("RESTAURANT"));
     }
 
     // //////////////////////////////////////
 
-    @Ignore
+    @Test
+    public void choicesNewActivity() {
+        final List<String> sectors = Lists.newArrayList("CLOTHES", "FOOD", "OTHER");
+        context.checking(new Expectations() {
+            {
+                oneOf(mockSectors).findUniqueNames();
+                will(returnValue(sectors));
+            }
+        });
+        assertThat(occupancy.choices0NewActivity(), is(sectors));
+    }
+
+    
+    // //////////////////////////////////////
+
     @Test
     public void disableNewActivity_whenLocked() {
         occupancy.setLockable(Status.LOCKED);
-        //assertThat(occupancy.disableNewActivity("RESTAURANT"), is("Cannot modify when locked"));
+        assertThat(occupancy.disableNewActivity(null,null), is("Cannot modify when locked"));
     }
 
-    @Ignore
     @Test
     public void disableNewActivity_whenUnlocked() {
         occupancy.setLockable(Status.UNLOCKED);
-        //assertThat(occupancy.disableNewActivity("RESTAURANT"), is(nullValue()));
+        assertThat(occupancy.disableNewActivity(null,null), is(nullValue()));
     }
     
     

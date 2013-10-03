@@ -18,7 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
@@ -169,13 +171,13 @@ public class OccupancyTest_unitSizeName {
     @Test
     public void disableNewUnitSize_whenLocked() {
         occupancy.setLockable(Status.LOCKED);
-        assertThat(occupancy.disableNewUnitSize("LARGE"), is("Cannot modify when locked"));
+        assertThat(occupancy.disableNewUnitSize(null), is("Cannot modify when locked"));
     }
 
     @Test
     public void disableNewUnitSize_whenUnlocked() {
         occupancy.setLockable(Status.UNLOCKED);
-        assertThat(occupancy.disableNewUnitSize("LARGE"), is(nullValue()));
+        assertThat(occupancy.disableNewUnitSize(null), is(nullValue()));
     }
     
     

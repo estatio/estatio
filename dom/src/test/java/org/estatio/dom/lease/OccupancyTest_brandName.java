@@ -18,7 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
@@ -34,8 +36,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.Status;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brands;
-import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.lease.tags.UnitSizes;
 
 public class OccupancyTest_brandName {
 
@@ -171,13 +171,13 @@ public class OccupancyTest_brandName {
     @Test
     public void disableNewBrand_whenLocked() {
         occupancy.setLockable(Status.LOCKED);
-        assertThat(occupancy.disableNewBrand("SUPERMAC"), is("Cannot modify when locked"));
+        assertThat(occupancy.disableNewBrand(null), is("Cannot modify when locked"));
     }
 
     @Test
     public void disableNewBrand_whenUnlocked() {
         occupancy.setLockable(Status.UNLOCKED);
-        assertThat(occupancy.disableNewBrand("SUPERMAC"), is(nullValue()));
+        assertThat(occupancy.disableNewBrand(null), is(nullValue()));
     }
     
     

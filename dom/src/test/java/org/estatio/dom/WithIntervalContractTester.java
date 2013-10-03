@@ -23,9 +23,13 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import org.jmock.Expectations;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.services.clock.ClockService;
 
 
 public class WithIntervalContractTester<T extends WithInterval<?>> {
@@ -63,10 +67,16 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         }
     }
 
-    private WIInstantiator<T> instantiator;
+    private final WIInstantiator<T> instantiator;
 
-    public WithIntervalContractTester(final WIInstantiator<T> instantiator) {
+    private final JUnitRuleMockery2 context;
+    private final ClockService mockClockService;
+
+    public WithIntervalContractTester(final WIInstantiator<T> instantiator, final JUnitRuleMockery2 context, final ClockService clockService) {
         this.instantiator = instantiator;
+        this.context = context;
+        this.mockClockService = clockService;
+        
         System.out.println("WithIntervalContractTester: " + instantiator.getClassName());
     }
 
@@ -91,6 +101,33 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         whenNoStartDateAndNoEndDateWithParentHasStartDateButNoEndDate();
         whenNoStartDateAndNoEndDateWithParentNoStartDateButHasEndDate();
         whenNoStartDateAndNoEndDateWithParentHasStartDateAndHasEndDate();
+        
+        isCurrent(startDate.minusDays(1), false);
+        isCurrent(startDate, true);
+        isCurrent(startDate.plusDays(1), true);
+        isCurrent(endDate, true);
+        isCurrent(endDate.plusDays(1), false);
+    }
+
+    private void isCurrent(final LocalDate now, final boolean expected) {
+        WithInterval<?> t = newWithInterval();
+        
+        t.setStartDate(startDate);
+        t.setEndDate(endDate);
+        
+        if(t instanceof EstatioDomainObject) {
+            EstatioDomainObject<?> edo = (EstatioDomainObject<?>) t;  
+            ((EstatioDomainObject) t).injectClockService(mockClockService);
+
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockClockService).now();
+                    will(returnValue(now));
+                }
+            });
+            
+            assertThat(t.isCurrent(), is(expected));
+        }
     }
 
     public void whenHasStartDateAndHasEndDate() {

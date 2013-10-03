@@ -16,16 +16,15 @@
  */
 package org.estatio.dom;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.SortedSet;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import org.estatio.dom.WithIntervalContiguous.Factory;
 import org.estatio.dom.valuetypes.LocalDateInterval;

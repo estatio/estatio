@@ -389,6 +389,7 @@ public class Occupancy
     public Occupancy newActivity(
             final @Named("Sector") String sectorName,
             final @Named("Activity") String activityName) {
+        setSectorName(sectorName);
         setActivityName(activityName);
         return this;
     }

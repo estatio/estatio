@@ -26,10 +26,16 @@ import static org.junit.Assert.assertThat;
 import java.util.Map;
 import java.util.Set;
 
+import org.jmock.auto.Mock;
+import org.junit.Rule;
 import org.junit.Test;
 import org.reflections.Reflections;
 
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.WithIntervalContractTester.WIInstantiator;
+import org.estatio.services.clock.ClockService;
 
 
 /**
@@ -42,6 +48,12 @@ import org.estatio.dom.WithIntervalContractTester.WIInstantiator;
 @SuppressWarnings("rawtypes")
 public abstract class WithIntervalContractTestAbstract_getInterval {
 
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+
+    @Mock
+    private ClockService mockClockService;
+    
     private final String packagePrefix;
     private Map<Class, WIInstantiator> instantiatorByType;
 
@@ -67,7 +79,7 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
             if(instantiator == null) {
                 assertThat("No instantiator for " + subtype.getName(), instantiator, is(not(nullValue())));
             }
-            final WithIntervalContractTester withIntervalContractTester = new WithIntervalContractTester(instantiator);
+            final WithIntervalContractTester withIntervalContractTester = new WithIntervalContractTester(instantiator, context, mockClockService);
             withIntervalContractTester.testAll();
         }
     }

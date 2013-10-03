@@ -18,13 +18,14 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -35,8 +36,6 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.Status;
 import org.estatio.dom.lease.tags.Sector;
 import org.estatio.dom.lease.tags.Sectors;
-import org.estatio.dom.lease.tags.UnitSize;
-import org.estatio.dom.lease.tags.UnitSizes;
 
 public class OccupancyTest_sectorName {
 
@@ -151,37 +150,40 @@ public class OccupancyTest_sectorName {
     
     // //////////////////////////////////////
 
-    @Ignore
     @Test
     public void newSector() {
         // given
-        final String[] arg = new String[1];
+        final String[] pSectorName = new String[1];
+        final String[] pActivityName = new String[1];
         occupancy = new Occupancy() {
             @Override
             public void setSectorName(String sectorName) {
-                arg[0] = sectorName;
+                pSectorName[0] = sectorName;
+            }
+            @Override
+            public void setActivityName(String activityName) {
+                pActivityName[0] = activityName;
             }
         };
         // when
         occupancy.newSector("FOOD", "RESTAURANT");
-        // then (delegates to the setSector)
-        assertThat(arg[0], is("FOOD"));
+        // then (delegates to the setSectorName and setActivityName)
+        assertThat(pSectorName[0], is("FOOD"));
+        assertThat(pActivityName[0], is("RESTAURANT"));
     }
 
     // //////////////////////////////////////
 
-    @Ignore
     @Test
     public void disableNewSector_whenLocked() {
         occupancy.setLockable(Status.LOCKED);
-        //assertThat(occupancy.disableNewSector("FOOD"), is("Cannot modify when locked"));
+        assertThat(occupancy.disableNewSector(null, null), is("Cannot modify when locked"));
     }
 
-    @Ignore
     @Test
     public void disableNewSector_whenUnlocked() {
         occupancy.setLockable(Status.UNLOCKED);
-        //assertThat(occupancy.disableNewSector("FOOD"), is(nullValue()));
+        assertThat(occupancy.disableNewSector(null, null), is(nullValue()));
     }
     
     

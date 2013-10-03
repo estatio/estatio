@@ -41,10 +41,10 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
+import junit.framework.AssertionFailedError;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-
-import junit.framework.AssertionFailedError;
 
 public final class PojoTester {
 
