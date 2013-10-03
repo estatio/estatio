@@ -160,7 +160,7 @@ public final class IBANHelper {
         int beginIndex = ibanFormat.indexOf(character);
         int endIndex = ibanFormat.lastIndexOf(character);
         String pattern = "";
-        if (beginIndex > -1 && endIndex >= beginIndex) {
+        if (replacement != null && beginIndex > -1 && endIndex >= beginIndex) {
             pattern = ibanFormat.substring(beginIndex, endIndex + 1);
             return ibanFormat.replace(pattern, replacement);
         } else {

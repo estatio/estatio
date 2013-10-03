@@ -105,7 +105,6 @@ public class Api extends AbstractFactoryAndRepository {
 
     // //////////////////////////////////////
 
-
     @ActionSemantics(Of.IDEMPOTENT)
     public void putCountry(
             @Named("code") String code,
@@ -182,7 +181,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         return chargeGroup;
     }
-    
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -202,8 +201,6 @@ public class Api extends AbstractFactoryAndRepository {
     private Tax fetchTaxIfAny(String reference) {
         return taxes.findTaxByReference(reference);
     }
-
-    
 
     // //////////////////////////////////////
 
@@ -393,7 +390,7 @@ public class Api extends AbstractFactoryAndRepository {
                 comm.setReference(reference);
             }
         }
-        //Email
+        // Email
         if (emailAddress != null) {
             CommunicationChannel comm = emailAddresses.findByEmailAddress(party, emailAddress);
             if (comm == null) {
@@ -401,7 +398,7 @@ public class Api extends AbstractFactoryAndRepository {
                 comm.setReference(reference);
             }
         }
- 
+
     }
 
     // //////////////////////////////////////
@@ -479,7 +476,7 @@ public class Api extends AbstractFactoryAndRepository {
         leaseUnit.setStartDate(startDate);
         leaseUnit.setEndDate(endDate);
         leaseUnit.setUnitSizeName(size);
-        leaseUnit.setBrandName(brand.replaceAll("\\p{C}", "").trim());
+        leaseUnit.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null);
         leaseUnit.setSectorName(sector);
         leaseUnit.setActivityName(activity);
     }
@@ -510,7 +507,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod));
         }
-        
+
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.APPROVED);
         item.setStatus(leaseItemStatus);
         item.setStartDate(startDate);
@@ -563,11 +560,11 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLeaseTermForIndexableRent(
             // start generic fields
-            @Named("leaseReference") String leaseReference, 
-            @Named("tenantReference") String tenantReference, 
-            @Named("unitReference") @Optional String unitReference, 
-            @Named("itemSequence") BigInteger itemSequence, 
-            @Named("itemType") String itemType, 
+            @Named("leaseReference") String leaseReference,
+            @Named("tenantReference") String tenantReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("itemSequence") BigInteger itemSequence,
+            @Named("itemType") String itemType,
             @Named("itemStartDate") LocalDate itemStartDate,
             @Named("sequence") BigInteger sequence,
             @Named("startDate") @Optional LocalDate startDate,
@@ -880,11 +877,11 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private ChargeGroups chargeGroups;
-    
+
     public void injectChargeGroups(final ChargeGroups chargeGroups) {
         this.chargeGroups = chargeGroups;
     }
-    
+
     private Indices indices;
 
     public void injectIndices(final Indices indices) {
