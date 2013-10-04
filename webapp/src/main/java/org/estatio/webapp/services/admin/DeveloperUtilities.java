@@ -28,7 +28,7 @@ import org.apache.isis.core.metamodel.services.devutils.DeveloperUtilitiesServic
 public class DeveloperUtilities extends DeveloperUtilitiesServiceDefault {
 
     /**
-     * 'Move' the action underneath the 'administration' menu item. 
+     * 'Move' the action underneath the 'Administration' menu item. 
      */
     @MemberOrder(name="Administration", sequence="90")
     @Override
@@ -38,7 +38,7 @@ public class DeveloperUtilities extends DeveloperUtilitiesServiceDefault {
     }
     
     /**
-     * 'Move' the action underneath the 'administration' menu item. 
+     * 'Move' the action underneath the 'Administration' menu item. 
      */
     @MemberOrder(name="Administration", sequence="91")
     @ActionSemantics(Of.SAFE)
