@@ -29,6 +29,7 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.InvoiceItem;
 import org.estatio.dom.invoice.InvoiceItemForTesting;
 import org.estatio.dom.lease.Lease;
@@ -89,6 +90,8 @@ public class WithIntervalContractTestAll_getInterval extends WithIntervalContrac
                 return lt;
             };
         });
+        map.put(Unit.class,
+                new WIInstantiator<Unit>(Unit.class));
         return map;
     }
 

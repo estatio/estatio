@@ -302,6 +302,7 @@ public class Api extends AbstractFactoryAndRepository {
         // set attributes
         unit.setName(name);
         unit.setUnitType(UnitType.valueOf(type));
+        unit.changeDates(startDate, endDate);
         unit.setArea(area);
         unit.setSalesArea(salesArea);
         unit.setStorageArea(storageArea);

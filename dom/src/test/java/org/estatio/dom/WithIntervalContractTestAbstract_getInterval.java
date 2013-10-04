@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jmock.auto.Mock;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -85,10 +86,20 @@ public abstract class WithIntervalContractTestAbstract_getInterval {
     }
 
     @SuppressWarnings("unchecked")
-    private WIInstantiator<?> instantiatorFor(Class<? extends WithInterval> subtype) {
+    private WIInstantiator<?> instantiatorFor(final Class<? extends WithInterval> subtype) {
         WIInstantiator<?> instantiator = lookup(subtype);
+        int i=0;
         while (instantiator == null) {
+            i++;
+            if(i == 20){
+                // HACK: a bit of a hack, but ensures that we drop out and fail
+                // if we forget to register a WIInstantiator.
+                return null;
+            }
             final Class superClass = subtype.getSuperclass();
+            if (superClass == null) {
+                return null;
+            }
             if(WithInterval.class.isAssignableFrom(superClass)) {
                 instantiator = lookup(superClass);
             } else {

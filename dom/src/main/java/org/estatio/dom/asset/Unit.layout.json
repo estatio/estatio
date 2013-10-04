@@ -29,6 +29,13 @@
             "mezzanineArea": {},
             "terraceArea": {}
           }
+        },
+        "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {},
+            "current": {}
+          }
         }
       }
     },
