@@ -29,7 +29,7 @@ import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSuppor
 import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.api.Api;
-import org.estatio.app.PropertyInvoiceSummaries;
+import org.estatio.app.InvoiceSummaries;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -108,7 +108,7 @@ public class EstatioSystemInitializer {
                     new RegisterEntities(), 
                     new WrapperFactoryDefault(), 
                     new Countries(), 
-                    new PropertyInvoiceSummaries(), 
+                    new InvoiceSummaries(), 
                     new States(), 
                     new StateContributions(), 
                     new Currencies(), 

@@ -23,11 +23,11 @@ import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
 
-public class PropertyInvoiceSummaryTest_beanProperties extends AbstractBeanPropertiesTest {
+public class InvoiceSummaryForPropertyDueDateTest_beanProperties extends AbstractBeanPropertiesTest {
 
     @Test
     public void test() {
-        final PropertyInvoiceSummary pojo = new PropertyInvoiceSummary();
+        final InvoiceSummaryForPropertyDueDate pojo = new InvoiceSummaryForPropertyDueDate();
         newPojoTester()
             .withFixture(pojos(Property.class))
             .exercise(pojo);

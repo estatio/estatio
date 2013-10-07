@@ -82,6 +82,14 @@ import org.apache.isis.applib.annotation.Where;
                         + "org.estatio.dom.lease.Occupancy o; "
                         + "org.estatio.dom.lease.Lease source"),
         @javax.jdo.annotations.Query(
+                name = "findByPropertyAndDueDateAndStatus", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE status == :status && " +
+                        "dueDate == :dueDate && " +
+                        "source.occupancies.contains(o) &&" +
+                        "o.unit.property == :property " +
+                        "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
+        @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.invoice.Invoice "

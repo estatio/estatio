@@ -23,58 +23,57 @@ import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-
 @Immutable
-public class PropertyInvoiceSummaries extends EstatioDomainService<PropertyInvoiceSummary> {
+public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForPropertyDueDate> {
 
-    public PropertyInvoiceSummaries() {
-        super(PropertyInvoiceSummaries.class, PropertyInvoiceSummary.class);
+    public InvoiceSummaries() {
+        super(InvoiceSummaries.class, InvoiceSummaryForPropertyDueDate.class);
     }
 
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Fixed Assets", sequence = "80")
-    public List<PropertyInvoiceSummary> propertyInvoicesDom() {
+    @MemberOrder(name = "Invoices", sequence = "80")
+    public List<InvoiceSummaryForPropertyDueDate> invoicesDom() {
         List<Property> propertyList = properties.allProperties();
         return Lists.newArrayList(
                 Iterables.transform(propertyList, toSummary()).iterator());
     }
 
-    private Function<Property, PropertyInvoiceSummary> toSummary() {
-        return new Function<Property, PropertyInvoiceSummary>(){
+    private Function<Property, InvoiceSummaryForPropertyDueDate> toSummary() {
+        return new Function<Property, InvoiceSummaryForPropertyDueDate>() {
 
-             @Override
-             public PropertyInvoiceSummary apply(final Property property) {
-                 final PropertyInvoiceSummary summary = 
-                     getContainer().newViewModelInstance(PropertyInvoiceSummary.class, property.getReference());
-                 summary.setProperty(property);
-                 return summary;
-             }
-         };
+            @Override
+            public InvoiceSummaryForPropertyDueDate apply(final Property property) {
+                final InvoiceSummaryForPropertyDueDate summary =
+                        getContainer().newViewModelInstance(InvoiceSummaryForPropertyDueDate.class, property.getReference());
+                summary.setProperty(property);
+                return summary;
+            }
+        };
     }
 
-    
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Fixed Assets", sequence = "80")
-    public List<PropertyInvoiceSummary> propertyInvoicesSql() {
+    @MemberOrder(name = "Invoices", sequence = "80")
+    public List<InvoiceSummaryForPropertyDueDate> invoicesSql() {
         return allInstances();
     }
 
-    
     private Properties properties;
+
     public void injectProperties(final Properties properties) {
         this.properties = properties;
     }
-    
+
 }

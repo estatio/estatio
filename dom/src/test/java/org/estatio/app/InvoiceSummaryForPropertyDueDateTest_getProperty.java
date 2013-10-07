@@ -34,7 +34,7 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 
-public class PropertyInvoiceSummaryTest_getProperty {
+public class InvoiceSummaryForPropertyDueDateTest_getProperty {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -44,14 +44,14 @@ public class PropertyInvoiceSummaryTest_getProperty {
 
     private Property property;
     
-    private PropertyInvoiceSummary summary;
+    private InvoiceSummaryForPropertyDueDate summary;
 
     @Before
     public void setUp() throws Exception {
         property = new Property();
         property.setReference("REF-1");
         
-        summary = new PropertyInvoiceSummary();
+        summary = new InvoiceSummaryForPropertyDueDate();
         summary.setReference("REF-1");
         summary.injectProperties(mockProperties);
     }
