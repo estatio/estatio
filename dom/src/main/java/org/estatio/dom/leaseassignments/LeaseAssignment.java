@@ -18,6 +18,11 @@
  */
 package org.estatio.dom.leaseassignments;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -27,8 +32,16 @@ import org.estatio.dom.Status;
 import org.estatio.dom.lease.Lease;
 
 //TODO: is this in scope?
-//@javax.jdo.annotations.PersistenceCapable
-//@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment, Status> {
 
     
@@ -63,8 +76,7 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUSLEASE_ID")
-    @javax.jdo.annotations.Persistent(mappedBy="nextLease")
+    @javax.jdo.annotations.Column(name="previousLeaseId")
     private Lease previousLease;
 
     public Lease getPreviousLease() {
@@ -77,7 +89,7 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXTLEASE_ID")
+    @javax.jdo.annotations.Column(name="nextLeaseId")
     private Lease nextLease;
 
     public Lease getNextLease() {
@@ -92,6 +104,7 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
 
     private LocalDate assignmentDate;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public LocalDate getAssignmentDate() {
         return assignmentDate;
     }
@@ -104,6 +117,7 @@ public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment,
 
     private LeaseAssignmentType assignmentType;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     public LeaseAssignmentType getAssignmentType() {
         return assignmentType;
     }

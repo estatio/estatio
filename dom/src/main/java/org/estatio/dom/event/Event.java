@@ -18,12 +18,18 @@
  */
 package org.estatio.dom.event;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -42,8 +48,16 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * <p>
  * NB: not currently in scope.
  */
-//@PersistenceCapable
-//@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 public class Event 
         extends EstatioTransactionalObject<Event, Status> 
         implements WithIntervalMutable<Event>, WithDescriptionGetter {
@@ -80,7 +94,8 @@ public class Event
 
     private LocalDate startDate;
 
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="false")
+    @Mandatory
     @Disabled
     @Override
     public LocalDate getStartDate() {
@@ -99,8 +114,9 @@ public class Event
 
     private LocalDate endDate;
 
-    @Disabled
+    @javax.jdo.annotations.Column(allowsNull="true")
     @Optional
+    @Disabled
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -188,6 +204,7 @@ public class Event
 
     private String description;
 
+    @javax.jdo.annotations.Column(allowsNull="false")    
     public String getDescription() {
         return description;
     }

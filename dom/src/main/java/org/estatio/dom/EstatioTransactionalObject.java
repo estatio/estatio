@@ -33,7 +33,9 @@ import org.apache.isis.applib.annotation.Hidden;
  * <p>
  * Subclasses must be annotated with:
  * <pre>
- * @javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+ * @javax.jdo.annotations.Version(
+ *     strategy=VersionStrategy.VERSION_NUMBER, 
+ *     column="version")
  * public class MyDomainObject extends EstationTransactionalObject {
  *   ...
  * }

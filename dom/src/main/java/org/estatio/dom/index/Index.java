@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
@@ -50,6 +51,9 @@ import org.estatio.dom.WithReferenceComparable;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "Index_reference_UNQ", members = "reference"),
