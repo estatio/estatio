@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.SortedSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -51,33 +53,40 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByRoleAndTypeAndStartDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
-                        "WHERE role == :agreementRole " +
-                        "&& type == :type " +
-                        "&& startDate == :startDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
+                        + "WHERE role == :agreementRole "
+                        + "&& type == :type "
+                        + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByRoleAndTypeAndEndDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
-                        "WHERE role == :agreementRole " +
-                        "&& type == :type " +
-                        "&& endDate == :endDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
+                        + "WHERE role == :agreementRole "
+                        + "&& type == :type "
+                        + "&& endDate == :endDate"),
         @javax.jdo.annotations.Query(
                 name = "findByRoleAndTypeAndContainsDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel " +
-                        "WHERE role == :role " +
-                        "&& type == :type " +
-                        "&& (startDate == null || startDate <= :date) " +
-                        "&& (endDate == null || endDate > :date) ")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
+                        + "WHERE role == :role "
+                        + "&& type == :type "
+                        + "&& (startDate == null || startDate <= :date) "
+                        + "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRoleCommunicationChannel 
@@ -121,7 +130,7 @@ public class AgreementRoleCommunicationChannel
 
     private AgreementRole role;
 
-    @javax.jdo.annotations.Column(name = "AGREEMENTROLE_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "agreementRoleId", allowsNull = "false")
     @Title(sequence = "2")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -168,7 +177,7 @@ public class AgreementRoleCommunicationChannel
 
     private CommunicationChannel communicationChannel;
 
-    @javax.jdo.annotations.Column(name = "COMMUNICATIONCHANNEL_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
     @Title(sequence = "3", prepend = ",")
     @Disabled
     public CommunicationChannel getCommunicationChannel() {

@@ -49,33 +49,37 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * A lease-specific subclass of {@link InvoiceItem}, referring {@link #getLeaseTerm() back} to the {@link LeaseTerm}
  * that acts as the <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.  
  */
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
-                        "WHERE (leaseTerm.leaseItem.lease.reference.matches(:leaseReferenceOrName) " +
-                        "   || leaseTerm.leaseItem.lease.name.matches(:leaseReferenceOrName)) " +
-                        "&& dueDate == :dueDate " +
-                        "&& startDate == :startDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease "
+                        + "WHERE (leaseTerm.leaseItem.lease.reference.matches(:leaseReferenceOrName) "
+                        + "    || leaseTerm.leaseItem.lease.name.matches(:leaseReferenceOrName)) "
+                        + "&& dueDate == :dueDate "
+                        + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByInvoiceAndLeaseTermAndStartDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
-                        "WHERE invoice == :invoice " +
-                        "&& leaseTerm == :leaseTerm " +
-                        "&& startDate == :startDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease "
+                        + "WHERE invoice == :invoice "
+                        + "&& leaseTerm == :leaseTerm "
+                        + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByInvoiceAndLeaseTermAndEndDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
-                        "WHERE invoice == :invoice " +
-                        "&& leaseTerm == :leaseTerm " +
-                        "&& endDate == :endDate")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease "
+                        + "WHERE invoice == :invoice "
+                        + "&& leaseTerm == :leaseTerm "
+                        + "&& endDate == :endDate")
 })
 public class InvoiceItemForLease extends InvoiceItem {
 
@@ -86,7 +90,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     //
     // suspect this should be mandatory, however (ie get rid of #remove(),
     // and refactor #attachToInvoice())
-    @javax.jdo.annotations.Column(name = "LEASETERM_ID", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
     public LeaseTerm getLeaseTerm() {

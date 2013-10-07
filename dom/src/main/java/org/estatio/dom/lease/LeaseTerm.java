@@ -25,6 +25,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
@@ -61,42 +62,50 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "LEASETERM_ID")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.IDENTITY, 
+        column = "id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
-                name = "LEASE_TERM_IDX",
+                name = "LeaseTerm_leaseItem_IDX",
                 members = { "leaseItem", "sequence" }),
         @javax.jdo.annotations.Index(
-                name = "LEASE_TERM2_IDX",
+                name = "LeaseTerm_leaseItem_startDate_IDX",
                 members = { "leaseItem", "startDate" }) })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByStatusAndActiveDate", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.lease.LeaseTerm "
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE status == :status "
-                        + "&& startDate <= :date "
-                        + "&& (endDate == null || endDate >= :date)"),
+                        + "   && startDate <= :date "
+                        + "   && (endDate == null || endDate >= :date)"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndSequence", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.lease.LeaseTerm "
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE leaseItem == :leaseItem "
-                        + "&& sequence == :sequence"),
+                        + "   && sequence == :sequence"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndStartDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.LeaseTerm " +
-                        "WHERE leaseItem == :leaseItem " +
-                        "&& startDate == :startDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem == :leaseItem "
+                        + "   && startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndEndDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.LeaseTerm " +
-                        "WHERE leaseItem == :leaseItem " +
-                        "&& endDate == :endDate")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem == :leaseItem "
+                        + "   && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm 
@@ -123,7 +132,7 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
-    @javax.jdo.annotations.Column(name = "LEASEITEM_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull="false")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     @Title(sequence = "1", append = ":")
@@ -351,7 +360,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PREVIOUS_ID")
+    @javax.jdo.annotations.Column(name = "previousLeaseTermId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private LeaseTerm previous;
 
@@ -388,7 +397,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "NEXT_ID")
+    @javax.jdo.annotations.Column(name = "nextLeaseTermId")
     private LeaseTerm next;
 
     @Hidden(where = Where.ALL_TABLES)

@@ -18,12 +18,17 @@
  */
 package org.estatio.dom.tag;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -40,8 +45,20 @@ import org.estatio.dom.WithNameGetter;
  * class name of <tt>LeaseUnit</tt>, and the tag's {@link #getName()} is set to
  * &quot;brand&quot;.
  */
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Unique(name = "tag_bookmark_and_name", members = { "taggable", "name" })
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Tag_taggable_name_UNQ", members = { "taggable", "name" })
+})
 @Immutable
 public class Tag 
         extends EstatioRefDataObject<Tag> 
@@ -61,8 +78,6 @@ public class Tag
 
     // //////////////////////////////////////
 
-    private Taggable taggable;
-    
     /**
      * Polymorphic association to (any implementation of) {@link Taggable}.
      */
@@ -71,7 +86,9 @@ public class Tag
                     @Extension(vendorName = "datanucleus",
                             key = "mapping-strategy",
                             value = "per-implementation") })
-    @javax.jdo.annotations.Column(name = "TAGGABLE_ID", allowsNull = "false")
+    private Taggable taggable;
+    
+    @Mandatory
     public Taggable getTaggable() {
         return taggable;
     }

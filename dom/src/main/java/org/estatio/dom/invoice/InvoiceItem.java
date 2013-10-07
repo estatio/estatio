@@ -24,6 +24,8 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -58,10 +60,17 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * This class is, in fact, abstract.  The <tt>InvoiceItemForLease</tt> subclass decouples the <tt>invoice</tt> module
  * from the <tt>lease</tt> module, and provides a many-to-many between the two concepts.
  */
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem 
         extends EstatioTransactionalObject<InvoiceItem, Status> 
@@ -118,7 +127,7 @@ public abstract class InvoiceItem
     //
     // suspect this should be mandatory, however (ie get rid of #remove(),
     // and refactor #attachToInvoice())
-    @javax.jdo.annotations.Column(name = "INVOICE_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull="true")
     @Render(Type.EAGERLY)
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
@@ -135,7 +144,7 @@ public abstract class InvoiceItem
 
     private Charge charge;
 
-    @javax.jdo.annotations.Column(name = "CHARGE_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "chargeId", allowsNull="true")
     @Title(sequence = "2")
     @Disabled
     public Charge getCharge() {
@@ -216,7 +225,7 @@ public abstract class InvoiceItem
 
     private Tax tax;
 
-    @javax.jdo.annotations.Column(name = "TAX_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull="true")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public Tax getTax() {

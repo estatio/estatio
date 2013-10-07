@@ -22,6 +22,7 @@ import java.math.BigInteger;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -49,10 +50,16 @@ import org.estatio.dom.Status;
  * the object to which the numerator has been scoped.  The values of these properties are taken from the
  * applib {@link Bookmark}.
  */
-@javax.jdo.annotations.PersistenceCapable(/* serializeRead = "true" */)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "NUMERATOR_ID")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.IDENTITY, 
+        column = "id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
         name = "findByNameAndObjectTypeAndObjectIdentifier", language = "JDOQL", 
@@ -60,14 +67,12 @@ import org.estatio.dom.Status;
                 + "FROM org.estatio.dom.numerator.Numerator "
                 + "WHERE name == :name"
                 + "&& objectIdentifier == :objectIdentifier"
-                + "&& objectType == :objectType"
-                ),
+                + "&& objectType == :objectType"),
     @javax.jdo.annotations.Query(
         name = "findByName", language = "JDOQL", 
         value = "SELECT "
                 + "FROM org.estatio.dom.numerator.Numerator "
-                + "WHERE name == :name"
-        )
+                + "WHERE name == :name")
 })
 @Immutable
 public class Numerator 

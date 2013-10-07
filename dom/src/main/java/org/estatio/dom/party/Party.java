@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Predicates;
@@ -49,23 +52,36 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Party_reference_UNQ", members="reference")
+})
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(
+            name = "Party_reference_name_IDX", members = { "reference", "name" })
+})
 @javax.jdo.annotations.Queries({ 
     @javax.jdo.annotations.Query( 
             name = "findByReferenceOrName", language = "JDOQL",
-            value = "SELECT FROM org.estatio.dom.party.Party " +
-                    "WHERE reference.matches(:referenceOrName) || name.matches(:referenceOrName)"),
+            value = "SELECT "
+                    + "FROM org.estatio.dom.party.Party "
+                    + "WHERE reference.matches(:referenceOrName) "
+                    + "   || name.matches(:referenceOrName)"),
     @javax.jdo.annotations.Query(
             name = "findByReference", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.party.Party " + 
-                    "WHERE reference == :reference") })
-@javax.jdo.annotations.Indices({
-    @javax.jdo.annotations.Index(name = "PARTY_REFERENCE_NAME_IDX", members = { "reference", "name" })
-})
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "PARTY_REFERENCE_UNIQUE_IDX", members="reference")
-})
+            value = "SELECT "
+                    + "FROM org.estatio.dom.party.Party " 
+                    + "WHERE reference == :reference") })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
 @Bookmarkable
 public abstract class Party

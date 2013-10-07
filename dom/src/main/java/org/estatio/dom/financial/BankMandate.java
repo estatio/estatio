@@ -28,10 +28,14 @@ import org.estatio.dom.Status;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 public class BankMandate extends Agreement<Status> {
     
 
@@ -68,7 +72,7 @@ public class BankMandate extends Agreement<Status> {
 
     private FinancialAccount bankAccount;
 
-    @javax.jdo.annotations.Column(name="BANKACCOUNT_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="bankFinancialAccountId", allowsNull="false")
     public FinancialAccount getBankAccount() {
         return bankAccount;
     }

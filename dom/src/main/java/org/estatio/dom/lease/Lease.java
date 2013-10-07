@@ -25,6 +25,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -58,10 +60,17 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
@@ -73,7 +82,7 @@ import org.estatio.dom.party.Party;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
                         + "WHERE reference.matches(:referenceOrName)"
-                        +    "|| name.matches(:referenceOrName)"),
+                        + "|| name.matches(:referenceOrName)"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndActiveOnDate", language = "JDOQL",
                 value = "SELECT "
@@ -81,7 +90,8 @@ import org.estatio.dom.party.Party;
                         + "WHERE units.contains(lu) "
                         + "&& (terminationDate == null || terminationDate <= :activeOnDate) "
                         + "&& (lu.unit == :asset || lu.unit.property == :asset) "
-                        + "VARIABLES org.estatio.dom.lease.Occupancy lu") })
+                        + "VARIABLES "
+                        + "org.estatio.dom.lease.Occupancy lu") })
 @Bookmarkable
 public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
@@ -250,7 +260,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PAIDBY_ID")
+    @javax.jdo.annotations.Column(name="paidByBankMandateId")
     private BankMandate paidBy;
 
     @Hidden(where=Where.ALL_TABLES)

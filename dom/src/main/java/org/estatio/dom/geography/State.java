@@ -26,20 +26,22 @@ import org.apache.isis.applib.annotation.Immutable;
 /**
  * Represents a geographic {@link State} {@link #getCountry() within} a {@link Country}.
  */
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByCountry", language = "JDOQL", 
-        value = "SELECT "
-                + "FROM org.estatio.dom.geography.State "
-                + "WHERE country == :country"),
-    @javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
-        value = "SELECT "
-                + "FROM org.estatio.dom.geography.State "
-                + "WHERE reference == :reference") 
+        @javax.jdo.annotations.Query(
+                name = "findByCountry", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.geography.State "
+                        + "WHERE country == :country"),
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.geography.State "
+                        + "WHERE reference == :reference")
 })
 @Immutable
 public class State 
@@ -47,7 +49,7 @@ public class State
 
     private Country country;
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="countryId", allowsNull="false")
     public Country getCountry() {
         return country;
     }

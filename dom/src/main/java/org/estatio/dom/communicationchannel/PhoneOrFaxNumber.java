@@ -18,19 +18,33 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Query(
-    name = "findByPhoneNumber", language = "JDOQL", 
-    value = "SELECT FROM org.estatio.dom.communicationchannel.PhoneOrFaxNumber " + 
-            "WHERE owner == :owner && " +
-            "phoneNumber == :phoneNumber")
-@javax.jdo.annotations.Index(name="PHONENUMBER_IDX", members={"phoneNumber"})
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(
+            name="PhoneNumber_phoneNumber_IDX", members={"phoneNumber"})
+})
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByPhoneNumber", language = "JDOQL", 
+            value = "SELECT "
+                    + "FROM org.estatio.dom.communicationchannel.PhoneOrFaxNumber " 
+                    + "WHERE owner == :owner "
+                    + "&& phoneNumber == :phoneNumber")
+})
 public class PhoneOrFaxNumber extends CommunicationChannel {
 
 

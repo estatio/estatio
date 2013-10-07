@@ -20,6 +20,9 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -35,12 +38,18 @@ import org.estatio.dom.WithStartDate;
  * Holds the {@link #getValue() value} of an {@link #getIndexBase() index (base)} from a particular
  * {@link #getStartDate() point in time} (until succeeded by some other value).
  */
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(
-        name = "findByIndexAndStartDate", language = "JDOQL", 
-        value = "SELECT FROM org.estatio.dom.index.IndexValue "
-                + "WHERE indexBase.index == :index "
-                + "   && startDate >= :startDate")
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByIndexAndStartDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.index.IndexValue "
+                        + "WHERE indexBase.index == :index "
+                        + "   && startDate >= :startDate")
+})
 public class IndexValue 
         extends EstatioRefDataObject<IndexValue> 
         implements WithStartDate {
@@ -73,7 +82,7 @@ public class IndexValue
 
     private IndexBase indexBase;
 
-    @javax.jdo.annotations.Column(name="INDEXBASE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="indexBaseId", allowsNull="false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "2")
     @Disabled

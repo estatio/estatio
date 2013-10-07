@@ -18,20 +18,33 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Query(
-        name = "findByEmailAddress", language = "JDOQL", 
-        value = "SELECT FROM org.estatio.dom.communicationchannel.EmailAddress " + 
-                "WHERE owner == :owner && " +
-                "emailAddress == :emailAddress")
-    @javax.jdo.annotations.Index(name="EMAILADDRESS_IDX", members={"emailAddress"})
-
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(
+            name="EmailAddress_emailAddress_IDX", members={"emailAddress"})
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByEmailAddress", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.communicationchannel.EmailAddress "
+                        + "WHERE owner == :owner "
+                        + "&& emailAddress == :emailAddress")
+})
 public class EmailAddress extends CommunicationChannel {
 
 

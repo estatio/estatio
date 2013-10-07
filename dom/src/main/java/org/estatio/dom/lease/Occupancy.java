@@ -20,6 +20,8 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -51,14 +53,23 @@ import org.estatio.dom.lease.tags.UnitSizes;
 import org.estatio.dom.tag.Taggable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Index(
-        name = "LEASE_UNIT_IDX",
-        members = { "lease", "unit", "startDate" })
-@javax.jdo.annotations.Unique(
-        name = "LEASE_UNIT_IDX2",
-        members = { "lease", "unit", "startDate" })
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Occupancy_lease_unit_startDate_UNQ",
+            members = { "lease", "unit", "startDate" })
+})
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(
+            name = "Occupancy_lease_unit_startDate_IDX",
+            members = { "lease", "unit", "startDate" })
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
@@ -111,7 +122,7 @@ public class Occupancy
 
     private Lease lease;
 
-    @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "leaseId", allowsNull="false")
     @Title(sequence = "1", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -127,7 +138,7 @@ public class Occupancy
 
     private UnitForLease unit;
 
-    @javax.jdo.annotations.Column(name = "UNIT_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "unitId", allowsNull="false")
     @Title(sequence = "2", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -253,7 +264,7 @@ public class Occupancy
 
     private UnitSize unitSize;
 
-    @javax.jdo.annotations.Column(name = "UNITSIZE_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "unitSizeId", allowsNull="true")
     @Hidden
     public UnitSize getUnitSize() {
         return unitSize;
@@ -300,7 +311,7 @@ public class Occupancy
     
     private Sector sector;
 
-    @javax.jdo.annotations.Column(name = "SECTOR_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "sectorId", allowsNull="true")
     @Hidden
     public Sector getSector() {
         return sector;
@@ -338,7 +349,7 @@ public class Occupancy
 
     private Activity activity;
     
-    @javax.jdo.annotations.Column(name = "ACTIVITY_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "activityId", allowsNull="true")
     @Hidden
     public Activity getActivity() {
         return activity;
@@ -406,7 +417,7 @@ public class Occupancy
 
     private Brand brand;
     
-    @javax.jdo.annotations.Column(name = "BRAND_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "brandId", allowsNull="true")
     @Hidden
     public Brand getBrand() {
         return brand;

@@ -40,10 +40,14 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy=DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
@@ -144,7 +148,7 @@ public class Property extends FixedAsset {
 
     private Country country;
 
-    @javax.jdo.annotations.Column(name="COUNTRY_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name="countryId", allowsNull="true")
     public Country getCountry() {
         return country;
     }

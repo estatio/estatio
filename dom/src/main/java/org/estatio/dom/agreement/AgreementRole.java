@@ -23,6 +23,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -56,28 +58,35 @@ import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByAgreementAndPartyAndTypeAndContainsDate", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.AgreementRole " +
-                        "WHERE agreement == :agreement " +
-                        "&& party == :party " +
-                        "&& type == :type " +
-                        "&& (startDate == null || startDate <= :date) " +
-                        "&& (endDate == null || endDate > :date) "),
+                        "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE agreement == :agreement "
+                        + "&& party == :party "
+                        + "&& type == :type "
+                        + "&& (startDate == null || startDate <= :date) "
+                        + "&& (endDate == null || endDate > :date) "),
         @javax.jdo.annotations.Query(
                 name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.AgreementRole " +
-                        "WHERE agreement == :agreement " +
-                        "&& type == :type " +
-                        "&& (startDate == null || startDate < :date) " +
-                        "&& (endDate == null || endDate > :date) ")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE agreement == :agreement "
+                        + "&& type == :type "
+                        + "&& (startDate == null || startDate < :date) "
+                        + "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Status> 
@@ -120,7 +129,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private Agreement<?> agreement;
 
-    @javax.jdo.annotations.Column(name = "AGREEMENT_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Agreement<?> getAgreement() {
@@ -135,7 +144,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     public Party getParty() {
@@ -150,7 +159,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private AgreementRoleType type;
 
-    @javax.jdo.annotations.Column(name = "TYPE_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1")
     @Disabled
     public AgreementRoleType getType() {

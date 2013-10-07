@@ -20,6 +20,10 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
@@ -31,18 +35,24 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithTitleComparable;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByTitle", language = "JDOQL", 
-        value = "SELECT " +
-                "FROM org.estatio.dom.agreement.AgreementRoleType " +
-                "WHERE title == :title "),
-    @javax.jdo.annotations.Query(
-            name = "findByAgreementType", language = "JDOQL", 
-            value = "SELECT " +
-                    "FROM org.estatio.dom.agreement.AgreementRoleType " +
-            "WHERE appliesTo == :agreementType ")
+        @javax.jdo.annotations.Query(
+                name = "findByTitle", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleType "
+                        + "WHERE title == :title "),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleType "
+                        + "WHERE appliesTo == :agreementType ")
 })
 @Immutable
 @Bounded
@@ -71,7 +81,7 @@ public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType>
 
     private AgreementType appliesTo;
 
-    @javax.jdo.annotations.Column(name="APPLIESTO_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="appliesToAgreementTypeId", allowsNull="false")
     public AgreementType getAppliesTo() {
         return appliesTo;
     }

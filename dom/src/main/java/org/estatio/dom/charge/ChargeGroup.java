@@ -21,6 +21,10 @@ package org.estatio.dom.charge;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Render;
@@ -31,16 +35,23 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT " +
-                    "FROM org.estatio.dom.charge.ChargeGroup " +
-            "WHERE reference.matches(:reference)")
-})
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "CHARGEGROUP_REFERENCE_UNIQUE_IDX", members="reference")
+    @javax.jdo.annotations.Unique(
+            name = "ChargeGroup_reference_UNQ", members="reference")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.charge.ChargeGroup "
+                        + "WHERE reference.matches(:reference)")
 })
 @Immutable
 @Bounded

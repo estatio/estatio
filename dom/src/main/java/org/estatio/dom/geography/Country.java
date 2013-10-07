@@ -25,14 +25,18 @@ import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL",
-        value = "SELECT " +
-                "FROM org.estatio.dom.geography.Country " +
-                "WHERE reference.matches(:reference)")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.geography.Country "
+                        + "WHERE reference.matches(:reference)")
+})
 @Immutable
 @Bounded
 public class Country extends Geography {

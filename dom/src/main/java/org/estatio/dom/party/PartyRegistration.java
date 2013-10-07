@@ -16,6 +16,9 @@
  */
 package org.estatio.dom.party;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -37,23 +40,31 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 // REVIEW: is this in scope?
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByPartyAndPartyRegistrationTypeAndStartDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.PartyRegistration "
                         + "WHERE party == :party "
-                        + "&& partyRegistrationType == :partyRegistrationType "
-                        + "&& startDate == :startDate"),
+                        + "   && partyRegistrationType == :partyRegistrationType "
+                        + "   && startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByPartyAndPartyRegistrationTypeAndEndDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.PartyRegistration "
                         + "WHERE party == :party "
-                        + "&& partyRegistrationType == :partyRegistrationType "
-                        + "&& endDate == :endDate")
+                        + "   && partyRegistrationType == :partyRegistrationType "
+                        + "   && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
@@ -93,7 +104,7 @@ public class PartyRegistration
 
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "partyId", allowsNull="false")
     public Party getParty() {
         return party;
     }

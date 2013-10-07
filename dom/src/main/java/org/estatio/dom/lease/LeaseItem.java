@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -62,21 +64,27 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * Each item gives rise to a succession of {@link LeaseTerm}s, typically generated on a quarterly basis.  The lease 
  * terms (by implementing <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s. 
  */
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
-                name = "LEASE_INDEX_IDX",
+                name = "LeaseItem_lease_type_sequence_IDX",
                 members = { "lease", "type", "sequence" }),
         @javax.jdo.annotations.Index(
-                name = "LEASE_INDEX2_IDX",
+                name = "LeaseItem_lease_type_startDate_IDX",
                 members = { "lease", "type", "startDate" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndStartDate", 
                 language = "JDOQL", 
-                value = "SELECT FROM org.estatio.dom.lease.LeaseItem "
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItem "
                         + "WHERE lease == :lease "
                         + "   && type == :type "
                         + "   && startDate == :startDate"),
@@ -92,7 +100,10 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndTypeAndEndDate", 
                 language = "JDOQL", 
-                value = "SELECT FROM org.estatio.dom.lease.LeaseItem WHERE lease == :lease && endDate == :endDate")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseItem "
+                        + "WHERE lease == :lease "
+                        + "   && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem 
@@ -134,7 +145,7 @@ public class LeaseItem
 
     private Lease lease;
 
-    @javax.jdo.annotations.Column(name = "LEASE_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
     public Lease getLease() {
@@ -332,7 +343,7 @@ public class LeaseItem
 
     private Charge charge;
 
-    @javax.jdo.annotations.Column(name = "CHARGE_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "false")
     public Charge getCharge() {
         return charge;
     }

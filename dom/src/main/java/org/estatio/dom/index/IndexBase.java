@@ -22,6 +22,9 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
@@ -40,7 +43,10 @@ import org.estatio.dom.utils.MathUtils;
  * 
  * @see Index
  */
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
 @Immutable
 public class IndexBase 
         extends EstatioRefDataObject<IndexBase> 
@@ -56,7 +62,7 @@ public class IndexBase
 
     private Index index;
     
-    @javax.jdo.annotations.Column(name="INDEX_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="indexId", allowsNull="false")
     @Title(sequence = "1", append = ", ")
     public Index getIndex() {
         return index;
@@ -124,7 +130,7 @@ public class IndexBase
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="PREVIOUS_ID")
+    @javax.jdo.annotations.Column(name="previousIndexBaseId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private IndexBase previous;
 
@@ -149,7 +155,7 @@ public class IndexBase
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="NEXT_ID")
+    @javax.jdo.annotations.Column(name="nextIndexBaseId")
     private IndexBase next;
 
     /**

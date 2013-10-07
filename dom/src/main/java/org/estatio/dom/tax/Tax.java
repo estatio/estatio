@@ -22,6 +22,10 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
@@ -37,13 +41,24 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
-        value = "SELECT "
-                + "FROM org.estatio.dom.tax.Tax "
-                + "WHERE reference.matches(:reference)")
-@javax.jdo.annotations.Unique(name = "TAX_REFERENCE_UNIQUE_IDX", members="reference")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Tax_reference_UNQ", members="reference")
+})
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByReference", language = "JDOQL", 
+            value = "SELECT "
+                    + "FROM org.estatio.dom.tax.Tax "
+                    + "WHERE reference.matches(:reference)")
+})
 @Bounded
 @Immutable
 public class Tax

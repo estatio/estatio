@@ -18,6 +18,10 @@
  */
 package org.estatio.dom.currency;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
@@ -32,22 +36,29 @@ import org.estatio.dom.WithReferenceComparable;
  * <p>
  * Used for taxes, indices, invoices, charges.
  */
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT " +
-                    "FROM org.estatio.dom.currency.Currency " +
-                    "WHERE reference.matches(:reference)"),
-    @javax.jdo.annotations.Query(
-            name = "findByReferenceOrDescription", language = "JDOQL", 
-            value = "SELECT " +
-                    "FROM org.estatio.dom.currency.Currency " +
-                    "WHERE reference.matches(:searchArg) " + 
-                    "|| description.matches(:searchArg)")
-})
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "CURRENCY_DESCRIPTION_UNIQUE_IDX", members="description")
+        @javax.jdo.annotations.Unique(
+                name = "Currency_description_UNQ", members = "description")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.currency.Currency "
+                        + "WHERE reference.matches(:reference)"),
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrDescription", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.currency.Currency "
+                        + "WHERE reference.matches(:searchArg) "
+                        + "|| description.matches(:searchArg)")
 })
 @Bounded
 @Immutable

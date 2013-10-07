@@ -24,6 +24,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -33,6 +35,7 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -50,28 +53,38 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findMatchingInvoices", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE source == :source " +
-                        "&& seller == :seller " +
-                        "&& buyer == :buyer " +
-                        "&& paymentMethod == :paymentMethod " +
-                        "&& status == :status " +
-                        "&& dueDate == :dueDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.invoice.Invoice "
+                        + "WHERE source == :source "
+                        + "&& seller == :seller "
+                        + "&& buyer == :buyer "
+                        + "&& paymentMethod == :paymentMethod "
+                        + "&& status == :status "
+                        + "&& dueDate == :dueDate"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndStatus", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE status == :status && " +
-                        "source.occupancies.contains(o) &&" +
-                        "o.unit.property == :property " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.invoice.Invoice "
+                        + "WHERE status == :status "
+                        + "&& source.occupancies.contains(o) "
+                        + "&& o.unit.property == :property "
+                        + "VARIABLES "
+                        + "org.estatio.dom.lease.Occupancy o; "
+                        + "org.estatio.dom.lease.Lease source"),
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.invoice.Invoice "
+                value = "SELECT "
+                        + "FROM org.estatio.dom.invoice.Invoice "
                         + "WHERE status == :status ")
 })
 @Bookmarkable
@@ -101,7 +114,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private Party buyer;
 
-    @javax.jdo.annotations.Column(name = "BUYER_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "buyerPartyId", allowsNull = "false")
     @Disabled
     public Party getBuyer() {
         return buyer;
@@ -115,7 +128,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
 
     private Party seller;
 
-    @javax.jdo.annotations.Column(name = "SELLER_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
     @Disabled
     public Party getSeller() {
         return seller;
@@ -165,8 +178,13 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
             extensions = {
                     @Extension(vendorName = "datanucleus",
                             key = "mapping-strategy",
-                            value = "per-implementation") })
-    @javax.jdo.annotations.Column(name = "SOURCE_ID", allowsNull = "false")
+                            value = "per-implementation"),
+                    @Extension(vendorName = "datanucleus",
+                            key = "implementation-classes",
+                            value = "org.estatio.dom.lease.Lease") })
+    @javax.jdo.annotations.Columns({
+            @javax.jdo.annotations.Column(name = "sourceLeaseId")
+    })
     @Disabled
     public InvoiceSource getSource() {
         return source;
@@ -225,7 +243,7 @@ public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> 
     private Currency currency;
 
     // REVIEW: invoice generation is not populating this field.
-    @javax.jdo.annotations.Column(name = "CURRENCY_ID", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "currencyId", allowsNull = "true")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public Currency getCurrency() {

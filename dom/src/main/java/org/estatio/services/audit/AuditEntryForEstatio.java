@@ -18,6 +18,8 @@
  */
 package org.estatio.services.audit;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -27,9 +29,14 @@ import org.apache.isis.applib.value.DateTime;
 
 
 @javax.jdo.annotations.PersistenceCapable(
-        identityType=IdentityType.DATASTORE, table="AUDITENTRY"
-        )
-@javax.jdo.annotations.DatastoreIdentity(strategy=javax.jdo.annotations.IdGeneratorStrategy.IDENTITY)
+        identityType=IdentityType.DATASTORE, 
+        table="AuditEntry")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.IDENTITY,
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @Immutable
 public class AuditEntryForEstatio {
 

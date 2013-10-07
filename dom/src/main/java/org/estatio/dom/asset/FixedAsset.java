@@ -22,6 +22,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
@@ -52,9 +54,20 @@ import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name="FixedAsset_reference_UNQ", members={"reference"})
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findAssetsByReferenceOrName", language = "JDOQL",
@@ -62,7 +75,6 @@ import org.estatio.dom.party.Party;
                         + "WHERE reference.matches(:regex) "
                         + "|| name.matches(:regex) ")
 })
-@javax.jdo.annotations.Unique(name="FIXEDASSET_REFERENCE_UNIQUE_IDX", members={"reference"})
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset 

@@ -20,6 +20,7 @@ package org.estatio.dom.financial;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -33,22 +34,34 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
-@javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE reference.matches(:reference)"),
-    @javax.jdo.annotations.Query(
-            name = "findByTypeAndParty", language = "JDOQL", 
-            value = "SELECT FROM org.estatio.dom.financial.FinancialAccount WHERE type == :type && owner == :owner")
-})
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.IDENTITY, 
+        column = "id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy=VersionStrategy.VERSION_NUMBER, 
+        column="version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "ACCOUNT_REFERENCE_UNIQUE_IDX", members="reference")
+        @javax.jdo.annotations.Unique(
+                name = "FinancialAccount_reference_UNQ", members = "reference")
 })
-@javax.jdo.annotations.Version(strategy=VersionStrategy.VERSION_NUMBER, column="VERSION")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.financial.FinancialAccount "
+                        + "WHERE reference.matches(:reference)"),
+        @javax.jdo.annotations.Query(
+                name = "findByTypeAndParty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.financial.FinancialAccount "
+                        + "WHERE type == :type "
+                        + "&& owner == :owner")
+})
 public abstract class FinancialAccount 
         extends EstatioTransactionalObject<FinancialAccount, Status> 
         implements WithNameGetter, WithReferenceUnique  {
@@ -127,7 +140,7 @@ public abstract class FinancialAccount
 
     private Party owner;
 
-    @javax.jdo.annotations.Column(name="OWNER_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="ownerPartyId", allowsNull="false")
     public Party getOwner() {
         return owner;
     }

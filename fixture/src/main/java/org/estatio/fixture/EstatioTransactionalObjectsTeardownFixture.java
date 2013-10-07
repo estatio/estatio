@@ -30,40 +30,39 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
     @Override
     public void install() {
         
-        deleteFrom("NUMERATOR");
+        deleteFrom("Numerator");
         
-        deleteFrom("INVOICEITEMFORLEASE");
-        deleteFrom("INVOICEITEM");
-        deleteFrom("INVOICE");
+        deleteFrom("InvoiceItemForLease");
+        deleteFrom("InvoiceItem");
+        deleteFrom("Invoice");
         
-        deleteFrom("TAG");
+        deleteFrom("Tag");
         
-        deleteFrom("LEASETERM");
-        deleteFrom("LEASEITEM");
-        deleteFrom("OCCUPANCY");
+        deleteFrom("LeaseTerm");
+        deleteFrom("LeaseItem");
+        deleteFrom("Occupancy");
         
-        deleteFrom("BANKMANDATE");
-        deleteFrom("LEASE");
+        deleteFrom("BankMandate");
+        deleteFrom("Lease");
         
-        deleteFrom("AGREEMENTROLECOMMUNICATIONCHANNEL");
-        deleteFrom("AGREEMENTROLE");
-        deleteFrom("AGREEMENT");
+        deleteFrom("AgreementRoleCommunicationChannel");
+        deleteFrom("AgreementRole");
+        deleteFrom("Agreement");
         
-        deleteFrom("BANKACCOUNT");
-        deleteFrom("FINANCIALACCOUNT");
+        deleteFrom("BankAccount");
+        deleteFrom("FinancialAccount");
         
-        deleteFrom("COMMUNICATIONCHANNEL");
+        deleteFrom("CommunicationChannel");
         
-        deleteFrom("UNIT");
-        deleteFrom("PROPERTY");
-        deleteFrom("FIXEDASSETROLE");
-        deleteFrom("FIXEDASSET");
+        deleteFrom("Unit");
+        deleteFrom("Property");
+        deleteFrom("FixedAssetRole");
+        deleteFrom("FixedAsset");
         
-        
-        deleteFrom("PARTYREGISTRATION");
-        deleteFrom("ORGANISATION");
-        deleteFrom("PERSON");
-        deleteFrom("PARTY");
+        deleteFrom("PartyRegistration");
+        deleteFrom("Organisation");
+        deleteFrom("Person");
+        deleteFrom("Party");
     }
 
     private void deleteFrom(final String table) {

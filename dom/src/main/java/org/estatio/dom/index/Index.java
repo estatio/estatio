@@ -22,6 +22,9 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
@@ -43,14 +46,20 @@ import org.estatio.dom.WithReferenceComparable;
  * {@link IndexBase}s.  It is the {@link IndexBase}s that {@link IndexBase#getValues() hold} the {@link IndexValue}s.
  * The rebasing {@link IndexBase#getFactor() factor} is held in {@link IndexBase}.
  */
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Query(
-        name = "findByReference", language = "JDOQL", 
-        value = "SELECT "
-                + "FROM org.estatio.dom.index.Index "
-                + "WHERE reference == :reference")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "INDEX_NAME_UNIQUE_IDX", members="name")
+        @javax.jdo.annotations.Unique(
+                name = "Index_name_UNQ", members = "name")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.index.Index "
+                        + "WHERE reference == :reference")
 })
 @Immutable
 public class Index 

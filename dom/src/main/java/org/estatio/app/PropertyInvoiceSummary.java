@@ -38,17 +38,17 @@ import org.estatio.dom.asset.Property;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
-        table = "PROPERTYINVOICESUMMARY",
+        table = "PropertyInvoiceSummary",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"PROPERTYINVOICESUMMARY\" "
+                        value = "CREATE VIEW \"PropertyInvoiceSummary\" "
                                 + "( "
                                 + "{this.reference}, "
                                 + "{this.name} "
                                 + ") AS "
-                                + "SELECT \"REFERENCE\", \"NAME\" "
-                                + "FROM \"FIXEDASSET\" "
-                                + "WHERE \"DISCRIMINATOR\" = 'org.estatio.dom.asset.Property'")
+                                + "SELECT \"reference\", \"name\" "
+                                + "FROM \"FixedAsset\" "
+                                + "WHERE \"discriminator\" = 'org.estatio.dom.asset.Property'")
         })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable

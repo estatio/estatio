@@ -19,6 +19,8 @@
 package org.estatio.dom.lease.tags;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
@@ -26,21 +28,29 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findBySectorAndName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.lease.tags.Activity "
-                    + "WHERE sector == :sector "
-                    + "   && name == :name")
-})
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "ACTIVITY_NAME_UNIQUE_IDX", members={"sector","name"})
+        @javax.jdo.annotations.Unique(
+                name = "Activity_sector_name_UNQ", members = { "sector", "name" })
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findBySectorAndName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.tags.Activity "
+                        + "WHERE sector == :sector "
+                        + "   && name == :name")
 })
 @Immutable
-public class Activity extends EstatioRefDataObject<Activity> implements WithNameGetter {
+public class Activity
+        extends EstatioRefDataObject<Activity>
+        implements WithNameGetter {
 
     public Activity() {
         super("sector,name");
@@ -49,7 +59,7 @@ public class Activity extends EstatioRefDataObject<Activity> implements WithName
     // //////////////////////////////////////
     
     private Sector sector;
-    @javax.jdo.annotations.Column(name="SECTOR_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name="sectorId", allowsNull="false")
     @Title(sequence="1")
     public Sector getSector() {
         return sector;

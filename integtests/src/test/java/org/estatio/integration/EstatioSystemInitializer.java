@@ -167,6 +167,9 @@ public class EstatioSystemInitializer {
 
             testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
             
+            testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
+
+            
             // uncomment to use log4jdbc instead
             // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); 
 
@@ -176,7 +179,6 @@ public class EstatioSystemInitializer {
 //            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword", "estatio"); 
 
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
-            testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
 
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.cache.level2.type", "none");
             // TODO: this is a (temporary?) work-around for
@@ -185,6 +187,8 @@ public class EstatioSystemInitializer {
             // believe that the second find fails to work due to original find
             // caching an incorrect query compilation plan
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.query.compilation.cached", "false");
+
+            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.identifier.case", "PreserveCase");
 
             // adding this is meant to be all that is required for
             // across-the-board multi-tenancy support

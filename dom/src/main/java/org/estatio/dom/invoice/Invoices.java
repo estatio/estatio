@@ -50,7 +50,9 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public List<Invoice> invoices(Property property, InvoiceStatus status) {
+    public List<Invoice> invoices(
+            final Property property, 
+            final InvoiceStatus status) {
         return allMatches("findByPropertyAndStatus", "property", property, "status", status);
     }
 

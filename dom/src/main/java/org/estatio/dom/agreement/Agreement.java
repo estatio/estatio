@@ -23,6 +23,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -59,25 +61,37 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(
+            name="Agreement_reference_IDX", members={"reference"})
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
-                value = "SELECT FROM org.estatio.dom.agreement.Agreement WHERE reference.matches(:reference)"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.Agreement "
+                        + "WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(
                 name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.agreement.Agreement " +
-                        "WHERE agreementType == :agreementType" +
-                        " && roles.contains(role)" +
-                        " && role.type == :roleType" +
-                        " && role.party == :party" +
-                        " VARIABLES org.estatio.dom.agreement.AgreementRole role")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.Agreement "
+                        + "WHERE agreementType == :agreementType"
+                        + " && roles.contains(role)"
+                        + " && role.type == :roleType"
+                        + " && role.party == :party"
+                        + " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
-@javax.jdo.annotations.Index(name="REFERENCE_IDX", members={"reference"})
 @Bookmarkable
 public abstract class Agreement<S extends Lockable> 
         extends EstatioTransactionalObject<Agreement<S>, S> 
@@ -91,7 +105,6 @@ public abstract class Agreement<S extends Lockable>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Unique(name = "AGREEMENT_REFERENCE_UNIQUE_IDX")
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
@@ -312,7 +325,7 @@ public abstract class Agreement<S extends Lockable>
 
     private AgreementType agreementType;
 
-    @javax.jdo.annotations.Column(name = "AGREEMENTTYPE_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "agreementTypeId", allowsNull="false")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public AgreementType getAgreementType() {
@@ -325,7 +338,7 @@ public abstract class Agreement<S extends Lockable>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PREVIOUS_ID")
+    @javax.jdo.annotations.Column(name = "previousAgreementId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private Agreement<S> previous;
 
@@ -368,7 +381,7 @@ public abstract class Agreement<S extends Lockable>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "NEXT_ID")
+    @javax.jdo.annotations.Column(name = "nextAgreementId")
     private Agreement<S> next;
 
     @Named("Next Agreement")

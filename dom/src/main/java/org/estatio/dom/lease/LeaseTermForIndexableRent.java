@@ -23,6 +23,7 @@ import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -36,15 +37,19 @@ import org.estatio.dom.index.IndexationCalculator;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.utils.MathUtils;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
-
 
     private Index index;
 
-    @javax.jdo.annotations.Column(name = "INDEX_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "indexId", allowsNull="true")
     @Mandatory
     public Index getIndex() {
         return index;

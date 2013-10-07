@@ -20,6 +20,9 @@ package org.estatio.dom.asset;
 
 import java.util.SortedSet;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -49,32 +52,40 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * Identifies the {@link #getParty() party} that plays a particular {@link #getType() type} of role with respect to
  * a {@link #getAsset() fixed asset}, for a particular {@link #getInterval() interval of time}.
  */
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndPartyAndType", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.asset.FixedAssetRole " +
-                        "WHERE asset == :asset " +
-                        "&& party == :party " +
-                        "&& type == :type"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE asset == :asset "
+                        + "&& party == :party "
+                        + "&& type == :type"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndPartyAndTypeAndStartDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.asset.FixedAssetRole " +
-                        "WHERE asset == :asset " +
-                        "&& party == :party " +
-                        "&& type == :type " +
-                        "&& startDate == :startDate"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE asset == :asset "
+                        + "&& party == :party "
+                        + "&& type == :type "
+                        + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndPartyAndTypeAndEndDate", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.asset.FixedAssetRole " +
-                        "WHERE asset == :asset " +
-                        "&& party == :party " +
-                        "&& type == :type " +
-                        "&& endDate == :endDate")
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE asset == :asset "
+                        + "&& party == :party "
+                        + "&& type == :type "
+                        + "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole 
@@ -118,7 +129,7 @@ public class FixedAssetRole
 
     private FixedAsset asset;
 
-    @javax.jdo.annotations.Column(name = "ASSET_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "assetId", allowsNull="false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -134,7 +145,7 @@ public class FixedAssetRole
 
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "PARTY_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "partyId", allowsNull="false")
     @Title(sequence = "2", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -366,6 +377,5 @@ public class FixedAssetRole
         }
         return null;
     }
-
 
 }

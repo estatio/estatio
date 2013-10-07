@@ -21,6 +21,7 @@ package org.estatio.dom.communicationchannel;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -44,11 +45,17 @@ import org.estatio.dom.WithReferenceGetter;
  * This is an abstract entity; concrete subclasses are {@link PostalAddress postal}, {@link PhoneOrFaxNumber phone/fax}
  *  and {@link EmailAddress email}.
  */
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "COMMUNICATIONCHANNEL_ID")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceAndType", language = "JDOQL",
@@ -128,10 +135,10 @@ public abstract class CommunicationChannel
                                 + ",org.estatio.dom.asset.Unit")
             })
     @javax.jdo.annotations.Columns({
-        @javax.jdo.annotations.Column(name="OWNER_ORGANISATION_ID"),
-        @javax.jdo.annotations.Column(name="OWNER_PERSON_ID"),
-        @javax.jdo.annotations.Column(name="OWNER_PROPERTY_ID"),
-        @javax.jdo.annotations.Column(name="OWNER_UNIT_ID")
+        @javax.jdo.annotations.Column(name="ownerOrganisationId"),
+        @javax.jdo.annotations.Column(name="ownerPersonId"),
+        @javax.jdo.annotations.Column(name="ownerPropertyId"),
+        @javax.jdo.annotations.Column(name="ownerUnitId")
     })
     @Optional 
     @Hidden(where = Where.PARENTED_TABLES)

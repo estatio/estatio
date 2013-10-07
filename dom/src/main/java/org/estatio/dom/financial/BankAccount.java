@@ -20,6 +20,7 @@ package org.estatio.dom.financial;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -31,17 +32,23 @@ import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "FINANCIALACCOUNT_ID")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.IDENTITY, 
+        column = "id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @Bookmarkable
 public class BankAccount extends FinancialAccount {
 
     private Party bank;
 
-    @javax.jdo.annotations.Column(name = "BANK_ID", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "bankPartyId", allowsNull = "true")
     public Party getBank() {
         return bank;
     }
@@ -68,7 +75,7 @@ public class BankAccount extends FinancialAccount {
 
     private Country country;
 
-    @javax.jdo.annotations.Column(name = "COUNTRY_ID", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
     public Country getCountry() {
         return country;
     }

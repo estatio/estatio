@@ -20,7 +20,9 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Mandatory;
@@ -33,18 +35,30 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Query(
-        name = "findByAddress", language = "JDOQL", 
-        value = "SELECT FROM " +
-                "org.estatio.dom.communicationchannel.CommunicationChannel " +
-                "WHERE owner == :owner" +
-                "&& address1 == :address1 " +
-                "&& postalCode == :postalCode " +
-                "&& city == :city " +
-                "&& country == :country ")
-@javax.jdo.annotations.Index(name="POSTAL_ADDRESS_IDX", members={"owner", "address1","postalCode","city","country"})
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Indices({
+    @javax.jdo.annotations.Index(
+            name="PostalAddress_main_idx", 
+            members={"owner", "address1","postalCode","city","country"})
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByAddress", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.communicationchannel.CommunicationChannel "
+                        + "WHERE owner == :owner"
+                        + "&& address1 == :address1 "
+                        + "&& postalCode == :postalCode "
+                        + "&& city == :city "
+                        + "&& country == :country ")
+})
 public class PostalAddress extends CommunicationChannel {
 
     private String address1;
@@ -112,7 +126,7 @@ public class PostalAddress extends CommunicationChannel {
     private Country country;
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
-    @javax.jdo.annotations.Column(name = "COUNTRY_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "countryId", allowsNull="true")
     @Mandatory
     @Disabled(reason="Update using action") 
     public Country getCountry() {
@@ -128,7 +142,7 @@ public class PostalAddress extends CommunicationChannel {
     private State state;
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
-    @javax.jdo.annotations.Column(name = "STATE_ID", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "stateId", allowsNull="true")
     @Mandatory
     @Disabled(reason="Update using action") 
     public State getState() {

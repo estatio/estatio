@@ -24,9 +24,6 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -41,10 +38,18 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+import org.estatio.dom.WithInterval;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 // TODO: make name abstract in FixedAsset, then define subclass-specific
 // constraint:
 // @javax.jdo.annotations.Unique(name="UNIT_NAME_UNQ_IDX",
@@ -155,7 +160,7 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
 
     private Property property;
 
-    @javax.jdo.annotations.Column(name = "PROPERTY_ID", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "propertyId", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public Property getProperty() {

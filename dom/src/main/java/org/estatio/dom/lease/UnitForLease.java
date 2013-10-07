@@ -31,23 +31,27 @@ import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.asset.Unit;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(
-            name = "findByReferenceOrName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.lease.UnitForLease "
-                    + "WHERE (reference.matches(:referenceOrName) "
-                    + "    || name.matches(:referenceOrName))"), 
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.lease.UnitForLease "
-                    + "WHERE reference.matches(:reference)") 
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.UnitForLease "
+                        + "WHERE (reference.matches(:referenceOrName) "
+                        + "   || name.matches(:referenceOrName))"),
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.UnitForLease "
+                        + "WHERE reference.matches(:reference)")
 })
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
 public class UnitForLease extends Unit {
 
     @javax.jdo.annotations.Persistent(mappedBy = "unit", defaultFetchGroup = "false")

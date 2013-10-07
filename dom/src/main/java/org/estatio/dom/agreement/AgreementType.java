@@ -20,6 +20,10 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.NotPersisted;
@@ -30,16 +34,23 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
 
-@javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-        name = "findByTitle", language = "JDOQL", 
-        value = "SELECT "
-                + "FROM org.estatio.dom.agreement.AgreementType "
-                + "WHERE title == :title")
-})
-@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "AGREEMENT_TYPE_TITLE_UNIQUE_IDX", members="title")
+    @javax.jdo.annotations.Unique(
+            name = "AgreementType_title_UNQ", members="title")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByTitle", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementType "
+                        + "WHERE title == :title")
 })
 @Immutable
 @Bounded

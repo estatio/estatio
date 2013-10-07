@@ -20,6 +20,9 @@ package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -41,8 +44,16 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "VERSION")
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByTaxAndDate", language = "JDOQL",
@@ -100,7 +111,7 @@ public class TaxRate
 
     private Tax tax;
 
-    @javax.jdo.annotations.Column(name = "TAX_ID", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull="false")
     @Title
     public Tax getTax() {
         return tax;
@@ -227,7 +238,7 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "PREVIOUS_ID")
+    @javax.jdo.annotations.Column(name = "previousTaxRateId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
     private TaxRate previous;
 
@@ -246,7 +257,7 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name = "NEXT_ID")
+    @javax.jdo.annotations.Column(name = "nextTaxRateId")
     private TaxRate next;
 
     @Hidden(where = Where.ALL_TABLES)

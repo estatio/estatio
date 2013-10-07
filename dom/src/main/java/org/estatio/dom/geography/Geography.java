@@ -19,6 +19,8 @@
 package org.estatio.dom.geography;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
@@ -27,8 +29,18 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME)
+
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Geography_name_UNQ", members="name")
+})
 @javax.jdo.annotations.Queries({
     @javax.jdo.annotations.Query(
             name = "findGeographyByReference", language = "JDOQL", 
@@ -37,9 +49,6 @@ import org.estatio.dom.WithReferenceComparable;
                     + "WHERE reference == :reference") 
 })
 @Immutable
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(name = "GEOGRAPHY_NAME_UNIQUE_IDX", members="name")
-})
 public abstract class Geography 
         extends EstatioRefDataObject<Geography> 
         implements WithReferenceComparable<Geography>, WithNameUnique {
