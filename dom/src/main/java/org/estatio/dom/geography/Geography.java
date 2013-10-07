@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
 
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -38,6 +39,8 @@ import org.estatio.dom.WithReferenceComparable;
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
 @javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Geography_reference_UNQ", members="reference"),
     @javax.jdo.annotations.Unique(
             name = "Geography_name_UNQ", members="name")
 })
@@ -51,7 +54,7 @@ import org.estatio.dom.WithReferenceComparable;
 @Immutable
 public abstract class Geography 
         extends EstatioRefDataObject<Geography> 
-        implements WithReferenceComparable<Geography>, WithNameUnique {
+        implements WithReferenceComparable<Geography>, WithReferenceUnique, WithNameUnique {
 
     public Geography() {
         super("reference");

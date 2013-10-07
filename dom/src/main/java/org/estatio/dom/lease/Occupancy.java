@@ -65,11 +65,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
             name = "Occupancy_lease_unit_startDate_UNQ",
             members = { "lease", "unit", "startDate" })
 })
-@javax.jdo.annotations.Indices({
-    @javax.jdo.annotations.Index(
-            name = "Occupancy_lease_unit_startDate_IDX",
-            members = { "lease", "unit", "startDate" })
-})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",

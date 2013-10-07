@@ -75,9 +75,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column = "version")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
-                name = "LeaseTerm_leaseItem_IDX",
-                members = { "leaseItem", "sequence" }),
-        @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_startDate_IDX",
                 members = { "leaseItem", "startDate" }) })
 @javax.jdo.annotations.Queries({

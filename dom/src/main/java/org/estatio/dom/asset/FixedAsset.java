@@ -68,6 +68,12 @@ import org.estatio.dom.party.Party;
     @javax.jdo.annotations.Unique(
             name="FixedAsset_reference_UNQ", members={"reference"})
 })
+@javax.jdo.annotations.Indices({
+    // to cover the 'findAssetsByReferenceOrName' query
+    // both in this superclass and the subclasses
+     @javax.jdo.annotations.Index(
+             name = "FixedAsset_reference_name_IDX", members = { "reference", "name" })
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findAssetsByReferenceOrName", language = "JDOQL",

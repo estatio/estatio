@@ -67,6 +67,8 @@ import org.estatio.dom.lease.LeaseConstants;
             name = "Party_reference_UNQ", members="reference")
 })
 @javax.jdo.annotations.Indices({
+    // to cover the 'findByReferenceOrName' query
+    // both in this superclass and the subclasses
     @javax.jdo.annotations.Index(
             name = "Party_reference_name_IDX", members = { "reference", "name" })
 })

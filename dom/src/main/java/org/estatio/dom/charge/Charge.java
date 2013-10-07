@@ -30,6 +30,7 @@ import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithCodeUnique;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -41,7 +42,9 @@ import org.estatio.dom.tax.Tax;
         column="discriminator")
 @javax.jdo.annotations.Uniques({
     @javax.jdo.annotations.Unique(
-            name = "Charge_code_UNQ", members={"code"})
+            name = "Charge_code_UNQ", members={"code"}),
+    @javax.jdo.annotations.Unique(
+            name = "Charge_reference_UNQ", members={"reference"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -54,7 +57,7 @@ import org.estatio.dom.tax.Tax;
 @Immutable
 public class Charge 
         extends EstatioRefDataObject<Charge> 
-        implements WithReferenceGetter, WithCodeUnique, WithDescriptionGetter {
+        implements WithReferenceUnique, WithCodeUnique, WithDescriptionGetter {
 
     public Charge() {
         super("code");

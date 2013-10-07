@@ -57,6 +57,7 @@ import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -73,8 +74,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
 @javax.jdo.annotations.Indices({
+    // to cover the 'findAssetsByReferenceOrName' query
+    // both in this superclass and the subclasses
     @javax.jdo.annotations.Index(
-            name="Agreement_reference_IDX", members={"reference"})
+            name = "Lease_reference_name_IDX", members = { "reference", "name" })
+})
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name="Agreement_reference_UNQ", members={"reference"})
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -95,7 +102,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable
 public abstract class Agreement<S extends Lockable> 
         extends EstatioTransactionalObject<Agreement<S>, S> 
-        implements WithReferenceComparable<Agreement<S>>, 
+        implements WithReferenceComparable<Agreement<S>>,
+                   WithReferenceUnique,
                    WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, 
                    WithNameGetter {
 

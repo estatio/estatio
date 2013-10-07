@@ -50,10 +50,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-// TODO: make name abstract in FixedAsset, then define subclass-specific
-// constraint:
-// @javax.jdo.annotations.Unique(name="UNIT_NAME_UNQ_IDX",
-// members={"property","name"})
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {

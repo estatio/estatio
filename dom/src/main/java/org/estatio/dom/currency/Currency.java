@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithDescriptionUnique;
 import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
 
 /**
  * Represents the {@link Currency} of some amount of money.
@@ -44,6 +45,8 @@ import org.estatio.dom.WithReferenceComparable;
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
 @javax.jdo.annotations.Uniques({
+        @javax.jdo.annotations.Unique(
+                name = "Currency_reference_UNQ", members = "reference"),
         @javax.jdo.annotations.Unique(
                 name = "Currency_description_UNQ", members = "description")
 })
@@ -65,7 +68,7 @@ import org.estatio.dom.WithReferenceComparable;
 @AutoComplete(repository=Currencies.class, action="autoComplete")
 public class Currency 
         extends EstatioRefDataObject<Currency> 
-        implements WithReferenceComparable<Currency>, WithDescriptionUnique {
+        implements WithReferenceComparable<Currency>, WithReferenceUnique, WithDescriptionUnique {
 
     public Currency() {
         super("reference");

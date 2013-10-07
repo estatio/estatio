@@ -52,6 +52,8 @@ import org.estatio.dom.WithReferenceComparable;
         column="id")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
+                name = "Index_reference_UNQ", members = "reference"),
+        @javax.jdo.annotations.Unique(
                 name = "Index_name_UNQ", members = "name")
 })
 @javax.jdo.annotations.Queries({
