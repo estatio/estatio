@@ -7,8 +7,7 @@
           "members": {
             "property": {},
             "dueDate": {},
-            "reference": {},
-            "name": {}
+            "total": {}
           }
         }
       }

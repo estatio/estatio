@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
@@ -49,41 +50,51 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
+    @Programmatic
     public List<Invoice> findInvoices(Property property, InvoiceStatus status) {
         return allMatches("findByPropertyAndStatus", "property", property, "status", status);
     }
 
     @ActionSemantics(Of.SAFE)
+    @Programmatic
+    public List<Invoice> findInvoices(Property property, LocalDate dueDate) {
+        return allMatches("findByPropertyAndDueDate", "property", property, "dueDate", dueDate);
+    }
+
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public List<Invoice> findInvoices(Property property, LocalDate dueDate, InvoiceStatus status) {
+    public List<Invoice> findInvoices(Property property, @Named("Due Date") @Optional LocalDate dueDate, @Optional InvoiceStatus status) {
+        if (status == null)
+            return allMatches("findByPropertyAndDueDate", "property", property, "dueDate", dueDate);
+        if (dueDate == null)
+            return allMatches("findByPropertyAndStatus", "property", property, "status", status);
         return allMatches("findByPropertyAndDueDateAndStatus", "property", property, "dueDate", dueDate, "status", status);
     }
 
     @ActionSemantics(Of.SAFE)
     @DescribedAs("New invoices, to be approved")
-    @MemberOrder(sequence = "1")
+    @MemberOrder(sequence = "10")
     public List<Invoice> findInvoicesToBeApproved() {
         return allMatches("findByStatus", "status", InvoiceStatus.NEW);
     }
 
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Approved invoices, to be collected")
-    @MemberOrder(sequence = "2")
+    @MemberOrder(sequence = "11")
     public List<Invoice> findInvoicesToBeCollected() {
         return allMatches("findByStatus", "status", InvoiceStatus.APPROVED);
     }
 
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Collected invoices, to be invoiced")
-    @MemberOrder(sequence = "3")
+    @MemberOrder(sequence = "12")
     public List<Invoice> findInvoicesToBeInvoiced() {
         return allMatches("findByStatus", "status", InvoiceStatus.COLLECTED);
     }
 
     @ActionSemantics(Of.SAFE)
     @DescribedAs("Already invoiced")
-    @MemberOrder(sequence = "4")
+    @MemberOrder(sequence = "13")
     public List<Invoice> findInvoicesPreviouslyInvoiced() {
         return allMatches("findByStatus", "status", InvoiceStatus.INVOICED);
     }

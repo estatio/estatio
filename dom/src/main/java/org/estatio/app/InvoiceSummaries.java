@@ -29,6 +29,7 @@ import org.estatio.dom.asset.Property;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 
@@ -40,9 +41,11 @@ public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForProp
     }
 
     // //////////////////////////////////////
+    // TODO: remove this method once we've settled on the best approach for view
+    // models. Currently preferring the database view
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "80")
+    @Hidden
     public List<InvoiceSummaryForPropertyDueDate> invoicesDom() {
         List<Property> propertyList = properties.allProperties();
         return Lists.newArrayList(
@@ -66,9 +69,11 @@ public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForProp
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "80")
-    public List<InvoiceSummaryForPropertyDueDate> invoicesSql() {
+    public List<InvoiceSummaryForPropertyDueDate> invoiceSummary() {
         return allInstances();
     }
+
+    // //////////////////////////////////////
 
     private Properties properties;
 

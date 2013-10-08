@@ -53,12 +53,12 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -86,6 +86,13 @@ import org.apache.isis.applib.annotation.Where;
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE status == :status && " +
                         "dueDate == :dueDate && " +
+                        "source.occupancies.contains(o) &&" +
+                        "o.unit.property == :property " +
+                        "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
+        @javax.jdo.annotations.Query(
+                name = "findByPropertyAndDueDate", language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE dueDate == :dueDate && " +
                         "source.occupancies.contains(o) &&" +
                         "o.unit.property == :property " +
                         "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
