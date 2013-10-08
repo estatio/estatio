@@ -112,7 +112,7 @@ public class LeasesTest_finders {
     
 
     @Test
-    public void allInvoices() {
+    public void allLeases() {
         
         leases.allLeases();
         

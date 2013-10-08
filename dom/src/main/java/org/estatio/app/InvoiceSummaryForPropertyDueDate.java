@@ -195,17 +195,17 @@ public class InvoiceSummaryForPropertyDueDate
 
     // //////////////////////////////////////
 
-    InvoiceSummaryForPropertyDueDateStatus columnNew;
-
-    public InvoiceSummaryForPropertyDueDateStatus getColumn1() {
-        if (columnNew == null) {
-            columnNew = new InvoiceSummaryForPropertyDueDateStatus();
-            columnNew.setProperty(getProperty());
-            columnNew.setDueDate(getDueDate());
-            columnNew.setStatus(InvoiceStatus.NEW);
-        }
-        return columnNew;
-    }
+//    InvoiceSummaryForPropertyDueDateStatus columnNew;
+//
+//    public InvoiceSummaryForPropertyDueDateStatus getColumn1() {
+//        if (columnNew == null) {
+//            columnNew = new InvoiceSummaryForPropertyDueDateStatus();
+//            columnNew.setProperty(getProperty());
+//            columnNew.setDueDate(getDueDate());
+//            columnNew.setStatus(InvoiceStatus.NEW);
+//        }
+//        return columnNew;
+//    }
 
     // //////////////////////////////////////
 

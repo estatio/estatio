@@ -23,15 +23,15 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class LeasesTest_finders extends EstatioIntegrationTest {
 
@@ -58,4 +58,11 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
         final List<Lease> matchingLeases = leases.findLeases("OXF*");
         assertThat(matchingLeases.size(), is(4));
     }
+
+    @Test
+    public void findLeasesAboutToExpireOnDate() throws Exception {
+        final List<Lease> matchingLeases = leases.findAboutToExpireOnDate(new LocalDate(2020, 1, 1));
+        assertThat(matchingLeases.size(), is(2));
+    }
+
 }

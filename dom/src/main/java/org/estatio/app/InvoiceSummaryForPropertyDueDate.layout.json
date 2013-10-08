@@ -5,13 +5,10 @@
       "memberGroups": {
         "General": {
           "members": {
+            "property": {},
+            "dueDate": {},
             "reference": {},
             "name": {}
-          }
-        },
-        "Property": {
-          "members": {
-            "property": {}
           }
         }
       }

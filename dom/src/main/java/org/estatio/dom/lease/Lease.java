@@ -60,17 +60,11 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
-        column = "version")
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME, column = "discriminator")
+@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
@@ -91,15 +85,21 @@ import org.estatio.dom.party.Party;
                         + "&& (terminationDate == null || terminationDate <= :activeOnDate) "
                         + "&& (lu.unit == :asset || lu.unit.property == :asset) "
                         + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy lu") })
+                        + "org.estatio.dom.lease.Occupancy lu"),
+        @javax.jdo.annotations.Query(
+                name = "findAboutToExpireOnDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.Lease " +
+                        "WHERE endDate != null && endDate >= :date ")
+
+})
 @Bookmarkable
 public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
-
 
     public Lease() {
         super(LeaseStatus.NEW, LeaseStatus.APPROVED);
     }
-    
+
     @Override
     public LeaseStatus getLockable() {
         return getStatus();
@@ -117,12 +117,12 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         super.created();
         setStatus(LeaseStatus.NEW);
     }
-    
+
     // //////////////////////////////////////
-    
+
     private LeaseStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public LeaseStatus getStatus() {
         return status;
@@ -132,9 +132,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         this.status = status;
     }
 
-    
     // //////////////////////////////////////
-
 
     @Override
     @NotPersisted
@@ -149,30 +147,31 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
         final AgreementRole ar = getSecondaryAgreementRole();
         return partyOf(ar);
     }
-    
+
     @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
         return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_LANDLORD);
     }
-    
+
     @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
         return findCurrentOrMostRecentAgreementRole(LeaseConstants.ART_TENANT);
     }
 
     // //////////////////////////////////////
-    
+
     /**
-     * The {@link Property} of the (first of the) {@link #getOccupancies() LeaseUnit}s.
+     * The {@link Property} of the (first of the) {@link #getOccupancies()
+     * LeaseUnit}s.
      * 
      * <p>
      * It is not possible for the {@link Occupancy}s to belong to different
-     * {@link Property properties}, and so it is sufficient to obtain the {@link Property}
-     * of the first such {@link Occupancy occupancy}. 
+     * {@link Property properties}, and so it is sufficient to obtain the
+     * {@link Property} of the first such {@link Occupancy occupancy}.
      */
     @Override
     public Property getProperty() {
-        if(getOccupancies().isEmpty()) {
+        if (getOccupancies().isEmpty()) {
             return null;
         }
         return getOccupancies().first().getUnit().getProperty();
@@ -182,7 +181,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     private LeaseType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     public LeaseType getType() {
         return type;
     }
@@ -218,9 +217,10 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     private SortedSet<LeaseItem> items = new TreeSet<LeaseItem>();
 
     /**
-     * Added to the default fetch group in an attempt to resolve pre-prod error, EST-233. 
+     * Added to the default fetch group in an attempt to resolve pre-prod error,
+     * EST-233.
      */
-    @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup="true")
+    @javax.jdo.annotations.Persistent(mappedBy = "lease", defaultFetchGroup = "true")
     @Render(Type.EAGERLY)
     public SortedSet<LeaseItem> getItems() {
         return items;
@@ -231,9 +231,9 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     }
 
     public LeaseItem newItem(
-            final LeaseItemType type, 
-            final Charge charge, 
-            final InvoicingFrequency invoicingFrequency, 
+            final LeaseItemType type,
+            final Charge charge,
+            final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod);
@@ -242,8 +242,8 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     @Hidden
     public LeaseItem findItem(
-            final LeaseItemType itemType, 
-            final LocalDate itemStartDate, 
+            final LeaseItemType itemType,
+            final LocalDate itemStartDate,
             final BigInteger sequence) {
         return leaseItems.findLeaseItem(this, itemType, itemStartDate, sequence);
     }
@@ -260,10 +260,10 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(name="paidByBankMandateId")
+    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
     private BankMandate paidBy;
 
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     public BankMandate getPaidBy() {
@@ -310,7 +310,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<BankMandate> existingBankMandatesForTenant() {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
-        if(tenantRole == null || !tenantRole.isCurrent()) {
+        if (tenantRole == null || !tenantRole.isCurrent()) {
             return Collections.emptyList();
         }
         final Party tenant = partyOf(tenantRole);
@@ -324,8 +324,8 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     public Lease newMandate(
-            final BankAccount bankAccount, 
-            final @Named("Start Date") LocalDate startDate, 
+            final BankAccount bankAccount,
+            final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
         final BankMandate bankMandate = newTransientInstance(BankMandate.class);
         final AgreementType bankMandateAgreementType = bankMandateAgreementType();
@@ -346,7 +346,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     public String disableNewMandate(final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
-        if(tenantRole == null || !tenantRole.isCurrent()) {
+        if (tenantRole == null || !tenantRole.isCurrent()) {
             return "Could not determine the tenant (secondary party) of this lease";
         }
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
@@ -426,8 +426,8 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
 
     @Bulk
     public Lease calculate(
-            final @Named("Period Start Date") LocalDate startDate, 
-            final @Named("Due date") LocalDate dueDate, 
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, dueDate, runType);
@@ -438,9 +438,9 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     // //////////////////////////////////////
 
     public Lease terminate(
-            final @Named("Termination Date") LocalDate terminationDate, 
+            final @Named("Termination Date") LocalDate terminationDate,
             final @Named("Are you sure?") @Optional Boolean confirm) {
-        // TODO: how is 'confirm' used?  isn't there meant to be a validate?
+        // TODO: how is 'confirm' used? isn't there meant to be a validate?
         for (LeaseItem item : getItems()) {
             LeaseTerm term = item.currentTerm(terminationDate);
             if (term == null) {
@@ -475,6 +475,5 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
-
 
 }

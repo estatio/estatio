@@ -52,7 +52,7 @@ public class Leases extends EstatioDomainService<Lease> {
     public enum InvoiceRunType {
         NORMAL_RUN, RETRO_RUN;
     }
-    
+
     public Leases() {
         super(Leases.class, Lease.class);
     }
@@ -63,15 +63,14 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Lease newLease(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
-            final @Named("Reference") String reference, 
-            final @Named("Name") String name, 
-            final @Named("Start Date") LocalDate startDate, 
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") 
-            String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
-            LocalDate endDate, 
-            final @Optional @Named("Landlord") Party landlord, 
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
+            // aggregate value types
+            final @Named("Reference") String reference,
+            final @Named("Name") String name,
+            final @Named("Start Date") LocalDate startDate,
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
+            final @Optional @Named("Landlord") Party landlord,
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
             ) {
@@ -90,12 +89,12 @@ public class Leases extends EstatioDomainService<Lease> {
         lease.setStartDate(startDate);
         lease.setEndDate(calculatedEndDate);
         persistIfNotAlready(lease);
-        
-        if(tenant != null) {
+
+        if (tenant != null) {
             final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
             lease.newRole(artTenant, tenant, null, null);
         }
-        if(landlord != null) {
+        if (landlord != null) {
             final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
             lease.newRole(artLandlord, landlord, null, null);
         }
@@ -104,43 +103,39 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
-        return firstMatch("findByReference", 
-                "reference", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
-            String referenceOrName) {
-        return allMatches("findByReferenceOrName", 
-                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
-    }
-    public String default0FindLeases() {
-        return "AAA-BBBBBBB*";
+    public List<Lease> findLeases(final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findLeasesActiveOnDate(
-            final FixedAsset fixedAsset, 
-            final @Named("Active On Date") LocalDate activeOnDate) {
+    public List<Lease> findLeasesActiveOnDate(final FixedAsset fixedAsset, final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
+
     public List<FixedAsset> autoComplete0FindLeasesActiveOnDate(final String searchPhrase) {
         return fixedAssets.findAssetsByReferenceOrName(searchPhrase);
     }
+
     public LocalDate default1FindLeasesActiveOnDate() {
         return getClockService().now();
     }
 
+    // //////////////////////////////////////
+
+    public List<Lease> findAboutToExpireOnDate(LocalDate date) {
+        return allMatches("findAboutToExpireOnDate", "date", date);
+    }
 
     // //////////////////////////////////////
 
-    
     /**
      * Returns the {@link InvoiceItemForLease}s that are newly
      * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
@@ -151,8 +146,8 @@ public class Leases extends EstatioDomainService<Lease> {
     @MemberOrder(sequence = "6")
     public List<InvoiceItemForLease> calculate(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
-            final @Named("Period Start Date") LocalDate startDate, 
-            final @Named("Due date") LocalDate dueDate, 
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         final List<Lease> leases = findLeases(referenceOrName);
         for (Lease lease : leases) {
@@ -162,23 +157,20 @@ public class Leases extends EstatioDomainService<Lease> {
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
-        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName, startDate, dueDate);
+        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName,
+                startDate, dueDate);
     }
-    public String default0Calculate() {
-        return "AAA-*";
-    }
+
     public LocalDate default1Calculate() {
         return getClockService().beginningOfQuarter();
     }
+
     public LocalDate default2Calculate() {
         return getClockService().beginningOfQuarter();
     }
 
-
-
-
     // //////////////////////////////////////
-    
+
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
@@ -186,17 +178,10 @@ public class Leases extends EstatioDomainService<Lease> {
         return allInstances();
     }
 
-
     // //////////////////////////////////////
 
-    private Invoices invoices;
-
-    public final void injectInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
-    
     private InvoiceItemsForLease invoiceItemsForLease;
-    
+
     public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
     }
@@ -218,6 +203,5 @@ public class Leases extends EstatioDomainService<Lease> {
     public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
-    
-    
+
 }
