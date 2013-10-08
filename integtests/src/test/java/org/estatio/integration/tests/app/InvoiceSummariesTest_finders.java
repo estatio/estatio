@@ -50,7 +50,7 @@ public class InvoiceSummariesTest_finders extends EstatioIntegrationTest {
 
     @Test
     public void allInvoiceSummariesForPropertyDueDate() throws Exception {
-        List<InvoiceSummaryForPropertyDueDate> summaries = invoiceSummaries.invoicesSql();
+        List<InvoiceSummaryForPropertyDueDate> summaries = invoiceSummaries.invoiceSummary();
         assertThat(summaries.size(), is(1));
         InvoiceSummaryForPropertyDueDate summary = summaries.get(0);
         Property property = summary.getProperty();
