@@ -90,7 +90,8 @@ import org.estatio.dom.party.Party;
                 name = "findAboutToExpireOnDate", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.Lease " +
-                        "WHERE endDate != null && endDate >= :date ")
+                        "WHERE endDate != null && endDate >= :date " +
+                        "ORDER BY endDate")
 
 })
 @Bookmarkable
