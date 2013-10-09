@@ -311,7 +311,9 @@ public abstract class LeaseTerm
 
     private boolean isActiveOn(final LocalDate localDate) {
         LocalDateInterval effectiveInterval = getEffectiveInterval();
-        if (effectiveInterval == null) return false;
+        if (effectiveInterval == null) {
+            return false;
+        }
         return effectiveInterval.contains(localDate);
     }
 

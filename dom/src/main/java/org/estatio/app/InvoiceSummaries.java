@@ -58,7 +58,9 @@ public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForProp
             @Override
             public InvoiceSummaryForPropertyDueDate apply(final Property property) {
                 final InvoiceSummaryForPropertyDueDate summary =
-                        getContainer().newViewModelInstance(InvoiceSummaryForPropertyDueDate.class, property.getReference());
+                        getContainer().newViewModelInstance(
+                                InvoiceSummaryForPropertyDueDate.class, 
+                                property.getReference());
                 summary.setProperty(property);
                 return summary;
             }

@@ -110,7 +110,13 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
     }
 
     private void isCurrent(final LocalDate date, final boolean expected) {
-        WithInterval<?> t = newWithInterval();
+        
+        // allow for fact that some classes (eg LeaseTerm) require a parent for this,
+        // others (eg AgreementForTesting) do not
+        WithInterval<?> t = newWithIntervalAndHasParent();
+        if (t == null) {
+            t = newWithInterval();
+        }
         
         t.setStartDate(startDate);
         t.setEndDate(endDate);

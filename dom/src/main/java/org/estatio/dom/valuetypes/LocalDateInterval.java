@@ -114,10 +114,12 @@ public final class LocalDateInterval {
      */
     public boolean contains(final LocalDate date) {
         if (endDate() == null) {
-            if (startDate() == null)
+            if (startDate() == null) {
                 return true;
-            if (date.isAfter(startDate()))
+            }
+            if (date.isEqual(startDate()) || date.isAfter(startDate())) {
                 return true;
+            }
             return false;
         }
         return asInterval().contains(date.toInterval());

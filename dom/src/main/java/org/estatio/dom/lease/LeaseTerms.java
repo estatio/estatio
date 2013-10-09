@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.services.clock.ClockService;
 
 public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 

@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.Title;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithCodeUnique;
 import org.estatio.dom.WithDescriptionGetter;
-import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.tax.Tax;
 

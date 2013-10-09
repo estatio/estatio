@@ -78,7 +78,9 @@ public class WithIntervalContractTestAll_getInterval extends WithIntervalContrac
                 new WIInstantiator<LeaseTermForTesting>(LeaseTermForTesting.class) {
             public LeaseTermForTesting newWithIntervalWithParent() throws Exception {
                 LeaseTermForTesting lt = newWithInterval();
-                lt.setLeaseItem(new LeaseItem());
+                final LeaseItem li = new LeaseItem();
+                lt.setLeaseItem(li);
+                li.setLease(new Lease());
                 return lt;
             };
         });

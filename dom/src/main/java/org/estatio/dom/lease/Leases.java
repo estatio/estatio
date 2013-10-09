@@ -40,7 +40,6 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
@@ -68,8 +67,10 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Named("Reference") String reference,
             final @Named("Name") String name,
             final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") 
+            String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
+            LocalDate endDate,
             final @Optional @Named("Landlord") Party landlord,
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
@@ -110,7 +111,9 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
-    public List<Lease> findLeases(final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+    public List<Lease> findLeases(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
         return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
