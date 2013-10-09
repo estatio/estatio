@@ -140,7 +140,6 @@ public abstract class LeaseTerm
     public void setLeaseItem(final LeaseItem leaseItem) {
         this.leaseItem = leaseItem;
     }
-
     
     // //////////////////////////////////////
 
@@ -267,7 +266,6 @@ public abstract class LeaseTerm
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
-
     // //////////////////////////////////////
 
     @Hidden
@@ -291,15 +289,18 @@ public abstract class LeaseTerm
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
+        LocalDate effectiveStartDate = getEffectiveStartDate();
+        LocalDate effectiveEndDate = getEffectiveEndDate();
+        return LocalDateInterval.including(effectiveStartDate, effectiveEndDate);
+        
     }
 
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
         Lease lease = getLeaseItem().getLease();
-        final LocalDateInterval startToEndDate = LocalDateInterval.including(getStartDate(), getEndDate());
+        final LocalDateInterval termInterval = LocalDateInterval.including(getStartDate(), getEndDate());
         final LocalDateInterval leaseEffectiveInterval = lease.getEffectiveInterval();
-        return startToEndDate.overlap(leaseEffectiveInterval);
+        return termInterval.overlap(leaseEffectiveInterval);
     }
 
     // //////////////////////////////////////
@@ -309,7 +310,9 @@ public abstract class LeaseTerm
     }
 
     private boolean isActiveOn(final LocalDate localDate) {
-        return getInterval().contains(localDate);
+        LocalDateInterval effectiveInterval = getEffectiveInterval();
+        if (effectiveInterval == null) return false;
+        return effectiveInterval.contains(localDate);
     }
 
     // //////////////////////////////////////

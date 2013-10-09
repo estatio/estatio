@@ -46,11 +46,11 @@ public final class LocalDateInterval {
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate, final IntervalEnding ending) {
         this.ending = ending;
         startInstant = startDate == null ? OPEN_START_INSTANT : startDate.toInterval().getStartMillis();
-        endInstant = endDate == null 
-                        ? OPEN_END_INSTANT 
-                        : ending == IntervalEnding.EXCLUDING_END_DATE 
-                            ? endDate.toInterval().getStartMillis() 
-                            : endDate.toInterval().getEndMillis();
+        endInstant = endDate == null
+                ? OPEN_END_INSTANT
+                : ending == IntervalEnding.EXCLUDING_END_DATE
+                        ? endDate.toInterval().getStartMillis()
+                        : endDate.toInterval().getEndMillis();
     }
 
     public LocalDateInterval(final Interval interval) {
@@ -76,9 +76,7 @@ public final class LocalDateInterval {
     }
 
     public LocalDate endDate(final IntervalEnding ending) {
-        // REVIEW: is the following line correct, using startInstant?  looks like a copy-n-paste error?
-        // if it isn't, please replace this text with an explanatory comment...
-        if (endInstant == OPEN_END_INSTANT || startInstant == 0) {
+        if (endInstant == OPEN_END_INSTANT || endInstant == 0) {
             return null;
         }
         LocalDate date = new LocalDate(endInstant);
@@ -111,11 +109,18 @@ public final class LocalDateInterval {
     /**
      * Does this date contain the specified time interval.
      * 
-     * @param localDate
+     * @param date
      * @return
      */
-    public boolean contains(final LocalDate localDate) {
-        return asInterval().contains(localDate.toInterval());
+    public boolean contains(final LocalDate date) {
+        if (endDate() == null) {
+            if (startDate() == null)
+                return true;
+            if (date.isAfter(startDate()))
+                return true;
+            return false;
+        }
+        return asInterval().contains(date.toInterval());
     }
 
     /**
@@ -135,7 +140,7 @@ public final class LocalDateInterval {
      * @return
      */
     public LocalDateInterval overlap(final LocalDateInterval otherInterval) {
-        if(otherInterval == null) {
+        if (otherInterval == null) {
             return null;
         }
         final Interval thisAsInterval = asInterval();

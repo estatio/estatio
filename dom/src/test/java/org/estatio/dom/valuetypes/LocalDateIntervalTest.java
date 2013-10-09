@@ -124,7 +124,13 @@ public class LocalDateIntervalTest {
     public void testContains() {
         assertTrue(periodInterval.contains(new LocalDate(2012, 1, 1)));
         assertTrue(periodInterval.contains(new LocalDate(2012, 3, 31)));
+        // open interval
+        assertTrue(interval8.contains(new LocalDate(2099, 1, 1)));
+        assertFalse(interval8.contains(new LocalDate(2000, 1, 1)));
+
+        assertTrue(interval9.contains(new LocalDate(2012, 3, 31)));
         assertFalse(periodInterval.contains(new LocalDate(2012, 4, 1)));
+
     }
 
     @Test
@@ -138,7 +144,21 @@ public class LocalDateIntervalTest {
         Assert.assertNull(myInterval.startDate());
         Assert.assertNull(myInterval.endDate());
     }
-    
+
+    @Test
+    public void testOverlap() {
+        LocalDateInterval myInterval1 = LocalDateInterval.excluding(new LocalDate(2000, 1, 1), null);
+        LocalDateInterval myInterval2 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
+        Assert.assertThat(myInterval1.overlap(myInterval2).startDate(), Is.is(new LocalDate(2000, 1, 1)));
+        Assert.assertThat(myInterval1.overlap(myInterval2).endDate(), Is.is(new LocalDate(2010, 1, 1)));
+
+        LocalDateInterval myInterval3 = LocalDateInterval.excluding(new LocalDate(2011, 1, 1), null);
+        LocalDateInterval myInterval4 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
+        Assert.assertNull(myInterval3.overlap(myInterval4));
+        Assert.assertNull(myInterval3.overlap(myInterval4));
+
+    }
+
     private static Interval emptyInterval() {
         return null;
     }
