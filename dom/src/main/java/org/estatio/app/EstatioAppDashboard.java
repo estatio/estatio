@@ -20,27 +20,29 @@ package org.estatio.app;
 
 import java.util.List;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
-import org.estatio.services.clock.ClockService;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.annotation.Dashboard;
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
+import org.estatio.dom.EstatioService;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
+
 @Dashboard
 @Named("Dashboard")
-public class EstatioAppDashboard extends AbstractFactoryAndRepository {
+public class EstatioAppDashboard extends EstatioService<EstatioAppDashboard> {
+    
+    public EstatioAppDashboard() {
+        super(EstatioAppDashboard.class);
+    }
 
     @Override
     public String getId() {
         return "dashboard";
     }
 
+    @Override
     public String iconName() {
         return "Dashboard";
     }
@@ -50,7 +52,7 @@ public class EstatioAppDashboard extends AbstractFactoryAndRepository {
     @Named("Leases about to expire")
     @Render(Type.EAGERLY)
     public List<Lease> getLeasesAboutToExpire() {
-        return leases.findAboutToExpireOnDate(clockService.now());
+        return leases.findAboutToExpireOnDate(getClockService().now());
     }
 
     // //////////////////////////////////////
@@ -59,11 +61,5 @@ public class EstatioAppDashboard extends AbstractFactoryAndRepository {
 
     public void injectLeases(final Leases leases) {
         this.leases = leases;
-    }
-
-    private ClockService clockService;
-    
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
     }
 }

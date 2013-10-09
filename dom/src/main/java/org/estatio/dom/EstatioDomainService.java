@@ -22,32 +22,21 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.core.commons.lang.StringExtensions;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-import org.estatio.services.clock.ClockService;
+public abstract class EstatioDomainService<T> extends EstatioService<T> {
 
-public abstract class EstatioDomainService<T> extends AbstractFactoryAndRepository {
-
-    private final Class<? extends EstatioDomainService<T>> serviceType;
     private final Class<T> entityType;
 
     protected EstatioDomainService(
             final Class<? extends EstatioDomainService<T>> serviceType, 
-            final Class<T> objectType) {
-        this.serviceType = serviceType;
-        this.entityType = objectType;
-    }
-    
-    @Override
-    public String getId() {
-        // eg "agreementRoles";
-        return StringExtensions.asCamelLowerFirst(serviceType.getSimpleName());
+            final Class<T> entityType) {
+        super(serviceType);
+        this.entityType = entityType;
     }
 
+    @Override
     public String iconName() {
         // eg "AgreementRole";
         return entityType.getSimpleName();
@@ -55,10 +44,6 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
 
     // //////////////////////////////////////
 
-    protected Class<? extends EstatioDomainService<T>> getServiceType() {
-        return serviceType;
-    }
-    
     protected Class<T> getEntityType() {
         return entityType;
     }
@@ -95,35 +80,7 @@ public abstract class EstatioDomainService<T> extends AbstractFactoryAndReposito
         return isisJdoSupport.getJdoPersistenceManager().newQuery(jdoql);
     }
 
-
-
     // //////////////////////////////////////
-
-    private ClockService clockService;
-    protected ClockService getClockService() {
-        return clockService;
-    }
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
-
-    /**
-     * a default value is used to prevent null pointers for objects 
-     * being initialized where the service has not yet been injected into.
-     */
-    private EventBusService eventBusService = EventBusService.NOOP;
-    protected EventBusService getEventBusService() {
-        return eventBusService;
-    }
-    /**
-     * Unlike domain objects, domain services ARE automatically registered
-     * with the {@link EventBusService}; Isis guarantees that there will be
-     * an instance of each domain service in memory when events are {@link EventBusService#post(Object) post}ed.
-     */
-    public void injectEventBusService(final EventBusService eventBusService) {
-        this.eventBusService = eventBusService;
-        eventBusService.register(this);
-    }
 
     protected IsisJdoSupport isisJdoSupport;
     public final void injectIsisJdoSupport(final IsisJdoSupport isisJdoSupport) {

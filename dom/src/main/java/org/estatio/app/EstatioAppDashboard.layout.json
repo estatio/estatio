@@ -20,5 +20,7 @@
     }
   ],
   "actions": {
+    "downloadLayout": {},
+    "refreshLayout": {}
   }
 }

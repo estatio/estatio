@@ -109,7 +109,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
         isCurrent(endDate.plusDays(1), false);
     }
 
-    private void isCurrent(final LocalDate now, final boolean expected) {
+    private void isCurrent(final LocalDate date, final boolean expected) {
         WithInterval<?> t = newWithInterval();
         
         t.setStartDate(startDate);
@@ -122,7 +122,7 @@ public class WithIntervalContractTester<T extends WithInterval<?>> {
             context.checking(new Expectations() {
                 {
                     oneOf(mockClockService).now();
-                    will(returnValue(now));
+                    will(returnValue(date));
                 }
             });
             

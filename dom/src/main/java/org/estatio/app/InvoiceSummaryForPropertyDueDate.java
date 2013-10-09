@@ -222,7 +222,7 @@ public class InvoiceSummaryForPropertyDueDate
 
     private Invoices invoicesService;
 
-    public void injectInvoicesService(Invoices invoicesService) {
+    public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
     }
 

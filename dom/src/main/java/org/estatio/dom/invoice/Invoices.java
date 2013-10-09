@@ -50,25 +50,37 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @Programmatic
-    public List<Invoice> findInvoices(Property property, InvoiceStatus status) {
-        return allMatches("findByPropertyAndStatus", "property", property, "status", status);
+    @MemberOrder(sequence = "1")
+    public List<Invoice> findInvoices(final Property property, final InvoiceStatus status) {
+        return allMatches("findByPropertyAndStatus", 
+                "property", property, 
+                "status", status);
     }
 
     @ActionSemantics(Of.SAFE)
     @Programmatic
-    public List<Invoice> findInvoices(Property property, LocalDate dueDate) {
-        return allMatches("findByPropertyAndDueDate", "property", property, "dueDate", dueDate);
+    public List<Invoice> findInvoices(
+            final Property property, final LocalDate dueDate) {
+        return allMatches("findByPropertyAndDueDate", 
+                "property", property, "dueDate", dueDate);
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
-    public List<Invoice> findInvoices(Property property, @Named("Due Date") @Optional LocalDate dueDate, @Optional InvoiceStatus status) {
-        if (status == null)
-            return allMatches("findByPropertyAndDueDate", "property", property, "dueDate", dueDate);
-        if (dueDate == null)
-            return allMatches("findByPropertyAndStatus", "property", property, "status", status);
-        return allMatches("findByPropertyAndDueDateAndStatus", "property", property, "dueDate", dueDate, "status", status);
+    public List<Invoice> findInvoices(
+            final Property property, 
+            final @Named("Due Date") @Optional LocalDate dueDate, 
+            final @Optional InvoiceStatus status) {
+        if (status == null) {
+            return allMatches("findByPropertyAndDueDate", 
+                    "property", property, "dueDate", dueDate);
+        } else if (dueDate == null) {
+            return allMatches("findByPropertyAndStatus", 
+                    "property", property, "status", status);
+        } else {
+            return allMatches("findByPropertyAndDueDateAndStatus", 
+                    "property", property, "dueDate", dueDate, "status", status);
+        }
     }
 
     @ActionSemantics(Of.SAFE)

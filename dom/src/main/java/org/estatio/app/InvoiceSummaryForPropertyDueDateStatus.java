@@ -146,7 +146,7 @@ public class InvoiceSummaryForPropertyDueDateStatus
     @Persistent
     private InvoiceStatus status;
 
-    public void setStatus(InvoiceStatus status) {
+    public void setStatus(final InvoiceStatus status) {
         this.status = status;
     }
 
@@ -177,7 +177,7 @@ public class InvoiceSummaryForPropertyDueDateStatus
         return invoices;
     }
 
-    public void setInvoices(List<Invoice> invoices) {
+    public void setInvoices(final List<Invoice> invoices) {
         this.invoices = invoices;
     }
 
@@ -191,7 +191,7 @@ public class InvoiceSummaryForPropertyDueDateStatus
 
     private Invoices invoicesService;
 
-    public void injectInvoicesService(Invoices invoicesService) {
+    public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
     }
 

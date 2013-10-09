@@ -74,7 +74,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     }
 
     public LocalDate default0LeaseTermsToBeApproved() {
-        return clockService.now();
+        return getClockService().now();
     }
 
 
@@ -113,12 +113,5 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 //    }
 
     
-    // //////////////////////////////////////
-
-    private ClockService clockService;
-
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
 
 }

@@ -116,7 +116,9 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
-    public List<Lease> findLeasesActiveOnDate(final FixedAsset fixedAsset, final @Named("Active On Date") LocalDate activeOnDate) {
+    public List<Lease> findLeasesActiveOnDate(
+            final FixedAsset fixedAsset, 
+            final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
 
@@ -130,7 +132,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    public List<Lease> findAboutToExpireOnDate(LocalDate date) {
+    public List<Lease> findAboutToExpireOnDate(final LocalDate date) {
         return allMatches("findAboutToExpireOnDate", "date", date);
     }
 
