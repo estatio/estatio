@@ -20,10 +20,11 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithStartDate;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -33,9 +34,6 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithStartDate;
-
 /**
  * Holds the {@link #getValue() value} of an {@link #getIndexBase() index (base)} from a particular
  * {@link #getStartDate() point in time} (until succeeded by some other value).
@@ -44,9 +42,6 @@ import org.estatio.dom.WithStartDate;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByIndexAndStartDate", language = "JDOQL",

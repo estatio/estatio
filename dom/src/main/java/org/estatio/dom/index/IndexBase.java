@@ -48,9 +48,6 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @Immutable
 public class IndexBase 
         extends EstatioRefDataObject<IndexBase> 
