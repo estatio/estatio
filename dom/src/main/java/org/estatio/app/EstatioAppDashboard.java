@@ -20,31 +20,33 @@ package org.estatio.app;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.Dashboard;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
-import org.estatio.dom.EstatioService;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 
-@Dashboard
 @Named("Dashboard")
-public class EstatioAppDashboard extends EstatioService<EstatioAppDashboard> {
+public class EstatioAppDashboard extends EstatioViewModel {
     
-    public EstatioAppDashboard() {
-        super(EstatioAppDashboard.class);
+    public String title() {
+        return "Dashboard";
     }
-
-    @Override
-    public String getId() {
-        return "dashboard";
-    }
-
-    @Override
+    
     public String iconName() {
         return "Dashboard";
+    }
+
+    // //////////////////////////////////////
+
+    @Override
+    public void viewModelInit(final String memento) {
+    }
+
+    @Override
+    public String viewModelMemento() {
+        return "dashboard";
     }
 
     // //////////////////////////////////////
@@ -62,4 +64,8 @@ public class EstatioAppDashboard extends EstatioService<EstatioAppDashboard> {
     public void injectLeases(final Leases leases) {
         this.leases = leases;
     }
+    
+
+    
+    
 }
