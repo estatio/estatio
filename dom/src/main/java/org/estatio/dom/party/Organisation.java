@@ -21,6 +21,8 @@ package org.estatio.dom.party;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.PublishedObject;
+
 
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
@@ -38,6 +40,7 @@ import javax.jdo.annotations.VersionStrategy;
                     + "WHERE reference.matches(:referenceOrName) "
                     + "   || name.matches(:referenceOrName)")
 })
+@PublishedObject(OrganisationChangedPayloadFactory.class)
 public class Organisation extends Party {
 
 
