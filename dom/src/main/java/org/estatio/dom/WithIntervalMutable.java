@@ -64,11 +64,11 @@ public interface WithIntervalMutable<T extends WithIntervalMutable<T>> extends W
         }
 
         public LocalDate default0ChangeDates() {
-            return withInterval.getEffectiveStartDate();
+            return withInterval.getEffectiveInterval().startDate();
         }
 
         public LocalDate default1ChangeDates() {
-            return withInterval.getEffectiveEndDate();
+            return withInterval.getEffectiveInterval().endDate();
         }
 
         public String validateChangeDates(

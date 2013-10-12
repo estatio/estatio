@@ -89,7 +89,7 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
 
             Inheritance inheritance = subtype.getAnnotation(Inheritance.class);
             
-            if (inheritance != null && inheritance.strategy() != InheritanceStrategy.NEW_TABLE) {
+            if (inheritance != null && inheritance.strategy() == InheritanceStrategy.SUPERCLASS_TABLE) {
                 // must have a @Discriminator(..., column="discriminator")
                 final Discriminator discriminator = subtype.getAnnotation(Discriminator.class);
                 assertThat("Class " + subtype.getName() + " inherits from "+ subtype.getSuperclass().getName()

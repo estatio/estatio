@@ -288,40 +288,26 @@ public abstract class InvoiceItem
 
     @Disabled
     @Optional
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
-
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Programmatic
+    @Override
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
     }
 
     // //////////////////////////////////////

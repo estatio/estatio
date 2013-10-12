@@ -223,12 +223,10 @@ public class LeaseItem
     @Hidden(where = Where.PARENTED_TABLES)
     @Optional
     @Disabled
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -273,35 +271,18 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public Lease getWithIntervalParent() {
-        return getLease();
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
-
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
+        return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
     @Programmatic
-    public LocalDate calculatedEndDate() {
-        return getEndDate() == null ? getLease().getEndDate() : getEndDate();
+    @Override
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval().overlap(getLease().getEffectiveInterval());
     }
-
+    
     // //////////////////////////////////////
 
     public boolean isCurrent() {
@@ -309,7 +290,7 @@ public class LeaseItem
     }
 
     private boolean isActiveOn(final LocalDate localDate) {
-        return getInterval().contains(localDate);
+        return getEffectiveInterval().contains(localDate);
     }
 
     // //////////////////////////////////////
@@ -380,7 +361,7 @@ public class LeaseItem
     @Programmatic
     public LeaseTerm currentTerm(final LocalDate date) {
         for (LeaseTerm term : getTerms()) {
-            if (term.getInterval().contains(date)) {
+            if (term.isActiveOn(date)) {
                 return term;
             }
         }
@@ -456,8 +437,12 @@ public class LeaseItem
         return this;
     }
 
+    // //////////////////////////////////////
+    
     BigDecimal valueForPeriod(
-            final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
+            final InvoicingFrequency frequency, 
+            final LocalDate periodStartDate, 
+            final LocalDate dueDate) {
         BigDecimal total = new BigDecimal(0);
         for (LeaseTerm term : getTerms()) {
             total = total.add(term.valueForPeriod(frequency, periodStartDate, dueDate));

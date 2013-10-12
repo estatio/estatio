@@ -168,12 +168,10 @@ public class Occupancy
 
     @Disabled
     @Optional
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -216,32 +214,18 @@ public class Occupancy
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
-
-
     // //////////////////////////////////////
-
-    @Hidden
-    @Override
-    public Lease getWithIntervalParent() {
-        return getLease();
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
 
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
+        return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Override
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval().overlap(this.getLease().getEffectiveInterval());
     }
 
     // //////////////////////////////////////

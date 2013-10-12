@@ -18,14 +18,15 @@
  */
 package org.estatio.dom.valuetypes;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import org.hamcrest.core.Is;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +55,16 @@ public class LocalDateIntervalTest {
     @Before
     public void setup() {
 
+    }
+
+    @Test
+    public void test() {
+        LocalDate startDate = new LocalDate(2012, 1, 1);
+        LocalDate endDate = new LocalDate(2012, 1, 31);
+        Interval jodaInterval = new Interval(startDate.toInterval().getStartMillis(), endDate.toInterval().getEndMillis());
+        LocalDateInterval interval = new LocalDateInterval(jodaInterval);
+        assertThat(interval.startDate(), is(startDate));
+        assertThat(interval.endDate(), is(endDate));
     }
 
     @Test
@@ -135,27 +146,33 @@ public class LocalDateIntervalTest {
 
     @Test
     public void testEndDateFromStartDate() {
-        Assert.assertThat(interval1.endDateFromStartDate(), Is.is(interval1.startDate().minusDays(1)));
+        assertThat(interval1.endDateFromStartDate(), is(interval1.startDate().minusDays(1)));
     }
 
     @Test
     public void testEmptyInterval() {
         LocalDateInterval myInterval = new LocalDateInterval(emptyInterval());
-        Assert.assertNull(myInterval.startDate());
-        Assert.assertNull(myInterval.endDate());
+        assertNull(myInterval.startDate());
+        assertNull(myInterval.endDate());
     }
 
     @Test
     public void testOverlap() {
         LocalDateInterval myInterval1 = LocalDateInterval.excluding(new LocalDate(2000, 1, 1), null);
         LocalDateInterval myInterval2 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
-        Assert.assertThat(myInterval1.overlap(myInterval2).startDate(), Is.is(new LocalDate(2000, 1, 1)));
-        Assert.assertThat(myInterval1.overlap(myInterval2).endDate(), Is.is(new LocalDate(2010, 1, 1)));
+        assertThat(myInterval1.overlap(myInterval2).startDate(), is(new LocalDate(2000, 1, 1)));
+        assertThat(myInterval1.overlap(myInterval2).endDate(), is(new LocalDate(2010, 1, 1)));
 
         LocalDateInterval myInterval3 = LocalDateInterval.excluding(new LocalDate(2011, 1, 1), null);
         LocalDateInterval myInterval4 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
-        Assert.assertNull(myInterval3.overlap(myInterval4));
-        Assert.assertNull(myInterval3.overlap(myInterval4));
+        assertNull(myInterval3.overlap(myInterval4));
+        assertNull(myInterval3.overlap(myInterval4));
+
+    }
+
+    @Test
+    public void testString() {
+        assertThat(interval8.toString(), is("2012-02-01/----------"));
 
     }
 

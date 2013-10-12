@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.estatio.dom.asset.Properties;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
@@ -42,9 +43,12 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
 
     private Leases leases;
 
+    private Properties properties;
+
     @Before
     public void setup() {
         leases = service(Leases.class);
+        properties = service(Properties.class);
     }
 
     @Test
@@ -56,7 +60,13 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
     @Test
     public void findLeasesByReference_whenWildcard() throws Exception {
         final List<Lease> matchingLeases = leases.findLeases("OXF*");
-        assertThat(matchingLeases.size(), is(4));
+            assertThat(matchingLeases.size(), is(4));
+    }
+
+    @Test
+    public void findLeaseByProperty() throws Exception {
+        final List<Lease> matchingLeases = leases.findLeasesByProperty(properties.findPropertyByReference("OXF"));
+        assertThat(matchingLeases.size(), is(3));
     }
 
     @Test

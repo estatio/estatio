@@ -24,14 +24,12 @@ import java.util.SortedSet;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
 
@@ -63,67 +61,72 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
 
     public void setEndDate(LocalDate endDate);
 
-    /**
-     * The parent "owning" object, if any, that is itself a {@link WithInterval}
-     * .
-     * 
-     * <p>
-     * Used to determine the {@link #getEffectiveStartDate() effective start
-     * date} and {@link #getEffectiveEndDate() effective end date} when the
-     * actual {@link #getStartDate() start date} and {@link #getEndDate() end
-     * date} are <tt>null</tt> (in other words the start/end date are inherited
-     * from the parent).
-     */
-    @Hidden
-    public WithInterval<?> getWithIntervalParent();
+    // /**
+    // * The parent "owning" object, if any, that is itself a {@link
+    // WithInterval}
+    // * .
+    // *
+    // * <p>
+    // * Used to determine the {@link #getEffectiveStartDate() effective start
+    // * date} and {@link #getEffectiveEndDate() effective end date} when the
+    // * actual {@link #getStartDate() start date} and {@link #getEndDate() end
+    // * date} are <tt>null</tt> (in other words the start/end date are
+    // inherited
+    // * from the parent).
+    // */
+    // @Hidden
+    // public WithInterval<?> getWithIntervalParent();
 
-    /**
-     * Either the {@link #getStartDate() start date}, or the
-     * {@link #getWithIntervalParent() parent}'s start date (if any).
-     */
-    @Hidden
-    public LocalDate getEffectiveStartDate();
+    // /**
+    // * Either the {@link #getStartDate() start date}, or the
+    // * {@link #getWithIntervalParent() parent}'s start date (if any).
+    // */
+    // @Hidden
+    // public LocalDate getEffectiveStartDate();
 
-    /**
-     * Either the {@link #getEndDate() end date}, or the
-     * {@link #getWithIntervalParent() parent}'s end date (if any).
-     */
-    @Hidden
-    public LocalDate getEffectiveEndDate();
+    // /**
+    // * Either the {@link #getEndDate() end date}, or the
+    // * {@link #getWithIntervalParent() parent}'s end date (if any).
+    // */
+    // @Hidden
+    // public LocalDate getEffectiveEndDate();
 
     @Programmatic
     public LocalDateInterval getInterval();
 
-    public boolean isCurrent();
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval();
 
-    // TODO: revise this code because it gives unwanted side effects where
-    // parents are open ended. See EST-245
+    @Programmatic
+    public boolean isCurrent();
 
     public final static class Util {
         private Util() {
         }
 
-        public static LocalDate effectiveStartDateOf(final WithInterval<?> wi) {
-            if (wi.getStartDate() != null) {
-                return wi.getStartDate();
-            }
-            final WithInterval<?> parentWi = wi.getWithIntervalParent();
-            if (parentWi != null) {
-                return parentWi.getEffectiveStartDate();
-            }
-            return null;
-        }
+        // public static LocalDate effectiveStartDateOf(final WithInterval<?>
+        // wi) {
+        // if (wi.getStartDate() != null) {
+        // return wi.getStartDate();
+        // }
+        // final WithInterval<?> parentWi = wi.getWithIntervalParent();
+        // if (parentWi != null) {
+        // return parentWi.getEffectiveStartDate();
+        // }
+        // return null;
+        // }
 
-        public static LocalDate effectiveEndDateOf(final WithInterval<?> wi) {
-            if (wi.getEndDate() != null) {
-                return wi.getEndDate();
-            }
-            final WithInterval<?> parentWi = wi.getWithIntervalParent();
-            if (parentWi != null) {
-                return parentWi.getEffectiveEndDate();
-            }
-            return null;
-        }
+        // public static LocalDate effectiveEndDateOf(final WithInterval<?> wi)
+        // {
+        // if (wi.getEndDate() != null) {
+        // return wi.getEndDate();
+        // }
+        // final WithInterval<?> parentWi = wi.getWithIntervalParent();
+        // if (parentWi != null) {
+        // return parentWi.getEffectiveEndDate();
+        // }
+        // return null;
+        // }
 
         public static <T extends WithInterval<T>> T firstElseNull(
                 final SortedSet<T> roles, final Predicate<T> predicate) {
@@ -132,5 +135,4 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             return iterator.hasNext() ? iterator.next() : null;
         }
     }
-
 }

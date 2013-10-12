@@ -29,7 +29,7 @@ public final class LocalDateInterval {
     private static final long OPEN_END_INSTANT = Long.MAX_VALUE;
     private long startInstant;
     private long endInstant;
-    private IntervalEnding ending = IntervalEnding.INCLUDING_END_DATE;
+    private static final IntervalEnding PERSISTENT_ENDING = IntervalEnding.INCLUDING_END_DATE;
 
     private enum IntervalEnding {
         INCLUDING_END_DATE, EXCLUDING_END_DATE
@@ -43,8 +43,16 @@ public final class LocalDateInterval {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder =
+                new StringBuilder(
+                        startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
+                        endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
+        return builder.toString();
+    }
+
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate, final IntervalEnding ending) {
-        this.ending = ending;
         startInstant = startDate == null ? OPEN_START_INSTANT : startDate.toInterval().getStartMillis();
         endInstant = endDate == null
                 ? OPEN_END_INSTANT
@@ -72,7 +80,7 @@ public final class LocalDateInterval {
     }
 
     public LocalDate endDate() {
-        return endDate(ending);
+        return endDate(PERSISTENT_ENDING);
     }
 
     public LocalDate endDate(final IntervalEnding ending) {
@@ -88,7 +96,7 @@ public final class LocalDateInterval {
     }
 
     public LocalDate endDateFromStartDate() {
-        return adjustDate(startDate(), ending);
+        return adjustDate(startDate(), PERSISTENT_ENDING);
     }
 
     private LocalDate adjustDate(final LocalDate date, final IntervalEnding ending) {

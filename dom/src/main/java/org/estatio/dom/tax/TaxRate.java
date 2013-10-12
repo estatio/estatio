@@ -185,28 +185,16 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
-
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Override
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
     }
 
     // //////////////////////////////////////

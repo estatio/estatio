@@ -20,11 +20,15 @@ package org.estatio.dom.asset;
 
 import java.util.SortedSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -41,23 +45,17 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 /**
- * Identifies the {@link #getParty() party} that plays a particular {@link #getType() type} of role with respect to
- * a {@link #getAsset() fixed asset}, for a particular {@link #getInterval() interval of time}.
+ * Identifies the {@link #getParty() party} that plays a particular
+ * {@link #getType() type} of role with respect to a {@link #getAsset() fixed
+ * asset}, for a particular {@link #getInterval() interval of time}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -85,11 +83,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class FixedAssetRole 
-        extends EstatioTransactionalObject<FixedAssetRole, Status> 
+public class FixedAssetRole
+        extends EstatioTransactionalObject<FixedAssetRole, Status>
         implements WithIntervalContiguous<FixedAssetRole> {
 
-    private WithIntervalContiguous.Helper<FixedAssetRole> helper = 
+    private WithIntervalContiguous.Helper<FixedAssetRole> helper =
             new WithIntervalContiguous.Helper<FixedAssetRole>(this);
 
     // //////////////////////////////////////
@@ -112,7 +110,7 @@ public class FixedAssetRole
 
     private Status status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public Status getStatus() {
         return status;
@@ -126,7 +124,7 @@ public class FixedAssetRole
 
     private FixedAsset asset;
 
-    @javax.jdo.annotations.Column(name = "assetId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "assetId", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -142,7 +140,7 @@ public class FixedAssetRole
 
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "partyId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -158,7 +156,7 @@ public class FixedAssetRole
 
     private FixedAssetRoleType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     @Title(sequence = "1")
     public FixedAssetRoleType getType() {
@@ -190,12 +188,10 @@ public class FixedAssetRole
 
     @Optional
     @Disabled
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -234,31 +230,18 @@ public class FixedAssetRole
         return helper.validateChangeDates(startDate, endDate);
     }
 
-
     // //////////////////////////////////////
-
-    @Hidden
-    @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
 
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Override
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
     }
 
     // //////////////////////////////////////
@@ -297,16 +280,15 @@ public class FixedAssetRole
 
     // //////////////////////////////////////
 
-
     static final class SiblingFactory implements WithIntervalContiguous.Factory<FixedAssetRole> {
         private final FixedAssetRole far;
         private final Party party;
-        
+
         public SiblingFactory(final FixedAssetRole far, final Party party) {
             this.far = far;
             this.party = party;
         }
-        
+
         @Override
         public FixedAssetRole newRole(final LocalDate startDate, final LocalDate endDate) {
             return far.getAsset().createRole(far.getType(), party, startDate, endDate);
@@ -342,7 +324,6 @@ public class FixedAssetRole
         }
         return null;
     }
-
 
     public FixedAssetRole precededBy(
             final Party party,

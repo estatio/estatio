@@ -49,11 +49,11 @@ public class AgreementTest_newRole_defaults  {
 
         agreement = new AgreementForTesting() {
             @Override
-            public LocalDate getEffectiveStartDate() {
+            public LocalDate getStartDate() {
                 return effectiveStartDate;
             }
             @Override
-            public LocalDate getEffectiveEndDate() {
+            public LocalDate getEndDate() {
                 return effectiveEndDate;
             }
         };

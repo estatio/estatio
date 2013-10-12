@@ -18,45 +18,41 @@
  */
 package org.estatio.dom.event;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithDescriptionGetter;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
-
 /**
- * An event that has or is scheduled to occur at some point in time or over a period of time.
+ * An event that has or is scheduled to occur at some point in time or over a
+ * period of time.
  * 
  * <p>
  * NB: not currently in scope.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-public class Event 
-        extends EstatioTransactionalObject<Event, Status> 
+public class Event
+        extends EstatioTransactionalObject<Event, Status>
         implements WithIntervalMutable<Event>, WithDescriptionGetter {
 
     public Event() {
@@ -86,39 +82,34 @@ public class Event
         this.status = status;
     }
 
-    
     // //////////////////////////////////////
 
     private LocalDate startDate;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Mandatory
     @Disabled
-    @Override
     public LocalDate getStartDate() {
         return startDate;
     }
 
-    @Override
     public void setStartDate(final LocalDate startDate) {
         this.startDate = startDate;
     }
-    
+
     public LocalDate defaultStartDate() {
         return getClockService().now();
     }
-    
 
     private LocalDate endDate;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     @Optional
     @Disabled
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -126,6 +117,7 @@ public class Event
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Event> changeDates = new WithIntervalMutable.Helper<Event>(this);
+
     WithIntervalMutable.Helper<Event> getChangeDates() {
         return changeDates;
     }
@@ -163,28 +155,16 @@ public class Event
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
-
     @Override
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Override
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
     }
 
     // //////////////////////////////////////
@@ -201,7 +181,7 @@ public class Event
 
     private String description;
 
-    @javax.jdo.annotations.Column(allowsNull="false")    
+    @javax.jdo.annotations.Column(allowsNull = "false")
     public String getDescription() {
         return description;
     }
@@ -209,6 +189,5 @@ public class Event
     public void setDescription(final String description) {
         this.description = description;
     }
-
 
 }

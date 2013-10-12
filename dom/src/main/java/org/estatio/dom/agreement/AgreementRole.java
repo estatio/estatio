@@ -189,12 +189,10 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     @Optional
     @Disabled
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
@@ -235,27 +233,15 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public Agreement<?> getWithIntervalParent() {
-        return getAgreement();
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
     @Programmatic
-    public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval().overlap(getAgreement().getEffectiveInterval());
+
     }
 
     // //////////////////////////////////////
@@ -511,7 +497,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
         return new Function<AgreementRole, LocalDate>() {
             @Override
             public LocalDate apply(final AgreementRole input) {
-                return input != null? input.getEffectiveEndDate(): null;
+                return input != null? input.getEffectiveInterval().endDate(): null;
             }};
     }
     

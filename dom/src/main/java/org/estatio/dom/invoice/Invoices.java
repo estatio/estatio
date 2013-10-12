@@ -21,6 +21,12 @@ package org.estatio.dom.invoice;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.numerator.Numerators;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -34,13 +40,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-
 public class Invoices extends EstatioDomainService<Invoice> {
 
     public Invoices() {
@@ -50,35 +49,35 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "1")
+    @Programmatic
     public List<Invoice> findInvoices(final Property property, final InvoiceStatus status) {
-        return allMatches("findByPropertyAndStatus", 
-                "property", property, 
+        return allMatches("findByPropertyAndStatus",
+                "property", property,
                 "status", status);
     }
-
+    
     @ActionSemantics(Of.SAFE)
     @Programmatic
     public List<Invoice> findInvoices(
             final Property property, final LocalDate dueDate) {
-        return allMatches("findByPropertyAndDueDate", 
+        return allMatches("findByPropertyAndDueDate",
                 "property", property, "dueDate", dueDate);
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public List<Invoice> findInvoices(
-            final Property property, 
-            final @Named("Due Date") @Optional LocalDate dueDate, 
+            final Property property,
+            final @Named("Due Date") @Optional LocalDate dueDate,
             final @Optional InvoiceStatus status) {
         if (status == null) {
-            return allMatches("findByPropertyAndDueDate", 
+            return allMatches("findByPropertyAndDueDate",
                     "property", property, "dueDate", dueDate);
         } else if (dueDate == null) {
-            return allMatches("findByPropertyAndStatus", 
+            return allMatches("findByPropertyAndStatus",
                     "property", property, "status", status);
         } else {
-            return allMatches("findByPropertyAndDueDateAndStatus", 
+            return allMatches("findByPropertyAndDueDateAndStatus",
                     "property", property, "dueDate", dueDate, "status", status);
         }
     }

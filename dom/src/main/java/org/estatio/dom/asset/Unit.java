@@ -24,6 +24,8 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -38,15 +40,12 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
@@ -187,41 +186,26 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Override
     @Optional
     @Disabled
     public LocalDate getEndDate() {
         return this.endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
-
     @Programmatic
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
     }
 
     // //////////////////////////////////////

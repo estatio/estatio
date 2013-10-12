@@ -20,6 +20,22 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.estatio.app.InvoiceSummaries;
+import org.estatio.app.InvoiceSummaryForPropertyDueDate;
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssets;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.JodaPeriodUtils;
+import org.estatio.dom.utils.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -32,19 +48,6 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
-
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssets;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.JodaPeriodUtils;
-import org.estatio.dom.utils.StringUtils;
 
 public class Leases extends EstatioDomainService<Lease> {
 
@@ -67,10 +70,8 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Named("Reference") String reference,
             final @Named("Name") String name,
             final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") 
-            String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
-            LocalDate endDate,
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
             final @Optional @Named("Landlord") Party landlord,
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
@@ -109,18 +110,22 @@ public class Leases extends EstatioDomainService<Lease> {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
 
+    @Programmatic
+    public List<Lease> findLeasesByProperty(Property property) {
+        return allMatches("findByProperty", "property", property);
+    }
+
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
-            String referenceOrName) {
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
         return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "4")
     public List<Lease> findLeasesActiveOnDate(
-            final FixedAsset fixedAsset, 
+            final FixedAsset fixedAsset,
             final @Named("Active On Date") LocalDate activeOnDate) {
         return allMatches("findByAssetAndActiveOnDate", "asset", fixedAsset, "activeOnDate", activeOnDate);
     }
@@ -176,6 +181,26 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "6")
+    public List<InvoiceSummaryForPropertyDueDate> calculate1(
+            final @Named("Property") @DescribedAs("") Property property,
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Due date") LocalDate dueDate,
+            final @Named("Run Type") InvoiceRunType runType) {
+        final List<Lease> leases = findLeasesByProperty(property);
+        for (Lease lease : leases) {
+            lease.verify();
+            lease.calculate(startDate, dueDate, runType);
+        }
+        // As a convenience, we now go find them and display them.
+        // We've done it this way so that the user can always just go to the
+        // menu and make this query.
+        return invoiceSummaries.invoiceSummary();
+    }
+
+    // //////////////////////////////////////
+
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
@@ -207,6 +232,18 @@ public class Leases extends EstatioDomainService<Lease> {
 
     public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
+    }
+
+    private Invoices invoices;
+
+    public void injectInvoices(Invoices invoices) {
+        this.invoices = invoices;
+    }
+
+    private InvoiceSummaries invoiceSummaries;
+
+    public void injectInvoiceSummaries(InvoiceSummaries invoiceSummaries) {
+        this.invoiceSummaries = invoiceSummaries;
     }
 
 }

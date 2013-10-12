@@ -77,10 +77,18 @@ import org.estatio.dom.party.Party;
                         + "WHERE reference.matches(:referenceOrName)"
                         + "|| name.matches(:referenceOrName)"),
         @javax.jdo.annotations.Query(
+                name = "findByProperty", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.Lease " +
+                        "WHERE occupancies.contains(lu) " +
+                        "&& (lu.unit.property == :property) " +
+                        "VARIABLES " +
+                        "org.estatio.dom.lease.Occupancy lu"),
+        @javax.jdo.annotations.Query(
                 name = "findByAssetAndActiveOnDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
-                        + "WHERE units.contains(lu) "
+                        + "WHERE occupancies.contains(lu) "
                         + "&& (terminationDate == null || terminationDate <= :activeOnDate) "
                         + "&& (lu.unit == :asset || lu.unit.property == :asset) "
                         + "VARIABLES "

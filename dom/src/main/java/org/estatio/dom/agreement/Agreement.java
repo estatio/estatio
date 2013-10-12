@@ -62,26 +62,26 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Indices({
-    // to cover the 'findAssetsByReferenceOrName' query
-    // both in this superclass and the subclasses
-    @javax.jdo.annotations.Index(
-            name = "Lease_reference_name_IDX", members = { "reference", "name" })
+        // to cover the 'findAssetsByReferenceOrName' query
+        // both in this superclass and the subclasses
+        @javax.jdo.annotations.Index(
+                name = "Lease_reference_name_IDX", members = { "reference", "name" })
 })
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name="Agreement_reference_UNQ", members={"reference"})
+        @javax.jdo.annotations.Unique(
+                name = "Agreement_reference_UNQ", members = { "reference" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -100,12 +100,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
 @Bookmarkable
-public abstract class Agreement<S extends Lockable> 
-        extends EstatioTransactionalObject<Agreement<S>, S> 
+public abstract class Agreement<S extends Lockable>
+        extends EstatioTransactionalObject<Agreement<S>, S>
         implements WithReferenceComparable<Agreement<S>>,
-                   WithReferenceUnique,
-                   WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>, 
-                   WithNameGetter {
+        WithReferenceUnique,
+        WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>,
+        WithNameGetter {
 
     public Agreement(final S statusWhenUnlocked, final S statusWhenLockedIfAny) {
         super("reference", statusWhenUnlocked, statusWhenLockedIfAny);
@@ -115,7 +115,7 @@ public abstract class Agreement<S extends Lockable>
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @DescribedAs("Unique reference code for this agreement")
     @Title
     public String getReference() {
@@ -166,19 +166,19 @@ public abstract class Agreement<S extends Lockable>
 
     protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
-        final Iterable<AgreementRole> rolesOfType = 
+        final Iterable<AgreementRole> rolesOfType =
                 Iterables.filter(getRoles(), AgreementRole.whetherTypeIs(agreementRoleType));
-        
+
         // try to find the one that is current...
-        Iterable<AgreementRole> roles = 
+        Iterable<AgreementRole> roles =
                 Iterables.filter(rolesOfType, AgreementRole.whetherCurrentIs(true));
-        
+
         // ... else the most recently ended one
-        if(Iterables.isEmpty(roles)) {
+        if (Iterables.isEmpty(roles)) {
             final List<AgreementRole> rolesInList = Lists.newArrayList(rolesOfType);
             roles = orderRolesByEffectiveEndDateReverseNullsFirst().leastOf(rolesInList, 1);
         }
-        
+
         // and return the party
         final AgreementRole currentOrMostRecentRole = ValueUtils.firstElseNull(roles);
         return currentOrMostRecentRole;
@@ -191,7 +191,6 @@ public abstract class Agreement<S extends Lockable>
     private static Ordering<AgreementRole> orderRolesByEffectiveEndDateReverseNullsFirst() {
         return Ordering.natural().onResultOf(AgreementRole.effectiveEndDateOf()).reverse().nullsFirst();
     }
-
 
     // //////////////////////////////////////
 
@@ -215,39 +214,25 @@ public abstract class Agreement<S extends Lockable>
 
     @Disabled
     @Optional
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
     @Programmatic
-    public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getStartDate(), getEndDate());
+    public LocalDateInterval getEffectiveInterval() {
+        return LocalDateInterval.including(getStartDate(), getTerminationDate() == null ? getEndDate() : getTerminationDate());
     }
 
     // //////////////////////////////////////
@@ -257,21 +242,13 @@ public abstract class Agreement<S extends Lockable>
     }
 
     private boolean isActiveOn(final LocalDate date) {
-        if (getTerminationDate() != null) {
-            // REVIEW: this seems to be wrong.
-            // I imagine it should be
-            // return LocalDateInterval.including(this.getStartDate(), this.getTerminationDate()).contains(date);
-            //
-            // or...
-            // perhaps getInterval() should take into account the termination date (ie move the if into getInterval?)
-            return LocalDateInterval.including(this.getStartDate(), this.getEndDate()).contains(date);
-        }
-        return getInterval().contains(date);
+        return getEffectiveInterval().contains(date);
     }
-    
+
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Agreement<S>> changeDates = new WithIntervalMutable.Helper<Agreement<S>>(this);
+
     WithIntervalMutable.Helper<Agreement<S>> getChangeDates() {
         return changeDates;
     }
@@ -287,7 +264,7 @@ public abstract class Agreement<S extends Lockable>
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked": null;
+        return isLocked() ? "Cannot modify when locked" : null;
     }
 
     @Override
@@ -309,13 +286,6 @@ public abstract class Agreement<S extends Lockable>
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public LocalDateInterval getEffectiveInterval() {
-        return LocalDateInterval.including(getStartDate(), getTerminationDate());
-    }
-
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Persistent
     private LocalDate terminationDate;
 
@@ -333,7 +303,7 @@ public abstract class Agreement<S extends Lockable>
 
     private AgreementType agreementType;
 
-    @javax.jdo.annotations.Column(name = "agreementTypeId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "agreementTypeId", allowsNull = "false")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public AgreementType getAgreementType() {
@@ -451,15 +421,16 @@ public abstract class Agreement<S extends Lockable>
         createRole(type, party, startDate, endDate);
         return this;
     }
+
     public String validateNewRole(
             final AgreementRoleType type,
             final Party party,
             final LocalDate startDate,
             final LocalDate endDate) {
-        if(startDate != null && endDate != null && startDate.isAfter(endDate)) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             return "End date cannot be earlier than start date";
         }
-        if(!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
+        if (!Sets.filter(getRoles(), type.matchingRole()).isEmpty()) {
             return "Add a successor/predecessor to existing agreement role";
         }
         return null;
@@ -468,42 +439,44 @@ public abstract class Agreement<S extends Lockable>
     public List<AgreementRoleType> choices0NewRole() {
         return agreementRoleTypes.findApplicableTo(getAgreementType());
     }
-    
+
     public LocalDate default2NewRole() {
-        return getEffectiveStartDate();
+        return getEffectiveInterval().startDate();
     }
-    
+
     public LocalDate default3NewRole() {
-        return getEffectiveEndDate();
+        return getEffectiveInterval().endDate();
     }
 
     /**
-     * Provided for BDD "glue"; delegated to by {@link #newRole(AgreementRoleType, Party, LocalDate, LocalDate)}.
+     * Provided for BDD "glue"; delegated to by
+     * {@link #newRole(AgreementRoleType, Party, LocalDate, LocalDate)}.
      */
     @Programmatic
     public AgreementRole createRole(
-            final AgreementRoleType type, 
-            final Party party, 
-            final LocalDate startDate, 
+            final AgreementRoleType type,
+            final Party party,
+            final LocalDate startDate,
             final LocalDate endDate) {
         final AgreementRole role = newTransientInstance(AgreementRole.class);
         role.setStartDate(startDate);
         role.setEndDate(endDate);
-        role.setType(type); // must do before associate with agreement, since part of AgreementRole#compareTo impl.
+        role.setType(type); // must do before associate with agreement, since
+                            // part of AgreementRole#compareTo impl.
 
         role.setStatus(Status.UNLOCKED);
-        
+
         // JDO will manage the relationship for us
-        // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email 2013-7-17
+        // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email
+        // 2013-7-17
         role.setParty(party);
         role.setAgreement(this);
-        
+
         persistIfNotAlready(role);
-        
+
         return role;
     }
 
-    
     // //////////////////////////////////////
 
     @Programmatic

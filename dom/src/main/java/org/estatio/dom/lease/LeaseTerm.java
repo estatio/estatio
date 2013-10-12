@@ -30,6 +30,18 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -47,20 +59,6 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
-
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -202,19 +200,17 @@ public abstract class LeaseTerm
     @Title(sequence = "3")
     @Disabled
     @Optional
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     public void modifyEndDate(final LocalDate endDate) {
         LocalDate currentEndDate = getEndDate();
-        if (endDate == null || endDate.equals(currentEndDate)) {
+        if (endDate == null && currentEndDate == null || endDate.equals(currentEndDate)) {
             return;
         }
         setEndDate(endDate);
@@ -268,39 +264,15 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Hidden
-    @Override
-    public LeaseItem getWithIntervalParent() {
-        return getLeaseItem();
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
-
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
-        LocalDate effectiveStartDate = getEffectiveStartDate();
-        LocalDate effectiveEndDate = getEffectiveEndDate();
-        return LocalDateInterval.including(effectiveStartDate, effectiveEndDate);
-        
+        return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
-        Lease lease = getLeaseItem().getLease();
-        final LocalDateInterval termInterval = LocalDateInterval.including(getStartDate(), getEndDate());
-        final LocalDateInterval leaseEffectiveInterval = lease.getEffectiveInterval();
-        return termInterval.overlap(leaseEffectiveInterval);
+        return getInterval().overlap(getLeaseItem().getEffectiveInterval());
     }
 
     // //////////////////////////////////////
@@ -309,7 +281,8 @@ public abstract class LeaseTerm
         return isActiveOn(getClockService().now());
     }
 
-    private boolean isActiveOn(final LocalDate localDate) {
+    @Programmatic
+    public boolean isActiveOn(final LocalDate localDate) {
         LocalDateInterval effectiveInterval = getEffectiveInterval();
         if (effectiveInterval == null) {
             return false;
@@ -596,7 +569,7 @@ public abstract class LeaseTerm
             return null;
         }
 
-        final LocalDate endDate = getLeaseItem().calculatedEndDate();
+        final LocalDate endDate = getLeaseItem().getEffectiveInterval().endDate();
         final LocalDate oneYearFromNow = getClockService().now().plusYears(1);
         final LocalDate maxEndDate = ValueUtils.coalesce(endDate, oneYearFromNow);
         if (nextStartDate.isAfter(maxEndDate)) {
@@ -636,6 +609,10 @@ public abstract class LeaseTerm
                 setEndDate(terminationDate);
             }
         }
+        if (getEndDate() == null && getNext() != null) {
+            modifyEndDate(getNext().getInterval().endDateFromStartDate());
+        }
+        
     }
 
     // //////////////////////////////////////
@@ -649,7 +626,7 @@ public abstract class LeaseTerm
     BigDecimal valueForPeriod(
             final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
         if (getStatus().isUnlocked()) {
-            BigDecimal value = invoiceCalculationService.calculatedValue(this, periodStartDate, dueDate, frequency);
+            BigDecimal value = invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
             return value;
         }
         return BigDecimal.ZERO;

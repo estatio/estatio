@@ -16,11 +16,14 @@
  */
 package org.estatio.dom.party;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -33,19 +36,13 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
 // REVIEW: is this in scope?
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -87,7 +84,7 @@ public class PartyRegistration
 
     private Status status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Hidden
     public Status getStatus() {
         return status;
@@ -101,7 +98,7 @@ public class PartyRegistration
 
     private Party party;
 
-    @javax.jdo.annotations.Column(name = "partyId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "partyId", allowsNull = "false")
     public Party getParty() {
         return party;
     }
@@ -114,7 +111,7 @@ public class PartyRegistration
 
     private PartyRegistrationType partyRegistrationType;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     public PartyRegistrationType getPartyRegistrationType() {
         return partyRegistrationType;
     }
@@ -145,20 +142,19 @@ public class PartyRegistration
 
     @Optional
     @Disabled
-    @Override
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    @Override
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<PartyRegistration> changeDates = 
+    private WithIntervalMutable.Helper<PartyRegistration> changeDates =
             new WithIntervalMutable.Helper<PartyRegistration>(this);
+
     WithIntervalMutable.Helper<PartyRegistration> getChangeDates() {
         return changeDates;
     }
@@ -194,31 +190,18 @@ public class PartyRegistration
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
-
     // //////////////////////////////////////
-
-    @Hidden
-    @Override
-    public WithInterval<?> getWithIntervalParent() {
-        return null;
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
-    }
 
     @Programmatic
     @Override
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
+    }
+
+    @Programmatic
+    @Override
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval();
     }
 
     // //////////////////////////////////////

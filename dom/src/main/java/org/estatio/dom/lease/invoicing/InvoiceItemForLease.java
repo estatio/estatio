@@ -24,12 +24,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -45,17 +39,24 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Where;
+
 /**
- * A lease-specific subclass of {@link InvoiceItem}, referring {@link #getLeaseTerm() back} to the {@link LeaseTerm}
- * that acts as the <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.  
+ * A lease-specific subclass of {@link InvoiceItem}, referring
+ * {@link #getLeaseTerm() back} to the {@link LeaseTerm} that acts as the
+ * <tt>InvoiceSource</tt> of this item's owning {@link Invoice}.
  */
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -122,18 +123,10 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     // //////////////////////////////////////
 
-    private LocalDateInterval effectiveInterval() {
+    @Override
+    @Programmatic
+    public LocalDateInterval getEffectiveInterval() {
         return getInterval().overlap(getLeaseTerm().getInterval());
-    }
-
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return effectiveInterval().startDate();
-    }
-
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return effectiveInterval().endDate();
     }
 
     // //////////////////////////////////////
@@ -143,7 +136,7 @@ public class InvoiceItemForLease extends InvoiceItem {
         final Lease lease = getLeaseTerm().getLeaseItem().getLease();
         if (lease == null) {
             return;
-        } 
+        }
         final AgreementRoleType landlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
         final AgreementRoleType tenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
@@ -161,9 +154,9 @@ public class InvoiceItemForLease extends InvoiceItem {
     }
 
     private Invoice createInvoice(
-            final Party seller, 
-            final Party buyer, 
-            final PaymentMethod paymentMethod, 
+            final Party seller,
+            final Party buyer,
+            final PaymentMethod paymentMethod,
             final Lease lease) {
         Invoice invoice;
         invoice = invoices.newInvoice();

@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
@@ -40,6 +41,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {
@@ -74,10 +76,10 @@ public class LeaseTermTest {
         lease.setStartDate(new LocalDate(2012, 1, 1));
 
         item = new LeaseItem();
+        item.setEndDate(new LocalDate(2013, 6, 30));
         lease.getItems().add(item);
         item.setLease(lease);
         
-        item.setEndDate(new LocalDate(2013, 6, 30));
         item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
 
@@ -155,13 +157,68 @@ public class LeaseTermTest {
     }
 
     @Test
-    public void effectiveInterval() throws Exception {
+    public void testEffectiveInterval() throws Exception {
         term.verify();
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 12, 31)));
         lease.setTerminationDate(new LocalDate(2012, 3, 31));
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 3, 31)));
     }
 
+    @Test
+    public void testEI() throws Exception {
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString(), is("2011-02-01/2011-12-31") );
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString(), is("2012-01-01/2012-06-30") );
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2011-02-01", null, "2011-01-01", null).toString(), is("2011-02-01/2012-12-31") );
+    }
+    
+    private LocalDateInterval effectiveIntervalWith(
+            String leaseStartDate,
+            String leaseEndDate,
+            String leaseTerminationDate,
+            String itemStartDate,
+            String itemEndDate,
+            String termStartDate,
+            String termEndDate
+            ){        
+
+        Lease lease = new Lease();
+        lease.setStartDate(parseDate(leaseStartDate));
+        lease.setEndDate(parseDate(leaseEndDate));
+        lease.setTerminationDate(parseDate(leaseTerminationDate));
+
+        LeaseItem item = new LeaseItem();
+        item.setStartDate(parseDate(itemStartDate));
+        item.setEndDate(parseDate(itemEndDate));
+        lease.getItems().add(item);
+        item.setLease(lease);
+        
+        item.injectLeaseTerms(mockLeaseTerms);
+        item.injectClockService(mockClockService);
+
+        LeaseTerm term = new LeaseTermForTesting();
+        
+        item.getTerms().add(term);
+        term.setLeaseItem(item);
+        
+        term.setStartDate(parseDate(termStartDate));
+        term.setEndDate(parseDate(termEndDate));
+        term.setFrequency(LeaseTermFrequency.YEARLY);
+        term.injectClockService(mockClockService);
+        term.initialize();
+        
+        return term.getEffectiveInterval();
+        
+    }
+    
+    private LocalDate parseDate(String input) {
+        if (input == null)
+            return null;
+        return LocalDate.parse(input);
+        
+    }
+    
+    
+    
     // //////////////////////////////////////
 
     public static Action returnLeaseTerm() {

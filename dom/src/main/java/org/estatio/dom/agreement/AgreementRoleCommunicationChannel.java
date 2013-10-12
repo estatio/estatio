@@ -251,30 +251,17 @@ public class AgreementRoleCommunicationChannel
 
     // //////////////////////////////////////
 
-    @Hidden
     @Override
-    public AgreementRole getWithIntervalParent() {
-        return getRole();
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveStartDate() {
-        return WithInterval.Util.effectiveStartDateOf(this);
-    }
-
-    @Hidden
-    @Override
-    public LocalDate getEffectiveEndDate() {
-        return WithInterval.Util.effectiveEndDateOf(this);
+    @Programmatic
+    public LocalDateInterval getInterval() {
+        return LocalDateInterval.including(getStartDate(), getEndDate());
     }
 
     @Override
     @Programmatic
-    public LocalDateInterval getInterval() {
-        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
+    public LocalDateInterval getEffectiveInterval() {
+        return getInterval().overlap(getRole().getEffectiveInterval());
     }
-
     // //////////////////////////////////////
 
     public boolean isCurrent() {
@@ -282,7 +269,7 @@ public class AgreementRoleCommunicationChannel
     }
 
     private boolean isActiveOn(final LocalDate localDate) {
-        return getInterval().contains(localDate);
+        return getEffectiveInterval().contains(localDate);
     }
 
     // //////////////////////////////////////
