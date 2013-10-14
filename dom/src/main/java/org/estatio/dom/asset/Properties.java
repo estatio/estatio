@@ -42,44 +42,55 @@ public class Properties extends EstatioDomainService<Property> {
 
     // //////////////////////////////////////
 
-    
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Fixed Assets", sequence = "1")
+    @MemberOrder(name = "Fixed Assets", sequence = "11")
     public Property newProperty(
-            final @Named("Reference") String reference, 
+            final @Named("Reference") String reference,
             final @Named("Name") String name,
-            final PropertyType propertyType, 
-            final @Named("City") @Optional String city, 
-            final @Optional Country country, 
+            final PropertyType propertyType,
+            final @Named("City") @Optional String city,
+            final @Optional Country country,
             final @Named("Acquire date") @Optional LocalDate acquireDate) {
         final Property property = newTransientInstance();
-        
+
         property.setReference(reference);
         property.setName(name);
         property.setPropertyType(propertyType);
-        
+
         property.setCity(city);
         property.setCountry(country);
         property.setAcquireDate(acquireDate);
-        
+
         persistIfNotAlready(property);
         return property;
     }
+
     public PropertyType default2NewProperty() {
         return PropertyType.MIXED;
     }
 
     // //////////////////////////////////////
 
-    @Programmatic
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Fixed Assets", sequence = "12")
     public List<Property> findProperties(final String referenceOrName) {
-        return allMatches("findByReferenceOrName", 
+        return allMatches("findByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Fixed Assets", sequence = "13")
+    public List<Property> allProperties() {
+        return allInstances();
+    }
+
+    // //////////////////////////////////////
+
     @Programmatic
     public Property findPropertyByReference(final String reference) {
-        return firstMatch("findByReference", 
+        return firstMatch("findByReference",
                 "reference", StringUtils.wildcardToRegex(reference));
     }
 
@@ -90,14 +101,4 @@ public class Properties extends EstatioDomainService<Property> {
         return findProperties("*".concat(searchPhrase).concat("*"));
     }
 
-    
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Fixed Assets", sequence = "99")
-    public List<Property> allProperties() {
-        return allInstances();
-    }
-
-    
 }

@@ -139,16 +139,16 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
 
     // //////////////////////////////////////
 
-    private BigDecimal terraceArea;
+    private BigDecimal dehorsArea;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Hidden(where = Where.PARENTED_TABLES)
-    public BigDecimal getTerraceArea() {
-        return terraceArea;
+    public BigDecimal getDehorsArea() {
+        return dehorsArea;
     }
 
-    public void setTerraceArea(final BigDecimal terraceArea) {
-        this.terraceArea = terraceArea;
+    public void setDehorsArea(final BigDecimal dehorsArea) {
+        this.dehorsArea = dehorsArea;
     }
 
     // //////////////////////////////////////

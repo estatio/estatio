@@ -288,7 +288,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("salesArea") @Optional BigDecimal salesArea,
             @Named("storageArea") @Optional BigDecimal storageArea,
             @Named("mezzanineArea") @Optional BigDecimal mezzanineArea,
-            @Named("terraceArea") @Optional BigDecimal terraceArea,
+            @Named("dehorsArea") @Optional BigDecimal dehorsArea,
             @Named("address1") @Optional String address1,
             @Named("city") @Optional String city,
             @Named("postalCode") @Optional String postalCode,
@@ -307,7 +307,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setSalesArea(salesArea);
         unit.setStorageArea(storageArea);
         unit.setMezzanineArea(mezzanineArea);
-        unit.setTerraceArea(terraceArea);
+        unit.setDehorsArea(dehorsArea);
         CommunicationChannel cc = communicationChannelContributions.findCommunicationChannelForType(unit, CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
             communicationChannelContributions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, null, postalCode, city);

@@ -34,27 +34,27 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-public class FixedAssetTest_lookupLocation {
+public class PropertyTest_lookupLocation {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Mock
     private LocationLookupService mockLocationLookupService;
-    
-    private FixedAsset fixedAsset;
-    
+
+    private Property property;
+
     @Before
     public void setUp() throws Exception {
-        fixedAsset = new FixedAssetForTesting();
-        fixedAsset.injectLocationLookupService(mockLocationLookupService);
+        property = new Property();
+        property.injectLocationLookupService(mockLocationLookupService);
     }
-    
+
     @Test
     public void test() {
         // given
-        assertThat(fixedAsset.getLocation(), is(nullValue()));
-        
+        assertThat(property.getLocation(), is(nullValue()));
+
         // when
         final Location location = new Location();
         context.checking(new Expectations() {
@@ -63,11 +63,10 @@ public class FixedAssetTest_lookupLocation {
                 will(returnValue(location));
             }
         });
-        
-        fixedAsset.lookupLocation("Buckingham Palace, London");
-        
+
+        property.lookupLocation("Buckingham Palace, London");
+
         // then
-        assertThat(fixedAsset.getLocation(), is(location));
+        assertThat(property.getLocation(), is(location));
     }
-    
 }

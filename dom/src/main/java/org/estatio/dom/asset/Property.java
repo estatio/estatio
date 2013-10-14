@@ -22,14 +22,22 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
+import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -37,10 +45,8 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.party.Party;
-
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
@@ -60,11 +66,11 @@ import org.estatio.dom.party.Party;
 })
 @AutoComplete(repository = Properties.class)
 @Bookmarkable
-public class Property extends FixedAsset {
+public class Property extends FixedAsset implements Locatable {
 
     private PropertyType propertyType;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     public PropertyType getPropertyType() {
         return propertyType;
     }
@@ -78,7 +84,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate openingDate;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public LocalDate getOpeningDate() {
         return openingDate;
     }
@@ -92,7 +98,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate acquireDate;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public LocalDate getAcquireDate() {
         return acquireDate;
     }
@@ -106,7 +112,7 @@ public class Property extends FixedAsset {
     @javax.jdo.annotations.Persistent
     private LocalDate disposalDate;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public LocalDate getDisposalDate() {
         return disposalDate;
     }
@@ -119,7 +125,7 @@ public class Property extends FixedAsset {
 
     private BigDecimal area;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     public BigDecimal getArea() {
         return area;
     }
@@ -132,7 +138,7 @@ public class Property extends FixedAsset {
 
     private String city;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getCity() {
         return city;
     }
@@ -145,13 +151,36 @@ public class Property extends FixedAsset {
 
     private Country country;
 
-    @javax.jdo.annotations.Column(name="countryId", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
     public Country getCountry() {
         return country;
     }
 
     public void setCountry(final Country country) {
         this.country = country;
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent
+    private Location location;
+
+    @Override
+    @Disabled
+    @Optional
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(final Location location) {
+        this.location = location;
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Named("Lookup")
+    public FixedAsset lookupLocation(final @Named("Address") String address) {
+        setLocation(locationLookupService.lookup(address));
+        return this;
     }
 
     // //////////////////////////////////////
@@ -172,23 +201,25 @@ public class Property extends FixedAsset {
 
     @PublishedAction
     public Unit newUnit(
-            @Named("Code") final String code, 
-            @Named("Name") final String name, 
+            @Named("Code") final String code,
+            @Named("Name") final String name,
             final UnitType unitType) {
         Unit unit = unitsRepo.newUnit(code, name, unitType);
         unit.setProperty(this);
         return unit;
     }
+
     public String default0NewUnit() {
         return this.getReference() + "-000";
     }
+
     public String default1NewUnit() {
         return "000";
     }
+
     public UnitType default2NewUnit() {
         return UnitType.BOUTIQUE;
     }
-
 
     // //////////////////////////////////////
 
@@ -212,6 +243,7 @@ public class Property extends FixedAsset {
     // //////////////////////////////////////
 
     private Units<?> unitsRepo;
+
     public final void injectUnits(final Units<?> unitsRepo) {
         this.unitsRepo = unitsRepo;
     }
@@ -222,4 +254,9 @@ public class Property extends FixedAsset {
         this.fixedAssetRoles = fixedAssetRoles;
     }
 
+    private LocationLookupService locationLookupService;
+
+    public final void injectLocationLookupService(final LocationLookupService locationLookupService) {
+        this.locationLookupService = locationLookupService;
+    }
 }
