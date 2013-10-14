@@ -104,7 +104,7 @@ public final class IBANHelper {
     }
 
     public static void verifyAndUpdate(final BankAccount account) {
-        if (!IBANValidator.valid(account.getIBAN())) {
+        if (!IBANValidator.valid(account.getIban())) {
             // not a valid account, see if we can fetch
             assembleIBAN(account);
         } else {
@@ -114,7 +114,7 @@ public final class IBANHelper {
     }
 
     public static void disassembleIBAN(final BankAccount account) {
-        String iban = account.getIBAN();
+        String iban = account.getIban();
         IBANFormat format = IBANFormat.valueOf(iban.substring(0, 2));
         if (format != null) {
             account.setNationalBankCode(partWithCharacter(format.format(), iban, "a"));
@@ -137,7 +137,7 @@ public final class IBANHelper {
                 iban = iban.replace("kk", "00");
                 iban = IBANValidator.fixChecksum(iban);
                 if (IBANValidator.valid(iban)) {
-                    account.setIBAN(iban);
+                    account.setIban(iban);
                 }
             }
         }

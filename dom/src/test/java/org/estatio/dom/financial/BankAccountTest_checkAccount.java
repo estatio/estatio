@@ -39,8 +39,8 @@ public class BankAccountTest_checkAccount {
 
     @Test
     public void happyCase() {
-        account.setIBAN("NL31ABNA0580744434");
-        account.verifyIBAN();
+        account.setIban("NL31ABNA0580744434");
+        account.verifyIban();
         assertThat(account.getAccountNumber(), is("0580744434"));
     }
 
@@ -49,8 +49,8 @@ public class BankAccountTest_checkAccount {
         account.setCountry(country);
         account.setNationalBankCode("ABNA");
         account.setAccountNumber("0580744434");
-        account.verifyIBAN();
-        assertThat(account.getIBAN(), is("NL31ABNA0580744434"));
+        account.verifyIban();
+        assertThat(account.getIban(), is("NL31ABNA0580744434"));
     }
 
 }

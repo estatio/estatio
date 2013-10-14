@@ -89,28 +89,28 @@ public class BankAccount extends FinancialAccount {
     private String iban;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    public String getIBAN() {
+    public String getIban() {
         return iban;
     }
 
-    public void setIBAN(final String iban) {
+    public void setIban(final String iban) {
         this.iban = iban;
     }
 
     // //////////////////////////////////////
 
-    public boolean isValidIBAN() {
-        return IBANValidator.valid(getIBAN());
+    public boolean isValidIban() {
+        return IBANValidator.valid(getIban());
     }
 
     // //////////////////////////////////////
 
-    public BankAccount verifyIBAN() {
+    public BankAccount verifyIban() {
         IBANHelper.verifyAndUpdate(this);
         return this;
     }
 
-    public String disableVerifyIBAN() {
+    public String disableVerifyIban() {
         return isLocked() ? "Cannot modify when locked" : null;
     }
 

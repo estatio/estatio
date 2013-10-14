@@ -35,7 +35,7 @@ public class IBANHelperTest {
     @Test
     public void testDutchAccount() {
         BankAccount ba = new BankAccount();
-        ba.setIBAN("NL31ABNA0580744434");
+        ba.setIban("NL31ABNA0580744434");
         IBANHelper.verifyAndUpdate(ba);
         Assert.assertThat(ba.getNationalBankCode(), Is.is("ABNA"));
         Assert.assertThat(ba.getAccountNumber(), Is.is("0580744434"));
@@ -44,7 +44,7 @@ public class IBANHelperTest {
     @Test
     public void testItalianAccount() {
         BankAccount ba = new BankAccount();
-        ba.setIBAN("IT69N0347501601000051986922");
+        ba.setIban("IT69N0347501601000051986922");
         IBANHelper.verifyAndUpdate(ba);
         Assert.assertThat(ba.getNationalBankCode(), Is.is("03475"));
         Assert.assertThat(ba.getBranchCode(), Is.is("01601"));
@@ -63,7 +63,7 @@ public class IBANHelperTest {
     @Test
     public void testFalseAccount() {
         BankAccount ba = new BankAccount();
-        ba.setIBAN("IT1231231");
+        ba.setIban("IT1231231");
         IBANHelper.verifyAndUpdate(ba);
         Assert.assertNull(ba.getNationalBankCode());
         Assert.assertNull(ba.getBranchCode());

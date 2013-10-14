@@ -729,7 +729,7 @@ public class Api extends AbstractFactoryAndRepository {
         bankAccount.setNationalBankCode(nationalBankCode);
         bankAccount.setNationalCheckCode(nationalCheckCode);
         bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
-        bankAccount.verifyIBAN();
+        bankAccount.verifyIban();
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
