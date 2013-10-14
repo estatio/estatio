@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -38,12 +39,14 @@ public class Persons extends EstatioDomainService<Person> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Parties", sequence = "1")
+    @MemberOrder(name = "Parties", sequence = "1")
     public Person newPerson(
-            final @Named("initials") @Optional String initials, 
-            final @Named("First name") @Optional String firstName, 
+            final @Named("reference") @Optional @RegEx(validation="[A-Z,0-9,_,-,/]") String reference,
+            final @Named("initials") @Optional @RegEx(validation="[A-Z]") String initials,
+            final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName) {
         final Person person = newTransientInstance(Person.class);
+        person.setReference(reference);
         person.setInitials(initials);
         person.setLastName(lastName);
         person.setFirstName(firstName);
@@ -51,15 +54,14 @@ public class Persons extends EstatioDomainService<Person> {
         persist(person);
         return person;
     }
-    
+
     // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Parties", sequence = "99.2")
+    @MemberOrder(name = "Parties", sequence = "99.2")
     public List<Person> allPersons() {
         return allInstances();
     }
-
 
 }

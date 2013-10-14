@@ -212,8 +212,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("lastName") String lastName) {
         Person person = (Person) parties.findPartyByReference(reference);
         if (person == null) {
-            person = persons.newPerson(initials, firstName, lastName);
-            person.setReference(reference);
+            person = persons.newPerson(reference, initials, firstName, lastName);
         }
         person.setFirstName(firstName);
         person.setLastName(lastName);

@@ -18,12 +18,12 @@
  */
 package org.estatio.fixture.party;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
@@ -51,8 +51,7 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
     }
 
     private Party createPerson(String reference, String initials, String firstName, String lastName) {
-        Party p = persons.newPerson(initials, firstName, lastName);
-        p.setReference(reference);
+        Party p = persons.newPerson(reference, initials, firstName, lastName);
         return p;
     }
 
