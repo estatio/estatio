@@ -181,7 +181,8 @@ public class Property extends FixedAsset implements Locatable {
     @ActionSemantics(Of.IDEMPOTENT)
     @Named("Lookup")
     public FixedAsset lookupLocation(final @Named("Address") String address) {
-        setLocation(locationLookupService.lookup(address));
+        if (locationLookupService != null) // service is not loaded in tests
+            setLocation(locationLookupService.lookup(address));
         return this;
     }
 

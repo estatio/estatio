@@ -166,7 +166,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t01_putAsset() throws Exception {
-        api.putProperty("APIPROP", "Apiland", "ITA", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT");
+        api.putProperty("APIPROP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT");
         api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", new LocalDate(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
         Assert.assertThat(properties.findProperties("APIPROP").size(), Is.is(1));
     }
