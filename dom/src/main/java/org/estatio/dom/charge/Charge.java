@@ -29,6 +29,7 @@ import org.estatio.dom.tax.Tax;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -64,6 +65,7 @@ public class Charge
 
     @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "1")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

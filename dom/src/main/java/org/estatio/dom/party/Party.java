@@ -31,16 +31,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
@@ -52,38 +42,48 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Party_reference_UNQ", members="reference")
+        @javax.jdo.annotations.Unique(
+                name = "Party_reference_UNQ", members = "reference")
 })
 @javax.jdo.annotations.Indices({
-    // to cover the 'findByReferenceOrName' query
-    // both in this superclass and the subclasses
-    @javax.jdo.annotations.Index(
-            name = "Party_reference_name_IDX", members = { "reference", "name" })
+        // to cover the 'findByReferenceOrName' query
+        // both in this superclass and the subclasses
+        @javax.jdo.annotations.Index(
+                name = "Party_reference_name_IDX", members = { "reference", "name" })
 })
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query( 
-            name = "findByReferenceOrName", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.party.Party "
-                    + "WHERE reference.matches(:referenceOrName) "
-                    + "   || name.matches(:referenceOrName)"),
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.party.Party " 
-                    + "WHERE reference == :reference") })
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Party "
+                        + "WHERE reference.matches(:referenceOrName) "
+                        + "   || name.matches(:referenceOrName)"),
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.party.Party "
+                        + "WHERE reference == :reference") })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
 @Bookmarkable
 public abstract class Party
@@ -108,7 +108,7 @@ public abstract class Party
 
     private Status status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Hidden
     public Status getStatus() {
         return status;
@@ -117,12 +117,12 @@ public abstract class Party
     public void setStatus(final Status status) {
         this.status = status;
     }
-    
+
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public String getReference() {
         return reference;
@@ -136,7 +136,7 @@ public abstract class Party
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title
     public String getName() {
         return name;
@@ -174,7 +174,7 @@ public abstract class Party
     public Collection<AgreementRole> getLeases() {
         return listCurrentAgreementsOfType(LeaseConstants.AT_LEASE);
     }
-    
+
     @NotPersisted
     @Render(Type.EAGERLY)
     public Collection<AgreementRole> getBankMandates() {
@@ -184,34 +184,32 @@ public abstract class Party
     private Collection<AgreementRole> listCurrentAgreementsOfType(final String art) {
         final AgreementType agreementType = agreementTypes.find(art);
         return Lists.newArrayList(
-                Iterables.filter(getAgreements(), 
-                    Predicates.and(
-                        AgreementRole.whetherAgreementTypeIs(agreementType), 
-                        AgreementRole.whetherCurrentIs(true))));
+                Iterables.filter(getAgreements(),
+                        Predicates.and(
+                                AgreementRole.whetherAgreementTypeIs(agreementType),
+                                AgreementRole.whetherCurrentIs(true))));
     }
 
     @Named("List All")
     public Collection<AgreementRole> listAllLeases() {
         return listAgreementsOfType(LeaseConstants.AT_LEASE);
     }
-    
+
     @Named("List All")
     public Collection<AgreementRole> listAllMandates() {
         return listAgreementsOfType(FinancialConstants.AT_MANDATE);
     }
-    
+
     private Collection<AgreementRole> listAgreementsOfType(final String art) {
         final AgreementType agreementType = agreementTypes.find(art);
         return Lists.newArrayList(
-                Iterables.filter(getAgreements(), 
-                     AgreementRole.whetherAgreementTypeIs(agreementType)));
+                Iterables.filter(getAgreements(),
+                        AgreementRole.whetherAgreementTypeIs(agreementType)));
     }
 
-
-    
     // //////////////////////////////////////
 
-    // TODO: EST-86.  is a bidir mapping required?
+    // TODO: EST-86. is a bidir mapping required?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
@@ -230,8 +228,9 @@ public abstract class Party
     }
 
     // //////////////////////////////////////
-    
+
     private AgreementTypes agreementTypes;
+
     public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
         this.agreementTypes = agreementTypes;
     }

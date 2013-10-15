@@ -244,6 +244,8 @@ public class Api extends AbstractFactoryAndRepository {
     public void putProperty(
             @Named("reference") String reference,
             @Named("name") String name,
+            @Named("countryCode") String countryCode,
+            @Named("city") String city,
             @Named("type") String type,
             @Named("acquireDate") @Optional LocalDate acquireDate,
             @Named("disposalDate") @Optional LocalDate disposalDate,
@@ -254,6 +256,8 @@ public class Api extends AbstractFactoryAndRepository {
         Party owner = fetchParty(ownerReference);
         Property property = fetchProperty(reference, true);
         property.setName(name);
+        property.setCountry(fetchCountry(countryCode));
+        property.setCity(city);
         property.setPropertyType(PropertyType.valueOf(type));
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);

@@ -23,6 +23,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -73,6 +74,7 @@ public abstract class Geography
      * >states</a>.
      */
     @javax.jdo.annotations.Column(allowsNull="false")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

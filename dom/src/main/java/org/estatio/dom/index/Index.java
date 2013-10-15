@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
@@ -78,6 +79,7 @@ public class Index
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

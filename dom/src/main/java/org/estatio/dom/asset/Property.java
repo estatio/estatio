@@ -42,8 +42,10 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PublishedAction;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.core.metamodel.facets.object.callbacks.PersistingCallbackFacet;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -143,8 +145,8 @@ public class Property extends FixedAsset implements Locatable {
         return city;
     }
 
-    public void setCity(final String propertyName) {
-        this.city = propertyName;
+    public void setCity(final String city) {
+        this.city = city;
     }
 
     // //////////////////////////////////////
@@ -201,10 +203,10 @@ public class Property extends FixedAsset implements Locatable {
 
     @PublishedAction
     public Unit newUnit(
-            @Named("Code") final String code,
+            @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true) final String reference,
             @Named("Name") final String name,
             final UnitType unitType) {
-        Unit unit = unitsRepo.newUnit(code, name, unitType);
+        Unit unit = unitsRepo.newUnit(reference, name, unitType);
         unit.setProperty(this);
         return unit;
     }

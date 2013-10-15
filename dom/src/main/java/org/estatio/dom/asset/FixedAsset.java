@@ -26,9 +26,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
-import com.danhaywood.isis.wicket.gmap3.applib.Location;
-import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 import com.google.common.collect.Sets;
 
 import org.estatio.dom.EstatioTransactionalObject;
@@ -39,16 +36,14 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -121,6 +116,7 @@ public abstract class FixedAsset
     @javax.jdo.annotations.Column(allowsNull = "false")
     @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

@@ -65,9 +65,6 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
         return allMatches("findByReferenceOrName", 
                 "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
-    public String default0FindUnits() {
-        return "AAA-00000*";
-    }
 
     @ActionSemantics(Of.SAFE)
     @Hidden

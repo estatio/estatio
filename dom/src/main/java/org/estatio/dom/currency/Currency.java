@@ -25,6 +25,7 @@ import javax.jdo.annotations.IdentityType;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.RegEx;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithDescriptionUnique;
@@ -76,6 +77,7 @@ public class Currency
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull="false")
+    @RegEx(validation = "[A-Z]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

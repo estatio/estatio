@@ -18,7 +18,7 @@
  */
 package org.estatio.integration.tests.api;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
@@ -48,13 +48,12 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
@@ -62,7 +61,6 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
-
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
@@ -168,7 +166,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t01_putAsset() throws Exception {
-        api.putProperty("APIPROP", "Apiland", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT");
+        api.putProperty("APIPROP", "Apiland", "ITA", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT");
         api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", new LocalDate(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
         Assert.assertThat(properties.findProperties("APIPROP").size(), Is.is(1));
     }

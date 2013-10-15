@@ -22,39 +22,38 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithReferenceUnique;
-
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Tax_reference_UNQ", members="reference")
+        @javax.jdo.annotations.Unique(
+                name = "Tax_reference_UNQ", members = "reference")
 })
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByReference", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.tax.Tax "
-                    + "WHERE reference.matches(:reference)")
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.tax.Tax "
+                        + "WHERE reference.matches(:reference)")
 })
 @Bounded
 @Immutable
@@ -65,13 +64,14 @@ public class Tax
     public Tax() {
         super("reference");
     }
-    
+
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -84,7 +84,7 @@ public class Tax
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull = "true")
     public String getName() {
         return name;
     }
@@ -110,7 +110,7 @@ public class Tax
     // //////////////////////////////////////
 
     public TaxRate newRate(
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Start Date") LocalDate startDate,
             final @Named("Percentage") BigDecimal percentage) {
         return taxRates.newRate(this, startDate, percentage);
     }
@@ -135,7 +135,6 @@ public class Tax
     }
 
     // //////////////////////////////////////
-
 
     private TaxRates taxRates;
 

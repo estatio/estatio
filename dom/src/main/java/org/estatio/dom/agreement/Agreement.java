@@ -117,7 +117,7 @@ public abstract class Agreement<S extends Lockable>
     @javax.jdo.annotations.Column(allowsNull = "false")
     @DescribedAs("Unique reference code for this agreement")
     @Title
-    @RegEx(validation = "[A-Z,0-9,_,-,/]+")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

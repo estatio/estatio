@@ -26,6 +26,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
@@ -52,6 +53,7 @@ import org.estatio.dom.asset.Unit;
                         + "FROM org.estatio.dom.lease.UnitForLease "
                         + "WHERE reference.matches(:reference)")
 })
+@Named("Unit")
 public class UnitForLease extends Unit {
 
     @javax.jdo.annotations.Persistent(mappedBy = "unit", defaultFetchGroup = "false")

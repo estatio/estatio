@@ -20,6 +20,9 @@ package org.estatio.dom.asset;
 
 import java.util.List;
 
+import com.danhaywood.isis.wicket.gmap3.applib.Location;
+import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -61,6 +64,11 @@ public class Properties extends EstatioDomainService<Property> {
         property.setCountry(country);
         property.setAcquireDate(acquireDate);
 
+        if (city != null && country != null && property.getLocation() == null) {
+            Location lookup = locationLookupService.lookup(city.concat(", ").concat(country.getName()));
+            property.setLocation(lookup);
+        }
+
         persistIfNotAlready(property);
         return property;
     }
@@ -99,6 +107,14 @@ public class Properties extends EstatioDomainService<Property> {
     @Hidden
     public List<Property> autoComplete(final String searchPhrase) {
         return findProperties("*".concat(searchPhrase).concat("*"));
+    }
+
+    // //////////////////////////////////////
+
+    private LocationLookupService locationLookupService;
+
+    public final void injectLocationLookupService(final LocationLookupService locationLookupService) {
+        this.locationLookupService = locationLookupService;
     }
 
 }

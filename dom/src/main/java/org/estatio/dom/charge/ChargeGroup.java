@@ -27,6 +27,7 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -66,6 +67,7 @@ public class ChargeGroup
 
     @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "1")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
     }

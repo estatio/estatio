@@ -48,6 +48,7 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 
 public class Leases extends EstatioDomainService<Lease> {
 
@@ -67,7 +68,7 @@ public class Leases extends EstatioDomainService<Lease> {
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true) String reference,
             final @Named("Name") String name,
             final @Named("Start Date") LocalDate startDate,
             final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
