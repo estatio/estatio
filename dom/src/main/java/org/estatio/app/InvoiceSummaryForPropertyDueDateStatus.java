@@ -29,26 +29,17 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.AbstractViewModel;
+import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.ViewModel;
 
 @Bookmarkable
 @Immutable
-public class InvoiceSummaryForPropertyDueDateStatus
-        extends EstatioDomainObject<InvoiceSummaryForPropertyDueDateStatus>
-        implements ViewModel {
-
-    // //////////////////////////////////////
-
-    public InvoiceSummaryForPropertyDueDateStatus() {
-        super("name");
-    }
-
-    // //////////////////////////////////////
+public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     /**
      * {@link ViewModel} implementation.
