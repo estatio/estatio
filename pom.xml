@@ -123,7 +123,7 @@ language governing permissions and limitations under the License.
 
         <repository>
             <id>gettext-commons-site</id>
-            <url>http://gettext-commons.googlecode.com/svn/maven-repository/</url>
+            <url>https://gettext-commons.googlecode.com/svn/maven-repository/</url>
         </repository>
 
         <repository>
