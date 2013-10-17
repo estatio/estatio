@@ -17,7 +17,6 @@
 package org.estatio.dom.party;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
@@ -26,9 +25,6 @@ import org.apache.isis.applib.util.TitleBuffer;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
-        column = "version")
 public class Person extends Party {
 
     

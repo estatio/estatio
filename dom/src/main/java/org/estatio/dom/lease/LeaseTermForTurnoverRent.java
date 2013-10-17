@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
@@ -32,9 +31,6 @@ import org.apache.isis.applib.annotation.Optional;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
-        column = "version")
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////

@@ -20,7 +20,6 @@ package org.estatio.dom.lease.invoicing;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Ordering;
 
@@ -55,9 +54,6 @@ import org.apache.isis.applib.annotation.Where;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER,
-        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL",

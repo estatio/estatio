@@ -120,7 +120,7 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                         version, is(not(nullValue())));
             }
 
-            if (EstatioTransactionalObject.class.isAssignableFrom(subtype)) {
+            if (subtype.getSuperclass().equals(EstatioTransactionalObject.class)) {
                 // must have a @Version(..., column="version")
                 final Version version = subtype.getAnnotation(Version.class);
                 assertThat("Class " + subtype.getName() + " inherits from EstatioTransactionalObject "

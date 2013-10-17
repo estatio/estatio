@@ -20,7 +20,6 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
@@ -30,9 +29,6 @@ import org.apache.isis.applib.annotation.Title;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
-        column = "version")
 @javax.jdo.annotations.Indices({
     @javax.jdo.annotations.Index(
             name="EmailAddress_emailAddress_IDX", members={"emailAddress"})

@@ -22,7 +22,10 @@ import java.util.List;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
+
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Mandatory;
@@ -31,18 +34,11 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
-
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
-        column = "version")
 @javax.jdo.annotations.Indices({
     @javax.jdo.annotations.Index(
             name="PostalAddress_main_idx", 

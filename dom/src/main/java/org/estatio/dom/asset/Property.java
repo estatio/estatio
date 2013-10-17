@@ -23,7 +23,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
@@ -37,6 +36,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -45,14 +45,10 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.core.metamodel.facets.object.callbacks.PersistingCallbackFacet;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER,
-        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
@@ -180,7 +176,7 @@ public class Property extends FixedAsset implements Locatable {
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Named("Lookup")
-    public FixedAsset lookupLocation(final @Named("Address") String address) {
+    public FixedAsset lookupLocation(final @Named("Address") @DescribedAs("Eaxmple: Herengracht 469, Amsterdam, NL") String address) {
         if (locationLookupService != null) // service is not loaded in tests
             setLocation(locationLookupService.lookup(address));
         return this;
@@ -204,7 +200,7 @@ public class Property extends FixedAsset implements Locatable {
 
     @PublishedAction
     public Unit newUnit(
-            @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true) final String reference,
+            @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true) final String reference,
             @Named("Name") final String name,
             final UnitType unitType) {
         Unit unit = unitsRepo.newUnit(reference, name, unitType);
