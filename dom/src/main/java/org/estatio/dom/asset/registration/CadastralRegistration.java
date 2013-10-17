@@ -28,7 +28,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return comuneAmministrativo;
     }
 
-    public void setComuneAmministrativo(String comuneAmministrativo) {
+    public void setComuneAmministrativo(final String comuneAmministrativo) {
         this.comuneAmministrativo = comuneAmministrativo;
     }
 
@@ -41,7 +41,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return comuneCatastale;
     }
 
-    public void setComuneCatastale(String comuneCatastale) {
+    public void setComuneCatastale(final String comuneCatastale) {
         this.comuneCatastale = comuneCatastale;
     }
 
@@ -54,7 +54,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return codiceComuneCatastale;
     }
 
-    public void setCodiceComuneCatastale(String codiceComuneCatastale) {
+    public void setCodiceComuneCatastale(final String codiceComuneCatastale) {
         this.codiceComuneCatastale = codiceComuneCatastale;
     }
 
@@ -67,7 +67,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return rendita;
     }
 
-    public void setRendita(String rendita) {
+    public void setRendita(final String rendita) {
         this.rendita = rendita;
     }
 
@@ -80,7 +80,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return foglio;
     }
 
-    public void setFoglio(String foglio) {
+    public void setFoglio(final String foglio) {
         this.foglio = foglio;
     }
 
@@ -93,7 +93,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return particella;
     }
 
-    public void setParticella(String particella) {
+    public void setParticella(final String particella) {
         this.particella = particella;
     }
 
@@ -106,7 +106,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return subalterno;
     }
 
-    public void setSubalterno(String subalterno) {
+    public void setSubalterno(final String subalterno) {
         this.subalterno = subalterno;
     }
 
@@ -119,7 +119,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(final String categoria) {
         this.categoria = categoria;
     }
 
@@ -132,7 +132,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return classe;
     }
 
-    public void setClasse(String classe) {
+    public void setClasse(final String classe) {
         this.classe = classe;
     }
 
@@ -145,7 +145,7 @@ public class CadastralRegistration extends FixedAssetRegistration {
         return consistenza;
     }
 
-    public void setConsistenza(String consistenza) {
+    public void setConsistenza(final String consistenza) {
         this.consistenza = consistenza;
     }
 }

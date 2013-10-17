@@ -23,8 +23,6 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithStartDate;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -33,6 +31,9 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithStartDate;
 
 /**
  * Holds the {@link #getValue() value} of an {@link #getIndexBase() index (base)} from a particular

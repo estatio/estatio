@@ -20,7 +20,6 @@ package org.estatio.dom.financial;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
 
@@ -33,9 +32,6 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME, 
         column="discriminator")
-@javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
-        column = "version")
 public class BankMandate extends Agreement<Status> {
     
 

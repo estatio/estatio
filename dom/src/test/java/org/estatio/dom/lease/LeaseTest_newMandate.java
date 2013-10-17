@@ -198,7 +198,7 @@ public class LeaseTest_newMandate {
 
         context.checking(new Expectations() {
             {
-                oneOf(mockFinancialAccounts).findBankAccountsByParty(tenant);
+                oneOf(mockFinancialAccounts).findBankAccountsByOwner(tenant);
                 will(returnValue(Collections.emptyList()));
             }
         });
@@ -218,7 +218,7 @@ public class LeaseTest_newMandate {
 
         context.checking(new Expectations() {
             {
-                allowing(mockFinancialAccounts).findBankAccountsByParty(tenant);
+                allowing(mockFinancialAccounts).findBankAccountsByOwner(tenant);
                 will(returnValue(Lists.newArrayList(bankAccount)));
             }
         });
@@ -283,7 +283,7 @@ public class LeaseTest_newMandate {
         
         context.checking(new Expectations() {
             {
-                oneOf(mockFinancialAccounts).findBankAccountsByParty(tenant);
+                oneOf(mockFinancialAccounts).findBankAccountsByOwner(tenant);
                 will(returnValue(Lists.newArrayList(bankAccount)));
             }
         });

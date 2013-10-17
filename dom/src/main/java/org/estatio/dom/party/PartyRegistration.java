@@ -20,10 +20,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -35,6 +31,11 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 // REVIEW: is this in scope?
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)

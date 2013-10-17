@@ -30,18 +30,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -59,6 +47,19 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -626,8 +627,7 @@ public abstract class LeaseTerm
     BigDecimal valueForPeriod(
             final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
         if (getStatus().isUnlocked()) {
-            BigDecimal value = invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
-            return value;
+            return invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
         }
         return BigDecimal.ZERO;
     }

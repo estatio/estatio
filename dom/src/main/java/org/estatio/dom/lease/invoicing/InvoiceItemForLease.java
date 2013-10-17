@@ -23,6 +23,11 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
 
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Where;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -37,11 +42,6 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Where;
 
 /**
  * A lease-specific subclass of {@link InvoiceItem}, referring

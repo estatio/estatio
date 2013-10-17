@@ -21,7 +21,6 @@ package org.estatio.dom.charge;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 

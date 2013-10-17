@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -47,7 +46,6 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
@@ -190,6 +188,7 @@ public class LeaseItem
 
     private LeaseItemType type;
 
+    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(sequence = "2")
     public LeaseItemType getType() {

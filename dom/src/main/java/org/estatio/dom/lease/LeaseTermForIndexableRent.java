@@ -24,16 +24,18 @@ import java.util.List;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.index.Index;
-import org.estatio.dom.index.Indexable;
-import org.estatio.dom.index.IndexationCalculator;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.utils.MathUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.index.Index;
+import org.estatio.dom.index.Indexable;
+import org.estatio.dom.index.IndexationCalculator;
+import org.estatio.dom.index.Indices;
+import org.estatio.dom.utils.MathUtils;
+
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)

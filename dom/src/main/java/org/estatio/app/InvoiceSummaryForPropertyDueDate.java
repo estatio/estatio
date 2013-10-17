@@ -23,14 +23,9 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoices;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractViewModel;
-import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Immutable;
@@ -38,6 +33,11 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.Invoices;
 
 /**
  * View model that surfaces information about each property along with summary

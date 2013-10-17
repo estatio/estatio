@@ -28,12 +28,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Sets;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -47,6 +41,13 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithNameComparable;
+import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(

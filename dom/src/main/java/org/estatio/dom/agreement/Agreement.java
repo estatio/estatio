@@ -33,17 +33,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -60,6 +49,18 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Lockable;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.ValueUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -232,7 +233,8 @@ public abstract class Agreement<S extends Lockable>
 
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
-        return LocalDateInterval.including(getStartDate(), getTerminationDate() == null ? getEndDate() : getTerminationDate());
+        return LocalDateInterval.including(
+                getStartDate(), getTerminationDate() == null ? getEndDate() : getTerminationDate());
     }
 
     // //////////////////////////////////////
@@ -400,9 +402,9 @@ public abstract class Agreement<S extends Lockable>
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent(mappedBy = "agreement")
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
+    @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup="true")
     @Disabled
     @Render(Type.EAGERLY)
     public SortedSet<AgreementRole> getRoles() {

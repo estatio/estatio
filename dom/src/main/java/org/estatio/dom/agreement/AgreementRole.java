@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -51,7 +50,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -156,6 +154,7 @@ public class AgreementRole extends EstatioTransactionalObject<AgreementRole, Sta
 
     private AgreementRoleType type;
 
+    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1")
     @Disabled

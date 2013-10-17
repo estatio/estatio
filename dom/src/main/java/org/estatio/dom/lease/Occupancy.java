@@ -20,7 +20,6 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
@@ -41,7 +40,6 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.lease.tags.Activities;
 import org.estatio.dom.lease.tags.Activity;

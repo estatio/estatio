@@ -23,19 +23,11 @@ import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.currency.Currency;
-import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
-import org.estatio.dom.numerator.Numerator;
-import org.estatio.dom.party.Party;
 
 import org.joda.time.LocalDate;
 
@@ -53,6 +45,13 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(

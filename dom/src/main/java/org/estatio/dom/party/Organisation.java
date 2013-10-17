@@ -24,15 +24,17 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.PublishedObject;
 
-@javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME, column = "discriminator")
-@javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
-                name = "findByReferenceOrName", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.party.Organisation "
-                        + "WHERE reference.matches(:referenceOrName) "
-                        + "   || name.matches(:referenceOrName)")
+@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
+@javax.jdo.annotations.Queries({ 
+    @javax.jdo.annotations.Query(
+            name = "findByReferenceOrName", language = "JDOQL", 
+            value = "SELECT "
+                    + "FROM org.estatio.dom.party.Organisation "
+                    + "WHERE reference.matches(:referenceOrName) "
+                    + "   || name.matches(:referenceOrName)")
 })
 @PublishedObject(OrganisationChangedPayloadFactory.class)
 public class Organisation extends Party {

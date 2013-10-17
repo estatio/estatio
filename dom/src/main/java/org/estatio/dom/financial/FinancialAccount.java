@@ -57,11 +57,16 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.financial.FinancialAccount "
                         + "WHERE reference.matches(:reference)"),
         @javax.jdo.annotations.Query(
-                name = "findByTypeAndParty", language = "JDOQL",
+                name = "findByTypeAndOwner", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.financial.FinancialAccount "
                         + "WHERE type == :type "
-                        + "&& owner == :owner")
+                        + "&& owner == :owner"),
+        @javax.jdo.annotations.Query(
+                name = "findByOwner", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.financial.FinancialAccount "
+                        + "WHERE owner == :owner")
 })
 public abstract class FinancialAccount 
         extends EstatioTransactionalObject<FinancialAccount, Status> 

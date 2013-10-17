@@ -24,11 +24,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -44,6 +39,12 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
  * Identifies the {@link #getParty() party} that plays a particular

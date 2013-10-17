@@ -26,10 +26,10 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Party;
 
 @Hidden
@@ -49,13 +49,14 @@ public class FinancialAccountContributions extends AbstractContainedObject {
     @NotContributed(As.ACTION)
     @MemberOrder(name = "Financial Accounts", sequence = "13.5")
     public List<FinancialAccount> financialAccounts(final Party owner) {
-        // TODO: replace with JDOQL
-        return allMatches(FinancialAccount.class, new Filter<FinancialAccount>() {
-            @Override
-            public boolean accept(final FinancialAccount t) {
-                return t.getOwner() == owner;
-            }
-        });
+        return financialAccounts.findAccountsByOwner(owner);
+    }
+
+    // //////////////////////////////////////
+
+    private FinancialAccounts financialAccounts;
+    public void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
+        this.financialAccounts = financialAccounts;
     }
 
 }

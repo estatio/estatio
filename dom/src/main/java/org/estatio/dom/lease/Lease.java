@@ -24,11 +24,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -63,7 +61,6 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
@@ -393,7 +390,7 @@ public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
     private List<BankAccount> existingBankAccountsForTenant() {
         final Party tenant = getSecondaryParty();
         if (tenant != null) {
-            return financialAccounts.findBankAccountsByParty(tenant);
+            return financialAccounts.findBankAccountsByOwner(tenant);
         } else {
             return Collections.emptyList();
         }

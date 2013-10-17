@@ -23,6 +23,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import javax.jdo.annotations.DatastoreIdentity;
@@ -33,14 +34,16 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;
 
-import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.TitledEnum;
 import org.junit.Test;
 import org.reflections.Reflections;
 
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.core.commons.authentication.AnonymousSession;
+
+import org.estatio.dom.EstatioDomainObject;
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.TitledEnum;
 
 /**
  * Automatically tests all enums implementing {@link TitledEnum}.
@@ -122,7 +125,8 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
 
             if (subtype.getSuperclass().equals(EstatioTransactionalObject.class)) {
                 // must have a @Version(..., column="version")
-                final Version version = subtype.getAnnotation(Version.class);
+                final Version version = getAnnotationOfTypeOfItsSupertypes(subtype, Version.class);
+                 
                 assertThat("Class " + subtype.getName() + " inherits from EstatioTransactionalObject "
                         + "but is not annotated with @Version",
                         version, is(not(nullValue())));
@@ -132,6 +136,17 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
             }
 
         }
+    }
+
+    private static <T extends Annotation> T getAnnotationOfTypeOfItsSupertypes (Class<?> cls, final Class<T> annotationClass) {
+        while(cls != null) {
+            T annotation = cls.getAnnotation(annotationClass);
+            if(annotation!=null) { 
+                return annotation; 
+            }
+            cls = cls.getSuperclass();
+        }
+        return null;
     }
 
 }

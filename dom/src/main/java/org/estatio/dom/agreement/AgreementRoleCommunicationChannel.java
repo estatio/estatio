@@ -28,13 +28,6 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithInterval;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -50,6 +43,13 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -157,6 +157,7 @@ public class AgreementRoleCommunicationChannel
 
     private AgreementRoleCommunicationChannelType type;
 
+    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Disabled
@@ -172,6 +173,7 @@ public class AgreementRoleCommunicationChannel
 
     private CommunicationChannel communicationChannel;
 
+    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
     @javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
     @Title(sequence = "3", prepend = ",")
     @Disabled

@@ -23,16 +23,16 @@ import java.util.List;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
-import org.estatio.dom.geography.States;
-
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.geography.State;
+import org.estatio.dom.geography.States;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)

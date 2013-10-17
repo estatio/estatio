@@ -27,6 +27,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -50,15 +60,6 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.services.settings.EstatioSettingsService;
-import org.jmock.Expectations;
-import org.jmock.auto.Mock;
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
-import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 public class InvoiceCalculationServiceTest {
     private static final LocalDate LEASE_START_DATE = new LocalDate(2011, 11, 1);

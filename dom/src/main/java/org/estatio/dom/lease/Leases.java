@@ -20,6 +20,20 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
+
 import org.estatio.app.InvoiceSummaries;
 import org.estatio.app.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.EstatioDomainService;
@@ -36,19 +50,6 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.RegEx;
 
 public class Leases extends EstatioDomainService<Lease> {
 
@@ -112,14 +113,15 @@ public class Leases extends EstatioDomainService<Lease> {
     }
 
     @Programmatic
-    public List<Lease> findLeasesByProperty(Property property) {
+    public List<Lease> findLeasesByProperty(final Property property) {
         return allMatches("findByProperty", "property", property);
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
+            String referenceOrName) {
         return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
@@ -237,13 +239,13 @@ public class Leases extends EstatioDomainService<Lease> {
 
     private Invoices invoices;
 
-    public void injectInvoices(Invoices invoices) {
+    public void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
 
     private InvoiceSummaries invoiceSummaries;
 
-    public void injectInvoiceSummaries(InvoiceSummaries invoiceSummaries) {
+    public void injectInvoiceSummaries(final InvoiceSummaries invoiceSummaries) {
         this.invoiceSummaries = invoiceSummaries;
     }
 

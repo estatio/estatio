@@ -18,7 +18,7 @@
  */
 package org.estatio.app;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;
@@ -30,7 +30,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 

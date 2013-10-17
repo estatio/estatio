@@ -23,13 +23,13 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
-
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)

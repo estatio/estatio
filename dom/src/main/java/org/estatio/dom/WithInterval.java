@@ -24,12 +24,13 @@ import java.util.SortedSet;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
 

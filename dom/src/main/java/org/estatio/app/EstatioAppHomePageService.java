@@ -20,8 +20,8 @@ package org.estatio.app;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.HomePage;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.HomePage;
 
 import org.estatio.dom.EstatioService;
 

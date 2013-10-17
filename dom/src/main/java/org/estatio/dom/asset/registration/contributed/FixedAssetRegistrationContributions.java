@@ -37,7 +37,9 @@ public class FixedAssetRegistrationContributions extends AbstractContainedObject
 
     @NotInServiceMenu
     @MemberOrder(name = "Registrations", sequence = "13")
-    public FixedAssetRegistration addRegistration(final FixedAsset subject, final FixedAssetRegistrationType registrationType) {
+    public FixedAssetRegistration addRegistration(
+            final FixedAsset subject, 
+            final FixedAssetRegistrationType registrationType) {
         FixedAssetRegistration registration = registrationType.create(getContainer());
         registration.setSubject(subject);
         return registration;

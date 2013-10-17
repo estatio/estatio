@@ -22,7 +22,6 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.asset.FixedAsset;
@@ -36,8 +35,12 @@ import org.apache.isis.applib.annotation.MemberOrder;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME, column = "discriminator")
-@javax.jdo.annotations.Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column = "discriminator")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER, 
+        column = "version")
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAssetRegistration, Status> {

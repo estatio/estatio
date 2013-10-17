@@ -20,7 +20,6 @@ package org.estatio.dom.numerator;
 
 import java.math.BigInteger;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;

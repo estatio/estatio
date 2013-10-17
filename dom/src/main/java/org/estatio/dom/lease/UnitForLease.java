@@ -24,12 +24,12 @@ import java.util.TreeSet;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.asset.Unit;
-
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+
+import org.estatio.dom.asset.Unit;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)

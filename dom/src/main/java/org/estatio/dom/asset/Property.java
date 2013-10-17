@@ -28,8 +28,6 @@ import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -45,6 +43,9 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -176,9 +177,12 @@ public class Property extends FixedAsset implements Locatable {
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Named("Lookup")
-    public FixedAsset lookupLocation(final @Named("Address") @DescribedAs("Eaxmple: Herengracht 469, Amsterdam, NL") String address) {
-        if (locationLookupService != null) // service is not loaded in tests
+    public FixedAsset lookupLocation(
+            final @Named("Address") @DescribedAs("Example: Herengracht 469, Amsterdam, NL") String address) {
+        if (locationLookupService != null) { 
+            // TODO: service does not seem to be loaded in tests 
             setLocation(locationLookupService.lookup(address));
+        }
         return this;
     }
 

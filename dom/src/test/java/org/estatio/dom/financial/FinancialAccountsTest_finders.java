@@ -80,18 +80,30 @@ public class FinancialAccountsTest_finders {
     }
 
     @Test
-    public void findBankAccountsByParty() {
+    public void findAccountsByTypeAndOwner() {
         
-        financialAccounts.findBankAccountsByParty(party);
+        financialAccounts.findBankAccountsByOwner(party);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FinancialAccount.class));
-        assertThat(finderInteraction.getQueryName(), is("findByTypeAndParty"));
+        assertThat(finderInteraction.getQueryName(), is("findByTypeAndOwner"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("owner"), is((Object)party));
         assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object)FinancialAccountType.BANK_ACCOUNT));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
     }
 
+    @Test
+    public void findAccountsByOwner() {
+        
+        financialAccounts.findAccountsByOwner(party);
+        
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FinancialAccount.class));
+        assertThat(finderInteraction.getQueryName(), is("findByOwner"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("owner"), is((Object)party));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+    }
+    
     @Test
     public void allAccounts() {
         

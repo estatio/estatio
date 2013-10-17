@@ -28,7 +28,7 @@ public class OrganisationChangedPayloadFactory implements PayloadFactory {
     @Override
     @Programmatic
     public EventPayload payloadFor(
-            final Object changedObject, ChangeKind changeKind) {
+            final Object changedObject, final ChangeKind changeKind) {
         return new OrganisationChangedPayload((Organisation) changedObject);
     }
 

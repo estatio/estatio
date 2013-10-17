@@ -20,16 +20,15 @@ package org.estatio.dom.party;
 
 import java.util.Set;
 
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.invoice.Invoice;
-
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.services.publish.EventPayloadForObjectChanged;
 
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+
 /**
- * Describes the payload for publishing an {@link Invoice} using Isis'. 
+ * Describes the payload for publishing a change to an {@link Organisation} using Isis'. 
  */
 public class OrganisationChangedPayload extends EventPayloadForObjectChanged<Organisation> {
 
@@ -54,7 +53,7 @@ public class OrganisationChangedPayload extends EventPayloadForObjectChanged<Org
     
     private CommunicationChannelContributions channelContributions;
     
-    public void injectChannelContributions(CommunicationChannelContributions channelContributions) {
+    public void injectChannelContributions(final CommunicationChannelContributions channelContributions) {
         this.channelContributions = channelContributions;
     }
 }

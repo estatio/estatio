@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.currency;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 

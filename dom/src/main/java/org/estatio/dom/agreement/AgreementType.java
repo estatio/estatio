@@ -20,7 +20,6 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 

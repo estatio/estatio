@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -63,11 +64,21 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     // //////////////////////////////////////
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Hidden
-    public List<BankAccount> findBankAccountsByParty(final Party party) {
-        return (List)allMatches("findByTypeAndParty", "type", FinancialAccountType.BANK_ACCOUNT, "owner", party);
+    @Programmatic
+    public List<BankAccount> findBankAccountsByOwner(final Party party) {
+        return (List)allMatches("findByTypeAndOwner", 
+                "type", FinancialAccountType.BANK_ACCOUNT, 
+                "owner", party);
     }
 
+    // //////////////////////////////////////
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Programmatic
+    public List<FinancialAccount> findAccountsByOwner(final Party party) {
+        return (List)allMatches("findByOwner", "owner", party);
+    }
+    
     // //////////////////////////////////////
     
     @ActionSemantics(Of.SAFE)
