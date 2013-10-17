@@ -173,8 +173,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t02_putOrganisation() {
-        api.putOrganisation("APITENANT", "API Tenant");
-        api.putOrganisation("APILANDLORD", "API Landlord");
+        api.putOrganisation("APITENANT", "API Tenant", "vat", "fiscal" );
+        api.putOrganisation("APILANDLORD", "API Landlord", "vat", "fiscal");
         Assert.assertThat(parties.findParties("API*").size(), Is.is(2));
     }
 

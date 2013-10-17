@@ -41,8 +41,8 @@ public class Persons extends EstatioDomainService<Person> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Parties", sequence = "1")
     public Person newPerson(
-            final @Named("reference") @Optional @RegEx(validation="[A-Z,0-9,_,-,/]") String reference,
-            final @Named("initials") @Optional @RegEx(validation="[A-Z]") String initials,
+            final @Named("reference") @Optional @RegEx(validation="[A-Z,0-9,_,-,/]+") String reference,
+            final @Named("initials") @Optional @RegEx(validation="[A-Z]+") String initials,
             final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName) {
         final Person person = newTransientInstance(Person.class);

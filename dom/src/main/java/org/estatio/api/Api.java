@@ -221,11 +221,14 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putOrganisation(
             @Named("reference") String reference,
-            @Named("name") String name) {
+            @Named("name") String name,
+            @Named("vatCode") @Optional String vatCode,
+            @Named("fiscalCode") @Optional String fiscalCode) {
         Organisation org = (Organisation) parties.findPartyByReference(reference);
         if (org == null) {
             org = organisations.newOrganisation(reference, name);
-            org.setReference(reference);
+            org.setFiscalCode(fiscalCode);
+            org.setVatCode(vatCode);
         }
         org.setName(name);
     }

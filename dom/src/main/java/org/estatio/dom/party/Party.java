@@ -48,6 +48,7 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -123,6 +124,7 @@ public abstract class Party
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = false)
     @Disabled
     public String getReference() {
         return reference;
