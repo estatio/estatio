@@ -94,8 +94,9 @@ language governing permissions and limitations under the License.
         <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
 
-        <!-- must be consistent with the version defined by the JDO Objectstore -->
+        <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-core.version>3.2.7</datanucleus-core.version>
+        <jdo-api.version>3.0.1</jdo-api.version>
 
         <!-- override in each module (used by locate global resources) -->
         <siteBaseDir>.</siteBaseDir>
