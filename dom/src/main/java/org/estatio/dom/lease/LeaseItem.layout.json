@@ -47,7 +47,7 @@
       "collections": {
         "terms": {
           "actions": {
-            "createInitialTerm": {}
+            "newTerm": {}
           }
         }
       }

@@ -22,16 +22,12 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 
 import org.estatio.dom.EstatioTransactionalObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.Units;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -41,12 +37,17 @@ import org.estatio.dom.asset.Units;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
-@AutoComplete(repository = Units.class)
-@Bookmarkable(BookmarkPolicy.AS_CHILD)
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findBySubject", language = "JDOQL",
+            value = "SELECT "
+                    + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
+                    + "WHERE subject == :subject"),
+})
 public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAssetRegistration, Status> {
 
     public FixedAssetRegistration() {
-        super("name", Status.UNLOCKED, Status.LOCKED);
+        super("type", Status.UNLOCKED, Status.LOCKED);
     }
 
     @Override
@@ -87,6 +88,20 @@ public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAsse
         this.subject = subject;
     }
 
+    // //////////////////////////////////////
+    
+    private FixedAssetRegistrationType type;
+    
+    public FixedAssetRegistrationType getType() {
+        return type;
+    }
+    
+    public void setType(FixedAssetRegistrationType type) {
+        this.type = type;
+    }
+    
+    // //////////////////////////////////////
+    
     String title() {
         // TODO Auto-generated method stub
         return null;

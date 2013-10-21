@@ -9,16 +9,12 @@
             "name": {},
             "unitType": {},
             "property": {},
-            "status": {}
           }
         },
-        "Location": {
+        "Dates": {
           "members": {
-            "location": {
-              "actions": {
-                "lookupLocation": {}
-              }
-            }
+            "startDate": {},
+            "endDate":{}
           }
         },
         "Areas": {
@@ -26,15 +22,8 @@
             "area": {},
             "storageArea": {},
             "salesArea": {},
-            "mezzanineArea": {},
+            "dehorsArea": {},
             "terraceArea": {}
-          }
-        },
-        "Dates": {
-          "members": {
-            "startDate": {},
-            "endDate": {},
-            "current": {}
           }
         }
       }
@@ -50,10 +39,11 @@
     {
       "span": 7,
       "collections": {
+        "leases": {},
         "communicationChannels": {},
         "roles": {
           "actions": {
-            "createInitialRole": {}
+            "newRole": {}
           }
         }
       }

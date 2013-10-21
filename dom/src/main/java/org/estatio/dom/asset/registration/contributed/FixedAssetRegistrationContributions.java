@@ -26,22 +26,23 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.filter.Filter;
 
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
+import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 
 @Hidden
 public class FixedAssetRegistrationContributions extends AbstractContainedObject {
 
     @NotInServiceMenu
     @MemberOrder(name = "Registrations", sequence = "13")
-    public FixedAssetRegistration addRegistration(
+    public FixedAssetRegistration newRegistration(
             final FixedAsset subject, 
             final FixedAssetRegistrationType registrationType) {
         FixedAssetRegistration registration = registrationType.create(getContainer());
         registration.setSubject(subject);
+        persistIfNotAlready(registration);
         return registration;
     }
 
@@ -51,13 +52,15 @@ public class FixedAssetRegistrationContributions extends AbstractContainedObject
     @NotContributed(As.ACTION)
     @MemberOrder(name = "Registrations", sequence = "13.5")
     public List<FixedAssetRegistration> registrations(final FixedAsset subject) {
-        // TODO: replace with JDOQL
-        return allMatches(FixedAssetRegistration.class, new Filter<FixedAssetRegistration>() {
-            @Override
-            public boolean accept(final FixedAssetRegistration t) {
-                return t.getSubject() == subject;
-            }
-        });
+        return fixedAssetRegistrations.findBySubject(subject);
+    }
+
+    // //////////////////////////////////////
+    
+    private FixedAssetRegistrations fixedAssetRegistrations;
+    
+    public void injectFixedAssetRegistrations(FixedAssetRegistrations fixedAssetRegistrations) {
+        this.fixedAssetRegistrations = fixedAssetRegistrations;
     }
 
 }

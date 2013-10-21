@@ -9,16 +9,12 @@
             "name": {},
             "unitType": {},
             "property": {},
-            "status": {}
           }
         },
-        "Location": {
+        "Dates": {
           "members": {
-            "location": {
-              "actions": {
-                "lookupLocation": {}
-              }
-            }
+            "startDate": {},
+            "endDate":{}
           }
         },
         "Areas": {
@@ -26,7 +22,7 @@
             "area": {},
             "storageArea": {},
             "salesArea": {},
-            "mezzanineArea": {},
+            "dehorsArea": {},
             "terraceArea": {}
           }
         }
@@ -47,7 +43,7 @@
         "communicationChannels": {},
         "roles": {
           "actions": {
-            "createInitialRole": {}
+            "newRole": {}
           }
         }
       }

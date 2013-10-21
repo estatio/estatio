@@ -36,6 +36,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -43,6 +44,7 @@ import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -167,6 +169,7 @@ public class Property extends FixedAsset implements Locatable {
     @Override
     @Disabled
     @Optional
+    @Hidden(where=Where.ALL_TABLES)
     public Location getLocation() {
         return location;
     }
