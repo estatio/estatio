@@ -5,8 +5,8 @@
       "memberGroups": {
         "General": {
           "members": {
-            "reference": {},
             "name": {},
+            "reference": {},
             "agreementType": {},
             "type": {},
             "property": {},
@@ -42,8 +42,7 @@
               "actions": {
                 "terminate": {}
               }
-            },
-            "current": {}
+            }
           }
         },
         "Related": {
@@ -68,21 +67,23 @@
         },
         "roles": {
           "actions": {
-            "createInitialRole": {}
+            "newRole": {}
           }
         },
-        "units": {
+        "occupancies": {
           "actions": {
-            "addUnit": {}
+            "occupy": {}
           }
         }
       }
     }
   ],
   "actions": {
+    "downloadLayout": {},
+    "approveAllTermsOfThisLease": {},
+    "refreshLayout": {},
     "verify": {},
     "calculate": {},
-    "approveAllTermsOfThisLease": {},
     "lock": {},
     "unlock": {}
   }

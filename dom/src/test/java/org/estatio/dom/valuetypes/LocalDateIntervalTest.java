@@ -28,7 +28,10 @@ import static org.junit.Assert.assertTrue;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 
 public class LocalDateIntervalTest {
 
@@ -171,6 +174,13 @@ public class LocalDateIntervalTest {
     }
 
     @Test
+    @Ignore
+    public void testOpen() {
+        assertThat(parseLocalDateInterval("*/2013-12-31").overlap(parseLocalDateInterval("2014-1-1/*")), is(parseLocalDateInterval("*/*")));
+    }
+    
+    
+    @Test
     public void testString() {
         assertThat(interval8.toString(), is("2012-02-01/----------"));
 
@@ -179,5 +189,17 @@ public class LocalDateIntervalTest {
     private static Interval emptyInterval() {
         return null;
     }
+    
+    
+    private LocalDateInterval parseLocalDateInterval(String input){
+        String[] values = input.split("/");
+        return new LocalDateInterval(parseLocalDate(values[0]), parseLocalDate(values[1]), IntervalEnding.INCLUDING_END_DATE);
+    }
 
+    static private LocalDate parseLocalDate(String input) {
+        if (input.contains("--") || input.contains("*"))
+            return null;
+        return LocalDate.parse(input);
+
+    }
 }

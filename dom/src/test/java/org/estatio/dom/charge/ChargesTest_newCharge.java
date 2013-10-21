@@ -81,7 +81,7 @@ public class ChargesTest_newCharge {
         
         final Charge newCharge = charges.createCharge("CG-REF", "CG-Description", "CG-Code", tax, chargeGroup);
         assertThat(newCharge.getReference(), is("CG-REF"));
-        assertThat(newCharge.getDescription(), is("CG-Description"));
+        assertThat(newCharge.getName(), is("CG-Description"));
         assertThat(newCharge.getCode(), is("CG-Code"));
         assertThat(newCharge.getTax(), is(tax));
         assertThat(newCharge.getGroup(), is(chargeGroup));

@@ -22,19 +22,19 @@ import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameGetter;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "Activity_sector_name_UNQ", members = { "sector", "name" })
@@ -47,7 +47,7 @@ import org.estatio.dom.WithNameGetter;
                         + "WHERE sector == :sector "
                         + "   && name == :name")
 })
-@Immutable
+@Bounded
 public class Activity
         extends EstatioRefDataObject<Activity>
         implements WithNameGetter {
@@ -57,23 +57,25 @@ public class Activity
     }
 
     // //////////////////////////////////////
-    
+
     private Sector sector;
-    @javax.jdo.annotations.Column(name="sectorId", allowsNull="false")
-    @Title(sequence="1")
+
+    @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "false")
+    @Title(sequence = "1")
     public Sector getSector() {
         return sector;
     }
+
     public void setSector(final Sector sector) {
         this.sector = sector;
     }
-    
+
     // //////////////////////////////////////
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Title(prepend=":", sequence="2")
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Title(prepend = ":", sequence = "2")
     public String getName() {
         return name;
     }

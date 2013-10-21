@@ -27,7 +27,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 
 import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithDescriptionUnique;
+import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
@@ -37,7 +37,7 @@ import org.estatio.dom.WithReferenceUnique;
  * <p>
  * Used for taxes, indices, invoices, charges.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
@@ -45,7 +45,7 @@ import org.estatio.dom.WithReferenceUnique;
         @javax.jdo.annotations.Unique(
                 name = "Currency_reference_UNQ", members = "reference"),
         @javax.jdo.annotations.Unique(
-                name = "Currency_description_UNQ", members = "description")
+                name = "Currency_name_UNQ", members = "name")
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -62,21 +62,21 @@ import org.estatio.dom.WithReferenceUnique;
 })
 @Bounded
 @Immutable
-@AutoComplete(repository=Currencies.class, action="autoComplete")
-public class Currency 
-        extends EstatioRefDataObject<Currency> 
-        implements WithReferenceComparable<Currency>, WithReferenceUnique, WithDescriptionUnique {
+@AutoComplete(repository = Currencies.class, action = "autoComplete")
+public class Currency
+        extends EstatioRefDataObject<Currency>
+        implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique {
 
     public Currency() {
         super("reference");
     }
-    
+
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @RegEx(validation = "[A-Z]+", caseSensitive=true)
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @RegEx(validation = "[A-Z]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -84,18 +84,19 @@ public class Currency
     public void setReference(final String reference) {
         this.reference = reference;
     }
-    
+
     // //////////////////////////////////////
 
-    private String description;
+    private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
-    public String getDescription() {
-        return description;
+    @javax.jdo.annotations.Column(allowsNull = "false")
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(final String despription) {
-        this.description = despription;
+    public void setName(final String name) {
+        this.name = name;
     }
 
 }

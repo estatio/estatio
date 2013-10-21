@@ -53,7 +53,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         createLeaseTermForRent(leaseTopModel, BigInteger.valueOf(1), leaseTopModel.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1), new LocalDate(2011, 1, 1), new LocalDate(2011, 4, 1), "ISTAT-FOI");
         createLeaseTermForServiceCharge(leaseTopModel, leaseTopModel.getStartDate(), null, BigDecimal.valueOf(6000));
         createLeaseTermForTurnoverRent(leaseTopModel, leaseTopModel.getStartDate().withDayOfYear(1).plusYears(1), null, "7");
-        
+
         Lease leaseMediaX = leases.findLeaseByReference("OXF-MEDIAX-002");
         createLeaseTermForRent(leaseMediaX, BigInteger.valueOf(1), leaseMediaX.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2008, 1, 1), new LocalDate(2009, 1, 1), new LocalDate(2009, 4, 1), "ISTAT-FOI");
         createLeaseTermForServiceCharge(leaseMediaX, leaseMediaX.getStartDate(), null, BigDecimal.valueOf(6000));
@@ -71,7 +71,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
 
     private LeaseTerm createLeaseTermForRent(Lease lease, BigInteger sequence, LocalDate startDate, LocalDate endDate, BigDecimal baseValue, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate, LocalDate effectiveDate, String indexReference) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        
+
         return createLeaseTermForRent(leaseItem, sequence, startDate, endDate, baseValue, baseIndexStartDate, nextIndexStartDate, effectiveDate, indexReference);
     }
 
@@ -99,7 +99,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
 
     public LeaseTerm createLeaseTermForServiceCharge(Lease lease, LocalDate startDate, LocalDate endDate, BigDecimal budgetedValue) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "SERVICE_CHARGE", LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        
+
         return createLeaseTermForServiceCharge(leaseItem, startDate, endDate, budgetedValue);
     }
 
@@ -115,7 +115,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
 
     public LeaseTerm createLeaseTermForTurnoverRent(Lease lease, LocalDate startDate, LocalDate endDate, String turnoverRentRule) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "TURNOVER_RENT", LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS);
-        
+
         LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseTerms.newLeaseTerm(leaseItem);
         leaseTerm.modifyStartDate(startDate);
         leaseTerm.setEndDate(endDate);

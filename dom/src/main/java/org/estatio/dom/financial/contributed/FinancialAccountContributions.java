@@ -37,7 +37,8 @@ public class FinancialAccountContributions extends AbstractContainedObject {
 
     @NotInServiceMenu
     @MemberOrder(name = "Financial Accounts", sequence = "13")
-    public FinancialAccount addAccount(final Party owner, final FinancialAccountType financialAccountType) {
+    public FinancialAccount addAccount(
+            final Party owner, final FinancialAccountType financialAccountType) {
         FinancialAccount financialAccount = financialAccountType.create(getContainer());
         financialAccount.setOwner(owner);
         return financialAccount;

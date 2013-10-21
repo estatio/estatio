@@ -25,6 +25,7 @@ import javax.jdo.Query;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -36,12 +37,13 @@ public class Sectors extends EstatioDomainService<Sector> {
     }
 
     // //////////////////////////////////////
-    
+
     @SuppressWarnings({ "unchecked" })
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<String> findUniqueNames() {
-        final Query query = newQuery("SELECT name FROM org.estatio.dom.lease.tags.Sector");
+
+        final Query query = newQuery("SELECT name FROM " + getEntityType().getName());
         return (List<String>) query.execute();
     }
 
@@ -50,5 +52,14 @@ public class Sectors extends EstatioDomainService<Sector> {
         return uniqueMatch("findByName", "name", name);
     }
 
+    @Programmatic
+    public Sector findOrCreate(final String name) {
+        Sector sector = findByName(name);
+        if (sector == null) {
+            sector = newTransientInstance(Sector.class);
+            sector.setName(name);
+        }
+        return sector;
+    }
 
 }

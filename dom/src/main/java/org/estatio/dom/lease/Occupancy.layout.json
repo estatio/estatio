@@ -1,0 +1,111 @@
+{
+	"columns":[
+		{
+			"span":4,
+			"memberGroups":{
+				"General":{
+					"members":{
+						"lease":{
+							
+						},
+						"unit":{
+							
+						},
+						"status":{
+							
+						},
+						"startDate":{
+							
+						},
+						"endDate":{
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		},
+		{
+			"span":4,
+			"memberGroups":{
+				"Classification":{
+					"members":{
+						"sector":{
+							
+						},
+						"activity":{
+							
+						},
+						"brand":{
+							
+						},
+						"unitSize":{
+							
+						}
+						
+					}
+					
+				},
+				"Reporting":{
+					"members":{
+						"reportTurnover":{
+							
+						},
+						"reportRent":{
+							
+						},
+						"reportOCR":{
+							
+						}
+						
+					}
+					
+				}
+				
+			
+		}
+		
+	},
+	{
+		"span":0,
+		"memberGroups":{
+			
+		}
+		
+	},
+	{
+		"span":8,
+		"collections":{
+			
+		}
+		
+	}
+	
+],
+"actions":{
+	"downloadLayout":{
+		
+	},
+	"refreshLayout":{
+		
+	},
+	"changeDates":{
+		
+	},
+	"lock":{
+		
+	},
+	"unlock":{
+		
+	},
+	"updateTags":{
+
+		
+	
+}
+	
+}
+}

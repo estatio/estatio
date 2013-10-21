@@ -25,10 +25,6 @@ import java.util.TreeSet;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.WithNameGetter;
-import org.estatio.dom.WithReferenceComparable;
-import org.estatio.dom.WithReferenceUnique;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
@@ -39,6 +35,11 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(

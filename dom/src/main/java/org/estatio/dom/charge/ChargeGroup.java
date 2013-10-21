@@ -77,16 +77,16 @@ public class ChargeGroup
 
     // //////////////////////////////////////
 
-    private String description;
+    private String name;
 
     @javax.jdo.annotations.Column(allowsNull="false")
     @Title(sequence = "2", prepend = "-")
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(final String description) {
-        this.description = description;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     // //////////////////////////////////////

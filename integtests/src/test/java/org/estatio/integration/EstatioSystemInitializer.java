@@ -17,17 +17,6 @@
 package org.estatio.integration;
 
 import org.apache.log4j.Level;
-
-import org.apache.isis.core.commons.config.IsisConfiguration;
-import org.apache.isis.core.commons.config.IsisConfigurationDefault;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.wrapper.WrapperFactoryDefault;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
-import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
-import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
-
 import org.estatio.api.Api;
 import org.estatio.app.InvoiceSummaries;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -39,6 +28,7 @@ import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.registration.contributed.FixedAssetRegistrationContributions;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -59,8 +49,8 @@ import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.UnitsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
@@ -80,17 +70,29 @@ import org.estatio.services.clock.ClockService;
 import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
+import org.apache.isis.core.commons.config.IsisConfiguration;
+import org.apache.isis.core.commons.config.IsisConfigurationDefault;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.wrapper.WrapperFactoryDefault;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
+
 /**
- * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on the current thread,
- * initialized with Estatio's domain services and with {@link EstatioRefDataObjectsFixture reference data fixture}. 
+ * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on
+ * the current thread, initialized with Estatio's domain services and with
+ * {@link EstatioRefDataObjectsFixture reference data fixture}.
  */
 public class EstatioSystemInitializer {
-    
-    private EstatioSystemInitializer(){}
+
+    private EstatioSystemInitializer() {
+    }
 
     public static IsisSystemForTest initIsft() {
         IsisSystemForTest isft = IsisSystemForTest.getElseNull();
-        if(isft == null) {
+        if (isft == null) {
             isft = new EstatioIntegTestBuilder().build().setUpSystem();
             IsisSystemForTest.set(isft);
         }
@@ -105,60 +107,62 @@ public class EstatioSystemInitializer {
             with(testConfiguration());
             with(new DataNucleusPersistenceMechanismInstaller());
             withServices(
-                    new RegisterEntities(), 
-                    new WrapperFactoryDefault(), 
-                    new Countries(), 
-                    new InvoiceSummaries(), 
-                    new States(), 
-                    new StateContributions(), 
-                    new Currencies(), 
-                    new Indices(), 
-                    new IndexBases(), 
-                    new IndexValues(), 
-                    new FixedAssets(), 
-                    new Properties(), 
-                    new FixedAssetRoles(), 
-                    new UnitsForLease(), 
-                    new Parties(), 
-                    new Persons(), 
-                    new Organisations(), 
-                    new Agreements(), 
+                    new RegisterEntities(),
+                    new WrapperFactoryDefault(),
+                    new Countries(),
+                    new InvoiceSummaries(),
+                    new States(),
+                    new StateContributions(),
+                    new Currencies(),
+                    new Indices(),
+                    new IndexBases(),
+                    new IndexValues(),
+                    new FixedAssets(),
+                    new Properties(),
+                    new FixedAssetRoles(),
+                    new UnitsForLease(),
+                    new Parties(),
+                    new Persons(),
+                    new Organisations(),
+                    new Agreements(),
                     new AgreementTypes(),
                     new AgreementRoles(),
                     new AgreementRoleCommunicationChannels(),
-                    new AgreementRoleCommunicationChannelTypes(), 
-                    new AgreementRoleTypes(), 
-                    new Leases(), 
-                    new LeaseTerms(), 
-                    new LeaseItems(), 
-                    new Occupancies(), 
-                    new Invoices(), 
-                    new InvoiceNumeratorContributions(), 
-                    new InvoiceItemsForLease(), 
+                    new AgreementRoleCommunicationChannelTypes(),
+                    new AgreementRoleTypes(),
+                    new Leases(),
+                    new LeaseTerms(),
+                    new LeaseItems(),
+                    new Occupancies(),
+                    new Invoices(),
+                    new InvoiceNumeratorContributions(),
+                    new InvoiceItemsForLease(),
                     new CommunicationChannels(),
                     new CommunicationChannelContributions(),
                     new PostalAddresses(),
                     new EmailAddresses(),
                     new PhoneOrFaxNumbers(),
-                    new Taxes(), 
-                    new TaxRates(), 
-                    //new Tags() ... instead, UnitSizes, Sectors, Activities and Brands
+                    new Taxes(),
+                    new TaxRates(),
+                    // new Tags() ... instead, UnitSizes, Sectors, Activities
+                    // and Brands
                     new UnitSizes(),
                     new Sectors(),
                     new Activities(),
                     new Brands(),
-                    new BookmarkServiceForEstatio(), 
+                    new BookmarkServiceForEstatio(),
                     new Charges(),
-                    new ChargeGroups(), 
-                    new FinancialAccounts(), 
-                    new Numerators(), 
-                    new ClockService(), 
-                    new Api(), 
-                    new IsisJdoSupportImpl(), 
-                    new InvoiceCalculationService(), 
-                    new ApplicationSettingsServiceForEstatio(), 
-                    new EstatioSettingsService(), 
+                    new ChargeGroups(),
+                    new FinancialAccounts(),
+                    new Numerators(),
+                    new ClockService(),
+                    new Api(),
+                    new IsisJdoSupportImpl(),
+                    new InvoiceCalculationService(),
+                    new ApplicationSettingsServiceForEstatio(),
+                    new EstatioSettingsService(),
                     new FinancialAccountContributions(),
+                    new FixedAssetRegistrationContributions(),
                     new EventBusServiceJdo());
         }
 
@@ -166,17 +170,21 @@ public class EstatioSystemInitializer {
             final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
 
             testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
-            
+
             testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
 
-            
             // uncomment to use log4jdbc instead
-            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "net.sf.log4jdbc.DriverSpy"); 
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+            // "net.sf.log4jdbc.DriverSpy");
 
-//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio"); 
-//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName", "com.microsoft.sqlserver.jdbc.SQLServerDriver"); 
-//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName", "estatio"); 
-//            testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword", "estatio"); 
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
+            // "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+            // "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
+            // "estatio");
+            // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
+            // "estatio");
 
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
 

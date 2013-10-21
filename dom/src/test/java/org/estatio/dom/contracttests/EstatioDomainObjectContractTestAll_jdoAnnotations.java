@@ -37,9 +37,6 @@ import javax.jdo.annotations.Version;
 import org.junit.Test;
 import org.reflections.Reflections;
 
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.core.commons.authentication.AnonymousSession;
-
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.EstatioTransactionalObject;
@@ -115,14 +112,6 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                 
             }
             
-            if (EstatioRefDataObject.class.isAssignableFrom(subtype)) {
-                // must have @Immutable
-                final Immutable version = subtype.getAnnotation(Immutable.class);
-                assertThat("Class " + subtype.getName() + " inherits from EstatioRefDataObject "
-                        + "but is not annotated with @Immutable",
-                        version, is(not(nullValue())));
-            }
-
             if (subtype.getSuperclass().equals(EstatioTransactionalObject.class)) {
                 // must have a @Version(..., column="version")
                 final Version version = getAnnotationOfTypeOfItsSupertypes(subtype, Version.class);

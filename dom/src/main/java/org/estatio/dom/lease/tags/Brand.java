@@ -18,42 +18,33 @@
  */
 package org.estatio.dom.lease.tags;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Brand_name_UNQ", members="name")
-})
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.Unique(name = "Brand_name_UNQ", members = "name")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.lease.tags.Brand "
-                    + "WHERE name == :name"),
-    @javax.jdo.annotations.Query(
-            name = "findUniqueNames", language = "JDOQL", 
-            value = "SELECT name "
-                    + "FROM org.estatio.dom.lease.tags.Brand") 
+        @javax.jdo.annotations.Query(
+                name = "findByName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.tags.Brand "
+                        + "WHERE name == :name"),
+        @javax.jdo.annotations.Query(
+                name = "findUniqueNames", language = "JDOQL",
+                value = "SELECT name "
+                        + "FROM org.estatio.dom.lease.tags.Brand")
 })
-@Immutable
-public class Brand 
-        extends EstatioRefDataObject<Brand> 
+@Bounded
+public class Brand
+        extends EstatioRefDataObject<Brand>
         implements WithNameUnique, WithNameComparable<Brand> {
 
     public Brand() {
@@ -64,7 +55,7 @@ public class Brand
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title
     public String getName() {
         return name;

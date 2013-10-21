@@ -153,13 +153,13 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
         Assert.assertNotNull(chargeGroup);
         assertThat(chargeGroup.getReference(), is("APICHARGEGROUP"));
-        assertThat(chargeGroup.getDescription(), is("APICHARGEGROUP"));
+        assertThat(chargeGroup.getName(), is("APICHARGEGROUP"));
 
         final Charge charge = charges.findCharge("APICHARGEREF");
         Assert.assertNotNull(charge);
         assertThat(charge.getReference(), is("APICHARGEREF"));
         assertThat(charge.getCode(), is("APICHARGECODE"));
-        assertThat(charge.getDescription(), is("API CHARGE"));
+        assertThat(charge.getName(), is("API CHARGE"));
         assertThat(charge.getTax(), is(tax));
         assertThat(charge.getGroup(), is(chargeGroup));
     }
@@ -205,7 +205,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t05_putLeaseUnitWorks() throws Exception {
-        api.putLeaseUnit("APILEASE", "APIUNIT", START_DATE, null, null, null, "APISIZE", "ABIBRAND", "APISECTOR", "APIACTIVITY");
+        api.putOccupancy("APILEASE", "APIUNIT", START_DATE, null, null, null, "APISIZE", "ABIBRAND", "APISECTOR", "APIACTIVITY", "YES", "YES", "YES");
         Lease l = leases.findLeaseByReference("APILEASE");
         Unit u = units.findUnitByReference("APIUNIT");
         Assert.assertNotNull(leaseUnits.findByLeaseAndUnitAndStartDate(l, u, START_DATE));

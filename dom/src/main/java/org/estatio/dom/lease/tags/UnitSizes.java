@@ -25,6 +25,7 @@ import javax.jdo.Query;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -50,5 +51,14 @@ public class UnitSizes extends EstatioDomainService<UnitSize> {
         return uniqueMatch("findByName", "name", name);
     }
 
+    @Programmatic
+    public UnitSize findOrCreate(final String name) {
+        UnitSize unitSize = findByName(name);
+        if (unitSize == null) {
+            unitSize = newTransientInstance(UnitSize.class);
+            unitSize.setName(name);
+        }
+        return unitSize;
+    }
 
 }

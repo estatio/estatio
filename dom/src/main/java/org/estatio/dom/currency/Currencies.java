@@ -48,17 +48,17 @@ public class Currencies extends EstatioDomainService<Currency> {
     @MemberOrder(name="Other", sequence = "currencies.2")
     public List<Currency> newCurrency(
             final @Named("Reference") String reference, 
-            final @Named("Description") @Optional String description) {
-        createCurrency(reference, description);
+            final @Named("Name") @Optional String name) {
+        createCurrency(reference, name);
         return allCurrencies();
     }
 
     // //////////////////////////////////////
     
-    private Currency createCurrency(final String reference, final String description) {
+    private Currency createCurrency(final String reference, final String name) {
         final Currency currency = newTransientInstance();
         currency.setReference(reference);
-        currency.setDescription(description);
+        currency.setName(name);
         persist(currency);
         return currency;
     }

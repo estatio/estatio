@@ -32,7 +32,6 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
@@ -52,18 +51,16 @@ import org.estatio.dom.lease.tags.UnitSizes;
 import org.estatio.dom.tag.Taggable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Occupancy_lease_unit_startDate_UNQ",
-            members = { "lease", "unit", "startDate" })
-})
+@javax.jdo.annotations.Unique(
+        name = "Occupancy_lease_unit_startDate_UNQ",
+        members = { "lease", "unit", "startDate" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
@@ -80,8 +77,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& unit == :unit "
                         + "&& endDate == :endDate")
 })
-public class Occupancy 
-        extends EstatioTransactionalObject<Occupancy, Status> 
+public class Occupancy
+        extends EstatioTransactionalObject<Occupancy, Status>
         implements WithIntervalMutable<Occupancy>, Taggable {
 
     public Occupancy() {
@@ -102,7 +99,7 @@ public class Occupancy
 
     private Status status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public Status getStatus() {
         return status;
@@ -116,7 +113,7 @@ public class Occupancy
 
     private Lease lease;
 
-    @javax.jdo.annotations.Column(name = "leaseId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -132,7 +129,7 @@ public class Occupancy
 
     private UnitForLease unit;
 
-    @javax.jdo.annotations.Column(name = "unitId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
     @Title(sequence = "2", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
@@ -149,8 +146,8 @@ public class Occupancy
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
+    @Disabled(reason = "Change using action")
     @Optional
-    @Disabled(reason="Change using ")
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -164,7 +161,7 @@ public class Occupancy
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Disabled
+    @Disabled(reason = "Change using action")
     @Optional
     public LocalDate getEndDate() {
         return endDate;
@@ -177,6 +174,7 @@ public class Occupancy
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<Occupancy> changeDates = new WithIntervalMutable.Helper<Occupancy>(this);
+
     WithIntervalMutable.Helper<Occupancy> getChangeDates() {
         return changeDates;
     }
@@ -236,14 +234,12 @@ public class Occupancy
         return getInterval().contains(localDate);
     }
 
-
     // //////////////////////////////////////
-
 
     private UnitSize unitSize;
 
-    @javax.jdo.annotations.Column(name = "unitSizeId", allowsNull="true")
-    @Hidden
+    @Disabled(reason = "Change using action")
+    @javax.jdo.annotations.Column(name = "unitSizeId", allowsNull = "true")
     public UnitSize getUnitSize() {
         return unitSize;
     }
@@ -252,45 +248,12 @@ public class Occupancy
         this.unitSize = unitSize;
     }
 
-    @javax.jdo.annotations.NotPersistent
-    @NotPersisted
-    @Disabled
-    @Named("UnitSize")
-    public String getUnitSizeName() {
-        return getUnitSize() != null? getUnitSize().getName(): null;
-    }
-    public void setUnitSizeName(final String unitSizeName) {
-        if(unitSizeName == null) {
-            setUnitSize(null);
-            return;
-        }
-        UnitSize unitSize = unitSizes.findByName(unitSizeName);
-        if(unitSize == null) {
-            unitSize = newTransientInstance(UnitSize.class);
-            unitSize.setName(unitSizeName);
-            setUnitSize(unitSize);
-            persistIfNotAlready(unitSize);
-        }
-        setUnitSize(unitSize);
-    }
-
-    public Occupancy newUnitSize(final @Named("UnitSize") @Optional String unitSizeName) {
-        setUnitSizeName(unitSizeName);
-        return this;
-    }
-    public String disableNewUnitSize(
-            final String unitSizeName) {
-        return isLocked() ? "Cannot modify when locked" : null;
-    }
-    
-    
     // //////////////////////////////////////
-    
-    
+
     private Sector sector;
 
-    @javax.jdo.annotations.Column(name = "sectorId", allowsNull="true")
-    @Hidden
+    @Disabled(reason = "Change using action")
+    @javax.jdo.annotations.Column(name = "sectorId", allowsNull = "true")
     public Sector getSector() {
         return sector;
     }
@@ -299,216 +262,178 @@ public class Occupancy
         this.sector = sector;
     }
 
-    @javax.jdo.annotations.NotPersistent
-    @NotPersisted
-    @Disabled
-    @Named("Sector")
-    public String getSectorName() {
-        return getSector() != null? getSector().getName(): null;
-    }
-    public void setSectorName(final String sectorName) {
-        if(sectorName == null) {
-            setSector(null);
-            setActivityName(null);
-            return;
-        }
-        Sector sector = sectors.findByName(sectorName);
-        if(sector == null) {
-            sector = newTransientInstance(Sector.class);
-            sector.setName(sectorName);
-            setSector(sector);
-            persistIfNotAlready(sector);
-        }
-        setSector(sector);
-    }
-
     // //////////////////////////////////////
 
-
     private Activity activity;
-    
-    @javax.jdo.annotations.Column(name = "activityId", allowsNull="true")
-    @Hidden
+
+    @Disabled(reason = "Change using action")
+    @javax.jdo.annotations.Column(name = "activityId", allowsNull = "true")
     public Activity getActivity() {
         return activity;
     }
-    
+
     public void setActivity(final Activity activity) {
         this.activity = activity;
-    }
-    
-    @javax.jdo.annotations.NotPersistent
-    @NotPersisted
-    @Named("Activity")
-    @Disabled
-    public String getActivityName() {
-        return getActivity() != null? getActivity().getName(): null;
-    }
-    public void setActivityName(final String activityName) {
-        if(activityName == null) {
-            setActivity(null);
-            return;
-        }
-        Activity activity = activities.findBySectorAndName(getSector(), activityName);
-        if(activity == null) {
-            activity = newTransientInstance(Activity.class);
-            activity.setSector(getSector());
-            activity.setName(activityName);
-            setActivity(activity);
-            persistIfNotAlready(activity);
-        }
-        setActivity(activity);
-    }
-    
-    @DescribedAs("Assign to new sector and activity")
-    public Occupancy newSector(
-            final @Named("Sector") String sectorName, 
-            final @Named("Activity") String activityName) {
-        setSectorName(sectorName);
-        setActivityName(activityName);
-        return this;
-    }
-    public String disableNewSector(
-            final String sectorName,
-            final String activityName) {
-        return isLocked() ? "Cannot modify when locked" : null;
-    }
-    
-    @DescribedAs("Assign to new activity (in an existing sector)")
-    public Occupancy newActivity(
-            final @Named("Sector") String sectorName,
-            final @Named("Activity") String activityName) {
-        setSectorName(sectorName);
-        setActivityName(activityName);
-        return this;
-    }
-    public String disableNewActivity(
-            final String sectorName,
-            final String activityName) {
-        return isLocked() ? "Cannot modify when locked" : null;
-    }
-    public List<String> choices0NewActivity() {
-        return sectors.findUniqueNames();
     }
 
     // //////////////////////////////////////
 
     private Brand brand;
-    
-    @javax.jdo.annotations.Column(name = "brandId", allowsNull="true")
-    @Hidden
+
+    @Disabled(reason = "Change using action")
+    @javax.jdo.annotations.Column(name = "brandId", allowsNull = "true")
     public Brand getBrand() {
         return brand;
     }
-    
+
     public void setBrand(final Brand brand) {
         this.brand = brand;
     }
-    
-    @javax.jdo.annotations.NotPersistent
-    @NotPersisted
-    @Disabled
-    @Named("Brand")
-    public String getBrandName() {
-        return getBrand() != null? getBrand().getName(): null;
-    }
-    public void setBrandName(final String brandName) {
-        if(brandName == null) {
-            setBrand(null);
-            return;
-        }
-        Brand brand = brands.findByName(brandName);
-        if(brand == null) {
-            brand = newTransientInstance(Brand.class);
-            brand.setName(brandName);
-            setBrand(brand);
-            persistIfNotAlready(brand);
-        }
-        setBrand(brand);
-    }
-    
-    public Occupancy newBrand(final @Named("Brand") @Optional String brandName) {
-        setBrandName(brandName);
-        return this;
-    }
-    public String disableNewBrand(
-            final String brandName) {
-        return isLocked() ? "Cannot modify when locked" : null;
-    }
-
 
     // //////////////////////////////////////
-    
+
     @DescribedAs("Update unit size, sector, activity and/or brand")
-    public Occupancy updateTags(
-            final @Named("Unit size") @Optional String unitSizeName, 
-            final @Named("Sector") @Optional String sectorName, 
-            final @Named("Activity") @Optional String activityName,
-            final @Named("Brand") @Optional String brandName) {
-        setUnitSizeName(unitSizeName);
-        setSectorName(sectorName);
-        setActivityName(activityName);
-        setBrandName(brandName);
+    public Occupancy updateClassification(
+            final @Named("Unit size") @Optional UnitSize unitSize,
+            final @Named("Sector") @Optional Sector sector,
+            final @Named("Activity") @Optional Activity activity,
+            final @Named("Brand") @Optional Brand brand) {
+        setUnitSize(unitSize);
+        setSector(sector);
+        setActivity(activity);
+        setBrand(brand);
         return this;
     }
-    public String disableUpdateTags(
-            final String unitSizeName, 
-            final String sectorName, 
-            final String activityName,
-            final String brandName) {
-        return isLocked() ? "Cannot modify when locked" : null;
-    }
-    public String default0UpdateTags() {
-        return getUnitSizeName();
-    }
-    public List<String> choices0UpdateTags() {
-        return unitSizes.findUniqueNames();
-    }
-    public String default1UpdateTags() {
-        return getSectorName();
-    }
-    public List<String> choices1UpdateTags() {
-        return sectors.findUniqueNames();
-    }
-    public String default2UpdateTags() {
-        return getActivityName();
-    }
-    public List<String> choices2UpdateTags(
-            final String unitSizeName, 
-            final String sectorName) {
-        final Sector sector = sectors.findByName(sectorName);
-        return activities.findUniqueNames(sector);
-    }
-    public String default3UpdateTags() {
-        return getBrandName();
-    }
-    public List<String> choices3UpdateTags() {
-        return brands.findUniqueNames();
+
+    public List<Activity> choices2UpdateClassification(
+            final UnitSize unitSize,
+            final Sector sector) {
+        return activities.findBySector(sector);
     }
 
-    
     // //////////////////////////////////////
 
+    @Programmatic
+    public Occupancy setBrandName(final String name) {
+        setBrand(brands.findOrCreate(name));
+        return this;
+    }
+
+    @Programmatic
+    public Occupancy setUnitSizeName(final String name) {
+        setUnitSize(unitSizes.findOrCreate(name));
+        return this;
+    }
+
+    @Programmatic
+    public Occupancy setSectorName(final String name) {
+        setSector(sectors.findOrCreate(name));
+        return this;
+    }
+
+    @Programmatic
+    public Occupancy setActivityName(final String name) {
+        setActivity(activities.findOrCreate(getSector(), name));
+        return this;
+    }
+
+    // //////////////////////////////////////
+
+    private OccupancyReportingType reportTurnover;
+
+    @Disabled(reason = "Change using action")
+    @Hidden(where = Where.PARENTED_TABLES)
+    public OccupancyReportingType getReportTurnover() {
+        return reportTurnover;
+    }
+
+    public void setReportTurnover(OccupancyReportingType reportTurnover) {
+        this.reportTurnover = reportTurnover;
+    }
+
+    // //////////////////////////////////////
+
+    private OccupancyReportingType reportRent;
+
+    @Disabled(reason = "Change using action")
+    @Hidden(where = Where.PARENTED_TABLES)
+    public OccupancyReportingType getReportRent() {
+        return reportRent;
+    }
+
+    public void setReportRent(OccupancyReportingType reportRent) {
+        this.reportRent = reportRent;
+    }
+
+    // //////////////////////////////////////
+
+    private OccupancyReportingType reportOCR;
+
+    @Disabled(reason = "Change using action")
+    @Hidden(where = Where.PARENTED_TABLES)
+    public OccupancyReportingType getReportOCR() {
+        return reportOCR;
+    }
+
+    public void setReportOCR(OccupancyReportingType reportOCR) {
+        this.reportOCR = reportOCR;
+    }
+
+    // //////////////////////////////////////
+
+    public Occupancy updateReportingOptions(
+            @Named("Report Turnover") OccupancyReportingType reportTurnover,
+            @Named("Report Rent") OccupancyReportingType reportRent,
+            @Named("Report OCR") OccupancyReportingType reportOCR) {
+        setReportTurnover(reportTurnover);
+        setReportRent(reportRent);
+        setReportOCR(reportOCR);
+        return this;
+    }
+
+    // //////////////////////////////////////
 
     private UnitSizes unitSizes;
+
     public final void injectUnitSizes(final UnitSizes unitSizes) {
         this.unitSizes = unitSizes;
     }
-    
+
     private Brands brands;
+
     public final void injectBrands(final Brands brands) {
         this.brands = brands;
     }
-    
+
     private Sectors sectors;
+
     public final void injectSectors(final Sectors sectors) {
         this.sectors = sectors;
     }
 
     private Activities activities;
+
     public final void injectActivities(final Activities activities) {
         this.activities = activities;
     }
-    
+
+    // //////////////////////////////////////
+
+    public enum OccupancyReportingType {
+        NO("Don't report"),
+        YES("Report"),
+        SEPARATE("Report but exclude from main calculations");
+
+        private final String title;
+
+        private OccupancyReportingType(final String title) {
+            this.title = title;
+        }
+
+        public String title() {
+            return title;
+        }
+
+    }
 
 }

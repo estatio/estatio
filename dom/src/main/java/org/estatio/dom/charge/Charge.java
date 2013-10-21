@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithCodeUnique;
-import org.estatio.dom.WithDescriptionGetter;
+import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.tax.Tax;
 
@@ -53,7 +53,7 @@ import org.estatio.dom.tax.Tax;
 @Immutable
 public class Charge 
         extends EstatioRefDataObject<Charge> 
-        implements WithReferenceUnique, WithCodeUnique, WithDescriptionGetter {
+        implements WithReferenceUnique, WithCodeUnique, WithNameGetter {
 
     public Charge() {
         super("code");
@@ -102,15 +102,15 @@ public class Charge
 
     // //////////////////////////////////////
 
-    private String description;
+    private String name;
 
     @javax.jdo.annotations.Column(allowsNull="false")
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(final String description) {
-        this.description = description;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     // //////////////////////////////////////

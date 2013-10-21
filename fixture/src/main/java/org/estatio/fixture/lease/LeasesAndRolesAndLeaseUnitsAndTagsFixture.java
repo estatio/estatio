@@ -42,33 +42,36 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
     public void install() {
 
         manager = parties.findPartyByReference("JDOE");
-        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true);
-        createLease("OXF-MEDIAX-002", "Meadiax Lease", "OXF-002", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true);
-        createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
-        createLease("OXF-PRET-004", "Pret lease", "OXF-004", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false);
+        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "Topmodel", "FASHION", "WOMEN", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true);
+        createLease("OXF-MEDIAX-002", "Mediax Lease", "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true);
+        createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
+        createLease("OXF-PRET-004", "Pret lease", "OXF-004", "Pret", "FASHION", "ALL", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false);
     }
 
     public Lease createLease(
-            String reference, String name, 
-            String unitReference, 
-            String landlordReference, String tenantReference, 
-            LocalDate startDate, LocalDate endDate, 
+            String reference, String name,
+            String unitReference,
+            String brand,
+            String sector,
+            String activity,
+            String landlordReference, String tenantReference,
+            LocalDate startDate, LocalDate endDate,
             boolean createManagerRole, boolean createLeaseUnitAndTags) {
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
         Lease lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
 
-        if(createManagerRole) {
+        if (createManagerRole) {
             lease.newRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
         }
-        if(createLeaseUnitAndTags) {
-            Occupancy lu = leaseUnits.newOccupancy(lease, unit);
-            lu.setBrandName(tenantReference);
-            lu.setSectorName("OTHER");
-            lu.setActivityName("OTHER");
+        if (createLeaseUnitAndTags) {
+            Occupancy occupancy = occupancies.newOccupancy(lease, unit);
+            occupancy.setBrandName(brand);
+            occupancy.setSectorName(sector);
+            occupancy.setActivityName(activity);
         }
-        
+
         if (leases.findLeaseByReference(reference) == null) {
             throw new RuntimeException("could not find lease reference='" + reference + "'");
         }
@@ -76,9 +79,8 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
     }
 
     private Party findPartyByReferenceOrNameElseNull(String partyReference) {
-        return partyReference != null? parties.findPartyByReference(partyReference): null;
+        return partyReference != null ? parties.findPartyByReference(partyReference) : null;
     }
-
 
     private Units<Unit> units;
 
@@ -92,10 +94,10 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
         this.leases = leases;
     }
 
-    private Occupancies leaseUnits;
+    private Occupancies occupancies;
 
     public void injectLeaseUnits(final Occupancies leaseUnits) {
-        this.leaseUnits = leaseUnits;
+        this.occupancies = leaseUnits;
     }
 
     private Parties parties;

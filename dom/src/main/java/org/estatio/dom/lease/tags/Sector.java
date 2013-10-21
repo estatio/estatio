@@ -21,42 +21,36 @@ package org.estatio.dom.lease.tags;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioRefDataObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
-@javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Sector_name_UNQ", members="name")
-})
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@javax.jdo.annotations.Unique(
+        name = "Sector_name_UNQ", members = "name")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.lease.tags.Sector "
-                    + "WHERE name == :name"),
-                    @javax.jdo.annotations.Query(
-                            name = "findUniqueNames", language = "JDOQL", 
-                            value = "SELECT name "
-                                    + "FROM org.estatio.dom.lease.tags.Sector") 
+        @javax.jdo.annotations.Query(
+                name = "findByName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.tags.Sector "
+                        + "WHERE name == :name"),
+        @javax.jdo.annotations.Query(
+                name = "findUniqueNames", language = "JDOQL",
+                value = "SELECT name "
+                        + "FROM org.estatio.dom.lease.tags.Sector")
 })
-@Immutable
-public class Sector 
-        extends EstatioRefDataObject<Sector> 
+@Bounded
+public class Sector
+        extends EstatioRefDataObject<Sector>
         implements WithNameUnique, WithNameComparable<Sector> {
 
     public Sector() {
@@ -67,7 +61,7 @@ public class Sector
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title
     public String getName() {
         return name;
@@ -76,9 +70,8 @@ public class Sector
     public void setName(final String name) {
         this.name = name;
     }
-    
-    // //////////////////////////////////////
 
+    // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "sector")
     private SortedSet<Activity> activities = new TreeSet<Activity>();

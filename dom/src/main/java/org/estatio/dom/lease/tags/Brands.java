@@ -25,6 +25,7 @@ import javax.jdo.Query;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -49,6 +50,15 @@ public class Brands extends EstatioDomainService<Brand> {
     public Brand findByName(final String name) {
         return firstMatch("findByName", "name", name);
     }
-
+    
+    @Programmatic
+    public Brand findOrCreate(final String name) {
+        Brand brand = findByName(name);
+        if (brand == null) {
+            brand = newTransientInstance(Brand.class);
+            brand.setName(name);
+        }
+        return brand;
+    }
     
 }

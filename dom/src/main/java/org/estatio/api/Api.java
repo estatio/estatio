@@ -80,6 +80,7 @@ import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.Occupancy.OccupancyReportingType;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Organisations;
@@ -458,7 +459,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putLeaseUnit(
+    public void putOccupancy(
             @Named("leaseReference") String leaseReference,
             @Named("unitReference") @Optional String unitReference,
             @Named("startDate") @Optional LocalDate startDate,
@@ -468,24 +469,30 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("size") @Optional String size,
             @Named("brand") @Optional String brand,
             @Named("sector") @Optional String sector,
-            @Named("activity") @Optional String activity) {
+            @Named("activity") @Optional String activity,
+            @Named("reportTurnver") @Optional String reportTurnover,
+            @Named("reportRent") @Optional String reportRent,
+            @Named("reportOCR") @Optional String reportOCR) {
         Lease lease = fetchLease(leaseReference);
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         if (unitReference != null && unit == null) {
             throw new ApplicationException(String.format("Unit with reference %s not found.", unitReference));
         }
-        Occupancy leaseUnit = leaseUnits.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
-        if (leaseUnit == null) {
-            leaseUnit = lease.occupy(unit);
-            leaseUnit.setStartDate(startDate);
+        Occupancy occupancy = occupancies.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
+        if (occupancy == null) {
+            occupancy = lease.occupy(unit);
+            occupancy.setStartDate(startDate);
         }
 
-        leaseUnit.setStartDate(startDate);
-        leaseUnit.setEndDate(endDate);
-        leaseUnit.setUnitSizeName(size);
-        leaseUnit.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null);
-        leaseUnit.setSectorName(sector);
-        leaseUnit.setActivityName(activity);
+        occupancy.setStartDate(startDate);
+        occupancy.setEndDate(endDate);
+        occupancy.setUnitSizeName(size);
+        occupancy.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null);
+        occupancy.setSectorName(sector);
+        occupancy.setActivityName(activity);
+        occupancy.setReportTurnover(reportTurnover != null ? OccupancyReportingType.valueOf(reportTurnover): null);
+        occupancy.setReportRent(reportRent != null ? OccupancyReportingType.valueOf(reportRent): null);
+        occupancy.setReportOCR(reportOCR != null ? OccupancyReportingType.valueOf(reportOCR): null);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -865,10 +872,10 @@ public class Api extends AbstractFactoryAndRepository {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    private Occupancies leaseUnits;
+    private Occupancies occupancies;
 
     public void injectLeaseUnits(final Occupancies leaseUnits) {
-        this.leaseUnits = leaseUnits;
+        this.occupancies = leaseUnits;
     }
 
     private Taxes taxes;

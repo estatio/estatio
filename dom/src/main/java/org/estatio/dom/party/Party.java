@@ -31,17 +31,6 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import org.estatio.dom.EstatioTransactionalObject;
-import org.estatio.dom.Status;
-import org.estatio.dom.WithNameComparable;
-import org.estatio.dom.WithReferenceUnique;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
-import org.estatio.dom.financial.FinancialConstants;
-import org.estatio.dom.lease.LeaseConstants;
-
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
@@ -52,6 +41,17 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.Status;
+import org.estatio.dom.WithNameComparable;
+import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
+import org.estatio.dom.financial.FinancialConstants;
+import org.estatio.dom.lease.LeaseConstants;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(

@@ -31,7 +31,7 @@ public final class LocalDateInterval {
     private long endInstant;
     private static final IntervalEnding PERSISTENT_ENDING = IntervalEnding.INCLUDING_END_DATE;
 
-    private enum IntervalEnding {
+    public enum IntervalEnding {
         INCLUDING_END_DATE, EXCLUDING_END_DATE
     }
 
@@ -41,15 +41,6 @@ public final class LocalDateInterval {
 
     public static LocalDateInterval including(final LocalDate startDate, final LocalDate endDate) {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder =
-                new StringBuilder(
-                        startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
-                        endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
-        return builder.toString();
     }
 
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate, final IntervalEnding ending) {
@@ -172,9 +163,24 @@ public final class LocalDateInterval {
         return interval.asInterval().contains(asInterval());
     }
 
+    /**
+     * The duration in days
+     * 
+     * @return
+     */
     public int days() {
         Period p = new Period(asInterval(), PeriodType.days());
         return p.getDays();
+    }
+    
+    
+    @Override
+    public String toString() {
+        StringBuilder builder =
+                new StringBuilder(
+                        startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
+                                endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
+        return builder.toString();
     }
 
 }

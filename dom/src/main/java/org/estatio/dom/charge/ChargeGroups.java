@@ -59,7 +59,7 @@ public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
     public ChargeGroup createChargeGroup(final String reference, final String description) {
         final ChargeGroup chargeGroup = newTransientInstance();
         chargeGroup.setReference(reference);
-        chargeGroup.setDescription(ValueUtils.coalesce(description, reference));
+        chargeGroup.setName(ValueUtils.coalesce(description, reference));
         persist(chargeGroup);
         return chargeGroup;
     }

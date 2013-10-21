@@ -50,11 +50,11 @@ public class Charges extends EstatioDomainService<Charge> {
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.2")
     public List<Charge> newCharge(
             final @Named("Reference") String reference, 
-            final @Named("Description") String description, 
+            final @Named("Name") String name, 
             final @Named("Code") String code, 
             final Tax tax, 
             final ChargeGroup chargeGroup) {
-        createCharge(reference, description, code, tax, chargeGroup);
+        createCharge(reference, name, code, tax, chargeGroup);
         return allCharges();
     }
 
@@ -63,7 +63,7 @@ public class Charges extends EstatioDomainService<Charge> {
     @Programmatic
     public Charge createCharge(
             final String reference, 
-            final String description, 
+            final String name, 
             final String code, 
             final Tax tax, 
             final ChargeGroup chargeGroup) {
@@ -73,7 +73,7 @@ public class Charges extends EstatioDomainService<Charge> {
             charge.setReference(reference);
             persist(charge);
         }
-        charge.setDescription(description);
+        charge.setName(name);
         charge.setCode(code);
         charge.setTax(tax);
         charge.setGroup(chargeGroup);

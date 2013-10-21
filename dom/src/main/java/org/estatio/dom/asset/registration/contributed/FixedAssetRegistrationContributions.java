@@ -20,10 +20,6 @@ package org.estatio.dom.asset.registration.contributed;
 
 import java.util.List;
 
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
-
 import org.apache.isis.applib.AbstractContainedObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -31,6 +27,10 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.filter.Filter;
+
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 
 @Hidden
 public class FixedAssetRegistrationContributions extends AbstractContainedObject {

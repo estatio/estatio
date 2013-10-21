@@ -305,7 +305,7 @@ public class InvoiceCalculationService {
         LeaseItem leaseItem = leaseTerm.getLeaseItem();
         Charge charge = leaseItem.getCharge();
         invoiceItem.setCharge(charge);
-        invoiceItem.setDescription(charge.getDescription());
+        invoiceItem.setDescription(charge.getName());
         invoiceItem.setDueDate(dueDate);
         invoiceItem.setStartDate(calculationResult.frequencyInterval.startDate());
         invoiceItem.setEndDate(calculationResult.frequencyInterval.endDateExcluding());

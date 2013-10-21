@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -51,10 +52,34 @@ public class Activities extends EstatioDomainService<Activity> {
         return (List<String>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
+    @SuppressWarnings("unchecked")
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<Activity> findBySector(final Sector sector) {
+        if(sector == null) {
+            return Collections.emptyList();
+        }
+        final Query query = newQuery("SELECT FROM org.estatio.dom.lease.tags.Activity WHERE sector == :sector");
+        return (List<Activity>) query.executeWithMap(ImmutableMap.of("sector", sector));
+    }
+
+    
+    
     @Hidden
     public Activity findBySectorAndName(final Sector sector, final String name) {
         return firstMatch("findBySectorAndName", "sector", sector, "name", name);
     }
 
+    @Programmatic
+    public Activity findOrCreate(final Sector sector, String name) {
+        Activity activity = findBySectorAndName(sector, name);
+        if (activity == null) {
+            activity = newTransientInstance(Activity.class);
+            activity.setSector(sector);
+            activity.setName(name);
+        }
+        return activity;
+    }
 
+    
 }

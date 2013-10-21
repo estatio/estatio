@@ -56,7 +56,7 @@ public class LeaseUnitTest_tags extends EstatioIntegrationTest {
     public void create() throws Exception {
         final Brand brand = leaseUnit.getBrand();
         assertThat(brand, is(not(nullValue())));
-        assertThat(brand.getName(), is("TOPMODEL"));
+        assertThat(brand.getName(), is("Topmodel"));
     }
 
 }

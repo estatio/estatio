@@ -18,22 +18,13 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
-import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.lease.tags.UnitSize;
 import org.estatio.dom.lease.tags.UnitSizes;
 
@@ -51,134 +42,134 @@ public class OccupancyTest_unitSizeName {
     private Occupancy occupancy;
     private UnitSize unitSize;
     
-    @Before
-    public void setup() {
-        occupancy = new Occupancy();
-        occupancy.injectUnitSizes(mockUnitSizes);
-        occupancy.setContainer(mockContainer);
-        
-        unitSize = new UnitSize();
-        unitSize.setName("BOUTIQUE");
-    }
-
-    @Test
-    public void getUnitSizeName_whenNone() {
-        // given
-        assertThat(occupancy.getUnitSize(), is(nullValue()));
-        // then
-        assertThat(occupancy.getUnitSizeName(), is(nullValue()));
-    }
-    
-    @Test
-    public void getUnitSizeName_whenUnit() {
-        // given
-        occupancy.setUnitSize(unitSize);
-        assertThat(occupancy.getUnitSize(), is(unitSize));
-        // then
-        assertThat(occupancy.getUnitSizeName(), is("BOUTIQUE"));
-    }
-    
-    // //////////////////////////////////////
-
-
-    @Test
-    public void setUnitSizeName_whenNull() {
-        
-        // given
-        occupancy.setUnitSize(unitSize);
-        assertThat(occupancy.getUnitSize(), is(not(nullValue())));
-
-        // when
-        occupancy.setUnitSizeName(null);
-        
-        // then
-        assertThat(occupancy.getUnitSizeName(), is(nullValue()));
-        assertThat(occupancy.getUnitSize(), is(nullValue()));
-    }
-
-    @Test
-    public void setUnitSizeName_whenNotNull_alreadyExists() {
-        
-        // given
-        occupancy.setUnitSize(unitSize);
-        assertThat(occupancy.getUnitSize(), is(not(nullValue())));
-
-        // when
-        final UnitSize existingUnitSize = new UnitSize();
-        existingUnitSize.setName("LARGE");
-        context.checking(new Expectations() {
-            {
-                oneOf(mockUnitSizes).findByName("LARGE");
-                will(returnValue(existingUnitSize));
-            }
-        });
-        
-        occupancy.setUnitSizeName("LARGE");
-        
-        // then
-        assertThat(occupancy.getUnitSizeName(), is("LARGE"));
-        assertThat(occupancy.getUnitSize(), is(existingUnitSize));
-    }
-    
-    @Test
-    public void setUnitSizeName_whenNotNull_doesNotExist() {
-        
-        // given
-        occupancy.setUnitSize(unitSize);
-        assertThat(occupancy.getUnitSize(), is(not(nullValue())));
-        
-        // when
-        final UnitSize newUnitSize = new UnitSize();
-        context.checking(new Expectations() {
-            {
-                oneOf(mockUnitSizes).findByName("LARGE");
-                will(returnValue(null));
-                
-                oneOf(mockContainer).newTransientInstance(UnitSize.class);
-                will(returnValue(newUnitSize));
-                
-                oneOf(mockContainer).persistIfNotAlready(newUnitSize);
-            }
-        });
-        
-        occupancy.setUnitSizeName("LARGE");
-        
-        // then
-        assertThat(occupancy.getUnitSizeName(), is("LARGE"));
-        assertThat(occupancy.getUnitSize(), is(newUnitSize));
-    }
-    
-    // //////////////////////////////////////
-
-    @Test
-    public void newUnitSize() {
-        // given
-        final String[] arg = new String[1];
-        occupancy = new Occupancy() {
-            @Override
-            public void setUnitSizeName(String unitSizeName) {
-                arg[0] = unitSizeName;
-            }
-        };
-        // when
-        occupancy.newUnitSize("LARGE");
-        // then (delegates to the setUnitSize)
-        assertThat(arg[0], is("LARGE"));
-    }
-
-    // //////////////////////////////////////
-
-    @Test
-    public void disableNewUnitSize_whenLocked() {
-        occupancy.setLockable(Status.LOCKED);
-        assertThat(occupancy.disableNewUnitSize(null), is("Cannot modify when locked"));
-    }
-
-    @Test
-    public void disableNewUnitSize_whenUnlocked() {
-        occupancy.setLockable(Status.UNLOCKED);
-        assertThat(occupancy.disableNewUnitSize(null), is(nullValue()));
-    }
-    
-    
+//    @Before
+//    public void setup() {
+//        occupancy = new Occupancy();
+//        occupancy.injectUnitSizes(mockUnitSizes);
+//        occupancy.setContainer(mockContainer);
+//        
+//        unitSize = new UnitSize();
+//        unitSize.setName("BOUTIQUE");
+//    }
+//
+//    @Test
+//    public void getUnitSizeName_whenNone() {
+//        // given
+//        assertThat(occupancy.getUnitSize(), is(nullValue()));
+//        // then
+//        assertThat(occupancy.getUnitSizeName(), is(nullValue()));
+//    }
+//    
+//    @Test
+//    public void getUnitSizeName_whenUnit() {
+//        // given
+//        occupancy.setUnitSize(unitSize);
+//        assertThat(occupancy.getUnitSize(), is(unitSize));
+//        // then
+//        assertThat(occupancy.getUnitSizeName(), is("BOUTIQUE"));
+//    }
+//    
+//    // //////////////////////////////////////
+//
+//
+//    @Test
+//    public void setUnitSizeName_whenNull() {
+//        
+//        // given
+//        occupancy.setUnitSize(unitSize);
+//        assertThat(occupancy.getUnitSize(), is(not(nullValue())));
+//
+//        // when
+//        occupancy.setUnitSizeName(null);
+//        
+//        // then
+//        assertThat(occupancy.getUnitSizeName(), is(nullValue()));
+//        assertThat(occupancy.getUnitSize(), is(nullValue()));
+//    }
+//
+//    @Test
+//    public void setUnitSizeName_whenNotNull_alreadyExists() {
+//        
+//        // given
+//        occupancy.setUnitSize(unitSize);
+//        assertThat(occupancy.getUnitSize(), is(not(nullValue())));
+//
+//        // when
+//        final UnitSize existingUnitSize = new UnitSize();
+//        existingUnitSize.setName("LARGE");
+//        context.checking(new Expectations() {
+//            {
+//                oneOf(mockUnitSizes).findByName("LARGE");
+//                will(returnValue(existingUnitSize));
+//            }
+//        });
+//        
+//        occupancy.setUnitSizeName("LARGE");
+//        
+//        // then
+//        assertThat(occupancy.getUnitSizeName(), is("LARGE"));
+//        assertThat(occupancy.getUnitSize(), is(existingUnitSize));
+//    }
+//    
+//    @Test
+//    public void setUnitSizeName_whenNotNull_doesNotExist() {
+//        
+//        // given
+//        occupancy.setUnitSize(unitSize);
+//        assertThat(occupancy.getUnitSize(), is(not(nullValue())));
+//        
+//        // when
+//        final UnitSize newUnitSize = new UnitSize();
+//        context.checking(new Expectations() {
+//            {
+//                oneOf(mockUnitSizes).findByName("LARGE");
+//                will(returnValue(null));
+//                
+//                oneOf(mockContainer).newTransientInstance(UnitSize.class);
+//                will(returnValue(newUnitSize));
+//                
+//                oneOf(mockContainer).persistIfNotAlready(newUnitSize);
+//            }
+//        });
+//        
+//        occupancy.setUnitSizeName("LARGE");
+//        
+//        // then
+//        assertThat(occupancy.getUnitSizeName(), is("LARGE"));
+//        assertThat(occupancy.getUnitSize(), is(newUnitSize));
+//    }
+//    
+//    // //////////////////////////////////////
+//
+//    @Test
+//    public void newUnitSize() {
+//        // given
+//        final String[] arg = new String[1];
+//        occupancy = new Occupancy() {
+//            @Override
+//            public void setUnitSizeName(String unitSizeName) {
+//                arg[0] = unitSizeName;
+//            }
+//        };
+//        // when
+//        occupancy.newUnitSize("LARGE");
+//        // then (delegates to the setUnitSize)
+//        assertThat(arg[0], is("LARGE"));
+//    }
+//
+//    // //////////////////////////////////////
+//
+//    @Test
+//    public void disableNewUnitSize_whenLocked() {
+//        occupancy.setLockable(Status.LOCKED);
+//        assertThat(occupancy.disableNewUnitSize(null), is("Cannot modify when locked"));
+//    }
+//
+//    @Test
+//    public void disableNewUnitSize_whenUnlocked() {
+//        occupancy.setLockable(Status.UNLOCKED);
+//        assertThat(occupancy.disableNewUnitSize(null), is(nullValue()));
+//    }
+//    
+//    
 }

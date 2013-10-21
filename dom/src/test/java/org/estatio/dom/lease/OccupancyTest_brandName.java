@@ -18,22 +18,13 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
-import org.jmock.Expectations;
 import org.jmock.auto.Mock;
-import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Brands;
 
@@ -51,134 +42,134 @@ public class OccupancyTest_brandName {
     private Occupancy occupancy;
     private Brand brand;
     
-    @Before
-    public void setup() {
-        occupancy = new Occupancy();
-        occupancy.injectBrands(mockBrands);
-        occupancy.setContainer(mockContainer);
-        
-        brand = new Brand();
-        brand.setName("BOUTIQUE");
-    }
+//    @Before
+//    public void setup() {
+//        occupancy = new Occupancy();
+//        occupancy.injectBrands(mockBrands);
+//        occupancy.setContainer(mockContainer);
+//        
+//        brand = new Brand();
+//        brand.setName("BOUTIQUE");
+//    }
+//
+//    @Test
+//    public void getBrandName_whenNone() {
+//        // given
+//        assertThat(occupancy.getBrand(), is(nullValue()));
+//        // then
+//        assertThat(occupancy.getBrandName(), is(nullValue()));
+//    }
+//    
+//    @Test
+//    public void getBrandName_whenUnit() {
+//        // given
+//        occupancy.setBrand(brand);
+//        assertThat(occupancy.getBrand(), is(brand));
+//        // then
+//        assertThat(occupancy.getBrandName(), is("BOUTIQUE"));
+//    }
+//    
+//    // //////////////////////////////////////
+//
+//
+//    @Test
+//    public void setBrandName_whenNull() {
+//        
+//        // given
+//        occupancy.setBrand(brand);
+//        assertThat(occupancy.getBrand(), is(not(nullValue())));
+//
+//        // when
+//        occupancy.setBrandName(null);
+//        
+//        // then
+//        assertThat(occupancy.getBrandName(), is(nullValue()));
+//        assertThat(occupancy.getBrand(), is(nullValue()));
+//    }
 
-    @Test
-    public void getBrandName_whenNone() {
-        // given
-        assertThat(occupancy.getBrand(), is(nullValue()));
-        // then
-        assertThat(occupancy.getBrandName(), is(nullValue()));
-    }
-    
-    @Test
-    public void getBrandName_whenUnit() {
-        // given
-        occupancy.setBrand(brand);
-        assertThat(occupancy.getBrand(), is(brand));
-        // then
-        assertThat(occupancy.getBrandName(), is("BOUTIQUE"));
-    }
-    
-    // //////////////////////////////////////
-
-
-    @Test
-    public void setBrandName_whenNull() {
-        
-        // given
-        occupancy.setBrand(brand);
-        assertThat(occupancy.getBrand(), is(not(nullValue())));
-
-        // when
-        occupancy.setBrandName(null);
-        
-        // then
-        assertThat(occupancy.getBrandName(), is(nullValue()));
-        assertThat(occupancy.getBrand(), is(nullValue()));
-    }
-
-    @Test
-    public void setBrandName_whenNotNull_alreadyExists() {
-        
-        // given
-        occupancy.setBrand(brand);
-        assertThat(occupancy.getBrand(), is(not(nullValue())));
-
-        // when
-        final Brand existingBrand = new Brand();
-        existingBrand.setName("SUPERMAC");
-        context.checking(new Expectations() {
-            {
-                oneOf(mockBrands).findByName("SUPERMAC");
-                will(returnValue(existingBrand));
-            }
-        });
-        
-        occupancy.setBrandName("SUPERMAC");
-        
-        // then
-        assertThat(occupancy.getBrandName(), is("SUPERMAC"));
-        assertThat(occupancy.getBrand(), is(existingBrand));
-    }
-    
-    @Test
-    public void setBrandName_whenNotNull_doesNotExist() {
-        
-        // given
-        occupancy.setBrand(brand);
-        assertThat(occupancy.getBrand(), is(not(nullValue())));
-        
-        // when
-        final Brand newBrand = new Brand();
-        context.checking(new Expectations() {
-            {
-                oneOf(mockBrands).findByName("SUPERMAC");
-                will(returnValue(null));
-                
-                oneOf(mockContainer).newTransientInstance(Brand.class);
-                will(returnValue(newBrand));
-                
-                oneOf(mockContainer).persistIfNotAlready(newBrand);
-            }
-        });
-        
-        occupancy.setBrandName("SUPERMAC");
-        
-        // then
-        assertThat(occupancy.getBrandName(), is("SUPERMAC"));
-        assertThat(occupancy.getBrand(), is(newBrand));
-    }
-    
-    // //////////////////////////////////////
-
-    @Test
-    public void newBrand() {
-        // given
-        final String[] arg = new String[1];
-        occupancy = new Occupancy() {
-            @Override
-            public void setBrandName(String brandName) {
-                arg[0] = brandName;
-            }
-        };
-        // when
-        occupancy.newBrand("SUPERMAC");
-        // then (delegates to the setBrand)
-        assertThat(arg[0], is("SUPERMAC"));
-    }
-
-    // //////////////////////////////////////
-
-    @Test
-    public void disableNewBrand_whenLocked() {
-        occupancy.setLockable(Status.LOCKED);
-        assertThat(occupancy.disableNewBrand(null), is("Cannot modify when locked"));
-    }
-
-    @Test
-    public void disableNewBrand_whenUnlocked() {
-        occupancy.setLockable(Status.UNLOCKED);
-        assertThat(occupancy.disableNewBrand(null), is(nullValue()));
-    }
-    
-    
+//    @Test
+//    public void setBrandName_whenNotNull_alreadyExists() {
+//        
+//        // given
+//        occupancy.setBrand(brand);
+//        assertThat(occupancy.getBrand(), is(not(nullValue())));
+//
+//        // when
+//        final Brand existingBrand = new Brand();
+//        existingBrand.setName("SUPERMAC");
+//        context.checking(new Expectations() {
+//            {
+//                oneOf(mockBrands).findByName("SUPERMAC");
+//                will(returnValue(existingBrand));
+//            }
+//        });
+//        
+//        occupancy.setBrandName("SUPERMAC");
+//        
+//        // then
+//        assertThat(occupancy.getBrandName(), is("SUPERMAC"));
+//        assertThat(occupancy.getBrand(), is(existingBrand));
+//    }
+//    
+//    @Test
+//    public void setBrandName_whenNotNull_doesNotExist() {
+//        
+//        // given
+//        occupancy.setBrand(brand);
+//        assertThat(occupancy.getBrand(), is(not(nullValue())));
+//        
+//        // when
+//        final Brand newBrand = new Brand();
+//        context.checking(new Expectations() {
+//            {
+//                oneOf(mockBrands).findByName("SUPERMAC");
+//                will(returnValue(null));
+//                
+//                oneOf(mockContainer).newTransientInstance(Brand.class);
+//                will(returnValue(newBrand));
+//                
+//                oneOf(mockContainer).persistIfNotAlready(newBrand);
+//            }
+//        });
+//        
+//        occupancy.setBrandName("SUPERMAC");
+//        
+//        // then
+//        assertThat(occupancy.getBrandName(), is("SUPERMAC"));
+//        assertThat(occupancy.getBrand(), is(newBrand));
+//    }
+//    
+//    // //////////////////////////////////////
+//
+//    @Test
+//    public void newBrand() {
+//        // given
+//        final String[] arg = new String[1];
+//        occupancy = new Occupancy() {
+//            @Override
+//            public void setBrandName(String brandName) {
+//                arg[0] = brandName;
+//            }
+//        };
+//        // when
+//        occupancy.newBrand("SUPERMAC");
+//        // then (delegates to the setBrand)
+//        assertThat(arg[0], is("SUPERMAC"));
+//    }
+//
+//    // //////////////////////////////////////
+//
+//    @Test
+//    public void disableNewBrand_whenLocked() {
+//        occupancy.setLockable(Status.LOCKED);
+//        assertThat(occupancy.disableNewBrand(null), is("Cannot modify when locked"));
+//    }
+//
+//    @Test
+//    public void disableNewBrand_whenUnlocked() {
+//        occupancy.setLockable(Status.UNLOCKED);
+//        assertThat(occupancy.disableNewBrand(null), is(nullValue()));
+//    }
+//    
+//    
 }
