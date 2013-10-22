@@ -154,6 +154,13 @@ You are free to adapt or extend Estatio to your needs.  If you would like assist
 
 You can find plenty of help on using Apache Isis at the [Isis mailing lists](http://isis.apache.org/support.html).  There is also extensive [online documentation](http://isis.apache.org/documentation.html).
 
+## Thanks
+
+Thanks to
+
+* [Atlassian](https://www.atlassian.com) for providing an open source [Clover](https://www.atlassian.com/software/clover/overview/) license
+* [Headway Software](http://structure101.com/contact/) for providing an open source [Structure 101](http://structure101.com/) license
+
 ## Legal Stuff ##
 
 Copyright 2012-2013 [Eurocommercial Properties NV](http://www.eurocommercialproperties.com) 
