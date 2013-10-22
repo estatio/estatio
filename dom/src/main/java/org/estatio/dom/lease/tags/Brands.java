@@ -53,6 +53,8 @@ public class Brands extends EstatioDomainService<Brand> {
     
     @Programmatic
     public Brand findOrCreate(final String name) {
+        if (name == null)
+            return null;
         Brand brand = findByName(name);
         if (brand == null) {
             brand = newTransientInstance(Brand.class);

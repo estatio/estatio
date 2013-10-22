@@ -32,17 +32,17 @@ import org.estatio.dom.asset.FixedAsset;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findBySubject", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
-                    + "WHERE subject == :subject"),
+        @javax.jdo.annotations.Query(
+                name = "findBySubject", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
+                        + "WHERE subject == :subject"),
 })
 public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAssetRegistration, Status> {
 
@@ -79,7 +79,7 @@ public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAsse
     private FixedAsset subject;
 
     @MemberOrder(sequence = "1")
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "subjectId", allowsNull = "false")
     public FixedAsset getSubject() {
         return subject;
     }
@@ -89,19 +89,19 @@ public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAsse
     }
 
     // //////////////////////////////////////
-    
+
     private FixedAssetRegistrationType type;
-    
+
     public FixedAssetRegistrationType getType() {
         return type;
     }
-    
+
     public void setType(FixedAssetRegistrationType type) {
         this.type = type;
     }
-    
+
     // //////////////////////////////////////
-    
+
     String title() {
         // TODO Auto-generated method stub
         return null;

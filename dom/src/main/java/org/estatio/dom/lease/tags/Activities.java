@@ -63,8 +63,6 @@ public class Activities extends EstatioDomainService<Activity> {
         return (List<Activity>) query.executeWithMap(ImmutableMap.of("sector", sector));
     }
 
-    
-    
     @Hidden
     public Activity findBySectorAndName(final Sector sector, final String name) {
         return firstMatch("findBySectorAndName", "sector", sector, "name", name);
@@ -72,6 +70,8 @@ public class Activities extends EstatioDomainService<Activity> {
 
     @Programmatic
     public Activity findOrCreate(final Sector sector, String name) {
+        if (name == null)
+            return null;
         Activity activity = findBySectorAndName(sector, name);
         if (activity == null) {
             activity = newTransientInstance(Activity.class);
