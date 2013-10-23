@@ -68,7 +68,7 @@ public class BankMandate extends Agreement<Status> {
 
     private FinancialAccount bankAccount;
 
-    @javax.jdo.annotations.Column(name="bankFinancialAccountId", allowsNull="false")
+    @javax.jdo.annotations.Column(name="bankAccountId", allowsNull="false")
     public FinancialAccount getBankAccount() {
         return bankAccount;
     }
