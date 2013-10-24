@@ -347,7 +347,7 @@ public class Occupancy
         return reportTurnover;
     }
 
-    public void setReportTurnover(OccupancyReportingType reportTurnover) {
+    public void setReportTurnover(final OccupancyReportingType reportTurnover) {
         this.reportTurnover = reportTurnover;
     }
 
@@ -361,7 +361,7 @@ public class Occupancy
         return reportRent;
     }
 
-    public void setReportRent(OccupancyReportingType reportRent) {
+    public void setReportRent(final OccupancyReportingType reportRent) {
         this.reportRent = reportRent;
     }
 
@@ -375,16 +375,16 @@ public class Occupancy
         return reportOCR;
     }
 
-    public void setReportOCR(OccupancyReportingType reportOCR) {
+    public void setReportOCR(final OccupancyReportingType reportOCR) {
         this.reportOCR = reportOCR;
     }
 
     // //////////////////////////////////////
 
     public Occupancy updateReportingOptions(
-            @Named("Report Turnover") OccupancyReportingType reportTurnover,
-            @Named("Report Rent") OccupancyReportingType reportRent,
-            @Named("Report OCR") OccupancyReportingType reportOCR) {
+            final @Named("Report Turnover") OccupancyReportingType reportTurnover,
+            final @Named("Report Rent") OccupancyReportingType reportRent,
+            final @Named("Report OCR") OccupancyReportingType reportOCR) {
         setReportTurnover(reportTurnover);
         setReportRent(reportRent);
         setReportOCR(reportOCR);

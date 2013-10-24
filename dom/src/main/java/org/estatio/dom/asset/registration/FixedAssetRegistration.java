@@ -95,8 +95,8 @@ public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAsse
     public FixedAssetRegistrationType getType() {
         return type;
     }
-
-    public void setType(FixedAssetRegistrationType type) {
+    
+    public void setType(final FixedAssetRegistrationType type) {
         this.type = type;
     }
 

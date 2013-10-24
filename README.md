@@ -1,6 +1,7 @@
 Estatio: an open source estate management system.
 =================================================
 
+
 tests [![Tests](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-01-tests/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-01-tests/) -*- analysis [![Code Analysis](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-02-analysis/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-02-analysis/) -*- packaging [![Packaging](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-03-packaging/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-03-package/)
 
 Estatio is modern and flexible property management software. It offers real estate professionals and service providers the power and flexibility to manage their business in a superior, flexible and cost-effective manner.
@@ -158,7 +159,7 @@ You can find plenty of help on using Apache Isis at the [Isis mailing lists](htt
 
 Thanks to
 
-* [Atlassian](https://www.atlassian.com) for providing an open source [Clover](https://www.atlassian.com/software/clover/overview/) license
+* <img src="https://raw.github.com/estatio/estatio/master/codequality/logoClover.png"/> [Atlassian](https://www.atlassian.com) for providing an open source [Clover](https://www.atlassian.com/software/clover/overview/) license 
 * [Headway Software](http://structure101.com/contact/) for providing an open source [Structure 101](http://structure101.com/) license
 
 ## Legal Stuff ##

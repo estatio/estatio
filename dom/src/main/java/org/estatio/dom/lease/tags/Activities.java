@@ -69,9 +69,10 @@ public class Activities extends EstatioDomainService<Activity> {
     }
 
     @Programmatic
-    public Activity findOrCreate(final Sector sector, String name) {
-        if (name == null)
+    public Activity findOrCreate(final Sector sector, final String name) {
+        if (name == null) {
             return null;
+        }
         Activity activity = findBySectorAndName(sector, name);
         if (activity == null) {
             activity = newTransientInstance(Activity.class);

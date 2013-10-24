@@ -26,7 +26,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractViewModel;
-import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Immutable;

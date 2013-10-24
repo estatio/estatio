@@ -59,7 +59,7 @@ public class FixedAssetRegistrationContributions extends AbstractContainedObject
     
     private FixedAssetRegistrations fixedAssetRegistrations;
     
-    public void injectFixedAssetRegistrations(FixedAssetRegistrations fixedAssetRegistrations) {
+    public void injectFixedAssetRegistrations(final FixedAssetRegistrations fixedAssetRegistrations) {
         this.fixedAssetRegistrations = fixedAssetRegistrations;
     }
 
