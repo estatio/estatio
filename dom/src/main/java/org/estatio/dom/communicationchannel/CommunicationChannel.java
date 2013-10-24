@@ -33,8 +33,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 
@@ -71,39 +70,14 @@ import org.estatio.dom.WithReferenceGetter;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel 
-        extends EstatioMutableAndLockableObject<CommunicationChannel, Status> 
+        extends EstatioMutableObject<CommunicationChannel> 
         implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
         // TODO: description is annotated as optional,
         // so it doesn't really make sense for it to be part of the natural sort
         // order
-        super("type, description", Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @MemberOrder(sequence="5")
-    @Disabled
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
+        super("type, description");
     }
 
     // //////////////////////////////////////

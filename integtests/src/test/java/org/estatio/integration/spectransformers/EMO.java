@@ -30,8 +30,8 @@ import org.estatio.dom.party.Parties;
  * These converters look up from the {@link ScenarioExecutionIntegrationScopeAbstract scenario}, then fall back to looking up from
  * the associated repository (if there is one for that type).
  */
-public class ETO  {
-    private ETO() {}
+public class EMO  {
+    private EMO() {}
 
     /**
      * Looks up from session only.
@@ -47,9 +47,9 @@ public class ETO  {
     /**
      * Looks up from session only (abstract class).
      */
-    public static class Agreement extends NullRecognizingTransformer<org.estatio.dom.agreement.Agreement<?>> {
+    public static class Agreement extends NullRecognizingTransformer<org.estatio.dom.agreement.Agreement> {
         @Override
-        public org.estatio.dom.agreement.Agreement<?> transformNonNull(String id) {
+        public org.estatio.dom.agreement.Agreement transformNonNull(String id) {
             return ScenarioExecution.current().getVar("agreement", id, org.estatio.dom.agreement.Agreement.class);
         }
     }

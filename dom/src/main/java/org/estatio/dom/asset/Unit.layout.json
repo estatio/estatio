@@ -50,8 +50,6 @@
     }
   ],
   "actions": {
-    "activeLeasesOnDate": {},
-    "lock": {},
-    "unlock": {}
+    "activeLeasesOnDate": {}
   }
 }

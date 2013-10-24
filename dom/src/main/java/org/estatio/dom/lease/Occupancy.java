@@ -37,8 +37,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.lease.tags.Activities;
 import org.estatio.dom.lease.tags.Activity;
@@ -78,36 +77,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 public class Occupancy
-        extends EstatioMutableAndLockableObject<Occupancy, Status>
+        extends EstatioMutableObject<Occupancy>
         implements WithIntervalMutable<Occupancy>, Taggable {
 
     public Occupancy() {
-        super("lease, startDate desc nullsLast, unit", Status.UNLOCKED, Status.LOCKED);
+        super("lease, startDate desc nullsLast, unit");
     }
 
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @Disabled
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
 
     // //////////////////////////////////////
 
@@ -190,7 +166,7 @@ public class Occupancy
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override
@@ -341,6 +317,7 @@ public class Occupancy
 
     private OccupancyReportingType reportTurnover;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportTurnover() {
@@ -355,6 +332,7 @@ public class Occupancy
 
     private OccupancyReportingType reportRent;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportRent() {
@@ -369,6 +347,7 @@ public class Occupancy
 
     private OccupancyReportingType reportOCR;
 
+    @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportOCR() {

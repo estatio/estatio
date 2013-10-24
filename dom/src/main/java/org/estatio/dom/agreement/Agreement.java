@@ -51,9 +51,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
@@ -100,15 +98,15 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
 @Bookmarkable
-public abstract class Agreement<S extends Lockable>
-        extends EstatioMutableAndLockableObject<Agreement<S>, S>
-        implements WithReferenceComparable<Agreement<S>>,
+public abstract class Agreement
+        extends EstatioMutableObject<Agreement>
+        implements WithReferenceComparable<Agreement>,
         WithReferenceUnique,
-        WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>,
+        WithIntervalMutable<Agreement>, Chained<Agreement>,
         WithNameGetter {
 
-    public Agreement(final S statusWhenUnlocked, final S statusWhenLockedIfAny) {
-        super("reference", statusWhenUnlocked, statusWhenLockedIfAny);
+    public Agreement() {
+        super("reference");
     }
 
     // //////////////////////////////////////
@@ -249,15 +247,15 @@ public abstract class Agreement<S extends Lockable>
 
     // //////////////////////////////////////
 
-    private WithIntervalMutable.Helper<Agreement<S>> changeDates = new WithIntervalMutable.Helper<Agreement<S>>(this);
+    private WithIntervalMutable.Helper<Agreement> changeDates = new WithIntervalMutable.Helper<Agreement>(this);
 
-    WithIntervalMutable.Helper<Agreement<S>> getChangeDates() {
+    WithIntervalMutable.Helper<Agreement> getChangeDates() {
         return changeDates;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override
-    public Agreement<S> changeDates(
+    public Agreement changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
         return getChangeDates().changeDates(startDate, endDate);
@@ -266,7 +264,7 @@ public abstract class Agreement<S extends Lockable>
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override
@@ -320,23 +318,23 @@ public abstract class Agreement<S extends Lockable>
 
     @javax.jdo.annotations.Column(name = "previousAgreementId")
     @javax.jdo.annotations.Persistent(mappedBy = "next")
-    private Agreement<S> previous;
+    private Agreement previous;
 
     @Named("Previous Agreement")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
-    public Agreement<S> getPrevious() {
+    public Agreement getPrevious() {
         return previous;
     }
 
-    public void setPrevious(final Agreement<S> previous) {
+    public void setPrevious(final Agreement previous) {
         this.previous = previous;
     }
 
-    public void modifyPrevious(final Agreement<S> previous) {
-        Agreement<S> currentPrevious = getPrevious();
+    public void modifyPrevious(final Agreement previous) {
+        Agreement currentPrevious = getPrevious();
         // check for no-op
         if (previous == null || previous.equals(currentPrevious)) {
             return;
@@ -349,7 +347,7 @@ public abstract class Agreement<S extends Lockable>
     }
 
     public void clearPrevious() {
-        Agreement<S> currentPreviousAgreement = getPrevious();
+        Agreement currentPreviousAgreement = getPrevious();
         // check for no-op
         if (currentPreviousAgreement == null) {
             return;
@@ -362,23 +360,23 @@ public abstract class Agreement<S extends Lockable>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "nextAgreementId")
-    private Agreement<S> next;
+    private Agreement next;
 
     @Named("Next Agreement")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
     @Optional
     @Override
-    public Agreement<S> getNext() {
+    public Agreement getNext() {
         return next;
     }
 
-    public void setNext(final Agreement<S> next) {
+    public void setNext(final Agreement next) {
         this.next = next;
     }
 
-    public void modifyNext(final Agreement<S> next) {
-        Agreement<S> currentNext = getNext();
+    public void modifyNext(final Agreement next) {
+        Agreement currentNext = getNext();
         // check for no-op
         if (next == null || next.equals(currentNext)) {
             return;
@@ -391,7 +389,7 @@ public abstract class Agreement<S extends Lockable>
     }
 
     public void clearNext() {
-        Agreement<S> currentNext = getNext();
+        Agreement currentNext = getNext();
         // check for no-op
         if (currentNext == null) {
             return;
@@ -415,7 +413,7 @@ public abstract class Agreement<S extends Lockable>
         this.roles = actors;
     }
 
-    public Agreement<S> newRole(
+    public Agreement newRole(
             final @Named("Type") AgreementRoleType type,
             final Party party,
             final @Named("Start date") @Optional LocalDate startDate,
@@ -465,8 +463,6 @@ public abstract class Agreement<S extends Lockable>
         role.setEndDate(endDate);
         role.setType(type); // must do before associate with agreement, since
                             // part of AgreementRole#compareTo impl.
-
-        role.setStatus(Status.UNLOCKED);
 
         // JDO will manage the relationship for us
         // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email

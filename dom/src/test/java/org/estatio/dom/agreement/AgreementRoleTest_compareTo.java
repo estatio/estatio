@@ -30,8 +30,8 @@ import org.estatio.dom.party.PartyForTesting;
 
 public class AgreementRoleTest_compareTo extends ComparableContractTest_compareTo<AgreementRole> {
 
-    private Agreement<?> agreement1;
-    private Agreement<?> agreement2;
+    private Agreement agreement1;
+    private Agreement agreement2;
 
     private Party party1;
     private Party party2;
@@ -89,7 +89,7 @@ public class AgreementRoleTest_compareTo extends ComparableContractTest_compareT
                 );
     }
 
-    private AgreementRole newAgreementRole(Agreement<?> agreement, LocalDate startDate, AgreementRoleType art, Party party) {
+    private AgreementRole newAgreementRole(Agreement agreement, LocalDate startDate, AgreementRoleType art, Party party) {
         final AgreementRole ar = new AgreementRole();
         ar.setAgreement(agreement);
         ar.setParty(party);

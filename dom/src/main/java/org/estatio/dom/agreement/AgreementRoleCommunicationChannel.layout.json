@@ -7,8 +7,7 @@
           "members": {
             "role": {},
             "type": {},
-            "communicationChannel": {},
-            "status": {}
+            "communicationChannel": {}
           }
         },
         "Dates": {
@@ -51,7 +50,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

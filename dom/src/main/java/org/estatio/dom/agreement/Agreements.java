@@ -29,7 +29,6 @@ import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 
-@SuppressWarnings("rawtypes")
 @Hidden
 public class Agreements extends EstatioDomainService<Agreement> {
 
@@ -41,7 +40,7 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
 
     @ActionSemantics(Of.SAFE)
-    public Agreement<?> findAgreementByReference(final String reference) {
+    public Agreement findAgreementByReference(final String reference) {
         return firstMatch("findByReference", 
                 "reference", StringUtils.wildcardToRegex(reference));
     }

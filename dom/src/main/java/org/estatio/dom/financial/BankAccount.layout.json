@@ -8,8 +8,7 @@
             "owner": {},
             "reference": {},
             "type": {},
-            "name": {},
-            "status": {}
+            "name": {}
           }
         }
       }
@@ -45,7 +44,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

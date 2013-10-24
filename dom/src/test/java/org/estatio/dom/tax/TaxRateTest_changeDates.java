@@ -31,7 +31,6 @@ import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_cha
 
 public class TaxRateTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<TaxRate> {
 
-    private boolean locked;
     private TaxRate taxRate;
 
     @Before
@@ -45,24 +44,9 @@ public class TaxRateTest_changeDates extends AbstractWithIntervalMutableContract
             org.estatio.dom.WithIntervalMutable.Helper<TaxRate> getChangeDates() {
                 return mockChangeDates;
             }
-            @Override
-            public boolean isLocked() {
-                return locked;
-            }
         };
     }
     
-    @Test
-    public void disableChangeDates_whenLocked() throws Exception {
-        locked = true;
-        assertThat(taxRate.disableChangeDates(null,null), is("Cannot modify when locked"));
-    }
-    
-    @Test
-    public void disableChangeDates_whenNotLocked() throws Exception {
-        locked = false;
-        assertThat(taxRate.disableChangeDates(null,null), is(nullValue()));
-    }
 
     // //////////////////////////////////////
 

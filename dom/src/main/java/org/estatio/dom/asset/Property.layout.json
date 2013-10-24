@@ -6,8 +6,7 @@
         "Asset": {
           "members": {
             "reference": {},
-            "name": {},
-            "status": {}
+            "name": {}
           }
         },
         "Location": {
@@ -71,8 +70,6 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {},
     "activeLeasesOnDate": {}
   }
 }

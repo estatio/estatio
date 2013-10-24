@@ -235,7 +235,7 @@ public abstract class Unit extends FixedAsset implements WithIntervalMutable<Uni
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override

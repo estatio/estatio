@@ -21,17 +21,16 @@ package org.estatio.dom.agreement;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.PojoTester.FilterSet;
 
 public class AgreementTest_beanProperties extends AbstractBeanPropertiesTest {
 
     @Test
     public void test() {
-        final Agreement<?> agreement = new AgreementForTesting();
+        final Agreement agreement = new AgreementForTesting();
         newPojoTester()
             .withFixture(pojos(Agreement.class, AgreementForTesting.class))
             .withFixture(pojos(AgreementType.class))
-            .exercise(agreement, FilterSet.excluding("status","lockable"));
+            .exercise(agreement);
     }
 
 }

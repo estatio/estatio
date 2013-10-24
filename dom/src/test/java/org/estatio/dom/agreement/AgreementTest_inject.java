@@ -43,7 +43,7 @@ public class AgreementTest_inject {
     @Mock
     private AgreementRoles mockAgreementRoles;
     
-    private Agreement<?> agreement;
+    private Agreement agreement;
 
     @Before
     public void setup() {

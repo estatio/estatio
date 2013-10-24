@@ -100,7 +100,7 @@ public class BankAccount extends FinancialAccount {
     }
 
     public String disableVerifyIban() {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     // //////////////////////////////////////

@@ -34,13 +34,7 @@ public class UnitTest_beanProperties extends AbstractBeanPropertiesTest {
 	    newPojoTester()
 			.withFixture(pojos(Property.class))
 			.withFixture(pojos(Location.class))
-            .withFixture(statii())
-			.exercise(new Unit(){}, FilterSet.excluding("lockable"));
+			.exercise(new Unit(){});
 	}
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static FixtureDatumFactory<Lockable> statii() {
-        return new FixtureDatumFactory(Lockable.class, (Object[])org.estatio.dom.Status.values());
-    }
 
 }

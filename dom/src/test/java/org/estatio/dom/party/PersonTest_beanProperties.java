@@ -21,22 +21,13 @@ package org.estatio.dom.party;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.PojoTester.FilterSet;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
 
 public class PersonTest_beanProperties extends AbstractBeanPropertiesTest {
 
 	@Test
 	public void test() {
 	    newPojoTester()
-            .withFixture(statii())
-	        .exercise(new Person(), FilterSet.excluding("lockable"));
+	        .exercise(new Person());
 	}
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static FixtureDatumFactory<Lockable> statii() {
-        return new FixtureDatumFactory(Lockable.class, (Object[])org.estatio.dom.Status.values());
-    }
 
 }

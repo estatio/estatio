@@ -24,10 +24,9 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.lease.Lease;
 
 //TODO: is this in scope?
@@ -38,43 +37,20 @@ import org.estatio.dom.lease.Lease;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
-public class LeaseAssignment extends EstatioMutableAndLockableObject<LeaseAssignment, Status> {
+public class LeaseAssignment extends EstatioMutableObject<LeaseAssignment> {
 
     
     public LeaseAssignment() {
         // TODO: I made this up...
-        super("nextLease,assignmentDate", Status.UNLOCKED, Status.LOCKED);
+        super("nextLease,assignmentDate");
     }
-    
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-    
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-
 
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name="previousLeaseId")
     private Lease previousLease;
 
+    @Optional
     public Lease getPreviousLease() {
         return previousLease;
     }
@@ -88,6 +64,7 @@ public class LeaseAssignment extends EstatioMutableAndLockableObject<LeaseAssign
     @javax.jdo.annotations.Column(name="nextLeaseId")
     private Lease nextLease;
 
+    @Optional
     public Lease getNextLease() {
         return nextLease;
     }

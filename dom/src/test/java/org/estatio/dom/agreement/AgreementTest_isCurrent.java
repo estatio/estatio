@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
 import org.estatio.services.clock.ClockService;
 
 public class AgreementTest_isCurrent  {
@@ -43,7 +42,7 @@ public class AgreementTest_isCurrent  {
     @Mock
     private ClockService mockClockService;
     
-    private Agreement<Status> agreement;
+    private Agreement agreement;
     
     @Before
     public void setUp() throws Exception {

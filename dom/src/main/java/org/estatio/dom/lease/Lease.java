@@ -99,27 +99,14 @@ import org.estatio.dom.party.Party;
 
 })
 @Bookmarkable
-public class Lease extends Agreement<LeaseStatus> implements InvoiceSource {
+public class Lease 
+        extends Agreement 
+        implements InvoiceSource {
 
-    public Lease() {
-        super(LeaseStatus.NEW, LeaseStatus.APPROVED);
-    }
-
-    @Override
-    public LeaseStatus getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final LeaseStatus lockable) {
-        setStatus(lockable);
-    }
 
     // //////////////////////////////////////
 
-    @Override
     public void created() {
-        super.created();
         setStatus(LeaseStatus.NEW);
     }
 

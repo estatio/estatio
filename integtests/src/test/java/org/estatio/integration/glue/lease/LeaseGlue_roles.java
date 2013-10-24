@@ -42,17 +42,17 @@ import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
-import org.estatio.integration.spectransformers.ERD;
-import org.estatio.integration.spectransformers.ETO;
+import org.estatio.integration.spectransformers.EIO;
+import org.estatio.integration.spectransformers.EMO;
 
 public class LeaseGlue_roles extends CukeGlueAbstract {
 
     public static class AgreementRoleDesc {
-        @XStreamConverter(ERD.AgreementRoleType.class) private AgreementRoleType type;
+        @XStreamConverter(EIO.AgreementRoleType.class) private AgreementRoleType type;
         @XStreamConverter(V.LyyyyMMdd.class) private LocalDate startDate;
         @XStreamConverter(V.LyyyyMMdd.class) private LocalDate endDate;
-        @XStreamConverter(ETO.Lease.class) private Lease agreement;
-        @XStreamConverter(ETO.Party.class) private Party party;
+        @XStreamConverter(EMO.Lease.class) private Lease agreement;
+        @XStreamConverter(EMO.Party.class) private Party party;
         private String indicated;
     }
     
@@ -80,10 +80,10 @@ public class LeaseGlue_roles extends CukeGlueAbstract {
 
     @When("^.* add.* agreement role.*type \"([^\"]*)\".* start date \"([^\"]*)\".* end date \"([^\"]*)\".* party \"([^\"]*)\"$")
     public void when_add_agreement_role_with_type_with_start_date_and_end_date(
-            @Transform(ERD.AgreementRoleType.class) final AgreementRoleType type, 
+            @Transform(EIO.AgreementRoleType.class) final AgreementRoleType type, 
             @Transform(V.LyyyyMMdd.class) final LocalDate startDate, 
             @Transform(V.LyyyyMMdd.class) final LocalDate endDate,
-            @Transform(ETO.Party.class) final Party party) throws Throwable {
+            @Transform(EMO.Party.class) final Party party) throws Throwable {
       
         nextTransaction();
         

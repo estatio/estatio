@@ -1,18 +1,20 @@
-/**
- * or more
- *  contributor license agreements.  See the NOTICE file distributed with
- *  this work for additional information regarding copyright ownership.
- *  The ASF licenses this file to You under the Apache License, Version 2.0
- *  (the "License"); you may not use this file except in compliance with
- *  the License.  You may obtain a copy of the License at
+/*
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Copyright 2012-2013 Eurocommercial Properties NV
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
  */
 package org.estatio.dom.party;
 
@@ -27,13 +29,11 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -63,37 +63,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
-        extends EstatioMutableAndLockableObject<PartyRegistration, Status>
+        extends EstatioMutableObject<PartyRegistration>
         implements WithIntervalMutable<PartyRegistration> {
 
     public PartyRegistration() {
         // TODO: I made this up...
-        super("party, startDate desc nullsLast", Status.UNLOCKED, Status.LOCKED);
+        super("party, startDate desc nullsLast");
     }
 
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
 
     // //////////////////////////////////////
 
@@ -171,7 +148,7 @@ public class PartyRegistration
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override

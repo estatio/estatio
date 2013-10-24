@@ -40,8 +40,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -85,7 +84,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole
-        extends EstatioMutableAndLockableObject<FixedAssetRole, Status>
+        extends EstatioMutableObject<FixedAssetRole>
         implements WithIntervalContiguous<FixedAssetRole> {
 
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =
@@ -94,31 +93,7 @@ public class FixedAssetRole
     // //////////////////////////////////////
 
     public FixedAssetRole() {
-        super("asset, startDate desc nullsLast, type, party", Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @Disabled
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
+        super("asset, startDate desc nullsLast, type, party");
     }
 
     // //////////////////////////////////////
@@ -211,7 +186,7 @@ public class FixedAssetRole
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override

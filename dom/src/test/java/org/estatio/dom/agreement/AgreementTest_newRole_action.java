@@ -38,7 +38,6 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -53,7 +52,7 @@ public class AgreementTest_newRole_action  {
     private AgreementRoleType art;
     private Party party;
     
-    private Agreement<Status> agreement;
+    private Agreement agreement;
 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -100,14 +99,13 @@ public class AgreementTest_newRole_action  {
                                item.getType() == art &&
                                item.getAgreement() == agreement &&
                                Objects.equal(item.getStartDate(), startDate) &&
-                               Objects.equal(item.getEndDate(), endDate) &&
-                               Objects.equal(item.getStatus(), Status.UNLOCKED);
+                               Objects.equal(item.getEndDate(), endDate);
                     }
                 };
             }
         });
         
-        Agreement<Status> x = agreement.newRole(art, party, startDate, endDate);
+        Agreement x = agreement.newRole(art, party, startDate, endDate);
         assertThat(x, is(agreement));
     }
 

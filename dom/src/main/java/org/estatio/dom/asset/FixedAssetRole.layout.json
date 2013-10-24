@@ -7,8 +7,7 @@
           "members": {
             "type": {},
             "asset": {},
-            "party": {},
-            "status": {}
+            "party": {}
           }
         },
         "Dates": {
@@ -51,7 +50,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

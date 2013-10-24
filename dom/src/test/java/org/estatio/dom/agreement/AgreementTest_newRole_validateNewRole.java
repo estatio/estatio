@@ -29,7 +29,6 @@ import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -42,7 +41,7 @@ public class AgreementTest_newRole_validateNewRole  {
     private AgreementRoleType artOther;
     private Party party;
     
-    private Agreement<Status> agreement;
+    private Agreement agreement;
 
     private LocalDate startDate;
     private LocalDate endDate;

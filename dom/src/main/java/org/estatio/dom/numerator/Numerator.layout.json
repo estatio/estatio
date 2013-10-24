@@ -35,7 +35,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

@@ -25,15 +25,13 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 
 /**
  * Generates a sequence of values (eg <tt>XYZ-00101</tt>, <tt>XYZ-00102</tt>, <tt>XYZ-00103</tt> etc)
@@ -72,21 +70,11 @@ import org.estatio.dom.Status;
 })
 @Immutable
 public class Numerator 
-        extends EstatioMutableAndLockableObject<Numerator, Status> 
+        extends EstatioMutableObject<Numerator> 
         implements Comparable<Numerator>, BookmarkHolder {
 
     public Numerator() {
-        super("name, objectType, objectIdentifier, format", Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
+        super("name, objectType, objectIdentifier, format");
     }
 
 
@@ -226,21 +214,6 @@ public class Numerator
     public void setLastIncrement(final BigInteger lastIncrement) {
         this.lastIncrement = lastIncrement;
     }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-    
 
     // //////////////////////////////////////
 

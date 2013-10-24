@@ -34,15 +34,13 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
-
 public class AgreementTest_newRole_choices  {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
     
     private AgreementType art;
-    private Agreement<Status> agreement;
+    private Agreement agreement;
 
     @Mock
     private AgreementRoleTypes mockAgreementRoleTypes;

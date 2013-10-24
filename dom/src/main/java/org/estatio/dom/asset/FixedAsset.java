@@ -33,7 +33,6 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -42,8 +41,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
@@ -79,35 +77,11 @@ import org.estatio.dom.party.Party;
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset
-        extends EstatioMutableAndLockableObject<FixedAsset, Status>
+        extends EstatioMutableObject<FixedAsset>
         implements WithNameComparable<FixedAsset>, WithReferenceUnique, CommunicationChannelOwner {
 
     public FixedAsset() {
-        super("name", Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
+        super("name");
     }
 
     // //////////////////////////////////////
@@ -204,8 +178,6 @@ public abstract class FixedAsset
         role.setEndDate(endDate);
         role.setType(type); // must do before associate with agreement, since
                             // part of AgreementRole#compareTo impl.
-
-        role.setStatus(Status.UNLOCKED);
 
         // JDO will manage the relationship for us
         // see http://markmail.org/thread/b6lpzktr6hzysisp, Dan's email

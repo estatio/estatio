@@ -18,14 +18,9 @@
  */
 package org.estatio.dom.agreement;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.party.Party;
 
-public class AgreementForTesting extends Agreement<Status> {
-
-    public AgreementForTesting() {
-        super(null, null);
-    }
+public class AgreementForTesting extends Agreement {
 
     @Override
     public Party getPrimaryParty() {
@@ -35,23 +30,6 @@ public class AgreementForTesting extends Agreement<Status> {
     @Override
     public Party getSecondaryParty() {
         return null;
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(Status lockable) {
-        setStatus(lockable);
-    }
-
-    public Status getStatus() {
-        return null;
-    }
-
-    public void setStatus(Status newStatus) {
     }
 
 }

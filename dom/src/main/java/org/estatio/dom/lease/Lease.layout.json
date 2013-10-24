@@ -83,8 +83,6 @@
     "approveAllTermsOfThisLease": {},
     "refreshLayout": {},
     "verify": {},
-    "calculate": {},
-    "lock": {},
-    "unlock": {}
+    "calculate": {}
   }
 }

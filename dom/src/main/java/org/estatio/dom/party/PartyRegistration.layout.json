@@ -7,7 +7,6 @@
           "members": {
             "party": {},
             "partyRegistrationType": {},
-            "status": {},
             "current": {}
           }
         }
@@ -38,7 +37,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

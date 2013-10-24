@@ -6,8 +6,7 @@
         "General": {
           "members": {
             "reference": {},
-            "name": {},
-            "status": {}
+            "name": {}
           }
         }
       }
@@ -26,7 +25,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

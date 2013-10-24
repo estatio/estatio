@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -47,7 +46,7 @@ public class AgreementTest_findRole  {
     private Party party;
     private LocalDate date;
 
-    private Agreement<Status> agreement;
+    private Agreement agreement;
 
 
     

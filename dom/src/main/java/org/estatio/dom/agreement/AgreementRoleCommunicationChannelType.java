@@ -51,7 +51,8 @@ import org.estatio.dom.EstatioImmutableObject;
 })
 @Immutable
 @Bounded
-public class AgreementRoleCommunicationChannelType extends EstatioImmutableObject<AgreementRoleCommunicationChannelType> {
+public class AgreementRoleCommunicationChannelType 
+        extends EstatioImmutableObject<AgreementRoleCommunicationChannelType> {
 
     public AgreementRoleCommunicationChannelType() {
         super("title");

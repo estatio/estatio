@@ -21,9 +21,7 @@ package org.estatio.dom.lease;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.Lockable;
 import org.estatio.dom.PojoTester.FilterSet;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
@@ -40,14 +38,8 @@ public class OccupancyTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Sector.class))
 	        .withFixture(pojos(Activity.class))
 	        .withFixture(pojos(Brand.class))
-            .withFixture(statii())
 	        .exercise(new Occupancy(),
-	                FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName", "lockable"));
+	                FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName"));
 	}
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static FixtureDatumFactory<Lockable> statii() {
-        return new FixtureDatumFactory(Lockable.class, (Object[])org.estatio.dom.Status.values());
-    }
 
 }

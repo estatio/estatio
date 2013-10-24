@@ -44,7 +44,7 @@ public class AgreementTest_findCurrentOrMostRecentParty {
     @Mock
     private ClockService mockClockService;
     
-    private Agreement<?> agreement;
+    private Agreement agreement;
     
     private AgreementRoleType landlordArt;
     private AgreementRoleType tenantArt;

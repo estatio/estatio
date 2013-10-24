@@ -8,8 +8,7 @@
             "reference": {},
             "name": {},
             "bankAccount": {},
-            "agreementType": {},
-            "status": {}
+            "agreementType": {}
           }
         },
         "Parties": {
@@ -59,7 +58,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

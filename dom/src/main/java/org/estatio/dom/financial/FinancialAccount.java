@@ -24,13 +24,11 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
@@ -69,37 +67,12 @@ import org.estatio.dom.party.Party;
                         + "WHERE owner == :owner")
 })
 public abstract class FinancialAccount 
-        extends EstatioMutableAndLockableObject<FinancialAccount, Status> 
+        extends EstatioMutableObject<FinancialAccount> 
         implements WithNameGetter, WithReferenceUnique  {
 
     public FinancialAccount() {
-        super("type, reference", Status.UNLOCKED, Status.LOCKED);
+        super("type, reference");
     }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Disabled
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-
 
     // //////////////////////////////////////
 

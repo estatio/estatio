@@ -31,7 +31,7 @@ import org.estatio.dom.agreement.AgreementRoleTypes;
  * <p>
  * These converters look up from the repository only.
  */
-public class ERD  {
+public class EIO  {
     public static class AgreementRoleCommunicationChannelType extends Transformer<org.estatio.dom.agreement.AgreementRoleCommunicationChannelType> {
         @Override
         public org.estatio.dom.agreement.AgreementRoleCommunicationChannelType transform(String id) {
@@ -46,6 +46,6 @@ public class ERD  {
         }
     }
 
-    private ERD() {}
+    private EIO() {}
 
 }

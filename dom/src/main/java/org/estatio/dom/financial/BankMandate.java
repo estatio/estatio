@@ -20,9 +20,6 @@ package org.estatio.dom.financial;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Hidden;
-
-import org.estatio.dom.Status;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
 
@@ -30,38 +27,9 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 //no @DatastoreIdentity nor @Version, since inherited from supertype
-public class BankMandate extends Agreement<Status> {
+public class BankMandate extends Agreement {
     
 
-    public BankMandate() {
-        super(Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-
-    
     // //////////////////////////////////////
 
     private FinancialAccount bankAccount;

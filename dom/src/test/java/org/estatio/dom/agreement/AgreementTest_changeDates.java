@@ -26,49 +26,28 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_changeDates;
 
-public class AgreementTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<Agreement<Status>> {
+public class AgreementTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<Agreement> {
 
 
-    private boolean locked;
-    private Agreement<Status> agreement;
+    private Agreement agreement;
 
     @Before
     public void setUp() throws Exception {
         agreement = withIntervalMutable;
     }
     
-    protected Agreement<Status> doCreateWithIntervalMutable(final WithIntervalMutable.Helper<Agreement<Status>> mockChangeDates) {
+    protected Agreement doCreateWithIntervalMutable(final WithIntervalMutable.Helper<Agreement> mockChangeDates) {
         return new AgreementForTesting() {
             @Override
-            org.estatio.dom.WithIntervalMutable.Helper<Agreement<Status>> getChangeDates() {
+            org.estatio.dom.WithIntervalMutable.Helper<Agreement> getChangeDates() {
                 return mockChangeDates;
-            }
-            @Override
-            public boolean isLocked() {
-                return locked;
             }
         };
     }
     
-
-    @Test
-    public void disableChangeDates_whenLocked() throws Exception {
-        locked = true;
-        assertThat(agreement.disableChangeDates(null,null), is("Cannot modify when locked"));
-    }
-    
-    @Test
-    public void disableChangeDates_whenNotLocked() throws Exception {
-        locked = false;
-        assertThat(agreement.disableChangeDates(null,null), is(nullValue()));
-    }
-
-
-    // //////////////////////////////////////
 
     @Test
     public void changeDatesDelegate() {

@@ -38,7 +38,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -71,36 +71,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 public class TaxRate 
-    extends EstatioMutableAndLockableObject<TaxRate, Status> 
+    extends EstatioMutableObject<TaxRate> 
     implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
-        super("tax, startDate desc nullsLast", Status.UNLOCKED, Status.LOCKED);
+        super("tax, startDate desc nullsLast");
     }
 
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
 
     // //////////////////////////////////////
 
@@ -160,7 +137,7 @@ public class TaxRate
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override

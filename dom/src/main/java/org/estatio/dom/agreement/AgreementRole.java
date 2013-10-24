@@ -48,8 +48,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -84,7 +83,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& (endDate == null || endDate > :date) ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioMutableAndLockableObject<AgreementRole, Status> 
+public class AgreementRole extends EstatioMutableObject<AgreementRole> 
         implements WithIntervalContiguous<AgreementRole> {
 
     private final WithIntervalContiguous.Helper<AgreementRole> helper = 
@@ -93,45 +92,22 @@ public class AgreementRole extends EstatioMutableAndLockableObject<AgreementRole
     // //////////////////////////////////////
 
     public AgreementRole() {
-        super("agreement, startDate desc nullsLast, type, party", Status.UNLOCKED, Status.LOCKED);
+        super("agreement, startDate desc nullsLast, type, party");
     }
 
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
 
     // //////////////////////////////////////
 
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
-    }
-
-    // //////////////////////////////////////
-
-    private Agreement<?> agreement;
+    private Agreement agreement;
 
     @javax.jdo.annotations.Column(name = "agreementId", allowsNull = "false")
     @Title(sequence = "3", prepend = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
-    public Agreement<?> getAgreement() {
+    public Agreement getAgreement() {
         return agreement;
     }
 
-    public void setAgreement(final Agreement<?> agreement) {
+    public void setAgreement(final Agreement agreement) {
         this.agreement = agreement;
     }
 
@@ -210,7 +186,7 @@ public class AgreementRole extends EstatioMutableAndLockableObject<AgreementRole
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override
@@ -426,7 +402,6 @@ public class AgreementRole extends EstatioMutableAndLockableObject<AgreementRole
         arcc.setType(type);
         arcc.setStartDate(startDate);
         arcc.setEndDate(endDate);
-        arcc.setStatus(Status.UNLOCKED);
         arcc.setCommunicationChannel(cc);
 
         // JDO will take care of bidir relationship

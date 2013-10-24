@@ -32,8 +32,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -53,34 +52,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 public class Event
-        extends EstatioMutableAndLockableObject<Event, Status>
+        extends EstatioMutableObject<Event>
         implements WithIntervalMutable<Event>, WithDescriptionGetter {
 
     public Event() {
-        super("startDate desc nullsLast, id", Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @Disabled
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
+        super("startDate desc nullsLast, id");
     }
 
     // //////////////////////////////////////
@@ -134,7 +110,7 @@ public class Event
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override

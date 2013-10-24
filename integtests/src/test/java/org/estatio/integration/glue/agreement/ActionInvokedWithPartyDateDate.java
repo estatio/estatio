@@ -25,7 +25,7 @@ import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 import org.apache.isis.core.specsupport.specs.V;
 
 import org.estatio.dom.party.Party;
-import org.estatio.integration.spectransformers.ETO;
+import org.estatio.integration.spectransformers.EMO;
 
 interface ActionInvokedWithPartyDateDate {
     public void invoke(Party party, LocalDate startDate, LocalDate endDate);
@@ -35,7 +35,7 @@ interface ActionInvokedWithPartyDateDate {
         public void I_invoke_the_action_with_start_date_end_date_party(
                 @Transform(V.LyyyyMMdd.class) LocalDate startDate, 
                 @Transform(V.LyyyyMMdd.class) LocalDate endDate, 
-                @Transform(ETO.Party.class) Party party) throws Throwable {
+                @Transform(EMO.Party.class) Party party) throws Throwable {
             
             nextTransaction();
             

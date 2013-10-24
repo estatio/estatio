@@ -43,8 +43,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
@@ -73,35 +72,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column="discriminator")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem 
-        extends EstatioMutableAndLockableObject<InvoiceItem, Status> 
+        extends EstatioMutableObject<InvoiceItem> 
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
-        super("invoice, startDate desc nullsLast, charge, description, sequence", null, null);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
+        super("invoice, startDate desc nullsLast, charge, description, sequence");
     }
 
     // //////////////////////////////////////

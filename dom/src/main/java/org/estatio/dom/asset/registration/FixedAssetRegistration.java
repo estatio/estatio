@@ -23,11 +23,10 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
-import org.estatio.dom.Status;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.asset.FixedAsset;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -48,42 +47,20 @@ import org.estatio.dom.asset.FixedAsset;
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
                         + "WHERE subject == :subject"),
 })
-public abstract class FixedAssetRegistration extends EstatioMutableAndLockableObject<FixedAssetRegistration, Status> {
+public abstract class FixedAssetRegistration 
+    extends EstatioMutableObject<FixedAssetRegistration> {
 
     public FixedAssetRegistration() {
-        super("type", Status.UNLOCKED, Status.LOCKED);
-    }
-
-    @Override
-    public Status getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final Status lockable) {
-        setStatus(lockable);
-    }
-
-    // //////////////////////////////////////
-
-    private Status status;
-
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @Hidden
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(final Status status) {
-        this.status = status;
+        super("type");
     }
 
     // //////////////////////////////////////
 
     private FixedAsset subject;
 
-    @MemberOrder(sequence = "1")
     @javax.jdo.annotations.Column(name = "subjectId", allowsNull = "false")
+    @MemberOrder(sequence = "1")
+    @Title(sequence="1")
     public FixedAsset getSubject() {
         return subject;
     }
@@ -96,6 +73,8 @@ public abstract class FixedAssetRegistration extends EstatioMutableAndLockableOb
 
     private FixedAssetRegistrationType type;
 
+    @Title(sequence="1", append=": ")
+    @javax.jdo.annotations.Column(allowsNull="false")
     public FixedAssetRegistrationType getType() {
         return type;
     }
@@ -104,11 +83,5 @@ public abstract class FixedAssetRegistration extends EstatioMutableAndLockableOb
         this.type = type;
     }
 
-    // //////////////////////////////////////
-
-    String title() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

@@ -27,7 +27,6 @@
         "Status": {
           "members": {
             "legal": {},
-            "status": {},
             "type": {},
             "reference": {}
           }
@@ -40,7 +39,5 @@
     }
   ],
   "actions": {
-    "lock": {},
-    "unlock": {}
   }
 }

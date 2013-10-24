@@ -164,7 +164,7 @@ public class PostalAddress extends CommunicationChannel {
     public String disableUpdateCountryAndState(
             final Country country, 
             final State state) {
-        return isLocked() ? "Cannot modify when locked": null;
+        return null;
     }
 
     public Country default0UpdateCountryAndState() {
