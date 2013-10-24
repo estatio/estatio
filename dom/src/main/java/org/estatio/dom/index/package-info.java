@@ -1,5 +1,5 @@
 /**
- * Defines {@link org.estatio.dom.EstatioRefDataObject reference data} {@link org.estatio.dom.index.Index} entity,
+ * Defines {@link org.estatio.dom.EstatioImmutableObject reference data} {@link org.estatio.dom.index.Index} entity,
  * which in turn {@link org.estatio.dom.index.Index#getIndexBases() aggregates} {@link org.estatio.dom.index.IndexBase},
  * which in turn {@link org.estatio.dom.index.IndexBase#getValues() aggregates} 
  * {@link org.estatio.dom.index.IndexValue}.

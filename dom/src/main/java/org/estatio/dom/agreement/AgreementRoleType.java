@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.WithTitleComparable;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
@@ -52,7 +52,7 @@ import org.estatio.dom.WithTitleComparable;
 })
 @Immutable
 @Bounded
-public class AgreementRoleType extends EstatioRefDataObject<AgreementRoleType> 
+public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType> 
         implements WithTitleComparable<AgreementRoleType> {
 
     public AgreementRoleType() {

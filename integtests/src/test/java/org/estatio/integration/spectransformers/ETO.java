@@ -18,13 +18,13 @@ package org.estatio.integration.spectransformers;
 
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 
 /**
- * A set of Estatio-specific converters for {@link EstatioTransactionalObject transactional object}s.
+ * A set of Estatio-specific converters for {@link EstatioMutableAndLockableObject transactional object}s.
  * 
  * <p>
  * These converters look up from the {@link ScenarioExecutionIntegrationScopeAbstract scenario}, then fall back to looking up from
@@ -36,11 +36,11 @@ public class ETO  {
     /**
      * Looks up from session only.
      */
-    public static class DomainObject extends NullRecognizingTransformer<EstatioTransactionalObject<?, ?>> {
+    public static class DomainObject extends NullRecognizingTransformer<EstatioMutableAndLockableObject<?, ?>> {
 
         @Override
-        public org.estatio.dom.EstatioTransactionalObject<?,?> transformNonNull(String id) {
-            return ScenarioExecution.current().getVar(null, id, org.estatio.dom.EstatioTransactionalObject.class);
+        public org.estatio.dom.EstatioMutableAndLockableObject<?,?> transformNonNull(String id) {
+            return ScenarioExecution.current().getVar(null, id, org.estatio.dom.EstatioMutableAndLockableObject.class);
         }
     }
 

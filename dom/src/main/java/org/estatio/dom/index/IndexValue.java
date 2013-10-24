@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -32,7 +33,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithStartDate;
 
 /**
@@ -43,6 +44,9 @@ import org.estatio.dom.WithStartDate;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByIndexAndStartDate", language = "JDOQL",
@@ -53,7 +57,7 @@ import org.estatio.dom.WithStartDate;
 })
 @Immutable
 public class IndexValue 
-        extends EstatioRefDataObject<IndexValue> 
+        extends EstatioMutableObject<IndexValue> 
         implements WithStartDate {
 
     public static final int VALUE_SCALE = 4;

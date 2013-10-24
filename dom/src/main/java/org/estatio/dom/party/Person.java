@@ -16,15 +16,15 @@
  */
 package org.estatio.dom.party;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.NEW_TABLE)
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 public class Person extends Party {
 
     

@@ -45,7 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
@@ -106,7 +106,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem 
-        extends EstatioTransactionalObject<LeaseItem, LeaseItemStatus> 
+        extends EstatioMutableAndLockableObject<LeaseItem, LeaseItemStatus> 
         implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     private static final int PAGE_SIZE = 15;

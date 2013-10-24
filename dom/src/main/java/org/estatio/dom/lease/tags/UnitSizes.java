@@ -53,8 +53,9 @@ public class UnitSizes extends EstatioDomainService<UnitSize> {
 
     @Programmatic
     public UnitSize findOrCreate(final String name) {
-        if (name == null)
+        if (name == null) {
             return null;
+        }
         UnitSize unitSize = findByName(name);
         if (unitSize == null) {
             unitSize = newTransientInstance(UnitSize.class);

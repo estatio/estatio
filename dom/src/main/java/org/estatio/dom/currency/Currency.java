@@ -20,13 +20,14 @@ package org.estatio.dom.currency;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -41,6 +42,9 @@ import org.estatio.dom.WithReferenceUnique;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "Currency_reference_UNQ", members = "reference"),
@@ -64,7 +68,7 @@ import org.estatio.dom.WithReferenceUnique;
 @Immutable
 @AutoComplete(repository = Currencies.class, action = "autoComplete")
 public class Currency
-        extends EstatioRefDataObject<Currency>
+        extends EstatioMutableObject<Currency>
         implements WithReferenceComparable<Currency>, WithReferenceUnique, WithNameUnique {
 
     public Currency() {

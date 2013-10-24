@@ -19,9 +19,9 @@
 package org.estatio.dom;
 
 
-public abstract class EstatioRefDataObject<T extends EstatioDomainObject<T>> extends EstatioDomainObject<T> {
+public abstract class EstatioImmutableObject<T extends EstatioDomainObject<T>> extends EstatioDomainObject<T> {
 
-    public EstatioRefDataObject(final String keyProperties) {
+    public EstatioImmutableObject(final String keyProperties) {
         super(keyProperties);
     }
 

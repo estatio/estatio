@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 
 /**
@@ -72,7 +72,7 @@ import org.estatio.dom.Status;
 })
 @Immutable
 public class Numerator 
-        extends EstatioTransactionalObject<Numerator, Status> 
+        extends EstatioMutableAndLockableObject<Numerator, Status> 
         implements Comparable<Numerator>, BookmarkHolder {
 
     public Numerator() {

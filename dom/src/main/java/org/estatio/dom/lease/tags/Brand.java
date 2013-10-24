@@ -20,16 +20,22 @@ package org.estatio.dom.lease.tags;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
-@javax.jdo.annotations.DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE, 
+        column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Unique(name = "Brand_name_UNQ", members = "name")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -44,7 +50,7 @@ import org.estatio.dom.WithNameUnique;
 })
 @Bounded
 public class Brand
-        extends EstatioRefDataObject<Brand>
+        extends EstatioMutableObject<Brand>
         implements WithNameUnique, WithNameComparable<Brand> {
 
     public Brand() {

@@ -24,6 +24,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -32,7 +33,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 
@@ -51,6 +52,9 @@ import org.estatio.dom.WithReferenceComparable;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "Index_reference_UNQ", members = "reference"),
@@ -66,7 +70,7 @@ import org.estatio.dom.WithReferenceComparable;
 })
 @Immutable
 public class Index 
-        extends EstatioRefDataObject<Index> 
+        extends EstatioMutableObject<Index> 
         implements WithReferenceComparable<Index>, WithNameUnique {
 
     public Index() {

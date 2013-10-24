@@ -24,6 +24,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -36,7 +37,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -45,6 +46,9 @@ import org.estatio.dom.WithReferenceUnique;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "Tax_reference_UNQ", members = "reference")
@@ -59,7 +63,7 @@ import org.estatio.dom.WithReferenceUnique;
 @Bounded
 @Immutable
 public class Tax
-        extends EstatioRefDataObject<Tax>
+        extends EstatioMutableObject<Tax>
         implements WithReferenceComparable<Tax>, WithNameGetter, WithReferenceUnique {
 
     public Tax() {

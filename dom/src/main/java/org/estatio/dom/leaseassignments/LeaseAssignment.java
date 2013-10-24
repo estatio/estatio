@@ -26,7 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.lease.Lease;
 
@@ -38,7 +38,7 @@ import org.estatio.dom.lease.Lease;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
-public class LeaseAssignment extends EstatioTransactionalObject<LeaseAssignment, Status> {
+public class LeaseAssignment extends EstatioMutableAndLockableObject<LeaseAssignment, Status> {
 
     
     public LeaseAssignment() {

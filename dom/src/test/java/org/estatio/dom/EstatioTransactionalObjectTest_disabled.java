@@ -29,7 +29,7 @@ import org.apache.isis.applib.Identifier.Type;
 
 public class EstatioTransactionalObjectTest_disabled {
 
-    public static class SomeTransactionalObject extends EstatioTransactionalObject<SomeTransactionalObject, Status>  {
+    public static class SomeTransactionalObject extends EstatioMutableAndLockableObject<SomeTransactionalObject, Status>  {
         public SomeTransactionalObject() {
             super("status", Status.UNLOCKED, Status.LOCKED);
         }

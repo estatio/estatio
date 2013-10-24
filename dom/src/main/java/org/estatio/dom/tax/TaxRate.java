@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -71,7 +71,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 public class TaxRate 
-    extends EstatioTransactionalObject<TaxRate, Status> 
+    extends EstatioMutableAndLockableObject<TaxRate, Status> 
     implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {

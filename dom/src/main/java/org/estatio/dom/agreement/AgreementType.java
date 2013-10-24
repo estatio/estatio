@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
 
@@ -50,7 +50,7 @@ import org.estatio.dom.WithTitleUnique;
 })
 @Immutable
 @Bounded
-public class AgreementType extends EstatioRefDataObject<AgreementType> 
+public class AgreementType extends EstatioImmutableObject<AgreementType> 
         implements WithTitleComparable<AgreementType>, WithTitleUnique {
 
     public AgreementType() {

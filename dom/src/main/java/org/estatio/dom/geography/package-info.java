@@ -1,5 +1,5 @@
 /**
- * Defines the {@link org.estatio.dom.EstatioRefDataObject reference data} {@link org.estatio.dom.geography.Geography}
+ * Defines the {@link org.estatio.dom.EstatioImmutableObject reference data} {@link org.estatio.dom.geography.Geography}
  * entity, with concrete subtypes {@link org.estatio.dom.geography.Country} and
  * {@link org.estatio.dom.geography.State}.
  * 

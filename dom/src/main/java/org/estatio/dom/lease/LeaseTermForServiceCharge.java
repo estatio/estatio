@@ -20,7 +20,6 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
@@ -32,9 +31,6 @@ import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
 

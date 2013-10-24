@@ -42,7 +42,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -53,12 +53,12 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME,
-        column = "discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "FixedAsset_reference_UNQ", members = { "reference" })
@@ -79,7 +79,7 @@ import org.estatio.dom.party.Party;
 @Bookmarkable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset
-        extends EstatioTransactionalObject<FixedAsset, Status>
+        extends EstatioMutableAndLockableObject<FixedAsset, Status>
         implements WithNameComparable<FixedAsset>, WithReferenceUnique, CommunicationChannelOwner {
 
     public FixedAsset() {

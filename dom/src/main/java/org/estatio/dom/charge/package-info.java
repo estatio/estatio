@@ -1,5 +1,5 @@
 /**
- * Defines the ({@link org.estatio.dom.EstatioRefDataObject reference data}) accounting 
+ * Defines the ({@link org.estatio.dom.EstatioImmutableObject reference data}) accounting 
  * {@link org.estatio.dom.charge.Charge} concept, representing products for which the company invoices its 
  * customers.  Examples are <i>PILOTAGE</i> and <i>ALTRI ONERI</i> (Italian locale).
  * 

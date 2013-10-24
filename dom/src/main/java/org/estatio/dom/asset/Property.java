@@ -50,8 +50,9 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable
-// identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.NEW_TABLE)
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",

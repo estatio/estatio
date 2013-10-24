@@ -54,8 +54,9 @@ public class Sectors extends EstatioDomainService<Sector> {
 
     @Programmatic
     public Sector findOrCreate(final String name) {
-        if (name == null)
+        if (name == null) {
             return null;
+        }
         Sector sector = findByName(name);
         if (sector == null) {
             sector = newTransientInstance(Sector.class);

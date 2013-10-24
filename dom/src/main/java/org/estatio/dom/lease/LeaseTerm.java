@@ -49,7 +49,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.Invoice;
@@ -66,12 +66,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY, 
         column = "id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_startDate_IDX",
@@ -105,7 +105,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm 
-        extends EstatioTransactionalObject<LeaseTerm, LeaseTermStatus> 
+        extends EstatioMutableAndLockableObject<LeaseTerm, LeaseTermStatus> 
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {

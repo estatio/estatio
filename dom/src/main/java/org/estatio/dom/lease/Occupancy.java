@@ -37,7 +37,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.lease.tags.Activities;
@@ -78,7 +78,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& endDate == :endDate")
 })
 public class Occupancy
-        extends EstatioTransactionalObject<Occupancy, Status>
+        extends EstatioMutableAndLockableObject<Occupancy, Status>
         implements WithIntervalMutable<Occupancy>, Taggable {
 
     public Occupancy() {

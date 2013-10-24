@@ -1,5 +1,5 @@
 /**
- * Defines a set of semi- {@link org.estatio.dom.EstatioRefDataObject reference data} like entities - 
+ * Defines a set of semi- {@link org.estatio.dom.EstatioImmutableObject reference data} like entities - 
  * {@link org.estatio.dom.lease.tags.UnitSize UnitSize}, {@link org.estatio.dom.lease.tags.Brand Brand}, 
  * {@link org.estatio.dom.lease.tags.Sector Sector} and {@link org.estatio.dom.lease.tags.Activity Activity} that 
  * characterize (or tag) a particular {@link org.estatio.dom.lease.Occupancy Occupancy}.

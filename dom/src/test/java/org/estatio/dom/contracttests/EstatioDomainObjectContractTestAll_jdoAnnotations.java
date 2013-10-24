@@ -18,9 +18,7 @@
  */
 package org.estatio.dom.contracttests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.lang.annotation.Annotation;
@@ -34,12 +32,14 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Version;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
 
 import org.estatio.dom.EstatioDomainObject;
-import org.estatio.dom.EstatioRefDataObject;
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.TitledEnum;
 
 /**
@@ -61,7 +61,9 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                 // skip (probably a testing class)
                 continue;
             }
-            if (EstatioRefDataObject.class == subtype || EstatioTransactionalObject.class == subtype) {
+            if (    EstatioImmutableObject.class == subtype || 
+                    EstatioMutableObject.class == subtype || 
+                    EstatioMutableAndLockableObject.class == subtype) {
                 // skip
                 continue;
             }
@@ -78,30 +80,29 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                     + "does not specify the identityType", identityType, is(not(nullValue())));
 
             if (identityType == IdentityType.DATASTORE) {
-                // must have a @DatastoreIdentity(..., column="id")
+                // NOT mandatory to have a @DatastoreIdentity, but if does, then @DatastoreIdentity(..., column="id")
                 final DatastoreIdentity datastoreIdentity = subtype.getAnnotation(DatastoreIdentity.class);
-                assertThat("Class " + subtype.getName() + " @PersistenceCapable annotation specifies identityType=\"DATASTORE\" but there is no @DatastoreIdentity annotation",
-                        datastoreIdentity, is(not(nullValue())));
-
-                assertThat("Class " + subtype.getName() + " @DataStoreIdentity annotation does not specify column=\"id\"",
-                        datastoreIdentity.column(), is("id"));
+                if(datastoreIdentity != null) {
+                    assertThat("Class " + subtype.getName() + " @DataStoreIdentity annotation does not specify column=\"id\"",
+                            datastoreIdentity.column(), is("id"));
+                }
             }
 
             Inheritance inheritance = subtype.getAnnotation(Inheritance.class);
             
             if (inheritance != null && inheritance.strategy() == InheritanceStrategy.SUPERCLASS_TABLE) {
-                // must have a @Discriminator(..., column="discriminator")
-                final Discriminator discriminator = subtype.getAnnotation(Discriminator.class);
-                assertThat("Class " + subtype.getName() + " inherits from "+ subtype.getSuperclass().getName()
-                        + "but is not annotated with @Discriminator",
-                        discriminator, is(not(nullValue())));
+                // must NOT have a @Discriminator(..., column="discriminator")
+                final Annotation[] declaredAnnotations = subtype.getDeclaredAnnotations();
+                for (Annotation declaredAnnotation : declaredAnnotations) {
+                    if(declaredAnnotation.annotationType() == Discriminator.class) {
+                        Assert.fail("Class " + subtype.getName() + " inherits from "+ subtype.getSuperclass().getName()
+                                + "and has (incorrectly) been annotated with @Discriminator");
+                    }
+                }
 
-                assertThat("Class " + subtype.getName() + " @Discriminator annotation does not specify column=\"discriminator\"",
-                        discriminator.column(), is("discriminator"));
-
-                // check if supertype has discriminator too
+                // check if supertype has discriminator
                 
-                // must have a @Discriminator(..., column="discriminator") on the supertype too
+                // must have a @Discriminator(..., column="discriminator") on one of its supertypes
                 final Discriminator superDiscriminator = subtype.getSuperclass().getAnnotation(Discriminator.class);
                 assertThat("Class " + subtype.getSuperclass().getName() + " is inherited by "+ subtype.getName()
                         + "but is not annotated with @Discriminator",
@@ -112,11 +113,11 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                 
             }
             
-            if (subtype.getSuperclass().equals(EstatioTransactionalObject.class)) {
+            if (subtype.getSuperclass().equals(EstatioMutableAndLockableObject.class)) {
                 // must have a @Version(..., column="version")
                 final Version version = getAnnotationOfTypeOfItsSupertypes(subtype, Version.class);
                  
-                assertThat("Class " + subtype.getName() + " inherits from EstatioTransactionalObject "
+                assertThat("Class " + subtype.getName() + " inherits from EstatioMutableAndLockableObject "
                         + "but is not annotated with @Version",
                         version, is(not(nullValue())));
 

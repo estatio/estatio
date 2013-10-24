@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithIntervalMutable;
@@ -53,7 +53,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 public class Event
-        extends EstatioTransactionalObject<Event, Status>
+        extends EstatioMutableAndLockableObject<Event, Status>
         implements WithIntervalMutable<Event>, WithDescriptionGetter {
 
     public Event() {

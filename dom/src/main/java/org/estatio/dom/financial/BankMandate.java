@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.financial;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -28,10 +27,9 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.NEW_TABLE)
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 public class BankMandate extends Agreement<Status> {
     
 

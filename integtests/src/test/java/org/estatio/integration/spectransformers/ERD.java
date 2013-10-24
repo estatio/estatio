@@ -20,13 +20,13 @@ import cucumber.api.Transformer;
 
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 
 
 /**
- * A set of Estatio-specific converters for {@link EstatioRefDataObject reference data} objects.
+ * A set of Estatio-specific converters for {@link EstatioImmutableObject reference data} objects.
  * 
  * <p>
  * These converters look up from the repository only.

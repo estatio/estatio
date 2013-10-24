@@ -24,6 +24,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
@@ -33,7 +34,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithStartDate;
 import org.estatio.dom.utils.MathUtils;
 
@@ -47,9 +48,12 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @Immutable
 public class IndexBase 
-        extends EstatioRefDataObject<IndexBase> 
+        extends EstatioMutableObject<IndexBase> 
         implements WithStartDate, Chained<IndexBase> {
 
     private static final int FACTOR_SCALE = 4;

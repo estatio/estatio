@@ -31,7 +31,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioImmutableObject;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -51,7 +51,7 @@ import org.estatio.dom.EstatioRefDataObject;
 })
 @Immutable
 @Bounded
-public class AgreementRoleCommunicationChannelType extends EstatioRefDataObject<AgreementRoleCommunicationChannelType> {
+public class AgreementRoleCommunicationChannelType extends EstatioImmutableObject<AgreementRoleCommunicationChannelType> {
 
     public AgreementRoleCommunicationChannelType() {
         super("title");

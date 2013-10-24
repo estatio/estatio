@@ -18,31 +18,14 @@
  */
 package org.estatio.dom;
 
-import javax.jdo.JDOHelper;
-
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.Hidden;
 
-/**
- * A domain object that is mutable and can be changed by multiple users over time,
- * and should therefore have optimistic locking controls in place.
- * 
- * <p>
- * Subclasses must be annotated with:
- * <pre>
- * @javax.jdo.annotations.Version(
- *     strategy=VersionStrategy.VERSION_NUMBER, 
- *     column="version")
- * public class MyDomainObject extends EstationTransactionalObject {
- *   ...
- * }
- * </pre>
- */
-public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T>, S extends Lockable> 
-        extends EstatioDomainObject<T> 
+public abstract class EstatioMutableAndLockableObject<T extends EstatioDomainObject<T>, S extends Lockable> 
+        extends EstatioMutableObject<T> 
         implements WithLockable<T,S> {
 
     /**
@@ -57,21 +40,12 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
      */
     private final S statusWhenLockedIfAny;
 
-    public EstatioTransactionalObject(
+    public EstatioMutableAndLockableObject(
             final String keyProperties, final S statusWhenUnlocked, final S statusWhenLockedIfAny) {
         super(keyProperties);
         this.statusWhenUnlocked = statusWhenUnlocked;
         this.statusWhenLockedIfAny = statusWhenLockedIfAny;
     }
-
-    @Hidden
-    public String getId() {
-        final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
-        return id;
-    }
-    
-
-    
 
     // //////////////////////////////////////
     
@@ -79,14 +53,6 @@ public abstract class EstatioTransactionalObject<T extends EstatioDomainObject<T
         setLockable(statusWhenLockedIfAny);
     }
     
-    // //////////////////////////////////////
-
-    @Hidden
-    public Long getVersionSequence() {
-        final Long version = (Long) JDOHelper.getVersion(this);
-        return version;
-    }
-
     // //////////////////////////////////////
     
 

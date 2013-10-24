@@ -51,7 +51,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalMutable;
@@ -67,12 +67,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME,
-        column = "discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Indices({
         // to cover the 'findAssetsByReferenceOrName' query
         // both in this superclass and the subclasses
@@ -101,7 +101,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable
 public abstract class Agreement<S extends Lockable>
-        extends EstatioTransactionalObject<Agreement<S>, S>
+        extends EstatioMutableAndLockableObject<Agreement<S>, S>
         implements WithReferenceComparable<Agreement<S>>,
         WithReferenceUnique,
         WithIntervalMutable<Agreement<S>>, Chained<Agreement<S>>,

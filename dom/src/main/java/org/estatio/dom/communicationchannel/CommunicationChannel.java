@@ -33,7 +33,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -50,12 +50,12 @@ import org.estatio.dom.WithReferenceGetter;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceAndType", language = "JDOQL",
@@ -71,7 +71,7 @@ import org.estatio.dom.WithReferenceGetter;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class CommunicationChannel 
-        extends EstatioTransactionalObject<CommunicationChannel, Status> 
+        extends EstatioMutableAndLockableObject<CommunicationChannel, Status> 
         implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {

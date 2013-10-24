@@ -46,7 +46,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
@@ -103,7 +103,7 @@ import org.estatio.dom.party.Party;
                         + "WHERE status == :status ")
 })
 @Bookmarkable
-public class Invoice extends EstatioTransactionalObject<Invoice, InvoiceStatus> {
+public class Invoice extends EstatioMutableAndLockableObject<Invoice, InvoiceStatus> {
 
     public Invoice() {
         super("invoiceNumber", InvoiceStatus.NEW, null);

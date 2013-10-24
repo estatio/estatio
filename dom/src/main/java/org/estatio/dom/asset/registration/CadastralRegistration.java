@@ -1,14 +1,14 @@
 package org.estatio.dom.asset.registration;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(strategy = DiscriminatorStrategy.CLASS_NAME, column = "discriminator")
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+//no @DataStoreIdentity nor @Version, since inherited from supertype
 public class CadastralRegistration extends FixedAssetRegistration {
 
     public String title() {

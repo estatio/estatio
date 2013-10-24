@@ -21,7 +21,6 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
@@ -38,10 +37,9 @@ import org.estatio.dom.utils.MathUtils;
 
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private Index index;

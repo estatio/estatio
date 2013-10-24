@@ -41,14 +41,15 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
-// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+// no @DatastoreIdentity nor @Version, since inherited from supertype
+// discriminator required, since has subtype
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
+public abstract class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
 
     // TODO: make name abstract in FixedAsset
     // (in order to be able to define subclass-specific constraint, see above)

@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
@@ -26,9 +25,7 @@ import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
     @javax.jdo.annotations.Index(
             name="EmailAddress_emailAddress_IDX", members={"emailAddress"})

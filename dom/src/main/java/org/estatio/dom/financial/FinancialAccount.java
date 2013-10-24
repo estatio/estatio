@@ -29,7 +29,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
@@ -40,12 +40,12 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.IDENTITY, 
         column = "id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @javax.jdo.annotations.Version(
         strategy=VersionStrategy.VERSION_NUMBER, 
         column="version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "FinancialAccount_reference_UNQ", members = "reference")
@@ -69,7 +69,7 @@ import org.estatio.dom.party.Party;
                         + "WHERE owner == :owner")
 })
 public abstract class FinancialAccount 
-        extends EstatioTransactionalObject<FinancialAccount, Status> 
+        extends EstatioMutableAndLockableObject<FinancialAccount, Status> 
         implements WithNameGetter, WithReferenceUnique  {
 
     public FinancialAccount() {

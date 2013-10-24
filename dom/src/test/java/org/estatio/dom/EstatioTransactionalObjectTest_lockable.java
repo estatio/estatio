@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public class EstatioTransactionalObjectTest_lockable {
 
-    public static class SomeTransactionalObject extends EstatioTransactionalObject<SomeTransactionalObject, Status>  {
+    public static class SomeTransactionalObject extends EstatioMutableAndLockableObject<SomeTransactionalObject, Status>  {
         public SomeTransactionalObject() {
             super("status", Status.UNLOCKED, Status.LOCKED);
         }

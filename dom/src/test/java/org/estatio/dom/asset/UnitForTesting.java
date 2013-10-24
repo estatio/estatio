@@ -16,18 +16,9 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.webapp.services.admin;
+package org.estatio.dom.asset;
 
-import org.apache.isis.applib.annotation.Named;
 
-import org.estatio.dom.EstatioImmutableObject;
-
-/**
- * This is a dummy service that is, nevertheless, registered, in order that 
- * miscellaneous domain services, typically for {@link EstatioImmutableObject reference data} entities,
- * can associate their various actions together.
- */
-@Named("Other")
-public class OtherServices {
+public class UnitForTesting extends Unit {
 
 }

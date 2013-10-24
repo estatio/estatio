@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.party.Party;
@@ -85,7 +85,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole
-        extends EstatioTransactionalObject<FixedAssetRole, Status>
+        extends EstatioMutableAndLockableObject<FixedAssetRole, Status>
         implements WithIntervalContiguous<FixedAssetRole> {
 
     private WithIntervalContiguous.Helper<FixedAssetRole> helper =

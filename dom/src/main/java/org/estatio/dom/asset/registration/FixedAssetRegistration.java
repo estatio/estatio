@@ -19,24 +19,28 @@
 package org.estatio.dom.asset.registration;
 
 import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.asset.FixedAsset;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME,
-        column = "discriminator")
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findBySubject", language = "JDOQL",
@@ -44,7 +48,7 @@ import org.estatio.dom.asset.FixedAsset;
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
                         + "WHERE subject == :subject"),
 })
-public class FixedAssetRegistration extends EstatioTransactionalObject<FixedAssetRegistration, Status> {
+public abstract class FixedAssetRegistration extends EstatioMutableAndLockableObject<FixedAssetRegistration, Status> {
 
     public FixedAssetRegistration() {
         super("type", Status.UNLOCKED, Status.LOCKED);

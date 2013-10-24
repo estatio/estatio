@@ -20,17 +20,15 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+@javax.jdo.annotations.Inheritance(
+        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////

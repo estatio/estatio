@@ -32,7 +32,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -63,7 +63,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class PartyRegistration
-        extends EstatioTransactionalObject<PartyRegistration, Status>
+        extends EstatioMutableAndLockableObject<PartyRegistration, Status>
         implements WithIntervalMutable<PartyRegistration> {
 
     public PartyRegistration() {

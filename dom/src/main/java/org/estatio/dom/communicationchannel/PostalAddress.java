@@ -20,7 +20,6 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
@@ -36,9 +35,7 @@ import org.estatio.dom.geography.States;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+//no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
     @javax.jdo.annotations.Index(
             name="PostalAddress_main_idx", 

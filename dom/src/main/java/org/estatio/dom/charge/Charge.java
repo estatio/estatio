@@ -20,13 +20,14 @@ package org.estatio.dom.charge;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithCodeUnique;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
@@ -36,6 +37,9 @@ import org.estatio.dom.tax.Tax;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Uniques({
     @javax.jdo.annotations.Unique(
             name = "Charge_code_UNQ", members={"code"}),
@@ -52,7 +56,7 @@ import org.estatio.dom.tax.Tax;
 @Bounded
 @Immutable
 public class Charge 
-        extends EstatioRefDataObject<Charge> 
+        extends EstatioMutableObject<Charge> 
         implements WithReferenceUnique, WithCodeUnique, WithNameGetter {
 
     public Charge() {

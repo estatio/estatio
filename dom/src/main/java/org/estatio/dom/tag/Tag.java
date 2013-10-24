@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.tag;
 
-import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -31,7 +30,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioRefDataObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameGetter;
 
 /**
@@ -49,9 +48,6 @@ import org.estatio.dom.WithNameGetter;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
@@ -61,7 +57,7 @@ import org.estatio.dom.WithNameGetter;
 })
 @Immutable
 public class Tag 
-        extends EstatioRefDataObject<Tag> 
+        extends EstatioMutableObject<Tag> 
         implements WithNameGetter {
 
     public Tag() {

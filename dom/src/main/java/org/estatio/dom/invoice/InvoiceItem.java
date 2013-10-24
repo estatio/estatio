@@ -43,7 +43,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioTransactionalObject;
+import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.Status;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
@@ -65,15 +65,15 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.DatastoreIdentity(
         strategy=IdGeneratorStrategy.NATIVE, 
         column="id")
-@javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER, 
         column = "version")
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME, 
+        column="discriminator")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class InvoiceItem 
-        extends EstatioTransactionalObject<InvoiceItem, Status> 
+        extends EstatioMutableAndLockableObject<InvoiceItem, Status> 
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
