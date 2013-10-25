@@ -159,7 +159,7 @@ You can find plenty of help on using Apache Isis at the [Isis mailing lists](htt
 
 Thanks to
 
-* <img src="https://raw.github.com/estatio/estatio/master/codequality/logoClover.png"/> [Atlassian](https://www.atlassian.com) for providing an open source [Clover](https://www.atlassian.com/software/clover/overview/) license 
+* <img src="https://raw.github.com/estatio/estatio/master/codequality/logoClover.png" width="100"/> [Atlassian](https://www.atlassian.com) for providing an open source [Clover](https://www.atlassian.com/software/clover/overview/) license 
 * [Headway Software](http://structure101.com/contact/) for providing an open source [Structure 101](http://structure101.com/) license
 
 ## Legal Stuff ##
