@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
@@ -136,4 +137,23 @@ public interface WithInterval<T extends WithInterval<T>> extends WithStartDate {
             return iterator.hasNext() ? iterator.next() : null;
         }
     }
+    
+    public final static class Predicates {
+        
+        private Predicates(){}
+        
+        /**
+         * A {@link Predicate} that tests whether the role's {@link WithInterval#isCurrent() current}
+         * status is the specified value.
+         */
+        public static <T extends WithInterval<T>> Predicate<T> whetherCurrentIs(final boolean current) {
+            return new Predicate<T>() {
+                public boolean apply(final T candidate) {
+                    return candidate != null && candidate.isCurrent() == current;
+                }
+            };
+        }
+
+    }
+    
 }

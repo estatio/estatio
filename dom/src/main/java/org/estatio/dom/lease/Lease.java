@@ -50,6 +50,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
+import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.invoice.InvoiceSource;
@@ -319,20 +320,16 @@ public class Lease
             final BankAccount bankAccount,
             final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
-        final BankMandate bankMandate = newTransientInstance(BankMandate.class);
-        final AgreementType bankMandateAgreementType = bankMandateAgreementType();
-        final AgreementRoleType debtorRoleType = debtorRoleType();
+        
+        final String reference = bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd");
+        final String name = null;
+        final Party creditor = getPrimaryParty();
+        final Party debtor = getSecondaryParty();
+        
+        final BankMandate bankMandate = 
+                bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
 
-        bankMandate.setAgreementType(bankMandateAgreementType);
-        bankMandate.setBankAccount(bankAccount);
-        bankMandate.setStartDate(startDate);
-        bankMandate.setEndDate(endDate);
-        bankMandate.setReference(bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd"));
-        bankMandate.newRole(debtorRoleType, getSecondaryParty(), startDate, endDate);
-
-        persist(bankMandate);
         paidBy(bankMandate);
-
         return this;
     }
 
@@ -385,6 +382,9 @@ public class Lease
 
     private AgreementRoleType debtorRoleType() {
         return agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
+    }
+    private AgreementRoleType creditorRoleType() {
+        return agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
     }
 
     private AgreementType bankMandateAgreementType() {
@@ -466,6 +466,12 @@ public class Lease
 
     public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
+    }
+
+    private BankMandates bankMandates;
+
+    public final void injectBankMandates(final BankMandates bankMandates) {
+        this.bankMandates = bankMandates;
     }
 
 }

@@ -22,7 +22,6 @@ import java.util.SortedSet;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
@@ -183,7 +182,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>>
         public T getPredecessor(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
-                    Predicates.<T>and(
+                    com.google.common.base.Predicates.<T>and(
                             filter,
                             endDatePreceding(withInterval.getStartDate())));
         }
@@ -191,7 +190,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>>
         public T getSuccessor(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
-                    Predicates.<T>and(
+                    com.google.common.base.Predicates.<T>and(
                             filter,
                             startDateFollowing(withInterval.getEndDate())));
 

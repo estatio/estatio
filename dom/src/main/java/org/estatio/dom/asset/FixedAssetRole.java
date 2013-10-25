@@ -24,6 +24,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Function;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -42,6 +44,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -80,7 +83,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE asset == :asset "
                         + "&& party == :party "
                         + "&& type == :type "
-                        + "&& endDate == :endDate")
+                        + "&& endDate == :endDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByParty", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE party == :party ")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class FixedAssetRole
@@ -332,4 +340,35 @@ public class FixedAssetRole
         return null;
     }
 
+    // //////////////////////////////////////
+
+    public final static class Functions {
+        
+        private Functions(){}
+
+        /**
+         * A {@link Function} that obtains the role's {@link FixedAssetRole#getParty() party} attribute.
+         */
+        public static <T extends Party> Function<FixedAssetRole, T> partyOf() {
+            return new Function<FixedAssetRole, T>() {
+                @SuppressWarnings("unchecked")
+                public T apply(final FixedAssetRole fixedAssetRole) {
+                    return (T) (fixedAssetRole != null ? fixedAssetRole.getParty() : null);
+                }
+            };
+        }
+        
+        /**
+         * A {@link Function} that obtains the role's {@link FixedAssetRole#getAsset() asset} attribute.
+         */
+        public static <T extends FixedAsset> Function<FixedAssetRole, T> assetOf() {
+            return new Function<FixedAssetRole, T>() {
+                @SuppressWarnings("unchecked")
+                public T apply(final FixedAssetRole fixedAssetRole) {
+                    return (T) (fixedAssetRole != null ? fixedAssetRole.getAsset() : null);
+                }
+            };
+        }
+    }
+    
 }

@@ -39,10 +39,10 @@ public class FixedAssets extends EstatioDomainService<FixedAsset> {
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<FixedAsset> findAssetsByReferenceOrName(final String searchPhrase) {
-        return allMatches("findAssetsByReferenceOrName", 
+        return allMatches("findByReferenceOrName", 
                 "regex", StringUtils.wildcardToCaseInsensitiveRegex(searchPhrase));
     }
-
+    
     // //////////////////////////////////////
 
     @Hidden

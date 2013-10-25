@@ -67,10 +67,10 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
         mandate.setBankAccount(bankAccount);
         persistIfNotAlready(mandate);
 
-        final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
-        mandate.newRole(artTenant, creditor, null, null);
-        final AgreementRoleType artLandlord = agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
-        mandate.newRole(artLandlord, debtor, null, null);
+        final AgreementRoleType artCreditor = agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
+        mandate.newRole(artCreditor, creditor, null, null);
+        final AgreementRoleType artDebtor = agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
+        mandate.newRole(artDebtor, debtor, null, null);
         return mandate;
     }
 

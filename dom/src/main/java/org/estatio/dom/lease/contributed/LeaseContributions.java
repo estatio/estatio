@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.agreement.AgreementType;
@@ -73,7 +74,7 @@ public class LeaseContributions {
     private static Predicate<AgreementRole> whetherCurrentAndAgreementTypeIs(final AgreementType agreementType) {
         return Predicates.and(
                 AgreementRole.Predicates.whetherAgreementTypeIs(agreementType),
-                AgreementRole.Predicates.whetherCurrentIs(true));
+                WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
     }
 
     

@@ -52,6 +52,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
@@ -170,7 +171,7 @@ public abstract class Agreement
 
         // try to find the one that is current...
         Iterable<AgreementRole> roles =
-                Iterables.filter(rolesOfType, AgreementRole.Predicates.whetherCurrentIs(true));
+                Iterables.filter(rolesOfType, WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
 
         // ... else the most recently ended one
         if (Iterables.isEmpty(roles)) {

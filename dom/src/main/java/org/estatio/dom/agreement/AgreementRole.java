@@ -49,6 +49,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -444,18 +445,8 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
                 }};
         }
         
-        /**
-         * A {@link Predicate} that tests whether the role's {@link AgreementRole#isCurrent() current}
-         * status is the specified value.
-         */
-        public static Predicate<AgreementRole> whetherCurrentIs(final boolean current) {
-            return new Predicate<AgreementRole>() {
-                public boolean apply(final AgreementRole candidate) {
-                    return candidate != null && candidate.isCurrent() == current;
-                }
-            };
-        }
     }
+    
 
     public final static class Functions {
         
