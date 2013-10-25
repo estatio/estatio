@@ -28,8 +28,8 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
@@ -39,6 +39,16 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 
 
+/**
+ * These contributions act upon {@link AgreementRoleHolder}, and from its 
+ * {@link AgreementRoleHolder#getAgreements()set of} {@link AgreementRole}, project to the corresponding
+ * {@link Lease}s.
+ * 
+ * <p>
+ * An alternative design would be to simply do a repository query against the database; this would be more efficient 
+ * (avoid an N+1 search as is the current design).  However, that query would be quite complex, having to traverse
+ * from {@link Lease} to {@link AgreementRole} to {@link org.estatio.dom.party.Party}. 
+ */
 @Hidden
 public class LeaseContributions { 
 

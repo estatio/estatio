@@ -25,9 +25,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -44,17 +42,19 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     // //////////////////////////////////////
 
-    @NotContributed
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "1")
+    
+    /**
+     * for migration API only
+     */
+    @Programmatic
     public BankMandate newBankMandate(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
-            final @Named("Reference") String reference,
-            final @Named("Name") String name,
-            final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("End Date") LocalDate endDate,
-            final @Optional @Named("Debtor") Party debtor,
-            final @Optional @Named("Creditor") Party creditor, 
+            final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Party debtor,
+            final Party creditor, 
             final BankAccount bankAccount
             // CHECKSTYLE:ON
             ) {
@@ -78,7 +78,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Accounts", sequence = "99")
     public List<BankMandate> allBankMandates() {
         return allInstances();
     }

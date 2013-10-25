@@ -39,6 +39,16 @@ import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.FinancialConstants;
 
 
+/**
+ * These contributions act upon {@link AgreementRoleHolder}, and from its 
+ * {@link AgreementRoleHolder#getAgreements()set of} {@link AgreementRole}, project to the corresponding
+ * {@link BankMandate}s.
+ * 
+ * <p>
+ * An alternative design would be to simply do a repository query against the database; this would be more efficient 
+ * (avoid an N+1 search as is the current design).  However, that query would be quite complex, having to traverse
+ * from {@link BankMandate} to {@link AgreementRole} to {@link org.estatio.dom.party.Party}. 
+ */
 @Hidden
 public class BankMandateContributions { 
 
