@@ -30,17 +30,17 @@
     {
       "span": 8,
       "collections": {
-        "leases": {
+        "currentLeases": {
             "actions": {
-                "listAllLeases": {}
+                "allLeases": {}
             }
         },
         "communicationChannels": {
           "actions": {}
         },
-        "bankMandates": {
+        "currentBankMandates": {
             "actions": {
-                "listAllMandates": {}
+                "allMandates": {}
             }
         },
         "financialAccounts": {

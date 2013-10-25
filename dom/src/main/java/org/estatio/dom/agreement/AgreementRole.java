@@ -413,67 +413,92 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
 
     // //////////////////////////////////////
 
-    /**
-     * A {@link Predicate} that tests whether the role's {@link AgreementRole#getType() type}
-     * is the specified value.
-     */
-    public static Predicate<AgreementRole> whetherTypeIs(final AgreementRoleType art) {
-        return new Predicate<AgreementRole>(){
+    public final static class Predicates {
+        
+        private Predicates(){}
+        
+        /**
+         * A {@link Predicate} that tests whether the role's {@link AgreementRole#getType() type}
+         * is the specified value.
+         */
+        public static Predicate<AgreementRole> whetherTypeIs(final AgreementRoleType art) {
+            return new Predicate<AgreementRole>(){
 
-            @Override
-            public boolean apply(final AgreementRole input) {
-                return input != null && input.getType() == art;
-            }};
-    }
+                @Override
+                public boolean apply(final AgreementRole input) {
+                    return input != null && input.getType() == art;
+                }};
+        }
 
-    
-    /**
-     * A {@link Predicate} that tests whether the role's {@link AgreementRole#getAgreement() agreement}'s
-     * {@link Agreement#getAgreementType() type} is the specified value.
-     */
-    public static Predicate<AgreementRole> whetherAgreementTypeIs(final AgreementType at) {
-        return new Predicate<AgreementRole>(){
-            
-            @Override
-            public boolean apply(final AgreementRole input) {
-                return input != null && input.getAgreement().getAgreementType() == at;
-            }};
-    }
-    
-    /**
-     * A {@link Predicate} that tests whether the role's {@link AgreementRole#isCurrent() current}
-     * status is the specified value.
-     */
-    public static Predicate<AgreementRole> whetherCurrentIs(final boolean current) {
-        return new Predicate<AgreementRole>() {
-            public boolean apply(final AgreementRole candidate) {
-                return candidate != null && candidate.isCurrent() == current;
-            }
-        };
-    }
-
-    /**
-     * A {@link Function} that obtains the role's {@link AgreementRole#getParty() party} attribute.
-     */
-    static Function<AgreementRole, Party> partyOf() {
-        return new Function<AgreementRole, Party>() {
-            public Party apply(final AgreementRole agreementRole) {
-                return agreementRole != null ? agreementRole.getParty() : null;
-            }
-        };
+        
+        /**
+         * A {@link Predicate} that tests whether the role's {@link AgreementRole#getAgreement() agreement}'s
+         * {@link Agreement#getAgreementType() type} is the specified value.
+         */
+        public static Predicate<AgreementRole> whetherAgreementTypeIs(final AgreementType at) {
+            return new Predicate<AgreementRole>(){
+                
+                @Override
+                public boolean apply(final AgreementRole input) {
+                    return input != null && input.getAgreement().getAgreementType() == at;
+                }};
+        }
+        
+        /**
+         * A {@link Predicate} that tests whether the role's {@link AgreementRole#isCurrent() current}
+         * status is the specified value.
+         */
+        public static Predicate<AgreementRole> whetherCurrentIs(final boolean current) {
+            return new Predicate<AgreementRole>() {
+                public boolean apply(final AgreementRole candidate) {
+                    return candidate != null && candidate.isCurrent() == current;
+                }
+            };
+        }
     }
 
-    /**
-     * A {@link Function} that obtains the role's {@link AgreementRole#getEffectiveEndDate() effective end date} 
-     * attribute.
-     */
-    static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
-        return new Function<AgreementRole, LocalDate>() {
-            @Override
-            public LocalDate apply(final AgreementRole input) {
-                return input != null? input.getEffectiveInterval().endDate(): null;
-            }};
+    public final static class Functions {
+        
+        private Functions(){}
+
+        /**
+         * A {@link Function} that obtains the role's {@link AgreementRole#getParty() party} attribute.
+         */
+        public static <T extends Party> Function<AgreementRole, T> partyOf() {
+            return new Function<AgreementRole, T>() {
+                @SuppressWarnings("unchecked")
+                public T apply(final AgreementRole agreementRole) {
+                    return (T) (agreementRole != null ? agreementRole.getParty() : null);
+                }
+            };
+        }
+
+        /**
+         * A {@link Function} that obtains the role's {@link AgreementRole#getAgreement() agreement} attribute.
+         */
+        public static <T extends Agreement> Function<AgreementRole, T> agreementOf() {
+            return new Function<AgreementRole, T>() {
+                @SuppressWarnings("unchecked")
+                public T apply(final AgreementRole agreementRole) {
+                    return (T) (agreementRole != null ? agreementRole.getAgreement(): null);
+                }
+            };
+        }
+        
+        /**
+         * A {@link Function} that obtains the role's {@link AgreementRole#getEffectiveEndDate() effective end date} 
+         * attribute.
+         */
+        public static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
+            return new Function<AgreementRole, LocalDate>() {
+                @Override
+                public LocalDate apply(final AgreementRole input) {
+                    return input != null? input.getEffectiveInterval().endDate(): null;
+                }};
+        }
+
     }
+
     
 
     // //////////////////////////////////////

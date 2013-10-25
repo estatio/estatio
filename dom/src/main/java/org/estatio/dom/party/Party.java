@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.party;
 
-import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -27,30 +26,19 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.AgreementRoleHolder;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
-import org.estatio.dom.financial.FinancialConstants;
-import org.estatio.dom.lease.LeaseConstants;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -88,7 +76,7 @@ import org.estatio.dom.lease.LeaseConstants;
 @Bookmarkable
 public abstract class Party
         extends EstatioMutableObject<Party>
-        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner {
+        implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner, AgreementRoleHolder {
 
     public Party() {
         super("name");
@@ -147,46 +135,6 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    @NotPersisted
-    @Render(Type.EAGERLY)
-    public Collection<AgreementRole> getLeases() {
-        return listCurrentAgreementsOfType(LeaseConstants.AT_LEASE);
-    }
-
-    @NotPersisted
-    @Render(Type.EAGERLY)
-    public Collection<AgreementRole> getBankMandates() {
-        return listCurrentAgreementsOfType(FinancialConstants.AT_MANDATE);
-    }
-
-    private Collection<AgreementRole> listCurrentAgreementsOfType(final String art) {
-        final AgreementType agreementType = agreementTypes.find(art);
-        return Lists.newArrayList(
-                Iterables.filter(getAgreements(),
-                        Predicates.and(
-                                AgreementRole.whetherAgreementTypeIs(agreementType),
-                                AgreementRole.whetherCurrentIs(true))));
-    }
-
-    @Named("List All")
-    public Collection<AgreementRole> listAllLeases() {
-        return listAgreementsOfType(LeaseConstants.AT_LEASE);
-    }
-
-    @Named("List All")
-    public Collection<AgreementRole> listAllMandates() {
-        return listAgreementsOfType(FinancialConstants.AT_MANDATE);
-    }
-
-    private Collection<AgreementRole> listAgreementsOfType(final String art) {
-        final AgreementType agreementType = agreementTypes.find(art);
-        return Lists.newArrayList(
-                Iterables.filter(getAgreements(),
-                        AgreementRole.whetherAgreementTypeIs(agreementType)));
-    }
-
-    // //////////////////////////////////////
-
     // TODO: EST-86. is a bidir mapping required?
     // @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
@@ -203,14 +151,6 @@ public abstract class Party
     @Hidden
     public Party newRegistration() {
         return this;
-    }
-
-    // //////////////////////////////////////
-
-    private AgreementTypes agreementTypes;
-
-    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
     }
 
 }

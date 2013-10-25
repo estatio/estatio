@@ -166,11 +166,11 @@ public abstract class Agreement
     protected AgreementRole findCurrentOrMostRecentAgreementRole(final AgreementRoleType agreementRoleType) {
         // all available roles
         final Iterable<AgreementRole> rolesOfType =
-                Iterables.filter(getRoles(), AgreementRole.whetherTypeIs(agreementRoleType));
+                Iterables.filter(getRoles(), AgreementRole.Predicates.whetherTypeIs(agreementRoleType));
 
         // try to find the one that is current...
         Iterable<AgreementRole> roles =
-                Iterables.filter(rolesOfType, AgreementRole.whetherCurrentIs(true));
+                Iterables.filter(rolesOfType, AgreementRole.Predicates.whetherCurrentIs(true));
 
         // ... else the most recently ended one
         if (Iterables.isEmpty(roles)) {
@@ -184,11 +184,11 @@ public abstract class Agreement
     }
 
     protected Party partyOf(final AgreementRole agreementRole) {
-        return AgreementRole.partyOf().apply(agreementRole);
+        return AgreementRole.Functions.partyOf().apply(agreementRole);
     }
 
     private static Ordering<AgreementRole> orderRolesByEffectiveEndDateReverseNullsFirst() {
-        return Ordering.natural().onResultOf(AgreementRole.effectiveEndDateOf()).reverse().nullsFirst();
+        return Ordering.natural().onResultOf(AgreementRole.Functions.effectiveEndDateOf()).reverse().nullsFirst();
     }
 
     // //////////////////////////////////////
