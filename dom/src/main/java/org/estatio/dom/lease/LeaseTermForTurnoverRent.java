@@ -22,9 +22,6 @@ import java.math.BigDecimal;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 

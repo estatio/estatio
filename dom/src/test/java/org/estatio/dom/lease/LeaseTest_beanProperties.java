@@ -21,8 +21,6 @@ package org.estatio.dom.lease;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.PojoTester.FilterSet;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;

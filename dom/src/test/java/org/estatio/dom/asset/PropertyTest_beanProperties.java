@@ -23,9 +23,6 @@ import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.Lockable;
-import org.estatio.dom.PojoTester.FilterSet;
-import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.geography.Country;
 
 public class PropertyTest_beanProperties extends AbstractBeanPropertiesTest {

@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.lease;
 
-import org.estatio.dom.Lockable;
 import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseStatus  {
