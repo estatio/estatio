@@ -18,7 +18,7 @@ package org.estatio.integration.spectransformers;
 
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
@@ -36,11 +36,11 @@ public class EMO  {
     /**
      * Looks up from session only.
      */
-    public static class DomainObject extends NullRecognizingTransformer<EstatioMutableAndLockableObject<?, ?>> {
+    public static class DomainObject extends NullRecognizingTransformer<EstatioMutableObject<?>> {
 
         @Override
-        public org.estatio.dom.EstatioMutableAndLockableObject<?,?> transformNonNull(String id) {
-            return ScenarioExecution.current().getVar(null, id, org.estatio.dom.EstatioMutableAndLockableObject.class);
+        public org.estatio.dom.EstatioMutableObject<?> transformNonNull(String id) {
+            return ScenarioExecution.current().getVar(null, id, org.estatio.dom.EstatioMutableObject.class);
         }
     }
 

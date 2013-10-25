@@ -21,7 +21,7 @@ package org.estatio.dom.lease;
 import org.estatio.dom.Lockable;
 import org.estatio.dom.utils.StringUtils;
 
-public enum LeaseTermStatus implements Lockable {
+public enum LeaseTermStatus {
 
     APPROVED,
     NEW;
@@ -30,13 +30,15 @@ public enum LeaseTermStatus implements Lockable {
         return StringUtils.enumTitle(this.name());
     }
 
-    @Override
-    public boolean isUnlocked() {
-        return this == NEW;
-    }
-
     public static LeaseTermStatus valueOfElse(final String status, final LeaseTermStatus statusElse) {
         return status != null? valueOf(status): statusElse;
+    }
+
+    public boolean isApproved() {
+        return this == LeaseTermStatus.APPROVED;
+    }
+    public boolean isNew() {
+        return this == LeaseTermStatus.NEW;
     }
 
  }

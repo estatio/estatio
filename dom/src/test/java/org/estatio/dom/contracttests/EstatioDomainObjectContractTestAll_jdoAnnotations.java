@@ -18,7 +18,9 @@
  */
 package org.estatio.dom.contracttests;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.lang.annotation.Annotation;
@@ -38,7 +40,6 @@ import org.reflections.Reflections;
 
 import org.estatio.dom.EstatioDomainObject;
 import org.estatio.dom.EstatioImmutableObject;
-import org.estatio.dom.EstatioMutableAndLockableObject;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.TitledEnum;
 
@@ -61,9 +62,8 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                 // skip (probably a testing class)
                 continue;
             }
-            if (    EstatioImmutableObject.class == subtype || 
-                    EstatioMutableObject.class == subtype || 
-                    EstatioMutableAndLockableObject.class == subtype) {
+            if (EstatioImmutableObject.class == subtype || 
+                EstatioMutableObject.class == subtype) {
                 // skip
                 continue;
             }
@@ -113,11 +113,11 @@ public class EstatioDomainObjectContractTestAll_jdoAnnotations {
                 
             }
             
-            if (subtype.getSuperclass().equals(EstatioMutableAndLockableObject.class)) {
+            if (subtype.getSuperclass().equals(EstatioMutableObject.class)) {
                 // must have a @Version(..., column="version")
                 final Version version = getAnnotationOfTypeOfItsSupertypes(subtype, Version.class);
                  
-                assertThat("Class " + subtype.getName() + " inherits from EstatioMutableAndLockableObject "
+                assertThat("Class " + subtype.getName() + " inherits from EstatioMutableObject "
                         + "but is not annotated with @Version",
                         version, is(not(nullValue())));
 

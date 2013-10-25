@@ -398,7 +398,7 @@ public class Lease
     public Lease approveAllTermsOfThisLease() {
         for (LeaseItem item : getItems()) {
             for (LeaseTerm term : item.getTerms()) {
-                term.lock();
+                term.approve();
             }
         }
         return this;

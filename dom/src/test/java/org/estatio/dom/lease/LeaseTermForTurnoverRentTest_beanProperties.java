@@ -33,12 +33,12 @@ public class LeaseTermForTurnoverRentTest_beanProperties extends AbstractBeanPro
 	        .withFixture(pojos(LeaseItem.class))
             .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
             .withFixture(statii())
-	        .exercise(new LeaseTermForTurnoverRent(), FilterSet.excluding("lockable"));
+	        .exercise(new LeaseTermForTurnoverRent());
 	}
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static FixtureDatumFactory<Lockable> statii() {
-        return new FixtureDatumFactory(Lockable.class, (Object[])org.estatio.dom.lease.LeaseTermStatus.values());
+    private static FixtureDatumFactory<LeaseTermStatus> statii() {
+        return new FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
     }
 
 }

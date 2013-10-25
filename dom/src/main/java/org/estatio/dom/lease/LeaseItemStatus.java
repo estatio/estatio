@@ -18,21 +18,15 @@
  */
 package org.estatio.dom.lease;
 
-import org.estatio.dom.Lockable;
 import org.estatio.dom.utils.StringUtils;
 
-public enum LeaseItemStatus implements Lockable {
+public enum LeaseItemStatus {
 
     APPROVED,
     NEW;
 
     public String title() {
         return StringUtils.enumTitle(this.name());
-    }
-
-    @Override
-    public boolean isUnlocked() {
-        return this == NEW;
     }
 
     public static LeaseItemStatus valueOfElse(final String status, final LeaseItemStatus statusElse) {

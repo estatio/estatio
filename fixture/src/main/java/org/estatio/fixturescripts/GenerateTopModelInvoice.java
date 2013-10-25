@@ -39,8 +39,8 @@ public class GenerateTopModelInvoice implements Callable<Object> {
         for (LeaseItem leaseItem : items) {
             final SortedSet<LeaseTerm> terms = leaseItem.getTerms();
             for (LeaseTerm leaseTerm : terms) {
-                if(leaseTerm.getStatus().isUnlocked()) {
-                    leaseTerm.lock();
+                if(leaseTerm.getStatus().isNew()) {
+                    leaseTerm.approve();
                 }
             }
 

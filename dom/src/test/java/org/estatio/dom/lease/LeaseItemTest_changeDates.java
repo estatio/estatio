@@ -31,7 +31,6 @@ import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_cha
 
 public class LeaseItemTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<LeaseItem> {
 
-    private boolean locked;
     private LeaseItem leaseItem;
 
     @Before
@@ -45,25 +44,9 @@ public class LeaseItemTest_changeDates extends AbstractWithIntervalMutableContra
             org.estatio.dom.WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
                 return mockChangeDates;
             }
-            @Override
-            public boolean isLocked() {
-                return locked;
-            }
         };
     }
     
-    @Test
-    public void disableChangeDates_whenLocked() throws Exception {
-        locked = true;
-        assertThat(leaseItem.disableChangeDates(null,null), is("Cannot modify when locked"));
-    }
-    
-    @Test
-    public void disableChangeDates_whenNotLocked() throws Exception {
-        locked = false;
-        assertThat(leaseItem.disableChangeDates(null,null), is(nullValue()));
-    }
-
 
     // //////////////////////////////////////
 

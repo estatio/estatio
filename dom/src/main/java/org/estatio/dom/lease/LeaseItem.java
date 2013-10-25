@@ -45,7 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
@@ -106,24 +106,15 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem 
-        extends EstatioMutableAndLockableObject<LeaseItem, LeaseItemStatus> 
+        extends EstatioMutableObject<LeaseItem> 
         implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     private static final int PAGE_SIZE = 15;
 
     public LeaseItem() {
-        super("lease, type, sequence desc", LeaseItemStatus.NEW, null);
+        super("lease, type, sequence desc");
     }
 
-    @Override
-    public LeaseItemStatus getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final LeaseItemStatus lockable) {
-        setStatus(lockable);
-    }
 
     // //////////////////////////////////////
 
@@ -248,7 +239,7 @@ public class LeaseItem
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override

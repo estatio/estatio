@@ -41,13 +41,13 @@ public class LeaseTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(AgreementType.class))
 	        .withFixture(pojos(BankMandate.class))
             .withFixture(statii())
-	        .exercise(new Lease(), FilterSet.excluding("lockable"));
+	        .exercise(new Lease());
 	}
 
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static FixtureDatumFactory<Lockable> statii() {
-        return new FixtureDatumFactory(Lockable.class, (Object[])LeaseStatus.values());
+    private static FixtureDatumFactory<LeaseStatus> statii() {
+        return new FixtureDatumFactory(LeaseStatus.class, (Object[])LeaseStatus.values());
     }
 
 }

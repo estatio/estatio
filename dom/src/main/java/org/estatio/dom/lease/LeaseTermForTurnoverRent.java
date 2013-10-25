@@ -22,6 +22,9 @@ import java.math.BigDecimal;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 
@@ -113,7 +116,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     public BigDecimal getApprovedValue() {
-        return isLocked()? getTurnoverRentValue(): null;
+        return getStatus().isApproved()? getTurnoverRentValue(): null;
     }
 
     // //////////////////////////////////////
@@ -157,15 +160,14 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    public LeaseTerm lock() {
-        super.lock();
+    public LeaseTerm approve() {
+        super.approve();
 
-        // guard against invalid updates when called as bulk action
-        if (isLocked()) {
-            return this;
-        } 
+        if (!getStatus().isApproved()) {
+            // need this guard, cos may be called as bulk action
+            setTurnoverRentValue(getTrialValue());
+        }
 
-        setTurnoverRentValue(getTrialValue());
         return this;
     }
 

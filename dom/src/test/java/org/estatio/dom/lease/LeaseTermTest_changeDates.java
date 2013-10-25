@@ -33,7 +33,6 @@ import org.estatio.dom.contracttests.AbstractWithIntervalMutableContractTest_cha
 
 public class LeaseTermTest_changeDates extends AbstractWithIntervalMutableContractTest_changeDates<LeaseTerm> {
 
-    private boolean locked;
     private LeaseTerm leaseTerm;
 
     @Before
@@ -48,10 +47,6 @@ public class LeaseTermTest_changeDates extends AbstractWithIntervalMutableContra
                 return mockChangeDates;
             }
             @Override
-            public boolean isLocked() {
-                return locked;
-            }
-            @Override
             public BigDecimal getTrialValue() {
                 return null;
             }
@@ -62,18 +57,6 @@ public class LeaseTermTest_changeDates extends AbstractWithIntervalMutableContra
         };
     }
     
-    @Test
-    public void disableChangeDates_whenLocked() throws Exception {
-        locked = true;
-        assertThat(leaseTerm.disableChangeDates(null,null), is("Cannot modify when locked"));
-    }
-    
-    @Test
-    public void disableChangeDates_whenNotLocked() throws Exception {
-        locked = false;
-        assertThat(leaseTerm.disableChangeDates(null,null), is(nullValue()));
-    }
-
     // //////////////////////////////////////
 
     @Test

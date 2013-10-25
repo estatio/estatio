@@ -49,7 +49,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioMutableAndLockableObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.Invoice;
@@ -105,23 +105,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm 
-        extends EstatioMutableAndLockableObject<LeaseTerm, LeaseTermStatus> 
+        extends EstatioMutableObject<LeaseTerm> 
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
-        super("leaseItem, sequence", LeaseTermStatus.NEW, LeaseTermStatus.APPROVED);
+        super("leaseItem, sequence");
     }
 
-    @Override
-    public LeaseTermStatus getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final LeaseTermStatus lockable) {
-        setStatus(lockable);
-    }
 
     // //////////////////////////////////////
 
@@ -243,7 +234,7 @@ public abstract class LeaseTerm
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return isLocked() ? "Cannot modify when locked" : null;
+        return null;
     }
 
     @Override
@@ -305,9 +296,7 @@ public abstract class LeaseTerm
         this.status = status;
     }
 
-    @Override
     public void created() {
-        super.created();
         setStatus(LeaseTermStatus.NEW);
     }
 
@@ -618,6 +607,17 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+    @Bulk
+    @ActionSemantics(Of.IDEMPOTENT)
+    public LeaseTerm approve() {
+        if(!getStatus().isApproved()) {
+            setStatus(LeaseTermStatus.APPROVED);
+        }
+        return this;
+    }
+
+    // //////////////////////////////////////
+
     @Programmatic
     public BigDecimal valueForDueDate(final LocalDate dueDate) {
         return getTrialValue();
@@ -626,7 +626,7 @@ public abstract class LeaseTerm
     @Programmatic
     BigDecimal valueForPeriod(
             final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
-        if (getStatus().isUnlocked()) {
+        if (getStatus().isNew()) {
             return invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
         }
         return BigDecimal.ZERO;

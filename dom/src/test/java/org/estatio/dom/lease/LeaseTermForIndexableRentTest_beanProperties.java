@@ -35,14 +35,13 @@ public class LeaseTermForIndexableRentTest_beanProperties extends AbstractBeanPr
 	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
 	        .withFixture(pojos(Index.class))
             .withFixture(statii())
-	        .exercise(new LeaseTermForIndexableRent(),
-	                FilterSet.excluding("lockable"));
+	        .exercise(new LeaseTermForIndexableRent());
 	}
 
 	
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static FixtureDatumFactory<Lockable> statii() {
-        return new FixtureDatumFactory(Lockable.class, (Object[])LeaseTermStatus.values());
+    private static FixtureDatumFactory<LeaseTermStatus> statii() {
+        return new FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
     }
 
 }

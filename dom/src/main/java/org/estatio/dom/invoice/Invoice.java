@@ -46,7 +46,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableAndLockableObject;
+import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
@@ -103,21 +103,12 @@ import org.estatio.dom.party.Party;
                         + "WHERE status == :status ")
 })
 @Bookmarkable
-public class Invoice extends EstatioMutableAndLockableObject<Invoice, InvoiceStatus> {
+public class Invoice extends EstatioMutableObject<Invoice> {
 
     public Invoice() {
-        super("invoiceNumber", InvoiceStatus.NEW, null);
+        super("invoiceNumber");
     }
 
-    @Override
-    public InvoiceStatus getLockable() {
-        return getStatus();
-    }
-
-    @Override
-    public void setLockable(final InvoiceStatus lockable) {
-        setStatus(lockable);
-    }
 
     // //////////////////////////////////////
 
@@ -198,8 +189,9 @@ public class Invoice extends EstatioMutableAndLockableObject<Invoice, InvoiceSta
                             key = "implementation-classes",
                             value = "org.estatio.dom.lease.Lease") })
     @javax.jdo.annotations.Columns({
-            @javax.jdo.annotations.Column(name = "sourceLeaseId")
+        @javax.jdo.annotations.Column(name = "sourceLeaseId", allowsNull="true")
     })
+    @Optional // not really, but to be compatible with JDO 
     @Disabled
     public InvoiceSource getSource() {
         return source;
