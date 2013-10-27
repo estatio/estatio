@@ -24,6 +24,7 @@ import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.currency.Currency;
@@ -49,6 +50,7 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
             ChargeGroup.class,
             TaxRate.class,
             Tax.class,
+            FixedAssetRegistrationType.class,
             AgreementRoleCommunicationChannelType.class,
             AgreementRoleType.class,
             AgreementType.class,
@@ -64,23 +66,24 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
      */
     @SuppressWarnings("unused")
     private void truncateTablesSQL(IsisJdoSupport isisJdoSupport) {
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"STATE\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE COUNTRY");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE GEOGRAPHY");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"State\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Country\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Geography\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE CURRENCY");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE CHARGE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE CHARGEGROUP");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Currency\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Charge\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"ChargeGroup\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE TAXRATE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE TAX");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"TaxRate\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Tax\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTROLETYPE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTROLECOMMUNICATIONCHANNELTYPE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE AGREEMENTTYPE");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"FixedAssetRegistrationType\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"AgreementRoleType\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"AgreementRoleCommunicationChannelType\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"AgreementType\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE INDEXVALUE");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE INDEXBASE");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexValue\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexBase\"");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"INDEX\"");
     }
 

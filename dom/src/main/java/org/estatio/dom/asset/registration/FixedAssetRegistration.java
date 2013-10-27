@@ -23,6 +23,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Title;
 
@@ -51,7 +52,7 @@ public abstract class FixedAssetRegistration
     extends EstatioMutableObject<FixedAssetRegistration> {
 
     public FixedAssetRegistration() {
-        super("type");
+        super("subject,type");
     }
 
     // //////////////////////////////////////
@@ -59,6 +60,7 @@ public abstract class FixedAssetRegistration
     private FixedAsset subject;
 
     @javax.jdo.annotations.Column(name = "subjectId", allowsNull = "false")
+    @Disabled
     @MemberOrder(sequence = "1")
     @Title(sequence="1")
     public FixedAsset getSubject() {
@@ -74,7 +76,7 @@ public abstract class FixedAssetRegistration
     private FixedAssetRegistrationType type;
 
     @Title(sequence="1", append=": ")
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(name = "registrationTypeId", allowsNull="false")
     public FixedAssetRegistrationType getType() {
         return type;
     }
@@ -82,6 +84,5 @@ public abstract class FixedAssetRegistration
     public void setType(final FixedAssetRegistrationType type) {
         this.type = type;
     }
-
 
 }

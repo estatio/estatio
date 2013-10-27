@@ -23,14 +23,12 @@ import java.util.List;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 
-@Named("Accounts")
 public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegistration> {
 
     public FixedAssetRegistrations() {
@@ -49,7 +47,7 @@ public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegi
 
     @ActionSemantics(Of.SAFE)
     @Prototype
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name="Fixed Assets", sequence = "99")
     public List<FixedAssetRegistration> allRegistrations() {
         return allInstances();
     }

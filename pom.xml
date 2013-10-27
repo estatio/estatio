@@ -554,15 +554,30 @@ language governing permissions and limitations under the License.
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-italy</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>estatio-dom-italy</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>estatio-integtests</artifactId>
+                <artifactId>estatio-fixture-italy</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
+
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -854,6 +869,7 @@ language governing permissions and limitations under the License.
             </activation>
             <modules>
                 <module>dom</module>
+                <module>dom-italy</module>
                 <module>fixture</module>
                 <module>integtests</module>
                 <module>webapp</module>
@@ -866,6 +882,7 @@ language governing permissions and limitations under the License.
             </properties>
             <modules>
                 <module>dom</module>
+                <module>dom-italy</module>
             </modules>
         </profile>
         <!-- so that m2e (within Eclipse) compiles in a different directory than the Maven cmd line -->

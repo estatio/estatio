@@ -1,0 +1,45 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "subject": {},
+            "type": {}
+          }
+        },
+        "Detail": {
+          "members": {
+            "categoria": {},
+            "classe": {},
+            "codiceComuneCatastale": {},
+            "comuneAmministrativo": {},
+            "comuneCatastale": {},
+            "consistenza": {},
+            "foglio": {},
+            "particella": {},
+            "rendita": {},
+            "subalterno": {}
+          }              
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {},
+    "refreshLayout": {}
+  }
+}

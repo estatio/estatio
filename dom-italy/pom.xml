@@ -23,14 +23,12 @@ language governing permissions and limitations under the License.
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>estatio-dom</artifactId>
+    <artifactId>estatio-dom-italy</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio DOM</name>
+    <name>Estatio DOM Italy</name>
     <description>
-        Domain object model for Estatio.  Includes repositories and
-        their implementations (using JDO API), as well as a number of
-        other domain services.
+        Italian extensions to the domain object model for Estatio.
     </description>
 
     <properties>
@@ -133,55 +131,16 @@ language governing permissions and limitations under the License.
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-applib</artifactId>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.objectstore</groupId>
-            <artifactId>isis-objectstore-jdo-applib</artifactId>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-dom</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.isis.objectstore</groupId>
-            <artifactId>isis-objectstore-jdo-datanucleus</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.xnap.commons</groupId>
-            <artifactId>gettext-commons</artifactId>
-        </dependency>
-
-        <!-- download:  
-             $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar 
-             install to ~/.m2/repo using: 
-             $ mvn install:install-file \
-                 -Dfile=rfc2445-4Mar2011.jar \
-                 -DgroupId=com.google \
-                 -DartifactId=rfc-2445 \
-                 -Dversion=0.0.20110304 \
-                 -Dpackaging=jar
-         -->
-        <dependency>
-            <groupId>com.google</groupId>
-            <artifactId>rfc-2445</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-
-        <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-gmap3-applib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-gmap3-service</artifactId>
-        </dependency>
-        
-        
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>
@@ -238,8 +197,6 @@ language governing permissions and limitations under the License.
             <artifactId>picocontainer</artifactId>
             <scope>test</scope>
         </dependency>
-
-
 
     </dependencies>
 

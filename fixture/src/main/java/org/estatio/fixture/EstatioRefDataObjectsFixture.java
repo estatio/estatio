@@ -25,6 +25,7 @@ import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
+import org.estatio.fixture.asset.registration.FixedAssetRegistrationTypeForItalyFixture;
 import org.estatio.fixture.charge.ChargeAndChargeGroupFixture;
 import org.estatio.fixture.charge.CurrencyFixture;
 import org.estatio.fixture.geography.CountriesAndStatesFixture;
@@ -41,6 +42,7 @@ public class EstatioRefDataObjectsFixture extends AbstractFixture {
             new EstatioTransactionalObjectsTeardownFixture(),
             new EstatioRefDataObjectsTeardownFixture(),
             new CountriesAndStatesFixture(),
+            new FixedAssetRegistrationTypeForItalyFixture(),
             new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
             new CurrencyFixture(),
             new TaxesAndTaxRatesFixture(),

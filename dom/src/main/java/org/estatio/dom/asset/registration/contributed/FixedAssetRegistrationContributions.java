@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.AbstractContainedObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
@@ -39,8 +40,8 @@ public class FixedAssetRegistrationContributions extends AbstractContainedObject
     @MemberOrder(name = "Registrations", sequence = "13")
     public FixedAssetRegistration newRegistration(
             final FixedAsset subject, 
-            final FixedAssetRegistrationType registrationType) {
-        FixedAssetRegistration registration = registrationType.create(getContainer());
+            final @Named("Type") FixedAssetRegistrationType registrationType) {
+        final FixedAssetRegistration registration = registrationType.create(getContainer());
         registration.setSubject(subject);
         persistIfNotAlready(registration);
         return registration;

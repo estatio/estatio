@@ -18,35 +18,91 @@
  */
 package org.estatio.dom.asset.registration;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.PowerType;
-import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.WithTitleComparable;
+import org.estatio.dom.WithTitleUnique;
+import org.estatio.dom.utils.ClassUtils;
 
-public enum FixedAssetRegistrationType implements PowerType<FixedAssetRegistration> {
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "FixedAssetRegistrationType_title_UNQ", members="title")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByTitle", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.registration.FixedAssetRegistrationType "
+                        + "WHERE title == :title")
+})
+@Immutable
+@Bounded
+public class FixedAssetRegistrationType 
+        extends EstatioImmutableObject<FixedAssetRegistrationType> 
+        implements WithTitleComparable<FixedAssetRegistrationType>, 
+                   WithTitleUnique, PowerType<FixedAssetRegistration> {
 
-    CADASTRAL_REGISTRATION(CadastralRegistration.class);
-
-    private final Class<? extends FixedAssetRegistration> clss;
-
-    private FixedAssetRegistrationType(final Class<? extends FixedAssetRegistration> clss) {
-        this.clss = clss;
-    }
-
-    public String title() {
-        return StringUtils.enumTitle(this.name());
+    public FixedAssetRegistrationType() {
+        super("title");
     }
 
     // //////////////////////////////////////
 
+    private String title;
+
+    @javax.jdo.annotations.Column(allowsNull="false")
+    @Title
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+    
+    
+    // //////////////////////////////////////
+
+
+    private String fullyQualifiedClassName;
+
+    @javax.jdo.annotations.Column(allowsNull="false")
+    public String getFullyQualifiedClassName() {
+        return fullyQualifiedClassName;
+    }
+
+    public void setFullyQualifiedClassName(final String fullyQualifiedClassName) {
+        this.fullyQualifiedClassName = fullyQualifiedClassName;
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
     public FixedAssetRegistration create(final DomainObjectContainer container){ 
         try {
-            FixedAssetRegistration registration = container.newTransientInstance(clss);
+            final Class<? extends FixedAssetRegistration> cls = 
+                    ClassUtils.load(getFullyQualifiedClassName(), FixedAssetRegistration.class);
+            FixedAssetRegistration registration = 
+                container.newTransientInstance(cls);
+            registration.setType(this);
             return registration;
         } catch (Exception ex) {
             throw new ApplicationException(ex);
         }
     }
-    
+
 }
