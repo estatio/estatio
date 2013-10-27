@@ -18,17 +18,33 @@
  */
 package org.estatio.dom.geography;
 
-import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.NEW_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.WithReferenceComparable;
+import org.estatio.dom.WithReferenceUnique;
+
+
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Version(
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "Country_reference_UNQ", members="reference"),
+    @javax.jdo.annotations.Unique(
+            name = "Country_name_UNQ", members="name"),
     @javax.jdo.annotations.Unique(
             name = "Country_alpha2Code_UNQ", members = "alpha2Code")
 })
@@ -41,18 +57,58 @@ import org.apache.isis.applib.annotation.Title;
 })
 @Immutable
 @Bounded
-public class Country extends Geography {
+public class Country extends EstatioMutableObject<Country> 
+implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique {
 
 
     public Country() {
-    };
+        super("reference");
+    }
 
     public Country(final String reference, final String alpha2Code, final String name) {
+        this();
         setReference(reference);
         setName(name);
         setAlpha2Code(alpha2Code);
     }
 
+    // //////////////////////////////////////
+
+    private String reference;
+
+    /**
+     * As per ISO standards for <a href=
+     * "http://www.commondatahub.com/live/geography/country/iso_3166_country_codes"
+     * >countries</a> and <a href=
+     * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
+     * >states</a>.
+     */
+    @javax.jdo.annotations.Column(allowsNull="false")
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(final String reference) {
+        this.reference = reference;
+    }
+
+
+    // //////////////////////////////////////
+
+    private String name;
+
+    @javax.jdo.annotations.Column(allowsNull="false")
+    @Title
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+    
+    
     // //////////////////////////////////////
 
     // not possible to make this unique because Country is rolled-up to Geography.

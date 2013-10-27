@@ -24,8 +24,6 @@ import org.estatio.dom.ComparableByReferenceContractTestAbstract_compareTo;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
-import org.estatio.dom.geography.Geography;
-import org.estatio.dom.geography.GeographyForTesting;
 
 
 /**
@@ -39,8 +37,7 @@ public class WithReferenceComparableContractTestAll_compareTo extends Comparable
 
     static ImmutableMap<Class<?>, Class<?>> noninstantiableSubstitutes() {
         return ImmutableMap.<Class<?>,Class<?>>of(
-                Agreement.class, AgreementForTesting.class,
-                Geography.class, GeographyForTesting.class);
+                Agreement.class, AgreementForTesting.class);
     }
 
 }

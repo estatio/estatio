@@ -38,8 +38,6 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementForTesting;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.geography.Geography;
-import org.estatio.dom.geography.GeographyForTesting;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.party.Party;
@@ -53,7 +51,6 @@ public class BidirectionalRelationshipContractTestAll extends BidirectionalRelat
                     .put(Agreement.class, new InstantiatorSimple(AgreementForTesting.class))
                     .put(FixedAsset.class, new InstantiatorSimple(FixedAssetForTesting.class))
                     .put(Party.class, new InstantiatorSimple(PartyForTesting.class))
-                    .put(Geography.class, new InstantiatorSimple(GeographyForTesting.class))
                     .put(LeaseItem.class, new InstantiatorForLeaseItem())
                     .put(LeaseTerm.class, new InstantiatorForLeaseTerm())
                     .build()

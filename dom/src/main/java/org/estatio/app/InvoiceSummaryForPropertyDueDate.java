@@ -50,26 +50,26 @@ import org.estatio.dom.invoice.Invoices;
                 @Extension(vendorName = "datanucleus", key = "view-definition",
                         value = "CREATE VIEW \"InvoiceSummary\" " +
                                 "( " +
-                                "{this.reference}, " +
-                                "{this.name}, " +
-                                "{this.dueDate}, " +
-                                "{this.total} " +
+                                "  {this.reference}, " +
+                                "  {this.name}, " +
+                                "  {this.dueDate}, " +
+                                "  {this.total} " +
                                 ") AS " +
-                                "SELECT" +
-                                "\"FixedAsset\".\"reference\" , " +
-                                "\"FixedAsset\".\"name\", " +
-                                "\"Invoice\".\"dueDate\", " +
-                                "COUNT(\"Invoice\".\"id\") AS \"total\" " +
-                                "FROM \"Invoice\" " +
-                                "INNER JOIN \"Lease\" ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
-                                "INNER JOIN \"Occupancy\" ON \"Lease\".\"id\" = \"Occupancy\".\"leaseId\" " +
-                                "INNER JOIN \"Unit\" ON \"Unit\".\"id\" = \"Occupancy\".\"unitId\" " +
-                                "INNER JOIN \"Property\" ON \"Property\".\"id\" = \"Unit\".\"propertyId\" " +
-                                "INNER JOIN \"FixedAsset\" ON \"FixedAsset\".\"id\" = \"Property\".\"id\" " +
+                                "SELECT " +
+                                "   \"FixedAsset\".\"reference\" , " +
+                                "   \"FixedAsset\".\"name\", " +
+                                "   \"Invoice\".\"dueDate\", " +
+                                "   COUNT(\"Invoice\".\"id\") AS \"total\" " +
+                                "  FROM \"Invoice\" " +
+                                "  INNER JOIN \"Lease\"      ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                                "  INNER JOIN \"Occupancy\"  ON \"Lease\".\"id\"         = \"Occupancy\".\"leaseId\" " +
+                                "  INNER JOIN \"Unit\"       ON \"Unit\".\"id\"          = \"Occupancy\".\"unitId\" " +
+                                "  INNER JOIN \"Property\"   ON \"Property\".\"id\"      = \"Unit\".\"propertyId\" " +
+                                "  INNER JOIN \"FixedAsset\" ON \"FixedAsset\".\"id\"    = \"Property\".\"id\" " +
                                 "GROUP BY " +
-                                "\"FixedAsset\".\"reference\", " +
-                                "\"FixedAsset\".\"name\", " +
-                                "\"Invoice\".\"dueDate\"")
+                                " \"FixedAsset\".\"reference\", " +
+                                " \"FixedAsset\".\"name\", " +
+                                " \"Invoice\".\"dueDate\"")
         })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable

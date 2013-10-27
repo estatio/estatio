@@ -68,7 +68,6 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
     private void truncateTablesSQL(IsisJdoSupport isisJdoSupport) {
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"State\"");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Country\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Geography\"");
         
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Currency\"");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Charge\"");
@@ -84,7 +83,7 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
         
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexValue\"");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexBase\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"INDEX\"");
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Index\"");
     }
 
     private IsisJdoSupport isisJdoSupport;
