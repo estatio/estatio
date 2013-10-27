@@ -62,7 +62,7 @@ public abstract class FixedAssetRegistration
     @javax.jdo.annotations.Column(name = "subjectId", allowsNull = "false")
     @Disabled
     @MemberOrder(sequence = "1")
-    @Title(sequence="1")
+    @Title(sequence="2")
     public FixedAsset getSubject() {
         return subject;
     }

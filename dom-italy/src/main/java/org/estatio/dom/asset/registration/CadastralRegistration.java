@@ -2,6 +2,8 @@ package org.estatio.dom.asset.registration;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import com.google.common.base.Strings;
+
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
 
@@ -18,8 +20,17 @@ public class CadastralRegistration extends FixedAssetRegistration {
                 .append(",", getParticella())
                 .append(",", getRendita())
                 .append(",", getSubalterno());
-        return tb.toString();
+        final String title = tb.toString();
+        if(Strings.isNullOrEmpty(title)) {
+            // the @Title annotations of supertype
+            return  getContainer().titleOf(getType())
+                    +": "
+                    +getContainer().titleOf(getSubject());
+        }
+        return title;
     }
+
+    // //////////////////////////////////////
 
     private String comuneAmministrativo;
 
