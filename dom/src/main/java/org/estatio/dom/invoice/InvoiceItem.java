@@ -44,6 +44,7 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.charge.Charge;
@@ -215,7 +216,7 @@ public abstract class InvoiceItem
 
     private String description;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.DESCRIPTION)
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public String getDescription() {

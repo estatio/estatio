@@ -51,7 +51,7 @@ public class AgreementTest_newRole_choices  {
         art = new AgreementType();
 
         agreement = new AgreementForTesting();
-        agreement.setAgreementType(art);
+        agreement.setType(art);
         agreement.injectAgreementRoleTypes(mockAgreementRoleTypes);
     }
     

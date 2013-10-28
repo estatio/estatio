@@ -42,6 +42,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
@@ -88,7 +89,7 @@ public abstract class FixedAsset
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
     @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
@@ -122,7 +123,7 @@ public abstract class FixedAsset
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
     @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
     public String getName() {

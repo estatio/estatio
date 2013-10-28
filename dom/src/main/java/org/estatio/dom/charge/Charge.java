@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithCodeUnique;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
@@ -67,7 +68,7 @@ public class Charge
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
@@ -82,7 +83,7 @@ public class Charge
 
     private String code;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Charge.CODE)
     public String getCode() {
         return code;
     }
@@ -108,7 +109,7 @@ public class Charge
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
     public String getName() {
         return name;
     }

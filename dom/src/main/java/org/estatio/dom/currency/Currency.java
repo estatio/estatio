@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -79,7 +80,7 @@ public class Currency
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
     @RegEx(validation = "[A-Z]+", caseSensitive = true)
     public String getReference() {
         return reference;
@@ -93,7 +94,7 @@ public class Currency
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
     @Override
     public String getName() {
         return name;

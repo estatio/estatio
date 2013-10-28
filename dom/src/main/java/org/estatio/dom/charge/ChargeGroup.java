@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 
@@ -68,7 +69,7 @@ public class ChargeGroup
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
@@ -83,7 +84,7 @@ public class ChargeGroup
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
     @Title(sequence = "2", prepend = "-")
     public String getName() {
         return name;

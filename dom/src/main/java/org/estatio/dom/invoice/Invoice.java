@@ -47,6 +47,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
@@ -146,10 +147,9 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Column(allowsNull = "true")
     private String collectionNumber;
 
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.Invoice.NUMBER)
     @Disabled
     public String getCollectionNumber() {
         return collectionNumber;
@@ -163,7 +163,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private String invoiceNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true")
+    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.Invoice.NUMBER)
     @Disabled
     public String getInvoiceNumber() {
         return invoiceNumber;
@@ -235,7 +235,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private InvoiceStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.STATUS_ENUM)
     @Disabled
     public InvoiceStatus getStatus() {
         return status;
@@ -265,7 +265,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private PaymentMethod paymentMethod;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.PAYMENT_METHOD_ENUM)
     @Disabled
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;

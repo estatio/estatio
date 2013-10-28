@@ -20,8 +20,9 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
+
+import org.estatio.dom.JdoColumnLength;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(
@@ -32,7 +33,7 @@ public class Person extends Party {
     
     private String initials;
 
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Person.INITIALS)
     public String getInitials() {
         return initials;
     }
@@ -54,7 +55,7 @@ public class Person extends Party {
     
     private String firstName;
 
-    @Optional
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PROPER_NAME)
     public String getFirstName() {
         return firstName;
     }
@@ -67,7 +68,7 @@ public class Person extends Party {
 
     private String lastName;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.PROPER_NAME)
     public String getLastName() {
         return lastName;
     }
@@ -81,7 +82,7 @@ public class Person extends Party {
 
     private PersonGenderType gender;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
     public PersonGenderType getGender() {
         return gender;
     }

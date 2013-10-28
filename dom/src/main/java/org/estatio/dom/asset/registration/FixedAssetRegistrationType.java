@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.WithTitleComparable;
 import org.estatio.dom.WithTitleUnique;
@@ -64,7 +65,7 @@ public class FixedAssetRegistrationType
 
     private String title;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
     @Title
     public String getTitle() {
         return title;
@@ -80,7 +81,7 @@ public class FixedAssetRegistrationType
 
     private String fullyQualifiedClassName;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.FQCN)
     public String getFullyQualifiedClassName() {
         return fullyQualifiedClassName;
     }

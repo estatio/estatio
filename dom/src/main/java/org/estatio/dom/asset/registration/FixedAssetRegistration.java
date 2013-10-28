@@ -76,7 +76,7 @@ public abstract class FixedAssetRegistration
     private FixedAssetRegistrationType type;
 
     @Title(sequence="1", append=": ")
-    @javax.jdo.annotations.Column(name = "registrationTypeId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "typeId", allowsNull="false")
     public FixedAssetRegistrationType getType() {
         return type;
     }

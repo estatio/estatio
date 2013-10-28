@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -69,15 +70,15 @@ public abstract class Unit extends FixedAsset implements WithIntervalMutable<Uni
 
     // //////////////////////////////////////
 
-    private UnitType unitType;
+    private UnitType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    public UnitType getUnitType() {
-        return unitType;
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    public UnitType getType() {
+        return type;
     }
 
-    public void setUnitType(final UnitType type) {
-        this.unitType = type;
+    public void setType(final UnitType type) {
+        this.type = type;
     }
 
     // //////////////////////////////////////

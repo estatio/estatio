@@ -46,6 +46,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
@@ -70,15 +71,15 @@ import org.estatio.dom.party.Party;
 @Bookmarkable
 public class Property extends FixedAsset implements Locatable {
 
-    private PropertyType propertyType;
+    private PropertyType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    public PropertyType getPropertyType() {
-        return propertyType;
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    public PropertyType getType() {
+        return type;
     }
 
-    public void setPropertyType(final PropertyType type) {
-        this.propertyType = type;
+    public void setType(final PropertyType type) {
+        this.type = type;
     }
 
     // //////////////////////////////////////
@@ -140,7 +141,7 @@ public class Property extends FixedAsset implements Locatable {
 
     private String city;
 
-    @javax.jdo.annotations.Column(allowsNull = "true")
+    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.PROPER_NAME)
     public String getCity() {
         return city;
     }

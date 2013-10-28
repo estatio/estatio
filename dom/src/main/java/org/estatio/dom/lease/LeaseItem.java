@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
@@ -120,7 +121,7 @@ public class LeaseItem
 
     private LeaseItemStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.STATUS_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public LeaseItemStatus getStatus() {
@@ -180,7 +181,7 @@ public class LeaseItem
     private LeaseItemType type;
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
     @Title(sequence = "2")
     public LeaseItemType getType() {
         return type;
@@ -287,7 +288,7 @@ public class LeaseItem
 
     private InvoicingFrequency invoicingFrequency;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.INVOICING_FREQUENCY_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
@@ -301,7 +302,7 @@ public class LeaseItem
 
     private PaymentMethod paymentMethod;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.PAYMENT_METHOD_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;

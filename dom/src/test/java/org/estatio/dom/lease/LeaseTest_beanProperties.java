@@ -37,6 +37,7 @@ public class LeaseTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Agreement.class, AgreementForTesting.class))
 	        .withFixture(pojos(Party.class, PartyForTesting.class))
 	        .withFixture(pojos(AgreementType.class))
+	        .withFixture(pojos(LeaseType.class))
 	        .withFixture(pojos(BankMandate.class))
             .withFixture(statii())
 	        .exercise(new Lease());

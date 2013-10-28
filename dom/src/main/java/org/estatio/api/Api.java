@@ -262,7 +262,7 @@ public class Api extends AbstractFactoryAndRepository {
         property.setName(name);
         property.setCountry(fetchCountry(countryCode));
         property.setCity(city);
-        property.setPropertyType(PropertyType.valueOf(type));
+        property.setType(PropertyType.valueOf(type));
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);
@@ -308,7 +308,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         // set attributes
         unit.setName(name);
-        unit.setUnitType(UnitType.valueOf(type));
+        unit.setType(UnitType.valueOf(type));
         unit.changeDates(startDate, endDate);
         unit.setArea(area);
         unit.setSalesArea(salesArea);

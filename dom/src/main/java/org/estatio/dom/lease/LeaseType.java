@@ -18,35 +18,56 @@
  */
 package org.estatio.dom.lease;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 
+import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Title;
 
-// TODO: this needs to be made into an entity
-//@javax.jdo.annotations.PersistenceCapable
-public enum LeaseType {
+import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithTitleComparable;
+import org.estatio.dom.WithTitleUnique;
 
-    AA("Apparecchiature Automatic"),
-    AD("Affitto d'Azienda"),
-    CG("Comodato Gratuito"),
-    CO("Comodato"),
-    DH("Dehors"),
-    LO("Locazione"),
-    OA("Occup. Abusiva Affito"),
-    OL("Occup. Abusiva Locazione"),
-    PA("Progroga Affitto"),
-    PL("Progroga Locazione"),
-    PP("Pannelli Pubblicitari"),
-    PR("Precaria"),
-    SA("Scritt. Privata Affitto"),
-    SL("Scritt. Privata Locazione");
+@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.DatastoreIdentity(
+        strategy=IdGeneratorStrategy.NATIVE, 
+        column="id")
+@javax.jdo.annotations.Uniques({
+    @javax.jdo.annotations.Unique(
+            name = "LeaseType_title_UNQ", members="title")
+})
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByTitle", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseType "
+                        + "WHERE title == :title")
+})
+@Immutable
+@Bounded
+public class LeaseType 
+        extends EstatioImmutableObject<LeaseType> 
+        implements WithTitleComparable<LeaseType>, 
+                   WithTitleUnique {
 
-    private final String title;
+    public LeaseType() {
+        super("title");
+    }
 
-    private LeaseType(final String title) {
+    // //////////////////////////////////////
+
+    private String title;
+
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
+    @Title
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(final String title) {
         this.title = title;
     }
 
-    public String title() {
-        return title;
-    }
-    
 }

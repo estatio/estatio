@@ -17,6 +17,6 @@
  * Every {@link org.estatio.dom.agreement.Agreement} has a 
  * {@link org.estatio.dom.agreement.Agreement#getPrimaryParty() primary} and a
  * {@link org.estatio.dom.agreement.Agreement#getSecondaryParty() secondary} party; which role identifies these
- * is dependent on the {@link org.estatio.dom.agreement.Agreement#getAgreementType() type}.  
+ * is dependent on the {@link org.estatio.dom.agreement.Agreement#getType() type}.  
  */
 package org.estatio.dom.agreement;

@@ -313,7 +313,7 @@ public class LeaseTest_newMandate {
         assertThat(returned, is(lease));
         
         assertThat(lease.getPaidBy(), is(bankMandate));
-        assertThat(bankMandate.getAgreementType(), is(bankMandateAgreementType));
+        assertThat(bankMandate.getType(), is(bankMandateAgreementType));
         assertThat(bankMandate.getBankAccount(), is((FinancialAccount)bankAccount));
         assertThat(bankMandate.getStartDate(), is(startDate));
         assertThat(bankMandate.getEndDate(), is(endDate));

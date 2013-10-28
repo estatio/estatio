@@ -188,9 +188,9 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t03_putPartyCommunicationChannelsWithoutReference() {
-        api.putPartyCommunicationChannels("APITENANT", null, "NewAddress1", "NewAddress2", "NewCity", "NewPostalCode", "NH", "NLD", "+31222222222", "+31333333333", "test@example.com");
+        api.putPartyCommunicationChannels("APITENANT", null, "NewAddress1", "NewAddress2", "NewCity", "NewPostCode", "NH", "NLD", "+31222222222", "+31333333333", "test@example.com");
         Party party = parties.findPartyByReference("APITENANT");
-        Assert.assertNotNull(postalAddresses.findByAddress(party, "NewAddress1", "NewPostalCode", "NewCity", countries.findCountry("NLD")));
+        Assert.assertNotNull(postalAddresses.findByAddress(party, "NewAddress1", "NewPostCode", "NewCity", countries.findCountry("NLD")));
         Assert.assertNotNull(phoneOrFaxNumbers.findByPhoneOrFaxNumber(party, "+31222222222"));
         Assert.assertNotNull(emailAddresses.findByEmailAddress(party, "test@example.com"));
     }

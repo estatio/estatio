@@ -25,6 +25,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 
+import org.estatio.dom.JdoColumnLength;
+
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -35,7 +37,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private String turnoverRentRule;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.LeaseTermForTurnoverRent.RENT_RULE)
     @Mandatory
     public String getTurnoverRentRule() {
         return turnoverRentRule;

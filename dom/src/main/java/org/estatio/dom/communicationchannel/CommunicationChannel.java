@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
@@ -130,7 +131,7 @@ public abstract class CommunicationChannel
     private CommunicationChannelType type;
 
     @MemberOrder(sequence="1")
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
     @Hidden(where=Where.OBJECT_FORMS)
     public CommunicationChannelType getType() {
         return type;
@@ -147,7 +148,7 @@ public abstract class CommunicationChannel
     /**
      * For import purposes only
      */
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.REFERENCE)
     @Hidden
     public String getReference() {
         return reference;
@@ -162,6 +163,7 @@ public abstract class CommunicationChannel
 
     private String description;
 
+    @javax.jdo.annotations.Column(length=JdoColumnLength.DESCRIPTION)
     @Hidden(where=Where.ALL_TABLES)
     @Optional
     public String getDescription() {

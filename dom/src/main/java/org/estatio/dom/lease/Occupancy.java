@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.lease.tags.Activities;
@@ -317,7 +318,7 @@ public class Occupancy
 
     private OccupancyReportingType reportTurnover;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportTurnover() {
@@ -332,7 +333,7 @@ public class Occupancy
 
     private OccupancyReportingType reportRent;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportRent() {
@@ -347,7 +348,7 @@ public class Occupancy
 
     private OccupancyReportingType reportOCR;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportOCR() {

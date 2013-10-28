@@ -42,6 +42,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -115,7 +116,7 @@ public class Lease
 
     private LeaseStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.STATUS_ENUM)
     @Disabled
     public LeaseStatus getStatus() {
         return status;
@@ -172,15 +173,15 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private LeaseType type;
+    private LeaseType leaseType;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    public LeaseType getType() {
-        return type;
+    @javax.jdo.annotations.Column(name="leaseTypeId", allowsNull = "true")
+    public LeaseType getLeaseType() {
+        return leaseType;
     }
 
-    public void setType(final LeaseType type) {
-        this.type = type;
+    public void setLeaseType(final LeaseType leaseType) {
+        this.leaseType = leaseType;
     }
 
     // //////////////////////////////////////

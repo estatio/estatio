@@ -87,7 +87,7 @@ public class Leases extends EstatioDomainService<Lease> {
         }
         Lease lease = newTransientInstance();
         final AgreementType at = agreementTypes.find(LeaseConstants.AT_LEASE);
-        lease.setAgreementType(at);
+        lease.setType(at);
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);

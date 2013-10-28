@@ -33,6 +33,7 @@ import org.estatio.dom.geography.State;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexBase;
 import org.estatio.dom.index.IndexValue;
+import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 
@@ -51,6 +52,7 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
             TaxRate.class,
             Tax.class,
             FixedAssetRegistrationType.class,
+            LeaseType.class,
             AgreementRoleCommunicationChannelType.class,
             AgreementRoleType.class,
             AgreementType.class,

@@ -49,7 +49,7 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
         final Unit unit = newTransientInstance();
         unit.setReference(reference);
         unit.setName(name);
-        unit.setUnitType(type);
+        unit.setType(type);
         persist(unit);
         return unit;
     }

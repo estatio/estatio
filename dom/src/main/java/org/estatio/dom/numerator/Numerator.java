@@ -32,6 +32,7 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkHolder;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 
 /**
  * Generates a sequence of values (eg <tt>XYZ-00101</tt>, <tt>XYZ-00102</tt>, <tt>XYZ-00103</tt> etc)
@@ -108,7 +109,7 @@ public class Numerator
      * The combination of ({@link #getObjectType() objectType}, {@link #getName() name})
      * is unique.
      */
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
     @Disabled
     public String getName() {
         return name;
@@ -136,7 +137,7 @@ public class Numerator
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
      * can be used to recreate a {@link Bookmark}, if required.
      */
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.FQCN)
     public String getObjectType() {
         return objectType;
     }
@@ -165,7 +166,7 @@ public class Numerator
      * The ({@link #getObjectType() objectType}, {@link #getObjectIdentifier() identifier})
      * can be used to recreate a {@link Bookmark}, if required.
      */
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.OBJECT_IDENTIFIER)
     public String getObjectIdentifier() {
         return objectIdentifier;
     }
@@ -185,7 +186,7 @@ public class Numerator
     /**
      * The String format to use to generate the value. 
      */
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Numerator.FORMAT)
     public String getFormat() {
         return format;
     }

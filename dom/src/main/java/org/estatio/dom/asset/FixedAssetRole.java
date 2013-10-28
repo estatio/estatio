@@ -43,8 +43,8 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -140,7 +140,7 @@ public class FixedAssetRole
 
     private FixedAssetRoleType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
     @Disabled
     @Title(sequence = "1")
     public FixedAssetRoleType getType() {

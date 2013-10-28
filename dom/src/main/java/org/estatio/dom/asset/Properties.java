@@ -55,7 +55,7 @@ public class Properties extends EstatioDomainService<Property> {
 
         property.setReference(reference);
         property.setName(name);
-        property.setPropertyType(propertyType);
+        property.setType(propertyType);
 
         property.setCity(city);
         property.setCountry(country);

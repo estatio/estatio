@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
@@ -78,7 +79,7 @@ public abstract class FinancialAccount
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
@@ -92,7 +93,7 @@ public abstract class FinancialAccount
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -106,7 +107,7 @@ public abstract class FinancialAccount
 
     private FinancialAccountType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
     @Hidden
     public FinancialAccountType getType() {
         return type;

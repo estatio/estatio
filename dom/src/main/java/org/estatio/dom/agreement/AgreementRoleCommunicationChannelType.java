@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.JdoColumnLength;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -62,7 +63,7 @@ public class AgreementRoleCommunicationChannelType
 
     private String title;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
     @Title
     public String getTitle() {
         return title;

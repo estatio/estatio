@@ -23,6 +23,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.JdoColumnLength;
+
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 //no @DatastoreIdentity nor @Version, since inherited from supertype
@@ -43,7 +45,7 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
 
     private String phoneNumber;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PHONE_NUMBER)
     @Title(prepend="Phone")
     @Mandatory
     public String getPhoneNumber() {

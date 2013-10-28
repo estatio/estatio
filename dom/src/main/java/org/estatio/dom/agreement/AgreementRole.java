@@ -361,7 +361,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
     }
 
     public List<AgreementRoleCommunicationChannelType> choices0NewCommunicationChannel() {
-        return getAgreement().getAgreementType().getRoleChannelTypesApplicableTo();
+        return getAgreement().getType().getRoleChannelTypesApplicableTo();
     }
 
     public List<CommunicationChannel> choices1NewCommunicationChannel() {
@@ -434,14 +434,14 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
         
         /**
          * A {@link Predicate} that tests whether the role's {@link AgreementRole#getAgreement() agreement}'s
-         * {@link Agreement#getAgreementType() type} is the specified value.
+         * {@link Agreement#getType() type} is the specified value.
          */
         public static Predicate<AgreementRole> whetherAgreementTypeIs(final AgreementType at) {
             return new Predicate<AgreementRole>(){
                 
                 @Override
                 public boolean apply(final AgreementRole input) {
-                    return input != null && input.getAgreement().getAgreementType() == at;
+                    return input != null && input.getAgreement().getType() == at;
                 }};
         }
         

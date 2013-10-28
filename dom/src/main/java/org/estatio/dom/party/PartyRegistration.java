@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -51,14 +52,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.PartyRegistration "
                         + "WHERE party == :party "
-                        + "   && partyRegistrationType == :partyRegistrationType "
+                        + "   && type == :type "
                         + "   && startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByPartyAndPartyRegistrationTypeAndEndDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.PartyRegistration "
                         + "WHERE party == :party "
-                        + "   && partyRegistrationType == :partyRegistrationType "
+                        + "   && type == :type "
                         + "   && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
@@ -87,15 +88,15 @@ public class PartyRegistration
 
     // //////////////////////////////////////
 
-    private PartyRegistrationType partyRegistrationType;
+    private PartyRegistrationType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    public PartyRegistrationType getPartyRegistrationType() {
-        return partyRegistrationType;
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    public PartyRegistrationType getType() {
+        return type;
     }
 
-    public void setPartyRegistrationType(final PartyRegistrationType partyRegistrationType) {
-        this.partyRegistrationType = partyRegistrationType;
+    public void setType(final PartyRegistrationType partyRegistrationType) {
+        this.type = partyRegistrationType;
     }
 
     // //////////////////////////////////////

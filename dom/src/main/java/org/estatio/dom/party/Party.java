@@ -34,6 +34,7 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.agreement.AgreementRole;
@@ -87,7 +88,7 @@ public abstract class Party
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = false)
     @Disabled
     public String getReference() {
@@ -102,7 +103,7 @@ public abstract class Party
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -135,8 +136,7 @@ public abstract class Party
 
     // //////////////////////////////////////
 
-    // TODO: EST-86. is a bidir mapping required?
-    // @javax.jdo.annotations.Persistent(mappedBy = "party")
+    @javax.jdo.annotations.Persistent(mappedBy = "party")
     private SortedSet<PartyRegistration> registrations = new TreeSet<PartyRegistration>();
 
     @Hidden
@@ -146,11 +146,6 @@ public abstract class Party
 
     public void setRegistrations(final SortedSet<PartyRegistration> registrations) {
         this.registrations = registrations;
-    }
-
-    @Hidden
-    public Party newRegistration() {
-        return this;
     }
 
 }

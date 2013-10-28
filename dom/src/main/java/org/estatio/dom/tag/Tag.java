@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 
 /**
@@ -97,7 +98,7 @@ public class Tag
 
     private String objectType;
     
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.FQCN)
     @Disabled
     public String getObjectType() {
         return objectType;
@@ -119,7 +120,7 @@ public class Tag
      * The combination of ({@link #getObjectType() objectType},
      * {@link #getName() name}) is unique.
      */
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
     @Disabled
     public String getName() {
         return name;

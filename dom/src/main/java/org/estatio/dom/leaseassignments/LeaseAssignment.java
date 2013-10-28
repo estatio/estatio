@@ -26,6 +26,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Optional;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.lease.Lease;
 
@@ -88,15 +89,15 @@ public class LeaseAssignment extends EstatioMutableObject<LeaseAssignment> {
 
     // //////////////////////////////////////
 
-    private LeaseAssignmentType assignmentType;
+    private LeaseAssignmentType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
-    public LeaseAssignmentType getAssignmentType() {
-        return assignmentType;
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
+    public LeaseAssignmentType getType() {
+        return type;
     }
 
-    public void setAssignmentType(final LeaseAssignmentType assignmentType) {
-        this.assignmentType = assignmentType;
+    public void setType(final LeaseAssignmentType assignmentType) {
+        this.type = assignmentType;
     }
 
 

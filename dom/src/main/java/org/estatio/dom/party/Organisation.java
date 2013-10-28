@@ -24,6 +24,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.PublishedObject;
 
+import org.estatio.dom.JdoColumnLength;
+
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
@@ -41,6 +43,7 @@ public class Organisation extends Party {
 
     private String fiscalCode;
 
+    @javax.jdo.annotations.Column(length=JdoColumnLength.Organisation.FISCAL_CODE)
     @Optional
     @MemberOrder(sequence = "1")
     public String getFiscalCode() {
@@ -55,6 +58,7 @@ public class Organisation extends Party {
 
     private String vatCode;
 
+    @javax.jdo.annotations.Column(length=JdoColumnLength.Organisation.VAT_CODE)
     @Optional
     @MemberOrder(sequence = "1")
     public String getVatCode() {

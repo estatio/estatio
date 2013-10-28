@@ -50,6 +50,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.Invoice;
@@ -286,7 +287,7 @@ public abstract class LeaseTerm
 
     private LeaseTermStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.STATUS_ENUM)
     @Disabled
     public LeaseTermStatus getStatus() {
         return status;
@@ -304,7 +305,7 @@ public abstract class LeaseTerm
 
     private LeaseTermFrequency frequency;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
     public LeaseTermFrequency getFrequency() {
         return frequency;
     }

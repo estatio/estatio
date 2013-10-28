@@ -134,7 +134,7 @@ public class AgreementRoleCommunicationChannel
     private AgreementRoleCommunicationChannelType type;
 
     @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(name="typeId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Disabled
     public AgreementRoleCommunicationChannelType getType() {

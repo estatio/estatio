@@ -52,6 +52,7 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
@@ -92,7 +93,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.Agreement "
-                        + "WHERE agreementType == :agreementType"
+                        + "WHERE type == :type"
                         + " && roles.contains(role)"
                         + " && role.type == :roleType"
                         + " && role.party == :party"
@@ -114,7 +115,7 @@ public abstract class Agreement
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
     @DescribedAs("Unique reference code for this agreement")
     @Title
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
@@ -130,6 +131,7 @@ public abstract class Agreement
 
     private String name;
 
+    @javax.jdo.annotations.Column(length=JdoColumnLength.NAME)
     @DescribedAs("Optional name for this agreement")
     @Hidden(where = Where.ALL_TABLES)
     @Optional
@@ -302,17 +304,17 @@ public abstract class Agreement
 
     // //////////////////////////////////////
 
-    private AgreementType agreementType;
+    private AgreementType type;
 
-    @javax.jdo.annotations.Column(name = "agreementTypeId", allowsNull = "false")
+    @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Hidden(where = Where.ALL_TABLES)
     @Disabled
-    public AgreementType getAgreementType() {
-        return agreementType;
+    public AgreementType getType() {
+        return type;
     }
 
-    public void setAgreementType(final AgreementType type) {
-        this.agreementType = type;
+    public void setType(final AgreementType type) {
+        this.type = type;
     }
 
     // //////////////////////////////////////
@@ -438,7 +440,7 @@ public abstract class Agreement
     }
 
     public List<AgreementRoleType> choices0NewRole() {
-        return agreementRoleTypes.findApplicableTo(getAgreementType());
+        return agreementRoleTypes.findApplicableTo(getType());
     }
 
     public LocalDate default2NewRole() {

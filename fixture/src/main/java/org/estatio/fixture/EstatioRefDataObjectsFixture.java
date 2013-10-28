@@ -30,6 +30,7 @@ import org.estatio.fixture.charge.ChargeAndChargeGroupFixture;
 import org.estatio.fixture.charge.CurrencyFixture;
 import org.estatio.fixture.geography.CountriesAndStatesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
+import org.estatio.fixture.lease.LeaseTypeForItalyFixture;
 import org.estatio.fixture.tax.TaxesAndTaxRatesFixture;
 
 
@@ -43,6 +44,7 @@ public class EstatioRefDataObjectsFixture extends AbstractFixture {
             new EstatioRefDataObjectsTeardownFixture(),
             new CountriesAndStatesFixture(),
             new FixedAssetRegistrationTypeForItalyFixture(),
+            new LeaseTypeForItalyFixture(),
             new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
             new CurrencyFixture(),
             new TaxesAndTaxRatesFixture(),

@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -83,7 +84,7 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
      * "http://www.commondatahub.com/live/geography/state_province_region/iso_3166_2_state_codes"
      * >states</a>.
      */
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
     public String getReference() {
         return reference;
@@ -98,7 +99,7 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -115,7 +116,7 @@ implements WithReferenceComparable<Country>, WithReferenceUnique, WithNameUnique
     @javax.jdo.annotations.Index(unique = "false")
     private String alpha2Code;
 
-    @javax.jdo.annotations.Column(allowsNull = "false")
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.Country.ALPHA2CODE)
     @Title
     public String getAlpha2Code() {
         return alpha2Code;

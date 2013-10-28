@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
@@ -56,7 +57,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private String address1;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PostalAddress.ADDRESS_LINE)
     @Mandatory
     @Title(sequence = "1", append = ", ")
     @Named("Address Line 1")
@@ -72,7 +73,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private String address2;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PostalAddress.ADDRESS_LINE)
     @Title(sequence = "2", append = ", ")
     @Optional
     @Named("Address Line 2")
@@ -88,7 +89,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private String postalCode;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PostalAddress.POSTAL_CODE)
     @Mandatory
     @Title(sequence = "3", append = ", ")
     public String getPostalCode() {
@@ -103,7 +104,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private String city;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PROPER_NAME)
     @Mandatory
     @Title(sequence = "4")
     public String getCity() {

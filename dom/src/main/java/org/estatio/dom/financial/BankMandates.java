@@ -59,7 +59,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
             // CHECKSTYLE:ON
             ) {
         BankMandate mandate = newTransientInstance();
-        mandate.setAgreementType(agreementTypes.find(FinancialConstants.AT_MANDATE));
+        mandate.setType(agreementTypes.find(FinancialConstants.AT_MANDATE));
         mandate.setReference(reference);
         mandate.setName(name);
         mandate.setStartDate(startDate);

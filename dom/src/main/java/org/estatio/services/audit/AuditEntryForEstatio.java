@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.DateTime;
 
+import org.estatio.dom.JdoColumnLength;
+
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType=IdentityType.DATASTORE, 
@@ -61,7 +63,7 @@ public class AuditEntryForEstatio {
     
     private String user;
 
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.USER_NAME)
     public String getUser() {
         return user;
     }
@@ -74,7 +76,7 @@ public class AuditEntryForEstatio {
 
     private String objectType;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.FQCN)
     @Title(sequence="3", prepend=":")
     public String getObjectType() {
         return objectType;
@@ -88,7 +90,7 @@ public class AuditEntryForEstatio {
 
     private String identifier;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OBJECT_IDENTIFIER)
     public String getIdentifier() {
         return identifier;
     }
