@@ -93,7 +93,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.Agreement "
-                        + "WHERE type == :type"
+                        + "WHERE type == :agreementType"
                         + " && roles.contains(role)"
                         + " && role.type == :roleType"
                         + " && role.party == :party"
