@@ -7,8 +7,8 @@
           "members": {
             "reference": {},
             "name": {},
-            "unitType": {},
-            "property": {},
+            "type": {},
+            "property": {}
           }
         },
         "Dates": {

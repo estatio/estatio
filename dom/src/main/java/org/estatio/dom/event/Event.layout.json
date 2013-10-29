@@ -1,0 +1,37 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "subject": {},
+            "subjectEventType": {},
+            "date": {}
+          }
+        },
+        "Detail": {
+          "members": {
+            "notes": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {},
+    "refreshLayout": {}
+  }
+}

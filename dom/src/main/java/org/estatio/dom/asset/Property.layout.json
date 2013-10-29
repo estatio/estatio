@@ -22,7 +22,7 @@
         },
         "Property": {
           "members": {
-            "propertyType": {},
+            "type": {},
             "area": {}
           }
         },

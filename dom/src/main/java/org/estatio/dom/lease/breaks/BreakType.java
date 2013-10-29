@@ -16,23 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event;
+package org.estatio.dom.lease.breaks;
 
-import org.estatio.dom.TitledEnum;
+import org.estatio.dom.Titled;
 import org.estatio.dom.utils.StringUtils;
 
-//TODO: is this in scope?
-// EST-131: convert to entity, since will vary by location
-public enum PropertyEventType implements TitledEnum {
+public enum BreakType implements Titled {
 
-    DISRUPTION, 
-    EXTENSION, 
-    REFURBISHMENT, 
-    EVENT, 
-    TASK;
+    FIXED, 
+    ROLLING;
 
     public String title() {
         return StringUtils.enumTitle(this.toString());
     }
-
 }

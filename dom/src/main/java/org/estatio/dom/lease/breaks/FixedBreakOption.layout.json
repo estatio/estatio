@@ -1,0 +1,45 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "lease": {},
+            "name": {},
+            "type": {},
+            "exerciseType": {}
+          }
+        },
+        "Dates": {
+          "members": {
+            "notificationDate": {},
+            "notificationPeriod": {},
+            "breakDate": {},
+            "reminderDate": {
+              "actions": {
+                "updateReminderDate": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "events": {}
+      }
+    }
+  ],
+  "actions": {
+  }
+}

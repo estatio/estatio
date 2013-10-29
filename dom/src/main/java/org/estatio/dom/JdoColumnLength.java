@@ -35,6 +35,7 @@ public final class JdoColumnLength {
     public final static int TITLE=50;
     public final static int NAME=30;
     public final static int DESCRIPTION=254;
+    public final static int NOTES=4000;
     
     public final static int PROPER_NAME=30;
     
@@ -45,13 +46,27 @@ public final class JdoColumnLength {
     public static final int OBJECT_IDENTIFIER = 20;
     public static final int USER_NAME = 50;
 
+    public static final int DURATION = 20;
+    
+    public static final class Event {
+        private Event(){}
+        
+        public static final int TYPE = 254;
+    }
+    
+    public static final class BreakOption {
+        private BreakOption(){}
+        
+        public static final int EXERCISE_TYPE_ENUM = 20;
+    }
+
     public static final class PostalAddress {
         private PostalAddress(){}
         
         public static final int ADDRESS_LINE = 100;
         public static final int POSTAL_CODE = 12;
     }
-
+    
     public static final class LeaseTermForTurnoverRent {
         private LeaseTermForTurnoverRent(){}
         

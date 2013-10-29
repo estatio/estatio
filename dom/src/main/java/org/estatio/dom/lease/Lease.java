@@ -27,10 +27,14 @@ import java.util.TreeSet;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import com.google.common.collect.Iterables;
+
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
@@ -57,7 +61,13 @@ import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakOption;
+import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.dom.lease.breaks.FixedBreakOption;
+import org.estatio.dom.lease.breaks.RollingBreakOption;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.JodaPeriodUtils;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -194,8 +204,8 @@ public class Lease
         return occupancies;
     }
 
-    public void setOccupancies(final SortedSet<Occupancy> units) {
-        this.occupancies = units;
+    public void setOccupancies(final SortedSet<Occupancy> occupancies) {
+        this.occupancies = occupancies;
     }
 
     public Occupancy occupy(
@@ -251,6 +261,114 @@ public class Lease
         }
         return null;
     }
+
+    // //////////////////////////////////////
+    
+    @javax.jdo.annotations.Persistent(mappedBy = "lease")
+    private SortedSet<BreakOption> breakOptions = new TreeSet<BreakOption>();
+
+    @Render(Type.EAGERLY)
+    public SortedSet<BreakOption> getBreakOptions() {
+        return breakOptions;
+    }
+
+    public void setBreakOptions(final SortedSet<BreakOption> breakOptions) {
+        this.breakOptions = breakOptions;
+    }
+    
+    // //////////////////////////////////////
+    
+    public Lease newFixedBreakOption(
+            final @Named("Break date") LocalDate breakDate, 
+            final @Named("Notification period") 
+                  @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
+            final BreakExerciseType breakExerciseType) {
+        final FixedBreakOption breakOption = newTransientInstance(FixedBreakOption.class);
+        breakOption.setLease(this);
+        breakOption.setExerciseType(breakExerciseType);
+        final LocalDate date = breakDate;
+        breakOption.setNotificationPeriod(notificationPeriodStr);
+        breakOption.setBreakDate(date);
+        
+        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
+        final LocalDate lastNotificationDate = date.minus(notificationPeriodJoda);
+        breakOption.setNotificationDate(lastNotificationDate);
+        
+        persistIfNotAlready(breakOption);
+        return this;
+    }
+
+    public LocalDate default0NewFixedBreakOption() {
+        // REVIEW: this is just a guess as to a reasonable default
+        return getClockService().now().plusYears(2);
+    }
+    public String default1NewFixedBreakOption() {
+        return "3m";
+    }
+    public BreakExerciseType default2NewFixedBreakOption() {
+        return BreakExerciseType.LANDLORD;
+    }
+    
+    public String validateNewFixedBreakOption(
+            final LocalDate breakDate, 
+            final String notificationPeriodStr,
+            final BreakExerciseType breakExerciseType) {
+        
+        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
+        if (notificationPeriodJoda == null) {
+            return "Notification period format not recognized";
+        }
+        final LocalDate notificationDate = breakDate.minus(notificationPeriodJoda);
+        return checkNewBreakOptionDuplicate(BreakType.FIXED, notificationDate);
+    }
+
+    private String checkNewBreakOptionDuplicate(final BreakType breakType, final LocalDate notificationDate) {
+        final Iterable<BreakOption> duplicates = 
+                Iterables.filter(getBreakOptions(), 
+                        BreakOption.Predicates.whetherTypeAndNotificationDate(breakType, notificationDate));
+        return duplicates.iterator().hasNext()?
+                "This lease already has a " + breakType + " break option for this date": null;
+    }
+
+    // //////////////////////////////////////
+
+    public Lease newRollingBreakOption(
+            final @Named("Earliest notification date") LocalDate earliestNotificationDate, 
+            final @Named("Notification period") 
+                  @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
+            final BreakExerciseType breakExerciseType) {
+        final RollingBreakOption breakOption = newTransientInstance(RollingBreakOption.class);
+        breakOption.setLease(this);
+        breakOption.setExerciseType(breakExerciseType);
+        breakOption.setNotificationPeriod(notificationPeriodStr);
+        breakOption.setNotificationDate(earliestNotificationDate);
+        persistIfNotAlready(breakOption);
+        return this;
+    }
+
+    public LocalDate default0NewRollingBreakOption() {
+        // REVIEW: this is just a guess as to a reasonable default
+        return getClockService().now().plusYears(2);
+    }
+    public String default1NewRollingBreakOption() {
+        return "3m";
+    }
+    public BreakExerciseType default2NewRollingBreakOption() {
+        return BreakExerciseType.LANDLORD;
+    }
+
+    public String validateNewRollingBreakOption(
+            final LocalDate earliestNotificationDate, 
+            final String notificationPeriodStr,
+            final BreakExerciseType breakExerciseType) {
+        
+        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
+        if (notificationPeriodJoda == null) {
+            return "Notification period format not recognized";
+        }
+        return checkNewBreakOptionDuplicate(BreakType.ROLLING, earliestNotificationDate);    
+    }
+
 
     // //////////////////////////////////////
 
@@ -474,5 +592,7 @@ public class Lease
     public final void injectBankMandates(final BankMandates bankMandates) {
         this.bankMandates = bankMandates;
     }
+
+
 
 }

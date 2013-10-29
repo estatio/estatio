@@ -16,29 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.event;
+package org.estatio.dom.lease.breaks;
 
-import org.estatio.dom.Titled;
+import org.apache.isis.applib.annotation.Hidden;
 
-// TODO: is this in scope?
-//  EST-130: convert to entity, since will vary by location
-public enum LeaseEventType implements Titled {
+import org.estatio.dom.EstatioDomainService;
 
-    LEASE_BRK_OPT_LNDLRD("Break Option - Landlord"), 
-    LEASE_BRK_OPT_MTL("Break Option - Mutual"), 
-    LEASE_BRK_OPT_TNT("Break Option - Tenant"), 
-    LEASE_EVENT("Event"), 
-    LEASE_MEETING("Meeting"), 
-    LEASE_PROLONGATION("Prolongation"), 
-    LEASE_TASK("Task");
+@Hidden
+public class BreakOptions extends EstatioDomainService<BreakOption> {
 
-    private String title;
-
-    private LeaseEventType(final String title) {
-        this.title = title;
+    public BreakOptions() {
+        super(BreakOptions.class, BreakOption.class);
     }
 
-    public String title() {
-        return title;
-    }
+
 }

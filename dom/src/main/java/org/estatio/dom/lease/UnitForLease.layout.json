@@ -7,7 +7,7 @@
           "members": {
             "reference": {},
             "name": {},
-            "unitType": {},
+            "type": {},
             "property": {}
           }
         },
@@ -50,8 +50,6 @@
     }
   ],
   "actions": {
-    "activeLeasesOnDate": {},
-    "lock": {},
-    "unlock": {}
+    "activeLeasesOnDate": {}
   }
 }

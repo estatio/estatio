@@ -74,6 +74,12 @@
           "actions": {
             "occupy": {}
           }
+        },
+        "breakOptions": {
+            "actions": {
+                "newFixedBreakOption": {},
+                "newRollingBreakOption": {}
+            }
         }
       }
     }

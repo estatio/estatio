@@ -30,6 +30,9 @@ public final class JodaPeriodUtils {
     private JodaPeriodUtils(){}
 
     public static Period asPeriod(final String inputStr) {
+        if(inputStr == null) {
+            return null;
+        }
         final String inputStrNormalized = inputStr.replaceAll(" ", "").toLowerCase();
         PeriodFormatter formatter = new PeriodFormatterBuilder().
                 appendYears().appendSuffix("y").
