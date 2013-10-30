@@ -117,7 +117,7 @@ public final class IBANHelper {
     public static void disassembleIBAN(final BankAccount account) {
         String iban = account.getIban();
         IBANFormat format = IBANFormat.valueOf(iban.substring(0, 2));
-        if (format != null && iban.length() == format.format.length()) {
+        if (format != null && iban.length() == format.format().length()) {
             account.setNationalBankCode(partWithCharacter(format.format(), iban, "a"));
             account.setNationalCheckCode(partWithCharacter(format.format(), iban, "x"));
             account.setBranchCode(partWithCharacter(format.format(), iban, "b"));
@@ -136,7 +136,7 @@ public final class IBANHelper {
                 iban = injectPartWithCharacter(iban, "b", account.getBranchCode());
                 iban = injectPartWithCharacter(iban, "c", account.getAccountNumber());
                 iban = iban.replace("kk", "00");
-                if (iban.length() != format.format.length())
+                if (iban.length() != format.format().length())
                     return;
                 iban = IBANValidator.fixChecksum(iban);
                 if (IBANValidator.valid(iban)) {
@@ -164,12 +164,7 @@ public final class IBANHelper {
         int endIndex = ibanFormat.lastIndexOf(character);
         String pattern = "";
         if (beginIndex > -1 && endIndex >= beginIndex) {
-            if (endIndex > ibanFormat.length()) {
-                pattern = ibanFormat.substring(beginIndex, endIndex + 1);
-            } else
-            {
-                pattern = ibanFormat.substring(beginIndex);
-            }
+            pattern = ibanFormat.substring(beginIndex, endIndex + 1);
             return ibanFormat.replace(pattern, replacement == null ? "" : replacement);
         } else {
             return ibanFormat;
