@@ -18,18 +18,25 @@
  */
 package org.estatio.dom.financial;
 
-import org.hamcrest.core.Is;
-import org.junit.Assert;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.financial.utils.IBANHelper;
+import org.estatio.dom.geography.Country;
 
 public class IBANHelperTest {
 
+    private Country country;
+
     @Before
     public void setup() {
-
+        country = new Country();
+        country.setAlpha2Code("IT");
+        country.setReference("ITA");
     }
 
     @Test
@@ -37,8 +44,8 @@ public class IBANHelperTest {
         BankAccount ba = new BankAccount();
         ba.setIban("NL31ABNA0580744434");
         IBANHelper.verifyAndUpdate(ba);
-        Assert.assertThat(ba.getNationalBankCode(), Is.is("ABNA"));
-        Assert.assertThat(ba.getAccountNumber(), Is.is("0580744434"));
+        assertThat(ba.getNationalBankCode(), is("ABNA"));
+        assertThat(ba.getAccountNumber(), is("0580744434"));
     }
 
     @Test
@@ -46,18 +53,18 @@ public class IBANHelperTest {
         BankAccount ba = new BankAccount();
         ba.setIban("IT69N0347501601000051986922");
         IBANHelper.verifyAndUpdate(ba);
-        Assert.assertThat(ba.getNationalBankCode(), Is.is("03475"));
-        Assert.assertThat(ba.getBranchCode(), Is.is("01601"));
-        Assert.assertThat(ba.getAccountNumber(), Is.is("000051986922"));
+        assertThat(ba.getNationalBankCode(), is("03475"));
+        assertThat(ba.getBranchCode(), is("01601"));
+        assertThat(ba.getAccountNumber(), is("000051986922"));
     }
 
     @Test
     public void testEmptyAccount() {
         BankAccount ba = new BankAccount();
         IBANHelper.verifyAndUpdate(ba);
-        Assert.assertNull(ba.getNationalBankCode());
-        Assert.assertNull(ba.getBranchCode());
-        Assert.assertNull(ba.getAccountNumber());
+        assertNull(ba.getNationalBankCode());
+        assertNull(ba.getBranchCode());
+        assertNull(ba.getAccountNumber());
     }
 
     @Test
@@ -65,10 +72,33 @@ public class IBANHelperTest {
         BankAccount ba = new BankAccount();
         ba.setIban("IT1231231");
         IBANHelper.verifyAndUpdate(ba);
-        Assert.assertNull(ba.getNationalBankCode());
-        Assert.assertNull(ba.getBranchCode());
-        Assert.assertNull(ba.getAccountNumber());
+        assertNull(ba.getNationalBankCode());
+        assertNull(ba.getBranchCode());
+        assertNull(ba.getAccountNumber());
     }
 
+    @Test
+    public void testCreateIBANfromFields() {
+        BankAccount ba = new BankAccount();
+        ba.setCountry(country);
+        ba.setNationalBankCode("03475");
+        ba.setBranchCode("01601");
+        ba.setAccountNumber("000051986922");
+        ba.setNationalCheckCode("N");
+        IBANHelper.verifyAndUpdate(ba);
+        assertThat(ba.getIban(), is("IT69N0347501601000051986922"));
+    }
+
+    @Test
+    public void testCreateIBANfromFieldsWithWrongInput() {
+        BankAccount ba = new BankAccount();
+        ba.setCountry(country);
+        ba.setNationalBankCode("07074");
+        ba.setBranchCode("36140");
+        ba.setAccountNumber("500");
+        ba.setNationalCheckCode(null);
+        ba.verifyIban();
+        assertNull(ba.getIban());
+    }
 
 }

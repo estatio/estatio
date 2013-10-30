@@ -22,8 +22,9 @@ import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.geography.Country;
 
 public final class IBANHelper {
-    
-    private IBANHelper(){}
+
+    private IBANHelper() {
+    }
 
     public enum IBANFormat {
         AL("ALkk aaas sssx cccc cccc cccc cccc"),
@@ -116,7 +117,7 @@ public final class IBANHelper {
     public static void disassembleIBAN(final BankAccount account) {
         String iban = account.getIban();
         IBANFormat format = IBANFormat.valueOf(iban.substring(0, 2));
-        if (format != null) {
+        if (format != null && iban.length() == format.format.length()) {
             account.setNationalBankCode(partWithCharacter(format.format(), iban, "a"));
             account.setNationalCheckCode(partWithCharacter(format.format(), iban, "x"));
             account.setBranchCode(partWithCharacter(format.format(), iban, "b"));
@@ -135,6 +136,8 @@ public final class IBANHelper {
                 iban = injectPartWithCharacter(iban, "b", account.getBranchCode());
                 iban = injectPartWithCharacter(iban, "c", account.getAccountNumber());
                 iban = iban.replace("kk", "00");
+                if (iban.length() != format.format.length())
+                    return;
                 iban = IBANValidator.fixChecksum(iban);
                 if (IBANValidator.valid(iban)) {
                     account.setIban(iban);
@@ -155,14 +158,19 @@ public final class IBANHelper {
 
     private static String injectPartWithCharacter(
             final String ibanFormat,
-            final String character, 
+            final String character,
             final String replacement) {
         int beginIndex = ibanFormat.indexOf(character);
         int endIndex = ibanFormat.lastIndexOf(character);
         String pattern = "";
-        if (replacement != null && beginIndex > -1 && endIndex >= beginIndex) {
-            pattern = ibanFormat.substring(beginIndex, endIndex + 1);
-            return ibanFormat.replace(pattern, replacement);
+        if (beginIndex > -1 && endIndex >= beginIndex) {
+            if (endIndex > ibanFormat.length()) {
+                pattern = ibanFormat.substring(beginIndex, endIndex + 1);
+            } else
+            {
+                pattern = ibanFormat.substring(beginIndex);
+            }
+            return ibanFormat.replace(pattern, replacement == null ? "" : replacement);
         } else {
             return ibanFormat;
         }
