@@ -13,14 +13,14 @@
         },
         "Dates": {
           "members": {
-            "notificationDate": {},
-            "notificationPeriod": {},
-            "breakDate": {},
             "reminderDate": {
               "actions": {
                 "updateReminderDate": {}
               }
-            }
+            },
+            "exerciseDate": {},
+            "notificationPeriod": {},
+            "breakDate": {}
           }
         }
       }

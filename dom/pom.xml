@@ -171,7 +171,7 @@ language governing permissions and limitations under the License.
             <artifactId>commons-lang</artifactId>
         </dependency>
 
-        <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
+        <!-- GMAP3 -->
         <dependency>
             <groupId>com.danhaywood.isis.wicket</groupId>
             <artifactId>danhaywood-isis-wicket-gmap3-applib</artifactId>
@@ -181,7 +181,12 @@ language governing permissions and limitations under the License.
             <artifactId>danhaywood-isis-wicket-gmap3-service</artifactId>
         </dependency>
         
-        
+        <!-- FULLCALENDAR2 -->
+        <dependency>
+            <groupId>com.danhaywood.isis.wicket</groupId>
+            <artifactId>danhaywood-isis-wicket-fullcalendar2-applib</artifactId>
+        </dependency>
+                
         <!-- testing -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>

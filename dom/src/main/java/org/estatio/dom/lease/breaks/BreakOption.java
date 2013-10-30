@@ -25,8 +25,11 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.danhaywood.isis.wicket.fullcalendar2.applib.CalendarEventable;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -34,6 +37,7 @@ import org.joda.time.Period;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -69,7 +73,7 @@ public abstract class BreakOption
 
 
     public BreakOption() {
-        super("lease, type, notificationDate");
+        super("lease, type, exerciseDate");
     }
 
 
@@ -110,21 +114,27 @@ public abstract class BreakOption
     // //////////////////////////////////////
     
     @javax.jdo.annotations.Persistent
-    private LocalDate notificationDate;
+    private LocalDate exerciseDate;
 
     /**
-     * The notification date for this break option; the semantics depend upon the particular
-     * {@link #getType() type} (subclass) of option. 
+     * The date on which this break option can be exercised, meaning that the other party
+     * to the lease is notified (also known as <i>notification date</i>).
      * 
      * <p>
-     * In the case of the {@link FixedBreakOption}, the notification date is the
-     * <i>last</i> date that an option can be exercised (it can also be exercised any
-     * date prior to the notification date).
-     * 
-     * <p>
-     * In the case of a {@link RollingBreakOption}, the notification date is the
-     * <o>first</i> date at which a option can be exercised (it can also be exercised any 
-     * date after the notification date).
+     * The exact semantics depend upon the particular
+     * {@link #getType() type} (subclass) of option:
+     * <ul>
+     *   <li>
+     *     In the case of the {@link FixedBreakOption}, the notification date is the
+     *     <i>last</i> date that an option can be exercised (it can also be exercised any
+     *     date prior to the notification date).
+     *   </li>
+     *   <li>
+     *     In the case of a {@link RollingBreakOption}, the notification date is the
+     *     <i>first</i> date at which a option can be exercised (it can also be exercised any 
+     *     date after the notification date).
+     *   </li>
+     * </ul>
      * 
      * <p>
      * To avoid misunderstandings in the UI, both subtypes rename the property (using Isis' 
@@ -133,12 +143,12 @@ public abstract class BreakOption
     @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
     @Title(prepend=" ", sequence="3")
-    public LocalDate getNotificationDate() {
-        return notificationDate;
+    public LocalDate getExerciseDate() {
+        return exerciseDate;
     }
     
-    public void setNotificationDate(final LocalDate lastNotificationDate) {
-        this.notificationDate = lastNotificationDate;
+    public void setExerciseDate(final LocalDate exerciseDate) {
+        this.exerciseDate = exerciseDate;
     }
 
     // //////////////////////////////////////
@@ -199,18 +209,26 @@ public abstract class BreakOption
         return events.findEventsBySubject(this);
     }
 
-    
+
+    /**
+     * to display in fullcalendar2
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Programmatic
+    @Override
+    public ImmutableMap<String, CalendarEventable> getCalendarEvents() {
+        final ImmutableMap eventsByCalendarName = Maps.uniqueIndex(
+                getEvents(), Event.Functions.GET_CALENDAR_NAME);
+        return eventsByCalendarName;
+    }
+
     // //////////////////////////////////////
 
     /**
      * For subclasses to call, eg in their <tt>persisting()</tt> callback methods.
      */
-    protected void createEvent(final LocalDate date, final EventSubject subject, final String subjectEventType) {
-        final Event breakEvent = newTransientInstance(Event.class);
-        breakEvent.setDate(date);
-        breakEvent.setSubject(subject);
-        breakEvent.setSubjectEventType(subjectEventType);
-        persistIfNotAlready(breakEvent);
+    protected Event createEvent(final LocalDate date, final EventSubject subject, final String subjectEventType) {
+        return events.newEvent(date, subject, subjectEventType);
     }
 
     // //////////////////////////////////////
@@ -235,7 +253,7 @@ public abstract class BreakOption
             return new Predicate<BreakOption>(){
                 @Override
                 public boolean apply(final BreakOption breakOption) {
-                    return Objects.equal(breakOption.getNotificationDate(), notificationDate);
+                    return Objects.equal(breakOption.getExerciseDate(), notificationDate);
                 }
             };
         }

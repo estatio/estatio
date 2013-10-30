@@ -216,6 +216,12 @@ language governing permissions and limitations under the License.
             <groupId>com.danhaywood.isis.wicket</groupId>
             <artifactId>danhaywood-isis-wicket-gmap3-ui</artifactId>
         </dependency>
+        <!-- FULLCALENDAR2 -->
+        <dependency>
+            <groupId>com.danhaywood.isis.wicket</groupId>
+            <artifactId>danhaywood-isis-wicket-fullcalendar2-ui</artifactId>
+        </dependency>
+                
         <!-- WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts -->
         <!--
         Requires Highchart license to use in commercial products.

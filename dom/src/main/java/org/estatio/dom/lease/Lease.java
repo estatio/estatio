@@ -292,7 +292,7 @@ public class Lease
         
         final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
         final LocalDate lastNotificationDate = date.minus(notificationPeriodJoda);
-        breakOption.setNotificationDate(lastNotificationDate);
+        breakOption.setExerciseDate(lastNotificationDate);
         
         persistIfNotAlready(breakOption);
         return this;
@@ -341,7 +341,7 @@ public class Lease
         breakOption.setLease(this);
         breakOption.setExerciseType(breakExerciseType);
         breakOption.setNotificationPeriod(notificationPeriodStr);
-        breakOption.setNotificationDate(earliestNotificationDate);
+        breakOption.setExerciseDate(earliestNotificationDate);
         persistIfNotAlready(breakOption);
         return this;
     }

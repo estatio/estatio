@@ -91,6 +91,7 @@ language governing permissions and limitations under the License.
         
         <danhaywood-isis-wicket-excel.version>1.3.0</danhaywood-isis-wicket-excel.version>
         <danhaywood-isis-wicket-fullcalendar.version>1.2.0</danhaywood-isis-wicket-fullcalendar.version>
+        <danhaywood-isis-wicket-fullcalendar2.version>1.3.0-SNAPSHOT</danhaywood-isis-wicket-fullcalendar2.version>
         <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
 
@@ -670,6 +671,16 @@ language governing permissions and limitations under the License.
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- FULLCALENDAR2: uncomment to use https://github.com/danhaywood/isis-wicket-fullcalendar2 -->
+            <dependency>
+                <groupId>com.danhaywood.isis.wicket</groupId>
+                <artifactId>danhaywood-isis-wicket-fullcalendar2</artifactId>
+                <version>${danhaywood-isis-wicket-fullcalendar2.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
 
             <!-- WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts -->
             <!--

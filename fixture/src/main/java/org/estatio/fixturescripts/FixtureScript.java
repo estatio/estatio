@@ -27,7 +27,9 @@ import org.apache.isis.applib.annotation.Named;
 @Named("Script")
 public enum FixtureScript {
 
-    GenerateTopModelInvoice(GenerateTopModelInvoice.class);
+    GenerateTopModelInvoice(GenerateTopModelInvoice.class),
+    CreateBreakOptions(CreateBreakOptions.class),
+    ;
     
     private Class<? extends Callable<Object>> cls;
 

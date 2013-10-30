@@ -20,6 +20,10 @@ package org.estatio.dom.event;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 
@@ -34,11 +38,13 @@ public class Events extends EstatioDomainService<Event> {
 
     // //////////////////////////////////////
     
+    @ActionSemantics(Of.SAFE)
     @NotContributed
     public List<Event> findEventsBySubject(final EventSubject eventSubject) {
         return allMatches("findBySubject", "subject", eventSubject);
     }
 
+    @ActionSemantics(Of.SAFE)
     @NotContributed
     public Event findEventsBySubjectAndSubjectEventType(
             final EventSubject eventSubject, 
@@ -47,6 +53,23 @@ public class Events extends EstatioDomainService<Event> {
                 "findBySubjectAndSubjectEventType", 
                 "subject", eventSubject,
                 "subjectEventType", subjectEventType);
+    }
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @NotContributed
+    public Event newEvent(final LocalDate date, final EventSubject subject, final String calendarName) {
+        final Event event = newTransientInstance(Event.class);
+        event.setDate(date);
+        event.setSubject(subject);
+        event.setCalendarName(calendarName);
+        persistIfNotAlready(event);
+        return event;
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public List<Event> findEventsOnOrAfter(final LocalDate date) {
+        return allMatches("findOnOrAfter", "date", date);
     }
 
 }

@@ -104,12 +104,12 @@ public class EstatioAdministrationService {
 
     @MemberOrder(sequence = "9")
     @Prototype
-    public void runScript(FixtureScript fixtureScript) {
-        fixtureScript.run(container);
+    public Object runScript(FixtureScript fixtureScript) {
+        return fixtureScript.run(container);
     }
 
     public FixtureScript default0RunScript() {
-        return FixtureScript.GenerateTopModelInvoice;
+        return FixtureScript.CreateBreakOptions;
     }
 
 

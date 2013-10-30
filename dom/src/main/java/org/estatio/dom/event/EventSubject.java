@@ -20,8 +20,10 @@ package org.estatio.dom.event;
 
 import java.util.List;
 
+import com.danhaywood.isis.wicket.fullcalendar2.applib.Calendarable;
 
-public interface EventSubject {
+
+public interface EventSubject extends Calendarable {
 
     /**
      * The {@link Event}s that pertain to this object; each of those events 

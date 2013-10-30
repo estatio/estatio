@@ -18,9 +18,15 @@
  */
 package org.estatio.dom.lease.breaks;
 
+import java.util.Set;
+
 import javax.jdo.annotations.InheritanceStrategy;
 
+import com.google.common.collect.Sets;
+
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Programmatic;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
@@ -30,27 +36,38 @@ public class RollingBreakOption
         extends BreakOption {
 
 
-    private static final String SUBJECT_EVENT_TYPE_EARLIEST_NOTIFICATION_DATE = "Earliest notification date";
+    private static final String CALENDAR_NAME_ROLLING_BREAK_EXERCISE = "Rolling break exercise";
 
     
     /**
-     * Dynamically rename {@link #getNotificationDate()} to be {@link #SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE} in 
+     * Dynamically rename {@link #getExerciseDate()} to be {@link #SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE} in 
      * the UI.
      * 
      * <p>
-     * For a {@link RollingBreakOption}, the {@link #getNotificationDate()} is the earliest date when notice can be 
+     * For a {@link RollingBreakOption}, the {@link #getExerciseDate()} is the earliest date when notice can be 
      * given for the {@link #getLease() lease} to be terminated.
+     * 
+     * <p>
+     * NB: implemented this way because the alternative (override and using <tt>@Named</tt> annotation) resulted in an
+     * infinite stacktrace, resultant from the JDO enhancement.
      */
-    public static String nameNotificationDate() {
-        return SUBJECT_EVENT_TYPE_EARLIEST_NOTIFICATION_DATE;
+    public static String nameExerciseDate() {
+        return "Earliest exercise date";
     }
 
+    // //////////////////////////////////////
+
+    @Programmatic
+    @Override
+    public Set<String> getCalendarNames() {
+        return Sets.newHashSet(CALENDAR_NAME_ROLLING_BREAK_EXERCISE);
+    }
 
     // //////////////////////////////////////
 
 
     public LocalDate getBreakDate() {
-        final LocalDate notificationDate = laterOf(getNotificationDate(), getClockService().now());
+        final LocalDate notificationDate = laterOf(getExerciseDate(), getClockService().now());
         return notificationDate.plus(getNotificationPeriodJoda());
     }
 
@@ -63,7 +80,9 @@ public class RollingBreakOption
 
     public void persisting() {
         // don't create an 'break date' event, since changes on a day-by-day basis 
-        createEvent(getNotificationDate(), this, SUBJECT_EVENT_TYPE_EARLIEST_NOTIFICATION_DATE);
+        createEvent(getExerciseDate(), this, CALENDAR_NAME_ROLLING_BREAK_EXERCISE);
     }
+
+
 
 }

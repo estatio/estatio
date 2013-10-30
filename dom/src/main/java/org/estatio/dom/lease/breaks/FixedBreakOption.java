@@ -18,7 +18,11 @@
  */
 package org.estatio.dom.lease.breaks;
 
+import java.util.Set;
+
 import javax.jdo.annotations.InheritanceStrategy;
+
+import com.google.common.collect.Sets;
 
 import org.joda.time.LocalDate;
 
@@ -26,6 +30,7 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.event.Event;
 
@@ -37,20 +42,35 @@ public class FixedBreakOption
         extends BreakOption {
 
 
-    private static final String SUBJECT_EVENT_TYPE_BREAK_DATE = "Break date";
-    private static final String SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE = "Last notification date";
-    private static final String SUBJECT_EVENT_TYPE_REMINDER_DATE = "Reminder date";
+    private static final String CALENDAR_NAME_FIXED_BREAK = "Fixed break date";
+    private static final String CALENDAR_NAME_FIXED_BREAK_EXERCISE = "Fixed break exercise";
+    private static final String CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER = "Fixed break exercise reminder";
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    @Override
+    public Set<String> getCalendarNames() {
+        return Sets.newHashSet(
+                CALENDAR_NAME_FIXED_BREAK, 
+                CALENDAR_NAME_FIXED_BREAK_EXERCISE, 
+                CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);
+    }
 
     /**
-     * Dynamically ename {@link #getNotificationDate()} to be {@link #SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE} in 
+     * Dynamically name {@link #getExerciseDate()} to be {@link #CALENDAR_NAME_FIXED_BREAK_EXERCISE} in 
      * the UI.
      * 
      * <p>
-     * For a {@link FixedBreakOption}, the {@link #getNotificationDate()} is the last (final) date when notice 
+     * For a {@link FixedBreakOption}, the {@link #getExerciseDate()} is the last (final) date when notice 
      * can be given for the {@link #getLease() lease} to be terminated.
+     * 
+     * <p>
+     * NB: implemented this way because the alternative (override and using <tt>@Named</tt> annotation) resulted in an
+     * infinite stacktrace, resultant from the JDO enhancement.
      */
-    public static String nameNotificationDate() {
-        return SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE;
+    public static String nameExerciseDate() {
+        return "Last exercise date";
     }
 
     // //////////////////////////////////////
@@ -60,7 +80,7 @@ public class FixedBreakOption
 
     /**
      * The date when the {@link #getLease() lease} can be terminated (assuming that the notice
-     * was given on or before the {@link #getNotificationDate() notification date}).
+     * was given on or before the {@link #getExerciseDate() notification date}).
      */
     @javax.jdo.annotations.Column(allowsNull="false")
     @Disabled
@@ -79,7 +99,7 @@ public class FixedBreakOption
     private LocalDate reminderDate;
 
     /**
-     * An optional reminder for the {@link #getNotificationDate() notification date}).
+     * An optional reminder for the {@link #getExerciseDate() notification date}).
      */
     @javax.jdo.annotations.Column(allowsNull="true")
     @Disabled(reason="Use action to set/clear a reminder date")
@@ -96,19 +116,19 @@ public class FixedBreakOption
     
     /**
      * Creates/updates/deletes a corresponding {@link Event} with a 
-     * {@link Event#getSubjectEventType() subject event type} of {@link #SUBJECT_EVENT_TYPE_REMINDER_DATE}.
+     * {@link Event#getCalendarName() subject event type} of {@link #CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER}.
      */
     @Named("Update")
     public FixedBreakOption updateReminderDate(
-            final @Optional @Named(SUBJECT_EVENT_TYPE_REMINDER_DATE) 
-                  @DescribedAs("Reminder for notification (leave blank to clear)") LocalDate reminderDate) {
+            final @Optional @Named(CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER) 
+                  @DescribedAs("Reminder to exercise (or leave blank to clear)") LocalDate reminderDate) {
         setReminderDate(reminderDate);
         final Event reminderEvent = 
-                events.findEventsBySubjectAndSubjectEventType(this, SUBJECT_EVENT_TYPE_REMINDER_DATE);
+                events.findEventsBySubjectAndSubjectEventType(this, CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);
         if(reminderDate != null) {
             if(reminderEvent == null) {
                 // create...
-                createEvent(getReminderDate(), this, SUBJECT_EVENT_TYPE_REMINDER_DATE);
+                createEvent(getReminderDate(), this, CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);
             } else {
                 // update...
                 reminderEvent.setDate(reminderDate);
@@ -122,7 +142,7 @@ public class FixedBreakOption
         return this;
     }
     public LocalDate default0UpdateReminderDate() {
-        return getNotificationDate().minusWeeks(2);
+        return getExerciseDate().minusWeeks(2);
     }
     public String disableUpdateReminderDate(final LocalDate reminderDate) {
         return getExerciseType() == BreakExerciseType.TENANT? 
@@ -136,8 +156,8 @@ public class FixedBreakOption
         if(reminderDate == null) {
             return null;
         }
-        return reminderDate.compareTo(getNotificationDate())>=0
-                ? "Reminder must be before notification date"
+        return reminderDate.compareTo(getExerciseDate())>=0
+                ? "Reminder must be before exercise date"
                 : null;
     }
     
@@ -145,9 +165,10 @@ public class FixedBreakOption
 
 
     public void persisting() {
-        createEvent(getBreakDate(), this, SUBJECT_EVENT_TYPE_BREAK_DATE);
-        createEvent(getNotificationDate(), this, SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE);
+        createEvent(getBreakDate(), this, CALENDAR_NAME_FIXED_BREAK);
+        createEvent(getExerciseDate(), this, CALENDAR_NAME_FIXED_BREAK_EXERCISE);
     }
+
 
 
     

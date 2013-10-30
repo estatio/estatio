@@ -13,7 +13,7 @@
         },
         "Dates": {
           "members": {
-            "notificationDate": {},
+            "exerciseDate": {},
             "notificationPeriod": {},
             "breakDate": {}
           }

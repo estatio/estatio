@@ -24,8 +24,11 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 
+import org.estatio.dom.event.Event;
+import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
+import org.estatio.services.clock.ClockService;
 
 @Named("Dashboard")
 public class EstatioAppDashboard extends EstatioViewModel {
@@ -57,15 +60,26 @@ public class EstatioAppDashboard extends EstatioViewModel {
         return leases.findAboutToExpireOnDate(getClockService().now());
     }
 
+    @Named("Upcoming events")
+    @Render(Type.EAGERLY)
+    public List<Event> getUpcomingEvents() {
+        return events.findEventsOnOrAfter(getClockService().now());
+    }
+
     // //////////////////////////////////////
 
     private Leases leases;
 
-    public void injectLeases(final Leases leases) {
+    public final void injectLeases(final Leases leases) {
         this.leases = leases;
     }
     
 
+    private Events events;
+    
+    public final void injectEvents(final Events events) {
+        this.events = events;
+    }
     
     
 }

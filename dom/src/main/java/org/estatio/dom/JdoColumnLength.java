@@ -52,7 +52,7 @@ public final class JdoColumnLength {
         private Event() {
         }
 
-        public static final int TYPE = 254;
+        public static final int CALENDAR_NAME = 254;
     }
 
     public static final class BreakOption {
