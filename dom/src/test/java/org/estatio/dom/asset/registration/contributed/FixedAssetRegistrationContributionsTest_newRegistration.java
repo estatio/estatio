@@ -16,7 +16,7 @@
  */
 package org.estatio.dom.asset.registration.contributed;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.jmock.Expectations;

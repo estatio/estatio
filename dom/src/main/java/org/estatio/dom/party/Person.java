@@ -24,16 +24,13 @@ import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.JdoColumnLength;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.NEW_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 public class Person extends Party {
 
-    
     private String initials;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Person.INITIALS)
+    @javax.jdo.annotations.Column(length = JdoColumnLength.Person.INITIALS)
     public String getInitials() {
         return initials;
     }
@@ -41,7 +38,6 @@ public class Person extends Party {
     public void setInitials(final String initials) {
         this.initials = initials;
     }
-
 
     // //////////////////////////////////////
 
@@ -52,10 +48,9 @@ public class Person extends Party {
 
     // //////////////////////////////////////
 
-    
     private String firstName;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PROPER_NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
     public String getFirstName() {
         return firstName;
     }
@@ -68,7 +63,7 @@ public class Person extends Party {
 
     private String lastName;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.PROPER_NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PROPER_NAME)
     public String getLastName() {
         return lastName;
     }
@@ -77,12 +72,11 @@ public class Person extends Party {
         this.lastName = lastName;
     }
 
-
     // //////////////////////////////////////
 
     private PersonGenderType gender;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     public PersonGenderType getGender() {
         return gender;
     }
@@ -98,7 +92,7 @@ public class Person extends Party {
     // //////////////////////////////////////
 
     public String validate() {
-        return getFirstName().isEmpty() || getInitials().isEmpty() ? 
+        return getFirstName().isEmpty() || getInitials().isEmpty() ?
                 "At least the first name or initials have to be filled in" : null;
     }
 
@@ -106,6 +100,5 @@ public class Person extends Party {
         TitleBuffer tb = new TitleBuffer();
         setName(tb.append(getLastName()).append(",", getFirstName()).toString());
     }
-
 
 }

@@ -29,12 +29,11 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithCodeUnique;
-import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.tax.Tax;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
@@ -42,10 +41,10 @@ import org.estatio.dom.tax.Tax;
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "Charge_code_UNQ", members={"code"}),
-    @javax.jdo.annotations.Unique(
-            name = "Charge_reference_UNQ", members={"reference"})
+        @javax.jdo.annotations.Unique(
+                name = "Charge_reference_UNQ", members = { "reference" }),
+        @javax.jdo.annotations.Unique(
+                name = "Charge_name_UNQ", members = { "name" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -56,21 +55,21 @@ import org.estatio.dom.tax.Tax;
 })
 @Bounded
 @Immutable
-public class Charge 
-        extends EstatioMutableObject<Charge> 
-        implements WithReferenceUnique, WithCodeUnique, WithNameGetter {
+public class Charge
+        extends EstatioMutableObject<Charge>
+        implements WithReferenceUnique, WithNameUnique {
 
     public Charge() {
-        super("code");
+        super("reference");
     }
 
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @Title(sequence = "1")
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -81,35 +80,9 @@ public class Charge
 
     // //////////////////////////////////////
 
-    private String code;
-
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.Charge.CODE)
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(final String code) {
-        this.code = code;
-    }
-
-    // //////////////////////////////////////
-
-    private Tax tax;
-
-    @javax.jdo.annotations.Column(name = "taxId", allowsNull="false")
-    public Tax getTax() {
-        return tax;
-    }
-
-    public void setTax(final Tax tax) {
-        this.tax = tax;
-    }
-
-    // //////////////////////////////////////
-
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     public String getName() {
         return name;
     }
@@ -120,9 +93,35 @@ public class Charge
 
     // //////////////////////////////////////
 
+    private String description;
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    // //////////////////////////////////////
+
+    private Tax tax;
+
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "false")
+    public Tax getTax() {
+        return tax;
+    }
+
+    public void setTax(final Tax tax) {
+        this.tax = tax;
+    }
+
+    // //////////////////////////////////////
+
     private ChargeGroup group;
 
-    @javax.jdo.annotations.Column(name = "groupId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "groupId", allowsNull = "false")
     public ChargeGroup getGroup() {
         return group;
     }

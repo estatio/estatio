@@ -18,11 +18,9 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.LeaseTypes;
 
-import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.fixtures.AbstractFixture;
-
-import org.estatio.dom.lease.LeaseType;
 
 public class LeaseTypeForItalyFixture extends AbstractFixture {
 
@@ -57,15 +55,16 @@ public class LeaseTypeForItalyFixture extends AbstractFixture {
     @Override
     public void install() {
         for (LeaseTypeData ltd : LeaseTypeData.values()) {
-            createLeaseType(ltd.title(), getContainer());
+            leaseTypes.findOrCreate(ltd.name(), ltd.title());
         }
     }
 
-    private static LeaseType createLeaseType(final String title, final DomainObjectContainer container) {
-        final LeaseType lt = container.newTransientInstance(LeaseType.class);
-        lt.setTitle(title);
-        container.persist(lt);
-        return lt;
+    // //////////////////////////////////////
+
+    private LeaseTypes leaseTypes;
+
+    public void injectLeaseTypes(LeaseTypes leaseTypes) {
+        this.leaseTypes = leaseTypes;
     }
 
 }

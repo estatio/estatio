@@ -27,47 +27,62 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithTitleComparable;
-import org.estatio.dom.WithTitleUnique;
+import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.WithReferenceComparable;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Uniques({
-    @javax.jdo.annotations.Unique(
-            name = "LeaseType_title_UNQ", members="title")
+        @javax.jdo.annotations.Unique(
+                name = "LeaseType_reference_UNQ", members = "reference"),
+        @javax.jdo.annotations.Unique(
+                name = "LeaseType_name_UNQ", members = "name")
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByTitle", language = "JDOQL",
+                name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseType "
-                        + "WHERE title == :title")
+                        + "WHERE reference == :reference")
 })
 @Immutable
 @Bounded
-public class LeaseType 
-        extends EstatioImmutableObject<LeaseType> 
-        implements WithTitleComparable<LeaseType>, 
-                   WithTitleUnique {
+public class LeaseType
+        extends EstatioImmutableObject<LeaseType>
+        implements WithReferenceComparable<LeaseType>,
+        WithNameUnique {
 
     public LeaseType() {
-        super("title");
+        super("reference");
     }
 
     // //////////////////////////////////////
 
-    private String title;
+    private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
-    @Title
-    public String getTitle() {
-        return title;
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    public String getReference() {
+        return reference;
     }
 
-    public void setTitle(final String title) {
-        this.title = title;
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    // //////////////////////////////////////
+
+    private String name;
+
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
+    @Title()
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
 }

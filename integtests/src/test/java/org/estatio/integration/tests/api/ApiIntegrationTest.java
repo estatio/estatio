@@ -148,7 +148,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         assertThat(tax.getName(), is("APITAX Name"));
         Assert.assertNotNull(tax.percentageFor(LocalDate.now()));
 
-        api.putCharge("APICHARGECODE", "APICHARGEREF", "API CHARGE", "APITAXREF", "APICHARGEGROUP");
+        api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APICHARGEGROUP");
 
         final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
         Assert.assertNotNull(chargeGroup);
@@ -158,8 +158,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         final Charge charge = charges.findCharge("APICHARGEREF");
         Assert.assertNotNull(charge);
         assertThat(charge.getReference(), is("APICHARGEREF"));
-        assertThat(charge.getCode(), is("APICHARGECODE"));
-        assertThat(charge.getName(), is("API CHARGE"));
+        assertThat(charge.getName(), is("APICHARGENAME"));
+        assertThat(charge.getDescription(), is("API CHARGE"));
         assertThat(charge.getTax(), is(tax));
         assertThat(charge.getGroup(), is(chargeGroup));
     }
@@ -197,7 +197,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", null, START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
+        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));

@@ -77,6 +77,8 @@ import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.LeaseTypes;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
@@ -90,6 +92,7 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
 
 @Named("Migration")
@@ -156,15 +159,24 @@ public class Api extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putCharge(
-            @Named("code") String code,
+    public void putLeaseType(
             @Named("reference") String reference,
+            @Named("name") String name) {
+        leaseTypes.findOrCreate(reference, name);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putCharge(
+            @Named("reference") String reference,
+            @Named("name") String name,
             @Named("description") String description,
             @Named("taxReference") String taxReference,
             @Named("chargeGroupReference") String chargeGroupReference) {
         Tax tax = fetchTaxIfAny(taxReference);
         ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference);
-        charges.newCharge(reference, description, code, tax, chargeGroup);
+        charges.newCharge(reference, name, description, tax, chargeGroup);
     }
 
     private Charge fetchCharge(String chargeReference) {
@@ -415,7 +427,7 @@ public class Api extends AbstractFactoryAndRepository {
     public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String typeStr, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
         final Property property = fetchProperty(propertyReference, false);
         final Party party = fetchParty(partyReference);
-        final FixedAssetRoleType type = FixedAssetRoleType.valueOf(typeStr);
+        final FixedAssetRoleType type = FixedAssetRoleType.valueOf(StringUtils.capitalize(typeStr.toLowerCase()));
         property.addRoleIfDoesNotExist(party, type, startDate, endDate);
     }
 
@@ -425,19 +437,18 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") String name,
             @Named("tenantReference") String tenantReference,
             @Named("landlordReference") String landlordReference,
-            @Named("type") @Optional String type,
+            @Named("type") String type,
             @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate,
             @Named("terminationDate") @Optional LocalDate terminationDate,
-            @Named("propertyReference") @Optional String propertyReference) {
+            @Named("propertyReference") @Optional String propertyReference
+            ) {
         Party tenant = fetchParty(tenantReference);
         Party landlord = fetchParty(landlordReference);
         Lease lease = leases.findLeaseByReference(reference);
+        LeaseType leaseType = leaseTypes.findOrCreate(type, null);
         if (lease == null) {
-            lease = leases.newLease(reference, name, startDate, null, endDate, landlord, tenant);
-        }
-        if (name != null) {
-            lease.setName(name);
+            lease = leases.newLease(reference, name, leaseType, startDate, null, endDate, landlord, tenant);
         }
         lease.setTerminationDate(terminationDate);
     }
@@ -470,7 +481,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("brand") @Optional String brand,
             @Named("sector") @Optional String sector,
             @Named("activity") @Optional String activity,
-            @Named("reportTurnver") @Optional String reportTurnover,
+            @Named("reportTurnover") @Optional String reportTurnover,
             @Named("reportRent") @Optional String reportRent,
             @Named("reportOCR") @Optional String reportOCR) {
         Lease lease = fetchLease(leaseReference);
@@ -490,9 +501,9 @@ public class Api extends AbstractFactoryAndRepository {
         occupancy.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null);
         occupancy.setSectorName(sector);
         occupancy.setActivityName(activity);
-        occupancy.setReportTurnover(reportTurnover != null ? OccupancyReportingType.valueOf(reportTurnover): null);
-        occupancy.setReportRent(reportRent != null ? OccupancyReportingType.valueOf(reportRent): null);
-        occupancy.setReportOCR(reportOCR != null ? OccupancyReportingType.valueOf(reportOCR): null);
+        occupancy.setReportTurnover(reportTurnover != null ? OccupancyReportingType.valueOf(reportTurnover) : OccupancyReportingType.NO);
+        occupancy.setReportRent(reportRent != null ? OccupancyReportingType.valueOf(reportRent) : OccupancyReportingType.NO);
+        occupancy.setReportOCR(reportOCR != null ? OccupancyReportingType.valueOf(reportOCR) : OccupancyReportingType.NO);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -561,7 +572,7 @@ public class Api extends AbstractFactoryAndRepository {
             if (address == null) {
                 address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, fetchState(stateCode, false), fetchCountry(countryCode, false));
             }
-            AgreementRoleType art = agreementRoleTypes.findByTitle(agreementRoleType);
+            AgreementRoleType art = agreementRoleTypes.findByTitle(StringUtils.capitalize(agreementRoleType.toLowerCase()));
             if (art == null)
                 throw new ApplicationException(String.format("AgreementRoleType %s not found.", agreementRoleType));
             AgreementRole role = lease.findRole(party, art, clockService.now());
@@ -918,6 +929,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectAgreementRoleCommunicationChannelTypes(AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
         this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
+    }
+
+    private LeaseTypes leaseTypes;
+
+    public void injectLeaseTypes(LeaseTypes leaseTypes) {
+        this.leaseTypes = leaseTypes;
     }
 
 }

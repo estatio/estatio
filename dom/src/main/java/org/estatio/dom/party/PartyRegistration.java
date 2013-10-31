@@ -33,8 +33,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 

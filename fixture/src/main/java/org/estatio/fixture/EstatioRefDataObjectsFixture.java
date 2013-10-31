@@ -21,9 +21,6 @@ package org.estatio.fixture;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
-
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.asset.registration.FixedAssetRegistrationTypeForItalyFixture;
 import org.estatio.fixture.charge.ChargeAndChargeGroupFixture;
@@ -33,30 +30,32 @@ import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
 import org.estatio.fixture.lease.LeaseTypeForItalyFixture;
 import org.estatio.fixture.tax.TaxesAndTaxRatesFixture;
 
+import org.apache.isis.applib.fixtures.AbstractFixture;
+import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 public class EstatioRefDataObjectsFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        
+
         final List<AbstractFixture> fixtures = Arrays.asList(
-            new EstatioTransactionalObjectsTeardownFixture(),
-            new EstatioRefDataObjectsTeardownFixture(),
-            new CountriesAndStatesFixture(),
-            new FixedAssetRegistrationTypeForItalyFixture(),
-            new LeaseTypeForItalyFixture(),
-            new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
-            new CurrencyFixture(),
-            new TaxesAndTaxRatesFixture(),
-            new ChargeAndChargeGroupFixture(),
-            new IndexAndIndexBaseAndIndexValueFixture()
-        );
+                new EstatioTransactionalObjectsTeardownFixture(),
+                new EstatioRefDataObjectsTeardownFixture(),
+                new CountriesAndStatesFixture(),
+                new FixedAssetRegistrationTypeForItalyFixture(),
+                new LeaseTypeForItalyFixture(),
+                new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
+                new CurrencyFixture(),
+                new TaxesAndTaxRatesFixture(),
+                new ChargeAndChargeGroupFixture(),
+                new IndexAndIndexBaseAndIndexValueFixture()
+                );
 
         final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
         for (AbstractFixture fixture : fixtures) {
             installer.addFixture(fixture);
         }
-        installer.installFixtures(); 
+        installer.installFixtures();
         getContainer().flush();
     }
 

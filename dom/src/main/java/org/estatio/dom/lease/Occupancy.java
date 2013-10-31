@@ -37,8 +37,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.lease.tags.Activities;
 import org.estatio.dom.lease.tags.Activity;

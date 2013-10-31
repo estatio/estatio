@@ -49,7 +49,6 @@ import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
-import org.estatio.dom.WithInterval;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;

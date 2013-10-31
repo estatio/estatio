@@ -28,8 +28,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;

@@ -70,6 +70,7 @@ public class Leases extends EstatioDomainService<Lease> {
             // aggregate value types
             final @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true) String reference,
             final @Named("Name") String name,
+            final @Named("Type") LeaseType leaseType,
             final @Named("Start Date") LocalDate startDate,
             final @Optional @Named("Duration") 
                   @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
@@ -93,6 +94,7 @@ public class Leases extends EstatioDomainService<Lease> {
         lease.setName(name);
         lease.setStartDate(startDate);
         lease.setEndDate(calculatedEndDate);
+        lease.setLeaseType(leaseType);
         persistIfNotAlready(lease);
 
         if (tenant != null) {

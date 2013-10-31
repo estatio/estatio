@@ -47,46 +47,45 @@ public class ChargesTest_newCharge {
 
     private ChargeGroup chargeGroup;
     private Tax tax;
-    
+
     @Before
     public void setup() {
-        
+
         chargeGroup = new ChargeGroup();
         tax = new Tax();
-        
+
         charges = new Charges() {
             @Override
             public Charge findCharge(String reference) {
                 return existingCharge;
             }
-        };    
+        };
         charges.setContainer(mockContainer);
     }
 
-    
     @Test
     public void newCharge_whenDoesNotExist() {
         final Charge charge = new Charge();
-        
+
         existingCharge = null;
 
         context.checking(new Expectations() {
             {
                 oneOf(mockContainer).newTransientInstance(Charge.class);
                 will(returnValue(charge));
-                
+
                 oneOf(mockContainer).persist(charge);
             }
         });
-        
-        final Charge newCharge = charges.createCharge("CG-REF", "CG-Description", "CG-Code", tax, chargeGroup);
+
+        final Charge newCharge = charges.createCharge("CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
         assertThat(newCharge.getReference(), is("CG-REF"));
-        assertThat(newCharge.getName(), is("CG-Description"));
-        assertThat(newCharge.getCode(), is("CG-Code"));
+        assertThat(newCharge.getName(), is("CG-Name"));
+        assertThat(newCharge.getDescription(), is("CG-Description"));
         assertThat(newCharge.getTax(), is(tax));
         assertThat(newCharge.getGroup(), is(chargeGroup));
     }
-    
+
     @Test
     public void newCharge_whenDoesExist() {
         existingCharge = new Charge();

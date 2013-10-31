@@ -18,75 +18,79 @@
  */
 package org.estatio.dom;
 
-
 public final class JdoColumnLength {
 
-    private JdoColumnLength() {}
-    
-    public final static int STATUS_ENUM=20;
-    public final static int INVOICING_FREQUENCY_ENUM=20;
-    public final static int LEASE_TERM_FREQUENCY_ENUM=20;
-    public final static int OCCUPANCY_REPORTING_TYPE_ENUM=20;
-    public final static int PAYMENT_METHOD_ENUM=20;
-    public final static int TYPE_ENUM=20;
-    
-    public final static int REFERENCE=24;
-    
-    public final static int TITLE=50;
-    public final static int NAME=30;
-    public final static int DESCRIPTION=254;
-    public final static int NOTES=4000;
-    
-    public final static int PROPER_NAME=30;
-    
-    public final static int PHONE_NUMBER=20;
-    public final static int EMAIL_ADDRESS=50;
+    private JdoColumnLength() {
+    }
 
-    public final static int FQCN=254;
+    public final static int STATUS_ENUM = 20;
+    public final static int INVOICING_FREQUENCY_ENUM = 30;
+    public final static int LEASE_TERM_FREQUENCY_ENUM = 20;
+    public final static int OCCUPANCY_REPORTING_TYPE_ENUM = 20;
+    public final static int PAYMENT_METHOD_ENUM = 20;
+    public final static int TYPE_ENUM = 20;
+
+    public final static int REFERENCE = 24;
+
+    public final static int TITLE = 50;
+    public final static int NAME = 50;
+    public final static int DESCRIPTION = 254;
+    public final static int NOTES = 4000;
+
+    public final static int PROPER_NAME = 50;
+
+    public final static int PHONE_NUMBER = 20;
+    public final static int EMAIL_ADDRESS = 50;
+
+    public final static int FQCN = 254;
     public static final int OBJECT_IDENTIFIER = 20;
     public static final int USER_NAME = 50;
 
     public static final int DURATION = 20;
-    
+
     public static final class Event {
-        private Event(){}
-        
+        private Event() {
+        }
+
         public static final int TYPE = 254;
     }
-    
+
     public static final class BreakOption {
-        private BreakOption(){}
-        
+        private BreakOption() {
+        }
+
         public static final int EXERCISE_TYPE_ENUM = 20;
     }
 
     public static final class PostalAddress {
-        private PostalAddress(){}
-        
+        private PostalAddress() {
+        }
+
         public static final int ADDRESS_LINE = 100;
         public static final int POSTAL_CODE = 12;
     }
-    
+
     public static final class LeaseTermForTurnoverRent {
-        private LeaseTermForTurnoverRent(){}
-        
+        private LeaseTermForTurnoverRent() {
+        }
+
         public static final int RENT_RULE = 254;
     }
 
-    
     public static final class Numerator {
-        private Numerator(){}
-        
+        private Numerator() {
+        }
+
         /**
          * {@link JdoColumnLength#REFERENCE} plus a few chars
          */
-        public final static int FORMAT=30; 
+        public final static int FORMAT = 30;
     }
-    
 
     public static final class Invoice {
-        private Invoice(){}
-        
+        private Invoice() {
+        }
+
         /**
          * TODO: review
          */
@@ -94,7 +98,9 @@ public final class JdoColumnLength {
     }
 
     public static final class Organisation {
-        private Organisation(){}
+        private Organisation() {
+        }
+
         /**
          * TODO: review
          */
@@ -104,55 +110,60 @@ public final class JdoColumnLength {
          */
         public static final int VAT_CODE = 30;
     }
-    
-    public static final class Charge {
-        private Charge(){}
-        /**
-         * TODO: review
-         */
-        public static final int CODE = 30;
-    }
-    
+
     public static final class Country {
-        private Country(){}
+        private Country() {
+        }
+
         public static final int ALPHA2CODE = 2;
     }
-    
+
+    public static final class Party {
+        private Party() {
+        }
+
+        public static final int NAME = 80;
+    }
+
     public static final class Person {
-        private Person(){}
+        private Person() {
+        }
+
         public static final int INITIALS = 3;
     }
-    
+
     public final static class BankAccount {
-        private BankAccount() {}
+        private BankAccount() {
+        }
 
         /**
          * eg http://en.wikipedia.org/wiki/International_Bank_Account_Number
          * 
          * max length currently is Malta, 31 chars.
          */
-        public final static int IBAN=32;
+        public final static int IBAN = 32;
 
         /**
          * TODO: review
          */
-        public final static int ACCOUNT_NUMBER=20;
+        public final static int ACCOUNT_NUMBER = 20;
         /**
          * TODO: review
          */
-        public final static int BRANCH_CODE=20;
+        public final static int BRANCH_CODE = 20;
         /**
          * TODO: review
          */
-        public final static int NATIONAL_BANK_CODE=20;
+        public final static int NATIONAL_BANK_CODE = 20;
         /**
          * TODO: review
          */
-        public final static int NATIONAL_CHECK_CODE=20;
+        public final static int NATIONAL_CHECK_CODE = 20;
     }
 
     public final static class State {
-        private State() {}
+        private State() {
+        }
 
         public final static int REFERENCE = 6;
     }

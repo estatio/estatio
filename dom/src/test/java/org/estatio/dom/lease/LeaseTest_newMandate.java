@@ -18,7 +18,9 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
@@ -28,7 +30,6 @@ import com.google.common.collect.Lists;
 
 import org.hamcrest.Matchers;
 import org.jmock.Expectations;
-import org.jmock.Sequence;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;

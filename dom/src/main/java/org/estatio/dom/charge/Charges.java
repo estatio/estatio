@@ -51,10 +51,10 @@ public class Charges extends EstatioDomainService<Charge> {
     public List<Charge> newCharge(
             final @Named("Reference") String reference, 
             final @Named("Name") String name, 
-            final @Named("Code") String code, 
+            final @Named("Description") String description, 
             final Tax tax, 
             final ChargeGroup chargeGroup) {
-        createCharge(reference, name, code, tax, chargeGroup);
+        createCharge(reference, name, description, tax, chargeGroup);
         return allCharges();
     }
 
@@ -64,7 +64,7 @@ public class Charges extends EstatioDomainService<Charge> {
     public Charge createCharge(
             final String reference, 
             final String name, 
-            final String code, 
+            final String description, 
             final Tax tax, 
             final ChargeGroup chargeGroup) {
         Charge charge = findCharge(reference);
@@ -74,7 +74,7 @@ public class Charges extends EstatioDomainService<Charge> {
             persist(charge);
         }
         charge.setName(name);
-        charge.setCode(code);
+        charge.setDescription(description);
         charge.setTax(tax);
         charge.setGroup(chargeGroup);
         return charge;

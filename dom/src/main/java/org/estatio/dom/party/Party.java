@@ -103,7 +103,7 @@ public abstract class Party
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.Party.NAME)
     @Title
     public String getName() {
         return name;
