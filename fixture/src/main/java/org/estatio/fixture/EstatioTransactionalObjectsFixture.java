@@ -26,7 +26,7 @@ import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture;
 
 
@@ -39,7 +39,7 @@ public class EstatioTransactionalObjectsFixture extends AbstractFixture {
             new EstatioTransactionalObjectsTeardownFixture(),
             new PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture(),
             new PropertiesAndUnitsFixture(),
-            new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture(),
+            new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(),
             new InvoiceAndInvoiceItemFixture()
         );
 

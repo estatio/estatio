@@ -23,8 +23,18 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum BreakType implements Titled {
 
-    FIXED, 
-    ROLLING;
+    FIXED(FixedBreakOption.class), 
+    ROLLING(RollingBreakOption.class);
+
+    private Class<? extends BreakOption> cls;
+
+    private BreakType(final Class<? extends BreakOption> cls) {
+        this.cls = cls;
+    }
+    
+    public Class<? extends BreakOption> getFactoryClass() {
+        return cls;
+    }
 
     public String title() {
         return StringUtils.enumTitle(this.toString());

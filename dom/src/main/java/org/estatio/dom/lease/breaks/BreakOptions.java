@@ -18,15 +18,71 @@
  */
 package org.estatio.dom.lease.breaks;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.utils.JodaPeriodUtils;
 
 @Hidden
 public class BreakOptions extends EstatioDomainService<BreakOption> {
 
     public BreakOptions() {
         super(BreakOptions.class, BreakOption.class);
+    }
+    
+    // //////////////////////////////////////
+    /**
+     * 
+     * @param lease
+     * @param breakDate
+     * @param notificationPeriodStr
+     * @param notificationDate
+     * @param breakType
+     * @param breakExerciseType
+     * @return
+     * 
+     * Wrapper to create a BreakOption, used by the API
+     */
+    @Programmatic
+    Lease newBreakOption(
+          final Lease lease,
+          final LocalDate breakDate, 
+          final String notificationPeriodStr,
+          final LocalDate notificationDate,
+          final BreakType breakType,
+            final BreakExerciseType breakExerciseType) {
+        
+        
+//        
+//        if (breakType.equals(BreakType.FIXED)) {
+//            lease.newFixedBreakOption(breakDate, notificationPeriodStr, breakExerciseType);
+//        } else
+//        {
+//            LocalDate earliestNotificationDate;
+//            lease.newRollingBreakOption(earliestNotificationDate, notificationPeriodStr, breakExerciseType);
+//        }
+//        
+//        final FixedBreakOption breakOption = newTransientInstance(FixedBreakOption.class);
+//        breakOption.setLease(lease);
+//        breakOption.setExerciseType(breakExerciseType);
+//        final LocalDate date = breakDate;
+//        breakOption.setNotificationPeriod(notificationPeriodStr);
+//        breakOption.setBreakDate(date);
+//        
+//        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
+//        final LocalDate lastNotificationDate = date.minus(notificationPeriodJoda);
+//        breakOption.setNotificationDate(lastNotificationDate);
+//        
+//        persistIfNotAlready(breakOption);
+        return lease;
     }
 
 

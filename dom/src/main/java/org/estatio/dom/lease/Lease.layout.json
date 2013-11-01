@@ -77,8 +77,7 @@
         },
         "breakOptions": {
             "actions": {
-                "newFixedBreakOption": {},
-                "newRollingBreakOption": {}
+                "newBreakOption": {}
             }
         }
       }

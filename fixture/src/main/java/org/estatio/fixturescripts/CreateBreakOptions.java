@@ -25,21 +25,21 @@ import org.joda.time.LocalDate;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.services.clock.ClockService;
 
 public class CreateBreakOptions implements Callable<Object> {
-    
+
     @Override
     public Object call() throws Exception {
         final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        lease.newFixedBreakOption(new LocalDate(clockService.now().plusMonths(6)), "3m", BreakExerciseType.LANDLORD);
-        lease.newFixedBreakOption(new LocalDate(clockService.now().plusMonths(12)), "3m", BreakExerciseType.MUTUAL);
-        lease.newFixedBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT);
-        lease.newRollingBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT);
+        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(6)), "3m", BreakExerciseType.LANDLORD, BreakType.FIXED, null);
+        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(12)), "3m", BreakExerciseType.MUTUAL, BreakType.FIXED, null);
+        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT, BreakType.FIXED, null);
+        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT, BreakType.ROLLING, null);
         return lease;
     }
-    
-    
+
     // //////////////////////////////////////
 
     private Leases leases;
@@ -49,6 +49,7 @@ public class CreateBreakOptions implements Callable<Object> {
     }
 
     private ClockService clockService;
+
     public final void injectClockService(ClockService clockService) {
         this.clockService = clockService;
     }

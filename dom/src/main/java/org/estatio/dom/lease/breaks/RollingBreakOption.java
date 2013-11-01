@@ -65,8 +65,8 @@ public class RollingBreakOption
 
     // //////////////////////////////////////
 
-
-    public LocalDate getBreakDate() {
+    @Override
+    public LocalDate getCurrentBreakDate() {
         final LocalDate notificationDate = laterOf(getExerciseDate(), getClockService().now());
         return notificationDate.plus(getNotificationPeriodJoda());
     }
@@ -74,7 +74,6 @@ public class RollingBreakOption
     private static LocalDate laterOf(final LocalDate d1, final LocalDate d2) {
         return d1.compareTo(d2) <0? d1: d2;
     }
-
 
     // //////////////////////////////////////
 

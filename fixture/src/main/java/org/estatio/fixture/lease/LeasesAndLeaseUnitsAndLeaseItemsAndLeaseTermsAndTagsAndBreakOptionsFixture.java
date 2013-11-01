@@ -20,11 +20,12 @@ package org.estatio.fixture.lease;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture extends AbstractFixture {
+public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends AbstractFixture {
 
-    public LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsFixture() {
+    public LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture() {
         addFixture(new LeasesAndRolesAndLeaseUnitsAndTagsFixture());
         addFixture(new LeaseItemsAndLeaseTermsFixture());
+        addFixture(new LeaseBreakOptionssFixture());
     }
 
 }

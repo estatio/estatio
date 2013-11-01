@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
@@ -84,6 +85,9 @@ import org.estatio.dom.lease.Occupancies;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.Occupancy.OccupancyReportingType;
 import org.estatio.dom.lease.UnitForLease;
+import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakOptions;
+import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
@@ -92,6 +96,7 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
 
@@ -781,6 +786,29 @@ public class Api extends AbstractFactoryAndRepository {
 
     // //////////////////////////////////////
 
+    public void putBreakOption(
+            @Named("leaseReference") String leaseReference,
+            @Named("breakType") String breakTypeStr,
+            @Named("breakExcerciseType") String breakExcerciseTypeStr,
+            @Named("breakDate") LocalDate breakDate,
+            @Named("notificationDate") LocalDate notificationDate,
+            @Named("notificationPeriod") @Optional String notificationPeriodStr,
+            @Named("description") @Optional String description
+            ) {
+        Lease lease = fetchLease(leaseReference);
+        BreakType breakType = BreakType.valueOf(breakTypeStr);
+        BreakExerciseType breakExerciseType = BreakExerciseType.valueOf(breakExcerciseTypeStr);
+        if (notificationDate != null){
+            Period period = new Period(notificationDate, breakDate);
+            notificationPeriodStr = JodaPeriodUtils.asSimpleString(period);
+        }
+        if (lease.validateNewBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description) == null){
+            lease.newBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description);
+        }
+    }
+
+    // //////////////////////////////////////
+
     private Agreements agreements;
 
     public void injectAgreements(Agreements agreements) {
@@ -935,6 +963,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectLeaseTypes(LeaseTypes leaseTypes) {
         this.leaseTypes = leaseTypes;
+    }
+
+    private BreakOptions breakOptions;
+
+    public void injectBreakOptions(BreakOptions breakOptions) {
+        this.breakOptions = breakOptions;
     }
 
 }

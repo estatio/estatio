@@ -21,9 +21,6 @@ package org.estatio.fixture;
 import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-
 
 public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture {
 
@@ -37,6 +34,8 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         
         deleteFrom("Tag");
         
+        deleteFrom("Event");
+        deleteFrom("BreakOption");
         deleteFrom("LeaseTerm");
         deleteFrom("LeaseItem");
         deleteFrom("Occupancy");

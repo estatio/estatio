@@ -72,7 +72,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
@@ -111,10 +111,9 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 
 })
 @Bookmarkable
-public class Lease 
-        extends Agreement 
+public class Lease
+        extends Agreement
         implements InvoiceSource {
-
 
     // //////////////////////////////////////
 
@@ -126,7 +125,7 @@ public class Lease
 
     private LeaseStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @Disabled
     public LeaseStatus getStatus() {
         return status;
@@ -185,7 +184,7 @@ public class Lease
 
     private LeaseType leaseType;
 
-    @javax.jdo.annotations.Column(name="leaseTypeId", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "leaseTypeId", allowsNull = "true")
     public LeaseType getLeaseType() {
         return leaseType;
     }
@@ -263,7 +262,7 @@ public class Lease
     }
 
     // //////////////////////////////////////
-    
+
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<BreakOption> breakOptions = new TreeSet<BreakOption>();
 
@@ -275,45 +274,50 @@ public class Lease
     public void setBreakOptions(final SortedSet<BreakOption> breakOptions) {
         this.breakOptions = breakOptions;
     }
-    
+
     // //////////////////////////////////////
-    
-    public Lease newFixedBreakOption(
-            final @Named("Break date") LocalDate breakDate, 
-            final @Named("Notification period") 
-                  @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
-            final BreakExerciseType breakExerciseType) {
-        final FixedBreakOption breakOption = newTransientInstance(FixedBreakOption.class);
+
+    public Lease newBreakOption(
+            final @Named("Break date") LocalDate breakDate,
+            final @Named("Notification period") @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
+            final BreakExerciseType breakExerciseType,
+            final BreakType breakType,
+            final @Named("Description") @Optional String description
+            ) {
+        final BreakOption breakOption = newTransientInstance(breakType.getFactoryClass());
+        breakOption.setType(breakType);
         breakOption.setLease(this);
         breakOption.setExerciseType(breakExerciseType);
         final LocalDate date = breakDate;
-        breakOption.setNotificationPeriod(notificationPeriodStr);
         breakOption.setBreakDate(date);
-        
+        breakOption.setNotificationPeriod(notificationPeriodStr);
         final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
-        final LocalDate lastNotificationDate = date.minus(notificationPeriodJoda);
-        breakOption.setExerciseDate(lastNotificationDate);
-        
-        persistIfNotAlready(breakOption);
+        final LocalDate excersiseDate = date.minus(notificationPeriodJoda);
+        breakOption.setExerciseDate(excersiseDate);
+        persist(breakOption);
         return this;
     }
 
-    public LocalDate default0NewFixedBreakOption() {
+    public LocalDate default0NewBreakOption() {
         // REVIEW: this is just a guess as to a reasonable default
         return getClockService().now().plusYears(2);
     }
-    public String default1NewFixedBreakOption() {
+
+    public String default1NewBreakOption() {
         return "3m";
     }
-    public BreakExerciseType default2NewFixedBreakOption() {
-        return BreakExerciseType.LANDLORD;
+
+    public BreakExerciseType default2NewBreakOption() {
+        return BreakExerciseType.TENANT;
     }
-    
-    public String validateNewFixedBreakOption(
-            final LocalDate breakDate, 
+
+    public String validateNewBreakOption(
+            final LocalDate breakDate,
             final String notificationPeriodStr,
-            final BreakExerciseType breakExerciseType) {
-        
+            final BreakExerciseType breakExerciseType,
+            final BreakType breakType,
+            final String description) {
+
         final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
         if (notificationPeriodJoda == null) {
             return "Notification period format not recognized";
@@ -322,53 +326,13 @@ public class Lease
         return checkNewBreakOptionDuplicate(BreakType.FIXED, notificationDate);
     }
 
-    private String checkNewBreakOptionDuplicate(final BreakType breakType, final LocalDate notificationDate) {
-        final Iterable<BreakOption> duplicates = 
-                Iterables.filter(getBreakOptions(), 
-                        BreakOption.Predicates.whetherTypeAndNotificationDate(breakType, notificationDate));
-        return duplicates.iterator().hasNext()?
-                "This lease already has a " + breakType + " break option for this date": null;
+    private String checkNewBreakOptionDuplicate(final BreakType breakType, final LocalDate breakDate) {
+        final Iterable<BreakOption> duplicates =
+                Iterables.filter(getBreakOptions(),
+                        BreakOption.Predicates.whetherTypeAndBreakDate(breakType, breakDate));
+        return duplicates.iterator().hasNext() ?
+                "This lease already has a " + breakType + " break option for this date" : null;
     }
-
-    // //////////////////////////////////////
-
-    public Lease newRollingBreakOption(
-            final @Named("Earliest notification date") LocalDate earliestNotificationDate, 
-            final @Named("Notification period") 
-                  @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
-            final BreakExerciseType breakExerciseType) {
-        final RollingBreakOption breakOption = newTransientInstance(RollingBreakOption.class);
-        breakOption.setLease(this);
-        breakOption.setExerciseType(breakExerciseType);
-        breakOption.setNotificationPeriod(notificationPeriodStr);
-        breakOption.setExerciseDate(earliestNotificationDate);
-        persistIfNotAlready(breakOption);
-        return this;
-    }
-
-    public LocalDate default0NewRollingBreakOption() {
-        // REVIEW: this is just a guess as to a reasonable default
-        return getClockService().now().plusYears(2);
-    }
-    public String default1NewRollingBreakOption() {
-        return "3m";
-    }
-    public BreakExerciseType default2NewRollingBreakOption() {
-        return BreakExerciseType.LANDLORD;
-    }
-
-    public String validateNewRollingBreakOption(
-            final LocalDate earliestNotificationDate, 
-            final String notificationPeriodStr,
-            final BreakExerciseType breakExerciseType) {
-        
-        final Period notificationPeriodJoda = JodaPeriodUtils.asPeriod(notificationPeriodStr);
-        if (notificationPeriodJoda == null) {
-            return "Notification period format not recognized";
-        }
-        return checkNewBreakOptionDuplicate(BreakType.ROLLING, earliestNotificationDate);    
-    }
-
 
     // //////////////////////////////////////
 
@@ -439,13 +403,13 @@ public class Lease
             final BankAccount bankAccount,
             final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") LocalDate endDate) {
-        
+
         final String reference = bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd");
         final String name = null;
         final Party creditor = getPrimaryParty();
         final Party debtor = getSecondaryParty();
-        
-        final BankMandate bankMandate = 
+
+        final BankMandate bankMandate =
                 bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
 
         paidBy(bankMandate);
@@ -502,6 +466,7 @@ public class Lease
     private AgreementRoleType debtorRoleType() {
         return agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
     }
+
     private AgreementRoleType creditorRoleType() {
         return agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
     }
@@ -592,7 +557,5 @@ public class Lease
     public final void injectBankMandates(final BankMandates bankMandates) {
         this.bankMandates = bankMandates;
     }
-
-
 
 }

@@ -173,7 +173,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t02_putOrganisation() {
-        api.putOrganisation("APITENANT", "API Tenant", "vat", "fiscal" );
+        api.putOrganisation("APITENANT", "API Tenant", "vat", "fiscal");
         api.putOrganisation("APILANDLORD", "API Landlord", "vat", "fiscal");
         Assert.assertThat(parties.findParties("API*").size(), Is.is(2));
     }
@@ -248,6 +248,13 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
                 null, null, null, null, null, null, null, null, null);
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
+    }
+
+    @Test
+    public void t08_putBreakOptionWorks() throws Exception {
+        api.putBreakOption("APILEASE", "FIXED", "TENANT", new LocalDate(2015, 1, 1), new LocalDate(2014, 7, 1), null, "Test");
+        api.putBreakOption("APILEASE", "ROLLING", "MUTUAL", new LocalDate(2019, 1, 1), null, "6m", "Test");
+        Assert.assertThat(leases.findLeaseByReference("APILEASE").getBreakOptions().size(), Is.is(2));
     }
 
 }

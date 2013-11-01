@@ -26,21 +26,16 @@ import org.joda.time.format.PeriodFormatterBuilder;
  * Utilities for manipulating parsing JODA {@link Period}s.
  */
 public final class JodaPeriodUtils {
-    
-    private JodaPeriodUtils(){}
+
+    private JodaPeriodUtils() {
+    }
 
     public static Period asPeriod(final String inputStr) {
-        if(inputStr == null) {
+        if (inputStr == null) {
             return null;
         }
         final String inputStrNormalized = inputStr.replaceAll(" ", "").toLowerCase();
-        PeriodFormatter formatter = new PeriodFormatterBuilder().
-                appendYears().appendSuffix("y").
-                appendMonths().appendSuffix("m").
-                appendDays().appendSuffix("d").
-                appendHours().appendSuffix("h").
-                appendMinutes().appendSuffix("min").
-                toFormatter();
+        PeriodFormatter formatter = simpleFormatter();
         try {
             return formatter.parsePeriod(inputStrNormalized);
         } catch (Exception e) {
@@ -49,23 +44,42 @@ public final class JodaPeriodUtils {
     }
 
     public static String asString(final Period period) {
-        StringBuilder sb = new StringBuilder();
-        Period leftOver = period;
-        int y = leftOver.getYears();
-        if (y > 0) {
-            sb.append(String.format("%1$d year(s) ", y));
-            leftOver.minusYears(y);
-        }
-        int m = leftOver.getMonths();
-        if (m > 0) {
-            sb.append(String.format("%1$d month(s) ", m));
-            leftOver.minusMonths(y);
-        }
-        int d = leftOver.getDays();
-        if (d > 0) {
-            sb.append(String.format("%1$d day(s) ", d));
-            leftOver.minusDays(y);
-        }
-        return sb.toString().trim();
+
+        PeriodFormatter formatter = complexFormatter();
+        return formatter.print(period).trim();
+
+    }
+
+    public static String asSimpleString(final Period period) {
+
+        PeriodFormatter formatter = simpleFormatter();
+        return formatter.print(period).trim();
+
+    }
+
+    private static PeriodFormatter simpleFormatter() {
+        PeriodFormatter formatter = new PeriodFormatterBuilder().
+                appendYears().appendSuffix("y").
+                appendMonths().appendSuffix("m").
+                appendDays().appendSuffix("d").
+                appendHours().appendSuffix("h").
+                appendMinutes().appendSuffix("min").
+                toFormatter();
+        return formatter;
+    }
+
+    private static PeriodFormatter complexFormatter() {
+        PeriodFormatter formatter = new PeriodFormatterBuilder().
+                appendYears().appendSuffix(" year", " years").
+                appendSeparator(", ", " & ").
+                appendMonths().appendSuffix(" month", " months").
+                appendSeparator(", ", " & ").
+                appendDays().appendSuffix(" day", " days").
+                appendSeparator(", ", " & ").
+                appendHours().appendSuffix(" hours", "hours").
+                appendSeparator(", ", " & ").
+                appendMinutes().appendSuffix(" minute", " minutes").
+                toFormatter();
+        return formatter;
     }
 }

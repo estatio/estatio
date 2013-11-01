@@ -37,6 +37,7 @@ import org.estatio.dom.communicationchannel.EmailAddresses;
 import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.event.Events;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.contributed.FinancialAccountContributions;
 import org.estatio.dom.geography.Countries;
@@ -148,6 +149,7 @@ public class EstatioSystemInitializer {
                     new TaxRates(),
                     // new Tags() ... instead, UnitSizes, Sectors, Activities
                     // and Brands
+                    new Events(),
                     new UnitSizes(),
                     new Sectors(),
                     new Activities(),

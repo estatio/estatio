@@ -27,21 +27,21 @@ import org.junit.Test;
 public class DateTimeUtilsTest {
 
     @Test
-    public void test() {
-        Period period = JodaPeriodUtils.asPeriod("6y6m");
+    public void testParse() {
+        Period period = JodaPeriodUtils.asPeriod("6y6m3d");
         LocalDate startDate = new LocalDate(2000, 1, 1);
-        Assert.assertThat(startDate.plus(period), Is.is(new LocalDate(2006, 7, 1)));
+        Assert.assertThat(startDate.plus(period), Is.is(new LocalDate(2006, 7, 4)));
     }
 
     @Test
-    public void testWithSpaces() {
+    public void testParseWithSpaces() {
         Period period = JodaPeriodUtils.asPeriod("  6Y  6m  ");
         LocalDate startDate = new LocalDate(2000, 1, 1);
         Assert.assertThat(startDate.plus(period), Is.is(new LocalDate(2006, 7, 1)));
     }
 
     @Test
-    public void testMalformed() {
+    public void testParseMalformed() {
         Period period = JodaPeriodUtils.asPeriod("6x6y");
         LocalDate startDate = new LocalDate(2000, 1, 1);
         Assert.assertThat(startDate.plus(period), Is.is(new LocalDate(2000, 1, 1)));
@@ -50,7 +50,14 @@ public class DateTimeUtilsTest {
     @Test
     public void testPeriodtoString() throws Exception {
         Period period = new Period(new LocalDate(2000, 1, 1), new LocalDate(2006, 7, 2));
-        Assert.assertThat(JodaPeriodUtils.asString(period), Is.is("6 year(s) 6 month(s) 1 day(s)"));
+        Assert.assertThat(JodaPeriodUtils.asString(period), Is.is("6 years, 6 months & 1 day"));
     }
 
+    @Test
+    public void testPeriodtoSimpleString() throws Exception {
+        Period period = new Period(new LocalDate(2000, 1, 1), new LocalDate(2006, 7, 2));
+        Assert.assertThat(JodaPeriodUtils.asSimpleString(period), Is.is("6y6m1d"));
+    }
+
+    
 }

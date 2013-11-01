@@ -8,14 +8,15 @@
             "lease": {},
             "name": {},
             "type": {},
-            "exerciseType": {}
+            "exerciseType": {},
+            "description": {}
           }
         },
         "Dates": {
           "members": {
+            "breakDate": {},
             "exerciseDate": {},
-            "notificationPeriod": {},
-            "breakDate": {}
+            "notificationPeriod": {}
           }
         }
       }
