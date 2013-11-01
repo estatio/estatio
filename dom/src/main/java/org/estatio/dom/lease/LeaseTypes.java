@@ -67,8 +67,9 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
     @Programmatic
     public LeaseType findOrCreate(final String reference, final String name) {
         LeaseType leaseType = findByReference(reference);
-        if (leaseType == null)
+        if (leaseType == null) {
             leaseType = newLeaseType(reference, name == null ? reference : name);
+        }
         return leaseType;
     }
 

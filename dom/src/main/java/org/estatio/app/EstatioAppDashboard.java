@@ -28,7 +28,6 @@ import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.services.clock.ClockService;
 
 @Named("Dashboard")
 public class EstatioAppDashboard extends EstatioViewModel {

@@ -241,14 +241,6 @@ language governing permissions and limitations under the License.
             <artifactId>danhaywood-isis-wicket-excel</artifactId>
         </dependency>
 
-        <!-- FULLCALENDAR: uncomment to use https://github.com/danhaywood/isis-wicket-fullcalendar -->
-        <!-- 
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
-        </dependency> 
-         -->
-
     </dependencies>
 
     <profiles>

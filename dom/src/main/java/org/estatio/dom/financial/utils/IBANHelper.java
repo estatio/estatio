@@ -136,8 +136,9 @@ public final class IBANHelper {
                 iban = injectPartWithCharacter(iban, "b", account.getBranchCode());
                 iban = injectPartWithCharacter(iban, "c", account.getAccountNumber());
                 iban = iban.replace("kk", "00");
-                if (iban.length() != format.format().length())
+                if (iban.length() != format.format().length()) {
                     return;
+                }
                 iban = IBANValidator.fixChecksum(iban);
                 if (IBANValidator.valid(iban)) {
                     account.setIban(iban);

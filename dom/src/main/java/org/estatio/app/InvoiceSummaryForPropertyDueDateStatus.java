@@ -24,7 +24,6 @@ import javax.jdo.annotations.Persistent;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractViewModel;
-import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Immutable;
@@ -42,7 +41,7 @@ import org.estatio.dom.invoice.Invoices;
 public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     /**
-     * {@link ViewModel} implementation.
+     * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public String viewModelMemento() {
@@ -50,7 +49,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     }
 
     /**
-     * {@link ViewModel} implementation.
+     * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public void viewModelInit(final String memento) {

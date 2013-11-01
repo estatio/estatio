@@ -67,7 +67,7 @@ public class LeaseType
         return reference;
     }
 
-    public void setReference(String reference) {
+    public void setReference(final String reference) {
         this.reference = reference;
     }
 

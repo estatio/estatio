@@ -90,8 +90,7 @@ language governing permissions and limitations under the License.
         <isis-security-shiro.version>1.4.0-SNAPSHOT</isis-security-shiro.version>
         
         <danhaywood-isis-wicket-excel.version>1.3.0</danhaywood-isis-wicket-excel.version>
-        <danhaywood-isis-wicket-fullcalendar.version>1.2.0</danhaywood-isis-wicket-fullcalendar.version>
-        <danhaywood-isis-wicket-fullcalendar2.version>1.3.0-SNAPSHOT</danhaywood-isis-wicket-fullcalendar2.version>
+        <danhaywood-isis-wicket-fullcalendar2.version>1.3.0</danhaywood-isis-wicket-fullcalendar2.version>
         <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
 
@@ -701,13 +700,6 @@ language governing permissions and limitations under the License.
                 <artifactId>danhaywood-isis-wicket-excel</artifactId>
                 <version>${danhaywood-isis-wicket-excel.version}</version>
             </dependency>
-
-            <!-- FULLCALENDAR: uncomment to use https://github.com/danhaywood/isis-wicket-fullcalendar -->
-            <dependency> 
-                <groupId>com.danhaywood.isis.wicket</groupId>
-                <artifactId>danhaywood-isis-wicket-fullcalendar</artifactId>
-                <version>${danhaywood-isis-wicket-fullcalendar.version}</version>
-            </dependency> 
 
         </dependencies>
     </dependencyManagement>

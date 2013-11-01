@@ -63,7 +63,7 @@ public class LeaseTypeForItalyFixture extends AbstractFixture {
 
     private LeaseTypes leaseTypes;
 
-    public void injectLeaseTypes(LeaseTypes leaseTypes) {
+    public final void injectLeaseTypes(LeaseTypes leaseTypes) {
         this.leaseTypes = leaseTypes;
     }
 
