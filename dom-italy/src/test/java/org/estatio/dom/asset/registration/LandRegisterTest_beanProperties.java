@@ -24,11 +24,11 @@ import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
 
-public class CadastralRegistrationTest_beanProperties extends AbstractBeanPropertiesTest {
+public class LandRegisterTest_beanProperties extends AbstractBeanPropertiesTest {
 
     @Test
     public void test() {
-        final CadastralRegistration pojo = new CadastralRegistration();
+        final LandRegister pojo = new LandRegister();
         newPojoTester()
             .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
             .withFixture(pojos(FixedAssetRegistrationType.class))

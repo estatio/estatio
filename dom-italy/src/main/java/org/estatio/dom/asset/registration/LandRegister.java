@@ -11,7 +11,7 @@ import org.apache.isis.applib.util.TitleBuffer;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 //no @DataStoreIdentity nor @Version, since inherited from supertype
-public class CadastralRegistration extends FixedAssetRegistration {
+public class LandRegister extends FixedAssetRegistration {
 
     public String title() {
         TitleBuffer tb = new TitleBuffer()

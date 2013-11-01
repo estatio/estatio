@@ -33,7 +33,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.FixedAssetForTesting;
 
-public class CadastralRegistrationTest_title {
+public class LandRegisterTest_title {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
@@ -41,30 +41,30 @@ public class CadastralRegistrationTest_title {
     @Mock
     private DomainObjectContainer mockContainer;
 
-    private CadastralRegistration cr;
+    private LandRegister cr;
     private FixedAssetForTesting subject;
-    
+
     private FixedAssetRegistrationType type;
 
     @Before
     public void setUp() throws Exception {
-        cr = new CadastralRegistration();
+        cr = new LandRegister();
         cr.setContainer(mockContainer);
-        
+
         subject = new FixedAssetForTesting();
         type = new FixedAssetRegistrationType();
-        
+
         cr.setType(type);
         cr.setSubject(subject);
     }
-    
+
     @Test
     public void whenEmpty() {
         context.checking(new Expectations() {
             {
                 oneOf(mockContainer).titleOf(type);
                 will(returnValue("type"));
-                
+
                 oneOf(mockContainer).titleOf(subject);
                 will(returnValue("subject"));
             }

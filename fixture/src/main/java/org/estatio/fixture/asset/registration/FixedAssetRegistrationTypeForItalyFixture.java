@@ -22,7 +22,7 @@ package org.estatio.fixture.asset.registration;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
-import org.estatio.dom.asset.registration.CadastralRegistration;
+import org.estatio.dom.asset.registration.LandRegister;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 
@@ -30,7 +30,7 @@ public class FixedAssetRegistrationTypeForItalyFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        createFixedAssetRegistrationType("Cadastral", CadastralRegistration.class, getContainer());
+        createFixedAssetRegistrationType("LandRegister", LandRegister.class, getContainer());
     }
 
     private static FixedAssetRegistrationType createFixedAssetRegistrationType(
