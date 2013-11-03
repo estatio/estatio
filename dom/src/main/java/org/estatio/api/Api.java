@@ -423,16 +423,20 @@ public class Api extends AbstractFactoryAndRepository {
                 comm.setReference(reference);
             }
         }
-
     }
 
     // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
-    public void putPropertyActor(@Named("propertyReference") String propertyReference, @Named("partyReference") String partyReference, @Named("type") String typeStr, @Named("startDate") @Optional LocalDate startDate, @Named("endDate") @Optional LocalDate endDate) {
+    public void putPropertyActor(
+            @Named("propertyReference") String propertyReference, 
+            @Named("partyReference") String partyReference, 
+            @Named("type") String typeStr, 
+            @Named("startDate") @Optional LocalDate startDate, 
+            @Named("endDate") @Optional LocalDate endDate) {
         final Property property = fetchProperty(propertyReference, false);
         final Party party = fetchParty(partyReference);
-        final FixedAssetRoleType type = FixedAssetRoleType.valueOf(StringUtils.capitalize(typeStr.toLowerCase()));
+        final FixedAssetRoleType type = FixedAssetRoleType.valueOf(typeStr);
         property.addRoleIfDoesNotExist(party, type, startDate, endDate);
     }
 
@@ -786,6 +790,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.IDEMPOTENT)
     public void putBreakOption(
             @Named("leaseReference") String leaseReference,
             @Named("breakType") String breakTypeStr,

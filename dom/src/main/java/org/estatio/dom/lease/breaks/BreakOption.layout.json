@@ -15,6 +15,7 @@
         "Dates": {
           "members": {
             "breakDate": {},
+            "currentBreakDate": {},
             "exerciseDate": {},
             "notificationPeriod": {}
           }
