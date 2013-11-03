@@ -153,14 +153,51 @@ public class Leases extends EstatioDomainService<Lease> {
     // //////////////////////////////////////
 
     /**
-     * Returns the {@link InvoiceItemForLease}s that are newly
+     * Returns the {@link InvoiceSummary}s that are newly
      * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
-     * {@link Lease}s matched by the provided <tt>leaseReference</tt> and the
+     * {@link Lease}s matched by the provided <tt>property</tt> and the
      * other parameters.
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "6")
-    public List<InvoiceItemForLease> calculate(
+    public List<InvoiceSummaryForPropertyDueDate> calculateProperty(
+            final @Named("Property") @DescribedAs("") Property property,
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Due date") LocalDate dueDate,
+            final @Named("Run Type") InvoiceRunType runType) {
+        final List<Lease> leases = findLeasesByProperty(property);
+        for (Lease lease : leases) {
+            lease.verify();
+            lease.calculate(startDate, dueDate, runType);
+        }
+        // As a convenience, we now go find them and display them.
+        // We've done it this way so that the user can always just go to the
+        // menu and make this query.
+        return invoiceSummaries.invoiceSummary();
+    }
+
+    public LocalDate default1CalculateProperty() {
+        return getClockService().beginningOfQuarter();
+    }
+
+    public LocalDate default2CalculateProperty() {
+        return getClockService().beginningOfQuarter();
+    }
+
+    // //////////////////////////////////////
+
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(sequence = "99")
+    public List<Lease> allLeases() {
+        return allInstances();
+    }
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "99")
+    @Prototype
+    public List<InvoiceItemForLease> calculateLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due date") LocalDate dueDate,
@@ -177,41 +214,12 @@ public class Leases extends EstatioDomainService<Lease> {
                 startDate, dueDate);
     }
 
-    public LocalDate default1Calculate() {
+    public LocalDate default1CalculateLeases() {
         return getClockService().beginningOfQuarter();
     }
 
-    public LocalDate default2Calculate() {
+    public LocalDate default2CalculateLeases() {
         return getClockService().beginningOfQuarter();
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "6")
-    public List<InvoiceSummaryForPropertyDueDate> calculate1(
-            final @Named("Property") @DescribedAs("") Property property,
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
-        final List<Lease> leases = findLeasesByProperty(property);
-        for (Lease lease : leases) {
-            lease.verify();
-            lease.calculate(startDate, dueDate, runType);
-        }
-        // As a convenience, we now go find them and display them.
-        // We've done it this way so that the user can always just go to the
-        // menu and make this query.
-        return invoiceSummaries.invoiceSummary();
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(sequence = "99")
-    public List<Lease> allLeases() {
-        return allInstances();
     }
 
     // //////////////////////////////////////
