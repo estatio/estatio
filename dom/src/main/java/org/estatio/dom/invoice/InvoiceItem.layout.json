@@ -39,7 +39,9 @@
           "members": {
             "dueDate": {},
             "startDate": {},
-            "endDate": {}
+            "endDate": {},
+            "effectiveStartDate": {},
+            "effectiveEndDate": {}
           }
         }
       }

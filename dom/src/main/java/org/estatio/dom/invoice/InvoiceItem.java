@@ -273,6 +273,18 @@ public abstract class InvoiceItem
     }
 
     // //////////////////////////////////////
+    
+    @Hidden(where=Where.PARENTED_TABLES)
+    public LocalDate getEffectiveStartDate() {
+        return getEffectiveInterval().startDate(); 
+    }
+    
+    @Hidden(where=Where.PARENTED_TABLES)
+    public LocalDate getEffectiveEndDate() {
+        return getEffectiveInterval().endDate(); 
+    }
+    
+    // //////////////////////////////////////
 
     @Programmatic
     @Override

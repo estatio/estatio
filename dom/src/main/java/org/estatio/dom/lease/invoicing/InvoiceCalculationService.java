@@ -308,7 +308,7 @@ public class InvoiceCalculationService {
         invoiceItem.setDescription(charge.getName());
         invoiceItem.setDueDate(dueDate);
         invoiceItem.setStartDate(calculationResult.frequencyInterval.startDate());
-        invoiceItem.setEndDate(calculationResult.frequencyInterval.endDateExcluding());
+        invoiceItem.setEndDate(calculationResult.frequencyInterval.endDate());
         Tax tax = charge.getTax();
         invoiceItem.setTax(tax);
         invoiceItem.attachToInvoice();
