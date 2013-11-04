@@ -35,25 +35,17 @@ import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 
 public class LocalDateIntervalTest {
 
-    private LocalDateInterval periodInterval = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
-    // exact match
-    private LocalDateInterval interval1 = LocalDateInterval.including(new LocalDate(2012, 1, 1), new LocalDate(2012, 3, 31));
-    // overlap
-    private LocalDateInterval interval2 = LocalDateInterval.excluding(new LocalDate(2011, 11, 1), new LocalDate(2012, 5, 1));
-    // ends in
-    private LocalDateInterval interval3 = LocalDateInterval.excluding(new LocalDate(2011, 11, 1), new LocalDate(2012, 3, 1));
-    // starts in
-    private LocalDateInterval interval4 = LocalDateInterval.excluding(new LocalDate(2012, 2, 1), new LocalDate(2012, 5, 1));
-    // start and ends in
-    private LocalDateInterval interval5 = LocalDateInterval.excluding(new LocalDate(2012, 2, 1), new LocalDate(2012, 3, 1));
-    // outside before
-    private LocalDateInterval interval6 = LocalDateInterval.excluding(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1));
-    // outside after
-    private LocalDateInterval interval7 = LocalDateInterval.excluding(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1));
-    // starts in, open ended
-    private LocalDateInterval interval8 = LocalDateInterval.excluding(new LocalDate(2012, 2, 1), null);
-    // open start, open end
-    private LocalDateInterval interval9 = LocalDateInterval.excluding(null, null);
+    private LocalDateInterval period120101to120401
+    = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
+    private LocalDateInterval interval120101to120331incl = LocalDateInterval.including(new LocalDate(2012, 1, 1), new LocalDate(2012, 3, 31));
+    private LocalDateInterval interval111101to120501 = LocalDateInterval.excluding(new LocalDate(2011, 11, 1), new LocalDate(2012, 5, 1));
+    private LocalDateInterval interval111101to120301 = LocalDateInterval.excluding(new LocalDate(2011, 11, 1), new LocalDate(2012, 3, 1));
+    private LocalDateInterval interval120201to120501 = LocalDateInterval.excluding(new LocalDate(2012, 2, 1), new LocalDate(2012, 5, 1));
+    private LocalDateInterval interval120201to120301 = LocalDateInterval.excluding(new LocalDate(2012, 2, 1), new LocalDate(2012, 3, 1));
+    private LocalDateInterval interval100101to110101 = LocalDateInterval.excluding(new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1));
+    private LocalDateInterval interval130101to140101 = LocalDateInterval.excluding(new LocalDate(2013, 1, 1), new LocalDate(2014, 1, 1));
+    private LocalDateInterval intervalOpento120201 = LocalDateInterval.excluding(new LocalDate(2012, 2, 1), null);
+    private LocalDateInterval intervalOpen = LocalDateInterval.excluding(null, null);
 
     @Before
     public void setup() {
@@ -72,124 +64,118 @@ public class LocalDateIntervalTest {
 
     @Test
     public void testIsWithinParent() {
-        assertTrue(interval1.overlaps(periodInterval));
-        assertTrue(interval2.overlaps(periodInterval));
-        assertTrue(interval3.overlaps(periodInterval));
-        assertTrue(interval4.overlaps(periodInterval));
-        assertTrue(interval5.overlaps(periodInterval));
-        assertFalse(interval6.overlaps(periodInterval));
-        assertFalse(interval7.overlaps(periodInterval));
-        assertTrue(interval8.overlaps(periodInterval));
-        assertTrue(interval9.overlaps(periodInterval));
+        assertTrue(interval120101to120331incl.overlaps(period120101to120401));
+        assertTrue(interval111101to120501.overlaps(period120101to120401));
+        assertTrue(interval111101to120301.overlaps(period120101to120401));
+        assertTrue(interval120201to120501.overlaps(period120101to120401));
+        assertTrue(interval120201to120301.overlaps(period120101to120401));
+        assertFalse(interval100101to110101.overlaps(period120101to120401));
+        assertFalse(interval130101to140101.overlaps(period120101to120401));
+        assertTrue(intervalOpento120201.overlaps(period120101to120401));
+        assertTrue(intervalOpen.overlaps(period120101to120401));
     }
 
     @Test
     public void testIsFullInterval() {
-        assertTrue(interval1.contains(periodInterval));
-        assertTrue(interval2.contains(periodInterval));
-        assertFalse(interval3.contains(periodInterval));
-        assertFalse(interval4.contains(periodInterval));
-        assertFalse(interval5.contains(periodInterval));
-        assertFalse(interval6.contains(periodInterval));
-        assertFalse(interval7.contains(periodInterval));
-        assertFalse(interval8.contains(periodInterval));
-        assertTrue(interval9.contains(periodInterval));
+        assertTrue(interval120101to120331incl.contains(period120101to120401));
+        assertTrue(interval111101to120501.contains(period120101to120401));
+        assertFalse(interval111101to120301.contains(period120101to120401));
+        assertFalse(interval120201to120501.contains(period120101to120401));
+        assertFalse(interval120201to120301.contains(period120101to120401));
+        assertFalse(interval100101to110101.contains(period120101to120401));
+        assertFalse(interval130101to140101.contains(period120101to120401));
+        assertFalse(intervalOpento120201.contains(period120101to120401));
+        assertTrue(intervalOpen.contains(period120101to120401));
     }
 
     @Test
     public void startDate() {
-        assertEquals(new LocalDate(2012, 1, 1), interval1.overlap(periodInterval).startDate());
-        assertEquals(new LocalDate(2012, 1, 1), interval2.overlap(periodInterval).startDate());
-        assertEquals(new LocalDate(2012, 1, 1), interval3.overlap(periodInterval).startDate());
-        assertEquals(new LocalDate(2012, 2, 1), interval4.overlap(periodInterval).startDate());
-        assertEquals(new LocalDate(2012, 2, 1), interval5.overlap(periodInterval).startDate());
-
-        assertEquals(new LocalDate(2012, 2, 1), interval8.overlap(periodInterval).startDate());
-        assertEquals(new LocalDate(2012, 1, 1), interval9.overlap(periodInterval).startDate());
+        assertEquals(new LocalDate(2012, 1, 1), interval120101to120331incl.overlap(period120101to120401).startDate());
+        assertEquals(new LocalDate(2012, 1, 1), interval111101to120501.overlap(period120101to120401).startDate());
+        assertEquals(new LocalDate(2012, 1, 1), interval111101to120301.overlap(period120101to120401).startDate());
+        assertEquals(new LocalDate(2012, 2, 1), interval120201to120501.overlap(period120101to120401).startDate());
+        assertEquals(new LocalDate(2012, 2, 1), interval120201to120301.overlap(period120101to120401).startDate());
+        assertEquals(new LocalDate(2012, 2, 1), intervalOpento120201.overlap(period120101to120401).startDate());
+        assertEquals(new LocalDate(2012, 1, 1), intervalOpen.overlap(period120101to120401).startDate());
     }
 
     @Test
     public void endDateExcluding() {
-        assertEquals(new LocalDate(2012, 4, 1), interval1.overlap(periodInterval).endDateExcluding());
-        assertEquals(new LocalDate(2012, 4, 1), interval2.overlap(periodInterval).endDateExcluding());
-        assertEquals(new LocalDate(2012, 3, 1), interval3.overlap(periodInterval).endDateExcluding());
-        assertEquals(new LocalDate(2012, 4, 1), interval4.overlap(periodInterval).endDateExcluding());
-        assertEquals(new LocalDate(2012, 3, 1), interval5.overlap(periodInterval).endDateExcluding());
-        assertEquals(null, interval6.overlap(periodInterval));
-        assertEquals(null, interval7.overlap(periodInterval));
-        assertEquals(new LocalDate(2012, 4, 1), interval8.overlap(periodInterval).endDateExcluding());
-        assertEquals(new LocalDate(2012, 4, 1), interval9.overlap(periodInterval).endDateExcluding());
+        assertEquals(new LocalDate(2012, 4, 1), interval120101to120331incl.overlap(period120101to120401).endDateExcluding());
+        assertEquals(new LocalDate(2012, 4, 1), interval111101to120501.overlap(period120101to120401).endDateExcluding());
+        assertEquals(new LocalDate(2012, 3, 1), interval111101to120301.overlap(period120101to120401).endDateExcluding());
+        assertEquals(new LocalDate(2012, 4, 1), interval120201to120501.overlap(period120101to120401).endDateExcluding());
+        assertEquals(new LocalDate(2012, 3, 1), interval120201to120301.overlap(period120101to120401).endDateExcluding());
+        assertEquals(null, interval100101to110101.overlap(period120101to120401).endDateExcluding());
+        assertEquals(null, interval130101to140101.overlap(period120101to120401).endDateExcluding());
+        assertEquals(new LocalDate(2012, 4, 1), intervalOpento120201.overlap(period120101to120401).endDateExcluding());
+        assertEquals(new LocalDate(2012, 4, 1), intervalOpen.overlap(period120101to120401).endDateExcluding());
     }
 
     @Test
     public void days() {
-        assertEquals(91, interval1.overlap(periodInterval).days());
-        assertEquals(91, interval2.overlap(periodInterval).days());
-        assertEquals(60, interval3.overlap(periodInterval).days());
-        assertEquals(60, interval4.overlap(periodInterval).days());
-        assertEquals(29, interval5.overlap(periodInterval).days());
-        assertEquals(null, interval6.overlap(periodInterval));
-        assertEquals(null, interval7.overlap(periodInterval));
-        assertEquals(60, interval8.overlap(periodInterval).days());
-        assertEquals(91, interval9.overlap(periodInterval).days());
+        assertEquals(91, interval120101to120331incl.overlap(period120101to120401).days());
+        assertEquals(91, interval111101to120501.overlap(period120101to120401).days());
+        assertEquals(60, interval111101to120301.overlap(period120101to120401).days());
+        assertEquals(60, interval120201to120501.overlap(period120101to120401).days());
+        assertEquals(29, interval120201to120301.overlap(period120101to120401).days());
+        assertEquals(0, interval100101to110101.overlap(period120101to120401).days());
+        assertEquals(0, interval130101to140101.overlap(period120101to120401).days());
+        assertEquals(60, intervalOpento120201.overlap(period120101to120401).days());
+        assertEquals(91, intervalOpen.overlap(period120101to120401).days());
+        assertEquals(91, period120101to120401.overlap(intervalOpen).days());
+        assertEquals(0, intervalOpen.overlap(intervalOpen).days());
     }
 
     @Test
     public void testContains() {
-        assertTrue(periodInterval.contains(new LocalDate(2012, 1, 1)));
-        assertTrue(periodInterval.contains(new LocalDate(2012, 3, 31)));
-        // open interval
-        assertTrue(interval8.contains(new LocalDate(2099, 1, 1)));
-        assertFalse(interval8.contains(new LocalDate(2000, 1, 1)));
-
-        assertTrue(interval9.contains(new LocalDate(2012, 3, 31)));
-        assertFalse(periodInterval.contains(new LocalDate(2012, 4, 1)));
-
+        assertTrue(period120101to120401.contains(new LocalDate(2012, 1, 1)));
+        assertTrue(period120101to120401.contains(new LocalDate(2012, 3, 31)));
+        assertTrue(intervalOpento120201.contains(new LocalDate(2099, 1, 1)));
+        assertFalse(intervalOpento120201.contains(new LocalDate(2000, 1, 1)));
+        assertTrue(intervalOpen.contains(new LocalDate(2012, 3, 31)));
+        assertFalse(period120101to120401.contains(new LocalDate(2012, 4, 1)));
     }
 
     @Test
     public void testEndDateFromStartDate() {
-        assertThat(interval1.endDateFromStartDate(), is(interval1.startDate().minusDays(1)));
+        assertThat(interval120101to120331incl.endDateFromStartDate(), is(interval120101to120331incl.startDate().minusDays(1)));
     }
 
     @Test
     public void testEmptyInterval() {
-        LocalDateInterval myInterval = new LocalDateInterval(emptyInterval());
+        LocalDateInterval myInterval = new LocalDateInterval();
         assertNull(myInterval.startDate());
         assertNull(myInterval.endDate());
     }
 
     @Test
     public void testOverlap() {
-        LocalDateInterval myInterval1 = LocalDateInterval.excluding(new LocalDate(2000, 1, 1), null);
-        LocalDateInterval myInterval2 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
-        assertThat(myInterval1.overlap(myInterval2).startDate(), is(new LocalDate(2000, 1, 1)));
-        assertThat(myInterval1.overlap(myInterval2).endDate(), is(new LocalDate(2010, 1, 1)));
+        LocalDateInterval interval1 = LocalDateInterval.excluding(new LocalDate(2000, 1, 1), null);
+        LocalDateInterval interval2 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
+        assertThat(interval1.overlap(interval2).startDate(), is(new LocalDate(2000, 1, 1)));
+        assertThat(interval1.overlap(interval2).endDate(), is(new LocalDate(2010, 1, 1)));
 
         LocalDateInterval myInterval3 = LocalDateInterval.excluding(new LocalDate(2011, 1, 1), null);
         LocalDateInterval myInterval4 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
-        assertNull(myInterval3.overlap(myInterval4));
-        assertNull(myInterval3.overlap(myInterval4));
-
+        assertThat(myInterval3.overlap(myInterval4), is(intervalOpen));
     }
 
     @Test
-    @Ignore
     public void testOpen() {
         assertThat(parseLocalDateInterval("*/2013-12-31").overlap(parseLocalDateInterval("2014-1-1/*")), is(parseLocalDateInterval("*/*")));
     }
     
-    
     @Test
     public void testString() {
-        assertThat(interval8.toString(), is("2012-02-01/----------"));
-
+        assertThat(intervalOpento120201.toString(), is("2012-02-01/----------"));
     }
 
-    private static Interval emptyInterval() {
-        return null;
+    @Test
+    public void testEquals(){
+        assertTrue(new LocalDateInterval().equals(new LocalDateInterval()));
+        assertTrue(new LocalDateInterval(null, null, IntervalEnding.EXCLUDING_END_DATE).equals(new LocalDateInterval(null, null, IntervalEnding.INCLUDING_END_DATE)));
     }
-    
     
     private LocalDateInterval parseLocalDateInterval(String input){
         String[] values = input.split("/");

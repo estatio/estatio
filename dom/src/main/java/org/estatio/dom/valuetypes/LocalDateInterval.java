@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.valuetypes;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -25,10 +27,8 @@ import org.joda.time.PeriodType;
 
 public final class LocalDateInterval {
 
-    private static final long OPEN_START_INSTANT = Long.MIN_VALUE;
-    private static final long OPEN_END_INSTANT = Long.MAX_VALUE;
-    private long startInstant;
-    private long endInstant;
+    private Long startInstant;
+    private Long endInstant;
     private static final IntervalEnding PERSISTENT_ENDING = IntervalEnding.INCLUDING_END_DATE;
 
     public enum IntervalEnding {
@@ -44,12 +44,15 @@ public final class LocalDateInterval {
     }
 
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate, final IntervalEnding ending) {
-        startInstant = startDate == null ? OPEN_START_INSTANT : startDate.toInterval().getStartMillis();
+        startInstant = startDate == null ? null : startDate.toInterval().getStartMillis();
         endInstant = endDate == null
-                ? OPEN_END_INSTANT
+                ? null
                 : ending == IntervalEnding.EXCLUDING_END_DATE
                         ? endDate.toInterval().getStartMillis()
                         : endDate.toInterval().getEndMillis();
+    }
+
+    public LocalDateInterval() {
     }
 
     public LocalDateInterval(final Interval interval) {
@@ -60,11 +63,13 @@ public final class LocalDateInterval {
     }
 
     public Interval asInterval() {
-        return new Interval(startInstant, endInstant);
+        return new Interval(
+                startInstant == null ? 0 : startInstant,
+                endInstant == null ? Long.MAX_VALUE : endInstant);
     }
 
     public LocalDate startDate() {
-        if (startInstant == OPEN_START_INSTANT || startInstant == 0) {
+        if (startInstant == null) {
             return null;
         }
         return new LocalDate(startInstant);
@@ -75,7 +80,7 @@ public final class LocalDateInterval {
     }
 
     public LocalDate endDate(final IntervalEnding ending) {
-        if (endInstant == OPEN_END_INSTANT || endInstant == 0) {
+        if (endInstant == null) {
             return null;
         }
         LocalDate date = new LocalDate(endInstant);
@@ -141,14 +146,14 @@ public final class LocalDateInterval {
      * @return
      */
     public LocalDateInterval overlap(final LocalDateInterval otherInterval) {
-        if (otherInterval == null) {
-            return null;
+        if (otherInterval == null || otherInterval.isInfinite()) {
+            return this;
         }
         final Interval thisAsInterval = asInterval();
         final Interval otherAsInterval = otherInterval.asInterval();
         Interval overlap = thisAsInterval.overlap(otherAsInterval);
         if (overlap == null) {
-            return null;
+            return new LocalDateInterval();
         }
         return new LocalDateInterval(overlap);
     }
@@ -169,18 +174,46 @@ public final class LocalDateInterval {
      * @return
      */
     public int days() {
+        if (isInfinite()){
+            return 0;
+        }
         Period p = new Period(asInterval(), PeriodType.days());
         return p.getDays();
     }
-    
-    
+
+    private boolean isInfinite() {
+        return startInstant == null && endInstant == null;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder =
                 new StringBuilder(
                         startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
-                                endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
+                        endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
         return builder.toString();
     }
 
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(16, 23). // two randomly chosen prime numbers
+                append(startInstant).
+                append(endInstant).
+                toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof LocalDateInterval))
+            return false;
+        LocalDateInterval rhs = (LocalDateInterval) obj;
+        return new EqualsBuilder().
+                append(startInstant, rhs.startInstant).
+                append(endInstant, rhs.endInstant).
+                isEquals();
+    }
 }
