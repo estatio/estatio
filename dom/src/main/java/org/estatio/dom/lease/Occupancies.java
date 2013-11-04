@@ -42,10 +42,12 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
     @NotContributed
     public Occupancy newOccupancy(
             final Lease lease, 
-            final UnitForLease unit) {
+            final UnitForLease unit,
+            final LocalDate startDate) {
         Occupancy lu = newTransientInstance(Occupancy.class);
         lu.setLease(lease);
         lu.setUnit(unit);
+        lu.setStartDate(startDate);
         persistIfNotAlready(lu);
         return lu;
     }

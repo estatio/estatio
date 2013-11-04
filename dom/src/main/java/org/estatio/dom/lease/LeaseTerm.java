@@ -43,6 +43,7 @@ import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -431,24 +432,18 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Programmatic
-    @Hidden
+    @Prototype
     public void remove() {
         if (getNext() != null) {
             getNext().remove();
         }
-        if (this.getInvoiceItems().size() > 0) {
-            // TODO: this term is outside the scope of the lease termination
-            // date and there are invoice items related to it so the amount
-            // should be credited
-            
-            @SuppressWarnings("unused")
-            int dummy=0;
-        } else {
-            this.modifyPrevious(null);
-            this.setLeaseItem(null);
+        if (this.getInvoiceItems().size() == 0) {
+            //TODO: Disabled, see EST-273
+            //this.modifyPrevious(null);
+            //getContainer().remove(this);
         }
     }
-
+    
     @Programmatic
     public void removeUnapprovedInvoiceItemsForDate(final LocalDate startDate, final LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
@@ -606,6 +601,16 @@ public abstract class LeaseTerm
         
     }
 
+    // //////////////////////////////////////
+    
+    @Programmatic
+    public void copyValuesTo(LeaseTerm target){
+        target.setStartDate(getStartDate());
+        target.setEndDate(getEndDate());
+        target.setStatus(getStatus());
+        target.setFrequency(getFrequency());
+    }
+    
     // //////////////////////////////////////
 
     @Bulk

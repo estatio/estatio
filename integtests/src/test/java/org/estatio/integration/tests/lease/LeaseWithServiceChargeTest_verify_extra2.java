@@ -24,33 +24,19 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.SortedSet;
 
-import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
-import org.estatio.services.settings.EstatioSettingsService;
 
 public class LeaseWithServiceChargeTest_verify_extra2 extends EstatioIntegrationTest {
 

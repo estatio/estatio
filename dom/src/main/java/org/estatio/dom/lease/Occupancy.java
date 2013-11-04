@@ -85,7 +85,6 @@ public class Occupancy
         super("lease, startDate desc nullsLast, unit");
     }
 
-
     // //////////////////////////////////////
 
     private Lease lease;
@@ -185,6 +184,20 @@ public class Occupancy
             final LocalDate startDate,
             final LocalDate endDate) {
         return getChangeDates().validateChangeDates(startDate, endDate);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public Occupancy terminate(
+            final @Named("End Date") LocalDate endDate) {
+        setEndDate(endDate);
+        return this;
+    }
+
+    public String validateTerminate(
+            final LocalDate endDate) {
+        return getEffectiveInterval().contains(endDate) ? null : "End date is not in range";
     }
 
     // //////////////////////////////////////
@@ -318,7 +331,7 @@ public class Occupancy
 
     private OccupancyReportingType reportTurnover;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportTurnover() {
@@ -333,7 +346,7 @@ public class Occupancy
 
     private OccupancyReportingType reportRent;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportRent() {
@@ -348,7 +361,7 @@ public class Occupancy
 
     private OccupancyReportingType reportOCR;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.OCCUPANCY_REPORTING_TYPE_ENUM)
     @Disabled(reason = "Change using action")
     @Hidden(where = Where.PARENTED_TABLES)
     public OccupancyReportingType getReportOCR() {

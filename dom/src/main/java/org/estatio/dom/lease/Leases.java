@@ -33,6 +33,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
 import org.estatio.app.InvoiceSummaries;
 import org.estatio.app.InvoiceSummaryForPropertyDueDate;
@@ -68,18 +69,21 @@ public class Leases extends EstatioDomainService<Lease> {
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            final @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true) String reference,
+            final @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true) String reference,
             final @Named("Name") String name,
             final @Named("Type") LeaseType leaseType,
             final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("Duration") 
-                  @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") 
-                  @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
             final @Optional @Named("Landlord") Party landlord,
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
             ) {
+        String validate = validateNewLease(reference, name, leaseType, startDate, duration, endDate, landlord, tenant);
+        if (validate != null){
+            throw new IsisApplicationException(validate);
+        }
+        
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
             final Period p = JodaPeriodUtils.asPeriod(duration);
@@ -108,6 +112,32 @@ public class Leases extends EstatioDomainService<Lease> {
         return lease;
     }
 
+    public String validateNewLease(
+            final String reference,
+            final String name,
+            final LeaseType leaseType,
+            final LocalDate startDate,
+            final String duration,
+            final LocalDate endDate,
+            final Party landlord,
+            final Party tenant
+            ) {
+        if ((endDate == null && duration == null) || (endDate != null && duration != null)){
+            return "Either end date or duration must be filled in.";
+        }
+        if (duration !=null){
+            final Period p = JodaPeriodUtils.asPeriod(duration);
+            if (p == null){
+                return "This is not a valid duration.";
+            }
+        } else {
+            if (endDate.isBefore(startDate)){
+                return "End date can not be before start date"; 
+            }
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -123,8 +153,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
-            String referenceOrName) {
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
         return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
     }
 
@@ -155,8 +184,8 @@ public class Leases extends EstatioDomainService<Lease> {
     /**
      * Returns the {@link InvoiceSummary}s that are newly
      * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
-     * {@link Lease}s matched by the provided <tt>property</tt> and the
-     * other parameters.
+     * {@link Lease}s matched by the provided <tt>property</tt> and the other
+     * parameters.
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "6")
@@ -192,6 +221,7 @@ public class Leases extends EstatioDomainService<Lease> {
     public List<Lease> allLeases() {
         return allInstances();
     }
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
@@ -247,7 +277,6 @@ public class Leases extends EstatioDomainService<Lease> {
     public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
-
 
     private InvoiceSummaries invoiceSummaries;
 

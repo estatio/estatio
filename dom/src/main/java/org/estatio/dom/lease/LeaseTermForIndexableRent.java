@@ -267,6 +267,29 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
             calculator.calculate(this);
         }
     }
+    
+    // //////////////////////////////////////
+    
+    @Override
+    public void copyValuesTo(LeaseTerm target){
+        LeaseTermForIndexableRent t = (LeaseTermForIndexableRent) target;
+        super.copyValuesTo(t);
+        t.setIndex(getIndex());
+        t.setBaseIndexStartDate(getBaseIndexStartDate());
+        t.setBaseIndexValue(getBaseIndexValue());
+        t.setNextIndexStartDate(getNextIndexStartDate());
+        t.setNextIndexValue(getNextIndexValue());
+        t.setEffectiveDate(getEffectiveDate());
+        t.setIndexationPercentage(getIndexationPercentage());
+        t.setLevellingPercentage(getLevellingPercentage());
+        t.setLevellingValue(getLevellingValue());
+        t.setBaseValue(getBaseValue());
+        t.setIndexedValue(getIndexedValue());
+        t.setSettledValue(getSettledValue());
+    }
+    
+    // //////////////////////////////////////
+    
 
     @Override
     @Programmatic

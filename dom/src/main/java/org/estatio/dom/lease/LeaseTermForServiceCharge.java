@@ -122,5 +122,16 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
         }
     }
+    
+    // //////////////////////////////////////
+    
+    @Override
+    public void copyValuesTo(LeaseTerm target){
+        LeaseTermForServiceCharge t = (LeaseTermForServiceCharge) target;
+        super.copyValuesTo(t);
+        t.setBudgetedValue(getBudgetedValue());
+        t.setAuditedValue(getAuditedValue());
+    }
+
 
 }

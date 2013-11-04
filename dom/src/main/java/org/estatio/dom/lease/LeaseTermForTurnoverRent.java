@@ -24,6 +24,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
 
@@ -168,6 +169,19 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         }
 
         return this;
+    }
+    
+    // //////////////////////////////////////
+    
+    @Override
+    public void copyValuesTo(LeaseTerm target){
+        LeaseTermForTurnoverRent t = (LeaseTermForTurnoverRent) target;
+        super.copyValuesTo(t);
+        t.setTurnoverRentRule(getTurnoverRentRule());
+        t.setTurnoverRentValue(getTurnoverRentValue());
+        t.setBudgetedTurnover(getBudgetedTurnover());
+        t.setAuditedTurnover(getAuditedTurnover());
+        t.setContractualRent(getContractualRent());
     }
 
 }

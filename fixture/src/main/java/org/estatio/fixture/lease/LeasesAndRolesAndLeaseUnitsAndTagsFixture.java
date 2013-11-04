@@ -66,7 +66,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
             lease.newRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
         }
         if (createLeaseUnitAndTags) {
-            Occupancy occupancy = occupancies.newOccupancy(lease, unit);
+            Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);

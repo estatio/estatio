@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
@@ -64,8 +65,6 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.dom.lease.breaks.FixedBreakOption;
-import org.estatio.dom.lease.breaks.RollingBreakOption;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 
@@ -208,9 +207,10 @@ public class Lease
     }
 
     public Occupancy occupy(
-            final @Named("unit") UnitForLease unit) {
+            final @Named("unit") UnitForLease unit,
+            final @Named("startDate") @Optional LocalDate startDate) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
-        Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit);
+        Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
         return occupancy;
     }
@@ -515,21 +515,173 @@ public class Lease
 
     public Lease terminate(
             final @Named("Termination Date") LocalDate terminationDate,
-            final @Named("Are you sure?") @Optional Boolean confirm) {
-        // TODO: how is 'confirm' used? isn't there meant to be a validate?
+            final @Named("Are you sure?") Boolean confirm) {
         for (LeaseItem item : getItems()) {
-            LeaseTerm term = item.currentTerm(terminationDate);
-            if (term == null) {
-                term = item.getTerms().last();
-            }
-            if (term != null) {
-                term.modifyEndDate(terminationDate);
+            for (LeaseTerm term : item.getTerms()) {
+                if (term.getInterval().contains(terminationDate))
+                    term.setEndDate(terminationDate);
                 if (term.getNext() != null) {
                     term.getNext().remove();
+                    break; // there are no more terms after this one that we
+                           // want to save and the remove recursively deals with
+                           // them
                 }
             }
         }
+        for (Occupancy occupancy : getOccupancies()) {
+            if (occupancy.getInterval().contains(terminationDate)) {
+                occupancy.terminate(terminationDate);
+            }
+            // TODO: remove occupancies after the termination date
+        }
+        // TODO: break options
+
+        setTerminationDate(terminationDate);
+
         return this;
+    }
+
+    public LocalDate default0Terminate() {
+        return getClockService().now();
+    }
+
+    public Boolean default1Terminate() {
+        return false;
+    }
+
+    public String validateTerminate(
+            final LocalDate terminationDate,
+            final Boolean confirm) {
+        if (terminationDate.isBefore(getStartDate())) {
+            return "Termination date can't be before start date";
+        }
+        return confirm ? null : "Make sure you confirm this action";
+    }
+
+    // //////////////////////////////////////
+
+    public Lease assign(
+            @Named("Reference") final String reference,
+            @Named("Name") final String name,
+            @Named("Tenant") final Party tenant,
+            @Named("Start date") final LocalDate startDate,
+            @Named("End date") final LocalDate endDate,
+            @Named("Are you sure?") final Boolean confirm
+            ) {
+        String validateAssign = validateAssign(reference, name, tenant, startDate, endDate, confirm);
+        if (validateAssign != null) {
+            // REVIEW: don't know if this is the right wat but when calling this
+            // method using the Api or integration tests I want to reuse the
+            // validation code
+            throw new IsisApplicationException("Validation error: ".concat(validateAssign));
+        }
+
+        Lease newLease = leases.newLease(
+                reference,
+                name,
+                this.getLeaseType(),
+                startDate,
+                null,
+                endDate,
+                this.getPrimaryParty(),
+                tenant
+                );
+
+        // items and terms
+        for (LeaseItem item : getItems()) {
+            LeaseItem newItem = newLease.newItem(item.getType(), item.getCharge(), item.getInvoicingFrequency(), item.getPaymentMethod());
+            LeaseTerm lastTerm = null;
+            for (LeaseTerm term : item.getTerms()) {
+                if (term.getInterval().contains(startDate)) {
+                    LeaseTerm newTerm;
+                    if (lastTerm == null) {
+                        newTerm = newItem.newTerm();
+                    } else {
+                        newTerm = lastTerm.createNext();
+                    }
+                    term.copyValuesTo(newTerm);
+                    lastTerm = newTerm;
+                }
+            }
+        }
+        // Occupancies
+        for (Occupancy occupancy : getOccupancies()) {
+            if (occupancy.getInterval().contains(startDate))
+                newLease.occupy(occupancy.getUnit(), startDate);
+        }
+        // Break options
+        for (BreakOption option : getBreakOptions()) {
+            if (option.getBreakDate().isAfter(startDate)) {
+                newLease.newBreakOption(
+                        option.getBreakDate(),
+                        option.getNotificationPeriod(),
+                        option.getExerciseType(),
+                        option.getType(),
+                        option.getDescription());
+            }
+        }
+        this.terminate(endDate, true);
+        this.setNext(newLease);
+        return newLease;
+    }
+
+    public LocalDate default3Assign() {
+        return getClockService().now();
+    }
+
+    public LocalDate default4Assign() {
+        return getEndDate();
+    }
+
+    public String validateAssign(
+            final String reference,
+            final String name,
+            final Party tenant,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Boolean confirm
+            ) {
+        if (endDate.isBefore(startDate)) {
+            return "End date can not be start date";
+        }
+        return leases.findLeaseByReference(reference) == null ? null : "Lease reference already exists,";
+    }
+
+    // //////////////////////////////////////
+
+    public Lease renew(
+            @Named("Reference") final String reference,
+            @Named("Name") final String name,
+            @Named("Start date") final LocalDate startDate,
+            @Named("End date") final LocalDate endDate,
+            @Named("Are you sure?") final Boolean confirm
+            ) {
+        return assign(reference, name, getSecondaryParty(), startDate, endDate, confirm);
+    }
+
+    public String default0Renew() {
+        return getReference();
+    }
+
+    public String default1Renew() {
+        return getName();
+    }
+
+    public LocalDate default2Renew() {
+        return getInterval().endDateExcluding();
+    }
+
+    public String validateRenew(
+            final String reference,
+            final String name,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final Boolean confirm
+            ) {
+        if (endDate.isBefore(startDate)) {
+            return "End date can not be before start date.";
+        }
+        return leases.findLeaseByReference(reference) == null ? null : "Lease reference already exists.";
     }
 
     // //////////////////////////////////////
@@ -556,6 +708,12 @@ public class Lease
 
     public final void injectBankMandates(final BankMandates bankMandates) {
         this.bankMandates = bankMandates;
+    }
+
+    private Leases leases;
+
+    public final void injectLeases(final Leases leases) {
+        this.leases = leases;
     }
 
 }

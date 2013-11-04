@@ -18,27 +18,17 @@
  */
 package org.estatio.integration.tests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
-public class LeaseWithServiceChargeTest_verify_extra1 extends EstatioIntegrationTest {
+public class LeaseTest_assign extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -46,31 +36,21 @@ public class LeaseWithServiceChargeTest_verify_extra1 extends EstatioIntegration
     }
     
     private Leases leases;
-
+ 
+    private Lease leasePoison;
     private Lease leaseMediax;
     
     @Before
     public void setup() {
         leases = service(Leases.class);
-        
+        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
         leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
     }
-
+    
     @Test
     public void happyCase() throws Exception {
-        // REVIEW: what is the variation being tested here (compared to similar tests with leaseTopModel) ?
-
-        // when
-        leaseMediax.verify();
-
-        // then
-        LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2008, 1, 1), BigInteger.valueOf(1));
-        
-        final LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(new LocalDate(2008, 1, 1));
-        assertNotNull(leaseMediaXServiceChargeTerm);
-        
-        final LeaseTerm leaseMediaXServiceChargeTermN = leaseMediaXServiceChargeItem.getTerms().last();
-        assertThat(leaseMediaXServiceChargeTermN.getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
+        Lease newLease = leasePoison.assign("OXF-MEDIAX-003" , "Reassigned", leaseMediax.getSecondaryParty() , new LocalDate(2014,1,1), new LocalDate(2014,1,1), true);
+    
     }
 
 }
