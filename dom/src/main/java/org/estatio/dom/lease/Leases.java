@@ -20,7 +20,9 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -140,16 +142,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public Lease findLeaseByReference(final String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
-    }
-
-    @Programmatic
-    public List<Lease> findLeasesByProperty(final Property property) {
-        return allMatches("findByProperty", "property", property);
-    }
-
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
@@ -252,6 +244,31 @@ public class Leases extends EstatioDomainService<Lease> {
         return getClockService().beginningOfQuarter();
     }
 
+// //////////////////////////////////////
+    
+    @Prototype
+    public String verifyAllLeases() {
+        DateTime dt = DateTime.now();
+        List<Lease> leases = allLeases();
+        for (Lease lease : leases){
+            lease.verify();
+        }
+        Period p = new Period(dt, DateTime.now());
+        return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
+    }
+    
+    // //////////////////////////////////////
+    
+    @Programmatic
+    public Lease findLeaseByReference(final String reference) {
+        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+    }
+    
+    @Programmatic
+    public List<Lease> findLeasesByProperty(final Property property) {
+        return allMatches("findByProperty", "property", property);
+    }
+    
     // //////////////////////////////////////
 
     private InvoiceItemsForLease invoiceItemsForLease;

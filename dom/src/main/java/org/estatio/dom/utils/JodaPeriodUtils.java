@@ -79,6 +79,8 @@ public final class JodaPeriodUtils {
                 appendHours().appendSuffix(" hours", "hours").
                 appendSeparator(", ", " & ").
                 appendMinutes().appendSuffix(" minute", " minutes").
+                appendSeparator(", ", " & ").
+                appendSeconds().appendSuffix(" second", " seconds").
                 toFormatter();
         return formatter;
     }
