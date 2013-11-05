@@ -63,17 +63,17 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.IDENTITY, 
+        strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_startDate_IDX",
@@ -106,8 +106,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "   && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class LeaseTerm 
-        extends EstatioMutableObject<LeaseTerm> 
+public abstract class LeaseTerm
+        extends EstatioMutableObject<LeaseTerm>
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
 
     public LeaseTerm() {
@@ -115,13 +115,12 @@ public abstract class LeaseTerm
         super("leaseItem, sequence");
     }
 
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
-    @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull = "false")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
     @Title(sequence = "1", append = ":")
@@ -132,7 +131,7 @@ public abstract class LeaseTerm
     public void setLeaseItem(final LeaseItem leaseItem) {
         this.leaseItem = leaseItem;
     }
-    
+
     // //////////////////////////////////////
 
     private BigInteger sequence;
@@ -221,6 +220,7 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseTerm> changeDates = new WithIntervalMutable.Helper<LeaseTerm>(this);
+
     WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
         return changeDates;
     }
@@ -288,7 +288,7 @@ public abstract class LeaseTerm
 
     private LeaseTermStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @Disabled
     public LeaseTermStatus getStatus() {
         return status;
@@ -306,7 +306,7 @@ public abstract class LeaseTerm
 
     private LeaseTermFrequency frequency;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
     public LeaseTermFrequency getFrequency() {
         return frequency;
     }
@@ -317,14 +317,16 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Mask("")
-    public abstract BigDecimal getTrialValue();
+    public BigDecimal getTrialValue() {
+        return null;
+    }
 
     // //////////////////////////////////////
-
-    @Mask("")
-    public abstract BigDecimal getApprovedValue();
-
+    
+    public BigDecimal getApprovedValue() {
+        return null;
+    }
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "previousLeaseTermId")
@@ -438,18 +440,18 @@ public abstract class LeaseTerm
             getNext().remove();
         }
         if (this.getInvoiceItems().size() == 0) {
-            //TODO: Disabled, see EST-273
-            //this.modifyPrevious(null);
-            //getContainer().remove(this);
+            // TODO: Disabled, see EST-273
+            // this.modifyPrevious(null);
+            // getContainer().remove(this);
         }
     }
-    
+
     @Programmatic
     public void removeUnapprovedInvoiceItemsForDate(final LocalDate startDate, final LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && 
-                    startDate.equals(invoiceItem.getStartDate()) && 
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) &&
+                    startDate.equals(invoiceItem.getStartDate()) &&
                     dueDate.equals(invoiceItem.getDueDate())) {
                 invoiceItem.setInvoice(null);
                 invoiceItem.clearLeaseTerm();
@@ -461,7 +463,7 @@ public abstract class LeaseTerm
 
     @Programmatic
     public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate dueDate) {
         InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
         if (ii == null) {
@@ -472,13 +474,13 @@ public abstract class LeaseTerm
 
     @Programmatic
     public InvoiceItemForLease findUnapprovedInvoiceItemFor(
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate dueDate) {
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) && 
-                    this.equals(invoiceItem.getLeaseTerm()) && 
-                    startDate.equals(invoiceItem.getStartDate()) && 
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) &&
+                    this.equals(invoiceItem.getLeaseTerm()) &&
+                    startDate.equals(invoiceItem.getStartDate()) &&
                     dueDate.equals(invoiceItem.getDueDate())) {
                 return invoiceItem;
             }
@@ -491,8 +493,8 @@ public abstract class LeaseTerm
         BigDecimal invoicedValue = new BigDecimal(0);
         for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
             Invoice invoice = invoiceItem.getInvoice();
-            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW || 
-                    invoiceItem.getStartDate() == null || 
+            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW ||
+                    invoiceItem.getStartDate() == null ||
                     invoiceItem.getStartDate().compareTo(startDate) != 0) {
                 continue;
             }
@@ -505,14 +507,14 @@ public abstract class LeaseTerm
 
     @Hidden
     public LeaseTerm calculate(
-            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due Date") LocalDate dueDate) {
         return calculate(startDate, dueDate, InvoiceRunType.NORMAL_RUN);
     }
 
     public LeaseTerm calculate(
-            final @Named("Period Start Date") LocalDate startDate, 
-            final @Named("Due Date") LocalDate dueDate, 
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Due Date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         invoiceCalculationService.calculateAndInvoice(
                 this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
@@ -550,8 +552,8 @@ public abstract class LeaseTerm
             return null;
         }
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null && 
-            terminationDate.isBefore(nextStartDate)) {
+        if (terminationDate != null &&
+                terminationDate.isBefore(nextStartDate)) {
             return null;
         }
 
@@ -598,25 +600,25 @@ public abstract class LeaseTerm
         if (getEndDate() == null && getNext() != null) {
             modifyEndDate(getNext().getInterval().endDateFromStartDate());
         }
-        
+
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
-    public void copyValuesTo(LeaseTerm target){
+    public void copyValuesTo(LeaseTerm target) {
         target.setStartDate(getStartDate());
         target.setEndDate(getEndDate());
         target.setStatus(getStatus());
         target.setFrequency(getFrequency());
     }
-    
+
     // //////////////////////////////////////
 
     @Bulk
     @ActionSemantics(Of.IDEMPOTENT)
     public LeaseTerm approve() {
-        if(!getStatus().isApproved()) {
+        if (!getStatus().isApproved()) {
             setStatus(LeaseTermStatus.APPROVED);
         }
         return this;
@@ -651,6 +653,5 @@ public abstract class LeaseTerm
     public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
-
 
 }

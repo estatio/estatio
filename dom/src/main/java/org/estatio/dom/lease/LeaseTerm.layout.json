@@ -8,14 +8,15 @@
             "type": {},
             "leaseItem": {},
             "frequency": {},
-            "sequence": {},
             "status": {},
-            "effectiveDate": {},
+            "startDate": {},
+            "endDate": {}
+            }
+        },
+        "Values": {
+          "members": {
             "trialValue": {},
             "approvedValue": {},
-            "baseValue": {},
-            "startDate": {},
-            "endDate": {},
             "current": {},
             "previous": {},
             "next": {}
@@ -39,7 +40,6 @@
     }
   ],
   "actions": {
-    "createNext": {},
     "verify": {}
   }
 }
