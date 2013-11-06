@@ -1,0 +1,42 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "property": {},
+            "dueDate": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+      	"Totals": {
+          "members": {
+            "total": {},
+            "netAmount": {},
+            "vatAmount": {},
+            "grossAmount": {}
+          }
+      	}
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 12,
+      "collections": {
+        "invoices": {}
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {},
+    "refreshLayout": {}
+  }
+}

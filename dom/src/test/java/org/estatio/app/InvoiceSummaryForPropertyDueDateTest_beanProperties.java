@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 
 public class InvoiceSummaryForPropertyDueDateTest_beanProperties extends AbstractBeanPropertiesTest {
 

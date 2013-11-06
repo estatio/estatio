@@ -18,7 +18,6 @@ package org.estatio.integration;
 
 import org.apache.log4j.Level;
 import org.estatio.api.Api;
-import org.estatio.app.InvoiceSummaries;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -48,6 +47,7 @@ import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.LeaseTypes;
@@ -112,7 +112,7 @@ public class EstatioSystemInitializer {
                     new RegisterEntities(),
                     new WrapperFactoryDefault(),
                     new Countries(),
-                    new InvoiceSummaries(),
+                    new InvoiceSummariesForPropertyDueDate(),
                     new States(),
                     new StateContributions(),
                     new Currencies(),

@@ -32,6 +32,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 
 public class InvoiceSummaryForPropertyDueDateTest_getProperty {
 

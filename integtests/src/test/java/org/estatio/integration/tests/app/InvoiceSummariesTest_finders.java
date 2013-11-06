@@ -25,9 +25,9 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
-import org.estatio.app.InvoiceSummaries;
-import org.estatio.app.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -36,7 +36,7 @@ import org.junit.Test;
 
 public class InvoiceSummariesTest_finders extends EstatioIntegrationTest {
 
-    private InvoiceSummaries invoiceSummaries;
+    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -45,12 +45,12 @@ public class InvoiceSummariesTest_finders extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        invoiceSummaries = service(InvoiceSummaries.class);
+        invoiceSummaries = service(InvoiceSummariesForPropertyDueDate.class);
     }
 
     @Test
     public void allInvoiceSummariesForPropertyDueDate() throws Exception {
-        List<InvoiceSummaryForPropertyDueDate> summaries = invoiceSummaries.invoiceSummary();
+        List<InvoiceSummaryForPropertyDueDate> summaries = invoiceSummaries.invoicesForPropertyDueDate();
         assertThat(summaries.size(), is(1));
         InvoiceSummaryForPropertyDueDate summary = summaries.get(0);
         Property property = summary.getProperty();

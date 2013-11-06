@@ -15,8 +15,9 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app;
+package org.estatio.dom.invoice.viewmodel;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.jdo.annotations.Extension;
@@ -28,6 +29,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractViewModel;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
@@ -45,30 +47,34 @@ import org.estatio.dom.invoice.Invoices;
  */
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
-        table = "InvoiceSummary",
+        table = "InvoiceSummaryForPropertyDueDate",
         extensions = {
                 @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"InvoiceSummary\" " +
+                        value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDate\" " +
                                 "( " +
                                 "  {this.reference}, " +
-                                "  {this.name}, " +
                                 "  {this.dueDate}, " +
-                                "  {this.total} " +
+                                "  {this.total}, " +
+                                "  {this.netAmount}, " +
+                                "  {this.vatAmount}, " +
+                                "  {this.grossAmount} " +
                                 ") AS " +
                                 "SELECT " +
                                 "   \"FixedAsset\".\"reference\" , " +
-                                "   \"FixedAsset\".\"name\", " +
                                 "   \"Invoice\".\"dueDate\", " +
-                                "   COUNT(\"Invoice\".\"id\") AS \"total\" " +
+                                "   COUNT(\"Invoice\".\"id\") AS \"total\", " +
+                                "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
+                                "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
+                                "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
                                 "  FROM \"Invoice\" " +
-                                "  INNER JOIN \"Lease\"      ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
-                                "  INNER JOIN \"Occupancy\"  ON \"Lease\".\"id\"         = \"Occupancy\".\"leaseId\" " +
-                                "  INNER JOIN \"Unit\"       ON \"Unit\".\"id\"          = \"Occupancy\".\"unitId\" " +
-                                "  INNER JOIN \"Property\"   ON \"Property\".\"id\"      = \"Unit\".\"propertyId\" " +
-                                "  INNER JOIN \"FixedAsset\" ON \"FixedAsset\".\"id\"    = \"Property\".\"id\" " +
+                                "  INNER JOIN \"Lease\"       ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                                "  INNER JOIN \"Occupancy\"   ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
+                                "  INNER JOIN \"Unit\"        ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
+                                "  INNER JOIN \"Property\"    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
+                                "  INNER JOIN \"FixedAsset\"  ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
+                                "  INNER JOIN \"InvoiceItem\" ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
                                 "GROUP BY " +
                                 " \"FixedAsset\".\"reference\", " +
-                                " \"FixedAsset\".\"name\", " +
                                 " \"Invoice\".\"dueDate\"")
         })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -111,25 +117,13 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
     @DescribedAs("Unique reference code for this property")
-    @Title(sequence = "1", prepend = "[", append = "] ")
+    @Hidden
     public String getReference() {
         return reference;
     }
 
     public void setReference(final String reference) {
         this.reference = reference;
-    }
-
-    // //////////////////////////////////////
-
-    private LocalDate dueDate;
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(final LocalDate dueDate) {
-        this.dueDate = dueDate;
     }
 
     // //////////////////////////////////////
@@ -146,6 +140,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      * to the underlying {@link Property}.
      */
     @Optional
+    @Title(sequence = "1")
     public Property getProperty() {
         if (property == null) {
             setProperty(properties.findPropertyByReference(getReference()));
@@ -159,25 +154,15 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     // //////////////////////////////////////
 
-    private String name;
+    private LocalDate dueDate;
 
-    /**
-     * The name of the underlying {@link #getProperty()}.
-     * 
-     * <p>
-     * Either populated directly by the JDO/DataNucleus objectstore, or else is
-     * lazily derived from the {@link #getProperty()} if this view model is
-     * rehydrated subsequently by Isis.
-     */
-    @javax.jdo.annotations.Column(allowsNull = "false")
-    @DescribedAs("Unique name for this property")
-    @Title(sequence = "2")
-    public String getName() {
-        return name != null ? name : (name = getProperty().getName());
+    @Title(sequence = "2", prepend = " - ")
+    public LocalDate getDueDate() {
+        return dueDate;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setDueDate(final LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     // //////////////////////////////////////
@@ -194,6 +179,42 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     // //////////////////////////////////////
 
+    private BigDecimal vatAmount;
+
+    public BigDecimal getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(BigDecimal vatAmount) {
+        this.vatAmount = vatAmount;
+    }
+
+    // //////////////////////////////////////
+
+    private BigDecimal netAmount;
+
+    public BigDecimal getNetAmount() {
+        return netAmount;
+    }
+
+    public void setNetAmount(BigDecimal netAmount) {
+        this.netAmount = netAmount;
+    }
+
+    // //////////////////////////////////////
+
+    private BigDecimal grossAmount;
+
+    public BigDecimal getGrossAmount() {
+        return grossAmount;
+    }
+
+    public void setGrossAmount(BigDecimal grossAmount) {
+        this.grossAmount = grossAmount;
+    }
+
+    // //////////////////////////////////////
+
     @Render(Type.EAGERLY)
     public List<Invoice> getInvoices() {
         return invoicesService.findInvoices(getProperty(), getDueDate());
@@ -203,13 +224,13 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     private Properties properties;
 
-    public void injectProperties(final Properties properties) {
+    final public void injectProperties(final Properties properties) {
         this.properties = properties;
     }
 
     private Invoices invoicesService;
 
-    public void injectInvoicesService(final Invoices invoicesService) {
+    final public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
     }
 

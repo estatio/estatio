@@ -37,8 +37,6 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
-import org.estatio.app.InvoiceSummaries;
-import org.estatio.app.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -47,6 +45,8 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
@@ -194,7 +194,7 @@ public class Leases extends EstatioDomainService<Lease> {
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
         // menu and make this query.
-        return invoiceSummaries.invoiceSummary();
+        return invoiceSummaries.invoicesForPropertyDueDate();
     }
 
     public LocalDate default1CalculateProperty() {
@@ -295,9 +295,9 @@ public class Leases extends EstatioDomainService<Lease> {
         this.agreementRoleTypes = agreementRoleTypes;
     }
 
-    private InvoiceSummaries invoiceSummaries;
+    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
 
-    public void injectInvoiceSummaries(final InvoiceSummaries invoiceSummaries) {
+    public void injectInvoiceSummaries(final InvoiceSummariesForPropertyDueDate invoiceSummaries) {
         this.invoiceSummaries = invoiceSummaries;
     }
 

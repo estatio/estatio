@@ -7,9 +7,22 @@
           "members": {
             "property": {},
             "dueDate": {},
-            "total": {}
+            "statusType": {}
           }
         }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+      	"Totals": {
+          "members": {
+            "total": {},
+            "netAmount": {},
+            "vatAmount": {},
+            "grossAmount": {}
+          }
+      	}
       }
     },
     {
@@ -17,12 +30,10 @@
       "memberGroups": {}
     },
     {
-      "span": 0,
-      "memberGroups": {}
-    },
-    {
-      "span": 8,
-      "collections": {}
+      "span": 12,
+      "collections": {
+        "invoices": {}
+      }
     }
   ],
   "actions": {

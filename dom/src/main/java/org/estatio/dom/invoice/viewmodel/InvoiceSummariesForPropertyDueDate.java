@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app;
+package org.estatio.dom.invoice.viewmodel;
 
 import java.util.List;
 
@@ -34,10 +34,10 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 
 @Immutable
-public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForPropertyDueDate> {
+public class InvoiceSummariesForPropertyDueDate extends EstatioDomainService<InvoiceSummaryForPropertyDueDate> {
 
-    public InvoiceSummaries() {
-        super(InvoiceSummaries.class, InvoiceSummaryForPropertyDueDate.class);
+    public InvoiceSummariesForPropertyDueDate() {
+        super(InvoiceSummariesForPropertyDueDate.class, InvoiceSummaryForPropertyDueDate.class);
     }
 
     // //////////////////////////////////////
@@ -59,7 +59,7 @@ public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForProp
             public InvoiceSummaryForPropertyDueDate apply(final Property property) {
                 final InvoiceSummaryForPropertyDueDate summary =
                         getContainer().newViewModelInstance(
-                                InvoiceSummaryForPropertyDueDate.class, 
+                                InvoiceSummaryForPropertyDueDate.class,
                                 property.getReference());
                 summary.setProperty(property);
                 return summary;
@@ -71,7 +71,7 @@ public class InvoiceSummaries extends EstatioDomainService<InvoiceSummaryForProp
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "80")
-    public List<InvoiceSummaryForPropertyDueDate> invoiceSummary() {
+    public List<InvoiceSummaryForPropertyDueDate> invoicesForPropertyDueDate() {
         return allInstances();
     }
 
