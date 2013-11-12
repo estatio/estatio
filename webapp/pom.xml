@@ -288,7 +288,7 @@ language governing permissions and limitations under the License.
             <dependencies>
                 <dependency>
                     <groupId>com.microsoft.sqlserver</groupId>
-                    <artifactId>jdbc</artifactId>
+                    <artifactId>jdbc4</artifactId>
                     <version>4.0</version>
                 </dependency>
             </dependencies>
