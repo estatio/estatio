@@ -82,10 +82,10 @@ public class Leases extends EstatioDomainService<Lease> {
             // CHECKSTYLE:ON
             ) {
         String validate = validateNewLease(reference, name, leaseType, startDate, duration, endDate, landlord, tenant);
-        if (validate != null){
+        if (validate != null) {
             throw new IsisApplicationException(validate);
         }
-        
+
         LocalDate calculatedEndDate = endDate;
         if (duration != null) {
             final Period p = JodaPeriodUtils.asPeriod(duration);
@@ -124,17 +124,17 @@ public class Leases extends EstatioDomainService<Lease> {
             final Party landlord,
             final Party tenant
             ) {
-        if ((endDate == null && duration == null) || (endDate != null && duration != null)){
+        if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
             return "Either end date or duration must be filled in.";
         }
-        if (duration !=null){
+        if (duration != null) {
             final Period p = JodaPeriodUtils.asPeriod(duration);
-            if (p == null){
+            if (p == null) {
                 return "This is not a valid duration.";
             }
         } else {
-            if (endDate.isBefore(startDate)){
-                return "End date can not be before start date"; 
+            if (endDate.isBefore(startDate)) {
+                return "End date can not be before start date";
             }
         }
         return null;
@@ -183,13 +183,14 @@ public class Leases extends EstatioDomainService<Lease> {
     @MemberOrder(sequence = "6")
     public List<InvoiceSummaryForPropertyDueDate> calculateProperty(
             final @Named("Property") @DescribedAs("") Property property,
-            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period end Date") LocalDate startDate,
+            final @Named("Period end Date") @Optional LocalDate endDate,
             final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         final List<Lease> leases = findLeasesByProperty(property);
         for (Lease lease : leases) {
-            lease.verify();
-            lease.calculate(startDate, dueDate, runType);
+            lease.verifyUntil(endDate);
+            lease.calculate(startDate, endDate, dueDate, runType);
         }
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
@@ -222,12 +223,13 @@ public class Leases extends EstatioDomainService<Lease> {
     public List<InvoiceItemForLease> calculateLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate,
             final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         final List<Lease> leases = findLeases(referenceOrName);
         for (Lease lease : leases) {
-            lease.verify();
-            lease.calculate(startDate, dueDate, runType);
+            lease.verifyUntil(endDate);
+            lease.calculate(startDate, endDate, dueDate, runType);
         }
         // As a convenience, we now go find them and display them.
         // We've done it this way so that the user can always just go to the
@@ -244,31 +246,31 @@ public class Leases extends EstatioDomainService<Lease> {
         return getClockService().beginningOfQuarter();
     }
 
-// //////////////////////////////////////
-    
+    // //////////////////////////////////////
+
     @Prototype
     public String verifyAllLeases() {
         DateTime dt = DateTime.now();
         List<Lease> leases = allLeases();
-        for (Lease lease : leases){
-            lease.verify();
+        for (Lease lease : leases) {
+            lease.verifyUntil(getClockService().now());
         }
         Period p = new Period(dt, DateTime.now());
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
         return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
     }
-    
+
     @Programmatic
     public List<Lease> findLeasesByProperty(final Property property) {
         return allMatches("findByProperty", "property", property);
     }
-    
+
     // //////////////////////////////////////
 
     private InvoiceItemsForLease invoiceItemsForLease;

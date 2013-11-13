@@ -30,14 +30,20 @@ public enum LeaseTermStatus {
     }
 
     public static LeaseTermStatus valueOfElse(final String status, final LeaseTermStatus statusElse) {
-        return status != null? valueOf(status): statusElse;
+        return status != null ? valueOf(status) : statusElse;
     }
 
     public boolean isApproved() {
         return this == LeaseTermStatus.APPROVED;
     }
+
     public boolean isNew() {
         return this == LeaseTermStatus.NEW;
     }
 
- }
+    public boolean isUpdatable() {
+        // For future feature
+        return true;
+    }
+
+}

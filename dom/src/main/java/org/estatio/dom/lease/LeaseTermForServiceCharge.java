@@ -29,14 +29,14 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.utils.MathUtils;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-
     private BigDecimal budgetedValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
@@ -50,7 +50,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     private BigDecimal auditedValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
     public BigDecimal getAuditedValue() {
         return auditedValue;
@@ -71,8 +71,8 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     @Override
     public BigDecimal getTrialValue() {
-        return MathUtils.isNotZeroOrNull(getAuditedValue()) 
-                ? getAuditedValue() 
+        return MathUtils.isNotZeroOrNull(getAuditedValue())
+                ? getAuditedValue()
                 : getBudgetedValue();
     }
 
@@ -80,7 +80,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     @Override
     @Programmatic
-    public BigDecimal valueForDueDate(final LocalDate dueDate) {
+    public BigDecimal valueForDate(final LocalDate dueDate) {
         // use the audited value after the end of the term and only when its
         // available
         if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
@@ -112,26 +112,21 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Programmatic
     public void update() {
         super.update();
-        if (getStatus().isNew()) {
-            // date from previous term
-            if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
-                if (MathUtils.isNotZeroOrNull(getPrevious().getTrialValue())) {
-                    setBudgetedValue(getPrevious().getTrialValue());
-                }
+        if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
+            if (MathUtils.isNotZeroOrNull(getPrevious().getTrialValue())) {
+                setBudgetedValue(getPrevious().getTrialValue());
             }
-
         }
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Override
-    public void copyValuesTo(LeaseTerm target){
+    public void copyValuesTo(LeaseTerm target) {
         LeaseTermForServiceCharge t = (LeaseTermForServiceCharge) target;
         super.copyValuesTo(t);
         t.setBudgetedValue(getBudgetedValue());
         t.setAuditedValue(getAuditedValue());
     }
-
 
 }

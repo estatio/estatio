@@ -26,10 +26,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
@@ -61,6 +64,8 @@ public class LeaseContributions {
      */
     @NotInServiceMenu
     @NotContributed(As.ACTION) // ie contributed collection
+    @Render(Type.EAGERLY)
+    @MemberOrder(sequence="80")
     public Collection<Lease> currentLeases(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypes.find(LeaseConstants.AT_LEASE);
         return Lists.newArrayList(

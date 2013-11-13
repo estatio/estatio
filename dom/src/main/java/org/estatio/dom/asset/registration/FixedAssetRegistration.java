@@ -46,7 +46,7 @@ import org.estatio.dom.asset.FixedAsset;
                 name = "findBySubject", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.registration.FixedAssetRegistration "
-                        + "WHERE subject == :subject"),
+                        + "WHERE subject == :subject")
 })
 public abstract class FixedAssetRegistration 
     extends EstatioMutableObject<FixedAssetRegistration> {

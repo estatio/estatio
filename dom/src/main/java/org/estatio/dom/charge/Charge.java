@@ -68,7 +68,6 @@ public class Charge
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @Title(sequence = "1")
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
@@ -82,6 +81,7 @@ public class Charge
 
     private String name;
 
+    @Title(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     public String getName() {
         return name;

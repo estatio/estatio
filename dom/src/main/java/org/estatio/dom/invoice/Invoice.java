@@ -110,7 +110,6 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         super("invoiceNumber");
     }
 
-
     // //////////////////////////////////////
 
     public String title() {
@@ -125,6 +124,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     @Disabled
     public Party getBuyer() {
         return buyer;
+
     }
 
     public void setBuyer(final Party buyer) {
@@ -149,7 +149,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private String collectionNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.Invoice.NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
     public String getCollectionNumber() {
         return collectionNumber;
@@ -163,7 +163,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private String invoiceNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.Invoice.NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
     public String getInvoiceNumber() {
         return invoiceNumber;
@@ -189,9 +189,10 @@ public class Invoice extends EstatioMutableObject<Invoice> {
                             key = "implementation-classes",
                             value = "org.estatio.dom.lease.Lease") })
     @javax.jdo.annotations.Columns({
-        @javax.jdo.annotations.Column(name = "sourceLeaseId", allowsNull="true")
+            @javax.jdo.annotations.Column(name = "sourceLeaseId", allowsNull = "true")
     })
-    @Optional // not really, but to be compatible with JDO 
+    @Optional
+    // not really, but to be compatible with JDO
     @Disabled
     public InvoiceSource getSource() {
         return source;
@@ -235,7 +236,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private InvoiceStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @Disabled
     public InvoiceStatus getStatus() {
         return status;
@@ -265,7 +266,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private PaymentMethod paymentMethod;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.PAYMENT_METHOD_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
     @Disabled
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -362,13 +363,13 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     // //////////////////////////////////////
 
     @Bulk
-    public Invoice assignCollectionNumber() {
+    public Invoice collect() {
 
         // bulk action, so need these guards
-        if (hideAssignCollectionNumber()) {
+        if (hideCollect()) {
             return this;
         }
-        if (disableAssignCollectionNumber() != null) {
+        if (disableCollect() != null) {
             return this;
         }
 
@@ -381,12 +382,12 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         return this;
     }
 
-    public boolean hideAssignCollectionNumber() {
+    public boolean hideCollect() {
         // only applies to direct debits
         return !getPaymentMethod().isDirectDebit();
     }
 
-    public String disableAssignCollectionNumber() {
+    public String disableCollect() {
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
@@ -405,29 +406,15 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     // //////////////////////////////////////
 
     @Bulk
-    public Invoice assignInvoiceNumber() {
-        // bulk action, so need these guards
-        if (hideAssignInvoiceNumber()) {
-            return this;
-        }
-        if (disableAssignInvoiceNumber() != null) {
-            return this;
-        }
-
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
-
-        setInvoiceNumber(numerator.increment());
-        this.setStatus(InvoiceStatus.INVOICED);
-
-        informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
-        return this;
+    public Invoice invoiceNow() {
+        return invoiceOn(getClockService().now());
+    }
+    
+    public boolean hideInvoiceNow() {
+        return false; // TODO: return true if action is hidden, false if visible
     }
 
-    public boolean hideAssignInvoiceNumber() {
-        return false;
-    }
-
-    public String disableAssignInvoiceNumber() {
+    public String disableInvoiceNow() {
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
@@ -435,10 +422,26 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
-        if (getStatus() != InvoiceStatus.COLLECTED) {
+        //TODO: offload valid next states to the InvoiceStatus enum? Eg getStatus.isPossible(InvoiceStatus.APPROVED)
+        // 
+        if (getStatus() != InvoiceStatus.COLLECTED && getStatus() != InvoiceStatus.APPROVED) {
             return "Must be in status of 'collected'";
         }
         return null;
+    }
+
+    @Programmatic
+    public Invoice invoiceOn(LocalDate invoiceDate) {
+        // bulk action, so need these guards
+        if (disableInvoiceNow() != null) {
+            return this;
+        }
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
+        setInvoiceNumber(numerator.increment());
+        setInvoiceDate(invoiceDate);
+        this.setStatus(InvoiceStatus.INVOICED);
+        informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
+        return this;
     }
 
     // //////////////////////////////////////
@@ -456,7 +459,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     @Bulk
     @ActionSemantics(Of.IDEMPOTENT)
     public Invoice submitToCoda() {
-        assignCollectionNumber();
+        collect();
         return this;
     }
 

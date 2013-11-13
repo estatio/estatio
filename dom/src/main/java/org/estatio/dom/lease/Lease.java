@@ -492,10 +492,15 @@ public class Lease
 
     @Bulk
     public Lease verify() {
-        for (LeaseItem item : getItems()) {
-            item.verify();
-        }
+        verifyUntil(getClockService().now());
         return this;
+    }
+
+    @Programmatic
+    public void verifyUntil(LocalDate date) {
+        for (LeaseItem item : getItems()) {
+            item.verifyUntil(date);
+        }
     }
 
     // //////////////////////////////////////
@@ -503,12 +508,22 @@ public class Lease
     @Bulk
     public Lease calculate(
             final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate,
             final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         for (LeaseItem item : getItems()) {
-            item.calculate(startDate, dueDate, runType);
+            item.calculate(startDate, endDate, dueDate, runType);
         }
         return this;
+    }
+
+    public String validateCalculate(
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate,
+            final @Named("Due date") LocalDate dueDate,
+            final @Named("Run Type") InvoiceRunType runType) {
+        return null; // TODO: return reason why action arguments are invalid,
+                     // null if ok
     }
 
     // //////////////////////////////////////
@@ -595,9 +610,9 @@ public class Lease
                 if (term.getInterval().contains(startDate)) {
                     LeaseTerm newTerm;
                     if (lastTerm == null) {
-                        newTerm = newItem.newTerm();
+                        newTerm = newItem.newTerm(term.getStartDate());
                     } else {
-                        newTerm = lastTerm.createNext();
+                        newTerm = lastTerm.createNext(term.getStartDate());
                     }
                     term.copyValuesTo(newTerm);
                     lastTerm = newTerm;

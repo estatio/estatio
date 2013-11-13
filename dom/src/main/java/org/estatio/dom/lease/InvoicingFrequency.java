@@ -19,6 +19,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 import com.google.common.collect.Ordering;
 
@@ -98,11 +99,9 @@ public enum InvoicingFrequency {
     public Boolean isInAdvance() {
         return paidIn == PaidIn.ADVANCE;
     }
-    public BigDecimal getNumerator() {
-        return numerator;
-    }
-    public BigDecimal getDenominator() {
-        return denominator;
+    
+    public BigDecimal annualMultiplier(){
+        return numerator.divide(denominator, MathContext.DECIMAL64);
     }
 
     public final static Ordering<InvoicingFrequency> ORDERING_BY_TYPE = 

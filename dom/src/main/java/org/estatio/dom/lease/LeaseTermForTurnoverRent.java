@@ -24,7 +24,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
 
@@ -149,7 +148,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     }
 
     @Override
-    protected void initialize() {
+    public void initialize() {
         super.initialize();
         LeaseTermForTurnoverRent prev = (LeaseTermForTurnoverRent) getPrevious();
         if (prev != null) {

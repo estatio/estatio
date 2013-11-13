@@ -92,9 +92,9 @@ public class InvoiceTest_assignCollectionNumber {
 
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
-        assertThat(invoice.hideAssignCollectionNumber(), is(false));
-        assertThat(invoice.disableAssignCollectionNumber(), is(nullValue()));
-        invoice.assignCollectionNumber();
+        assertThat(invoice.hideCollect(), is(false));
+        assertThat(invoice.disableCollect(), is(nullValue()));
+        invoice.collect();
         
         assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
     }
@@ -108,9 +108,9 @@ public class InvoiceTest_assignCollectionNumber {
 
         invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
         
-        assertThat(invoice.hideAssignCollectionNumber(), is(false));
-        assertThat(invoice.disableAssignCollectionNumber(), is("Collection number already assigned"));
-        invoice.assignCollectionNumber();
+        assertThat(invoice.hideCollect(), is(false));
+        assertThat(invoice.disableCollect(), is("Collection number already assigned"));
+        invoice.collect();
         
         assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
     }
@@ -122,10 +122,10 @@ public class InvoiceTest_assignCollectionNumber {
         
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
-        assertThat(invoice.hideAssignCollectionNumber(), is(false));
-        assertThat(invoice.disableAssignCollectionNumber(), is("No 'collection number' numerator found for invoice's property"));
+        assertThat(invoice.hideCollect(), is(false));
+        assertThat(invoice.disableCollect(), is("No 'collection number' numerator found for invoice's property"));
         
-        invoice.assignCollectionNumber();
+        invoice.collect();
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
 
@@ -135,10 +135,10 @@ public class InvoiceTest_assignCollectionNumber {
         
         invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
         
-        assertThat(invoice.hideAssignCollectionNumber(), is(true));
-        assertThat(invoice.disableAssignCollectionNumber(), is(nullValue()));
+        assertThat(invoice.hideCollect(), is(true));
+        assertThat(invoice.disableCollect(), is(nullValue()));
         
-        invoice.assignCollectionNumber();
+        invoice.collect();
         
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
@@ -149,10 +149,10 @@ public class InvoiceTest_assignCollectionNumber {
         
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
         
-        assertThat(invoice.hideAssignCollectionNumber(), is(false));
-        assertThat(invoice.disableAssignCollectionNumber(), is("Must be in status of 'approved'"));
+        assertThat(invoice.hideCollect(), is(false));
+        assertThat(invoice.disableCollect(), is("Must be in status of 'approved'"));
         
-        invoice.assignCollectionNumber();
+        invoice.collect();
         
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }

@@ -24,13 +24,13 @@
     {
       "span": 8,
       "collections": {
+        "communicationChannels": {
+          "actions": {}
+        },
         "currentLeases": {
             "actions": {
                 "allLeases": {}
             }
-        },
-        "communicationChannels": {
-          "actions": {}
         },
         "currentBankMandates": {
             "actions": {

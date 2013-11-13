@@ -12,9 +12,9 @@
         },
         "Details": {
           "members": {
-            "description": {},
             "charge": {},
-            "quantity": {}
+            "quantity": {},
+            "description": {}
           }
         }
       }

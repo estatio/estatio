@@ -386,44 +386,53 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    public LeaseTerm newTerm() {
-        LeaseTerm term = leaseTerms.newLeaseTerm(this);
+    public LeaseTerm newTerm(
+            final @Named("Start date") LocalDate startDate) {
+        LeaseTerm term = leaseTerms.newLeaseTerm(this, null, startDate);
+        term.initialize();
         return term;
     }
 
-    public String disableNewTerm() {
+    public String disableNewTerm(
+            final @Named("Start date") LocalDate startDate) {
         return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
     }
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public LeaseTerm createNextTerm(final LeaseTerm currentTerm) {
-        LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm);
-        return term;
-    }
+//    @Programmatic
+//    public LeaseTerm createNextTerm(final LeaseTerm currentTerm, final LocalDate startDate) {
+//        LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm, startDate);
+//        return term;
+//    }
 
     // //////////////////////////////////////
 
     public LeaseItem verify() {
+        verifyUntil(getClockService().now());
+        return this;
+    }
+    
+    @Programmatic
+    public void verifyUntil(LocalDate date) {
         for (LeaseTerm term : getTerms()) {
             if (term.getPrevious() == null) {
                 // since verify is recursive on terms only start on the main
                 // term
-                term.verify();
+                term.verifyUntil(date);
             }
         }
-        return this;
     }
 
     // //////////////////////////////////////
 
     public LeaseItem calculate(
-            final @Named("Period Start Date") LocalDate startDate, 
+            final @Named("Period start Date") LocalDate startDate, 
+            final @Named("Period end date") @Optional LocalDate endDate, 
             final @Named("Due date") LocalDate dueDate, 
             final @Named("Run Type") InvoiceRunType runType) {
         for (LeaseTerm term : getTerms()) {
-            term.calculate(startDate, dueDate, runType);
+            term.calculate(startDate, endDate, dueDate, runType);
         }
         return this;
     }
@@ -436,7 +445,7 @@ public class LeaseItem
             final LocalDate dueDate) {
         BigDecimal total = new BigDecimal(0);
         for (LeaseTerm term : getTerms()) {
-            total = total.add(term.valueForPeriod(frequency, periodStartDate, dueDate));
+            total = total.add(term.valueForPeriod(periodStartDate, dueDate, frequency));
         }
         return total;
     }

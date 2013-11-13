@@ -39,7 +39,6 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Mask;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -112,7 +111,7 @@ public abstract class LeaseTerm
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.
-        super("leaseItem, sequence");
+        super("leaseItem, sequence, startDate");
     }
 
     // //////////////////////////////////////
@@ -166,10 +165,9 @@ public abstract class LeaseTerm
 
     public void modifyStartDate(final LocalDate startDate) {
         LocalDate currentStartDate = getStartDate();
-        if (startDate == null || startDate.equals(currentStartDate)) {
-            return;
+        if (startDate != null && !startDate.equals(currentStartDate)) {
+            setStartDate(startDate);
         }
-        setStartDate(startDate);
         if (getPrevious() != null) {
             getPrevious().modifyEndDate(getInterval().endDateFromStartDate());
         }
@@ -322,11 +320,11 @@ public abstract class LeaseTerm
     }
 
     // //////////////////////////////////////
-    
+
     public BigDecimal getApprovedValue() {
         return null;
     }
-    
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "previousLeaseTermId")
@@ -505,19 +503,20 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public LeaseTerm calculate(
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due Date") LocalDate dueDate) {
-        return calculate(startDate, dueDate, InvoiceRunType.NORMAL_RUN);
+        return calculate(startDate, null, dueDate, InvoiceRunType.NORMAL_RUN);
     }
 
     public LeaseTerm calculate(
-            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period start Date") LocalDate startDate,
+            final @Named("Period end Date") @Optional LocalDate endDate,
             final @Named("Due Date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         invoiceCalculationService.calculateAndInvoice(
-                this, startDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
+                this, startDate, endDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
         return this;
     }
 
@@ -525,55 +524,52 @@ public abstract class LeaseTerm
 
     @Bulk
     public LeaseTerm verify() {
+        verifyUntil(getClockService().now());
+        return this;
+    }
+
+    @Programmatic
+    public void verifyUntil(LocalDate date) {
         update();
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
-        if (getStartDate() != null && getStartDate().compareTo(getClockService().now()) < 0) {
-            createNext();
-            next = getNext();
-            if (next != null) {
-                next.verify();
-            }
+        LeaseTerm nextTerm = getNext();
+        if (nextTerm == null && getNextStartDate().compareTo(date) <= 0) {
+            nextTerm = createNext(getNextStartDate());
         }
-        return this;
+        if (nextTerm != null) {
+            nextTerm.verifyUntil(date);
+        }
+    }
+
+    private LocalDate getNextStartDate() {
+        LocalDate nextStartDate = getInterval().endDateExcluding();
+        if (nextStartDate == null) {
+            return getFrequency().nextDate(getStartDate());
+        }
+        return nextStartDate;
     }
 
     // //////////////////////////////////////
 
-    public LeaseTerm createNext() {
-        final LocalDate newStartDate = getEndDate() == null
-                ? this.getFrequency().nextDate(this.getStartDate())
-                : this.getEndDate().plusDays(1);
-        return createNext(newStartDate);
-    }
-
-    LeaseTerm createNext(final LocalDate nextStartDate) {
-        if (getNext() != null) {
-            return null;
+    @Programmatic
+    public LeaseTerm createNext(final LocalDate nextStartDate) {
+        LeaseTerm nextTerm = getNext();
+        if (nextTerm != null) {
+            return nextTerm;
         }
+        // Don't create terms after termination date
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
         if (terminationDate != null &&
                 terminationDate.isBefore(nextStartDate)) {
             return null;
         }
-
-        final LocalDate endDate = getLeaseItem().getEffectiveInterval().endDate();
-        final LocalDate oneYearFromNow = getClockService().now().plusYears(1);
-        final LocalDate maxEndDate = ValueUtils.coalesce(endDate, oneYearFromNow);
-        if (nextStartDate.isAfter(maxEndDate)) {
-            // date is after end date, do nothing
-            return null;
-        }
-
-        LeaseTerm term = getNext();
-        if (getNext() == null) {
-            term = getLeaseItem().createNextTerm(this);
-        }
-
-        // new start Date
-        term.modifyStartDate(nextStartDate);
-        term.update();
-        return term;
+        // Ok, we need to create a term
+        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate);
+        nextTerm.initialize();
+        nextTerm.modifyStartDate(nextStartDate);
+        nextTerm.update();
+        return nextTerm;
     }
 
     // //////////////////////////////////////
@@ -589,14 +585,16 @@ public abstract class LeaseTerm
         setSequence(sequence);
     }
 
+    @Programmatic
     protected void update() {
         // terminate the last term
         LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null && next == null) {
+        if (terminationDate != null && getNext() == null) {
             if (getEndDate() == null || getEndDate().compareTo(terminationDate) > 0) {
                 setEndDate(terminationDate);
             }
         }
+        // Get the end date from the next start date
         if (getEndDate() == null && getNext() != null) {
             modifyEndDate(getNext().getInterval().endDateFromStartDate());
         }
@@ -627,18 +625,25 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Programmatic
-    public BigDecimal valueForDueDate(final LocalDate dueDate) {
+    public BigDecimal valueForDate(final LocalDate dueDate) {
         return getTrialValue();
     }
 
     @Programmatic
     BigDecimal valueForPeriod(
-            final InvoicingFrequency frequency, final LocalDate periodStartDate, final LocalDate dueDate) {
-        if (getStatus().isNew()) {
-            return invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
-        }
-        return BigDecimal.ZERO;
+            final LocalDate periodStartDate,
+            final LocalDate dueDate,
+            final InvoicingFrequency frequency) {
+        return invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
     }
+    
+    // //////////////////////////////////////
+    
+    @Override
+    public String toString(){
+        return getInterval().toString()+ " / ";
+    }
+    
 
     // //////////////////////////////////////
 
@@ -652,6 +657,12 @@ public abstract class LeaseTerm
 
     public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
+    }
+    
+    private LeaseTerms terms;
+    
+    public final void injectLeaseTerms(LeaseTerms terms) {
+        this.terms = terms;
     }
 
 }

@@ -41,28 +41,20 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous) {
+    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous, LocalDate startDate) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.modifyPrevious(previous);
+        leaseTerm.modifyStartDate(startDate);
         persistIfNotAlready(leaseTerm);
 
         // TOFIX: without this flush and refresh, the collection of terms on the
-        // item is not updated
-        
-        // REVIEW: is this still an issue?
+        // item is not updated. Removing code below will fail integration tests too.
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
         leaseTerm.initialize();
         return leaseTerm;
     }
-
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @Hidden
-    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem) {
-        return newLeaseTerm(leaseItem, null);
-    }
-
 
     // //////////////////////////////////////
 

@@ -26,10 +26,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
@@ -41,66 +44,74 @@ import org.estatio.dom.financial.FinancialConstants;
 
 
 /**
- * These contributions act upon {@link AgreementRoleHolder}, and from its 
- * {@link AgreementRoleHolder#getAgreements()set of} {@link AgreementRole}, project to the corresponding
- * {@link BankMandate}s.
+ * These contributions act upon {@link AgreementRoleHolder}, and from its
+ * {@link AgreementRoleHolder#getAgreements()set of} {@link AgreementRole},
+ * project to the corresponding {@link BankMandate}s.
  * 
  * <p>
- * An alternative design would be to simply do a repository query against the database; this would be more efficient 
- * (avoid an N+1 search as is the current design).  However, that query would be quite complex, having to traverse
- * from {@link BankMandate} to {@link AgreementRole} to {@link org.estatio.dom.party.Party}. 
+ * An alternative design would be to simply do a repository query against the
+ * database; this would be more efficient (avoid an N+1 search as is the current
+ * design). However, that query would be quite complex, having to traverse from
+ * {@link BankMandate} to {@link AgreementRole} to
+ * {@link org.estatio.dom.party.Party}.
  */
 @Hidden
-public class BankMandateContributions { 
+public class BankMandateContributions {
 
     /**
-     * A contributed collection of the current {@link BankMandate}s of the {@link AgreementRoleHolder}.
+     * A contributed collection of the current {@link BankMandate}s of the
+     * {@link AgreementRoleHolder}.
      * 
      * <p>
-     * All {@link BankMandate} are {@link #allBankMandate(AgreementRoleHolder) contributed} as an action. 
+     * All {@link BankMandate} are {@link #allBankMandate(AgreementRoleHolder)
+     * contributed} as an action.
      */
     @NotInServiceMenu
-    @NotContributed(As.ACTION) // ie contributed collection
+    @NotContributed(As.ACTION)
+    // ie contributed collection
+    @Render(Type.LAZILY)
+    @MemberOrder(sequence = "80")
     public Collection<BankMandate> currentBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypes.find(FinancialConstants.AT_MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
                                 agreementRoleHolder.getAgreements(),
-                                whetherCurrentAndAgreementTypeIs(agreementType)), 
-                        AgreementRole.Functions.<BankMandate>agreementOf()));
+                                whetherCurrentAndAgreementTypeIs(agreementType)),
+                        AgreementRole.Functions.<BankMandate> agreementOf()));
     }
 
     private static Predicate<AgreementRole> whetherCurrentAndAgreementTypeIs(final AgreementType agreementType) {
         return Predicates.and(
                 AgreementRole.Predicates.whetherAgreementTypeIs(agreementType),
-                WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
+                WithInterval.Predicates.<AgreementRole> whetherCurrentIs(true));
     }
 
-    
     // //////////////////////////////////////
-    
+
     /**
-     * A contributed action of all {@link BankMandate}s of the {@link AgreementRoleHolder}.
+     * A contributed action of all {@link BankMandate}s of the
+     * {@link AgreementRoleHolder}.
      * 
      * <p>
-     * The current {@link BankMandate}s are {@link #currentBankMandates(AgreementRoleHolder) contributed} as a 
-     * collection. 
+     * The current {@link BankMandate}s are
+     * {@link #currentBankMandates(AgreementRoleHolder) contributed} as a
+     * collection.
      */
     @NotInServiceMenu
     @Named("List All")
-    @NotContributed(As.ASSOCIATION) // ie contributed action
+    @NotContributed(As.ASSOCIATION)
+    // ie contributed action
     public Collection<BankMandate> allBankMandates(final AgreementRoleHolder agreementRoleHolder) {
         final AgreementType agreementType = agreementTypes.find(FinancialConstants.AT_MANDATE);
         return Lists.newArrayList(
                 Iterables.transform(
                         Iterables.filter(
                                 agreementRoleHolder.getAgreements(),
-                                AgreementRole.Predicates.whetherAgreementTypeIs(agreementType)), 
-                        AgreementRole.Functions.<BankMandate>agreementOf()));
+                                AgreementRole.Predicates.whetherAgreementTypeIs(agreementType)),
+                        AgreementRole.Functions.<BankMandate> agreementOf()));
     }
 
-    
     // //////////////////////////////////////
 
     private AgreementTypes agreementTypes;
