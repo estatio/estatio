@@ -21,6 +21,7 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -56,20 +57,23 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
- * An item component of an {@link #getLease() owning} {@link Lease}.  Each is of a {@link #getType() particular} 
- * {@link LeaseItemType}; Estatio currently defines three such: {@link LeaseItemType#RENT (indexable) rent}, 
- * {@link LeaseItemType#TURNOVER_RENT turnover rent} and {@link LeaseItemType#SERVICE_CHARGE service charge}
+ * An item component of an {@link #getLease() owning} {@link Lease}. Each is of
+ * a {@link #getType() particular} {@link LeaseItemType}; Estatio currently
+ * defines three such: {@link LeaseItemType#RENT (indexable) rent},
+ * {@link LeaseItemType#TURNOVER_RENT turnover rent} and
+ * {@link LeaseItemType#SERVICE_CHARGE service charge}
  * 
  * <p>
- * Each item gives rise to a succession of {@link LeaseTerm}s, typically generated on a quarterly basis.  The lease 
- * terms (by implementing <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s. 
+ * Each item gives rise to a succession of {@link LeaseTerm}s, typically
+ * generated on a quarterly basis. The lease terms (by implementing
+ * <tt>InvoiceSource</tt>) act as the source of <tt>InvoiceItem</tt>s.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
@@ -81,33 +85,33 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndStartDate", 
-                language = "JDOQL", 
+                name = "findByLeaseAndTypeAndStartDate",
+                language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseItem "
                         + "WHERE lease == :lease "
                         + "   && type == :type "
                         + "   && startDate == :startDate"),
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndStartDateAndSequence", 
-                language = "JDOQL", 
+                name = "findByLeaseAndTypeAndStartDateAndSequence",
+                language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseItem "
                         + "WHERE lease == :lease "
-                        +    "&& type == :type "
-                        +    "&& startDate == :startDate "
-                        +    "&& sequence == :sequence"),
+                        + "&& type == :type "
+                        + "&& startDate == :startDate "
+                        + "&& sequence == :sequence"),
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndEndDate", 
-                language = "JDOQL", 
+                name = "findByLeaseAndTypeAndEndDate",
+                language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseItem "
                         + "WHERE lease == :lease "
                         + "   && endDate == :endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class LeaseItem 
-        extends EstatioMutableObject<LeaseItem> 
+public class LeaseItem
+        extends EstatioMutableObject<LeaseItem>
         implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     private static final int PAGE_SIZE = 15;
@@ -116,12 +120,11 @@ public class LeaseItem
         super("lease, type, sequence desc");
     }
 
-
     // //////////////////////////////////////
 
     private LeaseItemStatus status;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.STATUS_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public LeaseItemStatus getStatus() {
@@ -180,8 +183,8 @@ public class LeaseItem
 
     private LeaseItemType type;
 
-    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Title(sequence = "2")
     public LeaseItemType getType() {
         return type;
@@ -225,6 +228,7 @@ public class LeaseItem
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<LeaseItem>(this);
+
     WithIntervalMutable.Helper<LeaseItem> getChangeDates() {
         return changeDates;
     }
@@ -273,7 +277,7 @@ public class LeaseItem
     public LocalDateInterval getEffectiveInterval() {
         return getInterval().overlap(getLease().getEffectiveInterval());
     }
-    
+
     // //////////////////////////////////////
 
     public boolean isCurrent() {
@@ -288,7 +292,7 @@ public class LeaseItem
 
     private InvoicingFrequency invoicingFrequency;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.INVOICING_FREQUENCY_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.INVOICING_FREQUENCY_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
@@ -302,7 +306,7 @@ public class LeaseItem
 
     private PaymentMethod paymentMethod;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.PAYMENT_METHOD_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
@@ -388,23 +392,28 @@ public class LeaseItem
 
     public LeaseTerm newTerm(
             final @Named("Start date") LocalDate startDate) {
-        LeaseTerm term = leaseTerms.newLeaseTerm(this, null, startDate);
+        LeaseTerm lastTerm = null;
+        try {
+            lastTerm = getTerms().last();
+        } catch (NoSuchElementException e) {
+        }
+        LeaseTerm term = leaseTerms.newLeaseTerm(this, lastTerm, startDate);
         term.initialize();
         return term;
     }
 
-    public String disableNewTerm(
-            final @Named("Start date") LocalDate startDate) {
-        return getTerms().size() > 0 ? "Use either 'Verify' or 'Create Next Term' on last term" : null;
+    public LocalDate default0NewTerm() {
+        LeaseTerm last = null;
+        try {
+            last = getTerms().last();
+        } catch (NoSuchElementException e) {
+            return getStartDate();
+        }
+        if (last.getEndDate() != null) {
+            return last.getInterval().endDateExcluding();
+        }
+        return last.getStartDate().plusYears(1).withMonthOfYear(1).withDayOfMonth(1);
     }
-
-    // //////////////////////////////////////
-
-//    @Programmatic
-//    public LeaseTerm createNextTerm(final LeaseTerm currentTerm, final LocalDate startDate) {
-//        LeaseTerm term = leaseTerms.newLeaseTerm(this, currentTerm, startDate);
-//        return term;
-//    }
 
     // //////////////////////////////////////
 
@@ -412,7 +421,7 @@ public class LeaseItem
         verifyUntil(getClockService().now());
         return this;
     }
-    
+
     @Programmatic
     public void verifyUntil(LocalDate date) {
         for (LeaseTerm term : getTerms()) {
@@ -427,9 +436,9 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseItem calculate(
-            final @Named("Period start Date") LocalDate startDate, 
-            final @Named("Period end date") @Optional LocalDate endDate, 
-            final @Named("Due date") LocalDate dueDate, 
+            final @Named("Period start Date") LocalDate startDate,
+            final @Named("Period end date") @Optional LocalDate endDate,
+            final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
         for (LeaseTerm term : getTerms()) {
             term.calculate(startDate, endDate, dueDate, runType);
@@ -438,10 +447,10 @@ public class LeaseItem
     }
 
     // //////////////////////////////////////
-    
+
     BigDecimal valueForPeriod(
-            final InvoicingFrequency frequency, 
-            final LocalDate periodStartDate, 
+            final InvoicingFrequency frequency,
+            final LocalDate periodStartDate,
             final LocalDate dueDate) {
         BigDecimal total = new BigDecimal(0);
         for (LeaseTerm term : getTerms()) {

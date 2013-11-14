@@ -71,7 +71,7 @@ public class LeaseTest_newItem {
             }
         });
         
-        final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER);
+        final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
         assertThat(newItem, is(leaseItem));
         assertThat(leaseItem.getLease(), is(lease));
         

@@ -538,14 +538,11 @@ public class Api extends AbstractFactoryAndRepository {
         //
         LeaseItem item = lease.findItem(itemType, startDate, sequence);
         if (item == null) {
-            item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod));
+            item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod), startDate);
         }
-
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.APPROVED);
         item.setStatus(leaseItemStatus);
-        item.setStartDate(startDate);
         item.setEndDate(endDate);
-        item.setType(itemType);
         item.setSequence(sequence);
     }
 

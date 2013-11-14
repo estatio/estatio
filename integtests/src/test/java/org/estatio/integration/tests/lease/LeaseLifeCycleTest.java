@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -46,7 +47,6 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
@@ -62,7 +62,9 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
 
     private Leases leases;
     private Lease lease;
-    private LeaseItem leaseRentItem;
+    private LeaseItem rItem;
+    private LeaseItem sItem;
+    private LeaseItem tItem;
     private Invoices invoices;
     private Indices indices;
     private IndexValues indexValues;
@@ -73,20 +75,23 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         indices = service(Indices.class);
         invoices = service(Invoices.class);
         lease = leases.findLeaseByReference("OXF-MIRACL-005");
-        leaseRentItem = lease.findFirstItemOfType(LeaseItemType.RENT);
+        rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
+        sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
+        tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
         indexValues = service(IndexValues.class);
     }
 
     @Test
     public void step1_verify() throws Exception {
-        // first pass verify
+        // when
         lease.verifyUntil(new LocalDate(2015, 1, 1));
-        assertThat(leaseRentItem.getTerms().toString(), leaseRentItem.getTerms().size(), is(2));
-        // verify is idempotent
-        lease.verifyUntil(new LocalDate(2014, 1, 1));
-        assertThat(leaseRentItem.getTerms().toString(), leaseRentItem.getTerms().size(), is(2));
-        LeaseTermForIndexableRent last = (LeaseTermForIndexableRent) leaseRentItem.getTerms().last();
-        LeaseTermForIndexableRent first = (LeaseTermForIndexableRent) leaseRentItem.getTerms().first();
+        // then
+        assertThat(rItem.getTerms().size(), is(2));
+        assertThat(sItem.getTerms().size(), is(3));
+        assertThat(tItem.getTerms().size(), is(2));
+
+        LeaseTermForIndexableRent last = (LeaseTermForIndexableRent) rItem.getTerms().last();
+        LeaseTermForIndexableRent first = (LeaseTermForIndexableRent) rItem.getTerms().first();
         assertThat(last.getBaseValue(), is(new BigDecimal(150000).setScale(2)));
         assertThat(first.getStartDate(), is(new LocalDate(2013, 11, 7)));
         assertThat(last.getStartDate(), is(new LocalDate(2015, 1, 1)));
@@ -95,14 +100,16 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
 
     @Test
     public void step2_caluclate() throws Exception {
-        assertThat("Before calculation", leaseRentItem.getTerms().size(), is(2));
+        assertThat("Before calculation", rItem.getTerms().size(), is(2));
         lease.calculate(new LocalDate(2013, 11, 13), new LocalDate(2015, 3, 31), START_DATE, InvoiceRunType.NORMAL_RUN);
-        assertThat(leaseRentItem.getTerms().size(), is(2));
-        LeaseTerm last = leaseRentItem.getTerms().last();
-        LeaseTerm first = leaseRentItem.findTerm(START_DATE);
+        assertThat(rItem.getTerms().size(), is(2));
+        LeaseTerm last = rItem.getTerms().last();
+        LeaseTerm first = rItem.findTerm(START_DATE);
         assertThat(first.getEffectiveInterval().startDate(), is(START_DATE));
-        assertThat(totalInvoiced(first), is(new BigDecimal("172418.48")));
-        assertThat(totalInvoiced(last), is(new BigDecimal("37500.00")));
+        assertThat(totalInvoicedForTerm(first), is(new BigDecimal("172418.48")));
+        assertThat(totalInvoicedForTerm(last), is(new BigDecimal("37500.00")));
+        assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("209918.48")));
+        assertThat(totalInvoicedForItem(sItem), is(new BigDecimal(1853.26 + 13000 + 3250).setScale(2, RoundingMode.HALF_EVEN)));
     }
 
     @Test
@@ -121,20 +128,50 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         Index index = indices.findIndex("ISTAT-FOI");
         indexValues.newIndexValue(index, new LocalDate(2013, 11, 1), new BigDecimal(110));
         indexValues.newIndexValue(index, new LocalDate(2014, 12, 1), new BigDecimal(115));
-
         lease.verifyUntil(new LocalDate(2015, 3, 31));
-
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) leaseRentItem.findTerm(new LocalDate(2015, 1, 1));
-
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) rItem.findTerm(new LocalDate(2015, 1, 1));
         assertThat(term.getIndexationPercentage(), is(new BigDecimal(4.5)));
+        assertThat(term.getIndexedValue(), is(new BigDecimal("156750.00")));
 
     }
 
-    private BigDecimal totalInvoiced(LeaseTerm term) {
+    @Test
+    public void step5_normalInvoice() throws Exception {
+        lease.calculate(new LocalDate(2015, 4, 1), null, new LocalDate(2015, 4, 1), InvoiceRunType.NORMAL_RUN);
+        assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("249105.98")));
+    }
+
+    @Test
+    public void step6_retroInvoice() throws Exception {
+        lease.calculate(new LocalDate(2015, 4, 1), null, new LocalDate(2015, 4, 1), InvoiceRunType.RETRO_RUN);
+        // (156750 - 150000) / = 1687.5 added
+        assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("249105.98").add(new BigDecimal("1687.50"))));
+    }
+
+    // //////////////////////////////////////
+
+    private BigDecimal totalInvoicedForLease(Lease lease) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (LeaseItem item : lease.getItems()) {
+            total = total.add(totalInvoicedForItem(item));
+        }
+        return total;
+    }
+
+    private BigDecimal totalInvoicedForTerm(LeaseTerm term) {
         BigDecimal total = BigDecimal.ZERO;
 
         for (InvoiceItem item : term.getInvoiceItems()) {
             total = total.add(item.getNetAmount());
+        }
+        return total;
+    }
+
+    private BigDecimal totalInvoicedForItem(LeaseItem item) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (LeaseTerm term : item.getTerms()) {
+            total = total.add(totalInvoicedForTerm(term));
         }
         return total;
     }

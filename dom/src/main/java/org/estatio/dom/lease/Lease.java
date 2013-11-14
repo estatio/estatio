@@ -32,6 +32,8 @@ import com.google.common.collect.Iterables;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -233,14 +235,21 @@ public class Lease
         this.items = items;
     }
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public LeaseItem newItem(
             final LeaseItemType type,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
-            final PaymentMethod paymentMethod) {
+            final PaymentMethod paymentMethod,
+            final @Named("Start date") LocalDate startDate) {
         // TODO: there doesn't seem to be any disableXxx guard for this action
         LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod);
+        leaseItem.setStartDate(startDate);
         return leaseItem;
+    }
+
+    public LocalDate default4NewItem() {
+        return getStartDate();
     }
 
     @Hidden
@@ -604,7 +613,12 @@ public class Lease
 
         // items and terms
         for (LeaseItem item : getItems()) {
-            LeaseItem newItem = newLease.newItem(item.getType(), item.getCharge(), item.getInvoicingFrequency(), item.getPaymentMethod());
+            LeaseItem newItem = newLease.newItem(
+                    item.getType(), 
+                    item.getCharge(), 
+                    item.getInvoicingFrequency(), 
+                    item.getPaymentMethod(), 
+                    item.getStartDate());
             LeaseTerm lastTerm = null;
             for (LeaseTerm term : item.getTerms()) {
                 if (term.getInterval().contains(startDate)) {

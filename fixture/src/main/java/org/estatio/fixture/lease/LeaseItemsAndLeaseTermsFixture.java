@@ -40,7 +40,6 @@ import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
 
@@ -50,43 +49,51 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
     public void install() {
 
         Lease leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        createLeaseTermForRent(leaseTopModel, BigInteger.valueOf(1), leaseTopModel.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1), new LocalDate(2011, 1, 1), new LocalDate(2011, 4, 1), "ISTAT-FOI");
-        createLeaseTermForServiceCharge(leaseTopModel, leaseTopModel.getStartDate(), null, BigDecimal.valueOf(6000));
+        createLeaseTermForRent(
+                leaseTopModel,
+                leaseTopModel.getStartDate(),
+                null,
+                BigDecimal.valueOf(20000), new LocalDate(2010, 7, 1),
+                new LocalDate(2011, 1, 1),
+                new LocalDate(2011, 4, 1),
+                "ISTAT-FOI");
+        createLeaseTermForServiceCharge(leaseTopModel, leaseTopModel.getStartDate(), null, BigDecimal.valueOf(6000), BigDecimal.valueOf(6600));
         createLeaseTermForTurnoverRent(leaseTopModel, leaseTopModel.getStartDate().withDayOfYear(1).plusYears(1), null, "7");
 
         Lease leaseMediaX = leases.findLeaseByReference("OXF-MEDIAX-002");
-        createLeaseTermForRent(leaseMediaX, BigInteger.valueOf(1), leaseMediaX.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2008, 1, 1), new LocalDate(2009, 1, 1), new LocalDate(2009, 4, 1), "ISTAT-FOI");
-        createLeaseTermForServiceCharge(leaseMediaX, leaseMediaX.getStartDate(), null, BigDecimal.valueOf(6000));
+        createLeaseTermForRent(leaseMediaX, leaseMediaX.getStartDate(), null, BigDecimal.valueOf(20000), new LocalDate(2008, 1, 1), new LocalDate(2009, 1, 1), new LocalDate(2009, 4, 1), "ISTAT-FOI");
+        createLeaseTermForServiceCharge(leaseMediaX, leaseMediaX.getStartDate(), null, BigDecimal.valueOf(6000), BigDecimal.valueOf(6600));
         createLeaseTermForTurnoverRent(leaseMediaX, leaseMediaX.getStartDate(), null, "7");
 
         Lease leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        createLeaseTermForRent(leasePoison, BigInteger.valueOf(1), leasePoison.getStartDate(), null, BigDecimal.valueOf(87300), null, null, null, "ISTAT-FOI");
-        createLeaseTermForRent(leasePoison, BigInteger.valueOf(2), leasePoison.getStartDate().plusYears(1), null, BigDecimal.valueOf(87300), new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), "ISTAT-FOI");
-        createLeaseTermForServiceCharge(leasePoison, leasePoison.getStartDate(), null, BigDecimal.valueOf(12400));
+        createLeaseTermForRent(leasePoison, leasePoison.getStartDate(), null, BigDecimal.valueOf(87300), null, null, null, "ISTAT-FOI");
+        createLeaseTermForRent(leasePoison, leasePoison.getStartDate().plusYears(1), null, BigDecimal.valueOf(87300), new LocalDate(2011, 1, 1), new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), "ISTAT-FOI");
+        createLeaseTermForServiceCharge(leasePoison, leasePoison.getStartDate(), null, BigDecimal.valueOf(12400), BigDecimal.valueOf(13640));
         createLeaseTermForTurnoverRent(leasePoison, leasePoison.getStartDate(), null, "7");
 
         Lease leaseM = leases.findLeaseByReference("OXF-MIRACL-005");
-        createLeaseTermForRent(leaseM, BigInteger.valueOf(1), leaseM.getStartDate(), null, BigDecimal.valueOf(150000), null, null, null, "ISTAT-FOI");
-        createLeaseTermForRent(leaseM, BigInteger.valueOf(2), new LocalDate(2015, 1, 1), null, null, new LocalDate(2013, 11, 1), new LocalDate(2014, 12, 1), null, "ISTAT-FOI");
+        createLeaseTermForRent(leaseM, leaseM.getStartDate(), null, BigDecimal.valueOf(150000), null, null, null, "ISTAT-FOI");
+        createLeaseTermForRent(leaseM, new LocalDate(2015, 1, 1), null, null, new LocalDate(2013, 11, 1), new LocalDate(2014, 12, 1), null, "ISTAT-FOI");
+        createLeaseTermForServiceCharge(leaseM, leaseM.getStartDate(), null, BigDecimal.valueOf(12400), null);
+        createLeaseTermForServiceCharge(leaseM, new LocalDate(2014, 1, 1), null, BigDecimal.valueOf(13000), null);
+        createLeaseTermForTurnoverRent(leaseM, leaseM.getStartDate(), null, "7");
 
     }
 
-    private LeaseTerm createLeaseTermForRent(Lease lease, BigInteger sequence, LocalDate startDate, LocalDate endDate, BigDecimal baseValue, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate, LocalDate effectiveDate, String indexReference) {
+    private LeaseTerm createLeaseTermForRent(
+            final Lease lease,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal baseValue,
+            final LocalDate baseIndexStartDate,
+            final LocalDate nextIndexStartDate,
+            final LocalDate effectiveDate,
+            final String indexReference) {
+
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE);
 
-        return createLeaseTermForRent(leaseItem, sequence, startDate, endDate, baseValue, baseIndexStartDate, nextIndexStartDate, effectiveDate, indexReference);
-    }
-
-    private LeaseTerm createLeaseTermForRent(LeaseItem leaseItem, BigInteger sequence, LocalDate startDate, LocalDate endDate, BigDecimal baseValue, LocalDate baseIndexStartDate, LocalDate nextIndexStartDate, LocalDate effectiveDate, String indexReference) {
         final Index index = indices.findIndex(indexReference);
-        LeaseTermForIndexableRent leaseTerm;
-        if (sequence.equals(BigInteger.ONE)) {
-            leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm(startDate);
-        } else {
-            LeaseTerm currentTerm = leaseItem.findTermWithSequence(sequence.subtract(BigInteger.ONE));
-            leaseTerm = (LeaseTermForIndexableRent) currentTerm.createNext(startDate);
-        }
-        leaseTerm.setStatus(LeaseTermStatus.NEW); // unlocked, so can calculate
+        LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm(startDate);
         leaseTerm.setEndDate(endDate);
         leaseTerm.setBaseValue(baseValue);
         leaseTerm.setBaseIndexStartDate(baseIndexStartDate);
@@ -94,27 +101,33 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         leaseTerm.setEffectiveDate(effectiveDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setIndex(index);
-        leaseTerm.setSequence(sequence);
         return leaseTerm;
     }
 
-    public LeaseTerm createLeaseTermForServiceCharge(Lease lease, LocalDate startDate, LocalDate endDate, BigDecimal budgetedValue) {
+    // //////////////////////////////////////
+
+    public LeaseTerm createLeaseTermForServiceCharge(
+            final Lease lease,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigDecimal budgetedValue, 
+            final BigDecimal auditedValue) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "SERVICE_CHARGE", LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-
-        return createLeaseTermForServiceCharge(leaseItem, startDate, endDate, budgetedValue);
-    }
-
-    private LeaseTerm createLeaseTermForServiceCharge(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal budgetedValue) {
-        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseTerms.newLeaseTerm(leaseItem, null, startDate);
-        leaseTerm.initialize();
-        leaseTerm.setEndDate(endDate);
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(startDate);
+        leaseTerm.modifyEndDate(endDate);
         leaseTerm.setBudgetedValue(budgetedValue);
-        leaseTerm.setAuditedValue(budgetedValue.multiply(BigDecimal.valueOf(1.1)));
+        leaseTerm.setAuditedValue(auditedValue);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         return leaseTerm;
     }
 
-    public LeaseTerm createLeaseTermForTurnoverRent(Lease lease, LocalDate startDate, LocalDate endDate, String turnoverRentRule) {
+    // //////////////////////////////////////
+
+    public LeaseTerm createLeaseTermForTurnoverRent(
+            final Lease lease,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final String turnoverRentRule) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "TURNOVER_RENT", LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS);
         LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseTerms.newLeaseTerm(leaseItem, null, startDate);
         leaseTerm.initialize();
@@ -124,18 +137,27 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         return leaseTerm;
     }
 
-    private LeaseItem findOrCreateLeaseItem(Lease lease, final String chargeReference, LeaseItemType leaseItemType, final InvoicingFrequency invoicingFrequency) {
+    // //////////////////////////////////////
+
+    private LeaseItem findOrCreateLeaseItem(
+            final Lease lease,
+            final String chargeReference,
+            final LeaseItemType leaseItemType,
+            final InvoicingFrequency invoicingFrequency) {
         final Charge charge = charges.findCharge(chargeReference);
         return findOrCreateLeaseItem(lease, charge, leaseItemType, invoicingFrequency);
     }
 
-    public LeaseItem findOrCreateLeaseItem(Lease lease, final Charge charge, LeaseItemType leaseItemType, final InvoicingFrequency invoicingFrequency) {
+    public LeaseItem findOrCreateLeaseItem(
+            final Lease lease,
+            final Charge charge,
+            final LeaseItemType leaseItemType,
+            final InvoicingFrequency invoicingFrequency) {
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
-            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT);
+            li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
             li.setType(leaseItemType);
             li.setStatus(LeaseItemStatus.APPROVED);
-            li.setStartDate(lease.getStartDate());
             li.setEndDate(lease.getEndDate());
             li.setSequence(BigInteger.valueOf(1));
         }
@@ -143,7 +165,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
     }
 
     // //////////////////////////////////////
-    
+
     private Indices indices;
 
     public void injectIndices(final Indices indices) {
