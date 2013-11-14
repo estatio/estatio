@@ -20,14 +20,39 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 
+import org.joda.time.LocalDate;
+
 public interface Indexable {
-    
+
     public void setBaseIndexValue(BigDecimal baseIndexValue);
     
     public void setNextIndexValue(BigDecimal nextIndexValue);
-
+    
     public void setIndexationPercentage(BigDecimal indexationPercentage);
     
     public void setIndexedValue(BigDecimal indexedValue);
-    
+
+    public Index getIndex();
+
+    public LocalDate getBaseIndexStartDate();
+
+    public LocalDate getNextIndexStartDate();
+
+    public BigDecimal getLevellingPercentage();
+
+    public BigDecimal getBaseValue();
+
+    public void setRebaseFactor(BigDecimal rebaseFactor);
+
+    public BigDecimal getBaseIndexValue();
+
+    public BigDecimal getNextIndexValue();
+
+    public BigDecimal getRebaseFactor();
+
+    void setIndex(Index index);
+
+    void setBaseIndexStartDate(LocalDate baseIndexStartDate);
+
+    void setNextIndexStartDate(LocalDate nextIndexStartDate);    
 }

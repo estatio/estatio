@@ -26,12 +26,13 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
-import org.estatio.dom.index.IndexationCalculator;
+import org.estatio.dom.index.IndexationService;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.utils.MathUtils;
 
@@ -46,10 +47,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(name = "indexId", allowsNull = "true")
     @Mandatory
+    @Override
     public Index getIndex() {
         return index;
     }
 
+    @Override
     public void setIndex(final Index index) {
         this.index = index;
     }
@@ -65,10 +68,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Mandatory
+    @Override
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
     }
 
+    @Override
     public void setBaseIndexStartDate(final LocalDate baseIndexStartDate) {
         this.baseIndexStartDate = baseIndexStartDate;
     }
@@ -79,10 +84,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Override
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
     }
 
+    @Override
     public void setBaseIndexValue(final BigDecimal baseIndexValue) {
         this.baseIndexValue = baseIndexValue;
     }
@@ -94,10 +101,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Mandatory
+    @Override
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
     }
 
+    @Override
     public void setNextIndexStartDate(final LocalDate nextIndexStartDate) {
         this.nextIndexStartDate = nextIndexStartDate;
     }
@@ -108,12 +117,30 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Override
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
     }
 
+    @Override
     public void setNextIndexValue(final BigDecimal nextIndexValue) {
         this.nextIndexValue = nextIndexValue;
+    }
+
+    // //////////////////////////////////////
+
+    private BigDecimal rebaseFactor;
+
+    @NotPersisted
+    @Override
+    public BigDecimal getRebaseFactor() {
+        return rebaseFactor;
+    }
+
+    @Override
+    public void setRebaseFactor(BigDecimal rebaseFactor) {
+        this.rebaseFactor = rebaseFactor;
+
     }
 
     // ///////////////////////////////////////////
@@ -140,6 +167,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         return indexationPercentage;
     }
 
+    @Override
     public void setIndexationPercentage(final BigDecimal indexationPercentage) {
         this.indexationPercentage = indexationPercentage;
     }
@@ -150,6 +178,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 1, allowsNull = "true")
     @Optional
+    @Override
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
     }
@@ -158,30 +187,13 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         this.levellingPercentage = levellingPercentage;
     }
 
-    // //////////////////////////////////////
-    
-    
-    
-    // ///////////////////////////////////////////
-
-    private BigDecimal levellingValue;
-
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    public BigDecimal getLevellingValue() {
-        return levellingValue;
-    }
-
-    public void setLevellingValue(final BigDecimal levellingValue) {
-        this.levellingValue = levellingValue;
-    }
-
     // ///////////////////////////////////////////
 
     private BigDecimal baseValue;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Override
     public BigDecimal getBaseValue() {
         return baseValue;
     }
@@ -200,6 +212,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         return indexedValue;
     }
 
+    @Override
     public void setIndexedValue(final BigDecimal indexedValue) {
         this.indexedValue = indexedValue;
     }
@@ -259,16 +272,13 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
         if (previousTerm != null) {
             BigDecimal newBaseValue = MathUtils.firstNonZero(
-                    previousTerm.getTrialValue(),
                     previousTerm.getIndexedValue(),
                     previousTerm.getBaseValue());
             if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
                 setBaseValue(newBaseValue);
             }
         }
-        final IndexationCalculator calculator = new IndexationCalculator(
-                getIndex(), getBaseIndexStartDate(), getNextIndexStartDate(), getBaseValue());
-        calculator.indexate(this);
+        indexationService.indexate(this);
 
     }
 
@@ -286,7 +296,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         t.setEffectiveDate(getEffectiveDate());
         t.setIndexationPercentage(getIndexationPercentage());
         t.setLevellingPercentage(getLevellingPercentage());
-        t.setLevellingValue(getLevellingValue());
         t.setBaseValue(getBaseValue());
         t.setIndexedValue(getIndexedValue());
         t.setSettledValue(getSettledValue());
@@ -317,6 +326,12 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     public final void injectIndices(final Indices indexes) {
         this.indices = indexes;
+    }
+
+    private IndexationService indexationService;
+
+    public final void injectIndexationService(IndexationService indexationService) {
+        this.indexationService = indexationService;
     }
 
 }

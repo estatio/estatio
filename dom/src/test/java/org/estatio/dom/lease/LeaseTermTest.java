@@ -67,7 +67,7 @@ public class LeaseTermTest {
             {
                 allowing(mockClockService).now();
                 will(returnValue(now));
-                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)));
+                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)), with(any(LocalDate.class)));
                 will(returnLeaseTerm());
             }
         });
@@ -91,6 +91,7 @@ public class LeaseTermTest {
         term.setStartDate(new LocalDate(2012, 1, 1));
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.injectClockService(mockClockService);
+        term.injectLeaseTerms(mockLeaseTerms);
         term.initialize();
     }
 
@@ -100,7 +101,7 @@ public class LeaseTermTest {
         item.getTerms().add(anotherTerm);
         anotherTerm.setLeaseItem(item);
         
-        LeaseTermForTesting next = (LeaseTermForTesting) this.term.createNext(new LocalDate(2013, 1, 1));
+        LeaseTermForTesting next = (LeaseTermForTesting) term.createNext(new LocalDate(2013, 1, 1));
         Assert.assertThat(this.term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
         Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
         Assert.assertNull(next.getEndDate());
@@ -113,21 +114,6 @@ public class LeaseTermTest {
         nextTerm.modifyStartDate(new LocalDate(2013, 1, 1));
         // term.update();
         assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
-    }
-
-    @Test
-    public void verify_ok() {
-        LeaseTerm newTerm = new LeaseTermForTesting();
-        newTerm.injectClockService(mockClockService);
-        
-        item.getTerms().add(newTerm);
-        newTerm.setLeaseItem(item);
-        
-        newTerm.setStartDate(new LocalDate(2012, 1, 1));
-        newTerm.setFrequency(LeaseTermFrequency.YEARLY);
-        newTerm.initialize();
-        newTerm.verify();
-        assertThat(newTerm.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
     }
 
     @Test
@@ -158,8 +144,8 @@ public class LeaseTermTest {
 
     @Test
     public void testEffectiveInterval() throws Exception {
-        term.verify();
-        assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 12, 31)));
+        term.update();
+        assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2013, 6, 30)));
         lease.setTerminationDate(new LocalDate(2012, 3, 31));
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 3, 31)));
     }

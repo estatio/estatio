@@ -46,6 +46,7 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
         createOrganisation("MEDIAX;Mediax Electronics;NL31ABNA0580744436;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com");
         createOrganisation("POISON;Poison Perfumeries;NL31ABNA0580744437;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com");
         createOrganisation("PRET;Pret-a-Manger;NL31ABNA0580744438;;;;;;;;;");
+        createOrganisation("MIRACLE;Miracle Shoes;NL31ABNA0580744439;;;;;;;;;");
         createPerson("JDOE", "J", "John", "Doe");
         createPerson("LTORVALDS", "L", "Linus", "Torvalds");
     }

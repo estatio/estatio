@@ -24,6 +24,7 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.SortedSet;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -44,40 +45,45 @@ public class LeaseWithServiceChargeTest_verify_extra2 extends EstatioIntegration
     public static void setupTransactionalData() {
         scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
-    
+
     private Leases leases;
 
     private Lease leasePoison;
     private LeaseItem leasePoisonRentItem;
     private LeaseItem leasePoisonServiceChargeItem;
-    
+
     @Before
     public void setup() {
         leases = service(Leases.class);
-        
+
         leasePoison = leases.findLeaseByReference("OXF-POISON-003");
         leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
         leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2011, 1, 1), BigInteger.valueOf(1));
     }
 
-    
     @Test
     public void happyCase() throws Exception {
-        // REVIEW: what is the variation being tested here (compared to similar tests with leaseTopModel) ?
+        // REVIEW: what is the variation being tested here (compared to similar
+        // tests with leaseTopModel) ?
 
         // when
-        leasePoison.verify();
+        leasePoison.verifyUntil(new LocalDate(2014, 1, 1));
 
         // then
-        final LeaseTerm leasePoisonServiceChargeTerm = leasePoisonServiceChargeItem.findTerm(new LocalDate(2011, 1, 1));
-        assertNotNull(leasePoisonServiceChargeTerm);
+        final LeaseTerm leaseTerm1 = leasePoisonServiceChargeItem.findTerm(new LocalDate(2011, 1, 1));
+        assertNotNull(leaseTerm1);
 
-        final LeaseTerm leasePoisonServiceChargeTermN = leasePoisonServiceChargeItem.getTerms().last();
-        assertThat(leasePoisonServiceChargeTermN.getTrialValue(), is(BigDecimal.valueOf(13640).setScale(2)));
-        
+        final LeaseTerm leaseTerm2 = leasePoisonServiceChargeItem.getTerms().last();
+        assertThat(leaseTerm2.getTrialValue(), is(BigDecimal.valueOf(13640).setScale(2)));
+
         // and then
-        assertThat(leasePoisonRentItem.getTerms().size(), is(4));
+        SortedSet<LeaseTerm> terms = leasePoisonRentItem.getTerms();
+        assertThat(
+                leasePoisonServiceChargeItem.getEffectiveInterval().toString()
+                .concat(terms.toString()), 
+                terms.size(), is(4));
         assertNotNull(leasePoisonRentItem.findTerm(new LocalDate(2011, 1, 1)));
+        
     }
 
 }

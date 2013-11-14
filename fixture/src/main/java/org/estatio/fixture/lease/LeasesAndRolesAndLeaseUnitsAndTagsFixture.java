@@ -46,6 +46,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
         createLease("OXF-MEDIAX-002", "Mediax Lease", "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true);
         createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
         createLease("OXF-PRET-004", "Pret lease", "OXF-004", "Pret", "FASHION", "ALL", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false);
+        createLease("OXF-MIRACL-005", "Miracle lease", "OXF-005", "Miracle", "FASHION", "ALL", "ACME", "MIRACLE", new LocalDate(2013, 11, 7), new LocalDate(2023, 11, 6), false, true);
     }
 
     public Lease createLease(
@@ -54,9 +55,12 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
             String brand,
             String sector,
             String activity,
-            String landlordReference, String tenantReference,
-            LocalDate startDate, LocalDate endDate,
-            boolean createManagerRole, boolean createLeaseUnitAndTags) {
+            String landlordReference, 
+            String tenantReference,
+            LocalDate startDate, 
+            LocalDate endDate,
+            boolean createManagerRole, 
+            boolean createLeaseUnitAndTags) {
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);

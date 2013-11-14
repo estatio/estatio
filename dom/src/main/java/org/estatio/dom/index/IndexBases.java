@@ -27,6 +27,8 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -34,7 +36,7 @@ import org.estatio.dom.EstatioDomainService;
 /**
  * Domain service acting as a repository of {@link IndexBase}s.
  */
-public class IndexBases 
+public class IndexBases
         extends EstatioDomainService<IndexBase> {
 
     public IndexBases() {
@@ -44,11 +46,12 @@ public class IndexBases
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Indices", sequence = "2")
+    @MemberOrder(name = "Indices", sequence = "2")
+    @NotInServiceMenu
     public IndexBase newIndexBase(
-            final @Named("Index") Index index, 
-            final @Named("Previous Base") IndexBase previousBase, 
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Index") Index index,
+            final @Named("Previous Base") IndexBase previousBase,
+            final @Named("Start Date") LocalDate startDate,
             final @Named("Factor") BigDecimal factor) {
         IndexBase indexBase = newTransientInstance();
         indexBase.modifyPrevious(previousBase);
@@ -61,12 +64,18 @@ public class IndexBases
 
     // //////////////////////////////////////
 
+    @Programmatic
+    public IndexBase findByIndexAndDate(final Index index, LocalDate date) {
+        return firstMatch("findByIndexAndDate", "index", index, "date", date);
+    }
+
+    // //////////////////////////////////////
+
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Indices", sequence = "7")
+    @MemberOrder(name = "Indices", sequence = "7")
     public List<IndexBase> allIndexBases() {
         return allInstances();
     }
-
 
 }

@@ -29,32 +29,31 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
 
 public class GenerateTopModelInvoice implements Callable<Object> {
-    
+
     @Override
     public Object call() throws Exception {
         final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        lease.verify();
+        lease.verifyUntil(new LocalDate(2014, 1, 1));
 
         final SortedSet<LeaseItem> items = lease.getItems();
         for (LeaseItem leaseItem : items) {
             final SortedSet<LeaseTerm> terms = leaseItem.getTerms();
             for (LeaseTerm leaseTerm : terms) {
-                if(leaseTerm.getStatus().isNew()) {
+                if (leaseTerm.getStatus().isNew()) {
                     leaseTerm.approve();
                 }
             }
 
             for (LeaseTerm leaseTerm : terms) {
-                if(leaseTerm.getStartDate().equals(new LocalDate(2012,7,15))) {
-                    leaseTerm.calculate(new LocalDate(2013,4,1), new LocalDate(2013,4,1));
+                if (leaseTerm.getStartDate().equals(new LocalDate(2012, 7, 15))) {
+                    leaseTerm.calculate(new LocalDate(2013, 4, 1), new LocalDate(2013, 4, 1));
                 }
             }
         }
-        
+
         return lease;
     }
-    
-    
+
     // //////////////////////////////////////
 
     private Leases leases;

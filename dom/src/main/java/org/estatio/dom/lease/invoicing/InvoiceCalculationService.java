@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -44,7 +45,7 @@ public class InvoiceCalculationService {
 
     /**
      * class to store the result a calculation
-     *
+     * 
      */
     static class CalculationResult {
         BigDecimal value;
@@ -68,11 +69,25 @@ public class InvoiceCalculationService {
         }
     }
 
+    static class CalculationResultsUtil {
+        public static BigDecimal sum(List<CalculationResult> list) {
+            BigDecimal sum = BigDecimal.ZERO;
+            if (list == null || list.size() < 1) {
+                return sum;
+            }
+            for (CalculationResult result : list) {
+                sum = sum.add(result.getCalculatedValue());
+            }
+            return sum;
+        }
+    }
+
     /**
      * Calculates term and creates invoice
      * 
      * @param leaseTerm
      * @param periodStartDate
+     * @param periodEndDate
      * @param dueDate
      * @param invoicingFrequency
      * @param runType
@@ -81,17 +96,21 @@ public class InvoiceCalculationService {
     public void calculateAndInvoice(
             final LeaseTerm leaseTerm,
             final LocalDate periodStartDate,
+            final LocalDate periodEndDate,
             final LocalDate dueDate,
-            final InvoicingFrequency invoicingFrequency,
+            final InvoicingFrequency invoicingFrequency, 
             final InvoiceRunType runType) {
+        final List<CalculationResult> results;
+        LocalDate start = periodStartDate;
+        LocalDate end = periodEndDate;
         if (runType.equals(InvoiceRunType.RETRO_RUN)) {
-            final List<CalculationResult> results = calculateFullLengthOfTerm(leaseTerm, dueDate);
-            createInvoiceItems(leaseTerm, dueDate, results);
-        } else {
-            final CalculationResult result = 
-                    calculateForInvoiceFrequency(leaseTerm, periodStartDate, dueDate, invoicingFrequency);
-            createAdjustedInvoiceItem(leaseTerm, dueDate, result, invoicingFrequency);
+            start = leaseTerm.getStartDate();
+            if (leaseTerm.getEndDate() == null || leaseTerm.getEndDate().isAfter(dueDate)) {
+                end = dueDate;
+            }
         }
+        results = calculateWithFrequency(leaseTerm, start, end, dueDate, invoicingFrequency);
+        createAdjustedInvoiceItem(leaseTerm, dueDate, results, invoicingFrequency);
     }
 
     /**
@@ -109,14 +128,10 @@ public class InvoiceCalculationService {
             final LocalDate periodStartDate,
             final LocalDate dueDate,
             final InvoicingFrequency invoicingFrequency) {
-        BigDecimal value = BigDecimal.ZERO;
-        final List<CalculationResult> results = 
+        final List<CalculationResult> results =
                 calculateAllPeriodsWithGivenInvoicingFrequency(
                         leaseTerm, periodStartDate, dueDate, invoicingFrequency);
-        for (CalculationResult result : results) {
-            value = value.add(result.getCalculatedValue());
-        }
-        return value;
+        return CalculationResultsUtil.sum(results);
     }
 
     /**
@@ -127,54 +142,69 @@ public class InvoiceCalculationService {
      * @param dueDate
      * @return
      */
+    @Deprecated
     CalculationResult calculateLeaseTerm(
             final LeaseTerm leaseTerm,
             final LocalDate periodStartDate,
             final LocalDate dueDate) {
-        return calculateForInvoiceFrequency(
-                leaseTerm, periodStartDate, dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
+        return calculateWithFrequency(
+                leaseTerm,
+                periodStartDate,
+                null,
+                dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency()).get(0);
     }
 
     /**
-     * Calculates a term with a different invoicing frequency
+     * Calculates a term with a given invoicing frequency
      * 
      * @param leaseTerm
      * @param periodStartDate
-     * @param dueDate
+     * @param periodEndDate
+     *            TODO
+     * @param valueDate
      * @param invoicingFrequency
      * @return
      */
-    CalculationResult calculateForInvoiceFrequency(
+    List<CalculationResult> calculateWithFrequency(
             final LeaseTerm leaseTerm,
             final LocalDate periodStartDate,
-            final LocalDate dueDate,
-            final InvoicingFrequency invoicingFrequency) {
-        final LocalDateInterval frequencyInterval = 
-                new LocalDateInterval(CalendarUtils.intervalMatching(periodStartDate, invoicingFrequency.getRrule()));
-        if (frequencyInterval.startDate() != null) {
+            final LocalDate periodEndDate,
+            final LocalDate valueDate, final InvoicingFrequency invoicingFrequency) {
+        String rrule = invoicingFrequency.getRrule();
+
+        List<CalculationResult> results = new ArrayList<CalculationResult>();
+
+        List<Interval> intervals = CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, rrule);
+
+        for (Interval interval : intervals)
+        {
             final LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
-            final LocalDateInterval overlap = frequencyInterval.overlap(termInterval);
+            final LocalDateInterval calculationInterval = new LocalDateInterval(interval);
+            final LocalDateInterval overlap = calculationInterval.overlap(termInterval);
             if (overlap != null) {
                 final BigDecimal overlapDays = new BigDecimal(overlap.days());
-                final BigDecimal frequencyDays = new BigDecimal(frequencyInterval.days());
+                final BigDecimal frequencyDays = new BigDecimal(calculationInterval.days());
                 final BigDecimal rangeFactor = overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
-                final BigDecimal freqFactor = 
-                        invoicingFrequency.getNumerator().divide(
-                                invoicingFrequency.getDenominator(), MathContext.DECIMAL64);
-                final BigDecimal currentValue = leaseTerm.valueForDueDate(dueDate);
-                if (currentValue != null && freqFactor != null && rangeFactor != null) {
+                final BigDecimal annualFactor = invoicingFrequency.annualMultiplier();
+                final BigDecimal currentValue = leaseTerm.valueForDate(valueDate);
+                if (currentValue != null && annualFactor != null && rangeFactor != null) {
                     final BigDecimal value =
-                            currentValue.multiply(freqFactor)
+                            currentValue.multiply(annualFactor)
                                     .multiply(rangeFactor)
                                     .setScale(2, RoundingMode.HALF_UP);
-                    return new CalculationResult(frequencyInterval, value);
+                    results.add(new CalculationResult(calculationInterval, value));
                 }
             }
-            return new CalculationResult(frequencyInterval, BigDecimal.ZERO.setScale(2));
         }
-        return null;
+        return results;
     }
 
+    @NotContributed
+    public List<CalculationResult> calculateFullLengthOfTerm(LeaseTerm leaseTerm, LocalDate dueDate) {
+        return calculateWithFrequency(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(), dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
+    }
+    
+    
     /**
      * calculates a term with an invoicing frequency that can be different then
      * the invoicing frequency of the lease item of the term
@@ -190,45 +220,19 @@ public class InvoiceCalculationService {
             final LocalDate periodStartDate,
             final LocalDate dueDate,
             final InvoicingFrequency invoicingFrequency) {
-        List<CalculationResult> results = new ArrayList<CalculationResult>();
-        LocalDate intervalStartDate = periodStartDate;
-        LocalDateInterval invoicingFrequencyInterval = new LocalDateInterval(
-                CalendarUtils.intervalMatching(intervalStartDate, invoicingFrequency.getRrule()));
-        do {
-            final CalculationResult result = 
-                    calculateForInvoiceFrequency(leaseTerm, intervalStartDate, dueDate, 
-                            leaseTerm.getLeaseItem().getInvoicingFrequency());
-            results.add(result);
-            intervalStartDate = result.getFrequencyInterval().endDateExcluding();
-        } while (invoicingFrequencyInterval.endDateExcluding() != null &&
-                invoicingFrequencyInterval.contains(intervalStartDate));
+        LocalDateInterval interval = new LocalDateInterval(
+                CalendarUtils.intervalMatching(periodStartDate, invoicingFrequency.getRrule()));
+        final List<CalculationResult> results =
+                calculateWithFrequency(
+                        leaseTerm,
+                        interval.startDate(),
+                        interval.endDate(),
+                        dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
         return results;
     }
 
-    /**
-     * Calculates all results for the total length of the term
-     * 
-     * @param leaseTerm
-     * @param dueDate
-     * @return
-     */
-    List<CalculationResult> calculateFullLengthOfTerm(final LeaseTerm leaseTerm, final LocalDate dueDate) {
-        List<CalculationResult> results = new ArrayList<CalculationResult>();
-        CalculationResult result;
-        LocalDateInterval frequencyInterval = new LocalDateInterval(CalendarUtils.intervalContaining(
-                leaseTerm.getStartDate(),
-                leaseTerm.getLeaseItem().getInvoicingFrequency().getRrule()));
-        if (frequencyInterval != null) {
-            LocalDate intervalStartDate = frequencyInterval.startDate();
-            do {
-                result = calculateLeaseTerm(leaseTerm, intervalStartDate, dueDate);
-                results.add(result);
-                intervalStartDate = result.getFrequencyInterval().endDateExcluding();
-            } while (intervalStartDate.compareTo(dueDate) < 0);
-
-        }
-        return results;
-    }
+    // //////////////////////////////////////
+    // Creation of invoice items
 
     /**
      * Creates invoice items for a list of calculation results
@@ -238,15 +242,15 @@ public class InvoiceCalculationService {
      * @param results
      */
     void createInvoiceItems(
-            final LeaseTerm leaseTerm, final LocalDate dueDate,
+            final LeaseTerm leaseTerm,
+            final LocalDate dueDate,
             final List<CalculationResult> results) {
-        for (CalculationResult result : results) {
-            createAdjustedInvoiceItem(leaseTerm, dueDate, result, leaseTerm.getLeaseItem().getInvoicingFrequency());
-        }
+        createAdjustedInvoiceItem(leaseTerm, dueDate, results, leaseTerm.getLeaseItem().getInvoicingFrequency());
     }
 
     /**
-     * Calculates an invoice item
+     * Calculates an invoice item with the difference between the already
+     * invoiced and calculated value.
      * 
      * @param leaseTerm
      * @param dueDate
@@ -256,29 +260,30 @@ public class InvoiceCalculationService {
     void createAdjustedInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDate dueDate,
-            final CalculationResult calculationResult,
+            final List<CalculationResult> results,
             final InvoicingFrequency invoicingFrequency) {
-        if (calculationResult == null) {
-            return;
-        }
         final LocalDate epochDate = estatioSettingsService.fetchEpochDate();
 
-        final LocalDate startDate = calculationResult.frequencyInterval.startDate();
-        BigDecimal invoicedValue;
-        if (epochDate != null && startDate.compareTo(epochDate) < 0) {
-            CalculationResult mockResult = calculateForInvoiceFrequency(
-                    leaseTerm,
-                    startDate,
-                    startDate,
-                    invoicingFrequency);
-            invoicedValue = mockResult.getCalculatedValue();
-        } else {
-            invoicedValue = leaseTerm.invoicedValueFor(startDate);
+        for (CalculationResult result : results) {
+            final LocalDate startDate = result.frequencyInterval.startDate();
+            BigDecimal invoicedValue;
+            if (epochDate != null && startDate.compareTo(epochDate) < 0) {
+                List<CalculationResult> mockResult = calculateWithFrequency(
+                        leaseTerm,
+                        startDate,
+                        null,
+                        startDate,
+                        invoicingFrequency);
+                invoicedValue = CalculationResultsUtil.sum(mockResult);
+            } else {
+                invoicedValue = leaseTerm.invoicedValueFor(startDate);
+            }
+            BigDecimal newValue = result.value.subtract(invoicedValue);
+            if (newValue.compareTo(BigDecimal.ZERO) != 0) {
+                createInvoiceItem(leaseTerm, dueDate, result, newValue);
+            }
         }
-        BigDecimal newValue = calculationResult.value.subtract(invoicedValue);
-        if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-            createInvoiceItem(leaseTerm, dueDate, calculationResult, newValue);
-        }
+
     }
 
     /**
@@ -322,5 +327,6 @@ public class InvoiceCalculationService {
     public void setEstatioSettings(final EstatioSettingsService estatioSettings) {
         this.estatioSettingsService = estatioSettings;
     }
+
 
 }

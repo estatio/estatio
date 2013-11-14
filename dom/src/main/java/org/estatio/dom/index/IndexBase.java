@@ -31,6 +31,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.Chained;
@@ -51,6 +53,15 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByIndexAndDate", language = "JDOQL",
+            value = "SELECT "+
+                    "FROM org.estatio.dom.index.IndexBase "+
+                    "WHERE index == :index " +
+                    "&& startDate <= :date " +
+                    "ORDER BY startDate DESC ")
+})
 @Immutable
 public class IndexBase 
         extends EstatioMutableObject<IndexBase> 
@@ -179,6 +190,7 @@ public class IndexBase
     @javax.jdo.annotations.Persistent(mappedBy = "indexBase")
     private SortedSet<IndexValue> values = new TreeSet<IndexValue>();
 
+    @Render(Type.EAGERLY)
     public SortedSet<IndexValue> getValues() {
         return values;
     }

@@ -637,7 +637,6 @@ public class Api extends AbstractFactoryAndRepository {
             term.setNextIndexStartDate(nextIndexStartDate);
             term.setNextIndexValue(nextIndexValue);
             term.setIndexationPercentage(indexationPercentage);
-            term.setLevellingValue(levellingValue);
             term.setLevellingPercentage(levellingPercentage);
         }
     }

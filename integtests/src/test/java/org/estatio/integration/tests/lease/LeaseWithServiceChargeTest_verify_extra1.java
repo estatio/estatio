@@ -44,31 +44,32 @@ public class LeaseWithServiceChargeTest_verify_extra1 extends EstatioIntegration
     public static void setupTransactionalData() {
         scenarioExecution().install(new EstatioTransactionalObjectsFixture());
     }
-    
+
     private Leases leases;
 
     private Lease leaseMediax;
-    
+
     @Before
     public void setup() {
         leases = service(Leases.class);
-        
+
         leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
     }
 
     @Test
     public void happyCase() throws Exception {
-        // REVIEW: what is the variation being tested here (compared to similar tests with leaseTopModel) ?
+        // REVIEW: what is the variation being tested here (compared to similar
+        // tests with leaseTopModel) ?
 
         // when
-        leaseMediax.verify();
+        leaseMediax.verifyUntil(new LocalDate(2014, 1, 1));
 
         // then
         LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2008, 1, 1), BigInteger.valueOf(1));
-        
+
         final LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(new LocalDate(2008, 1, 1));
         assertNotNull(leaseMediaXServiceChargeTerm);
-        
+
         final LeaseTerm leaseMediaXServiceChargeTermN = leaseMediaXServiceChargeItem.getTerms().last();
         assertThat(leaseMediaXServiceChargeTermN.getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
     }

@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hamcrest.core.Is;
 import org.joda.time.Interval;
@@ -58,6 +59,26 @@ public class CalendarUtilsTest_interval {
     @Test
     public void zaraIntervalTest2() throws Exception {
         assertEquals(CalendarUtils.currentInterval(new LocalDate(2012, 3, 1), "RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTH=2,5,8,11", new LocalDate(2010, 1, 1)), new Interval(new LocalDate(2012, 2, 1).toInterval().getStartMillis(), new LocalDate(2012, 5, 1).toInterval().getStartMillis()));
+    }
+
+    @Test
+    public void intervalsInRangeTest() {
+        List<Interval> intervals = CalendarUtils.intervalsInRange(new LocalDate(2012, 2, 1), new LocalDate(2012, 8, 1), "RRULE:FREQ=MONTHLY;INTERVAL=3");
+        assertThat(intervals.size(), is(3));
+        assertThat(intervals.get(0).getStart().toLocalDate(), is(new LocalDate(2012, 1, 1)));
+        assertThat(intervals.get(2).getEnd().toLocalDate(), is(new LocalDate(2012, 10, 1)));
+    }
+
+    @Test
+    public void intervalsInRangeWithoutEndDateTest() {
+        List<Interval> intervals = CalendarUtils.intervalsInRange(new LocalDate(2012, 2, 1), null, "RRULE:FREQ=MONTHLY;INTERVAL=3");
+        assertThat(intervals.size(), is(1));
+        assertThat(intervals.get(0).getStart().toLocalDate(), is(new LocalDate(2012, 1, 1)));
+    }
+
+    @Test
+    public void nextDateTest() {
+        assertThat(CalendarUtils.nextDate(new LocalDate(2012, 1, 1), "RRULE:FREQ=MONTHLY;INTERVAL=3"), is(new LocalDate(2012, 4, 1)));
     }
 
     @Test

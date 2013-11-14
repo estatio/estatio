@@ -31,6 +31,8 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
@@ -39,20 +41,23 @@ import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 
 /**
- * Represents an externally-defined index (eg the retail price index) which provides values for a sequence of dates
- * (typically monthly).  The values are decimals representing an increase in percentage points, eg 1.05 to mean a
- * 5% increase.
+ * Represents an externally-defined index (eg the retail price index) which
+ * provides values for a sequence of dates (typically monthly). The values are
+ * decimals representing an increase in percentage points, eg 1.05 to mean a 5%
+ * increase.
  * 
  * <p>
- * Periodically the index will be rebased, to reset the percentage point back to 1.00.  Therefore the index does not
- * hold {@link IndexValue index value}s directly, instead it {@link #getIndexBases() holds} a succession of
- * {@link IndexBase}s.  It is the {@link IndexBase}s that {@link IndexBase#getValues() hold} the {@link IndexValue}s.
- * The rebasing {@link IndexBase#getFactor() factor} is held in {@link IndexBase}.
+ * Periodically the index will be rebased, to reset the percentage point back to
+ * 1.00. Therefore the index does not hold {@link IndexValue index value}s
+ * directly, instead it {@link #getIndexBases() holds} a succession of
+ * {@link IndexBase}s. It is the {@link IndexBase}s that
+ * {@link IndexBase#getValues() hold} the {@link IndexValue}s. The rebasing
+ * {@link IndexBase#getFactor() factor} is held in {@link IndexBase}.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
         strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
@@ -70,20 +75,20 @@ import org.estatio.dom.WithReferenceComparable;
                         + "WHERE reference == :reference")
 })
 @Immutable
-public class Index 
-        extends EstatioMutableObject<Index> 
+public class Index
+        extends EstatioMutableObject<Index>
         implements WithReferenceComparable<Index>, WithNameUnique {
 
     public Index() {
         super("reference");
     }
-    
+
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -96,7 +101,7 @@ public class Index
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -111,6 +116,7 @@ public class Index
     @javax.jdo.annotations.Persistent(mappedBy = "index")
     private SortedSet<IndexBase> indexBases = new TreeSet<IndexBase>();
 
+    @Render(Type.EAGERLY)
     public SortedSet<IndexBase> getIndexBases() {
         return indexBases;
     }
@@ -146,17 +152,13 @@ public class Index
     }
 
     @Programmatic
-    public void initialize(
-            final IndexationCalculator indexationCalculator, 
-            final LocalDate baseIndexStartDate, 
-            final LocalDate nextIndexStartDate) {
-        indexationCalculator.setBaseIndexValue(getIndexValueForDate(baseIndexStartDate));
-        indexationCalculator.setNextIndexValue(getIndexValueForDate(nextIndexStartDate));
-        indexationCalculator.setRebaseFactor(getRebaseFactorForDates(baseIndexStartDate, nextIndexStartDate));
+    public void initialize(final Indexable input) {
+        input.setBaseIndexValue(getIndexValueForDate(input.getBaseIndexStartDate()));
+        input.setNextIndexValue(getIndexValueForDate(input.getNextIndexStartDate()));
+        input.setRebaseFactor(getRebaseFactorForDates(input.getBaseIndexStartDate(), input.getNextIndexStartDate()));
     }
 
     // //////////////////////////////////////
-
 
     private IndexValues indexValues;
 

@@ -19,6 +19,8 @@
 package org.estatio.dom.utils;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.ical.compat.jodatime.LocalDateIterator;
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
@@ -38,34 +40,48 @@ public final class CalendarUtils {
     private CalendarUtils() {
     }
 
+    /**
+     * Returns an interval based on rrule which start date matches startDate
+     * 
+     * @param startDate
+     * @param rrule
+     * @return
+     */
     public static Interval intervalMatching(final LocalDate startDate, final String rrule) {
-        Interval interval =  intervalContaining(startDate, rrule);
+        Interval interval = intervalContaining(startDate, rrule);
         if (interval.getStart().toLocalDate().equals(startDate)) {
             return interval;
         }
         return null;
     }
-    
+
+    /**
+     * Returns an interval based on rrule which contains containgDate
+     * 
+     * @param containingDate
+     * @param rrule
+     * @return
+     */
     public static Interval intervalContaining(final LocalDate containingDate, final String rrule) {
         return currentInterval(containingDate, rrule, START_DATE_DEFAULT);
     }
-    
+
     public static Interval currentInterval(
-            final LocalDate date, 
-            final String rrule, 
+            final LocalDate date,
+            final String rrule,
             final LocalDate startDate) {
         if (date == null || startDate == null || rrule == null) {
             return null;
         }
         try {
             LocalDate thisDate = startDate;
-            final LocalDateIterator iter = 
+            final LocalDateIterator iter =
                     LocalDateIteratorFactory.createLocalDateIterator(rrule, thisDate, true);
             while (iter.hasNext()) {
                 LocalDate nextDate = iter.next();
                 if (nextDate.compareTo(date) > 0) {
                     return new Interval(
-                            thisDate.toInterval().getStartMillis(), 
+                            thisDate.toInterval().getStartMillis(),
                             nextDate.toInterval().getStartMillis());
                 }
                 thisDate = nextDate;
@@ -76,6 +92,13 @@ public final class CalendarUtils {
         return null;
     }
 
+    /**
+     * Returns the start date of the next interval
+     * 
+     * @param date
+     * @param rrule
+     * @return
+     */
     public static LocalDate nextDate(final LocalDate date, final String rrule) {
         return date == null || rrule == null ? null : currentInterval(date, rrule, date).getEnd().toLocalDate();
     }
@@ -85,6 +108,21 @@ public final class CalendarUtils {
             return true;
         }
         return false;
+    }
+
+    public static List<Interval> intervalsInRange(final LocalDate startDate, final LocalDate endDate, final String rrule) {
+        List<Interval> intervals = new ArrayList<Interval>();
+        LocalDate start = startDate;
+        LocalDate end = endDate == null ? startDate : endDate;
+        Interval interval = null;
+        do {
+            interval = intervalContaining(start, rrule);
+            if (interval != null) {
+                intervals.add(interval);
+                start = interval.getEnd().toLocalDate();
+            }
+        } while (interval != null && start.isBefore(end));
+        return intervals;
     }
 
 }

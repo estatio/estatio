@@ -44,6 +44,7 @@ import org.estatio.dom.geography.StateContributions;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValues;
+import org.estatio.dom.index.IndexationService;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
@@ -140,6 +141,7 @@ public class EstatioSystemInitializer {
                     new Invoices(),
                     new InvoiceNumeratorContributions(),
                     new InvoiceItemsForLease(),
+                    new IndexationService(),
                     new CommunicationChannels(),
                     new CommunicationChannelContributions(),
                     new PostalAddresses(),

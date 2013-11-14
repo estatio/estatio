@@ -60,7 +60,4 @@ public class Indices extends EstatioDomainService<Index> {
         return firstMatch("findByReference", "reference", reference);
     }
 
-
-
-
 }

@@ -27,6 +27,8 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -34,7 +36,7 @@ import org.estatio.dom.EstatioDomainService;
 /**
  * Domain service acting as a repository of {@link IndexValue}s.
  */
-public class IndexValues 
+public class IndexValues
         extends EstatioDomainService<IndexValue> {
 
     public IndexValues() {
@@ -44,10 +46,10 @@ public class IndexValues
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Indices", sequence = "3")
+    @NotInServiceMenu
     public IndexValue newIndexValue(
-            final @Named("Index Base") IndexBase indexBase, 
-            final @Named("Start Date") LocalDate startDate, 
+            final @Named("Index Base") IndexBase indexBase,
+            final @Named("Start Date") LocalDate startDate,
             final @Named("Value") BigDecimal value) {
         IndexValue indexValue = newTransientInstance();
         indexValue.setStartDate(startDate);
@@ -56,15 +58,24 @@ public class IndexValues
         indexBase.addToValues(indexValue);
         return indexValue;
     }
-    
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @NotInServiceMenu
+    public IndexValue newIndexValue(
+            final @Named("Index") Index index,
+            final @Named("Start Date") LocalDate startDate,
+            final @Named("Value") BigDecimal value) {
+        IndexBase indexBase = indexBasesService.findByIndexAndDate(index, startDate);
+        return newIndexValue(indexBase, startDate, value);
+    }
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Indices", sequence = "6")
+    @Programmatic
     public IndexValue findIndexValueByIndexAndStartDate(
-            final Index index, 
+            final Index index,
             final @Named("Start Date") LocalDate startDate) {
-        return firstMatch("findByIndexAndStartDate", 
-                "index", index, 
+        return firstMatch("findByIndexAndStartDate",
+                "index", index,
                 "startDate", startDate);
     }
 
@@ -72,9 +83,17 @@ public class IndexValues
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Indices", sequence = "8")
+    @MemberOrder(name = "Indices", sequence = "8")
     public List<IndexValue> allIndexValues() {
         return allInstances();
+    }
+
+    // //////////////////////////////////////
+
+    private IndexBases indexBasesService;
+
+    public void injectIndexBasesService(IndexBases indexBasesService) {
+        this.indexBasesService = indexBasesService;
     }
 
 }

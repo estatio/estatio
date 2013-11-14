@@ -60,19 +60,19 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
     @Test
     public void findLeasesByReference_whenWildcard() throws Exception {
         final List<Lease> matchingLeases = leases.findLeases("OXF*");
-            assertThat(matchingLeases.size(), is(4));
+            assertThat(matchingLeases.size(), is(5));
     }
 
     @Test
     public void findLeaseByProperty() throws Exception {
         final List<Lease> matchingLeases = leases.findLeasesByProperty(properties.findPropertyByReference("OXF"));
-        assertThat(matchingLeases.size(), is(3));
+        assertThat(matchingLeases.size(), is(4));
     }
 
     @Test
     public void findLeasesAboutToExpireOnDate() throws Exception {
         final List<Lease> matchingLeases = leases.findAboutToExpireOnDate(new LocalDate(2020, 1, 1));
-        assertThat(matchingLeases.size(), is(2));
+        assertThat(matchingLeases.size(), is(3));
     }
 
 }
