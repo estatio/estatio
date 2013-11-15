@@ -40,10 +40,14 @@ public class IndexationService {
         final Index index = input.getIndex();
         if (index == null) {
             return IndexationResult.NULL;
-        } 
+        }
+        return indexateWithIndexToResult(input);
+    }
+
+    private IndexationResult indexateWithIndexToResult(final Indexable input) {
+        final Index index = input.getIndex();
         BigDecimal indexedValue = null;
         BigDecimal indexationPercentage = null;
-        
         index.initialize(input);
         final BigDecimal baseIndexValue = input.getBaseIndexValue() ;
         final BigDecimal nextIndexValue = input.getNextIndexValue();
@@ -55,24 +59,19 @@ public class IndexationService {
             final BigDecimal indexationFactor = nextIndexValue
                     .divide(baseIndexValue, MathContext.DECIMAL64)
                     .multiply(rebaseFactor, MathContext.DECIMAL64).setScale(3, RoundingMode.HALF_EVEN);
-            indexationPercentage = (
-                    indexationFactor
+            indexationPercentage = (indexationFactor
                             .subtract(BigDecimal.ONE))
                             .multiply(ONE_HUNDRED).setScale(1, RoundingMode.HALF_EVEN);
-
             final BigDecimal levellingFactor = indexationPercentage
                     .multiply(levellingPercentage.divide(ONE_HUNDRED))
                     .divide(ONE_HUNDRED)
                     .add(BigDecimal.ONE);
             if (baseValue != null) {
-                indexedValue =
-                        baseValue
+                indexedValue = baseValue
                                 .multiply(levellingFactor)
                                 .setScale(2, RoundingMode.HALF_EVEN);
-
             }
         }
-        
         return new IndexationResult(indexedValue, indexationPercentage, baseIndexValue, nextIndexValue);
     }
 
