@@ -30,10 +30,15 @@ public class IndexationService {
 
     @NotContributed
     public void indexate(final Indexable input) {
-        Index index = input.getIndex();
 
         final IndexationResult indexationResult;
+        indexationResult = indexateToResult(input);
+        indexationResult.apply(input);
+    }
 
+    private IndexationResult indexateToResult(final Indexable input) {
+        final IndexationResult indexationResult;
+        final Index index = input.getIndex();
         if (index != null) {
             BigDecimal indexedValue = null;
             BigDecimal indexationPercentage = null;
@@ -71,8 +76,7 @@ public class IndexationService {
         } else {
             indexationResult = IndexationResult.NULL;
         }
-
-        indexationResult.apply(input);
+        return indexationResult;
     }
 
     static class IndexationResult {
