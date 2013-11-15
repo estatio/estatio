@@ -92,7 +92,7 @@ public class IndexValues
 
     private IndexBases indexBasesService;
 
-    public void injectIndexBasesService(IndexBases indexBasesService) {
+    public void injectIndexBasesService(final IndexBases indexBasesService) {
         this.indexBasesService = indexBasesService;
     }
 

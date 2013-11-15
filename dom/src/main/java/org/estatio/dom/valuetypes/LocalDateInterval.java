@@ -196,6 +196,7 @@ public final class LocalDateInterval {
 
     @Override
     public int hashCode() {
+        // TODO: use Isis' ObjectContracts?
         return new HashCodeBuilder(16, 23). // two randomly chosen prime numbers
                 append(startInstant).
                 append(endInstant).
@@ -203,13 +204,17 @@ public final class LocalDateInterval {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null)
+    public boolean equals(final Object obj) {
+        // TODO: use Isis' ObjectContracts?
+        if (obj == null) {
             return false;
-        if (obj == this)
+        }
+        if (obj == this) {
             return true;
-        if (!(obj instanceof LocalDateInterval))
+        }
+        if (!(obj instanceof LocalDateInterval)) {
             return false;
+        }
         LocalDateInterval rhs = (LocalDateInterval) obj;
         return new EqualsBuilder().
                 append(startInstant, rhs.startInstant).

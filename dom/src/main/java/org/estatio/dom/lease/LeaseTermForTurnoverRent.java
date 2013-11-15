@@ -173,7 +173,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     // //////////////////////////////////////
     
     @Override
-    public void copyValuesTo(LeaseTerm target){
+    public void copyValuesTo(final LeaseTerm target){
         LeaseTermForTurnoverRent t = (LeaseTermForTurnoverRent) target;
         super.copyValuesTo(t);
         t.setTurnoverRentRule(getTurnoverRentRule());

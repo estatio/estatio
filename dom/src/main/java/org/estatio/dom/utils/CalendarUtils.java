@@ -19,9 +19,9 @@
 package org.estatio.dom.utils;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.google.ical.compat.jodatime.LocalDateIterator;
 import com.google.ical.compat.jodatime.LocalDateIteratorFactory;
 
@@ -110,8 +110,9 @@ public final class CalendarUtils {
         return false;
     }
 
-    public static List<Interval> intervalsInRange(final LocalDate startDate, final LocalDate endDate, final String rrule) {
-        List<Interval> intervals = new ArrayList<Interval>();
+    public static List<Interval> intervalsInRange(
+            final LocalDate startDate, final LocalDate endDate, final String rrule) {
+        List<Interval> intervals = Lists.newArrayList();
         LocalDate start = startDate;
         LocalDate end = endDate == null ? startDate : endDate;
         Interval interval = null;

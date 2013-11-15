@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -75,8 +74,10 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Named("Name") String name,
             final @Named("Type") LeaseType leaseType,
             final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") 
+            String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
+            LocalDate endDate,
             final @Optional @Named("Landlord") Party landlord,
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
@@ -86,13 +87,7 @@ public class Leases extends EstatioDomainService<Lease> {
             throw new IsisApplicationException(validate);
         }
 
-        LocalDate calculatedEndDate = endDate;
-        if (duration != null) {
-            final Period p = JodaPeriodUtils.asPeriod(duration);
-            if (p != null) {
-                calculatedEndDate = startDate.plus(p).minusDays(1);
-            }
-        }
+        LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
         Lease lease = newTransientInstance();
         final AgreementType at = agreementTypes.find(LeaseConstants.AT_LEASE);
         lease.setType(at);
@@ -114,7 +109,19 @@ public class Leases extends EstatioDomainService<Lease> {
         return lease;
     }
 
+    private static LocalDate calculateEndDate(
+            final LocalDate startDate, final LocalDate endDate, final String duration) {
+        if (duration != null) {
+            final Period p = JodaPeriodUtils.asPeriod(duration);
+            if (p != null) {
+                return startDate.plus(p).minusDays(1);
+            }
+        }
+        return endDate;
+    }
+
     public String validateNewLease(
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             final String reference,
             final String name,
             final LeaseType leaseType,
@@ -123,6 +130,7 @@ public class Leases extends EstatioDomainService<Lease> {
             final LocalDate endDate,
             final Party landlord,
             final Party tenant
+            // CHECKSTYLE:ON
             ) {
         if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
             return "Either end date or duration must be filled in.";
@@ -145,8 +153,8 @@ public class Leases extends EstatioDomainService<Lease> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String refOrName) {
+        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(refOrName));
     }
 
     @ActionSemantics(Of.SAFE)

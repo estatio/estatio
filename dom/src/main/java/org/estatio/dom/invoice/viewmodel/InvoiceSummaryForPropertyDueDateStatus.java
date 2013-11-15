@@ -42,40 +42,40 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 
 @javax.jdo.annotations.PersistenceCapable(
-        identityType = IdentityType.NONDURABLE,
-        table = "InvoiceSummaryForPropertyDueDateStatus",
-        extensions = {
-                @Extension(vendorName = "datanucleus", key = "view-definition",
-                        value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDateStatus\" " +
-                                "( " +
-                                "  {this.reference}, " +
-                                "  {this.dueDate}, " +
-                                "  {this.status}, " +
-                                "  {this.total}, " +
-                                "  {this.netAmount}, " +
-                                "  {this.vatAmount}, " +
-                                "  {this.grossAmount} " +
-                                ") AS " +
-                                "SELECT " +
-                                "  \"FixedAsset\".\"reference\" , " +
-                                "  \"Invoice\".\"dueDate\", " +
-                                "  \"Invoice\".\"status\", " +
-                                "  COUNT(\"Invoice\".\"id\") AS \"total\", " +
-                                "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
-                                "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
-                                "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
-                                "FROM \"Invoice\" " +
-                                "  INNER JOIN \"Lease\"       ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
-                                "  INNER JOIN \"Occupancy\"   ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
-                                "  INNER JOIN \"Unit\"        ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
-                                "  INNER JOIN \"Property\"    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
-                                "  INNER JOIN \"FixedAsset\"  ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
-                                "  INNER JOIN \"InvoiceItem\" ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
-                                "GROUP BY " +
-                                "  \"FixedAsset\".\"reference\", " +
-                                "  \"Invoice\".\"dueDate\", " +
-                                "  \"Invoice\".\"status\"")
-        })
+    identityType = IdentityType.NONDURABLE,
+    table = "InvoiceSummaryForPropertyDueDateStatus",
+    extensions = {
+        @Extension(vendorName = "datanucleus", key = "view-definition",
+            value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDateStatus\" " +
+                    "( " +
+                    "  {this.reference}, " +
+                    "  {this.dueDate}, " +
+                    "  {this.status}, " +
+                    "  {this.total}, " +
+                    "  {this.netAmount}, " +
+                    "  {this.vatAmount}, " +
+                    "  {this.grossAmount} " +
+                    ") AS " +
+                    "SELECT " +
+                    "  \"FixedAsset\".\"reference\" , " +
+                    "  \"Invoice\".\"dueDate\", " +
+                    "  \"Invoice\".\"status\", " +
+                    "  COUNT(\"Invoice\".\"id\") AS \"total\", " +
+                    "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
+                    "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
+                    "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
+                    "FROM \"Invoice\" " +
+                    "  INNER JOIN \"Lease\"       ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                    "  INNER JOIN \"Occupancy\"   ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
+                    "  INNER JOIN \"Unit\"        ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
+                    "  INNER JOIN \"Property\"    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
+                    "  INNER JOIN \"FixedAsset\"  ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
+                    "  INNER JOIN \"InvoiceItem\" ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
+                    "GROUP BY " +
+                    "  \"FixedAsset\".\"reference\", " +
+                    "  \"Invoice\".\"dueDate\", " +
+                    "  \"Invoice\".\"status\"")
+    })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
@@ -143,7 +143,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
@@ -167,7 +167,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
         return vatAmount;
     }
 
-    public void setVatAmount(BigDecimal vatAmount) {
+    public void setVatAmount(final BigDecimal vatAmount) {
         this.vatAmount = vatAmount;
     }
 
@@ -179,7 +179,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
         return netAmount;
     }
 
-    public void setNetAmount(BigDecimal netAmount) {
+    public void setNetAmount(final BigDecimal netAmount) {
         this.netAmount = netAmount;
     }
 
@@ -191,7 +191,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
         return grossAmount;
     }
 
-    public void setGrossAmount(BigDecimal grossAmount) {
+    public void setGrossAmount(final BigDecimal grossAmount) {
         this.grossAmount = grossAmount;
     }
 

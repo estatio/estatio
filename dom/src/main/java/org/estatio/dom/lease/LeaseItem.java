@@ -396,6 +396,7 @@ public class LeaseItem
         try {
             lastTerm = getTerms().last();
         } catch (NoSuchElementException e) {
+            // TODO: is this ok?  if so then let's have a comment here at least.
         }
         LeaseTerm term = leaseTerms.newLeaseTerm(this, lastTerm, startDate);
         term.initialize();
@@ -423,7 +424,7 @@ public class LeaseItem
     }
 
     @Programmatic
-    public void verifyUntil(LocalDate date) {
+    public void verifyUntil(final LocalDate date) {
         for (LeaseTerm term : getTerms()) {
             if (term.getPrevious() == null) {
                 // since verify is recursive on terms only start on the main

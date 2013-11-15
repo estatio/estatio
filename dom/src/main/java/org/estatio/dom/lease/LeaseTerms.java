@@ -41,7 +41,7 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous, LocalDate startDate) {
+    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous, final LocalDate startDate) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.modifyPrevious(previous);

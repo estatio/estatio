@@ -19,17 +19,12 @@
 package org.estatio.dom.lease.breaks;
 
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.utils.JodaPeriodUtils;
 
 @Hidden
 public class BreakOptions extends EstatioDomainService<BreakOption> {

@@ -431,7 +431,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     }
 
     @Programmatic
-    public Invoice invoiceOn(LocalDate invoiceDate) {
+    public Invoice invoiceOn(final LocalDate invoiceDate) {
         // bulk action, so need these guards
         if (disableInvoiceNow() != null) {
             return this;

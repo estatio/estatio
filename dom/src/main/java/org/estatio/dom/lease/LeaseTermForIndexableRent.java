@@ -138,7 +138,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     }
 
     @Override
-    public void setRebaseFactor(BigDecimal rebaseFactor) {
+    public void setRebaseFactor(final BigDecimal rebaseFactor) {
         this.rebaseFactor = rebaseFactor;
 
     }
@@ -285,7 +285,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     // //////////////////////////////////////
 
     @Override
-    public void copyValuesTo(LeaseTerm target) {
+    public void copyValuesTo(final LeaseTerm target) {
         LeaseTermForIndexableRent t = (LeaseTermForIndexableRent) target;
         super.copyValuesTo(t);
         t.setIndex(getIndex());
@@ -330,7 +330,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private IndexationService indexationService;
 
-    public final void injectIndexationService(IndexationService indexationService) {
+    public final void injectIndexationService(final IndexationService indexationService) {
         this.indexationService = indexationService;
     }
 

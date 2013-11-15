@@ -109,7 +109,8 @@ public class FixedBreakOption
      */
     @Named("Update")
     public FixedBreakOption updateReminderDate(
-            final @Optional @Named(CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER) @DescribedAs("Reminder to exercise (or leave blank to clear)") LocalDate reminderDate) {
+            final @Optional @Named(CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER) 
+            @DescribedAs("Reminder to exercise (or leave blank to clear)") LocalDate reminderDate) {
         setReminderDate(reminderDate);
         final Event reminderEvent =
                 events.findEventsBySubjectAndSubjectEventType(this, CALENDAR_NAME_FIXED_BREAK_EXERCISE_REMINDER);

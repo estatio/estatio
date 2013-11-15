@@ -288,7 +288,8 @@ public class Lease
 
     public Lease newBreakOption(
             final @Named("Break date") LocalDate breakDate,
-            final @Named("Notification period") @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
+            final @Named("Notification period") @DescribedAs("Notification period in a text format. Example 6y5m2d") 
+            String notificationPeriodStr,
             final BreakExerciseType breakExerciseType,
             final BreakType breakType,
             final @Named("Description") @Optional String description
@@ -506,7 +507,7 @@ public class Lease
     }
 
     @Programmatic
-    public void verifyUntil(LocalDate date) {
+    public void verifyUntil(final LocalDate date) {
         for (LeaseItem item : getItems()) {
             item.verifyUntil(date);
         }
@@ -542,8 +543,9 @@ public class Lease
             final @Named("Are you sure?") Boolean confirm) {
         for (LeaseItem item : getItems()) {
             for (LeaseTerm term : item.getTerms()) {
-                if (term.getInterval().contains(terminationDate))
+                if (term.getInterval().contains(terminationDate)) {
                     term.setEndDate(terminationDate);
+                }
                 if (term.getNext() != null) {
                     term.getNext().remove();
                     break; // there are no more terms after this one that we
@@ -594,24 +596,27 @@ public class Lease
             ) {
         String validateAssign = validateAssign(reference, name, tenant, startDate, endDate, confirm);
         if (validateAssign != null) {
-            // REVIEW: don't know if this is the right wat but when calling this
+            // REVIEW: don't know if this is the right way but when calling this
             // method using the Api or integration tests I want to reuse the
             // validation code
             throw new IsisApplicationException("Validation error: ".concat(validateAssign));
         }
 
         Lease newLease = leases.newLease(
-                reference,
-                name,
+                reference, name,
                 this.getLeaseType(),
-                startDate,
-                null,
-                endDate,
-                this.getPrimaryParty(),
-                tenant
-                );
+                startDate, null, endDate,
+                this.getPrimaryParty(), tenant );
 
-        // items and terms
+        createItemsAndTerms(newLease, startDate);
+        createOccupancies(newLease, startDate);
+        createBreakOptions(newLease, startDate);
+        this.terminate(endDate, true);
+        this.setNext(newLease);
+        return newLease;
+    }
+
+    private void createItemsAndTerms(final Lease newLease, final LocalDate startDate) {
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(), 
@@ -633,12 +638,17 @@ public class Lease
                 }
             }
         }
-        // Occupancies
+    }
+
+    private void createOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : getOccupancies()) {
-            if (occupancy.getInterval().contains(startDate))
+            if (occupancy.getInterval().contains(startDate)) {
                 newLease.occupy(occupancy.getUnit(), startDate);
+            }
         }
-        // Break options
+    }
+
+    private void createBreakOptions(final Lease newLease, final LocalDate startDate) {
         for (BreakOption option : getBreakOptions()) {
             if (option.getBreakDate().isAfter(startDate)) {
                 newLease.newBreakOption(
@@ -649,9 +659,6 @@ public class Lease
                         option.getDescription());
             }
         }
-        this.terminate(endDate, true);
-        this.setNext(newLease);
-        return newLease;
     }
 
     public LocalDate default3Assign() {

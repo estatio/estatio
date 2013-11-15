@@ -21,8 +21,9 @@ package org.estatio.dom.lease.invoicing;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -70,7 +71,7 @@ public class InvoiceCalculationService {
     }
 
     static class CalculationResultsUtil {
-        public static BigDecimal sum(List<CalculationResult> list) {
+        public static BigDecimal sum(final List<CalculationResult> list) {
             BigDecimal sum = BigDecimal.ZERO;
             if (list == null || list.size() < 1) {
                 return sum;
@@ -156,14 +157,6 @@ public class InvoiceCalculationService {
 
     /**
      * Calculates a term with a given invoicing frequency
-     * 
-     * @param leaseTerm
-     * @param periodStartDate
-     * @param periodEndDate
-     *            TODO
-     * @param valueDate
-     * @param invoicingFrequency
-     * @return
      */
     List<CalculationResult> calculateWithFrequency(
             final LeaseTerm leaseTerm,
@@ -172,12 +165,10 @@ public class InvoiceCalculationService {
             final LocalDate valueDate, final InvoicingFrequency invoicingFrequency) {
         String rrule = invoicingFrequency.getRrule();
 
-        List<CalculationResult> results = new ArrayList<CalculationResult>();
+        final List<CalculationResult> results = Lists.newArrayList();
+        final List<Interval> intervals = CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, rrule);
 
-        List<Interval> intervals = CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, rrule);
-
-        for (Interval interval : intervals)
-        {
+        for (final Interval interval : intervals) {
             final LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
             final LocalDateInterval calculationInterval = new LocalDateInterval(interval);
             final LocalDateInterval overlap = calculationInterval.overlap(termInterval);
@@ -200,8 +191,11 @@ public class InvoiceCalculationService {
     }
 
     @NotContributed
-    public List<CalculationResult> calculateFullLengthOfTerm(LeaseTerm leaseTerm, LocalDate dueDate) {
-        return calculateWithFrequency(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(), dueDate, leaseTerm.getLeaseItem().getInvoicingFrequency());
+    public List<CalculationResult> calculateFullLengthOfTerm(final LeaseTerm leaseTerm, final LocalDate dueDate) {
+        final LocalDate startDate = leaseTerm.getStartDate();
+        final LocalDate endDate = leaseTerm.getEndDate();
+        final InvoicingFrequency invoicingFrequency = leaseTerm.getLeaseItem().getInvoicingFrequency();
+        return calculateWithFrequency(leaseTerm, startDate, endDate, dueDate, invoicingFrequency);
     }
     
     

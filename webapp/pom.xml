@@ -274,7 +274,15 @@ language governing permissions and limitations under the License.
             </build>
         </profile>
 
-        <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath (nb: driver must be manually installed to local repo manually using mvn install-file) -->
+        <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath 
+        (nb: driver must be manually installed to local repo manually using mvn install-file)
+        
+        mvn install:install-file -DgroupId=com.microsoft.sqlserver \
+                         -DartifactId=jdbc4 \
+                         -Dversion=4.0 \
+                         -Dpackaging=jar \
+                         -Dfile=jdbc4.jar
+        -->
         <!--
         commented out for open source release.
         -->

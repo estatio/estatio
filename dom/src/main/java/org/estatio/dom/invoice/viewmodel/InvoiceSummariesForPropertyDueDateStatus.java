@@ -27,7 +27,8 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.estatio.dom.EstatioDomainService;
 
 @Immutable
-public class InvoiceSummariesForPropertyDueDateStatus extends EstatioDomainService<InvoiceSummaryForPropertyDueDateStatus> {
+public class InvoiceSummariesForPropertyDueDateStatus 
+    extends EstatioDomainService<InvoiceSummaryForPropertyDueDateStatus> {
 
     public InvoiceSummariesForPropertyDueDateStatus() {
         super(InvoiceSummariesForPropertyDueDateStatus.class, InvoiceSummaryForPropertyDueDateStatus.class);

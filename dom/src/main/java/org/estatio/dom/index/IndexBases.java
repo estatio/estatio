@@ -65,7 +65,7 @@ public class IndexBases
     // //////////////////////////////////////
 
     @Programmatic
-    public IndexBase findByIndexAndDate(final Index index, LocalDate date) {
+    public IndexBase findByIndexAndDate(final Index index, final LocalDate date) {
         return firstMatch("findByIndexAndDate", "index", index, "date", date);
     }
 

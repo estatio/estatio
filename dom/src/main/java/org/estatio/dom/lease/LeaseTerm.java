@@ -59,7 +59,6 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -529,7 +528,7 @@ public abstract class LeaseTerm
     }
 
     @Programmatic
-    public void verifyUntil(LocalDate date) {
+    public void verifyUntil(final LocalDate date) {
         update();
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
@@ -605,7 +604,7 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Programmatic
-    public void copyValuesTo(LeaseTerm target) {
+    public void copyValuesTo(final LeaseTerm target) {
         target.setStartDate(getStartDate());
         target.setEndDate(getEndDate());
         target.setStatus(getStatus());
@@ -662,7 +661,7 @@ public abstract class LeaseTerm
     
     private LeaseTerms terms;
     
-    public final void injectLeaseTerms(LeaseTerms terms) {
+    public final void injectLeaseTerms(final LeaseTerms terms) {
         this.terms = terms;
     }
 
