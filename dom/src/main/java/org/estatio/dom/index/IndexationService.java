@@ -37,46 +37,43 @@ public class IndexationService {
     }
 
     private IndexationResult indexateToResult(final Indexable input) {
-        final IndexationResult indexationResult;
         final Index index = input.getIndex();
-        if (index != null) {
-            BigDecimal indexedValue = null;
-            BigDecimal indexationPercentage = null;
-            
-            index.initialize(input);
-            final BigDecimal baseIndexValue = input.getBaseIndexValue() ;
-            final BigDecimal nextIndexValue = input.getNextIndexValue();
-            final BigDecimal rebaseFactor = input.getRebaseFactor();
-            final BigDecimal baseValue = input.getBaseValue();
-            final BigDecimal levellingPercentage = 
-                    input.getLevellingPercentage() == null ? ONE_HUNDRED : input.getLevellingPercentage();
-            if (baseIndexValue != null && nextIndexValue != null) {
-                final BigDecimal indexationFactor = nextIndexValue
-                        .divide(baseIndexValue, MathContext.DECIMAL64)
-                        .multiply(rebaseFactor, MathContext.DECIMAL64).setScale(3, RoundingMode.HALF_EVEN);
-                indexationPercentage = (
-                        indexationFactor
-                                .subtract(BigDecimal.ONE))
-                                .multiply(ONE_HUNDRED).setScale(1, RoundingMode.HALF_EVEN);
+        if (index == null) {
+            return IndexationResult.NULL;
+        } 
+        BigDecimal indexedValue = null;
+        BigDecimal indexationPercentage = null;
+        
+        index.initialize(input);
+        final BigDecimal baseIndexValue = input.getBaseIndexValue() ;
+        final BigDecimal nextIndexValue = input.getNextIndexValue();
+        final BigDecimal rebaseFactor = input.getRebaseFactor();
+        final BigDecimal baseValue = input.getBaseValue();
+        final BigDecimal levellingPercentage = 
+                input.getLevellingPercentage() == null ? ONE_HUNDRED : input.getLevellingPercentage();
+        if (baseIndexValue != null && nextIndexValue != null) {
+            final BigDecimal indexationFactor = nextIndexValue
+                    .divide(baseIndexValue, MathContext.DECIMAL64)
+                    .multiply(rebaseFactor, MathContext.DECIMAL64).setScale(3, RoundingMode.HALF_EVEN);
+            indexationPercentage = (
+                    indexationFactor
+                            .subtract(BigDecimal.ONE))
+                            .multiply(ONE_HUNDRED).setScale(1, RoundingMode.HALF_EVEN);
 
-                final BigDecimal levellingFactor = indexationPercentage
-                        .multiply(levellingPercentage.divide(ONE_HUNDRED))
-                        .divide(ONE_HUNDRED)
-                        .add(BigDecimal.ONE);
-                if (baseValue != null) {
-                    indexedValue =
-                            baseValue
-                                    .multiply(levellingFactor)
-                                    .setScale(2, RoundingMode.HALF_EVEN);
+            final BigDecimal levellingFactor = indexationPercentage
+                    .multiply(levellingPercentage.divide(ONE_HUNDRED))
+                    .divide(ONE_HUNDRED)
+                    .add(BigDecimal.ONE);
+            if (baseValue != null) {
+                indexedValue =
+                        baseValue
+                                .multiply(levellingFactor)
+                                .setScale(2, RoundingMode.HALF_EVEN);
 
-                }
             }
-            
-            indexationResult = new IndexationResult(indexedValue, indexationPercentage, baseIndexValue, nextIndexValue);
-        } else {
-            indexationResult = IndexationResult.NULL;
         }
-        return indexationResult;
+        
+        return new IndexationResult(indexedValue, indexationPercentage, baseIndexValue, nextIndexValue);
     }
 
     static class IndexationResult {
