@@ -32,17 +32,15 @@ public class IndexationService {
     public void indexate(final Indexable input) {
         Index index = input.getIndex();
 
-        BigDecimal indexedValue = null;
-        BigDecimal indexationPercentage = null;
-        BigDecimal baseIndexValue = null;
-        BigDecimal nextIndexValue = null;
-
         final IndexationResult indexationResult;
 
         if (index != null) {
+            BigDecimal indexedValue = null;
+            BigDecimal indexationPercentage = null;
+            
             index.initialize(input);
-            baseIndexValue = input.getBaseIndexValue();
-            nextIndexValue = input.getNextIndexValue();
+            final BigDecimal baseIndexValue = input.getBaseIndexValue() ;
+            final BigDecimal nextIndexValue = input.getNextIndexValue();
             final BigDecimal rebaseFactor = input.getRebaseFactor();
             final BigDecimal baseValue = input.getBaseValue();
             final BigDecimal levellingPercentage = 
