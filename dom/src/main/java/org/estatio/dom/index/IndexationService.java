@@ -32,42 +32,32 @@ public class IndexationService {
     public void indexate(final Indexable input) {
         Index index = input.getIndex();
 
-        BigDecimal indexationFactor;
-        BigDecimal rebaseFactor;
-
         BigDecimal indexedValue = null;
         BigDecimal indexationPercentage = null;
         BigDecimal baseIndexValue = null;
         BigDecimal nextIndexValue = null;
-        BigDecimal baseValue = null;
-        BigDecimal levellingPercentage = null;
-        BigDecimal levellingFactor = null;
 
         if (index != null) {
             index.initialize(input);
             baseIndexValue = input.getBaseIndexValue();
             nextIndexValue = input.getNextIndexValue();
-            rebaseFactor = input.getRebaseFactor();
-            baseValue = input.getBaseValue();
-            levellingPercentage = input.getLevellingPercentage() == null ? ONE_HUNDRED : input.getLevellingPercentage();
-
+            final BigDecimal rebaseFactor = input.getRebaseFactor();
+            final BigDecimal baseValue = input.getBaseValue();
+            final BigDecimal levellingPercentage = 
+                    input.getLevellingPercentage() == null ? ONE_HUNDRED : input.getLevellingPercentage();
             if (baseIndexValue != null && nextIndexValue != null) {
-                indexationFactor =
-                        nextIndexValue
-                                .divide(baseIndexValue, MathContext.DECIMAL64)
-                                .multiply(rebaseFactor, MathContext.DECIMAL64).setScale(3, RoundingMode.HALF_EVEN);
+                final BigDecimal indexationFactor = nextIndexValue
+                        .divide(baseIndexValue, MathContext.DECIMAL64)
+                        .multiply(rebaseFactor, MathContext.DECIMAL64).setScale(3, RoundingMode.HALF_EVEN);
                 indexationPercentage = (
                         indexationFactor
                                 .subtract(BigDecimal.ONE))
                                 .multiply(ONE_HUNDRED).setScale(1, RoundingMode.HALF_EVEN);
 
-                levellingFactor =
-                        indexationPercentage
-                                .multiply(levellingPercentage.divide(ONE_HUNDRED))
-                                .divide(ONE_HUNDRED)
-                                .add(BigDecimal.ONE);
-
-                
+                final BigDecimal levellingFactor = indexationPercentage
+                        .multiply(levellingPercentage.divide(ONE_HUNDRED))
+                        .divide(ONE_HUNDRED)
+                        .add(BigDecimal.ONE);
                 if (baseValue != null) {
                     indexedValue =
                             baseValue
