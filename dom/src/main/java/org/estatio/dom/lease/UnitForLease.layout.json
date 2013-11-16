@@ -14,7 +14,11 @@
         "Dates": {
           "members": {
             "startDate": {},
-            "endDate":{}
+            "endDate":{
+                actions: {
+                    "changeDates": {}
+                }
+            }
           }
         },
         "Areas": {
@@ -39,7 +43,11 @@
     {
       "span": 7,
       "collections": {
-        "leases": {},
+        "leases": {
+		  "actions": {
+		    "findLeasesActiveOnDate": {}
+		  }
+        },
         "communicationChannels": {},
         "roles": {
           "actions": {
@@ -49,7 +57,5 @@
       }
     }
   ],
-  "actions": {
-    "activeLeasesOnDate": {}
-  }
+  "actions": {}
 }
