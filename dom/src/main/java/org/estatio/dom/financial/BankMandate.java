@@ -27,6 +27,15 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 //no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findBankMandatesFor", language = "JDOQL",
+            value = "SELECT "
+                    + "FROM org.estatio.dom.financial.BankMandate "
+                    + "WHERE bankAccount == :bankAccount")
+})
+
+
 public class BankMandate extends Agreement {
     
 

@@ -17,6 +17,17 @@
 package org.estatio.integration;
 
 import org.apache.log4j.Level;
+
+import org.apache.isis.core.commons.config.IsisConfiguration;
+import org.apache.isis.core.commons.config.IsisConfigurationDefault;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.wrapper.WrapperFactoryDefault;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
+
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
@@ -37,6 +48,7 @@ import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.event.Events;
+import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.contributed.FinancialAccountContributions;
 import org.estatio.dom.geography.Countries;
@@ -72,16 +84,6 @@ import org.estatio.services.bookmarks.BookmarkServiceForEstatio;
 import org.estatio.services.clock.ClockService;
 import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
-
-import org.apache.isis.core.commons.config.IsisConfiguration;
-import org.apache.isis.core.commons.config.IsisConfigurationDefault;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.wrapper.WrapperFactoryDefault;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
-import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
-import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 /**
  * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on
@@ -133,6 +135,7 @@ public class EstatioSystemInitializer {
                     new AgreementRoleCommunicationChannels(),
                     new AgreementRoleCommunicationChannelTypes(),
                     new AgreementRoleTypes(),
+                    new BankMandates(),
                     new Leases(),
                     new LeaseTerms(),
                     new LeaseItems(),

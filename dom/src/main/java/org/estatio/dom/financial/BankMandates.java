@@ -83,6 +83,12 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
         return allInstances();
     }
 
+    @Programmatic
+    @ActionSemantics(Of.SAFE)
+    public List<BankMandate> findBankMandatesFor(BankAccount bankAccount) {
+        return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
+    }
+    
     // //////////////////////////////////////
 
     private AgreementTypes agreementTypes;

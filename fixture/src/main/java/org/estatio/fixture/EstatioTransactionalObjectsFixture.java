@@ -25,9 +25,10 @@ import org.apache.isis.applib.fixtures.AbstractFixture;
 import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.financial.BankAccountAndMandateFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 
 
 public class EstatioTransactionalObjectsFixture extends AbstractFixture {
@@ -37,10 +38,11 @@ public class EstatioTransactionalObjectsFixture extends AbstractFixture {
         
         final List<AbstractFixture> fixtures = Arrays.asList(
             new EstatioTransactionalObjectsTeardownFixture(),
-            new PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture(),
+            new PersonsAndOrganisationsAndCommunicationChannelsFixture(),
             new PropertiesAndUnitsFixture(),
             new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(),
-            new InvoiceAndInvoiceItemFixture()
+            new InvoiceAndInvoiceItemFixture(),
+            new BankAccountAndMandateFixture()
         );
 
         final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();

@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -101,4 +103,14 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public List<AgreementRole> findByPartyAndTypeAndContainsDate(
+            final Party party,
+            final AgreementRoleType type,
+            final LocalDate date) {
+        return allMatches("findByPartyAndTypeAndContainsDate", "party", party, "type", type, "date", date);
+    }    
+   
+    
 }

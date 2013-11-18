@@ -22,9 +22,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 
+import org.apache.isis.applib.fixtures.AbstractFixture;
+import org.apache.isis.core.commons.ensure.Ensure;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -33,20 +35,17 @@ import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.core.commons.ensure.Ensure;
-
-public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture extends AbstractFixture {
+public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        createOrganisation("ACME;ACME Properties International;NL31ABNA0580744433;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com");
-        createOrganisation("HELLOWORLD;Hello World Properties;NL31ABNA0580744434;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com");
-        createOrganisation("TOPMODEL;Topmodel Fashion;NL31ABNA0580744435;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com");
-        createOrganisation("MEDIAX;Mediax Electronics;NL31ABNA0580744436;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com");
-        createOrganisation("POISON;Poison Perfumeries;NL31ABNA0580744437;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com");
-        createOrganisation("PRET;Pret-a-Manger;NL31ABNA0580744438;;;;;;;;;");
-        createOrganisation("MIRACLE;Miracle Shoes;NL31ABNA0580744439;;;;;;;;;");
+        createOrganisation("ACME;ACME Properties International;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com");
+        createOrganisation("HELLOWORLD;Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com");
+        createOrganisation("TOPMODEL;Topmodel Fashion;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com");
+        createOrganisation("MEDIAX;Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com");
+        createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com");
+        createOrganisation("PRET;Pret-a-Manger;;;;;;;;;");
+        createOrganisation("MIRACLE;Miracle Shoes;;;;;;;;;");
         createPerson("JDOE", "J", "John", "Doe");
         createPerson("LTORVALDS", "L", "Linus", "Torvalds");
     }
@@ -60,26 +59,42 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
         String[] values = input.split(";");
         Party party = organisations.newOrganisation(values[0], values[1]);
         Ensure.ensureThatArg(party, is(not(nullValue())), "could not find party '" + values[0] + "', '" + values[1] + "'");
-        financialAccounts.newBankAccount(party, values[2]);
         getContainer().flush();
-        if(defined(values, 3)) {
-            final Country country = countries.findCountry(values[8]);
-            final State state = states.findState(values[7]);
+        if(defined(values, 2)) {
+            final Country country = countries.findCountry(values[7]);
+            final State state = states.findState(values[6]);
             if(country != null && state != null) {
-                communicationChannelContributedActions.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, country, state, values[3], values[4], values[5], values[6]);
+                communicationChannelContributedActions.newPostal(
+                        party, 
+                        CommunicationChannelType.POSTAL_ADDRESS, 
+                        country, 
+                        state, 
+                        values[2], 
+                        values[3], 
+                        values[4], 
+                        values[5]);
             }
             getContainer().flush();
         }
+        if(defined(values, 8)) {
+            communicationChannelContributedActions.newPhoneOrFax(
+                    party, 
+                    CommunicationChannelType.PHONE_NUMBER, 
+                    values[8]);
+            getContainer().flush();
+        }
         if(defined(values, 9)) {
-            communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, values[9]);
+            communicationChannelContributedActions.newPhoneOrFax(
+                    party, 
+                    CommunicationChannelType.FAX_NUMBER, 
+                    values[9]);
             getContainer().flush();
         }
         if(defined(values, 10)) {
-            communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.FAX_NUMBER, values[10]);
-            getContainer().flush();
-        }
-        if(defined(values, 11)) {
-            communicationChannelContributedActions.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, values[11]);
+            communicationChannelContributedActions.newEmail(
+                    party, 
+                    CommunicationChannelType.EMAIL_ADDRESS, 
+                    values[10]);
             getContainer().flush();
         }
         return party;
@@ -119,12 +134,6 @@ public class PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixtu
 
     public void injectCommunicationChannels(CommunicationChannelContributions communicationChannelContributedActions) {
         this.communicationChannelContributedActions = communicationChannelContributedActions;
-    }
-
-    private FinancialAccounts financialAccounts;
-
-    public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
-        this.financialAccounts = financialAccounts;
     }
 
 }

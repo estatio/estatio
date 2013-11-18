@@ -24,7 +24,7 @@ import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.fixture.EstatioTransactionalObjectsTeardownFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndRolesAndLeaseUnitsAndTagsFixture;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 
 /**
  * A catalogue of different fixtures for features to use;
@@ -41,7 +41,7 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
     public void beforeScenarioLeasesOnlyFixture() {
         scenarioExecution().install(
                 new EstatioTransactionalObjectsTeardownFixture(),
-                new PersonsAndOrganisationsAndBankAccountsAndCommunicationChannelsFixture(),
+                new PersonsAndOrganisationsAndCommunicationChannelsFixture(),
                 new PropertiesAndUnitsFixture(),
                 new LeasesAndRolesAndLeaseUnitsAndTagsFixture()
                 // no lease items or terms

@@ -80,8 +80,16 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE agreement == :agreement "
                         + "&& type == :type "
                         + "&& (startDate == null || startDate < :date) "
+                        + "&& (endDate == null || endDate > :date) "),
+        @javax.jdo.annotations.Query(
+                name = "findByPartyAndTypeAndContainsDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE party == :party "
+                        + "&& type == :type "
+                        + "&& (startDate == null || startDate < :date) "
                         + "&& (endDate == null || endDate > :date) ")
-})
+        })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class AgreementRole extends EstatioMutableObject<AgreementRole> 
         implements WithIntervalContiguous<AgreementRole> {
