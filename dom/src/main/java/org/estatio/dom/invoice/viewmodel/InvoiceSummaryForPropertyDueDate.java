@@ -18,12 +18,16 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import com.google.common.io.BaseEncoding;
+
+import org.jdom2.Element;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractViewModel;
@@ -40,6 +44,7 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.utils.Jdom2Util;
 
 /**
  * View model that surfaces information about each property along with summary
@@ -82,27 +87,65 @@ import org.estatio.dom.invoice.Invoices;
 @Immutable
 public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
-    private static final String OID_SEPARATOR = "_AND_";
-
-    // //////////////////////////////////////
-
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public String viewModelMemento() {
-        return getReference() + OID_SEPARATOR + getDueDate().toString();
+        final String base64UrlEncode = base64UrlEncode(asSnapshotXml());
+        return base64UrlEncode;
     }
-
+    
+    /**
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public void viewModelInit(final String memento) {
-        String[] split = memento.split(OID_SEPARATOR);
-        setReference(split[0]);
-        setDueDate(new LocalDate(split[1]));
+        initFromSnapshotXml(base64UrlDecode(memento));
     }
+
+    private String asSnapshotXml() {
+        Element el = new Element("memento");
+
+        set(el, "reference", getReference());
+        set(el, "dueDate", getDueDate());
+        set(el, "netAmount", getNetAmount());
+        set(el, "vatAmount", getVatAmount());
+        set(el, "grossAmount", getGrossAmount());
+        set(el, "total", ""+getTotal());
+        
+        return Jdom2Util.toString(el);
+    }
+
+    private void initFromSnapshotXml(final String str) {
+        final Element el = Jdom2Util.parse(str);
+        
+        setReference(Jdom2Util.getChild(el, "reference", String.class));
+        setDueDate(Jdom2Util.getChild(el, "dueDate", LocalDate.class));
+        setNetAmount(Jdom2Util.getChild(el, "netAmount", BigDecimal.class));
+        setVatAmount(Jdom2Util.getChild(el, "vatAmount", BigDecimal.class));
+        setGrossAmount(Jdom2Util.getChild(el, "grossAmount", BigDecimal.class));
+        setTotal(Jdom2Util.getChild(el, "total", Integer.class));
+    }
+
+    static void set(final Element memento, final String name, final Object value) {
+        if(value != null) {
+            memento.addContent(new Element(name).setText(value.toString()));
+        }
+    }
+
+    static String get(final Element el, final String name) {
+        return el.getChild(name).getText();
+    }
+
+    private static String base64UrlEncode(final String str) {
+        return BaseEncoding.base64Url().encode(str.getBytes(Charset.forName("UTF-8")));
+    }
+    private static String base64UrlDecode(final String str) {
+        return new String(BaseEncoding.base64Url().decode(str), Charset.forName("UTF-8"));
+    }
+    
 
     // //////////////////////////////////////
 

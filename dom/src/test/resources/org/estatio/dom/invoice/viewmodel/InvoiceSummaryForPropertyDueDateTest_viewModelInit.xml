@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<memento>
+  <reference>OXF</reference>
+  <dueDate>2013-04-01</dueDate>
+  <total>123</total>
+  <netAmount>10.00</netAmount>
+  <vatAmount>1.75</vatAmount>
+  <grossAmount>11.75</grossAmount>
+</memento>
