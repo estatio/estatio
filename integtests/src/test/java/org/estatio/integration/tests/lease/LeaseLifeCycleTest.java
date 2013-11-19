@@ -130,6 +130,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         indexValues.newIndexValue(index, new LocalDate(2014, 12, 1), new BigDecimal(115));
         lease.verifyUntil(new LocalDate(2015, 3, 31));
         LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) rItem.findTerm(new LocalDate(2015, 1, 1));
+
         assertThat(term.getIndexationPercentage(), is(new BigDecimal(4.5)));
         assertThat(term.getIndexedValue(), is(new BigDecimal("156750.00")));
 

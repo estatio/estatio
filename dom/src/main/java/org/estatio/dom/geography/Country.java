@@ -54,7 +54,7 @@ import org.estatio.dom.WithReferenceUnique;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.geography.Country "
-                        + "WHERE reference.matches(:reference)")
+                        + "WHERE reference == :reference")
 })
 @Immutable
 @Bounded

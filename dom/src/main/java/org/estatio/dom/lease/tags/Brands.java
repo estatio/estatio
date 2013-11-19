@@ -22,12 +22,15 @@ import java.util.List;
 
 import javax.jdo.Query;
 
+import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
 @Hidden
 public class Brands extends EstatioDomainService<Brand> {
@@ -37,8 +40,8 @@ public class Brands extends EstatioDomainService<Brand> {
     }
 
     // //////////////////////////////////////
-    
-    @SuppressWarnings({ "unchecked"})
+
+    @SuppressWarnings({ "unchecked" })
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<String> findUniqueNames() {
@@ -50,7 +53,12 @@ public class Brands extends EstatioDomainService<Brand> {
     public Brand findByName(final String name) {
         return firstMatch("findByName", "name", name);
     }
-    
+
+    @Hidden
+    public List<Brand> matchByName(final String name) {
+        return allMatches("matchByName", "name", StringUtils.wildcardToCaseInsensitiveRegex(name));
+    }
+
     @Programmatic
     public Brand findOrCreate(final String name) {
         if (name == null) {
@@ -63,5 +71,12 @@ public class Brands extends EstatioDomainService<Brand> {
         }
         return brand;
     }
-    
+
+    @Hidden
+    public List<Brand> autoComplete(final String searchPhrase) {
+        return searchPhrase.length() > 0
+                ? matchByName("*" + searchPhrase + "*")
+                : Lists.<Brand> newArrayList();
+    }
+
 }

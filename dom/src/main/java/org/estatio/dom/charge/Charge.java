@@ -51,7 +51,7 @@ import org.estatio.dom.tax.Tax;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.charge.Charge "
-                        + "WHERE reference.matches(:reference)")
+                        + "WHERE reference == :reference")
 })
 @Bounded
 @Immutable

@@ -60,19 +60,6 @@ public class OrganisationsTest_finders {
             }
         };
     }
-
-    @Test
-    public void findOrganisation() {
-
-        organisations.findOrganisation("*REF?1*");
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Organisation.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("referenceOrName"), is((Object)"(?i).*REF.1.*"));
-
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
-    }
     
     
     @Test

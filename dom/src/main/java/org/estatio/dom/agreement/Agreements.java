@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.NotContributed;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.StringUtils;
 
 @Hidden
 public class Agreements extends EstatioDomainService<Agreement> {
@@ -38,11 +37,10 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
     // //////////////////////////////////////
 
-
     @ActionSemantics(Of.SAFE)
     public Agreement findAgreementByReference(final String reference) {
         return firstMatch("findByReference", 
-                "reference", StringUtils.wildcardToRegex(reference));
+                "reference", reference);
     }
 
     @ActionSemantics(Of.SAFE)

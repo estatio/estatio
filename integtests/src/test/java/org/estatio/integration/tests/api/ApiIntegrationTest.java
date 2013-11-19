@@ -45,6 +45,7 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.IndexationStatus;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -238,14 +239,65 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t07_putLeaseTermWorks() throws Exception {
-        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), LeaseItemType.RENT.name(), START_DATE,
-                BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), LeaseTermStatus.NEW.name(),
-                null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", LeaseTermFrequency.YEARLY.name(),
-                null, null, null, null, null, null, null, null, null);
-        api.putLeaseTermForIndexableRent("APILEASE", "APITENANT", "APIUNIT", BigInteger.valueOf(1), LeaseItemType.RENT.name(), START_DATE,
-                BigInteger.valueOf(2), new LocalDate(2013, 1, 1), new LocalDate(2013, 12, 31), LeaseTermStatus.NEW.name(),
-                null, null, BigDecimal.valueOf(12345), BigDecimal.valueOf(12345), null, null, null, "APIINDEX", LeaseTermFrequency.YEARLY.name(),
-                null, null, null, null, null, null, null, null, null);
+        api.putLeaseTermForIndexableRent(
+                "APILEASE",
+                "APITENANT",
+                "APIUNIT",
+                BigInteger.valueOf(1),
+                LeaseItemType.RENT.name(),
+                START_DATE,
+                BigInteger.valueOf(1),
+                START_DATE,
+                new LocalDate(2012, 12, 31),
+                LeaseTermStatus.NEW.name(),
+                IndexationStatus.NEXT.name(),
+                null,
+                null,
+                BigDecimal.valueOf(12345),
+                BigDecimal.valueOf(12345),
+                null,
+                null,
+                null,
+                "APIINDEX",
+                LeaseTermFrequency.YEARLY.name(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        api.putLeaseTermForIndexableRent("APILEASE",
+                "APITENANT",
+                "APIUNIT",
+                BigInteger.valueOf(1),
+                LeaseItemType.RENT.name(),
+                START_DATE,
+                BigInteger.valueOf(2),
+                new LocalDate(2013, 1, 1),
+                new LocalDate(2013, 12, 31),
+                LeaseTermStatus.NEW.name(),
+                IndexationStatus.NEXT.name(),
+                null,
+                null,
+                BigDecimal.valueOf(12345),
+                BigDecimal.valueOf(12345),
+                null,
+                null,
+                null,
+                "APIINDEX",
+                LeaseTermFrequency.YEARLY.name(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null, 
+                null);
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));
     }

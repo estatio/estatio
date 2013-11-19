@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.utils.StringUtils;
 
 public class Countries extends EstatioDomainService<Country> {
 
@@ -46,19 +45,19 @@ public class Countries extends EstatioDomainService<Country> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Other", sequence = "geography.countries.2")
     public List<Country> newCountry(
-            final @Named("Reference") String reference, 
-            final @Named("Alpha-2 Code") String alpha2Code, 
+            final @Named("Reference") String reference,
+            final @Named("Alpha-2 Code") String alpha2Code,
             final @Named("Name") String name) {
         createCountry(reference, alpha2Code, name);
         return allCountries();
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
     public Country createCountry(
-            final String reference, 
-            final String alpha2Code, 
+            final String reference,
+            final String alpha2Code,
             final String name) {
         final Country country = newTransientInstance();
         country.setReference(reference);
@@ -68,15 +67,10 @@ public class Countries extends EstatioDomainService<Country> {
         return country;
     }
 
-
     @Programmatic
     public Country findCountry(
             final String reference) {
-        if (reference == null) {
-            return null;
-        }
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", reference);
     }
-
 
 }

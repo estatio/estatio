@@ -75,7 +75,7 @@ public class FinancialAccountsTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FinancialAccount.class));
         assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
 

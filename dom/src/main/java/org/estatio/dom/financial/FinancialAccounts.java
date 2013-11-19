@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.StringUtils;
 
 @Named("Accounts")
 public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
@@ -57,8 +56,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "2")
     public FinancialAccount findAccountByReference(final @Named("Reference") String reference) {
-        String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch("findByReference", "reference", regex);
+        return firstMatch("findByReference", "reference", reference);
     }
     
     // //////////////////////////////////////

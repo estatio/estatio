@@ -44,7 +44,7 @@ public class FixedAssetsTest_finders extends EstatioIntegrationTest {
     
     @Test
     public void findAssetsByReferenceOrName() throws Exception {
-        Assert.assertThat(fixedAssets.findAssetsByReferenceOrName("*mall*").size(), Is.is(1));
+        Assert.assertThat(fixedAssets.matchAssetsByReferenceOrName("*mall*").size(), Is.is(1));
     }
 
     @Test

@@ -295,6 +295,22 @@ public class Occupancy
         return this;
     }
 
+    public UnitSize default0UpdateClassification() {
+        return getUnitSize();
+    }
+
+    public Sector default1UpdateClassification() {
+        return getSector();
+    }
+
+    public Activity default2UpdateClassification() {
+        return getActivity();
+    }
+
+    public Brand default3UpdateClassification() {
+        return getBrand();
+    }
+
     public List<Activity> choices2UpdateClassification(
             final UnitSize unitSize,
             final Sector sector) {

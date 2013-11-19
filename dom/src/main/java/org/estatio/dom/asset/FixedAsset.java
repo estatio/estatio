@@ -70,7 +70,7 @@ import org.estatio.dom.party.Party;
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByReferenceOrName", language = "JDOQL",
+                name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.asset.FixedAsset "
                         + "WHERE reference.matches(:regex) "
                         + "|| name.matches(:regex) ")

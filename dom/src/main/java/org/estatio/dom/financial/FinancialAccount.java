@@ -54,7 +54,7 @@ import org.estatio.dom.party.Party;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.financial.FinancialAccount "
-                        + "WHERE reference.matches(:reference)"),
+                        + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByTypeAndOwner", language = "JDOQL",
                 value = "SELECT "

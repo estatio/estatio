@@ -79,7 +79,7 @@ public class Properties extends EstatioDomainService<Property> {
     @MemberOrder(name = "Fixed Assets", sequence = "12")
     public List<Property> findProperties(final String referenceOrName) {
         return allMatches("findByReferenceOrName",
-                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     // //////////////////////////////////////
@@ -95,7 +95,7 @@ public class Properties extends EstatioDomainService<Property> {
     @Programmatic
     public Property findPropertyByReference(final String reference) {
         return firstMatch("findByReference",
-                "reference", StringUtils.wildcardToRegex(reference));
+                "reference", reference);
     }
 
     // //////////////////////////////////////

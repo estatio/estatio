@@ -72,7 +72,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
             final @Named("Start Date") LocalDate startDate, 
             final @Named("Due Date") LocalDate dueDate) {
         return allMatches("findByLeaseAndStartDateAndDueDate",
-                "leaseReferenceOrName", StringUtils.wildcardToRegex(leaseReferenceOrName),
+                "leaseReferenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(leaseReferenceOrName),
                 "startDate", startDate,
                 "dueDate", dueDate);
     }

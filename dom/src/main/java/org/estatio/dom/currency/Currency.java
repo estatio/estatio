@@ -58,9 +58,9 @@ import org.estatio.dom.WithReferenceUnique;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.currency.Currency "
-                        + "WHERE reference.matches(:reference)"),
+                        + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
-                name = "findByReferenceOrDescription", language = "JDOQL",
+                name = "matchByReferenceOrDescription", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.currency.Currency "
                         + "WHERE reference.matches(:searchArg) "

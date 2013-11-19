@@ -65,7 +65,7 @@ import org.estatio.dom.party.Party;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.Property "
-                        + "WHERE reference.matches(:reference)")
+                        + "WHERE reference == :reference")
 })
 @AutoComplete(repository = Properties.class)
 @Bookmarkable

@@ -72,6 +72,8 @@ public class Event
         extends EstatioMutableObject<Event> 
         implements CalendarEventable {
 
+    private static final int NUMBER_OF_LINES = 8;
+
     public Event() {
         super("date, subject, calendarName");
     }
@@ -154,7 +156,7 @@ public class Event
     private String notes;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.NOTES)
-    @MultiLine(numberOfLines=8)
+    @MultiLine(numberOfLines=NUMBER_OF_LINES)
     public String getNotes() {
         return notes;
     }

@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.utils.StringUtils;
 
 /**
  * Domain service acting as a repository and factory of geographic {@link State}s.
@@ -73,7 +72,7 @@ public class States
 
     @Programmatic
     public State findState(final @Named("Reference") String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", reference);
     }
 
     @Programmatic

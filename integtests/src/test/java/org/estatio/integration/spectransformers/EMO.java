@@ -20,7 +20,6 @@ import org.apache.isis.core.specsupport.scenarios.ScenarioExecution;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 
 /**
@@ -91,7 +90,7 @@ public class EMO  {
             try {
                 return ScenarioExecution.current().getVar("organisation", id, org.estatio.dom.party.Organisation.class);
             } catch(IllegalStateException e) {
-                return ScenarioExecution.current().service(Organisations.class).findOrganisation(id);
+                return (org.estatio.dom.party.Organisation) ScenarioExecution.current().service(Parties.class).findPartyByReference(id);
             }
         }
     }

@@ -77,7 +77,7 @@ public class InvoiceItemsForLeaseTest_finders {
         
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(InvoiceItemForLease.class));
         assertThat(finderInteraction.getQueryName(), is("findByLeaseAndStartDateAndDueDate"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("leaseReferenceOrName"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("leaseReferenceOrName"), is((Object)"(?i).*REF.1.*"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object)startDate));
         assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate"), is((Object)dueDate));
         

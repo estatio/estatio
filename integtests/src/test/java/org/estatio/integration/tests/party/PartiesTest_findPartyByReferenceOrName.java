@@ -46,12 +46,12 @@ public class PartiesTest_findPartyByReferenceOrName extends EstatioIntegrationTe
     
     @Test
     public void happyCase() throws Exception {
-        Assert.assertNotNull(parties.findPartyByReferenceOrName("HELLOWORLD"));
+        Assert.assertNotNull(parties.matchPartyByReferenceOrName("HELLOWORLD"));
     }
 
     @Test
     public void canNotBeFound() throws Exception {
-        Assert.assertNull(parties.findPartyByReferenceOrName("HELLO"));
+        Assert.assertNull(parties.matchPartyByReferenceOrName("HELLO"));
     }
 
 }

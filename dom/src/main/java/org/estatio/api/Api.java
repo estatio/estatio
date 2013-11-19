@@ -67,6 +67,7 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.IndexationStatus;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -429,10 +430,10 @@ public class Api extends AbstractFactoryAndRepository {
 
     @ActionSemantics(Of.IDEMPOTENT)
     public void putPropertyActor(
-            @Named("propertyReference") String propertyReference, 
-            @Named("partyReference") String partyReference, 
-            @Named("type") String typeStr, 
-            @Named("startDate") @Optional LocalDate startDate, 
+            @Named("propertyReference") String propertyReference,
+            @Named("partyReference") String partyReference,
+            @Named("type") String typeStr,
+            @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate) {
         final Property property = fetchProperty(propertyReference, false);
         final Party party = fetchParty(partyReference);
@@ -503,7 +504,6 @@ public class Api extends AbstractFactoryAndRepository {
             occupancy = lease.occupy(unit, startDate);
         }
 
-        occupancy.setStartDate(startDate);
         occupancy.setEndDate(endDate);
         occupancy.setUnitSizeName(size);
         occupancy.setBrandName(brand != null ? brand.replaceAll("\\p{C}", "").trim() : null);
@@ -599,8 +599,9 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("sequence") BigInteger sequence,
             @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate,
-            @Named("status") @Optional String status,
+            @Named("status") @Optional String statusStr,
             // end generic fields
+            @Named("indexationStatus") @Optional String indexationStatusStr,
             @Named("reviewDate") @Optional LocalDate reviewDate,
             @Named("effectiveDate") @Optional LocalDate effectiveDate,
             @Named("baseValue") @Optional BigDecimal baseValue,
@@ -619,7 +620,16 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
             @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(
+                leaseReference,
+                unitReference,
+                itemSequence,
+                itemType,
+                itemStartDate,
+                startDate,
+                endDate,
+                sequence,
+                statusStr);
         if (term != null) {
             Index index = indices.findIndex(indexReference);
             LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
@@ -634,6 +644,8 @@ public class Api extends AbstractFactoryAndRepository {
             term.setNextIndexStartDate(nextIndexStartDate);
             term.setNextIndexValue(nextIndexValue);
             term.setIndexationPercentage(indexationPercentage);
+            IndexationStatus indexationStatus = indexationStatusStr == null ? null : IndexationStatus.valueOf(indexationStatusStr);
+            term.setIndexationStatus(indexationStatus);
             term.setLevellingPercentage(levellingPercentage);
         }
     }
@@ -688,7 +700,16 @@ public class Api extends AbstractFactoryAndRepository {
         }
     }
 
-    private LeaseTerm putLeaseTerm(String leaseReference, String unitReference, BigInteger itemSequence, String itemType, LocalDate itemStartDate, LocalDate startDate, LocalDate endDate, BigInteger sequence, String status) {
+    private LeaseTerm putLeaseTerm(
+            String leaseReference,
+            String unitReference,
+            BigInteger itemSequence,
+            String itemType,
+            LocalDate itemStartDate,
+            LocalDate startDate,
+            LocalDate endDate,
+            BigInteger sequence,
+            String statusStr) {
         Lease lease = leases.findLeaseByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));
@@ -717,7 +738,7 @@ public class Api extends AbstractFactoryAndRepository {
                 }
                 term.setSequence(sequence);
             }
-            term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(status));
+            term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(statusStr));
             // will be overwritten if there is a next term
             term.setEndDate(lease.getTerminationDate());
             return term;
@@ -795,11 +816,11 @@ public class Api extends AbstractFactoryAndRepository {
         Lease lease = fetchLease(leaseReference);
         BreakType breakType = BreakType.valueOf(breakTypeStr);
         BreakExerciseType breakExerciseType = BreakExerciseType.valueOf(breakExcerciseTypeStr);
-        if (notificationDate != null){
+        if (notificationDate != null) {
             Period period = new Period(notificationDate, breakDate);
             notificationPeriodStr = JodaPeriodUtils.asSimpleString(period);
         }
-        if (lease.validateNewBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description) == null){
+        if (lease.validateNewBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description) == null) {
             lease.newBreakOption(breakDate, notificationPeriodStr, breakExerciseType, breakType, description);
         }
     }
@@ -960,12 +981,6 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectLeaseTypes(LeaseTypes leaseTypes) {
         this.leaseTypes = leaseTypes;
-    }
-
-    private BreakOptions breakOptions;
-
-    public void injectBreakOptions(BreakOptions breakOptions) {
-        this.breakOptions = breakOptions;
     }
 
 }

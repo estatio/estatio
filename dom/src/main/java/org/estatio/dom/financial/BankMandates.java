@@ -42,19 +42,19 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     // //////////////////////////////////////
 
-    
     /**
      * for migration API only
      */
     @Programmatic
     public BankMandate newBankMandate(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
+            // aggregate value types
             final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
             final Party debtor,
-            final Party creditor, 
+            final Party creditor,
             final BankAccount bankAccount
             // CHECKSTYLE:ON
             ) {
@@ -78,17 +78,17 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Accounts", sequence = "99")
+    @MemberOrder(name = "Accounts", sequence = "99")
     public List<BankMandate> allBankMandates() {
         return allInstances();
     }
 
     @Programmatic
     @ActionSemantics(Of.SAFE)
-    public List<BankMandate> findBankMandatesFor(BankAccount bankAccount) {
+    public List<BankMandate> findBankMandatesFor(final BankAccount bankAccount) {
         return allMatches("findBankMandatesFor", "bankAccount", bankAccount);
     }
-    
+
     // //////////////////////////////////////
 
     private AgreementTypes agreementTypes;

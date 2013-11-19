@@ -82,7 +82,7 @@ public class AgreementsTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
         assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*some.Reference.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*some?Reference*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
     

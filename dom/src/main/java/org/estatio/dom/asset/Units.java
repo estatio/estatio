@@ -63,13 +63,13 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
             String referenceOrName) {
         // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
         return allMatches("findByReferenceOrName", 
-                "referenceOrName", StringUtils.wildcardToRegex(referenceOrName));
+                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
     public T findUnitByReference(final String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////

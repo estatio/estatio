@@ -28,7 +28,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.utils.StringUtils;
 
 public class Currencies extends EstatioDomainService<Currency> {
 
@@ -66,14 +65,13 @@ public class Currencies extends EstatioDomainService<Currency> {
     @Programmatic
     public Currency findCurrency(
             final String reference) {
-        String rexeg = StringUtils.wildcardToRegex(reference);
-        return firstMatch("findByReference", "reference", rexeg);
+        return firstMatch("findByReference", "reference", reference);
     }
 
 
     @Programmatic
     public List<Currency> autoComplete(final String searchArg) {
-        return allMatches("findByReferenceOrDescription", "searchArg", searchArg);
+        return allMatches("matchByReferenceOrDescription", "searchArg", searchArg);
     }
     
     

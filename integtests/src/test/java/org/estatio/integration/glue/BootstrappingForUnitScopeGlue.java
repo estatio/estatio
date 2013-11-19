@@ -47,7 +47,7 @@ public class BootstrappingForUnitScopeGlue extends CukeGlueAbstract {
                 allowing(service(Leases.class)).findLeaseByReference(with(any(String.class)));
                 will(inMemoryDB.finds(Lease.class));
                 
-                allowing(service(Parties.class)).findPartyByReferenceOrName(with(any(String.class)));
+                allowing(service(Parties.class)).matchPartyByReferenceOrName(with(any(String.class)));
                 will(inMemoryDB.finds(PartyForTesting.class));
                 
                 allowing(service(AgreementRoleTypes.class)).findByTitle(with(any(String.class)));

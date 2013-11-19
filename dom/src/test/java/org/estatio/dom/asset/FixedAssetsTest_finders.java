@@ -64,11 +64,11 @@ public class FixedAssetsTest_finders {
     @Test
     public void findAssetsByReferenceOrName() {
 
-        fixedAssets.findAssetsByReferenceOrName("some?search*Phrase");
+        fixedAssets.matchAssetsByReferenceOrName("some?search*Phrase");
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAsset.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
+        assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("regex"), is((Object)"(?i)some.search.*Phrase"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
@@ -80,7 +80,7 @@ public class FixedAssetsTest_finders {
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(FixedAsset.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReferenceOrName"));
+        assertThat(finderInteraction.getQueryName(), is("matchByReferenceOrName"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("regex"), is((Object)"(?i).*some.RegEx.*Phrase.*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }

@@ -29,7 +29,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.utils.StringUtils;
 
 public class Charges extends EstatioDomainService<Charge> {
 
@@ -84,8 +83,7 @@ public class Charges extends EstatioDomainService<Charge> {
     
     @Programmatic
     public Charge findCharge(final String reference) {
-        String regex = StringUtils.wildcardToRegex(reference);
-        return firstMatch("findByReference", "reference", regex);
+        return firstMatch("findByReference", "reference", reference);
     }
 
 }

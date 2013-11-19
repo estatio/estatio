@@ -22,7 +22,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
@@ -45,11 +45,16 @@ import org.estatio.dom.WithNameUnique;
                         + "FROM org.estatio.dom.lease.tags.Brand "
                         + "WHERE name == :name"),
         @javax.jdo.annotations.Query(
+                name = "matchByName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.tags.Brand "
+                        + "WHERE name.matches(:name)"),
+        @javax.jdo.annotations.Query(
                 name = "findUniqueNames", language = "JDOQL",
                 value = "SELECT name "
                         + "FROM org.estatio.dom.lease.tags.Brand")
 })
-@Bounded
+@AutoComplete(repository = Brands.class, action = "autoComplete")
 public class Brand
         extends EstatioMutableObject<Brand>
         implements WithNameUnique, WithNameComparable<Brand> {

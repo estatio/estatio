@@ -63,7 +63,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByReferenceOrName", language = "JDOQL",
+                name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.party.Party "
                         + "WHERE reference.matches(:referenceOrName) "

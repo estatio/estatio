@@ -70,16 +70,8 @@ public class CountriesTest_finders {
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Country.class));
         assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)".*REF.1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
-    }
-
-    @Test
-    public void findCountryByReference_whenNull() {
-        // TODO: why do the other finders not have a null guard
-        // (or conversely, why does Countries repo?)
-        assertThat(countries.findCountry(null), is(nullValue()));
-        assertThat(finderInteraction, is(nullValue()));
     }
     
     @Test

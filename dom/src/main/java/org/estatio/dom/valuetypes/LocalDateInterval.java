@@ -19,7 +19,6 @@
 package org.estatio.dom.valuetypes;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -192,15 +191,6 @@ public final class LocalDateInterval {
                         startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
                         endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
         return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        // TODO: use Isis' ObjectContracts?
-        return new HashCodeBuilder(16, 23). // two randomly chosen prime numbers
-                append(startInstant).
-                append(endInstant).
-                toHashCode();
     }
 
     @Override

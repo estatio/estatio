@@ -88,7 +88,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.Agreement "
-                        + "WHERE reference.matches(:reference)"),
+                        + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
                 name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL",
                 value = "SELECT "

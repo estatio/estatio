@@ -30,14 +30,6 @@ import org.estatio.dom.JdoColumnLength;
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
 //no @DatastoreIdentity nor @Version, since inherited from supertype
-@javax.jdo.annotations.Queries({ 
-    @javax.jdo.annotations.Query(
-            name = "findByReferenceOrName", language = "JDOQL", 
-            value = "SELECT "
-                    + "FROM org.estatio.dom.party.Organisation "
-                    + "WHERE reference.matches(:referenceOrName) "
-                    + "   || name.matches(:referenceOrName)")
-})
 @PublishedObject(OrganisationChangedPayloadFactory.class)
 public class Organisation extends Party {
 

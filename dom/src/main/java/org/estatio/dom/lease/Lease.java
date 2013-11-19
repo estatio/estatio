@@ -79,9 +79,9 @@ import org.estatio.dom.utils.JodaPeriodUtils;
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
-                        + "WHERE reference.matches(:reference)"),
+                        + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
-                name = "findByReferenceOrName", language = "JDOQL",
+                name = "matchByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Lease "
                         + "WHERE reference.matches(:referenceOrName)"
@@ -208,10 +208,17 @@ public class Lease
         this.occupancies = occupancies;
     }
 
+
+    /**
+     * The action to relate a lease to a unit. A lease can occupy unlimited units.
+     * 
+     * @param unit
+     * @param startDate
+     * @return
+     */
     public Occupancy occupy(
-            final @Named("unit") UnitForLease unit,
-            final @Named("startDate") @Optional LocalDate startDate) {
-        // TODO: there doesn't seem to be any disableXxx guard for this action
+            final @Named("Unit") UnitForLease unit,
+            final @Named("Start date") @Optional LocalDate startDate) {
         Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
         return occupancy;

@@ -38,8 +38,8 @@ public class FixedAssets extends EstatioDomainService<FixedAsset> {
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<FixedAsset> findAssetsByReferenceOrName(final String searchPhrase) {
-        return allMatches("findByReferenceOrName", 
+    public List<FixedAsset> matchAssetsByReferenceOrName(final String searchPhrase) {
+        return allMatches("matchByReferenceOrName", 
                 "regex", StringUtils.wildcardToCaseInsensitiveRegex(searchPhrase));
     }
     
@@ -47,7 +47,7 @@ public class FixedAssets extends EstatioDomainService<FixedAsset> {
 
     @Hidden
     public List<FixedAsset> autoComplete(final String searchPhrase) {
-        return findAssetsByReferenceOrName("*".concat(searchPhrase).concat("*"));
+        return matchAssetsByReferenceOrName("*".concat(searchPhrase).concat("*"));
     }
 
 }

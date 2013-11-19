@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.geography;
+package org.estatio.dom.tag;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,21 +31,19 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.dom.lease.tags.Brands;
 
-public class StatesTest_finders {
+public class BrandsTest_finders {
 
     private FinderInteraction finderInteraction;
 
-    private States states;
-
-    private Country country;
+    private Brands brands;
 
     @Before
     public void setup() {
-        
-        country = new Country();
-        
-        states = new States() {
+
+        brands = new Brands() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -53,7 +51,7 @@ public class StatesTest_finders {
                 return null;
             }
             @Override
-            protected List<State> allInstances() {
+            protected List<Brand> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -66,35 +64,25 @@ public class StatesTest_finders {
     }
 
     @Test
-    public void findStateByReference() {
-
-        states.findState("*REF?1*");
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
-    }
-
-    @Test
-    public void findStatesByCountry() {
-        
-        states.findStatesByCountry(country);
-        
+    public void matchByName() {
+        brands.matchByName("*REF?1*");
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
-        assertThat(finderInteraction.getQueryName(), is("findByCountry"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("country"), is((Object)country));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
+        assertThat(finderInteraction.getQueryName(), is("matchByName"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)"(?i).*REF.1.*"));
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
+
     
     @Test
-    public void allStates() {
-        
-        states.allStates();
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+    public void autoComplete() {
+        brands.autoComplete("REF1");
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Brand.class));
+        assertThat(finderInteraction.getQueryName(), is("matchByName"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("name"), is((Object)"(?i).*REF1.*"));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
     }
-    
+
+        
 }

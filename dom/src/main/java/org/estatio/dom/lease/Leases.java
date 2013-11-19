@@ -154,7 +154,8 @@ public class Leases extends EstatioDomainService<Lease> {
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String refOrName) {
-        return allMatches("findByReferenceOrName", "referenceOrName", StringUtils.wildcardToRegex(refOrName));
+        String pattern = StringUtils.wildcardToCaseInsensitiveRegex(refOrName);
+        return allMatches("matchByReferenceOrName", "referenceOrName", pattern);
     }
 
     @ActionSemantics(Of.SAFE)
@@ -166,7 +167,7 @@ public class Leases extends EstatioDomainService<Lease> {
     }
 
     public List<FixedAsset> autoComplete0FindLeasesActiveOnDate(final String searchPhrase) {
-        return fixedAssets.findAssetsByReferenceOrName(searchPhrase);
+        return fixedAssets.matchAssetsByReferenceOrName(searchPhrase);
     }
 
     public LocalDate default1FindLeasesActiveOnDate() {
@@ -271,7 +272,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     @Programmatic
     public Lease findLeaseByReference(final String reference) {
-        return firstMatch("findByReference", "reference", StringUtils.wildcardToRegex(reference));
+        return firstMatch("findByReference", "reference", reference);
     }
 
     @Programmatic
