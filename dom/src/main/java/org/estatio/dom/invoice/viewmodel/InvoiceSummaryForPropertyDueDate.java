@@ -18,16 +18,12 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.google.common.io.BaseEncoding;
-
-import org.jdom2.Element;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractViewModel;
@@ -39,12 +35,13 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
+import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.Jdom2Util;
 
 /**
  * View model that surfaces information about each property along with summary
@@ -92,60 +89,33 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      */
     @Override
     public String viewModelMemento() {
-        final String base64UrlEncode = base64UrlEncode(asSnapshotXml());
-        return base64UrlEncode;
+        final Memento memento = viewModelSupport.create();
+        
+        memento.set("reference", getReference())
+                .set("dueDate", getDueDate())
+                .set("netAmount", getNetAmount())
+                .set("vatAmount", getVatAmount())
+                .set("grossAmount", getGrossAmount())
+                .set("total", getTotal());
+
+        return memento.asString();
     }
     
-    /**
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
-    public void viewModelInit(final String memento) {
-        initFromSnapshotXml(base64UrlDecode(memento));
-    }
-
-    private String asSnapshotXml() {
-        Element el = new Element("memento");
-
-        set(el, "reference", getReference());
-        set(el, "dueDate", getDueDate());
-        set(el, "netAmount", getNetAmount());
-        set(el, "vatAmount", getVatAmount());
-        set(el, "grossAmount", getGrossAmount());
-        set(el, "total", ""+getTotal());
+    public void viewModelInit(final String mementoStr) {
+        final Memento memento = viewModelSupport.parse(mementoStr);
         
-        return Jdom2Util.toString(el);
+        setReference(memento.get("reference", String.class));
+        setDueDate(memento.get("dueDate", LocalDate.class));
+        setNetAmount(memento.get("netAmount", BigDecimal.class));
+        setVatAmount(memento.get("vatAmount", BigDecimal.class));
+        setGrossAmount(memento.get("grossAmount", BigDecimal.class));
+        setTotal(memento.get("total", Integer.class));
     }
 
-    private void initFromSnapshotXml(final String str) {
-        final Element el = Jdom2Util.parse(str);
-        
-        setReference(Jdom2Util.getChild(el, "reference", String.class));
-        setDueDate(Jdom2Util.getChild(el, "dueDate", LocalDate.class));
-        setNetAmount(Jdom2Util.getChild(el, "netAmount", BigDecimal.class));
-        setVatAmount(Jdom2Util.getChild(el, "vatAmount", BigDecimal.class));
-        setGrossAmount(Jdom2Util.getChild(el, "grossAmount", BigDecimal.class));
-        setTotal(Jdom2Util.getChild(el, "total", Integer.class));
-    }
-
-    static void set(final Element memento, final String name, final Object value) {
-        if(value != null) {
-            memento.addContent(new Element(name).setText(value.toString()));
-        }
-    }
-
-    static String get(final Element el, final String name) {
-        return el.getChild(name).getText();
-    }
-
-    private static String base64UrlEncode(final String str) {
-        return BaseEncoding.base64Url().encode(str.getBytes(Charset.forName("UTF-8")));
-    }
-    private static String base64UrlDecode(final String str) {
-        return new String(BaseEncoding.base64Url().decode(str), Charset.forName("UTF-8"));
-    }
-    
 
     // //////////////////////////////////////
 
@@ -275,6 +245,12 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     final public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
+    }
+    
+    private ViewModelSupport viewModelSupport;
+    
+    final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
+        this.viewModelSupport = viewModelSupport;
     }
 
 }

@@ -38,13 +38,14 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
+import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.utils.Jdom2Util;
 
 @javax.jdo.annotations.PersistenceCapable(
     identityType = IdentityType.NONDURABLE,
@@ -86,49 +87,39 @@ import org.estatio.dom.utils.Jdom2Util;
 @Immutable
 public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
-
+    
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public String viewModelMemento() {
-        final String base64UrlEncode = base64UrlEncode(asSnapshotXml());
-        return base64UrlEncode;
+        final Memento memento = viewModelSupport.create();
+        
+        memento.set("reference", getReference())
+                .set("dueDate", getDueDate())
+                .set("status", getStatus())
+                .set("netAmount", getNetAmount())
+                .set("vatAmount", getVatAmount())
+                .set("grossAmount", getGrossAmount())
+                .set("total", "" + getTotal());
+
+        return memento.asString();
     }
     
-    /**
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
-    public void viewModelInit(final String memento) {
-        initFromSnapshotXml(base64UrlDecode(memento));
-    }
-
-    private String asSnapshotXml() {
-        Element el = new org.jdom2.Element("memento");
-
-        set(el, "reference", getReference());
-        set(el, "dueDate", getDueDate());
-        set(el, "status", getStatus());
-        set(el, "netAmount", getNetAmount());
-        set(el, "vatAmount", getVatAmount());
-        set(el, "grossAmount", getGrossAmount());
-        set(el, "total", ""+getTotal());
+    public void viewModelInit(final String mementoStr) {
+        final Memento memento = viewModelSupport.parse(mementoStr);
         
-        return Jdom2Util.toString(el);
-    }
-
-    private void initFromSnapshotXml(final String str) {
-        final Element el = Jdom2Util.parse(str);
-        
-        setReference(Jdom2Util.getChild(el, "reference", String.class));
-        setDueDate(Jdom2Util.getChild(el, "dueDate", LocalDate.class));
-        setStatus(Jdom2Util.getChild(el, "status", String.class));
-        setNetAmount(Jdom2Util.getChild(el, "netAmount", BigDecimal.class));
-        setVatAmount(Jdom2Util.getChild(el, "vatAmount", BigDecimal.class));
-        setGrossAmount(Jdom2Util.getChild(el, "grossAmount", BigDecimal.class));
-        setTotal(Jdom2Util.getChild(el, "total", Integer.class));
+        setReference(memento.get("reference", String.class));
+        setDueDate(memento.get("dueDate", LocalDate.class));
+        setStatus(memento.get("status", String.class));
+        setNetAmount(memento.get("netAmount", BigDecimal.class));
+        setVatAmount(memento.get("vatAmount", BigDecimal.class));
+        setGrossAmount(memento.get("grossAmount", BigDecimal.class));
+        setTotal(memento.get("total", Integer.class));
     }
 
     static void set(final Element memento, final String name, final Object value) {
@@ -301,6 +292,12 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     final public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
+    }
+
+    private ViewModelSupport viewModelSupport;
+    
+    final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
+        this.viewModelSupport = viewModelSupport;
     }
 
 }

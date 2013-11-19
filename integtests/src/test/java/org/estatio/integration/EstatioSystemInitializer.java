@@ -21,6 +21,8 @@ import org.apache.log4j.Level;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.runtime.services.viewmodelsupport.ViewModelSupportDefault;
+import org.apache.isis.core.runtime.services.xmlsnapshot.XmlSnapshotServiceDefault;
 import org.apache.isis.core.wrapper.WrapperFactoryDefault;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
@@ -160,6 +162,8 @@ public class EstatioSystemInitializer {
                     new Activities(),
                     new Brands(),
                     new BookmarkServiceForEstatio(),
+                    new XmlSnapshotServiceDefault(),
+                    new ViewModelSupportDefault(),
                     new Charges(),
                     new ChargeGroups(),
                     new FinancialAccounts(),
