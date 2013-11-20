@@ -16,16 +16,11 @@
  */
 package org.estatio.dom.invoice.viewmodel;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
-import java.net.URL;
 
-import com.google.common.io.BaseEncoding;
-import com.google.common.io.Resources;
-
-import org.apache.commons.lang.NotImplementedException;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -34,7 +29,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
-import org.apache.isis.applib.services.xmlsnapshot.XmlSnapshotServiceAbstract;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 

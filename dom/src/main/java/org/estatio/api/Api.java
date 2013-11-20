@@ -67,7 +67,6 @@ import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.IndexationStatus;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -87,7 +86,6 @@ import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.Occupancy.OccupancyReportingType;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakOptions;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Organisations;
@@ -601,7 +599,6 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("endDate") @Optional LocalDate endDate,
             @Named("status") @Optional String statusStr,
             // end generic fields
-            @Named("indexationStatus") @Optional String indexationStatusStr,
             @Named("reviewDate") @Optional LocalDate reviewDate,
             @Named("effectiveDate") @Optional LocalDate effectiveDate,
             @Named("baseValue") @Optional BigDecimal baseValue,
@@ -644,8 +641,6 @@ public class Api extends AbstractFactoryAndRepository {
             term.setNextIndexStartDate(nextIndexStartDate);
             term.setNextIndexValue(nextIndexValue);
             term.setIndexationPercentage(indexationPercentage);
-            IndexationStatus indexationStatus = indexationStatusStr == null ? null : IndexationStatus.valueOf(indexationStatusStr);
-            term.setIndexationStatus(indexationStatus);
             term.setLevellingPercentage(levellingPercentage);
         }
     }
@@ -701,15 +696,15 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private LeaseTerm putLeaseTerm(
-            String leaseReference,
-            String unitReference,
-            BigInteger itemSequence,
-            String itemType,
-            LocalDate itemStartDate,
-            LocalDate startDate,
-            LocalDate endDate,
-            BigInteger sequence,
-            String statusStr) {
+            final String leaseReference,
+            final String unitReference,
+            final BigInteger itemSequence,
+            final String itemType,
+            final LocalDate itemStartDate,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final BigInteger sequence,
+            final String statusStr) {
         Lease lease = leases.findLeaseByReference(leaseReference);
         if (lease == null) {
             throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));

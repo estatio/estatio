@@ -26,10 +26,10 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Mandatory;
-import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.JdoColumnScale;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indexable;
 import org.estatio.dom.index.IndexationService;
@@ -82,7 +82,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private BigDecimal baseIndexValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
     @Optional
     @Override
     public BigDecimal getBaseIndexValue() {
@@ -115,7 +115,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private BigDecimal nextIndexValue;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
     @Optional
     @Override
     public BigDecimal getNextIndexValue() {
@@ -131,7 +131,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private BigDecimal rebaseFactor;
 
-    @NotPersisted
+    @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.REBASE_FACTOR, allowsNull = "true")
+    @Optional
     @Override
     public BigDecimal getRebaseFactor() {
         return rebaseFactor;
@@ -163,6 +164,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 1, allowsNull = "true")
     @Optional
+    @Override
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
     }
@@ -208,6 +210,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Override
     public BigDecimal getIndexedValue() {
         return indexedValue;
     }
@@ -230,8 +233,6 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     public void setSettledValue(final BigDecimal settledValue) {
         this.settledValue = settledValue;
     }
-
-    // //////////////////////////////////////
 
     @Override
     public BigDecimal getApprovedValue() {
@@ -263,23 +264,36 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
                 setLevellingPercentage(previousTerm.getLevellingPercentage());
             }
         }
+
     }
+    
+    // //////////////////////////////////////
+    
+    public boolean isIndexable() {
+        return getSettledValue() == null 
+                && getIndexedValue() == null
+                && (getBaseIndexStartDate() != null && getNextIndexStartDate() != null)
+                && (getBaseIndexStartDate().compareTo(getNextIndexStartDate()) < 0);
+    }
+    
+    // //////////////////////////////////////
 
     @Programmatic
     @Override
     public void update() {
         super.update();
-        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
-        if (previousTerm != null) {
-            BigDecimal newBaseValue = MathUtils.firstNonZero(
-                    previousTerm.getIndexedValue(),
-                    previousTerm.getBaseValue());
-            if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
-                setBaseValue(newBaseValue);
+        if (isIndexable()) {
+            LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
+            if (previousTerm != null) {
+                BigDecimal newBaseValue = MathUtils.firstNonZero(
+                        previousTerm.getIndexedValue(),
+                        previousTerm.getBaseValue());
+                if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
+                    setBaseValue(newBaseValue);
+                }
             }
+            indexationService.indexate(this);
         }
-        indexationService.indexate(this);
-
     }
 
     // //////////////////////////////////////

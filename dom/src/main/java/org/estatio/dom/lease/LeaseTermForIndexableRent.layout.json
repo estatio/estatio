@@ -35,10 +35,12 @@
             "baseIndexValue": {},
             "nextIndexStartDate": {},
             "nextIndexValue": {},
+            "rebaseFactor": {},
             "effectiveDate": {},
             "indexationPercentage": {},
             "levellingPercentage": {},
-            "levellingValue": {}
+            "levellingValue": {},
+            "indexable": {}
           }
         }
       }

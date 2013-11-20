@@ -437,9 +437,11 @@ public abstract class LeaseTerm
             getNext().remove();
         }
         if (this.getInvoiceItems().size() == 0) {
+            // CHECKSTYLE.OFF: 
             // TODO: Disabled, see EST-273
             // this.modifyPrevious(null);
             // getContainer().remove(this);
+            // CHECKSTYLE.ON: 
         }
     }
 
@@ -570,7 +572,6 @@ public abstract class LeaseTerm
         nextTerm.update();
         return nextTerm;
     }
-    
 
     // //////////////////////////////////////
 
@@ -636,14 +637,13 @@ public abstract class LeaseTerm
             final InvoicingFrequency frequency) {
         return invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Override
-    public String toString(){
-        return getInterval().toString()+ " / ";
+    public String toString() {
+        return getInterval().toString() + " / ";
     }
-    
 
     // //////////////////////////////////////
 
@@ -658,9 +658,9 @@ public abstract class LeaseTerm
     public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
-    
+
     private LeaseTerms terms;
-    
+
     public final void injectLeaseTerms(final LeaseTerms terms) {
         this.terms = terms;
     }

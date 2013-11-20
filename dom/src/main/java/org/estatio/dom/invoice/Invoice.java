@@ -29,6 +29,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -113,7 +114,17 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     // //////////////////////////////////////
 
     public String title() {
-        return String.format("%08d", Integer.parseInt(getId()));
+        return String.format("*%08d", Integer.parseInt(getId()));
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden(where=Where.OBJECT_FORMS)
+    public String getNumber() {
+        return ObjectUtils.firstNonNull(
+                getInvoiceNumber(),
+                getCollectionNumber(),
+                title());
     }
 
     // //////////////////////////////////////
@@ -151,6 +162,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
+    @Hidden(where=Where.PARENTED_TABLES)
     public String getCollectionNumber() {
         return collectionNumber;
     }
@@ -165,6 +177,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
+    @Hidden(where=Where.PARENTED_TABLES)
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -409,7 +422,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     public Invoice invoiceNow() {
         return invoiceOn(getClockService().now());
     }
-    
+
     public boolean hideInvoiceNow() {
         return false; // TODO: return true if action is hidden, false if visible
     }
@@ -422,8 +435,9 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
-        //TODO: offload valid next states to the InvoiceStatus enum? Eg getStatus.isPossible(InvoiceStatus.APPROVED)
-        // 
+        // TODO: offload valid next states to the InvoiceStatus enum? Eg
+        // getStatus.isPossible(InvoiceStatus.APPROVED)
+        //
         if (getStatus() != InvoiceStatus.COLLECTED && getStatus() != InvoiceStatus.APPROVED) {
             return "Must be in status of 'collected'";
         }

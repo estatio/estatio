@@ -20,7 +20,7 @@ package org.estatio.dom.financial.utils;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public final class IBANValidator {
     

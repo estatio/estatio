@@ -392,12 +392,7 @@ public class LeaseItem
 
     public LeaseTerm newTerm(
             final @Named("Start date") LocalDate startDate) {
-        LeaseTerm lastTerm = null;
-        try {
-            lastTerm = getTerms().last();
-        } catch (NoSuchElementException e) {
-            // TODO: is this ok?  if so then let's have a comment here at least.
-        }
+        LeaseTerm lastTerm = getTerms().size() > 0 ? getTerms().last() : null;
         LeaseTerm term = leaseTerms.newLeaseTerm(this, lastTerm, startDate);
         term.initialize();
         return term;

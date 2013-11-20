@@ -24,6 +24,15 @@ import static org.junit.Assert.assertThat;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.hamcrest.core.Is;
+import org.joda.time.LocalDate;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -45,7 +54,6 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.IndexationStatus;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
@@ -62,14 +70,6 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
-import org.hamcrest.core.Is;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiIntegrationTest extends EstatioIntegrationTest {
@@ -250,7 +250,6 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
                 START_DATE,
                 new LocalDate(2012, 12, 31),
                 LeaseTermStatus.NEW.name(),
-                IndexationStatus.NEXT.name(),
                 null,
                 null,
                 BigDecimal.valueOf(12345),
@@ -279,7 +278,6 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
                 new LocalDate(2013, 1, 1),
                 new LocalDate(2013, 12, 31),
                 LeaseTermStatus.NEW.name(),
-                IndexationStatus.NEXT.name(),
                 null,
                 null,
                 BigDecimal.valueOf(12345),

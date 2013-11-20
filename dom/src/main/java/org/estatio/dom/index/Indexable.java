@@ -24,35 +24,39 @@ import org.joda.time.LocalDate;
 
 public interface Indexable {
 
-    public void setBaseIndexValue(BigDecimal baseIndexValue);
-    
-    public void setNextIndexValue(BigDecimal nextIndexValue);
-    
-    public void setIndexationPercentage(BigDecimal indexationPercentage);
-    
-    public void setIndexedValue(BigDecimal indexedValue);
+    LocalDate getBaseIndexStartDate();
 
-    public Index getIndex();
+    BigDecimal getBaseIndexValue();
 
-    public LocalDate getBaseIndexStartDate();
+    BigDecimal getBaseValue();
 
-    public LocalDate getNextIndexStartDate();
+    Index getIndex();
 
-    public BigDecimal getLevellingPercentage();
+    BigDecimal getIndexationPercentage();
 
-    public BigDecimal getBaseValue();
+    BigDecimal getLevellingPercentage();
 
-    public void setRebaseFactor(BigDecimal rebaseFactor);
+    LocalDate getNextIndexStartDate();
 
-    public BigDecimal getBaseIndexValue();
+    BigDecimal getNextIndexValue();
 
-    public BigDecimal getNextIndexValue();
-
-    public BigDecimal getRebaseFactor();
-
-    void setIndex(Index index);
+    BigDecimal getRebaseFactor();
 
     void setBaseIndexStartDate(LocalDate baseIndexStartDate);
 
-    void setNextIndexStartDate(LocalDate nextIndexStartDate);    
+    void setBaseIndexValue(BigDecimal baseIndexValue);
+
+    void setIndex(Index index);
+
+    void setIndexationPercentage(BigDecimal indexationPercentage);
+
+    void setIndexedValue(BigDecimal indexedValue);
+
+    void setNextIndexStartDate(LocalDate nextIndexStartDate);
+
+    void setNextIndexValue(BigDecimal nextIndexValue);
+
+    void setRebaseFactor(BigDecimal rebaseFactor);
+
+    BigDecimal getIndexedValue();
 }
