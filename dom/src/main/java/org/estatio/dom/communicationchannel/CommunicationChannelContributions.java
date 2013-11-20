@@ -63,7 +63,7 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
             final @Named("Owner") CommunicationChannelOwner owner, 
             final @Named("Type") CommunicationChannelType type,
             final Country country, 
-            final State state, 
+            final @Optional State state, 
             final @Named("Address Line 1") String address1, 
             final @Named("Address Line 2") @Optional String address2, 
             final @Named("Postal Code") String postalCode, 

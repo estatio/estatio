@@ -25,10 +25,10 @@ public final class JdoColumnLength {
 
     public final static int STATUS_ENUM = 20;
     public final static int INVOICING_FREQUENCY_ENUM = 30;
-    public final static int LEASE_TERM_FREQUENCY_ENUM = 20;
-    public final static int OCCUPANCY_REPORTING_TYPE_ENUM = 20;
-    public final static int PAYMENT_METHOD_ENUM = 20;
-    public final static int TYPE_ENUM = 20;
+    public final static int LEASE_TERM_FREQUENCY_ENUM = 30;
+    public final static int OCCUPANCY_REPORTING_TYPE_ENUM = 30;
+    public final static int PAYMENT_METHOD_ENUM = 30;
+    public final static int TYPE_ENUM = 30;
 
     public final static int REFERENCE = 24;
 

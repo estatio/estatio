@@ -22,13 +22,11 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.utils.StringUtils;
 
 public class Organisations extends EstatioDomainService<Organisation> {
 
@@ -39,9 +37,9 @@ public class Organisations extends EstatioDomainService<Organisation> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Parties", sequence = "2")
+    @MemberOrder(name = "Parties", sequence = "2")
     public Organisation newOrganisation(
-            final @Named("Reference") String reference, 
+            final @Named("Reference") String reference,
             final @Named("Name") String name) {
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setReference(reference);
@@ -51,24 +49,10 @@ public class Organisations extends EstatioDomainService<Organisation> {
     }
 
     // //////////////////////////////////////
-    
-    @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Parties", sequence = "5")
-    public List<Organisation> findOrganisations(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
-            String referenceOrName) {
-        return allMatches("findByReferenceOrName", 
-                "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
-    }
-    public String default0FindOrganisations() {
-        return "*prop*";
-    }
-
-    // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Parties", sequence = "99.1")
+    @MemberOrder(name = "Parties", sequence = "99.1")
     public List<Organisation> allOrganisations() {
         return allInstances();
     }

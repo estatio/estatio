@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.AbstractContainedObject;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
@@ -38,10 +39,16 @@ public class FinancialAccountContributions extends AbstractContainedObject {
     @NotInServiceMenu
     @MemberOrder(name = "Financial Accounts", sequence = "13")
     public FinancialAccount addAccount(
-            final Party owner, final FinancialAccountType financialAccountType) {
-        FinancialAccount financialAccount = financialAccountType.create(getContainer());
-        financialAccount.setOwner(owner);
-        return financialAccount;
+            final Party owner,
+            final FinancialAccountType financialAccountType,
+            final @Named("Reference") String reference,
+            final @Named("Name") String name) {
+        FinancialAccount account = financialAccountType.create(getContainer());
+        account.setOwner(owner);
+        account.setReference(reference);
+        account.setName(name);
+        persistIfNotAlready(account);
+        return account;
     }
 
     // //////////////////////////////////////
@@ -56,6 +63,7 @@ public class FinancialAccountContributions extends AbstractContainedObject {
     // //////////////////////////////////////
 
     private FinancialAccounts financialAccounts;
+
     public void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
     }
