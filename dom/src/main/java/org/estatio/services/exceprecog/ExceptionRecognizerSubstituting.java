@@ -21,9 +21,9 @@ package org.estatio.services.exceprecog;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
-import org.apache.isis.applib.services.exceprecog.ExceptionRecognizerGeneral;
+import org.apache.isis.applib.services.exceprecog.ExceptionRecognizerAbstract;
 
-class ExceptionRecognizerSubstituting extends ExceptionRecognizerGeneral {
+class ExceptionRecognizerSubstituting extends ExceptionRecognizerAbstract {
     public ExceptionRecognizerSubstituting(final String messageFragment, final String replacement) {
         super(new Predicate<Throwable>() {
             public boolean apply(final Throwable ex) {

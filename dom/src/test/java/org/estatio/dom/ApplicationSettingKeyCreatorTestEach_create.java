@@ -20,7 +20,10 @@ package org.estatio.dom;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
+
+import org.estatio.dom.ApplicationSettingCreator.Helper;
 
 
 
@@ -43,15 +46,23 @@ public class ApplicationSettingKeyCreatorTestEach_create extends ApplicationSett
             this.description = description;
             this.defaultValue = defaultValue;
         }
+        @Override
         public void create(ApplicationSettingsServiceRW appSettings) {
             Helper.create(this, appSettings);
         }
+        @Override
+        public ApplicationSetting find(final ApplicationSettingsServiceRW appSettings) {
+            return Helper.find(this, appSettings);
+        }
+        @Override
         public Class<?> getDataType() {
             return dataType;
         }
+        @Override
         public String getDescription() {
             return description;
         }
+        @Override
         public Object getDefaultValue() {
             return defaultValue;
         }

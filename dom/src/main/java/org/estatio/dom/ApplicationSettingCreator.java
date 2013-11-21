@@ -19,10 +19,13 @@ package org.estatio.dom;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 
 public interface ApplicationSettingCreator {
     void create(ApplicationSettingsServiceRW appSettings);
+    ApplicationSetting find(ApplicationSettingsServiceRW appSettings);
+    
     String name();
     
     Class<?> getDataType();
@@ -31,6 +34,10 @@ public interface ApplicationSettingCreator {
 
     final static class Helper {
         private Helper(){}
+        public static ApplicationSetting find(
+                final ApplicationSettingCreator creator, final ApplicationSettingsServiceRW appSettings) {
+            return appSettings.find(ApplicationSettingCreator.Helper.getKey(creator));
+        }
         public static void create(
                 final ApplicationSettingCreator creator, final ApplicationSettingsServiceRW appSettings) {
             final Class<?> dataType = creator.getDataType();
@@ -58,4 +65,5 @@ public interface ApplicationSettingCreator {
             return creator.getClass().getPackage().getName()+"."+creator.name();
         }
     }
+
 }

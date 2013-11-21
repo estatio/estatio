@@ -20,6 +20,7 @@ package org.estatio.dom.invoice;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 
 import org.estatio.dom.ApplicationSettingCreator;
@@ -36,15 +37,23 @@ public enum ApplicationSettingKey implements ApplicationSettingCreator {
         this.description = description;
         this.defaultValue = defaultValue;
     }
+    @Override
     public void create(final ApplicationSettingsServiceRW appSettings) {
         Helper.create(this, appSettings);
     }
+    @Override
+    public ApplicationSetting find(final ApplicationSettingsServiceRW appSettings) {
+        return Helper.find(this, appSettings);
+    }
+    @Override
     public Class<?> getDataType() {
         return dataType;
     }
+    @Override
     public String getDescription() {
         return description;
     }
+    @Override
     public Object getDefaultValue() {
         return defaultValue;
     }

@@ -55,6 +55,7 @@ public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsSer
     @Hidden
     public void installDefaultsIfRequired() {
         if(!installedDefaults) {
+            // the guard is to prevent an infinite loop
             installedDefaults = true;
             installDefaults();
         }
@@ -73,7 +74,7 @@ public class ApplicationSettingsServiceForEstatio extends ApplicationSettingsSer
     }
 
     private void createIfRequired(final ApplicationSettingCreator creator) {
-        ApplicationSetting find = find(creator.name());
+        ApplicationSetting find = creator.find(this);
         if(find == null) {
             creator.create(this);
         }
