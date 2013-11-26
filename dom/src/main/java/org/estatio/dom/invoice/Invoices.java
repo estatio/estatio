@@ -36,6 +36,8 @@ import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.currency.Currency;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
@@ -114,9 +116,23 @@ public class Invoices extends EstatioDomainService<Invoice> {
     // //////////////////////////////////////
 
     @Programmatic
-    public Invoice newInvoice() {
+    public Invoice newInvoice(
+            final @Named("Buyer") Party buyer,
+            final @Named("Seller") Party seller,
+            final PaymentMethod paymentMethod,
+            final Currency currency,
+            final @Named("Due date") LocalDate dueDate,
+            final @Named("Lease") Lease lease
+            ) {
         Invoice invoice = newTransientInstance();
-        persist(invoice);
+        invoice.setBuyer(buyer);
+        invoice.setSeller(seller);
+        invoice.setPaymentMethod(paymentMethod);
+        invoice.setStatus(InvoiceStatus.NEW);
+        invoice.setCurrency(currency);
+        invoice.setLease(lease);
+        invoice.setDueDate(dueDate);
+        persistIfNotAlready(invoice);
         return invoice;
     }
 
@@ -125,11 +141,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final Party seller,
             final Party buyer,
             final PaymentMethod paymentMethod,
-            final InvoiceSource source,
+            final Lease lease,
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
         final List<Invoice> invoices = findInvoicesByVarious(
-                seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
+                seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         return ValueUtils.firstElseNull(invoices);
     }
 
@@ -138,14 +154,14 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final Party seller,
             final Party buyer,
             final PaymentMethod paymentMethod,
-            final InvoiceSource source,
+            final Lease lease,
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
         return allMatches("findMatchingInvoices",
                 "seller", seller,
                 "buyer", buyer,
                 "paymentMethod", paymentMethod,
-                "source", source,
+                "lease", lease,
                 "status", invoiceStatus,
                 "dueDate", dueDate);
     }

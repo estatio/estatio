@@ -38,6 +38,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 
@@ -50,7 +51,7 @@ public class InvoicesTest_finders {
     private Party seller;
     private Party buyer;
     private PaymentMethod paymentMethod;
-    private InvoiceSource source;
+    private Lease lease;
     private InvoiceStatus invoiceStatus;
     private LocalDate dueDate;
 
@@ -60,7 +61,7 @@ public class InvoicesTest_finders {
         seller = new PartyForTesting();
         buyer = new PartyForTesting();
         paymentMethod = PaymentMethod.BANK_TRANSFER;
-        source = new InvoiceSource(){
+        lease = new Lease(){
             @Override
             public Property getProperty() {
                 return null;
@@ -92,7 +93,7 @@ public class InvoicesTest_finders {
     @Test
     public void findMatchingInvoices() {
 
-        invoices.findInvoicesByVarious(seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
+        invoices.findInvoicesByVarious(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Invoice.class));
@@ -100,7 +101,7 @@ public class InvoicesTest_finders {
         assertThat(finderInteraction.getArgumentsByParameterName().get("buyer"), is((Object)buyer));
         assertThat(finderInteraction.getArgumentsByParameterName().get("seller"), is((Object)seller));
         assertThat(finderInteraction.getArgumentsByParameterName().get("paymentMethod"), is((Object)paymentMethod));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("source"), is((Object)source));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object)lease));
         assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object)invoiceStatus));
         assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate"), is((Object)dueDate));
 
@@ -109,8 +110,7 @@ public class InvoicesTest_finders {
     
     @Test
     public void findMatchingInvoice() {
-        
-        invoices.findInvoicesByVarious(seller, buyer, paymentMethod, source, invoiceStatus, dueDate);
+        invoices.findInvoicesByVarious(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         
         // delegates to findMatchingInvoices, so this is correct...
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
@@ -120,7 +120,7 @@ public class InvoicesTest_finders {
         assertThat(finderInteraction.getArgumentsByParameterName().get("buyer"), is((Object)buyer));
         assertThat(finderInteraction.getArgumentsByParameterName().get("seller"), is((Object)seller));
         assertThat(finderInteraction.getArgumentsByParameterName().get("paymentMethod"), is((Object)paymentMethod));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("source"), is((Object)source));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object)lease));
         assertThat(finderInteraction.getArgumentsByParameterName().get("status"), is((Object)invoiceStatus));
         assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate"), is((Object)dueDate));
         
@@ -139,7 +139,7 @@ public class InvoicesTest_finders {
             @Override
             @ActionSemantics(Of.SAFE)
             @Hidden
-            public List<Invoice> findInvoicesByVarious(Party seller, Party buyer, PaymentMethod paymentMethod, InvoiceSource source, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+            public List<Invoice> findInvoicesByVarious(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                 return Arrays.asList(invoice1, invoice2, invoice3);
             }
         };
@@ -154,7 +154,7 @@ public class InvoicesTest_finders {
             @Override
             @ActionSemantics(Of.SAFE)
             @Hidden
-            public List<Invoice> findInvoicesByVarious(Party seller, Party buyer, PaymentMethod paymentMethod, InvoiceSource source, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+            public List<Invoice> findInvoicesByVarious(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                 return Arrays.<Invoice>asList();
             }
         };

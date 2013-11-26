@@ -18,14 +18,11 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
-import com.google.common.io.BaseEncoding;
 
 import org.jdom2.Element;
 import org.joda.time.LocalDate;
@@ -37,6 +34,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
 import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento;
@@ -48,53 +46,81 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 
 @javax.jdo.annotations.PersistenceCapable(
-    identityType = IdentityType.NONDURABLE,
-    table = "InvoiceSummaryForPropertyDueDateStatus",
-    extensions = {
-        @Extension(vendorName = "datanucleus", key = "view-definition",
-            value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDateStatus\" " +
-                    "( " +
-                    "  {this.reference}, " +
-                    "  {this.dueDate}, " +
-                    "  {this.status}, " +
-                    "  {this.total}, " +
-                    "  {this.netAmount}, " +
-                    "  {this.vatAmount}, " +
-                    "  {this.grossAmount} " +
-                    ") AS " +
-                    "SELECT " +
-                    "  \"FixedAsset\".\"reference\" , " +
-                    "  \"Invoice\".\"dueDate\", " +
-                    "  \"Invoice\".\"status\", " +
-                    "  COUNT(\"Invoice\".\"id\") AS \"total\", " +
-                    "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
-                    "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
-                    "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
-                    "FROM \"Invoice\" " +
-                    "  INNER JOIN \"Lease\"       ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
-                    "  INNER JOIN \"Occupancy\"   ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
-                    "  INNER JOIN \"Unit\"        ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
-                    "  INNER JOIN \"Property\"    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
-                    "  INNER JOIN \"FixedAsset\"  ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
-                    "  INNER JOIN \"InvoiceItem\" ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
-                    "GROUP BY " +
-                    "  \"FixedAsset\".\"reference\", " +
-                    "  \"Invoice\".\"dueDate\", " +
-                    "  \"Invoice\".\"status\"")
-    })
+        identityType = IdentityType.NONDURABLE,
+        table = "InvoiceSummaryForPropertyDueDateStatus",
+        extensions = {
+                @Extension(vendorName = "datanucleus", key = "view-definition",
+                        value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDateStatus\" " +
+                                "( " +
+                                "  {this.reference}, " +
+                                "  {this.dueDate}, " +
+                                "  {this.status}, " +
+                                "  {this.total}, " +
+                                "  {this.netAmount}, " +
+                                "  {this.vatAmount}, " +
+                                "  {this.grossAmount} " +
+                                ") AS " +
+                                "SELECT " +
+                                "  \"FixedAsset\".\"reference\" , " +
+                                "  \"Invoice\".\"dueDate\", " +
+                                "  \"Invoice\".\"status\", " +
+                                "  COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
+                                "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
+                                "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
+                                "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
+                                "FROM \"Invoice\" " +
+                                "  INNER JOIN \"Lease\" " +
+                                "    ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                                "  INNER JOIN \"Occupancy\"   " +
+                                "    ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
+                                "  INNER JOIN \"Unit\"        " +
+                                "    ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
+                                "  INNER JOIN \"Property\"    " +
+                                "    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
+                                "  INNER JOIN \"FixedAsset\"  " +
+                                "    ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
+                                "  INNER JOIN \"InvoiceItem\" " +
+                                "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
+                                "GROUP BY " +
+                                "  \"FixedAsset\".\"reference\", " +
+                                "  \"Invoice\".\"dueDate\", " +
+                                "  \"Invoice\".\"status\"")
+        })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
 public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
-    
+    // //////////////////////////////////////
+
+    public InvoiceSummaryForPropertyDueDateStatus approve() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.approve();
+        }
+        return this;
+    }
+
+    public InvoiceSummaryForPropertyDueDateStatus collect() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.collect();
+        }
+        return this;
+    }
+
+    public InvoiceSummaryForPropertyDueDateStatus invoice() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.invoiceNow();
+        }
+        return this;
+    }
+
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public String viewModelMemento() {
         final Memento memento = viewModelSupport.create();
-        
+
         memento.set("reference", getReference())
                 .set("dueDate", getDueDate())
                 .set("status", getStatus())
@@ -105,14 +131,14 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
         return memento.asString();
     }
-    
+
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public void viewModelInit(final String mementoStr) {
         final Memento memento = viewModelSupport.parse(mementoStr);
-        
+
         setReference(memento.get("reference", String.class));
         setDueDate(memento.get("dueDate", LocalDate.class));
         setStatus(memento.get("status", String.class));
@@ -123,7 +149,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     }
 
     static void set(final Element memento, final String name, final Object value) {
-        if(value != null) {
+        if (value != null) {
             memento.addContent(new Element(name).setText(value.toString()));
         }
     }
@@ -131,14 +157,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     static String get(final Element el, final String name) {
         return el.getChild(name).getText();
     }
-
-    private static String base64UrlEncode(final String str) {
-        return BaseEncoding.base64Url().encode(str.getBytes(Charset.forName("UTF-8")));
-    }
-    private static String base64UrlDecode(final String str) {
-        return new String(BaseEncoding.base64Url().decode(str), Charset.forName("UTF-8"));
-    }
-
 
     // //////////////////////////////////////
 
@@ -157,6 +175,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     private LocalDate dueDate;
 
+    @Title(sequence = "2", prepend = " - ")
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -169,7 +188,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     private String status;
 
-    @Hidden
+    @Title(sequence = "2", prepend = " - ")
     public String getStatus() {
         return status;
     }
@@ -189,7 +208,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     public void setTotal(final int total) {
         this.total = total;
     }
-    
+
     // //////////////////////////////////////
 
     private BigDecimal vatAmount;
@@ -240,6 +259,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
      * to the underlying {@link Property}.
      */
     @Optional
+    @Title(sequence = "1")
     public Property getProperty() {
         if (property == null) {
             setProperty(properties.findPropertyByReference(getReference()));
@@ -295,7 +315,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     }
 
     private ViewModelSupport viewModelSupport;
-    
+
     final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
         this.viewModelSupport = viewModelSupport;
     }

@@ -78,6 +78,9 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         createLeaseTermForServiceCharge(leaseM, new LocalDate(2014, 1, 1), null, BigDecimal.valueOf(13000), null);
         createLeaseTermForTurnoverRent(leaseM, leaseM.getStartDate(), null, "7");
 
+        Lease leaseP = leases.findLeaseByReference("KAL-POISON-001");
+        createLeaseTermForRent(leaseP, leaseP.getStartDate(), null, BigDecimal.valueOf(150000), null, null, null, "ISTAT-FOI");
+        
     }
 
     private LeaseTerm createLeaseTermForRent(

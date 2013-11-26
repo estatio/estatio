@@ -18,11 +18,19 @@
  */
 package org.estatio.integration.tests.invoice;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -43,6 +51,7 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
     private Party seller;
     private Party buyer;
     private Lease lease;
+    private Properties properties;
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -54,16 +63,32 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
         invoices = service(Invoices.class);
         parties = service(Parties.class);
         leases = service(Leases.class);
-        
+        properties = service(Properties.class);
+
         seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
     }
-    
+
     @Test
     public void findMatchingInvoice() throws Exception {
         Invoice invoice = invoices.findInvoiceByVarious(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
         Assert.assertNotNull(invoice);
+    }
+    
+    @Test
+    public void findInvoicesByPropertyDueDate() {
+        Property property = properties.findPropertyByReference("KAL");
+        List<Invoice> result = invoices.findInvoices(property, new LocalDate(2012, 1, 1));
+        assertThat(result.size(), is(1));
+    }
+
+    @Test
+    public void findInvoicesByPropertyDueDateStatus() {
+        Property property = properties.findPropertyByReference("KAL");
+        List<Invoice> result = invoices.findInvoices(property, new LocalDate(2012, 1, 1), InvoiceStatus.NEW);
+        assertThat(result.size(), is(1));
+
     }
 
 }

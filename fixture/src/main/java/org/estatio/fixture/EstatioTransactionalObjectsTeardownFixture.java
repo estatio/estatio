@@ -32,7 +32,7 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         deleteFrom("InvoiceItem");
         deleteFrom("Invoice");
         
-        deleteFrom("Tag");
+        // deleteFrom("Tag");
         
         deleteFrom("Event");
         deleteFrom("BreakOption");

@@ -23,7 +23,6 @@ import java.math.BigInteger;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Persistent;
@@ -52,6 +51,7 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
 
@@ -67,7 +67,7 @@ import org.estatio.dom.party.Party;
                 name = "findMatchingInvoices", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.invoice.Invoice "
-                        + "WHERE source == :source "
+                        + "WHERE lease == :lease "
                         + "&& seller == :seller "
                         + "&& buyer == :buyer "
                         + "&& paymentMethod == :paymentMethod "
@@ -75,29 +75,30 @@ import org.estatio.dom.party.Party;
                         + "&& dueDate == :dueDate"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.invoice.Invoice "
-                        + "WHERE status == :status "
-                        + "&& source.occupancies.contains(o) "
-                        + "&& o.unit.property == :property "
-                        + "VARIABLES "
-                        + "org.estatio.dom.lease.Occupancy o; "
-                        + "org.estatio.dom.lease.Lease source"),
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE " +
+                        "lease.occupancies.contains(o) && " +
+                        "o.unit.property == :property && " +
+                        "status == :status " +
+                        "VARIABLES org.estatio.dom.lease.Occupancy o"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndDueDateAndStatus", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE status == :status && " +
-                        "dueDate == :dueDate && " +
-                        "source.occupancies.contains(o) &&" +
-                        "o.unit.property == :property " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
+                        "WHERE " +
+                        "lease.occupancies.contains(o) &&" +
+                        "o.unit.property == :property && " +
+                        "status == :status && " +
+                        "dueDate == :dueDate " +
+                        "VARIABLES org.estatio.dom.lease.Occupancy o"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndDueDate", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE dueDate == :dueDate && " +
-                        "source.occupancies.contains(o) &&" +
-                        "o.unit.property == :property " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o; org.estatio.dom.lease.Lease source"),
+                        "WHERE " +
+                        "lease.occupancies.contains(o) &&" +
+                        "o.unit.property == :property && " +
+                        "dueDate == :dueDate " +
+                        "VARIABLES org.estatio.dom.lease.Occupancy o"),
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT "
@@ -119,7 +120,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Hidden(where=Where.OBJECT_FORMS)
+    @Hidden(where = Where.OBJECT_FORMS)
     public String getNumber() {
         return ObjectUtils.firstNonNull(
                 getInvoiceNumber(),
@@ -162,7 +163,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
-    @Hidden(where=Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     public String getCollectionNumber() {
         return collectionNumber;
     }
@@ -177,7 +178,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
-    @Hidden(where=Where.PARENTED_TABLES)
+    @Hidden(where = Where.PARENTED_TABLES)
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -188,31 +189,17 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    private InvoiceSource source;
+    private Lease lease;
 
-    /**
-     * Polymorphic association to (any implementation of) {@link InvoiceSource}.
-     */
-    @javax.jdo.annotations.Persistent(
-            extensions = {
-                    @Extension(vendorName = "datanucleus",
-                            key = "mapping-strategy",
-                            value = "per-implementation"),
-                    @Extension(vendorName = "datanucleus",
-                            key = "implementation-classes",
-                            value = "org.estatio.dom.lease.Lease") })
-    @javax.jdo.annotations.Columns({
-            @javax.jdo.annotations.Column(name = "sourceLeaseId", allowsNull = "true")
-    })
+    @javax.jdo.annotations.Column(name = "sourceLeaseId", allowsNull = "true")
     @Optional
-    // not really, but to be compatible with JDO
     @Disabled
-    public InvoiceSource getSource() {
-        return source;
+    public Lease getLease() {
+        return lease;
     }
 
-    public void setSource(final InvoiceSource source) {
-        this.source = source;
+    public void setLease(final Lease lease) {
+        this.lease = lease;
     }
 
     // //////////////////////////////////////
@@ -461,10 +448,10 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     // //////////////////////////////////////
 
     /**
-     * Derived from the {@link #getSource() invoice source}.
+     * Derived from the {@link #getLease() invoice source}.
      */
     public Property getProperty() {
-        return getSource().getProperty();
+        return getLease().getProperty();
     }
 
     // //////////////////////////////////////

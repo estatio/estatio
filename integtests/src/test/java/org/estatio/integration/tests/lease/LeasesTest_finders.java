@@ -72,7 +72,7 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
     @Test
     public void findLeasesAboutToExpireOnDate() throws Exception {
         final List<Lease> matchingLeases = leases.findAboutToExpireOnDate(new LocalDate(2020, 1, 1));
-        assertThat(matchingLeases.size(), is(3));
+        assertThat(matchingLeases.size(), is(4));
     }
 
 }

@@ -48,37 +48,43 @@ import org.estatio.dom.invoice.Invoices;
  * details of its invoices in their various states.
  */
 @javax.jdo.annotations.PersistenceCapable(
-    identityType = IdentityType.NONDURABLE,
-    table = "InvoiceSummaryForPropertyDueDate",
-    extensions = {
-        @Extension(vendorName = "datanucleus", key = "view-definition",
-            value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDate\" " +
-                    "( " +
-                    "  {this.reference}, " +
-                    "  {this.dueDate}, " +
-                    "  {this.total}, " +
-                    "  {this.netAmount}, " +
-                    "  {this.vatAmount}, " +
-                    "  {this.grossAmount} " +
-                    ") AS " +
-                    "SELECT " +
-                    "   \"FixedAsset\".\"reference\" , " +
-                    "   \"Invoice\".\"dueDate\", " +
-                    "   COUNT(\"Invoice\".\"id\") AS \"total\", " +
-                    "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
-                    "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
-                    "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
-                    "  FROM \"Invoice\" " +
-                    "  INNER JOIN \"Lease\"       ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
-                    "  INNER JOIN \"Occupancy\"   ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
-                    "  INNER JOIN \"Unit\"        ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
-                    "  INNER JOIN \"Property\"    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
-                    "  INNER JOIN \"FixedAsset\"  ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
-                    "  INNER JOIN \"InvoiceItem\" ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
-                    "GROUP BY " +
-                    " \"FixedAsset\".\"reference\", " +
-                    " \"Invoice\".\"dueDate\"")
-    })
+        identityType = IdentityType.NONDURABLE,
+        table = "InvoiceSummaryForPropertyDueDate",
+        extensions = {
+                @Extension(vendorName = "datanucleus", key = "view-definition",
+                        value = "CREATE VIEW \"InvoiceSummaryForPropertyDueDate\" " +
+                                "( " +
+                                "  {this.reference}, " +
+                                "  {this.dueDate}, " +
+                                "  {this.total}, " +
+                                "  {this.netAmount}, " +
+                                "  {this.vatAmount}, " +
+                                "  {this.grossAmount} " +
+                                ") AS " +
+                                "SELECT " +
+                                "   \"FixedAsset\".\"reference\" , " +
+                                "   \"Invoice\".\"dueDate\", " +
+                                "   COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
+                                "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
+                                "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
+                                "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
+                                "  FROM \"Invoice\" " +
+                                "  INNER JOIN \"Lease\"   " +
+                                "    ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                                "  INNER JOIN \"Occupancy\" " +
+                                "    ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
+                                "  INNER JOIN \"Unit\"   " +
+                                "    ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
+                                "  INNER JOIN \"Property\" " +
+                                "    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
+                                "  INNER JOIN \"FixedAsset\" " +
+                                "    ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
+                                "  INNER JOIN \"InvoiceItem\" " +
+                                "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
+                                "GROUP BY " +
+                                " \"FixedAsset\".\"reference\", " +
+                                " \"Invoice\".\"dueDate\"")
+        })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
@@ -90,7 +96,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
     @Override
     public String viewModelMemento() {
         final Memento memento = viewModelSupport.create();
-        
+
         memento.set("reference", getReference())
                 .set("dueDate", getDueDate())
                 .set("netAmount", getNetAmount())
@@ -100,14 +106,14 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
         return memento.asString();
     }
-    
+
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
     @Override
     public void viewModelInit(final String mementoStr) {
         final Memento memento = viewModelSupport.parse(mementoStr);
-        
+
         setReference(memento.get("reference", String.class));
         setDueDate(memento.get("dueDate", LocalDate.class));
         setNetAmount(memento.get("netAmount", BigDecimal.class));
@@ -115,7 +121,6 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
         setGrossAmount(memento.get("grossAmount", BigDecimal.class));
         setTotal(memento.get("total", Integer.class));
     }
-
 
     // //////////////////////////////////////
 
@@ -246,9 +251,9 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
     final public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
     }
-    
+
     private ViewModelSupport viewModelSupport;
-    
+
     final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
         this.viewModelSupport = viewModelSupport;
     }
