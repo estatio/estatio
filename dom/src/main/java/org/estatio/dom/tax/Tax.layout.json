@@ -6,7 +6,8 @@
         "General": {
           "members": {
             "reference": {},
-            "name": {}
+            "name": {},
+            "externalReference": {}
           }
         }
       }

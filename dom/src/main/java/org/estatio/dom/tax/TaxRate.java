@@ -38,15 +38,16 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -69,20 +70,19 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE tax == :tax "
                         + "&& endDate == :endDate")
 })
-public class TaxRate 
-    extends EstatioMutableObject<TaxRate> 
-    implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
+public class TaxRate
+        extends EstatioMutableObject<TaxRate>
+        implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
 
     public TaxRate() {
         super("tax, startDate desc nullsLast");
     }
 
-
     // //////////////////////////////////////
 
     private Tax tax;
 
-    @javax.jdo.annotations.Column(name = "taxId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "false")
     @Title
     public Tax getTax() {
         return tax;
@@ -120,7 +120,22 @@ public class TaxRate
 
     // //////////////////////////////////////
 
+    private String externalReference;
+
+    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(final String externalReference) {
+        this.externalReference = externalReference;
+    }
+
+    // //////////////////////////////////////
+
     private WithIntervalMutable.Helper<TaxRate> changeDates = new WithIntervalMutable.Helper<TaxRate>(this);
+
     WithIntervalMutable.Helper<TaxRate> getChangeDates() {
         return changeDates;
     }
@@ -155,7 +170,6 @@ public class TaxRate
             final LocalDate endDate) {
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
-
 
     // //////////////////////////////////////
 

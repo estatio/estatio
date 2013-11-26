@@ -24,6 +24,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
@@ -102,6 +103,20 @@ public class Charge
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    // //////////////////////////////////////
+
+    private String externalReference;
+
+    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(final String externalReference) {
+        this.externalReference = externalReference;
     }
 
     // //////////////////////////////////////

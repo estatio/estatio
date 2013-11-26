@@ -31,6 +31,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
@@ -99,6 +100,20 @@ public class Tax
         this.name = name;
     }
 
+    // //////////////////////////////////////
+    
+    private String externalReference;
+    
+    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.NAME)
+    public String getExternalReference() {
+        return externalReference;
+    }
+    
+    public void setExternalReference(final String externalReference) {
+        this.externalReference = externalReference;
+    }
+    
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "tax")
