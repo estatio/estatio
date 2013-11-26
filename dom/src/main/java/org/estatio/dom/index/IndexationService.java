@@ -22,13 +22,13 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
 
 public class IndexationService {
 
     public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
 
-    @NotContributed
+    @Programmatic
     public void indexate(final Indexable input) {
 
         final IndexationResult indexationResult;

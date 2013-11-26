@@ -65,8 +65,16 @@ public class IndexValues
             final @Named("Index") Index index,
             final @Named("Start Date") LocalDate startDate,
             final @Named("Value") BigDecimal value) {
-        IndexBase indexBase = indexBasesService.findByIndexAndDate(index, startDate);
+        IndexBase indexBase = indexBases.findByIndexAndDate(index, startDate);
         return newIndexValue(indexBase, startDate, value);
+    }
+
+    public LocalDate default1NewIndexValue() {
+        // TODO: this action is contributed on an Index and it should fetch the
+        // Index it's contributed on
+        Index index = indices.allIndices().get(0);
+        IndexValue last = findLastByIndex(index);
+        return last == null ? null : last.getStartDate().plusMonths(1);
     }
 
     @ActionSemantics(Of.SAFE)
@@ -77,6 +85,14 @@ public class IndexValues
         return firstMatch("findByIndexAndStartDate",
                 "index", index,
                 "startDate", startDate);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @Programmatic
+    public IndexValue findLastByIndex(
+            final Index index) {
+        return firstMatch("findLastByIndex",
+                "index", index);
     }
 
     // //////////////////////////////////////
@@ -90,10 +106,16 @@ public class IndexValues
 
     // //////////////////////////////////////
 
-    private IndexBases indexBasesService;
+    private IndexBases indexBases;
 
-    public void injectIndexBasesService(final IndexBases indexBasesService) {
-        this.indexBasesService = indexBasesService;
+    public void injectIndexBases(final IndexBases indexBases) {
+        this.indexBases = indexBases;
+    }
+
+    private Indices indices;
+
+    public void injectIndices(final Indices indices) {
+        this.indices = indices;
     }
 
 }

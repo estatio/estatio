@@ -25,7 +25,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -46,7 +45,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private Index index;
 
     @javax.jdo.annotations.Column(name = "indexId", allowsNull = "true")
-    @Mandatory
+    @Optional
     @Override
     public Index getIndex() {
         return index;
@@ -67,7 +66,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate baseIndexStartDate;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    @Mandatory
+    @Optional
     @Override
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
@@ -100,7 +99,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private LocalDate nextIndexStartDate;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    @Mandatory
+    @Optional
     @Override
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
@@ -266,16 +265,16 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         }
 
     }
-    
+
     // //////////////////////////////////////
-    
+
     public boolean isIndexable() {
-        return getSettledValue() == null 
+        return getSettledValue() == null
                 && getIndexedValue() == null
                 && (getBaseIndexStartDate() != null && getNextIndexStartDate() != null)
                 && (getBaseIndexStartDate().compareTo(getNextIndexStartDate()) < 0);
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
