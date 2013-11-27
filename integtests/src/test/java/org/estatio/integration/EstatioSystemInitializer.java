@@ -114,7 +114,6 @@ public class EstatioSystemInitializer {
             with(testConfiguration());
             with(new DataNucleusPersistenceMechanismInstaller());
             withServices(
-                    new RegisterEntities(),
                     new WrapperFactoryDefault(),
                     new Countries(),
                     new InvoiceSummariesForPropertyDueDate(),
