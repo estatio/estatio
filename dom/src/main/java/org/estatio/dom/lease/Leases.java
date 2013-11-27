@@ -20,6 +20,8 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -27,6 +29,7 @@ import org.joda.time.Period;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
@@ -74,10 +77,8 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Named("Name") String name,
             final @Named("Type") LeaseType leaseType,
             final @Named("Start Date") LocalDate startDate,
-            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") 
-            String duration,
-            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") 
-            LocalDate endDate,
+            final @Optional @Named("Duration") @DescribedAs("Duration in a text format. Example 6y5m2d") String duration,
+            final @Optional @Named("End Date") @DescribedAs("Can be omitted when duration is filled in") LocalDate endDate,
             final @Optional @Named("Landlord") Party landlord,
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
@@ -146,6 +147,37 @@ public class Leases extends EstatioDomainService<Lease> {
             }
         }
         return null;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "99")
+    @Prototype
+    public List<InvoiceItemForLease> calculateLeases(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate,
+            final @Named("Due date") LocalDate dueDate,
+            final @Named("Run Type") InvoiceRunType runType) {
+        final List<Lease> leases = findLeases(referenceOrName);
+        for (Lease lease : leases) {
+            lease.verifyUntil(endDate);
+            lease.calculate(startDate, endDate, dueDate, runType);
+        }
+        // As a convenience, we now go find them and display them.
+        // We've done it this way so that the user can always just go to the
+        // menu and make this query.
+        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName,
+                startDate, dueDate);
+    }
+
+    public LocalDate default1CalculateLeases() {
+        return getClockService().beginningOfQuarter();
+    }
+
+    public LocalDate default2CalculateLeases() {
+        return getClockService().beginningOfQuarter();
     }
 
     // //////////////////////////////////////
@@ -226,37 +258,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "99")
-    @Prototype
-    public List<InvoiceItemForLease> calculateLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
-        final List<Lease> leases = findLeases(referenceOrName);
-        for (Lease lease : leases) {
-            lease.verifyUntil(endDate);
-            lease.calculate(startDate, endDate, dueDate, runType);
-        }
-        // As a convenience, we now go find them and display them.
-        // We've done it this way so that the user can always just go to the
-        // menu and make this query.
-        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName,
-                startDate, dueDate);
-    }
-
-    public LocalDate default1CalculateLeases() {
-        return getClockService().beginningOfQuarter();
-    }
-
-    public LocalDate default2CalculateLeases() {
-        return getClockService().beginningOfQuarter();
-    }
-
-    // //////////////////////////////////////
-
     @Prototype
     public String verifyAllLeases() {
         DateTime dt = DateTime.now();
@@ -278,6 +279,15 @@ public class Leases extends EstatioDomainService<Lease> {
     @Programmatic
     public List<Lease> findLeasesByProperty(final Property property) {
         return allMatches("findByProperty", "property", property);
+    }
+
+    // //////////////////////////////////////
+
+    @Hidden
+    public List<Lease> autoComplete(final String searchPhrase) {
+        return searchPhrase.length() > 2
+                ? findLeases("*" + searchPhrase + "*")
+                : Lists.<Lease> newArrayList();
     }
 
     // //////////////////////////////////////

@@ -34,6 +34,7 @@ import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DescribedAs;
@@ -111,6 +112,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
                         "ORDER BY endDate")
 
 })
+@AutoComplete(repository = Leases.class, action = "autoComplete")
 @Bookmarkable
 public class Lease
         extends Agreement
