@@ -57,23 +57,24 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
  * Represents a line-item of an {@link #getInvoice() owning} {@link Invoice}.
  * 
  * <p>
- * This class is, in fact, abstract.  The <tt>InvoiceItemForLease</tt> subclass decouples the <tt>invoice</tt> module
- * from the <tt>lease</tt> module, and provides a many-to-many between the two concepts.
+ * This class is, in fact, abstract. The <tt>InvoiceItemForLease</tt> subclass
+ * decouples the <tt>invoice</tt> module from the <tt>lease</tt> module, and
+ * provides a many-to-many between the two concepts.
  */
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class InvoiceItem 
-        extends EstatioMutableObject<InvoiceItem> 
+public class InvoiceItem
+        extends EstatioMutableObject<InvoiceItem>
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
@@ -84,7 +85,7 @@ public abstract class InvoiceItem
 
     private BigInteger sequence;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Hidden
     public BigInteger getSequence() {
         return sequence;
@@ -98,12 +99,12 @@ public abstract class InvoiceItem
 
     private Invoice invoice;
 
-    // REVIEW: this is optional because of the #remove() method, 
+    // REVIEW: this is optional because of the #remove() method,
     // also because the ordering of flushes in #attachToInvoice()
     //
     // suspect this should be mandatory, however (ie get rid of #remove(),
     // and refactor #attachToInvoice())
-    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "true")
     @Render(Type.EAGERLY)
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
@@ -120,7 +121,7 @@ public abstract class InvoiceItem
 
     private Charge charge;
 
-    @javax.jdo.annotations.Column(name = "chargeId", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "true")
     @Title(sequence = "2")
     @Disabled
     public Charge getCharge() {
@@ -133,14 +134,13 @@ public abstract class InvoiceItem
 
     public List<Charge> choicesCharge() {
         return charges.allCharges();
-
     }
 
     // //////////////////////////////////////
 
     private BigDecimal quantity;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Disabled
     public BigDecimal getQuantity() {
         return quantity;
@@ -154,7 +154,7 @@ public abstract class InvoiceItem
 
     private BigDecimal netAmount;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Disabled
     public BigDecimal getNetAmount() {
         return netAmount;
@@ -172,7 +172,7 @@ public abstract class InvoiceItem
 
     private BigDecimal vatAmount;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public BigDecimal getVatAmount() {
@@ -187,7 +187,7 @@ public abstract class InvoiceItem
 
     private BigDecimal grossAmount;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Disabled
     public BigDecimal getGrossAmount() {
         return grossAmount;
@@ -201,7 +201,7 @@ public abstract class InvoiceItem
 
     private Tax tax;
 
-    @javax.jdo.annotations.Column(name = "taxId", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public Tax getTax() {
@@ -216,7 +216,7 @@ public abstract class InvoiceItem
 
     private String description;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.DESCRIPTION)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public String getDescription() {
@@ -232,7 +232,7 @@ public abstract class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate dueDate;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Disabled
     public LocalDate getDueDate() {
         return dueDate;
@@ -273,17 +273,17 @@ public abstract class InvoiceItem
     }
 
     // //////////////////////////////////////
-    
-    @Hidden(where=Where.PARENTED_TABLES)
+
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getEffectiveStartDate() {
-        return getEffectiveInterval().startDate(); 
+        return getEffectiveInterval().startDate();
     }
-    
-    @Hidden(where=Where.PARENTED_TABLES)
+
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getEffectiveEndDate() {
-        return getEffectiveInterval().endDate(); 
+        return getEffectiveInterval().endDate();
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -314,7 +314,9 @@ public abstract class InvoiceItem
      * Attaches this item to an invoice with similar attributes. Creates a new
      * invoice when no matching found.
      */
-    public abstract void attachToInvoice();
+    public void attachToInvoice() {
+        // TODO: refactor into InvoiceItemsForLease repository?
+    }
 
     // //////////////////////////////////////
 

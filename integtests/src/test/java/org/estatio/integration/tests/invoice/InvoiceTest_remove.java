@@ -76,7 +76,7 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     }
 
     private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
-        return invoices.findInvoicesByVarious(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
+        return invoices.findMatchingInvoices(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
     }
 
 }

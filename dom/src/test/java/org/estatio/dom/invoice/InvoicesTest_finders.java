@@ -93,7 +93,7 @@ public class InvoicesTest_finders {
     @Test
     public void findMatchingInvoices() {
 
-        invoices.findInvoicesByVarious(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+        invoices.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Invoice.class));
@@ -110,7 +110,7 @@ public class InvoicesTest_finders {
     
     @Test
     public void findMatchingInvoice() {
-        invoices.findInvoicesByVarious(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+        invoices.findMatchingInvoices(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         
         // delegates to findMatchingInvoices, so this is correct...
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
@@ -139,12 +139,12 @@ public class InvoicesTest_finders {
             @Override
             @ActionSemantics(Of.SAFE)
             @Hidden
-            public List<Invoice> findInvoicesByVarious(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+            public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                 return Arrays.asList(invoice1, invoice2, invoice3);
             }
         };
         
-        assertThat(invoices.findInvoiceByVarious(null, null, null, null, null, null), is(invoice1));
+        assertThat(invoices.findMatchingInvoice(null, null, null, null, null, null), is(invoice1));
     }
 
     @Test
@@ -154,12 +154,12 @@ public class InvoicesTest_finders {
             @Override
             @ActionSemantics(Of.SAFE)
             @Hidden
-            public List<Invoice> findInvoicesByVarious(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
+            public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                 return Arrays.<Invoice>asList();
             }
         };
         
-        assertThat(invoices.findInvoiceByVarious(null, null, null, null, null, null), is(nullValue()));
+        assertThat(invoices.findMatchingInvoice(null, null, null, null, null, null), is(nullValue()));
     }
 
     @Test

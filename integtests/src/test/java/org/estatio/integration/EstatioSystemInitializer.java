@@ -28,7 +28,6 @@ import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -60,6 +59,7 @@ import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.IndexationService;
 import org.estatio.dom.index.Indices;
+import org.estatio.dom.invoice.InvoiceItems;
 import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
@@ -144,6 +144,7 @@ public class EstatioSystemInitializer {
                     new Occupancies(),
                     new Invoices(),
                     new InvoiceNumeratorContributions(),
+                    new InvoiceItems(),
                     new InvoiceItemsForLease(),
                     new IndexationService(),
                     new CommunicationChannels(),
@@ -153,8 +154,6 @@ public class EstatioSystemInitializer {
                     new PhoneOrFaxNumbers(),
                     new Taxes(),
                     new TaxRates(),
-                    // new Tags() ... instead, UnitSizes, Sectors, Activities
-                    // and Brands
                     new Events(),
                     new UnitSizes(),
                     new Sectors(),

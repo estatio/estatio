@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -49,6 +50,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.lease.Lease;
@@ -65,14 +67,15 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findMatchingInvoices", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.invoice.Invoice "
-                        + "WHERE lease == :lease "
-                        + "&& seller == :seller "
-                        + "&& buyer == :buyer "
-                        + "&& paymentMethod == :paymentMethod "
-                        + "&& status == :status "
-                        + "&& dueDate == :dueDate"),
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE " +
+                        "lease == :lease && " +
+                        "seller == :seller && " +
+                        "buyer == :buyer && " +
+                        "paymentMethod == :paymentMethod && " +
+                        "status == :status && " +
+                        "dueDate == :dueDate"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndStatus", language = "JDOQL",
                 value = "SELECT " +
@@ -447,6 +450,22 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
+    public Invoice newItem(
+            final Charge charge,
+            final @Named("Quantity") BigDecimal quantity,
+            final @Named("Net amount") BigDecimal netAmount,
+            final @Named("Description") String description) {
+        InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
+        invoiceItem.setQuantity(quantity);
+        invoiceItem.setCharge(charge);
+        invoiceItem.setNetAmount(netAmount);
+        invoiceItem.setDescription(description);
+        invoiceItem.verify();
+        return this;
+    }
+
+    // //////////////////////////////////////
+
     /**
      * Derived from the {@link #getLease() invoice source}.
      */
@@ -495,4 +514,11 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     public final void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
+
+    private InvoiceItems invoiceItems;
+
+    public final void injectInvoiceItemsForLease(final InvoiceItems invoiceItems) {
+        this.invoiceItems = invoiceItems;
+    }
+
 }

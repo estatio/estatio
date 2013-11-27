@@ -58,7 +58,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
                 "property", property,
                 "status", status);
     }
-    
+
     @ActionSemantics(Of.SAFE)
     @Programmatic
     public List<Invoice> findInvoices(
@@ -115,6 +115,20 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
+    @NotContributed
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(sequence = "1")
+    public Invoice newInvoiceForLease(
+            final @Named("Lease") Lease lease,
+            final @Named("Due date") LocalDate dueDate,
+            final PaymentMethod paymentMethod,
+            final Currency currency
+            ) {
+        return newInvoice(lease.getSecondaryParty(), lease.getPrimaryParty(), paymentMethod, currency, dueDate, lease);
+    }
+
+    // //////////////////////////////////////
+
     @Programmatic
     public Invoice newInvoice(
             final @Named("Buyer") Party buyer,
@@ -137,27 +151,32 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     @Hidden
-    public Invoice findInvoiceByVarious(
+    public Invoice findMatchingInvoice(
             final Party seller,
             final Party buyer,
             final PaymentMethod paymentMethod,
             final Lease lease,
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
-        final List<Invoice> invoices = findInvoicesByVarious(
+        final List<Invoice> invoices = findMatchingInvoices(
                 seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         return ValueUtils.firstElseNull(invoices);
+        
+        
+        
+        
     }
 
     @Hidden
-    public List<Invoice> findInvoicesByVarious(
+    public List<Invoice> findMatchingInvoices(
             final Party seller,
             final Party buyer,
             final PaymentMethod paymentMethod,
             final Lease lease,
             final InvoiceStatus invoiceStatus,
             final LocalDate dueDate) {
-        return allMatches("findMatchingInvoices",
+        return allMatches(
+                "findMatchingInvoices",
                 "seller", seller,
                 "buyer", buyer,
                 "paymentMethod", paymentMethod,

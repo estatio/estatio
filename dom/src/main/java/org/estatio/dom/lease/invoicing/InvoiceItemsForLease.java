@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
@@ -44,7 +45,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @Hidden
+    @Programmatic
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm, final LocalDate startDate, final LocalDate dueDate) {
         InvoiceItemForLease invoiceItem = newTransientInstance();
