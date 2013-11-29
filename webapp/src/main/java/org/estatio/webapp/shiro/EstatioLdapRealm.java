@@ -34,6 +34,10 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -99,7 +103,7 @@ public class EstatioLdapRealm extends JndiLdapRealm {
 
     private String searchBase;
     
-    private Map<String,String> rolesByGroup = Maps.newLinkedHashMap();
+    private Map<String,List<String>> roleListByGroup = Maps.newLinkedHashMap();
     private PermissionToRoleMapper permissionToRoleMapper;
     
     public EstatioLdapRealm() {
@@ -153,9 +157,13 @@ public class EstatioLdapRealm extends JndiLdapRealm {
                 Matcher matcher = MEMBER_OF_PATTERN.matcher(attrValue);
                 if(matcher.matches()) {
                     String groupName = matcher.group(1);
-                    String roleName = rolesByGroup.get(groupName);
-                    if(roleName != null) {
-                        roleNames.add(roleName);
+                    List<String> roleList = roleListByGroup.get(groupName);
+                    if(roleList != null) {
+                        for (String roleName : roleList) {
+                            if(roleName != null) {
+                                roleNames.add(roleName);
+                            }
+                        }
                     }
                 }
             }
@@ -178,8 +186,24 @@ public class EstatioLdapRealm extends JndiLdapRealm {
         this.searchBase = searchBase;
     }
 
-    public void setRolesByGroup(Map<String, String> rolesByGroup) {
-        this.rolesByGroup.putAll(rolesByGroup);
+    private final static Function<String,String> TRIM = new Function<String,String>(){
+        public String apply(String str) {
+            return str.trim();
+        }
+    };
+
+    private final static Function<String, List<String>> splitOn(final char separatorChar) {
+        return new Function<String, List<String>>() {
+            public List<String> apply(String str) {
+                Iterable<String> split = Splitter.on(separatorChar).split(str);
+                return Lists.newArrayList(Iterables.transform(split, TRIM));
+            }
+        };
+    }
+    
+    public void setRoleListByGroup(Map<String, String> roleListStrByGroup) {
+        Map<String, List<String>> roleListByGroup = Maps.transformValues(roleListStrByGroup, splitOn('|'));
+        this.roleListByGroup.putAll(roleListByGroup);
     }
     
     /**
