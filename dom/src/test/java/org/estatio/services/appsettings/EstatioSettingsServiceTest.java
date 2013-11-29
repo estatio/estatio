@@ -88,8 +88,6 @@ public class EstatioSettingsServiceTest {
         final LocalDate date = new LocalDate(2013,4,1);
         context.checking(new Expectations() {
             {
-                //oneOf(mockApplicationSettingsService).installDefaultsIfRequired();
-                
                 oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);
                 will(returnValue(new ApplicationSettingForTesting(date.toString(SettingAbstract.DATE_FORMATTER), SettingType.LOCAL_DATE)));
             }
@@ -102,8 +100,6 @@ public class EstatioSettingsServiceTest {
     public void whenNull() {
         context.checking(new Expectations() {
             {
-                //oneOf(mockApplicationSettingsService).installDefaultsIfRequired();
-                
                 oneOf(mockApplicationSettingsService).find(EstatioSettingsService.EPOCH_DATE_KEY);
                 will(returnValue(null));
             }
