@@ -180,7 +180,7 @@ public class EstatioSystemInitializer {
         private IsisConfiguration testConfiguration() {
             final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
 
-            testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio.dom");
+            testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio");
 
             testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
 

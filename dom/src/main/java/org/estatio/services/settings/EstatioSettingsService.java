@@ -24,7 +24,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.objectstore.jdo.applib.service.settings.ApplicationSettingJdo;
 
 import org.estatio.dom.ApplicationSettingKey;
 
@@ -50,7 +49,7 @@ public class EstatioSettingsService {
      */
     @Hidden
     public LocalDate fetchEpochDate() {
-        getApplicationSettings().installDefaultsIfRequired();
+        //getApplicationSettings().installDefaultsIfRequired();
         final ApplicationSetting epochDate = applicationSettingsService.find(EPOCH_DATE_KEY);
         return epochDate != null ? epochDate.valueAsLocalDate() : null;
     }
@@ -61,8 +60,8 @@ public class EstatioSettingsService {
     @Hidden
     public void updateEpochDate(
             final LocalDate newEpochDate) {
-        getApplicationSettings().installDefaultsIfRequired();
-        final ApplicationSettingJdo setting = find(EPOCH_DATE_KEY);
+        //getApplicationSettings().installDefaultsIfRequired();
+        final ApplicationSettingForEstatio setting = find(EPOCH_DATE_KEY);
         if(setting!=null) {
             if(newEpochDate != null) {
                 setting.updateAsLocalDate(newEpochDate);
@@ -81,8 +80,8 @@ public class EstatioSettingsService {
         return applicationSettingsService.listAll();
     }
 
-    private ApplicationSettingJdo find(final String key) {
-        return (ApplicationSettingJdo) getApplicationSettings().find(key);
+    private ApplicationSettingForEstatio find(final String key) {
+        return (ApplicationSettingForEstatio) getApplicationSettings().find(key);
     }
 
 

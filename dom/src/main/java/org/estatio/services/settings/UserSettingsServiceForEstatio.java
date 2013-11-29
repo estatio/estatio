@@ -16,14 +16,125 @@
  */
 package org.estatio.services.settings;
 
-import org.apache.isis.objectstore.jdo.applib.service.settings.UserSettingsServiceJdoHidden;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.AbstractService;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.settings.SettingAbstract;
+import org.apache.isis.applib.services.settings.SettingType;
+import org.apache.isis.applib.services.settings.UserSetting;
+import org.apache.isis.applib.services.settings.UserSettingsServiceRW;
 
 /**
- * Estatio-specific version of {@link UserSettingsServiceJdoHidden}.
- * 
- * <p>
- * Currently performs no customisation; for symmetry with {@link ApplicationSettingsServiceForEstatio}.
+ * An implementation of {@link org.apache.isis.applib.services.settings.UserSettingsService} that 
+ * persists settings as entities into a JDO-backed database.
  */
-public class UserSettingsServiceForEstatio extends UserSettingsServiceJdoHidden {
+public class UserSettingsServiceForEstatio extends AbstractService implements UserSettingsServiceRW {
+
+    @Programmatic
+    @Override
+    public UserSetting find(
+            final String user, 
+            final String key) {
+        return firstMatch(
+                new QueryDefault<UserSettingForEstatio>(UserSettingForEstatio.class, 
+                        "findByUserAndKey", 
+                        "user",user,
+                        "key", key));
+    }
+
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public List<UserSetting> listAllFor(final String user) {
+        return (List)allMatches(
+                new QueryDefault<UserSettingForEstatio>(UserSettingForEstatio.class, 
+                        "findByUser", 
+                        "user", user));
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public List<UserSetting> listAll() {
+        return (List)allMatches(
+                new QueryDefault<UserSettingForEstatio>(UserSettingForEstatio.class, 
+                        "findAll"));
+    }
+
+
+    // //////////////////////////////////////
+    
+    @Programmatic
+    @Override
+    public UserSettingForEstatio newString(
+            final String user, 
+            final String key, 
+            final String description, 
+            final String value) {
+        return newSetting(user, key, description, SettingType.STRING, value);
+    }
+
+    @Programmatic
+    @Override
+    public UserSettingForEstatio newInt(
+            final String user, 
+            final String key, 
+            final String description, 
+            final Integer value) {
+        return newSetting(user, key, description, SettingType.INT, value.toString());
+    }
+
+    @Programmatic
+    @Override
+    public UserSettingForEstatio newLong(
+            final String user, 
+            final String key, 
+            final String description, 
+            final Long value) {
+        return newSetting(user, key, description, SettingType.LONG, value.toString());
+    }
+
+    @Programmatic
+    @Override
+    public UserSettingForEstatio newLocalDate(
+            final String user, 
+            final String key, 
+            final String description, 
+            final LocalDate value) {
+        return newSetting(user, key, description, SettingType.LOCAL_DATE, 
+                value.toString(SettingAbstract.DATE_FORMATTER));
+    }
+
+    @Programmatic
+    @Override
+    public UserSettingForEstatio newBoolean(
+            final String user, 
+            final String key, 
+            final String description, 
+            final Boolean value) {
+        return newSetting(user, key, description, SettingType.BOOLEAN, new Boolean(value != null && value).toString());
+    }
+
+    private UserSettingForEstatio newSetting(
+            final String user, final String key, final String description, 
+            final SettingType settingType, final String valueRaw) {
+        final UserSettingForEstatio setting = newTransientInstance(UserSettingForEstatio.class);
+        setting.setUser(user);
+        setting.setKey(key);
+        setting.setType(settingType);
+        setting.setDescription(description);
+        setting.setValueRaw(valueRaw);
+        persist(setting);
+        return setting;
+    }
 
 }

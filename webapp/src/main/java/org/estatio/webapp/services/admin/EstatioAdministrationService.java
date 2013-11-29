@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.TypeOf;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
@@ -38,6 +39,7 @@ import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
 import org.estatio.fixturescripts.FixtureScript;
+import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @Named("Administration")
@@ -54,6 +56,7 @@ public class EstatioAdministrationService {
 
     // //////////////////////////////////////
 
+    @TypeOf(ApplicationSettingForEstatio.class)
     @MemberOrder(sequence = "aaa.2")
     public List<ApplicationSetting> listAllSettings() {
         return settingsService.listAll();

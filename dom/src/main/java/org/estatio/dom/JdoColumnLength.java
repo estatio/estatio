@@ -48,6 +48,11 @@ public final class JdoColumnLength {
 
     public static final int DURATION = 20;
 
+    public static final class Setting {
+        public final static int KEY = 128;
+        public final static int TYPE = 20;
+    }
+
     public static final class Event {
         private Event() {
         }
