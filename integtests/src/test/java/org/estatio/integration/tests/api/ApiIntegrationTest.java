@@ -140,8 +140,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         assertThat(state.getName(), is("North Holland"));
         assertThat(state.getCountry(), is(netherlands));
 
-        api.putTax("APITAXREF", "APITAX Name", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1));
-        api.putTax("APITAXREF", "APITAX Name", BigDecimal.valueOf(21), new LocalDate(1980, 1, 1));
+        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", new LocalDate(1980, 1, 1), "APITAXEXTRATEREF", BigDecimal.valueOf(21.0));
+        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", new LocalDate(1980, 1, 1), "APITAXEXTRATEREF", BigDecimal.valueOf(21));
 
         final Tax tax = taxes.findTaxByReference("APITAXREF");
         Assert.assertNotNull(tax);
@@ -149,7 +149,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         assertThat(tax.getName(), is("APITAX Name"));
         Assert.assertNotNull(tax.percentageFor(LocalDate.now()));
 
-        api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APICHARGEGROUP");
+        api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APICHARGEGROUP", "APICHARGEEXTREF");
 
         final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
         Assert.assertNotNull(chargeGroup);
@@ -294,7 +294,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
                 null,
                 null,
                 null,
-                null, 
+                null,
                 null);
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertThat(lease.getItems().first().getTerms().size(), Is.is(2));

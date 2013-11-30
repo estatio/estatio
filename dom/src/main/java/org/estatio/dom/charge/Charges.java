@@ -44,26 +44,15 @@ public class Charges extends EstatioDomainService<Charge> {
         return allInstances();
     }
 
+    // //////////////////////////////////////
+
     @NotContributed
-    @ActionSemantics(Of.IDEMPOTENT)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.2")
-    public List<Charge> newCharge(
+    public Charge newCharge(
             final @Named("Reference") String reference, 
             final @Named("Name") String name, 
             final @Named("Description") String description, 
-            final Tax tax, 
-            final ChargeGroup chargeGroup) {
-        createCharge(reference, name, description, tax, chargeGroup);
-        return allCharges();
-    }
-
-    // //////////////////////////////////////
-
-    @Programmatic
-    public Charge createCharge(
-            final String reference, 
-            final String name, 
-            final String description, 
             final Tax tax, 
             final ChargeGroup chargeGroup) {
         Charge charge = findCharge(reference);

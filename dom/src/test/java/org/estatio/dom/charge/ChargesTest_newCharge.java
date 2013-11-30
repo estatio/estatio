@@ -78,7 +78,7 @@ public class ChargesTest_newCharge {
             }
         });
 
-        final Charge newCharge = charges.createCharge("CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
+        final Charge newCharge = charges.newCharge("CG-REF", "CG-Name", "CG-Description", tax, chargeGroup);
         assertThat(newCharge.getReference(), is("CG-REF"));
         assertThat(newCharge.getName(), is("CG-Name"));
         assertThat(newCharge.getDescription(), is("CG-Description"));
@@ -90,7 +90,7 @@ public class ChargesTest_newCharge {
     public void newCharge_whenDoesExist() {
         existingCharge = new Charge();
 
-        final Charge newCharge = charges.createCharge("CG-REF", "Some other description", "Some other code", null, null);
+        final Charge newCharge = charges.newCharge("CG-REF", "Some other description", "Some other code", null, null);
         assertThat(newCharge, is(existingCharge));
     }
 

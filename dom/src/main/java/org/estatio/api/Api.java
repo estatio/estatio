@@ -18,6 +18,7 @@ package org.estatio.api;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -94,6 +95,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
@@ -175,12 +177,14 @@ public class Api extends AbstractFactoryAndRepository {
     public void putCharge(
             @Named("reference") String reference,
             @Named("name") String name,
-            @Named("description") String description,
+            @Named("description") @Optional String description,
             @Named("taxReference") String taxReference,
-            @Named("chargeGroupReference") String chargeGroupReference) {
+            @Named("chargeGroupReference") String chargeGroupReference,
+            @Named("externalReference") @Optional String externalReference) {
         Tax tax = fetchTaxIfAny(taxReference);
         ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference);
-        charges.newCharge(reference, name, description, tax, chargeGroup);
+        Charge charge = charges.newCharge(reference, name, description, tax, chargeGroup);
+        charge.setExternalReference(externalReference);
     }
 
     private Charge fetchCharge(String chargeReference) {
@@ -205,14 +209,17 @@ public class Api extends AbstractFactoryAndRepository {
     public void putTax(
             @Named("reference") String reference,
             @Named("name") String name,
-            @Named("percentage") BigDecimal percentage,
-            @Named("startDate") LocalDate startDate) {
+            @Named("externalReference") @Optional String externalReference,
+            @Named("rateStartDate") LocalDate startDate,
+            @Named("rateExternalReference") @Optional String rateExternalReference,
+            @Named("ratePercentage") BigDecimal percentage) {
         Tax tax = fetchTaxIfAny(reference);
         if (tax == null) {
             tax = taxes.newTax(reference, name);
-            tax.setName(name);
+            tax.setExternalReference(externalReference);
         }
-        tax.newRate(startDate, percentage);
+        TaxRate rate = tax.newRate(startDate, percentage);
+        rate.setExternalReference(rateExternalReference);
     }
 
     private Tax fetchTaxIfAny(String reference) {
