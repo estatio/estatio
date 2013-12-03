@@ -18,7 +18,6 @@ package org.estatio.api;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -295,6 +294,9 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private Property fetchProperty(String reference, boolean createIfNotFond) {
+        if (reference == null) {
+            return null;
+        }
         Property property = properties.findPropertyByReference(reference);
         if (property == null) {
             if (!createIfNotFond)
@@ -455,7 +457,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("type") String type,
             @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate,
-            @Named("terminationDate") @Optional LocalDate terminationDate,
+            @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
+            @Named("tenancyEndDate") @Optional LocalDate tenancyEndDate,
             @Named("propertyReference") @Optional String propertyReference
             ) {
         Party tenant = fetchParty(tenantReference);
@@ -465,7 +468,8 @@ public class Api extends AbstractFactoryAndRepository {
         if (lease == null) {
             lease = leases.newLease(reference, name, leaseType, startDate, null, endDate, landlord, tenant);
         }
-        lease.setTerminationDate(terminationDate);
+        lease.setTenancyStartDate(tenancyStartDate);
+        lease.setTenancyEndDate(tenancyEndDate);
     }
 
     private Lease fetchLease(String leaseReference) {
@@ -728,24 +732,18 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             throw new ApplicationException(String.format("LeaseItem with reference %1$s, %2$s, %3$s, %4$s not found.", leaseReference, leaseItemType.toString(), itemStartDate.toString(), itemSequence.toString()));
         }
-        // check if the date is within range of lease
-        if (lease.getTerminationDate() == null || lease.getTerminationDate().compareTo(startDate) >= 0) {
-            LeaseTerm term = item.findTermWithSequence(sequence);
-            if (term == null) {
-                if (sequence.equals(BigInteger.ONE)) {
-                    term = item.newTerm(startDate);
-                } else {
-                    LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
-                    term = previousTerm.createNext(startDate);
-                }
-                term.setSequence(sequence);
+        LeaseTerm term = item.findTermWithSequence(sequence);
+        if (term == null) {
+            if (sequence.equals(BigInteger.ONE)) {
+                term = item.newTerm(startDate);
+            } else {
+                LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
+                term = previousTerm.createNext(startDate);
             }
-            term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(statusStr));
-            // will be overwritten if there is a next term
-            term.setEndDate(lease.getTerminationDate());
-            return term;
+            term.setSequence(sequence);
         }
-        return null;
+        term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(statusStr));
+        return term;
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -755,6 +753,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") @Optional String name,
             @Named("bankAccountType") @Optional String bankAccountType,
             @Named("ownerReference") String ownerReference,
+            @Named("propertyReference") @Optional String propertyReference,
             @Named("iban") @Optional String iban,
             @Named("countryCode") @Optional String countryCode,
             @Named("nationalCheckCode") @Optional String nationalCheckCode,
@@ -769,6 +768,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (bankAccount == null) {
             bankAccount = financialAccounts.newBankAccount(owner, iban);
         }
+        bankAccount.setProperty(fetchProperty(propertyReference, false));
         bankAccount.setReference(reference);
         bankAccount.setAccountNumber(accountNumber);
         bankAccount.setBranchCode(branchCode);

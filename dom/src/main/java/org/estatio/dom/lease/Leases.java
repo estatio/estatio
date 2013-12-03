@@ -54,6 +54,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class Leases extends EstatioDomainService<Lease> {
 
@@ -142,7 +143,7 @@ public class Leases extends EstatioDomainService<Lease> {
                 return "This is not a valid duration.";
             }
         } else {
-            if (endDate.isBefore(startDate)) {
+            if (!new LocalDateInterval(startDate, endDate).isValid()) {
                 return "End date can not be before start date";
             }
         }

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.agreement;
+package org.estatio.dom.lease;
 
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
@@ -24,13 +24,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AgreementTest_getEffectiveInterval {
+import org.estatio.dom.lease.Lease;
 
-    private Agreement agreement;
+public class LeaseTest_getEffectiveInterval {
+
+    private Lease agreement;
 
     @Before
     public void setup() {
-        agreement = new AgreementForTesting();
+        agreement = new Lease();
         agreement.setStartDate(new LocalDate(2012, 1, 1));
 
     }
@@ -38,7 +40,7 @@ public class AgreementTest_getEffectiveInterval {
     @Test
     public void getEffectiveInterval() {
         Assert.assertNull(agreement.getEffectiveInterval().endDateExcluding());
-        agreement.setTerminationDate(new LocalDate(2012, 6, 30));
+        agreement.setTenancyEndDate(new LocalDate(2012, 6, 30));
         Assert.assertThat(agreement.getEffectiveInterval().endDateExcluding(), Is.is(new LocalDate(2012, 7, 1)));
     }
 

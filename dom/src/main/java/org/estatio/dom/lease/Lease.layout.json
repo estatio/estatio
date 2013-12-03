@@ -5,8 +5,8 @@
       "memberGroups": {
         "General": {
           "members": {
-            "name": {},
             "reference": {},
+            "name": {},
             "type": {},
             "leaseType": {},
             "property": {},
@@ -38,6 +38,8 @@
                 "changeDates": {}
               }
             },
+            "tenancyStartDate": {},
+            "tenancyEndDate": {},
             "terminationDate": {
               "actions": {
                 "terminate": {}

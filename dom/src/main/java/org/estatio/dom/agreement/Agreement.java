@@ -234,8 +234,7 @@ public abstract class Agreement
 
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
-        return LocalDateInterval.including(
-                getStartDate(), getTerminationDate() == null ? getEndDate() : getTerminationDate());
+        return new LocalDateInterval(getStartDate(), getEndDate());
     }
 
     // //////////////////////////////////////
@@ -285,21 +284,6 @@ public abstract class Agreement
             final LocalDate startDate,
             final LocalDate endDate) {
         return getChangeDates().validateChangeDates(startDate, endDate);
-    }
-
-    // //////////////////////////////////////
-
-    @javax.jdo.annotations.Persistent
-    private LocalDate terminationDate;
-
-    @Optional
-    @Disabled
-    public LocalDate getTerminationDate() {
-        return terminationDate;
-    }
-
-    public void setTerminationDate(final LocalDate terminationDate) {
-        this.terminationDate = terminationDate;
     }
 
     // //////////////////////////////////////

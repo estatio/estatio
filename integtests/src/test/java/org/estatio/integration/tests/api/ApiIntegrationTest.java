@@ -198,7 +198,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", START_DATE, new LocalDate(2021, 12, 31), null, "APIPROP");
+        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", START_DATE, new LocalDate(2021, 12, 31), null, null, "APIPROP");
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
@@ -233,7 +233,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t06_putLeaseItemWorks() throws Exception {
-        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, new LocalDate(2012, 12, 31), "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.APPROVED.name());
+        api.putLeaseItem("APILEASE", "APITENANT", "APIUNIT", LeaseItemType.RENT.name(), BigInteger.valueOf(1), START_DATE, null, "APICHARGEREF", null, InvoicingFrequency.QUARTERLY_IN_ADVANCE.name(), PaymentMethod.DIRECT_DEBIT.name(), LeaseItemStatus.APPROVED.name());
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getItems().size(), Is.is(1));
     }
 

@@ -146,7 +146,7 @@ public class LeaseTermTest {
     public void testEffectiveInterval() throws Exception {
         term.update();
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2013, 6, 30)));
-        lease.setTerminationDate(new LocalDate(2012, 3, 31));
+        lease.setTenancyEndDate(new LocalDate(2012, 3, 31));
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 3, 31)));
     }
 
@@ -170,7 +170,7 @@ public class LeaseTermTest {
         Lease lease = new Lease();
         lease.setStartDate(parseDate(leaseStartDate));
         lease.setEndDate(parseDate(leaseEndDate));
-        lease.setTerminationDate(parseDate(leaseTerminationDate));
+        lease.setTenancyEndDate(parseDate(leaseTerminationDate));
 
         LeaseItem item = new LeaseItem();
         item.setStartDate(parseDate(itemStartDate));

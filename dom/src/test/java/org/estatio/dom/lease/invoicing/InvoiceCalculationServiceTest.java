@@ -224,7 +224,7 @@ public class InvoiceCalculationServiceTest {
         leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
         leaseTerm.setEndDate(new LocalDate(2012, 3, 31));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
-        lease.setTerminationDate(new LocalDate(2012, 1, 31));
+        lease.setTenancyEndDate(new LocalDate(2012, 1, 31));
         CalculationResult result = ic.calculateLeaseTerm(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         assertEquals(BigDecimal.valueOf(1703.30).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }

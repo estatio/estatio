@@ -70,6 +70,7 @@ import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -198,6 +199,54 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @javax.jdo.annotations.Persistent
+    public LocalDate tenancyStartDate;
+
+    @Disabled
+    @Optional
+    public LocalDate getTenancyStartDate() {
+        return tenancyStartDate;
+    }
+
+    public void setTenancyStartDate(final LocalDate tenancyStartDate) {
+        this.tenancyStartDate = tenancyStartDate;
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent
+    public LocalDate tenancyEndDate;
+
+    @Disabled
+    @Optional
+    public LocalDate getTenancyEndDate() {
+        return tenancyEndDate;
+    }
+
+    public void setTenancyEndDate(final LocalDate tenancyEndDate) {
+        this.tenancyEndDate = tenancyEndDate;
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    @Override
+    public LocalDateInterval getEffectiveInterval() {
+        return new LocalDateInterval(
+                getTenancyStartDate() == null ? getStartDate() : getTenancyStartDate(),
+                getTenancyEndDate());
+    }
+
+    // //////////////////////////////////////
+
+    @Optional
+    @Disabled
+    public LocalDate getTerminationDate() {
+        return getTenancyEndDate();
+    }
+
+    // //////////////////////////////////////
+
     @javax.jdo.annotations.Persistent(mappedBy = "lease")
     private SortedSet<Occupancy> occupancies = new TreeSet<Occupancy>();
 
@@ -210,9 +259,9 @@ public class Lease
         this.occupancies = occupancies;
     }
 
-
     /**
-     * The action to relate a lease to a unit. A lease can occupy unlimited units.
+     * The action to relate a lease to a unit. A lease can occupy unlimited
+     * units.
      * 
      * @param unit
      * @param startDate
@@ -297,8 +346,7 @@ public class Lease
 
     public Lease newBreakOption(
             final @Named("Break date") LocalDate breakDate,
-            final @Named("Notification period") @DescribedAs("Notification period in a text format. Example 6y5m2d") 
-            String notificationPeriodStr,
+            final @Named("Notification period") @DescribedAs("Notification period in a text format. Example 6y5m2d") String notificationPeriodStr,
             final BreakExerciseType breakExerciseType,
             final BreakType breakType,
             final @Named("Description") @Optional String description
@@ -571,7 +619,7 @@ public class Lease
         }
         // TODO: break options
 
-        setTerminationDate(terminationDate);
+        setTenancyEndDate(terminationDate);
 
         return this;
     }
@@ -615,7 +663,7 @@ public class Lease
                 reference, name,
                 this.getLeaseType(),
                 startDate, null, endDate,
-                this.getPrimaryParty(), tenant );
+                this.getPrimaryParty(), tenant);
 
         createItemsAndTerms(newLease, startDate);
         createOccupancies(newLease, startDate);
@@ -628,10 +676,10 @@ public class Lease
     private void createItemsAndTerms(final Lease newLease, final LocalDate startDate) {
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
-                    item.getType(), 
-                    item.getCharge(), 
-                    item.getInvoicingFrequency(), 
-                    item.getPaymentMethod(), 
+                    item.getType(),
+                    item.getCharge(),
+                    item.getInvoicingFrequency(),
+                    item.getPaymentMethod(),
                     item.getStartDate());
             LeaseTerm lastTerm = null;
             for (LeaseTerm term : item.getTerms()) {

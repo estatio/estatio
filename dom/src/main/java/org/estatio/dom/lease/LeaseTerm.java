@@ -436,13 +436,13 @@ public abstract class LeaseTerm
         if (getNext() != null) {
             getNext().remove();
         }
-        if (this.getInvoiceItems().size() == 0) {
-            // CHECKSTYLE.OFF: 
+//        if (this.getInvoiceItems().size() == 0) {
+            // CHECKSTYLE.OFF:
             // TODO: Disabled, see EST-273
             // this.modifyPrevious(null);
             // getContainer().remove(this);
-            // CHECKSTYLE.ON: 
-        }
+            // CHECKSTYLE.ON:
+//        }
     }
 
     @Programmatic
@@ -560,9 +560,7 @@ public abstract class LeaseTerm
             return nextTerm;
         }
         // Don't create terms after termination date
-        LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null &&
-                terminationDate.isBefore(nextStartDate)) {
+        if (!getLeaseItem().getEffectiveInterval().contains(nextStartDate)) {
             return null;
         }
         // Ok, we need to create a term

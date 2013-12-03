@@ -79,8 +79,7 @@ public class AgreementTest_isCurrent  {
     @Test
     public void whenTerminationDate() {
         agreement.setStartDate(new LocalDate(2013,4,1));
-        agreement.setEndDate(new LocalDate(2013,6,30));
-        agreement.setTerminationDate(new LocalDate(2013,5,20));
+        agreement.setEndDate(new LocalDate(2013,5,20));
         
         // before
         expectClockNowToReturn(new LocalDate(2013,3,31));
