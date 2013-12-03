@@ -152,25 +152,25 @@ public class LeaseTermTest {
 
     @Test
     public void testEI() throws Exception {
-        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString(), is("2011-02-01/2011-12-31") );
-        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString(), is("2012-01-01/2012-06-30") );
-        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2011-02-01", null, "2011-01-01", null).toString(), is("2011-02-01/2012-12-31") );
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString(), is("2011-02-01/2011-12-31") );
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString(), is("2012-01-01/2012-06-30") );
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", null).toString(), is("2011-02-01/----------") );
     }
     
     private LocalDateInterval effectiveIntervalWith(
             String leaseStartDate,
             String leaseEndDate,
-            String leaseTerminationDate,
+            String leaseTenancyStartDate,
+            String leaseTenacyEndDate,
             String itemStartDate,
             String itemEndDate,
-            String termStartDate,
-            String termEndDate
+            String termStartDate, String termEndDate
             ){        
 
         Lease lease = new Lease();
         lease.setStartDate(parseDate(leaseStartDate));
         lease.setEndDate(parseDate(leaseEndDate));
-        lease.setTenancyEndDate(parseDate(leaseTerminationDate));
+        lease.setTenancyEndDate(parseDate(leaseTenacyEndDate));
 
         LeaseItem item = new LeaseItem();
         item.setStartDate(parseDate(itemStartDate));
