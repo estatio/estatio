@@ -23,8 +23,10 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
@@ -156,4 +158,18 @@ public class BankAccount extends FinancialAccount {
         this.accountNumber = accountNumber;
     }
 
+    // //////////////////////////////////////
+    
+    private Property property;
+    
+    @javax.jdo.annotations.Column(name="fixedAssetId", allowsNull="true")
+    @Optional
+    public Property getProperty() {
+        return property;
+    }
+    
+    public void setProperty(final Property property) {
+        this.property = property;
+    }
+    
 }
