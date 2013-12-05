@@ -34,14 +34,14 @@ import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioRefDataObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
 public class IndicesTest_finders extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioRefDataObjectsFixture());
     }
 
     private Indices indices;
