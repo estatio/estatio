@@ -37,7 +37,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -47,10 +46,6 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
@@ -84,19 +79,31 @@ public class Leases extends EstatioDomainService<Lease> {
             final @Optional @Named("Tentant") Party tenant
             // CHECKSTYLE:ON
             ) {
-        String validate = validateNewLease(reference, name, leaseType, startDate, duration, endDate, landlord, tenant);
-        if (validate != null) {
-            throw new IsisApplicationException(validate);
-        }
 
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
+        return newLease(reference, name, leaseType, startDate, calculatedEndDate, null, null, landlord, tenant);
+    }
+
+    @Programmatic
+    public Lease newLease(
+            final String reference,
+            final String name,
+            final LeaseType leaseType,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final LocalDate tenancyStartDate,
+            final LocalDate tenancyEndDate,
+            final Party landlord,
+            final Party tenant) {
         Lease lease = newTransientInstance();
         final AgreementType at = agreementTypes.find(LeaseConstants.AT_LEASE);
         lease.setType(at);
         lease.setReference(reference);
         lease.setName(name);
         lease.setStartDate(startDate);
-        lease.setEndDate(calculatedEndDate);
+        lease.setEndDate(endDate);
+        lease.setTenancyStartDate(tenancyStartDate);
+        lease.setTenancyEndDate(tenancyEndDate);
         lease.setLeaseType(leaseType);
         persistIfNotAlready(lease);
 
@@ -152,37 +159,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "99")
-    @Prototype
-    public List<InvoiceItemForLease> calculateLeases(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
-        final List<Lease> leases = findLeases(referenceOrName);
-        for (Lease lease : leases) {
-            lease.verifyUntil(endDate);
-            lease.calculate(startDate, endDate, dueDate, runType);
-        }
-        // As a convenience, we now go find them and display them.
-        // We've done it this way so that the user can always just go to the
-        // menu and make this query.
-        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName,
-                startDate, dueDate);
-    }
-
-    public LocalDate default1CalculateLeases() {
-        return getClockService().beginningOfQuarter();
-    }
-
-    public LocalDate default2CalculateLeases() {
-        return getClockService().beginningOfQuarter();
-    }
-
-    // //////////////////////////////////////
-
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "3")
     public List<Lease> findLeases(
@@ -211,41 +187,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     public List<Lease> findAboutToExpireOnDate(final LocalDate date) {
         return allMatches("findAboutToExpireOnDate", "date", date);
-    }
-
-    // //////////////////////////////////////
-
-    /**
-     * Returns the {@link InvoiceSummary}s that are newly
-     * {@link Lease#calculate(LocalDate, LocalDate) calculate}d for all of the
-     * {@link Lease}s matched by the provided <tt>property</tt> and the other
-     * parameters.
-     */
-    @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "6")
-    public List<InvoiceSummaryForPropertyDueDate> calculateProperty(
-            final @Named("Property") @DescribedAs("") Property property,
-            final @Named("Period end Date") LocalDate startDate,
-            final @Named("Period end Date") @Optional LocalDate endDate,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
-        final List<Lease> leases = findLeasesByProperty(property);
-        for (Lease lease : leases) {
-            lease.verifyUntil(endDate);
-            lease.calculate(startDate, endDate, dueDate, runType);
-        }
-        // As a convenience, we now go find them and display them.
-        // We've done it this way so that the user can always just go to the
-        // menu and make this query.
-        return invoiceSummaries.invoicesForPropertyDueDate();
-    }
-
-    public LocalDate default1CalculateProperty() {
-        return getClockService().beginningOfQuarter();
-    }
-
-    public LocalDate default2CalculateProperty() {
-        return getClockService().beginningOfQuarter();
     }
 
     // //////////////////////////////////////
@@ -293,12 +234,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    private InvoiceItemsForLease invoiceItemsForLease;
-
-    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
-        this.invoiceItemsForLease = invoiceItemsForLease;
-    }
-
     private FixedAssets fixedAssets;
 
     public final void injectFixedAssets(final FixedAssets fixedAssets) {
@@ -315,12 +250,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
-    }
-
-    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
-
-    public void injectInvoiceSummaries(final InvoiceSummariesForPropertyDueDate invoiceSummaries) {
-        this.invoiceSummaries = invoiceSummaries;
     }
 
 }
