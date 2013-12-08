@@ -54,7 +54,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 public class Leases extends EstatioDomainService<Lease> {
 
     public enum InvoiceRunType {
-        NORMAL_RUN, RETRO_RUN;
+        NORMAL_RUN,
+        RETRO_RUN;
     }
 
     public Leases() {
@@ -185,8 +186,11 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    public List<Lease> findAboutToExpireOnDate(final LocalDate date) {
-        return allMatches("findAboutToExpireOnDate", "date", date);
+    public List<Lease> findExpireInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
+        return allMatches(
+                "findExpireInDateRange",
+                "rangeStartDate", rangeStartDate,
+                "rangeEndDate", rangeEndDate);
     }
 
     // //////////////////////////////////////

@@ -32,6 +32,8 @@ import org.estatio.dom.lease.Leases;
 @Named("Dashboard")
 public class EstatioAppDashboard extends EstatioViewModel {
     
+    private static final int MONTHS = 3;
+
     public String title() {
         return "Dashboard";
     }
@@ -56,13 +58,13 @@ public class EstatioAppDashboard extends EstatioViewModel {
     @Named("Leases about to expire")
     @Render(Type.EAGERLY)
     public List<Lease> getLeasesAboutToExpire() {
-        return leases.findAboutToExpireOnDate(getClockService().now());
+        return leases.findExpireInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
     }
 
     @Named("Upcoming events")
     @Render(Type.EAGERLY)
     public List<Event> getUpcomingEvents() {
-        return events.findEventsOnOrAfter(getClockService().now());
+        return events.findEventsInDateRange(getClockService().now(), getClockService().now().plusMonths(MONTHS));
     }
 
     // //////////////////////////////////////

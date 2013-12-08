@@ -106,12 +106,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "VARIABLES "
                         + "org.estatio.dom.lease.Occupancy lu"),
         @javax.jdo.annotations.Query(
-                name = "findAboutToExpireOnDate", language = "JDOQL",
+                name = "findExpireInDateRange", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.Lease " +
-                        "WHERE endDate != null && endDate >= :date " +
+                        "WHERE " +
+                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) && " +
+                        "tenancyEndDate == null " +
                         "ORDER BY endDate")
-
 })
 @AutoComplete(repository = Leases.class, action = "autoComplete")
 @Bookmarkable
@@ -204,6 +205,7 @@ public class Lease
 
     @Disabled
     @Optional
+    @Hidden(where=Where.ALL_TABLES)
     public LocalDate getTenancyStartDate() {
         return tenancyStartDate;
     }
@@ -219,6 +221,7 @@ public class Lease
 
     @Disabled
     @Optional
+    @Hidden(where=Where.ALL_TABLES)
     public LocalDate getTenancyEndDate() {
         return tenancyEndDate;
     }

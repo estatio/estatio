@@ -37,7 +37,7 @@ public class Events extends EstatioDomainService<Event> {
     }
 
     // //////////////////////////////////////
-    
+
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public List<Event> findEventsBySubject(final EventSubject eventSubject) {
@@ -47,10 +47,10 @@ public class Events extends EstatioDomainService<Event> {
     @ActionSemantics(Of.SAFE)
     @NotContributed
     public Event findEventsBySubjectAndSubjectEventType(
-            final EventSubject eventSubject, 
+            final EventSubject eventSubject,
             final String subjectEventType) {
         return firstMatch(
-                "findBySubjectAndSubjectEventType", 
+                "findBySubjectAndSubjectEventType",
                 "subject", eventSubject,
                 "subjectEventType", subjectEventType);
     }
@@ -68,8 +68,8 @@ public class Events extends EstatioDomainService<Event> {
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public List<Event> findEventsOnOrAfter(final LocalDate date) {
-        return allMatches("findOnOrAfter", "date", date);
+    public List<Event> findEventsInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
+        return allMatches("findInDateRange", "rangeStartDate", rangeStartDate, "rangeEndDate", rangeEndDate);
     }
 
 }

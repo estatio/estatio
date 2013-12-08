@@ -63,10 +63,11 @@ import org.estatio.dom.JdoColumnLength;
                     "WHERE subject == :subject " +
                     "   && subjectEventType == :subjectEventType"),
     @javax.jdo.annotations.Query(
-            name = "findOnOrAfter", language = "JDOQL",
+            name = "findInDateRange", language = "JDOQL",
             value = "SELECT " +
                     "FROM org.estatio.dom.event.Event " +
-                    "WHERE date >= :date")
+                    "WHERE date >= :rangeStartDate &&" +
+                    "date <= :rangeEndDate")
 })    
 public class Event
         extends EstatioMutableObject<Event> 
