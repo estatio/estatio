@@ -581,6 +581,7 @@ public class Lease
             final @Named("Period End Date") @Optional LocalDate endDate,
             final @Named("Due date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
+        verifyUntil(endDate);
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, endDate, dueDate, runType);
         }
