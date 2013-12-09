@@ -53,7 +53,7 @@ import org.estatio.dom.WithStartDate;
                 value = "SELECT "
                         + "FROM org.estatio.dom.index.IndexValue "
                         + "WHERE indexBase.index == :index "
-                        + "   && startDate >= :startDate"),
+                        + "   && startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findLastByIndex", language = "JDOQL",
                 value = "SELECT "
