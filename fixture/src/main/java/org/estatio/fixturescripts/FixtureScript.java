@@ -29,7 +29,9 @@ public enum FixtureScript {
 
     GenerateTopModelInvoice(GenerateTopModelInvoice.class),
     CreateBreakOptions(CreateBreakOptions.class),
-    ;
+    FixLeaseTerms(FixLeaseTerms.class),
+    TruncateLeases(TruncateLeases.class),
+    TruncateInvoices(TruncateInvoices.class);
     
     private Class<? extends Callable<Object>> cls;
 
