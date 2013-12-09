@@ -28,22 +28,21 @@ import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.joda.time.LocalDate;
 
-
 public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
-
 
     @Override
     public void install() {
+        // Source http://www.istat.it/it/archivio/30440
 
         Index index = createIndex("ISTAT-FOI", "ISTAT FOI");
 
         IndexBase base1989 = createIndexBase(index, null, 1990, 1.242);
-        
+
         createIndexValues(base1989, 1990, new double[] { 103.3, 104, 104.4, 104.8, 105.1, 105.5, 105.9, 106.6, 107.2, 108.1, 108.8, 109.2 }, 106.1);
         createIndexValues(base1989, 1991, new double[] { 110, 111, 111.3, 111.8, 112.2, 112.8, 113, 113.3, 113.8, 114.7, 115.5, 115.8 }, 112.9);
         createIndexValues(base1989, 1992, new double[] { 116.7, 116.9, 117.4, 117.9, 118.5, 118.9, 119.1, 119.2, 119.6, 120.3, 121, 121.2 }, 118.9);
 
-        IndexBase base1992 = createIndexBase(index,base1989, 1993, 1.189);
+        IndexBase base1992 = createIndexBase(index, base1989, 1993, 1.189);
         createIndexValues(base1992, 1993, new double[] { 102.3, 102.7, 102.9, 103.3, 103.7, 104.2, 104.6, 104.7, 104.8, 105.5, 106, 106 }, 104.2);
         createIndexValues(base1992, 1994, new double[] { 106.6, 107, 107.2, 107.5, 107.9, 108.1, 108.4, 108.6, 108.9, 109.5, 109.9, 110.3 }, 108.3);
         createIndexValues(base1992, 1995, new double[] { 110.7, 111.6, 112.5, 113.1, 113.8, 114.4, 114.5, 114.9, 115.2, 115.8, 116.5, 116.7 }, 114.1);
@@ -68,7 +67,7 @@ public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
         IndexBase base2000 = createIndexBase(index, base1995, 2011, 1.373);
         createIndexValues(base2000, 2011, new double[] { 101.2, 101.5, 101.9, 102.4, 102.5, 102.6, 102.9, 103.2, 103.2, 103.6, 103.7, 104 }, 102.7);
         createIndexValues(base2000, 2012, new double[] { 104.4, 104.8, 105.2, 105.7, 105.6, 105.8, 105.9, 106.4, 106.4, 106.4, 106.2, 106.5 }, 105.8);
-        createIndexValues(base2000, 2013, new double[] { 106.7, 106.7, 106.9, 106.9, 106.9, 107.1, 107.2 }, 0);
+        createIndexValues(base2000, 2013, new double[] { 106.7, 106.7, 106.9, 106.9, 106.9, 107.1, 107.2, 107.6, 107.2, 107.1 }, 0);
 
     }
 
@@ -87,7 +86,7 @@ public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
             i++;
         }
     }
-    
+
     // //////////////////////////////////////
 
     private Indices indices;
@@ -95,6 +94,7 @@ public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
     public Indices getIndices() {
         return indices;
     }
+
     public void injectIndices(Indices indices) {
         this.indices = indices;
     }
@@ -110,11 +110,5 @@ public class IndexAndIndexBaseAndIndexValueFixture extends AbstractFixture {
     public void injectIndexValues(final IndexValues indexValues) {
         this.indexValues = indexValues;
     }
-
-
-
-
-    
-
 
 }

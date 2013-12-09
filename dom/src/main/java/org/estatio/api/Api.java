@@ -466,7 +466,7 @@ public class Api extends AbstractFactoryAndRepository {
         Lease lease = leases.findLeaseByReference(reference);
         LeaseType leaseType = leaseTypes.findOrCreate(type, null);
         if (lease == null) {
-            lease = leases.newLease(reference, name, leaseType, startDate, null, endDate, landlord, tenant);
+            lease = leases.newLease(reference, name, leaseType, startDate, endDate, tenancyStartDate, tenancyEndDate, landlord, tenant);
         }
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);

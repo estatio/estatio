@@ -285,6 +285,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
             LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
             if (previousTerm != null) {
                 BigDecimal newBaseValue = MathUtils.firstNonZero(
+                        previousTerm.getSettledValue(),
                         previousTerm.getIndexedValue(),
                         previousTerm.getBaseValue());
                 if (getBaseValue() == null || newBaseValue.compareTo(getBaseValue()) != 0) {
@@ -321,6 +322,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     public BigDecimal valueForDate(final LocalDate dueDate) {
         // use the indexed value on or after the effective date, use the base
         // otherwise
+        
+        // TODO: doesn't smell well
         if (getEffectiveDate() == null) {
             return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
         }

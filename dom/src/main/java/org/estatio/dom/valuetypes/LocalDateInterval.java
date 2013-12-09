@@ -74,17 +74,17 @@ public final class LocalDateInterval {
     }
 
     private LocalDate endDate;
-
     private LocalDate startDate;
 
     public LocalDateInterval() {
     }
 
     public LocalDateInterval(final Interval interval) {
-        if (interval != null) {
-            startDate = IntervalUtil.toLocalDate(interval.getStartMillis());
-            endDate = IntervalUtil.toLocalDate(interval.getEndMillis());
+        if (interval == null) {
+            throw new IllegalArgumentException("interval cannot be null");
         }
+        startDate = IntervalUtil.toLocalDate(interval.getStartMillis());
+        endDate = IntervalUtil.toLocalDate(interval.getEndMillis());
     }
 
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate) {
@@ -191,14 +191,17 @@ public final class LocalDateInterval {
      * @return
      */
     public LocalDateInterval overlap(final LocalDateInterval otherInterval) {
-        if (otherInterval == null || otherInterval.isInfinite()) {
+        if (otherInterval == null) {
+            return null;
+        }
+        if (otherInterval.isInfinite()) {
             return this;
         }
         final Interval thisAsInterval = asInterval();
         final Interval otherAsInterval = otherInterval.asInterval();
         Interval overlap = thisAsInterval.overlap(otherAsInterval);
         if (overlap == null) {
-            return new LocalDateInterval();
+            return null;
         }
         return new LocalDateInterval(overlap);
     }

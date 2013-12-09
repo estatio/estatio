@@ -34,6 +34,7 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
+    private static final int MONTHS = 3;
     private BigDecimal budgetedValue;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
@@ -71,9 +72,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     @Override
     public BigDecimal getTrialValue() {
-        return MathUtils.isNotZeroOrNull(getAuditedValue())
-                ? getAuditedValue()
-                : getBudgetedValue();
+        return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
     }
 
     // //////////////////////////////////////
@@ -81,13 +80,12 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     @Override
     @Programmatic
     public BigDecimal valueForDate(final LocalDate dueDate) {
-        // use the audited value after the end of the term and only when its
-        // available
-        if (MathUtils.isNotZeroOrNull(getAuditedValue())) {
-            if (getEndDate() != null) {
-                if (dueDate.compareTo(getEndDate().plusDays(1)) >= 0) {
-                    return getAuditedValue();
-                }
+        // TODO: we might need an effective date on the Service Charge too
+        LocalDate endDate = getInterval().endDateExcluding();
+        if (endDate != null) {
+            LocalDate effectiveDate = endDate.plusMonths(MONTHS);
+            if (getEndDate() != null && effectiveDate.compareTo(dueDate) <= 0) {
+                return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
             }
         }
         return getBudgetedValue();
@@ -101,10 +99,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         super.initialize();
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPrevious();
         if (previousTerm != null) {
-            this.setBudgetedValue(
-                    MathUtils.isNotZeroOrNull(previousTerm.getAuditedValue())
-                            ? previousTerm.getAuditedValue()
-                            : previousTerm.getBudgetedValue());
+            this.setBudgetedValue(MathUtils.firstNonZero(previousTerm.getAuditedValue(), previousTerm.getBudgetedValue()));
         }
     }
 

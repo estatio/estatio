@@ -138,17 +138,24 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
 
     @Test
     public void step5_normalInvoice() throws Exception {
-        lease.calculate(new LocalDate(2015, 4, 1), null, new LocalDate(2015, 4, 1), InvoiceRunType.NORMAL_RUN);
+        lease.calculate(new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), InvoiceRunType.NORMAL_RUN);
         assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("249105.98")));
     }
 
     @Test
     public void step6_retroInvoice() throws Exception {
-        lease.calculate(new LocalDate(2015, 4, 1), null, new LocalDate(2015, 4, 1), InvoiceRunType.RETRO_RUN);
+        lease.calculate(new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), InvoiceRunType.RETRO_RUN);
         // (156750 - 150000) / = 1687.5 added
         assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("249105.98").add(new BigDecimal("1687.50"))));
     }
 
+    @Test
+    public void step7_teminate() throws Exception {
+        lease.terminate(new LocalDate(2014, 6, 30), true);
+        lease.verify();
+        
+    }
+    
     // //////////////////////////////////////
 
     private BigDecimal totalInvoicedForLease(Lease lease) {

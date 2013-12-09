@@ -50,6 +50,11 @@ public class ClockService {
         return beginningOfQuarter(date);
     }
 
+    public LocalDate beginningOfNextQuarter() {
+        final LocalDate date = now().plusMonths(3);
+        return beginningOfQuarter(date);
+    }
+    
     static LocalDate beginningOfQuarter(final LocalDate date) {
         final LocalDate beginningOfMonth = beginningOfMonth(date);
         final int monthOfYear = beginningOfMonth.getMonthOfYear();

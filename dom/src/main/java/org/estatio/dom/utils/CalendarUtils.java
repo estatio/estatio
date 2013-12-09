@@ -112,9 +112,12 @@ public final class CalendarUtils {
 
     public static List<Interval> intervalsInRange(
             final LocalDate startDate, final LocalDate endDate, final String rrule) {
+        if (startDate.compareTo(endDate) > 0) {
+            throw new IllegalArgumentException(
+                    String.format("Start date %s is after end date %s", startDate.toString(), endDate.toString()));
+        }
         List<Interval> intervals = Lists.newArrayList();
         LocalDate start = startDate;
-        LocalDate end = endDate == null ? startDate : endDate;
         Interval interval = null;
         do {
             interval = intervalContaining(start, rrule);
@@ -122,7 +125,7 @@ public final class CalendarUtils {
                 intervals.add(interval);
                 start = interval.getEnd().toLocalDate();
             }
-        } while (interval != null && start.isBefore(end));
+        } while (interval != null && start.isBefore(endDate));
         return intervals;
     }
 

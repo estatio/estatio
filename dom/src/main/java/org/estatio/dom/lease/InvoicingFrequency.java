@@ -23,6 +23,11 @@ import java.math.MathContext;
 
 import com.google.common.collect.Ordering;
 
+import org.joda.time.LocalDate;
+
+import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
 public enum InvoicingFrequency {
 
     WEEKLY_IN_ADVANCE(
@@ -98,6 +103,16 @@ public enum InvoicingFrequency {
 
     public Boolean isInAdvance() {
         return paidIn == PaidIn.ADVANCE;
+    }
+
+    public LocalDate getDueDate(final LocalDate date){
+        LocalDateInterval interval = new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
+        return interval.startDate();
+    }
+    
+    public LocalDate getNextDueDate(final LocalDate date){
+        LocalDateInterval interval = new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
+        return interval.endDateExcluding();
     }
     
     public BigDecimal annualMultiplier(){

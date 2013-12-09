@@ -24,6 +24,7 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -54,6 +55,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResultsUtil;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
@@ -127,17 +129,16 @@ public class InvoiceCalculationServiceTest {
 
         leaseItem = new LeaseItem();
         leaseItem.setStartDate(LEASE_START_DATE);
-
-        lease.getItems().add(leaseItem);
+        leaseItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         leaseItem.setLease(lease);
 
-        leaseItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
+        lease.getItems().add(leaseItem);
 
         leaseTerm = new LeaseTermForTesting();
         leaseTerm.injectInvoiceItemsForLease(mockInvoiceItemsForLease);
+        leaseTerm.setLeaseItem(leaseItem);
 
         leaseItem.getTerms().add(leaseTerm);
-        leaseTerm.setLeaseItem(leaseItem);
 
         tax = new Tax();
         tax.injectTaxRates(mockTaxRates);
@@ -183,11 +184,9 @@ public class InvoiceCalculationServiceTest {
 
     @Test
     public void testCalculateExactPeriod() {
-
         leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
         leaseTerm.setEndDate(new LocalDate(2012, 3, 31));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
-
         CalculationResult result = ic.calculateLeaseTerm(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
     }
@@ -202,12 +201,44 @@ public class InvoiceCalculationServiceTest {
     }
 
     @Test
+    public void testCalculateWithFrequency() {
+        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
+        leaseTerm.setEndDate(new LocalDate(2012, 2, 29));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        List<CalculationResult> results = ic.calculateWithFrequency(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 3, 1), new LocalDate(2012, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency());
+        CalculationResult result = results.get(0);
+        assertThat(results.size(), is(1));
+        assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
+    }
+
+    @Test
+    public void testCalculateWithFrequencyDifferentEndDate() {
+        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
+        leaseTerm.setEndDate(new LocalDate(2012, 2, 29));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        List<CalculationResult> results = ic.calculateWithFrequency(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 2, 28), new LocalDate(2012, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency());
+        CalculationResult result = results.get(0);
+        assertThat(results.size(), is(1));
+        assertEquals(BigDecimal.valueOf(1593.41).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
+    }
+
+    @Test
     public void testCalculateNothing() {
         leaseTerm.setStartDate(new LocalDate(2013, 1, 1));
         leaseTerm.setEndDate(new LocalDate(2013, 3, 1));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
         CalculationResult result = ic.calculateLeaseTerm(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         assertEquals(BigDecimal.valueOf(0).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
+    }
+
+    @Test
+    public void testDateAfterTerminationDate() {
+
+        lease.terminate(new LocalDate(2013, 12, 31), true);
+        LeaseTermForTesting t2 = new LeaseTermForTesting(leaseItem, new LocalDate(2014, 1, 1), null, new BigDecimal("20000.00"));
+        CalculationResult r2 = ic.calculateLeaseTerm(t2, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1));
+        assertThat(r2.getCalculatedValue(), is(new BigDecimal("0.00")));
+
     }
 
     @Test
@@ -227,6 +258,8 @@ public class InvoiceCalculationServiceTest {
         lease.setTenancyEndDate(new LocalDate(2012, 1, 31));
         CalculationResult result = ic.calculateLeaseTerm(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1));
         assertEquals(BigDecimal.valueOf(1703.30).setScale(2, RoundingMode.HALF_UP), result.getCalculatedValue());
+        CalculationResult result2 = ic.calculateLeaseTerm(leaseTerm, new LocalDate(2014, 1, 1), new LocalDate(2014, 1, 1));
+        assertThat(result2.getCalculatedValue(), is(new BigDecimal("0.00")));
     }
 
     @Test
@@ -250,29 +283,8 @@ public class InvoiceCalculationServiceTest {
         leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
         leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
-        List<CalculationResult> results = ic.calculateFullLengthOfTerm(leaseTerm, new LocalDate(2013, 4, 1));
+        List<CalculationResult> results = ic.calculateWithFrequency(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(), new LocalDate(2013, 4, 1), leaseTerm.getLeaseItem().getInvoicingFrequency());
         assertThat(results.size(), is(5));
-        assertThat(results.get(0).getCalculatedValue(), is(BigDecimal.valueOf(3296.70).setScale(2)));
-        assertThat(results.get(1).getCalculatedValue(), is(BigDecimal.valueOf(5000).setScale(2)));
-        assertThat(results.get(2).getCalculatedValue(), is(BigDecimal.valueOf(5000).setScale(2)));
-        assertThat(results.get(3).getCalculatedValue(), is(BigDecimal.valueOf(5000).setScale(2)));
-        assertThat(results.get(4).getCalculatedValue(), is(BigDecimal.valueOf(1722.22).setScale(2)));
-        // TODO: Since 2012 is a leap year, the sum of the invoices is greater
-        // than the value of the term.....
-    }
-
-    @Test
-    public void testFullCalulationResults2() {
-        LocalDate startDate = new LocalDate(2012, 2, 1);
-        LocalDate endDate = new LocalDate(2013, 1, 31);
-        BigDecimal value = BigDecimal.valueOf(20000);
-
-        leaseTerm.setStartDate(startDate);
-        leaseTerm.setEndDate(endDate);
-        leaseTerm.setValue(value);
-
-        List<CalculationResult> results = ic.calculateFullLengthOfTerm(leaseTerm, new LocalDate(2013, 4, 1));
-
         assertThat(results.get(0).getCalculatedValue(), is(BigDecimal.valueOf(3296.70).setScale(2)));
         assertThat(results.get(1).getCalculatedValue(), is(BigDecimal.valueOf(5000).setScale(2)));
         assertThat(results.get(2).getCalculatedValue(), is(BigDecimal.valueOf(5000).setScale(2)));
@@ -307,11 +319,77 @@ public class InvoiceCalculationServiceTest {
         });
 
         ic.setEstatioSettings(mockSettings);
-        ic.calculateAndInvoice(leaseTerm, new LocalDate(2012, 1, 1), null, new LocalDate(2012, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency(), InvoiceRunType.NORMAL_RUN);
+        ic.calculateAndInvoice(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency(), InvoiceRunType.NORMAL_RUN);
 
         InvoiceItemForLease invoiceItem = leaseTerm.getInvoiceItems().first();
 
         assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), invoiceItem.getNetAmount());
         assertEquals(new LocalDate(2012, 1, 1), invoiceItem.getStartDate());
     }
+
+    @Test
+    public void testMockResults() {
+
+        leaseItem.setCharge(charge);
+
+        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
+        leaseTerm.setEndDate(null);
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+
+        List<CalculationResult> results = ic.calculateWithFrequency(leaseTerm, leaseTerm.getStartDate(), new LocalDate(2014, 1, 1), new LocalDate(2013, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency());
+        List<CalculationResult> mockResults = new ArrayList<InvoiceCalculationService.CalculationResult>();
+        
+        for (CalculationResult result : results) {
+            List<CalculationResult> mock = ic.mockResults(leaseTerm, result, leaseTerm.getLeaseItem().getInvoicingFrequency(), new LocalDate(2013, 1, 1));
+            mockResults.addAll(mock);
+        }
+        assertThat(results.size(), is(mockResults.size()));
+        assertThat(CalculationResultsUtil.sum(results), is(new BigDecimal("40000.00")));
+        assertThat(CalculationResultsUtil.sum(mockResults), is(new BigDecimal("20000.00")));
+    }
+
+    @Test
+    public void testMockResults2() {
+
+        leaseItem.setCharge(charge);
+
+        leaseTerm.setStartDate(new LocalDate(2012, 9, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 8, 31));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        leaseTerm.setAdjustedValue(BigDecimal.valueOf(22000));
+
+        List<CalculationResult> results = ic.calculateWithFrequency(leaseTerm, leaseTerm.getStartDate(), new LocalDate(2014, 1, 1), new LocalDate(2013, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency());
+        List<CalculationResult> mockResults = new ArrayList<InvoiceCalculationService.CalculationResult>();
+        
+        for (CalculationResult result : results) {
+            List<CalculationResult> mock = ic.mockResults(leaseTerm, result, leaseTerm.getLeaseItem().getInvoicingFrequency(), new LocalDate(2013, 1, 1));
+            mockResults.addAll(mock);
+        }
+        assertThat(results.size(), is(mockResults.size()));
+        assertThat(CalculationResultsUtil.sum(results), is(new BigDecimal("20000.00")));
+        assertThat(CalculationResultsUtil.sum(mockResults), is(new BigDecimal("6630.43")));
+    }
+
+    @Test
+    public void testMockResults3() {
+
+        leaseItem.setCharge(charge);
+
+        leaseTerm.setStartDate(new LocalDate(2012, 9, 1));
+        leaseTerm.setEndDate(new LocalDate(2013, 8, 31));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        leaseTerm.setAdjustedValue(BigDecimal.valueOf(22000));
+
+        List<CalculationResult> results = ic.calculateWithFrequency(leaseTerm, leaseTerm.getStartDate(), new LocalDate(2014, 1, 1), new LocalDate(2013, 10, 1), leaseTerm.getLeaseItem().getInvoicingFrequency());
+        List<CalculationResult> mockResults = new ArrayList<InvoiceCalculationService.CalculationResult>();
+        
+        for (CalculationResult result : results) {
+            List<CalculationResult> mock = ic.mockResults(leaseTerm, result, leaseTerm.getLeaseItem().getInvoicingFrequency(), new LocalDate(2013, 1, 1));
+            mockResults.addAll(mock);
+        }
+        assertThat(results.size(), is(mockResults.size()));
+        assertThat(CalculationResultsUtil.sum(results), is(new BigDecimal("22000.00")));
+        assertThat(CalculationResultsUtil.sum(mockResults), is(new BigDecimal("6630.43")));
+    }
+
 }

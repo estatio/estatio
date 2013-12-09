@@ -20,19 +20,37 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 
-import org.apache.isis.applib.annotation.Mask;
+import org.joda.time.LocalDate;
 
 public class LeaseTermForTesting extends LeaseTerm {
 
-    @Mask("")
+    public LeaseTermForTesting() {
+    }
+
+    public LeaseTermForTesting(LeaseItem leaseItem, LocalDate startDate, LocalDate endDate, BigDecimal value) {
+        super();
+        this.value = value;
+        setStartDate(startDate);
+        setEndDate(endDate);
+        setLeaseItem(leaseItem);
+    }
+
     @Override
     public BigDecimal getApprovedValue() {
         return value;
     }
 
-    @Mask("")
     @Override
     public BigDecimal getTrialValue() {
+        return value;
+    }
+    
+    @Override
+    public BigDecimal valueForDate(LocalDate date){
+        // after the end date the adjusted value is returned
+        if (getEndDate() != null && date.compareTo(getEndDate()) >= 0) {
+            return adjustedValue != null ? adjustedValue : value;
+        }
         return value;
     }
 
@@ -44,4 +62,9 @@ public class LeaseTermForTesting extends LeaseTerm {
         this.value = value;
     }
 
+    private BigDecimal adjustedValue;
+    
+    public void setAdjustedValue(final BigDecimal adjustedValue) {
+        this.adjustedValue = adjustedValue;
+    }
 }

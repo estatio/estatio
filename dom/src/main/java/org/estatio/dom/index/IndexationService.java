@@ -85,8 +85,10 @@ public class IndexationService {
         private BigDecimal nextIndexValue = null;
  
         public IndexationResult(
-                final BigDecimal indexedValue, final BigDecimal indexationPercentage, 
-                final BigDecimal baseIndexValue, final BigDecimal nextIndexValue) {
+                final BigDecimal indexedValue, 
+                final BigDecimal indexationPercentage, 
+                final BigDecimal baseIndexValue, 
+                final BigDecimal nextIndexValue) {
             this.indexedValue = indexedValue;
             this.indexationPercentage = indexationPercentage;
             this.baseIndexValue = baseIndexValue;

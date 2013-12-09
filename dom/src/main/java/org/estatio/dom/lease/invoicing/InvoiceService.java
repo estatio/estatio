@@ -20,7 +20,6 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.services.clock.ClockService;
 
-@Named("Invoices")
 public class InvoiceService {
 
     /**
@@ -30,43 +29,43 @@ public class InvoiceService {
      * parameters.
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "6")
+    @MemberOrder(name = "Invoices", sequence = "6")
     public List<InvoiceSummaryForPropertyDueDate> calculateInvoicesForProperty(
             final @Named("Property") @DescribedAs("") Property property,
-            final @Named("Period end Date") LocalDate startDate,
-            final @Named("Period end Date") @Optional LocalDate endDate,
+            final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period start Date") LocalDate startDate,
+            final @Named("Period end Date") @Optional LocalDate endDate) {
         final List<Lease> results = leases.findLeasesByProperty(property);
         for (Lease lease : results) {
-            lease.verifyUntil(endDate);
             lease.calculate(startDate, endDate, dueDate, runType);
         }
-        // As a convenience, we now go find them and display them.
-        // We've done it this way so that the user can always just go to the
-        // menu and make this query.
         return invoiceSummaries.invoicesForPropertyDueDate();
     }
 
-    public LocalDate default1CalculateInvoicesForProperty() {
-        return clockService.beginningOfQuarter();
+    public LocalDate default2CalculateInvoicesForProperty() {
+        return clockService.beginningOfNextQuarter();
     }
 
-    public LocalDate default2CalculateInvoicesForProperty() {
-        return clockService.beginningOfQuarter();
+    public LocalDate default3CalculateInvoicesForProperty() {
+        return clockService.beginningOfNextQuarter();
+    }
+
+    public LocalDate default4CalculateInvoicesForProperty() {
+        return clockService.beginningOfNextQuarter();
     }
 
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(sequence = "99")
+    @MemberOrder(name = "Invoices", sequence = "99")
     @Prototype
     public List<InvoiceItemForLease> calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate,
+            final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate) {
         final List<Lease> results = leases.findLeases(referenceOrName);
         for (Lease lease : results) {
             lease.verifyUntil(endDate);
@@ -79,12 +78,16 @@ public class InvoiceService {
                 startDate, dueDate);
     }
 
-    public LocalDate default1CalculateInvoicesForLeases() {
-        return clockService.beginningOfQuarter();
+    public LocalDate default2CalculateInvoicesForLeases() {
+        return clockService.beginningOfNextQuarter();
     }
 
-    public LocalDate default2CalculateInvoicesForLeases() {
-        return clockService.beginningOfQuarter();
+    public LocalDate default3CalculateInvoicesForLeases() {
+        return clockService.beginningOfNextQuarter();
+    }
+
+    public LocalDate default4CalculateInvoicesForLeases() {
+        return clockService.beginningOfNextQuarter();
     }
 
     // //////////////////////////////////////

@@ -71,7 +71,7 @@ public class LeaseWithServiceChargeTest_verify_extra1 extends EstatioIntegration
         assertNotNull(leaseMediaXServiceChargeTerm);
 
         final LeaseTerm leaseMediaXServiceChargeTermN = leaseMediaXServiceChargeItem.getTerms().last();
-        assertThat(leaseMediaXServiceChargeTermN.getTrialValue(), is(BigDecimal.valueOf(6600).setScale(2)));
+        assertThat(leaseMediaXServiceChargeTermN.getTrialValue(), is(BigDecimal.valueOf(6000).setScale(2)));
     }
 
 }

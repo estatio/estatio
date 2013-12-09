@@ -508,7 +508,7 @@ public abstract class LeaseTerm
     public LeaseTerm calculate(
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due Date") LocalDate dueDate) {
-        return calculate(startDate, null, dueDate, InvoiceRunType.NORMAL_RUN);
+        return calculate(startDate, startDate, dueDate, InvoiceRunType.NORMAL_RUN);
     }
 
     public LeaseTerm calculate(
@@ -535,7 +535,8 @@ public abstract class LeaseTerm
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
         LeaseTerm nextTerm = getNext();
-        if (nextTerm == null && getNextStartDate().compareTo(date) <= 0) {
+        LocalDate nextStartDate = getNextStartDate();
+        if (nextTerm == null && nextStartDate.compareTo(date) <= 0) {
             nextTerm = createNext(getNextStartDate());
         }
         if (nextTerm != null) {
@@ -559,11 +560,6 @@ public abstract class LeaseTerm
         if (nextTerm != null) {
             return nextTerm;
         }
-        // Don't create terms after termination date
-        if (!getLeaseItem().getEffectiveInterval().contains(nextStartDate)) {
-            return null;
-        }
-        // Ok, we need to create a term
         nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate);
         nextTerm.initialize();
         nextTerm.modifyStartDate(nextStartDate);
@@ -586,13 +582,6 @@ public abstract class LeaseTerm
 
     @Programmatic
     protected void update() {
-        // terminate the last term
-        LocalDate terminationDate = getLeaseItem().getLease().getTerminationDate();
-        if (terminationDate != null && getNext() == null) {
-            if (getEndDate() == null || getEndDate().compareTo(terminationDate) > 0) {
-                setEndDate(terminationDate);
-            }
-        }
         // Get the end date from the next start date
         if (getEndDate() == null && getNext() != null) {
             modifyEndDate(getNext().getInterval().endDateFromStartDate());
