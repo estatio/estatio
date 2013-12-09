@@ -84,7 +84,8 @@ import org.estatio.dom.party.Party;
                         "lease.occupancies.contains(o) && " +
                         "o.unit.property == :property && " +
                         "status == :status " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o"),
+                        "VARIABLES org.estatio.dom.lease.Occupancy o " +
+                        "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndDueDateAndStatus", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
@@ -93,7 +94,8 @@ import org.estatio.dom.party.Party;
                         "o.unit.property == :property && " +
                         "status == :status && " +
                         "dueDate == :dueDate " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o"),
+                        "VARIABLES org.estatio.dom.lease.Occupancy o " +
+                        "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndDueDate", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
@@ -101,12 +103,14 @@ import org.estatio.dom.party.Party;
                         "lease.occupancies.contains(o) &&" +
                         "o.unit.property == :property && " +
                         "dueDate == :dueDate " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o"),
+                        "VARIABLES org.estatio.dom.lease.Occupancy o " +
+                        "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.invoice.Invoice "
-                        + "WHERE status == :status ")
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice "+
+                        "WHERE status == :status " +
+                        "ORDER BY invoiceNumber")
 })
 @Bookmarkable
 public class Invoice extends EstatioMutableObject<Invoice> {
@@ -166,7 +170,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     public String getCollectionNumber() {
         return collectionNumber;
     }
@@ -181,7 +185,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.Invoice.NUMBER)
     @Disabled
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     public String getInvoiceNumber() {
         return invoiceNumber;
     }

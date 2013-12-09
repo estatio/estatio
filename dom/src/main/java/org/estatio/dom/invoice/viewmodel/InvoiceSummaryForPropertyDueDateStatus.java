@@ -33,9 +33,10 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
 import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento;
 
@@ -110,6 +111,14 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     public InvoiceSummaryForPropertyDueDateStatus invoice() {
         for (Invoice invoice : getInvoices()) {
             invoice.invoiceNow();
+        }
+        return this;
+    }
+
+    @Prototype
+    public InvoiceSummaryForPropertyDueDateStatus removeAll() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.remove();
         }
         return this;
     }
