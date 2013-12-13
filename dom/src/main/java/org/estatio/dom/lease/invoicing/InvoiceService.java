@@ -35,7 +35,7 @@ public class InvoiceService {
             final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
             final @Named("Period start Date") LocalDate startDate,
-            final @Named("Period end Date") @Optional LocalDate endDate) {
+            final @Named("Period end Date") LocalDate endDate) {
         final List<Lease> results = leases.findLeasesByProperty(property);
         for (Lease lease : results) {
             lease.calculate(startDate, endDate, dueDate, runType);
