@@ -12,8 +12,8 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.Leases;
@@ -30,7 +30,7 @@ public class InvoiceService {
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "6")
-    public List<InvoiceSummaryForPropertyDueDate> calculateInvoicesForProperty(
+    public List<InvoiceSummaryForPropertyDueDateStatus> calculateInvoicesForProperty(
             final @Named("Property") @DescribedAs("") Property property,
             final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
@@ -42,7 +42,7 @@ public class InvoiceService {
                 lease.calculate(runType, dueDate, startDate, endDate);
             }
         }
-        return invoiceSummaries.invoicesForPropertyDueDate();
+        return invoiceSummaries.invoicesForPropertyDueDateStatus();
     }
 
     public LocalDate default2CalculateInvoicesForProperty() {
@@ -74,7 +74,7 @@ public class InvoiceService {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "99")
     @Prototype
-    public List<InvoiceSummaryForPropertyDueDate> calculateInvoicesForLeases(
+    public List<InvoiceSummaryForPropertyDueDateStatus> calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
@@ -86,7 +86,7 @@ public class InvoiceService {
                 lease.calculate(runType, dueDate, startDate, endDate);
             }
         }
-        return invoiceSummaries.invoicesForPropertyDueDate();
+        return invoiceSummaries.invoicesForPropertyDueDateStatus();
     }
 
     public LocalDate default2CalculateInvoicesForLeases() {
@@ -103,9 +103,9 @@ public class InvoiceService {
 
     // //////////////////////////////////////
 
-    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
+    private InvoiceSummariesForPropertyDueDateStatus invoiceSummaries;
 
-    public void injectInvoiceSummaries(final InvoiceSummariesForPropertyDueDate invoiceSummaries) {
+    public void injectInvoiceSummaries(final InvoiceSummariesForPropertyDueDateStatus invoiceSummaries) {
         this.invoiceSummaries = invoiceSummaries;
     }
 
