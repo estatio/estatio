@@ -41,11 +41,10 @@ public class Numerators extends EstatioDomainService<Numerator> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "numerators.1")
+    @MemberOrder(name="Administration", sequence = "numerators.1")
     public List<Numerator> allNumerators() {
         return allInstances();
     }
-
 
     // //////////////////////////////////////
 

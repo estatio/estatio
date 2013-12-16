@@ -35,7 +35,7 @@ import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
-public class NumeratorTest_increment extends EstatioIntegrationTest {
+public class NumeratorTest_finders extends EstatioIntegrationTest {
 
     private Numerators numerators;
     private Properties properties;
@@ -55,32 +55,12 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
         property2 = properties.allProperties().get(1);
         numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("10"));
         numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property2, "DEF-%05d", new BigInteger("100"));
-        numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+        numerators.createScopedNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("1000"));
     }
 
     @Test
     public void numerator_increment() throws Exception {
-        Numerator in = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
-        assertThat(in.getLastIncrement(), is(new BigInteger("10")));
-        assertThat(in.increment(), is("ABC-00011"));
-        assertThat(in.getLastIncrement(), is(new BigInteger("11")));
+
     }
-    
-    @Test
-    public void testIncrementGlobalNumerator() throws Exception {
-        Numerator in = numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
-        assertThat(in.getLastIncrement(), is(new BigInteger("1000")));
-        assertThat(in.increment(), is("ABC-01001"));
-        assertThat(in.getLastIncrement(), is(new BigInteger("1001")));
-        
-    }
-    
-    @Test
-    public void test() throws Exception {
-        assertThat(numerators.allNumerators().size(), is(3));
-        
-    }
-    
-    
 
 }
