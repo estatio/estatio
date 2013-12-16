@@ -123,7 +123,7 @@ public class Lease
     // //////////////////////////////////////
 
     public void created() {
-        setStatus(LeaseStatus.NEW);
+        setStatus(LeaseStatus.ACTIVE);
     }
 
     // //////////////////////////////////////
@@ -138,6 +138,26 @@ public class Lease
 
     public void setStatus(final LeaseStatus status) {
         this.status = status;
+    }
+
+    public Lease changeStatus(
+            final LeaseStatus newStatus,
+            final @Named("Reason") String reason
+            ) {
+        if (!newStatus.equals(getStatus())) {
+            LeaseStatusReason leaseStatusReason = newTransientInstance(LeaseStatusReason.class);
+            leaseStatusReason.setLease(this);
+            leaseStatusReason.setReason(reason);
+            leaseStatusReason.setUser(getUser().getName());
+            leaseStatusReason.setTimestamp(getClockService().timestamp());
+            persistIfNotAlready(leaseStatusReason);
+            setStatus(newStatus);
+        }
+        return this;
+    }
+
+    public List<LeaseStatusReason> statusHistory() {
+        return leases.findLeaseStatusReasonByLease(this);
     }
 
     // //////////////////////////////////////
@@ -205,7 +225,7 @@ public class Lease
 
     @Disabled
     @Optional
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     public LocalDate getTenancyStartDate() {
         return tenancyStartDate;
     }
@@ -221,7 +241,7 @@ public class Lease
 
     @Disabled
     @Optional
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     public LocalDate getTenancyEndDate() {
         return tenancyEndDate;
     }
@@ -577,10 +597,10 @@ public class Lease
 
     @Bulk
     public Lease calculate(
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate,
+            final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate) {
         verifyUntil(endDate);
         for (LeaseItem item : getItems()) {
             item.calculate(startDate, endDate, dueDate, runType);
@@ -622,9 +642,7 @@ public class Lease
             // TODO: remove occupancies after the termination date
         }
         // TODO: break options
-
         setTenancyEndDate(terminationDate);
-
         return this;
     }
 
@@ -643,6 +661,34 @@ public class Lease
             return "Termination date can't be before start date";
         }
         return confirm ? null : "Make sure you confirm this action";
+    }
+
+    public boolean hideTerminate() {
+        return !getStatus().equals(LeaseStatus.ACTIVE);
+    }
+
+    // //////////////////////////////////////
+
+    public Lease suspend(
+            final @Named("Reason") String reason) {
+        changeStatus(LeaseStatus.SUSPENDED, reason);
+        return this;
+
+    }
+
+    public boolean hideSuspend() {
+        return !getStatus().equals(LeaseStatus.ACTIVE);
+    }
+
+    // //////////////////////////////////////
+
+    public Lease activate() {
+        changeStatus(LeaseStatus.SUSPENDED, "Activated by user");
+        return this;
+    }
+
+    public boolean hideActivate() {
+        return !getStatus().equals(LeaseStatus.SUSPENDED);
     }
 
     // //////////////////////////////////////
@@ -685,19 +731,7 @@ public class Lease
                     item.getInvoicingFrequency(),
                     item.getPaymentMethod(),
                     item.getStartDate());
-            LeaseTerm lastTerm = null;
-            for (LeaseTerm term : item.getTerms()) {
-                if (term.getInterval().contains(startDate)) {
-                    LeaseTerm newTerm;
-                    if (lastTerm == null) {
-                        newTerm = newItem.newTerm(term.getStartDate());
-                    } else {
-                        newTerm = lastTerm.createNext(term.getStartDate());
-                    }
-                    term.copyValuesTo(newTerm);
-                    lastTerm = newTerm;
-                }
-            }
+            item.copyTerms(startDate, newItem);
         }
     }
 

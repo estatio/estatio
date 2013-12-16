@@ -262,7 +262,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         leaseTopModelServiceChargeItem = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         // call calculate on leaseTopModel
-        leaseTopModel.calculate(new LocalDate(2010, 10, 1), null, new LocalDate(2010, 10, 1), InvoiceRunType.NORMAL_RUN);
+        leaseTopModel.calculate(InvoiceRunType.NORMAL_RUN, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), null);
         assertThat(leaseTopModelServiceChargeTerm0.getInvoiceItems().size(), is(2)); // the
                                                                                      // previous
                                                                                      // test

@@ -9,13 +9,13 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.services.clock.ClockService;
@@ -38,7 +38,9 @@ public class InvoiceService {
             final @Named("Period end Date") LocalDate endDate) {
         final List<Lease> results = leases.findLeasesByProperty(property);
         for (Lease lease : results) {
-            lease.calculate(startDate, endDate, dueDate, runType);
+            if (lease.getStatus() != LeaseStatus.SUSPENDED) {
+                lease.calculate(runType, dueDate, startDate, endDate);
+            }
         }
         return invoiceSummaries.invoicesForPropertyDueDate();
     }
@@ -55,27 +57,36 @@ public class InvoiceService {
         return clockService.beginningOfNextQuarter();
     }
 
+    // public String validateCalculateInvoicesForProperty(
+    // final Property property,
+    // final InvoiceRunType runType,
+    // final LocalDate dueDate,
+    // final LocalDate startDate,
+    // final LocalDate endDate) {
+    // if(endDate.compareTo(startDate) < 0) {
+    // return "End date is before start date";
+    // }
+    // return null;
+    // }
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "99")
     @Prototype
-    public List<InvoiceItemForLease> calculateInvoicesForLeases(
+    public List<InvoiceSummaryForPropertyDueDate> calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
             final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate) {
+            final @Named("Period End Date") LocalDate endDate) {
         final List<Lease> results = leases.findLeases(referenceOrName);
         for (Lease lease : results) {
-            lease.verifyUntil(endDate);
-            lease.calculate(startDate, endDate, dueDate, runType);
+            if (lease.getStatus() != LeaseStatus.SUSPENDED) {
+                lease.calculate(runType, dueDate, startDate, endDate);
+            }
         }
-        // As a convenience, we now go find them and display them.
-        // We've done it this way so that the user can always just go to the
-        // menu and make this query.
-        return invoiceItemsForLease.findInvoiceItemsByLease(referenceOrName,
-                startDate, dueDate);
+        return invoiceSummaries.invoicesForPropertyDueDate();
     }
 
     public LocalDate default2CalculateInvoicesForLeases() {
@@ -91,12 +102,6 @@ public class InvoiceService {
     }
 
     // //////////////////////////////////////
-
-    private InvoiceItemsForLease invoiceItemsForLease;
-
-    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
-        this.invoiceItemsForLease = invoiceItemsForLease;
-    }
 
     private InvoiceSummariesForPropertyDueDate invoiceSummaries;
 

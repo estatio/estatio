@@ -20,13 +20,14 @@ package org.estatio.dom.lease;
 
 import org.estatio.dom.utils.StringUtils;
 
-public enum LeaseStatus  {
+public enum LeaseStatus {
 
-    APPROVED,
-    NEW;
+    SUSPENDED,
+    ACTIVE,
+    TERMINATED;
 
     public String title() {
         return StringUtils.enumTitle(this.name());
     }
 
- }
+}

@@ -73,6 +73,7 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
@@ -455,6 +456,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("tenantReference") String tenantReference,
             @Named("landlordReference") String landlordReference,
             @Named("type") String type,
+            @Named("status") String statusStr,
             @Named("startDate") @Optional LocalDate startDate,
             @Named("endDate") @Optional LocalDate endDate,
             @Named("tenancyStartDate") @Optional LocalDate tenancyStartDate,
@@ -465,11 +467,13 @@ public class Api extends AbstractFactoryAndRepository {
         Party landlord = fetchParty(landlordReference);
         Lease lease = leases.findLeaseByReference(reference);
         LeaseType leaseType = leaseTypes.findOrCreate(type, null);
+        LeaseStatus status = LeaseStatus.valueOf(statusStr);
         if (lease == null) {
             lease = leases.newLease(reference, name, leaseType, startDate, endDate, tenancyStartDate, tenancyEndDate, landlord, tenant);
         }
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
+        lease.changeStatus(status, "Set by import");
     }
 
     private Lease fetchLease(String leaseReference) {

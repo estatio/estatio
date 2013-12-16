@@ -26,6 +26,7 @@ import com.google.common.collect.Ordering;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.utils.CalendarUtils;
+import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public enum InvoicingFrequency {
@@ -121,4 +122,9 @@ public enum InvoicingFrequency {
 
     public final static Ordering<InvoicingFrequency> ORDERING_BY_TYPE = 
             Ordering.<InvoicingFrequency> natural().nullsFirst();
+
+    public String title() {
+        return StringUtils.enumTitle(this.name());
+    }
+
 }
