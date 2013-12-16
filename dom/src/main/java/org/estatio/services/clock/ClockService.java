@@ -32,6 +32,10 @@ public class ClockService {
         return Clock.getTimeAsLocalDate();
     }
 
+    public long timestamp() {
+        return Clock.getTime();
+    }
+    
     // //////////////////////////////////////
 
     public LocalDate beginningOfMonth() {
