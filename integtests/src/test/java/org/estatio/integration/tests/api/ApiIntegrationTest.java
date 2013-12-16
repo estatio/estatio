@@ -198,7 +198,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", START_DATE, new LocalDate(2021, 12, 31), null, null, "APIPROP");
+        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", "ACTIVE", START_DATE, new LocalDate(2021, 12, 31), null, null, "APIPROP");
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
