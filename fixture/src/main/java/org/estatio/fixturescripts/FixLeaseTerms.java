@@ -20,6 +20,7 @@ package org.estatio.fixturescripts;
 
 import java.util.concurrent.Callable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
@@ -66,25 +67,18 @@ public class FixLeaseTerms implements Callable<Object> {
     }
 
     private boolean fixEffectiveDate(LeaseTermForIndexableRent term) {
-        LocalDate currentIndexDate = latest(term.getNextIndexStartDate(), term.getStartDate());
-        if (currentIndexDate != null) {
-            LocalDate nextDueDate = term.getLeaseItem().getInvoicingFrequency().getNextDueDate(currentIndexDate.plusDays(20));
-            if (term.getEffectiveDate() == null || term.getEffectiveDate().compareTo(nextDueDate) != 0) {
-                term.setEffectiveDate(nextDueDate);
-                return true;
-            }
+        LocalDate indexAvailableDate = term.getNextIndexStartDate() == null ? null : term.getNextIndexStartDate().plusMonths(2).plusDays(16);
+        LocalDate effectiveDate = null;
+        if (indexAvailableDate != null 
+                && indexAvailableDate.compareTo(term.getStartDate()) > 0 
+                && term.getSettledValue() == null) {
+            effectiveDate = term.getLeaseItem().getInvoicingFrequency().getNextDueDate(indexAvailableDate);
+        }
+        if (!ObjectUtils.equals(effectiveDate, term.getEffectiveDate())){
+            term.setEffectiveDate(effectiveDate);
+            return true;
         }
         return false;
-    }
-
-    private LocalDate latest(LocalDate d1, LocalDate d2) {
-        if (d1 == null) {
-            return d2;
-        }
-        if (d2 != null && d2.compareTo(d1) > 0) {
-            return d2;
-        }
-        return d1;
     }
 
     private LeaseTerms leaseTerms;
