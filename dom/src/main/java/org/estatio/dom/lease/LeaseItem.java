@@ -264,6 +264,21 @@ public class LeaseItem
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
+    public LeaseItem copyAndTerminate(
+            final LocalDate startDate,
+            final InvoicingFrequency invoicingFrequency,
+            final PaymentMethod paymentMethod,
+            final Charge charge
+            ) {
+        LeaseItem newItem = getLease().newItem(this.getType(), charge, invoicingFrequency, paymentMethod, startDate);
+        this.copyTerms(startDate, newItem);
+        return newItem;
+    }
+    
+    public LocalDate default0CopyAndTerminate() {
+        return getLease().getInterval().endDateExcluding();
+    }
+    
     // //////////////////////////////////////
 
     @Programmatic
@@ -440,6 +455,25 @@ public class LeaseItem
             term.calculate(startDate, endDate, dueDate, runType);
         }
         return this;
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public void copyTerms(final LocalDate startDate, final LeaseItem newItem) {
+        LeaseTerm lastTerm = null;
+        for (LeaseTerm term : getTerms()) {
+            if (term.getInterval().contains(startDate)) {
+                LeaseTerm newTerm;
+                if (lastTerm == null) {
+                    newTerm = newItem.newTerm(term.getStartDate());
+                } else {
+                    newTerm = lastTerm.createNext(term.getStartDate());
+                }
+                term.copyValuesTo(newTerm);
+                lastTerm = newTerm;
+            }
+        }
     }
 
     // //////////////////////////////////////

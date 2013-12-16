@@ -115,8 +115,17 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
         return this;
     }
 
+    public InvoiceSummaryForPropertyDueDateStatus removeAllNew() {
+        for (Invoice invoice : getInvoices()) {
+            if (invoice.getStatus().equals(InvoiceStatus.NEW)) {
+                invoice.remove();
+            }
+        }
+        return this;
+    }
+
     @Prototype
-    public InvoiceSummaryForPropertyDueDateStatus removeAll() {
+    public InvoiceSummaryForPropertyDueDateStatus removeNew() {
         for (Invoice invoice : getInvoices()) {
             invoice.remove();
         }
