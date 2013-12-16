@@ -609,10 +609,10 @@ public class Lease
     }
 
     public String validateCalculate(
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate,
+            final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period Start Date") LocalDate startDate,
+            final @Named("Period End Date") @Optional LocalDate endDate) {
         return null; // TODO: return reason why action arguments are invalid,
                      // null if ok
     }
