@@ -22,8 +22,9 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseItemStatus {
 
-    APPROVED,
-    NEW;
+    ACTIVE,
+    SUSPENDED,
+    TERMINATED;
 
     public String title() {
         return StringUtils.enumTitle(this.name());

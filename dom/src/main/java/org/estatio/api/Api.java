@@ -553,7 +553,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (item == null) {
             item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod), startDate);
         }
-        final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.APPROVED);
+        final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.ACTIVE);
         item.setStatus(leaseItemStatus);
         item.setEndDate(endDate);
         item.setSequence(sequence);
@@ -798,13 +798,13 @@ public class Api extends AbstractFactoryAndRepository {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(bankAccountReference);
         if (bankAccount == null)
             throw new ApplicationException(String.format("BankAccount with reference %1$s not found", bankAccountReference));
+        Lease lease = fetchLease(leaseReference);
         if (bankMandate == null) {
             Party debtor = fetchParty(debtorReference);
             Party creditor = fetchParty(creditorReference);
-            Lease lease = fetchLease(leaseReference);
             bankMandate = bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
-            lease.paidBy(bankMandate);
         }
+        lease.paidBy(bankMandate);
     }
 
     // //////////////////////////////////////

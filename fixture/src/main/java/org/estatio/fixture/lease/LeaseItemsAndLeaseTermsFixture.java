@@ -158,7 +158,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         if (li == null) {
             li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
             li.setType(leaseItemType);
-            li.setStatus(LeaseItemStatus.APPROVED);
+            li.setStatus(LeaseItemStatus.ACTIVE);
             li.setEndDate(lease.getEndDate());
             li.setSequence(BigInteger.valueOf(1));
         }
