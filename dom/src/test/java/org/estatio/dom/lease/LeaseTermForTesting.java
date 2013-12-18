@@ -36,12 +36,7 @@ public class LeaseTermForTesting extends LeaseTerm {
     }
 
     @Override
-    public BigDecimal getApprovedValue() {
-        return value;
-    }
-
-    @Override
-    public BigDecimal getTrialValue() {
+    public BigDecimal getEffectiveValue() {
         return value;
     }
     

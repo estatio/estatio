@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -140,6 +141,7 @@ public class Lease
         this.status = status;
     }
 
+    @Programmatic
     public Lease changeStatus(
             final LeaseStatus newStatus,
             final @Named("Reason") String reason
@@ -152,8 +154,34 @@ public class Lease
             leaseStatusReason.setTimestamp(getClockService().timestamp());
             persistIfNotAlready(leaseStatusReason);
             setStatus(newStatus);
+
         }
         return this;
+    }
+
+    public LeaseItemStatus getItemStatus() {
+        TreeSet<LeaseItem> items = new TreeSet<LeaseItem>(getItems()) {
+            /**
+             * 
+             */
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Comparator<LeaseItem> comparator() {
+                return new Comparator<LeaseItem>()
+                {
+                    @Override
+                    public int compare(final LeaseItem o1, final LeaseItem o2) {
+                        return o1.getStatus().compareTo(o2.getStatus());
+                    }
+                };
+
+            }
+        };
+        if (items.size() > 0) {
+            return items.first().getStatus();
+        }
+        return null;
     }
 
     public List<LeaseStatusReason> statusHistory() {
@@ -669,8 +697,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public Lease suspend(
-            final @Named("Reason") String reason) {
+    public Lease suspend(final @Named("Reason") String reason) {
         changeStatus(LeaseStatus.SUSPENDED, reason);
         return this;
 

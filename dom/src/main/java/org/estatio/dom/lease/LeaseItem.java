@@ -125,7 +125,6 @@ public class LeaseItem
     private LeaseItemStatus status;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
-    @Hidden(where = Where.PARENTED_TABLES)
     @Disabled
     public LeaseItemStatus getStatus() {
         return status;
@@ -133,6 +132,32 @@ public class LeaseItem
 
     public void setStatus(final LeaseItemStatus status) {
         this.status = status;
+    }
+
+    @Programmatic
+    public void changeStatus(final LeaseItemStatus newStatus, final String reason) {
+        if (!getStatus().equals(newStatus)) {
+            setStatus(newStatus);
+
+        }
+    }
+
+    public LeaseItem suspend(final @Named("Reason") String reason) {
+        changeStatus(LeaseItemStatus.SUSPENDED, reason);
+        return this;
+    }
+
+    public boolean hideSuspend() {
+        return getStatus().equals(LeaseItemStatus.SUSPENDED);
+    }
+
+    public LeaseItem activate() {
+        changeStatus(LeaseItemStatus.ACTIVE, "");
+        return this;
+    }
+
+    public boolean hideActivate() {
+        return getStatus().equals(LeaseItemStatus.ACTIVE);
     }
 
     // //////////////////////////////////////
@@ -274,11 +299,11 @@ public class LeaseItem
         this.copyTerms(startDate, newItem);
         return newItem;
     }
-    
+
     public LocalDate default0CopyAndTerminate() {
         return getLease().getInterval().endDateExcluding();
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -352,18 +377,9 @@ public class LeaseItem
 
     @Disabled
     @Optional
-    public BigDecimal getTrialValue() {
+    public BigDecimal getValue() {
         final LeaseTerm currentTerm = currentTerm(getClockService().now());
-        return currentTerm != null ? currentTerm.getTrialValue() : null;
-    }
-
-    // //////////////////////////////////////
-
-    @Disabled
-    @Optional
-    public BigDecimal getApprovedValue() {
-        LeaseTerm currentTerm = currentTerm(getClockService().now());
-        return currentTerm != null ? currentTerm.getApprovedValue() : null;
+        return currentTerm != null ? currentTerm.getEffectiveValue() : null;
     }
 
     // //////////////////////////////////////

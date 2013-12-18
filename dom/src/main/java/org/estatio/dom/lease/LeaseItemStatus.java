@@ -22,16 +22,22 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum LeaseItemStatus {
 
-    ACTIVE,
     SUSPENDED,
+    ACTIVE,
     TERMINATED;
+
+    /*
+     * The order is used in Lease#getItemStatus. Since 'SUSPENDED' is the only
+     * status that affects the calculation we want to show that there is a
+     * suspension.
+     */
 
     public String title() {
         return StringUtils.enumTitle(this.name());
     }
 
     public static LeaseItemStatus valueOfElse(final String status, final LeaseItemStatus statusElse) {
-        return status != null? valueOf(status): statusElse;
+        return status != null ? valueOf(status) : statusElse;
     }
 
- }
+}

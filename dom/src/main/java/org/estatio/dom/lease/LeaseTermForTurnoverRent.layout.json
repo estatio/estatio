@@ -28,8 +28,7 @@
         },
         "Values": {
           "members": {
-            "trialValue": {},
-            "approvedValue": {}
+            "effectiveValue": {}
           }
         }
       }

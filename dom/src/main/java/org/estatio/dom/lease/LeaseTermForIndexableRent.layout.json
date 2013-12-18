@@ -50,8 +50,7 @@
       "memberGroups": {
         "Values": {
           "members": {
-            "trialValue": {},
-            "approvedValue": {},
+            "effectiveValue": {},
             "baseValue": {},
             "indexedValue": {},
             "settledValue": {}

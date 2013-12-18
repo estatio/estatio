@@ -32,8 +32,7 @@
       "memberGroups": {
         "Current Value": {
           "members": {
-            "trialValue": {},
-            "approvedValue": {}
+            "value": {}
           }
         }
       }

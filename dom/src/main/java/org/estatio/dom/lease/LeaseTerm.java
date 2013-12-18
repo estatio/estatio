@@ -314,13 +314,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    public BigDecimal getTrialValue() {
-        return null;
-    }
-
-    // //////////////////////////////////////
-
-    public BigDecimal getApprovedValue() {
+    public BigDecimal getEffectiveValue() {
         return null;
     }
 
@@ -436,13 +430,10 @@ public abstract class LeaseTerm
         if (getNext() != null) {
             getNext().remove();
         }
-//        if (this.getInvoiceItems().size() == 0) {
-            // CHECKSTYLE.OFF:
-            // TODO: Disabled, see EST-273
-            // this.modifyPrevious(null);
-            // getContainer().remove(this);
-            // CHECKSTYLE.ON:
-//        }
+        if (this.getInvoiceItems().size() == 0) {
+            this.modifyPrevious(null);
+            getContainer().remove(this);
+        }
     }
 
     @Programmatic
@@ -516,8 +507,10 @@ public abstract class LeaseTerm
             final @Named("Period end Date") @Optional LocalDate endDate,
             final @Named("Due Date") LocalDate dueDate,
             final @Named("Run Type") InvoiceRunType runType) {
-        invoiceCalculationService.calculateAndInvoice(
-                this, startDate, endDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
+        if (!getLeaseItem().getStatus().equals(LeaseItemStatus.SUSPENDED)) {
+            invoiceCalculationService.calculateAndInvoice(
+                    this, startDate, endDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
+        }
         return this;
     }
 
@@ -614,7 +607,7 @@ public abstract class LeaseTerm
 
     @Programmatic
     public BigDecimal valueForDate(final LocalDate dueDate) {
-        return getTrialValue();
+        return getEffectiveValue();
     }
 
     @Programmatic

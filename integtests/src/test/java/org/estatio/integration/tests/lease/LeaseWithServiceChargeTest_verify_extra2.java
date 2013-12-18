@@ -74,7 +74,7 @@ public class LeaseWithServiceChargeTest_verify_extra2 extends EstatioIntegration
         assertNotNull(leaseTerm1);
 
         final LeaseTerm leaseTerm2 = leasePoisonServiceChargeItem.getTerms().last();
-        assertThat(leaseTerm2.getTrialValue(), is(BigDecimal.valueOf(12400).setScale(2)));
+        assertThat(leaseTerm2.getEffectiveValue(), is(BigDecimal.valueOf(12400).setScale(2)));
 
         // and then
         SortedSet<LeaseTerm> terms = leasePoisonRentItem.getTerms();

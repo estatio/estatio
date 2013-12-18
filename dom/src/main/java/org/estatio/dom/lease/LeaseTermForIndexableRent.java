@@ -233,15 +233,10 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         this.settledValue = settledValue;
     }
 
-    @Override
-    public BigDecimal getApprovedValue() {
-        return getStatus().isApproved() ? getTrialValue() : null;
-    }
-
     // //////////////////////////////////////
 
     @Override
-    public BigDecimal getTrialValue() {
+    public BigDecimal getEffectiveValue() {
         return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
     }
 

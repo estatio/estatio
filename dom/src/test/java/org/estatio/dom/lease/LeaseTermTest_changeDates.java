@@ -39,37 +39,31 @@ public class LeaseTermTest_changeDates extends AbstractWithIntervalMutableContra
     public void setUp() throws Exception {
         leaseTerm = withIntervalMutable;
     }
-    
+
     protected LeaseTerm doCreateWithIntervalMutable(final WithIntervalMutable.Helper<LeaseTerm> mockChangeDates) {
         return new LeaseTerm() {
             @Override
             org.estatio.dom.WithIntervalMutable.Helper<LeaseTerm> getChangeDates() {
                 return mockChangeDates;
             }
+
             @Override
-            public BigDecimal getTrialValue() {
-                return null;
-            }
-            @Override
-            public BigDecimal getApprovedValue() {
+            public BigDecimal getEffectiveValue() {
                 return null;
             }
         };
     }
-    
+
     // //////////////////////////////////////
 
     @Test
     public void changeDatesDelegate() {
-        leaseTerm = new LeaseTerm(){
+        leaseTerm = new LeaseTerm() {
             @Override
-            public BigDecimal getTrialValue() {
+            public BigDecimal getEffectiveValue() {
                 return null;
             }
-            @Override
-            public BigDecimal getApprovedValue() {
-                return null;
-            }};
+        };
         assertThat(leaseTerm.getChangeDates(), is(not(nullValue())));
     }
 

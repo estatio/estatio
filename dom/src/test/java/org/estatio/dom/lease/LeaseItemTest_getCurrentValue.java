@@ -77,7 +77,7 @@ public class LeaseItemTest_getCurrentValue {
 
     @Test
     public void test() {
-        assertThat(leaseItem.getTrialValue(), is(BigDecimal.TEN));
+        assertThat(leaseItem.getValue(), is(BigDecimal.TEN));
         assertThat(getCurrentValueDateArgument, is(now));
     }
 

@@ -11,6 +11,7 @@
             "leaseType": {},
             "property": {},
             "status": {},
+            "itemStatus": {},
             "paidBy": {
               "actions": {
                 "paidBy": {},

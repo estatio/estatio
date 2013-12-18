@@ -64,14 +64,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    public BigDecimal getApprovedValue() {
-        return getStatus().isApproved() ? getTrialValue() : null;
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    public BigDecimal getTrialValue() {
+    public BigDecimal getEffectiveValue() {
         return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
     }
 
@@ -108,8 +101,8 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     public void update() {
         super.update();
         if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
-            if (MathUtils.isNotZeroOrNull(getPrevious().getTrialValue())) {
-                setBudgetedValue(getPrevious().getTrialValue());
+            if (MathUtils.isNotZeroOrNull(getPrevious().getEffectiveValue())) {
+                setBudgetedValue(getPrevious().getEffectiveValue());
             }
         }
     }

@@ -177,7 +177,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
 
         // then
         assertThat(term.getStatus(), is(LeaseTermStatus.APPROVED));
-        assertThat(term.getApprovedValue(), is(BigDecimal.valueOf(20200).setScale(2)));
+        assertThat(term.getEffectiveValue(), is(BigDecimal.valueOf(20200).setScale(2)));
     }
 
     @Test

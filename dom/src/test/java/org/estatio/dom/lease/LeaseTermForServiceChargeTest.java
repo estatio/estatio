@@ -78,7 +78,7 @@ public class LeaseTermForServiceChargeTest {
     @Test
     public void testUpdate() {
         term.update();
-        assertThat(term.getTrialValue(), Is.is(term.getBudgetedValue()));
+        assertThat(term.getEffectiveValue(), Is.is(term.getBudgetedValue()));
         LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
         
         item.getTerms().add(nextTerm);

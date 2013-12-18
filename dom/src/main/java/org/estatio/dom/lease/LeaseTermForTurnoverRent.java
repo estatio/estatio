@@ -114,14 +114,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    public BigDecimal getApprovedValue() {
-        return getStatus().isApproved()? getTurnoverRentValue(): null;
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    public BigDecimal getTrialValue() {
+    public BigDecimal getEffectiveValue() {
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         BigDecimal calculatedTurnoverRent = helper.calculateRent(getAuditedTurnover());
         if (getContractualRent() != null && 
@@ -164,7 +157,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
         if (!getStatus().isApproved()) {
             // need this guard, cos may be called as bulk action
-            setTurnoverRentValue(getTrialValue());
+            setTurnoverRentValue(getEffectiveValue());
         }
 
         return this;

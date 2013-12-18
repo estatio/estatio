@@ -15,8 +15,7 @@
         },
         "Values": {
           "members": {
-            "trialValue": {},
-            "approvedValue": {},
+            "effectiveValue": {},
             "current": {},
             "previous": {},
             "next": {}
