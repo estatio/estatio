@@ -27,6 +27,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -109,6 +110,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE lease == :lease "
                         + "   && endDate == :endDate")
 })
+@Unique(name ="LeaseItem_lease_type_startDate_sequence_IDX", members={"lease", "type", "startDate", "sequence"})
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem
         extends EstatioMutableObject<LeaseItem>

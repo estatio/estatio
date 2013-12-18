@@ -28,6 +28,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -103,6 +104,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE leaseItem == :leaseItem "
                         + "   && endDate == :endDate")
 })
+@Unique(name ="LeaseTerm_leaseItem_sequence_IDX", members={"leaseItem", "sequence"})
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm
         extends EstatioMutableObject<LeaseTerm>
