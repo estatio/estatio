@@ -70,6 +70,14 @@ public class CalendarUtilsTest_interval {
     }
 
     @Test
+    public void intervalsInRangeTest2() {
+        List<Interval> intervals = CalendarUtils.intervalsInRange(new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), "RRULE:FREQ=MONTHLY;INTERVAL=3");
+        assertThat(intervals.size(), is(1));
+        assertThat(intervals.get(0).getStart().toLocalDate(), is(new LocalDate(2012, 1, 1)));
+        assertThat(intervals.get(0).getEnd().toLocalDate(), is(new LocalDate(2012, 4, 1)));
+    }
+
+    @Test
     public void nextDateTest() {
         assertThat(CalendarUtils.nextDate(new LocalDate(2012, 1, 1), "RRULE:FREQ=MONTHLY;INTERVAL=3"), is(new LocalDate(2012, 4, 1)));
     }

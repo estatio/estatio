@@ -554,8 +554,7 @@ public class Api extends AbstractFactoryAndRepository {
             item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod), startDate);
         }
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.ACTIVE);
-        item.setStatus(leaseItemStatus);
-        item.setEndDate(endDate);
+        item.modifyStatus(leaseItemStatus, "Updated through API");
         item.setSequence(sequence);
     }
 

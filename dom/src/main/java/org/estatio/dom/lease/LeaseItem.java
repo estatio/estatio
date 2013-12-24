@@ -30,6 +30,8 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
+import com.google.common.base.Function;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -110,13 +112,21 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE lease == :lease "
                         + "   && endDate == :endDate")
 })
-@Unique(name ="LeaseItem_lease_type_startDate_sequence_IDX", members={"lease", "type", "startDate", "sequence"})
+@Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = { "lease", "type", "startDate", "sequence" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class LeaseItem
         extends EstatioMutableObject<LeaseItem>
         implements WithIntervalMutable<LeaseItem>, WithSequence {
 
     private static final int PAGE_SIZE = 15;
+
+    public static class Functions {
+        public static Function<LeaseItem, LeaseItemStatus> GET_STATUS = new Function<LeaseItem, LeaseItemStatus>() {
+            public LeaseItemStatus apply(final LeaseItem li) {
+                return li.getStatus();
+            }
+        };
+    }
 
     public LeaseItem() {
         super("lease, type, sequence desc");
@@ -137,15 +147,15 @@ public class LeaseItem
     }
 
     @Programmatic
-    public void changeStatus(final LeaseItemStatus newStatus, final String reason) {
+    public void modifyStatus(final LeaseItemStatus newStatus, final String reason) {
         if (!getStatus().equals(newStatus)) {
             setStatus(newStatus);
-
+            getLease().updateStatusFromEffectiveStatus(reason);
         }
     }
 
     public LeaseItem suspend(final @Named("Reason") String reason) {
-        changeStatus(LeaseItemStatus.SUSPENDED, reason);
+        modifyStatus(LeaseItemStatus.SUSPENDED, reason);
         return this;
     }
 
@@ -154,7 +164,7 @@ public class LeaseItem
     }
 
     public LeaseItem activate() {
-        changeStatus(LeaseItemStatus.ACTIVE, "");
+        modifyStatus(LeaseItemStatus.ACTIVE, "");
         return this;
     }
 

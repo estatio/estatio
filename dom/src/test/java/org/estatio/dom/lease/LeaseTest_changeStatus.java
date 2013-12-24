@@ -18,8 +18,12 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.math.BigInteger;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -65,25 +69,39 @@ public class LeaseTest_changeStatus {
     @Test
     public void testWhenActived() {
         lease.setStatus(LeaseStatus.ACTIVE);
-        assertTrue(lease.hideActivate());
-        assertFalse(lease.hideSuspend());
+        assertTrue(lease.hideActivateAll());
+        assertFalse(lease.hideSuspendAll());
         assertFalse(lease.hideTerminate());
     }
 
     @Test
     public void testWhenSuspended() {
         lease.setStatus(LeaseStatus.SUSPENDED);
-        assertFalse(lease.hideActivate());
-        assertTrue(lease.hideSuspend());
+        assertFalse(lease.hideActivateAll());
+        assertTrue(lease.hideSuspendAll());
         assertTrue(lease.hideTerminate());
     }
 
     @Test
     public void testWhenTerminated() {
         lease.setStatus(LeaseStatus.TERMINATED);
-        assertTrue(lease.hideActivate());
-        assertTrue(lease.hideSuspend());
+        assertTrue(lease.hideActivateAll());
+        assertTrue(lease.hideSuspendAll());
         assertTrue(lease.hideTerminate());
     }
-    
+
+    @Test
+    public void testEffectiveStatus() {
+        LeaseItem item1 = new LeaseItem();
+        LeaseItem item2 = new LeaseItem();
+        item1.setStatus(LeaseItemStatus.SUSPENDED);
+        item1.setSequence(new BigInteger("1"));
+        item2.setStatus(LeaseItemStatus.SUSPENDED);
+        item2.setSequence(new BigInteger("2"));
+        lease.getItems().add(item1);
+        lease.getItems().add(item2);
+        assertThat(lease.getEffectiveStatus(), is(LeaseStatus.SUSPENDED));
+        item2.setStatus(LeaseItemStatus.ACTIVE);
+        assertThat(lease.getEffectiveStatus(), is(LeaseStatus.SUSPENDED_PARTIALLY));
+    }
 }

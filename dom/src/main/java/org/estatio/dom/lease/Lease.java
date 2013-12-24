@@ -19,8 +19,8 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -29,6 +29,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -154,32 +155,30 @@ public class Lease
             leaseStatusReason.setTimestamp(getClockService().timestamp());
             persistIfNotAlready(leaseStatusReason);
             setStatus(newStatus);
-
         }
         return this;
     }
 
-    public LeaseItemStatus getItemStatus() {
-        TreeSet<LeaseItem> items = new TreeSet<LeaseItem>(getItems()) {
-            /**
-             * 
-             */
-            private static final long serialVersionUID = 1L;
+    @Programmatic
+    public void updateStatusFromEffectiveStatus(final String reason) {
+        final LeaseStatus effectiveStatus = getEffectiveStatus();
+        if (effectiveStatus != null && !effectiveStatus.equals(getStatus())) {
+            setStatus(effectiveStatus);
+        }
+    }
 
-            @Override
-            public Comparator<LeaseItem> comparator() {
-                return new Comparator<LeaseItem>()
-                {
-                    @Override
-                    public int compare(final LeaseItem o1, final LeaseItem o2) {
-                        return o1.getStatus().compareTo(o2.getStatus());
-                    }
-                };
-
+    @Programmatic
+    public LeaseStatus getEffectiveStatus() {
+        ArrayList<LeaseItem> all = new ArrayList<LeaseItem>(getItems());
+        int itemCount = getItems().size();
+        List<LeaseItemStatus> statusList = Lists.transform(all, LeaseItem.Functions.GET_STATUS);
+        int suspensionCount = Collections.frequency(statusList, LeaseItemStatus.SUSPENDED);
+        if (suspensionCount > 0) {
+            if (itemCount == suspensionCount) {
+                return LeaseStatus.SUSPENDED;
+            } else {
+                return LeaseStatus.SUSPENDED_PARTIALLY;
             }
-        };
-        if (items.size() > 0) {
-            return items.first().getStatus();
         }
         return null;
     }
@@ -697,25 +696,28 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public Lease suspend(final @Named("Reason") String reason) {
-        changeStatus(LeaseStatus.SUSPENDED, reason);
+    public Lease suspendAll(final @Named("Reason") String reason) {
+        for (LeaseItem item : getItems()) {
+            item.suspend(reason);
+        }
         return this;
-
     }
 
-    public boolean hideSuspend() {
-        return !getStatus().equals(LeaseStatus.ACTIVE);
+    public boolean hideSuspendAll() {
+        return !getStatus().equals(LeaseStatus.ACTIVE) && !getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY);
     }
 
     // //////////////////////////////////////
 
-    public Lease activate() {
-        changeStatus(LeaseStatus.SUSPENDED, "Activated by user");
+    public Lease activateAll() {
+        for (LeaseItem item : getItems()) {
+            item.activate();
+        }
         return this;
     }
 
-    public boolean hideActivate() {
-        return !getStatus().equals(LeaseStatus.SUSPENDED);
+    public boolean hideActivateAll() {
+        return !getStatus().equals(LeaseStatus.SUSPENDED) && !getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY);
     }
 
     // //////////////////////////////////////

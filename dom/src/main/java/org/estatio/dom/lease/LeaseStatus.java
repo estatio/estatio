@@ -23,6 +23,7 @@ import org.estatio.dom.utils.StringUtils;
 public enum LeaseStatus {
 
     SUSPENDED,
+    SUSPENDED_PARTIALLY,
     ACTIVE,
     TERMINATED;
 
