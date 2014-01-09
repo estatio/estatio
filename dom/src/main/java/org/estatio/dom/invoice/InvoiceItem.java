@@ -328,14 +328,14 @@ public class InvoiceItem
 
     // //////////////////////////////////////
 
-    @Programmatic
+    @Bulk
     public void remove() {
-        // no safeguard, assuming being called with precaution
-        setInvoice(null);
-        getContainer().flush();
-        getContainer().remove(this);
+        if (getInvoice().getStatus().equals(InvoiceStatus.NEW)) {
+            setInvoice(null);
+            getContainer().remove(this);
+        }
     }
-
+    
     @Programmatic
     private void calculateTax() {
         BigDecimal vatAmount = BigDecimal.ZERO;
