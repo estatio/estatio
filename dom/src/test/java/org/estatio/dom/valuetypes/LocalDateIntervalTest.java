@@ -170,7 +170,7 @@ public class LocalDateIntervalTest {
 
     @Test
     public void testOpen() {
-        assertThat(parseLocalDateInterval("*/*").overlap(parseLocalDateInterval("*/*")), is(parseLocalDateInterval("*/*")));
+        assertThat(LocalDateInterval.parseString("*/*").overlap(LocalDateInterval.parseString("*/*")), is(LocalDateInterval.parseString("*/*")));
     }
     
     @Test
@@ -184,15 +184,9 @@ public class LocalDateIntervalTest {
         assertTrue(new LocalDateInterval(null, null, IntervalEnding.EXCLUDING_END_DATE).equals(new LocalDateInterval(null, null, IntervalEnding.INCLUDING_END_DATE)));
     }
     
-    private LocalDateInterval parseLocalDateInterval(String input){
-        String[] values = input.split("/");
-        return new LocalDateInterval(parseLocalDate(values[0]), parseLocalDate(values[1]), IntervalEnding.INCLUDING_END_DATE);
+    @Test
+    public void testParseString() throws Exception {
+        assertThat(LocalDateInterval.parseString("2010-07-01/2010-10-01").endDateExcluding(), is(new LocalDate(2010, 10, 1)));
     }
-
-    static private LocalDate parseLocalDate(String input) {
-        if (input.contains("--") || input.contains("*"))
-            return null;
-        return LocalDate.parse(input);
-
-    }
+    
 }

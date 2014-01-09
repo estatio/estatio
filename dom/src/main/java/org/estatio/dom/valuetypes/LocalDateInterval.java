@@ -256,4 +256,35 @@ public final class LocalDateInterval {
     private boolean isInfinite() {
         return startDate == null && endDate == null;
     }
+
+    /**
+     * Parse a string representation of a LocalDateInterval
+     * 
+     * Since this method is only used for testing it's not heavily guarded against illegal arguments
+     * 
+     * @param input  a string with format yyyy-mm-dd/yyyy-mm-dd, end date is excluding
+     * @return
+     */
+    public static LocalDateInterval parseString(final String input) {
+        String[] values = input.split("/");
+        try {
+            return new LocalDateInterval(parseLocalDate(values[0]), parseLocalDate(values[1]), IntervalEnding.EXCLUDING_END_DATE);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to parse " + input);
+        }
+    }
+
+    /**
+     * Parse a string to a LocalDate
+     * 
+     * @param input  a string representing a parsable LocalDate, "*" or "----------" returns null
+     * @return
+     */
+    private static LocalDate parseLocalDate(final String input) {
+        if (input.contains("--") || input.contains("*")) {
+            return null;
+        }
+        return LocalDate.parse(input);
+
+    }
 }

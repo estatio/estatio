@@ -60,6 +60,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRates;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.settings.EstatioSettingsService;
 
 public class InvoiceCalculationServiceTest {
@@ -292,39 +293,6 @@ public class InvoiceCalculationServiceTest {
         assertThat(results.get(4).getCalculatedValue(), is(BigDecimal.valueOf(1722.22).setScale(2)));
         // TODO: Since 2012 is a leap year, the sum of the invoices is greater
         // than the value of the term.....
-    }
-
-    @Test
-    public void testCreateInvoiceItem() {
-
-        leaseItem.setCharge(charge);
-
-        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
-        leaseTerm.setEndDate(new LocalDate(2013, 1, 1));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-
-        context.checking(new Expectations() {
-            {
-                oneOf(mockInvoiceItemsForLease).newInvoiceItem(with(any(LeaseTerm.class)), with(any(LocalDate.class)), with(any(LocalDate.class)));
-                will(returnValue(invoiceItemForLease));
-                oneOf(mockTaxRates).findTaxRateByTaxAndDate(with(tax), with(new LocalDate(2012, 1, 1)));
-                will(returnValue(taxRate));
-                exactly(2).of(mockAgreementRoles).findByAgreementAndTypeAndContainsDate(with(any(Agreement.class)), with(any(AgreementRoleType.class)), with(any(LocalDate.class)));
-                will(returnValue(new AgreementRole()));
-                oneOf(mockInvoices).findMatchingInvoice(with(aNull(Party.class)), with(aNull(Party.class)), with(aNull(PaymentMethod.class)), with(any(Lease.class)), with(any(InvoiceStatus.class)), with(any(LocalDate.class)));
-                will(returnValue(new Invoice()));
-                oneOf(mockSettings).fetchEpochDate();
-                will(returnValue(null));
-            }
-        });
-
-        ic.setEstatioSettings(mockSettings);
-        ic.calculateAndInvoice(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), leaseTerm.getLeaseItem().getInvoicingFrequency(), InvoiceRunType.NORMAL_RUN);
-
-        InvoiceItemForLease invoiceItem = leaseTerm.getInvoiceItems().first();
-
-        assertEquals(BigDecimal.valueOf(5000).setScale(2, RoundingMode.HALF_UP), invoiceItem.getNetAmount());
-        assertEquals(new LocalDate(2012, 1, 1), invoiceItem.getStartDate());
     }
 
     @Test

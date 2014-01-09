@@ -20,9 +20,11 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.List;
 
 import com.google.common.collect.Ordering;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.utils.CalendarUtils;
@@ -37,54 +39,55 @@ public enum InvoicingFrequency {
             BigDecimal.valueOf(7), BigDecimal.valueOf(365.25)),
     WEEKLY_IN_ARREARS(
             "RRULE:FREQ=WEEKLY;INTERVAL=1",
-            PaidIn.ARREARS, 
+            PaidIn.ARREARS,
             BigDecimal.valueOf(7), BigDecimal.valueOf(365.25)),
     MONTHLY_IN_ADVANCE(
             "RRULE:FREQ=MONTHLY;INTERVAL=1",
-            PaidIn.ADVANCE, 
-            BigDecimal.valueOf(1), BigDecimal.valueOf(12)), 
+            PaidIn.ADVANCE,
+            BigDecimal.valueOf(1), BigDecimal.valueOf(12)),
     MONTHLY_IN_ARREARS(
             "RRULE:FREQ=MONTHLY;INTERVAL=1",
-            PaidIn.ARREARS, 
-            BigDecimal.valueOf(1), BigDecimal.valueOf(12)), 
+            PaidIn.ARREARS,
+            BigDecimal.valueOf(1), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ADVANCE(
             "RRULE:FREQ=MONTHLY;INTERVAL=3",
-            PaidIn.ADVANCE, 
-            BigDecimal.valueOf(3), BigDecimal.valueOf(12)), 
+            PaidIn.ADVANCE,
+            BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ADVANCE_PLUS1M(
             "RRULE:FREQ=MONTHLY;INTERVAL=3;BYMONTH=2,5,8,11",
-            PaidIn.ADVANCE, 
-            BigDecimal.valueOf(3), BigDecimal.valueOf(12)), 
+            PaidIn.ADVANCE,
+            BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     QUARTERLY_IN_ARREARS(
             "RRULE:FREQ=MONTHLY;INTERVAL=3",
-            PaidIn.ARREARS, 
-            BigDecimal.valueOf(3), BigDecimal.valueOf(12)), 
+            PaidIn.ARREARS,
+            BigDecimal.valueOf(3), BigDecimal.valueOf(12)),
     SEMI_YEARLY_IN_ADVANCE(
             "RRULE:FREQ=MONTHLY;INTERVAL=6",
-            PaidIn.ADVANCE, 
+            PaidIn.ADVANCE,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     SEMI_YEARLY_IN_ARREARS(
             "RRULE:FREQ=MONTHLY;INTERVAL=6",
-            PaidIn.ARREARS, 
+            PaidIn.ARREARS,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     YEARLY_IN_ADVANCE(
             "RRULE:FREQ=YEARLY;INTERVAL=1",
-            PaidIn.ADVANCE, 
+            PaidIn.ADVANCE,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     YEARLY_IN_ARREARS(
             "RRULE:FREQ=YEARLY;INTERVAL=1",
-            PaidIn.ARREARS, 
+            PaidIn.ARREARS,
             BigDecimal.valueOf(1), BigDecimal.valueOf(1));
 
     static enum PaidIn {
         ADVANCE,
         ARREARS
     }
+
     private InvoicingFrequency(
-            final String rrule, 
-            final PaidIn paidIn, 
-            final BigDecimal numerator, 
-            final BigDecimal denominator){
+            final String rrule,
+            final PaidIn paidIn,
+            final BigDecimal numerator,
+            final BigDecimal denominator) {
         this.rrule = rrule;
         this.numerator = numerator;
         this.denominator = denominator;
@@ -92,35 +95,41 @@ public enum InvoicingFrequency {
     }
 
     private final String rrule;
-    
     private final PaidIn paidIn;
     private final BigDecimal numerator;
     private final BigDecimal denominator;
-    
 
-    public String getRrule() {
-        return rrule;
+    public LocalDate dueDate(final LocalDate date) {
+        LocalDateInterval interval = intervalContaining(date);
+        return paidIn.equals(PaidIn.ADVANCE) ? interval.startDate() : interval.endDateExcluding();
     }
 
-    public Boolean isInAdvance() {
-        return paidIn == PaidIn.ADVANCE;
-    }
-
-    public LocalDate getDueDate(final LocalDate date){
-        LocalDateInterval interval = new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
-        return interval.startDate();
-    }
-    
-    public LocalDate getNextDueDate(final LocalDate date){
-        LocalDateInterval interval = new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
+    public LocalDate nextDueDate(final LocalDate date) {
+        LocalDateInterval interval = intervalContaining(date);
         return interval.endDateExcluding();
     }
-    
-    public BigDecimal annualMultiplier(){
+
+    public LocalDateInterval intervalContaining(final LocalDate date) {
+        return new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
+    }
+
+    public LocalDateInterval intervalMatching(final LocalDate startDate) {
+        final Interval intervalMatching = CalendarUtils.intervalMatching(startDate, this.rrule);
+        if (intervalMatching == null) {
+            return null;
+        }
+        return new LocalDateInterval(intervalMatching);
+    }
+
+    public List<Interval> intervalsInRange(final LocalDate periodStartDate, final LocalDate periodEndDate) {
+        return CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule);
+    }
+
+    public BigDecimal annualMultiplier() {
         return numerator.divide(denominator, MathContext.DECIMAL64);
     }
 
-    public final static Ordering<InvoicingFrequency> ORDERING_BY_TYPE = 
+    public final static Ordering<InvoicingFrequency> ORDERING_BY_TYPE =
             Ordering.<InvoicingFrequency> natural().nullsFirst();
 
     public String title() {
