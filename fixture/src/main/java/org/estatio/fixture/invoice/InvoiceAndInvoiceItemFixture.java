@@ -37,10 +37,14 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 
 public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
 
     public static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
+    public static final LocalDateInterval INTERVAL = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), IntervalEnding.EXCLUDING_END_DATE);
+
     public static final String LEASE = "OXF-POISON-003";
     public static final String SELLER_PARTY = "ACME";
     public static final String BUYER_PARTY = "POISON";
@@ -70,7 +74,7 @@ public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
 
         final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, START_DATE, START_DATE);
+            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, INTERVAL, START_DATE);
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
         }

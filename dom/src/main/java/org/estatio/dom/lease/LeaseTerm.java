@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -75,36 +76,17 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column = "discriminator")
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
-                name = "LeaseTerm_leaseItem_startDate_IDX",
-                members = { "leaseItem", "startDate" }) })
+                name = "LeaseTerm_leaseItem_sequence_IDX",
+                members = { "leaseItem", "sequence" }) })
 @javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
-                name = "findByStatusAndActiveDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.LeaseTerm "
-                        + "WHERE status == :status "
-                        + "   && startDate <= :date "
-                        + "   && (endDate == null || endDate >= :date)"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndSequence", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE leaseItem == :leaseItem "
-                        + "   && sequence == :sequence"),
-        @javax.jdo.annotations.Query(
-                name = "findByLeaseItemAndStartDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.LeaseTerm "
-                        + "WHERE leaseItem == :leaseItem "
-                        + "   && startDate == :startDate"),
-        @javax.jdo.annotations.Query(
-                name = "findByLeaseItemAndEndDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.LeaseTerm "
-                        + "WHERE leaseItem == :leaseItem "
-                        + "   && endDate == :endDate")
+                        + "   && sequence == :sequence")
 })
-@Unique(name ="LeaseTerm_leaseItem_sequence_IDX", members={"leaseItem", "sequence"})
+@Unique(name = "LeaseTerm_leaseItem_sequence_IDX", members = { "leaseItem", "sequence" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm
         extends EstatioMutableObject<LeaseTerm>
@@ -455,27 +437,26 @@ public abstract class LeaseTerm
 
     @Programmatic
     public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(
-            final LocalDate startDate,
+            final LocalDateInterval invoiceInterval,
             final LocalDate dueDate) {
-        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(startDate, dueDate);
+        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(invoiceInterval, dueDate);
         if (ii == null) {
-            ii = invoiceItemsForLease.newInvoiceItem(this, startDate, dueDate);
+            ii = invoiceItemsForLease.newInvoiceItem(this, invoiceInterval, dueDate);
         }
         return ii;
     }
 
     @Programmatic
     public InvoiceItemForLease findUnapprovedInvoiceItemFor(
-            final LocalDate startDate,
+            final LocalDateInterval invoiceInterval,
             final LocalDate dueDate) {
-        for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
-            Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) &&
-                    this.equals(invoiceItem.getLeaseTerm()) &&
-                    startDate.equals(invoiceItem.getStartDate()) &&
-                    dueDate.equals(invoiceItem.getDueDate())) {
-                return invoiceItem;
-            }
+
+        List<InvoiceItemForLease> invoiceItems =
+                invoiceItemsForLease.findByLeaseTermAndIntervalAndDueDateAndStatus(
+                        this, invoiceInterval, dueDate, InvoiceStatus.NEW);
+        if (invoiceItems.size() > 0) {
+            //TODO: what should we do when we find more then one. Throw an error?
+            return invoiceItems.get(0);
         }
         return null;
     }

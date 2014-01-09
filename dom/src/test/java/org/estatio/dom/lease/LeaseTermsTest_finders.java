@@ -77,7 +77,7 @@ public class LeaseTermsTest_finders {
     @Test
     public void findLeaseTermByLeaseItemAndSequence() {
         
-        leaseTerms.findLeaseTermByLeaseItemAndSequence(leaseItem, sequence);
+        leaseTerms.findByLeaseItemAndSequence(leaseItem, sequence);
         
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
         

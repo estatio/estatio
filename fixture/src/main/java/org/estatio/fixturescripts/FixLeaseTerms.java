@@ -72,7 +72,7 @@ public class FixLeaseTerms implements Callable<Object> {
         if (indexAvailableDate != null 
                 && indexAvailableDate.compareTo(term.getStartDate()) > 0 
                 && term.getSettledValue() == null) {
-            effectiveDate = term.getLeaseItem().getInvoicingFrequency().getNextDueDate(indexAvailableDate);
+            effectiveDate = term.getLeaseItem().getInvoicingFrequency().intervalContaining(indexAvailableDate).endDateExcluding();
         }
         if (!ObjectUtils.equals(effectiveDate, term.getEffectiveDate())){
             term.setEffectiveDate(effectiveDate);

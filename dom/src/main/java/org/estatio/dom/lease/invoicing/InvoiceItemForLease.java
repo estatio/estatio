@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import javax.jdo.annotations.Index;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
@@ -50,7 +51,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL",
@@ -61,12 +62,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& dueDate == :dueDate "
                         + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
-                name = "findByInvoiceAndLeaseTermAndStartDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease "
-                        + "WHERE invoice == :invoice "
-                        + "&& leaseTerm == :leaseTerm "
-                        + "&& startDate == :startDate"),
+                name = "findByLeaseTermAndIntervalAndDueDateAndStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm == :leaseTerm " +
+                        "&& startDate == :startDate " +
+                        "&& endDate == :endDate " +
+                        "&& dueDate == :dueDate " +
+                        "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
                 name = "findByInvoiceAndLeaseTermAndEndDate", language = "JDOQL",
                 value = "SELECT "
@@ -75,6 +78,8 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& leaseTerm == :leaseTerm "
                         + "&& endDate == :endDate")
 })
+@Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
+        members = { "leaseTerm", "startDate", "endDate", "dueDate" })
 public class InvoiceItemForLease extends InvoiceItem {
 
     private LeaseTerm leaseTerm;

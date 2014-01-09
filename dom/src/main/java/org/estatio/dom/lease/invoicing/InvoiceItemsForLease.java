@@ -24,38 +24,39 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.utils.StringUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
 
     public InvoiceItemsForLease() {
         super(InvoiceItemsForLease.class, InvoiceItemForLease.class);
     }
-    
+
     // //////////////////////////////////////
 
-    
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Programmatic
     public InvoiceItemForLease newInvoiceItem(
-            final LeaseTerm leaseTerm, final LocalDate startDate, final LocalDate dueDate) {
+            final LeaseTerm leaseTerm, 
+            final LocalDateInterval interval, 
+            final LocalDate dueDate) {
         InvoiceItemForLease invoiceItem = newTransientInstance();
-        invoiceItem.setStartDate(startDate);
+        invoiceItem.setStartDate(interval.startDate());
+        invoiceItem.setEndDate(interval.endDate());
         invoiceItem.setDueDate(dueDate);
         invoiceItem.modifyLeaseTerm(leaseTerm);
         persistIfNotAlready(invoiceItem);
         return invoiceItem;
     }
-
 
     // //////////////////////////////////////
 
@@ -68,21 +69,37 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<InvoiceItemForLease> findInvoiceItemsByLease(
-            final @Named("Lease reference or name") @DescribedAs("May include wildcards '*' and '?'") 
-            String leaseReferenceOrName,
-            final @Named("Start Date") LocalDate startDate, 
-            final @Named("Due Date") LocalDate dueDate) {
-        return allMatches("findByLeaseAndStartDateAndDueDate",
+            final String leaseReferenceOrName,
+            final LocalDate startDate,
+            final LocalDate dueDate) {
+        return allMatches(
+                "findByLeaseAndStartDateAndDueDate",
                 "leaseReferenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(leaseReferenceOrName),
                 "startDate", startDate,
                 "dueDate", dueDate);
     }
-    
+
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<InvoiceItemForLease> findByLeaseTermAndIntervalAndDueDateAndStatus(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval interval,
+            final LocalDate dueDate,
+            final InvoiceStatus invoiceStatus) {
+        return allMatches(
+                "findByLeaseTermAndIntervalAndDueDateAndStatus",
+                "leaseTerm", leaseTerm,
+                "startDate", interval.startDate(),
+                "endDate", interval.endDate(),
+                "dueDate", dueDate,
+                "invoiceStatus", invoiceStatus);
+    }
+
     // //////////////////////////////////////
-    
+
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Invoices", sequence = "99")
+    @MemberOrder(name = "Invoices", sequence = "99")
     public List<InvoiceItemForLease> allInvoiceItems() {
         return allInstances();
     }

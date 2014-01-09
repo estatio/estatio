@@ -37,11 +37,12 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         super(LeaseTerms.class, LeaseTerm.class);
     }
 
-    // //////////////////////////////////////
-
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
-    public LeaseTerm newLeaseTerm(final LeaseItem leaseItem, final LeaseTerm previous, final LocalDate startDate) {
+    public LeaseTerm newLeaseTerm(
+            final LeaseItem leaseItem,
+            final LeaseTerm previous,
+            final LocalDate startDate) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         leaseTerm.setLeaseItem(leaseItem);
         leaseTerm.modifyPrevious(previous);
@@ -49,17 +50,17 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         persistIfNotAlready(leaseTerm);
 
         // TOFIX: without this flush and refresh, the collection of terms on the
-        // item is not updated. Removing code below will fail integration tests too.
+        // item is not updated. Removing code below will fail integration tests
+        // too.
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
         leaseTerm.initialize();
         return leaseTerm;
     }
 
-    // //////////////////////////////////////
-
+    @Deprecated
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Leases", sequence="20")
+    @MemberOrder(name = "Leases", sequence = "20")
     public List<LeaseTerm> leaseTermsToBeApproved(final LocalDate date) {
         return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
     }
@@ -68,41 +69,23 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
         return getClockService().now();
     }
 
-
-    // //////////////////////////////////////
-
+    /**
+     * Returns terms by LeaseItem and sequence. Used by the API
+     * 
+     * @param leaseItem
+     * @param sequence
+     * @return
+     */
     @Hidden
-    public LeaseTerm findLeaseTermByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
+    public LeaseTerm findByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
         return firstMatch("findByLeaseItemAndSequence", "leaseItem", leaseItem, "sequence", sequence);
     }
 
-    // //////////////////////////////////////
-
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Leases", sequence="99")
+    @MemberOrder(name = "Leases", sequence = "99")
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances();
     }
-
-    // //////////////////////////////////////
-
-    // commenting out since suspect may now be ok...
-    // if reoccurs, add back in...
-    
-//    /**
-//     * Horrid hack... without this hsqldb was attempting to do the DDL for the
-//     * table intermixed with DML, and so hit a deadlock in the driver.
-//     * 
-//     * HSQLDB 1.8.10 didn't have this problem.
-//     * 
-//     * this might not be needed now that we have {@link RegisterEntities}.
-//     */
-//    @Hidden
-//    public LeaseTerm dummy() {
-//        return null;
-//    }
-
-    
 
 }
