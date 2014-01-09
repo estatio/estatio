@@ -179,12 +179,15 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") String name,
             @Named("description") @Optional String description,
             @Named("taxReference") String taxReference,
+            @Named("sortOrder") @Optional String sortOrder,
             @Named("chargeGroupReference") String chargeGroupReference,
+            @Named("chargeGroupName") String chargeGroupName,
             @Named("externalReference") @Optional String externalReference) {
         Tax tax = fetchTaxIfAny(taxReference);
-        ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference);
+        ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
         Charge charge = charges.newCharge(reference, name, description, tax, chargeGroup);
         charge.setExternalReference(externalReference);
+        charge.setSortOrder(sortOrder);
     }
 
     private Charge fetchCharge(String chargeReference) {
@@ -195,11 +198,12 @@ public class Api extends AbstractFactoryAndRepository {
         return charge;
     }
 
-    private ChargeGroup fetchOrCreateChargeGroup(String chargeGroupReference) {
-        ChargeGroup chargeGroup = chargeGroups.findChargeGroup(chargeGroupReference);
+    private ChargeGroup fetchOrCreateChargeGroup(String reference, String name) {
+        ChargeGroup chargeGroup = chargeGroups.findChargeGroup(reference);
         if (chargeGroup == null) {
-            chargeGroup = chargeGroups.createChargeGroup(chargeGroupReference, null);
+            chargeGroup = chargeGroups.createChargeGroup(reference, name);
         }
+        chargeGroup.setName(name);
         return chargeGroup;
     }
 
@@ -387,13 +391,15 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("reference") @Optional String reference,
             @Named("address1") @Optional String address1,
             @Named("address2") @Optional String address2,
+            @Named("address3") @Optional String address3,
             @Named("city") @Optional String city,
             @Named("postalCode") @Optional String postalCode,
             @Named("stateCode") @Optional String stateCode,
             @Named("countryCode") @Optional String countryCode,
             @Named("phoneNumber") @Optional String phoneNumber,
             @Named("faxNumber") @Optional String faxNumber,
-            @Named("emailAddress") @Optional String emailAddress
+            @Named("emailAddress") @Optional String emailAddress,
+            @Named("legal") @Optional Boolean legal
             ) {
         Party party = fetchParty(partyReference);
         if (party == null)
@@ -406,6 +412,9 @@ public class Api extends AbstractFactoryAndRepository {
             if (comm == null) {
                 comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findState(stateCode), countries.findCountry(countryCode));
                 comm.setReference(reference);
+            }
+            if (legal) {
+                comm.setLegal(true);
             }
         }
         // Phone
@@ -552,10 +561,12 @@ public class Api extends AbstractFactoryAndRepository {
         LeaseItem item = lease.findItem(itemType, startDate, sequence);
         if (item == null) {
             item = lease.newItem(itemType, charge, InvoicingFrequency.valueOf(invoicingFrequency), PaymentMethod.valueOf(paymentMethod), startDate);
+            item.setSequence(sequence);
         }
+        item.setNextDueDate(nextDueDate);
+        item.setEpochDate(nextDueDate);
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.ACTIVE);
         item.modifyStatus(leaseItemStatus, "Updated through API");
-        item.setSequence(sequence);
     }
 
     private LeaseItemType fetchLeaseItemType(String type) {

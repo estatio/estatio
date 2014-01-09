@@ -213,7 +213,7 @@ public class LeaseItem
         // return null;
         // TODO: the code above proved to be very unreliable when using the api.
         // Have to investigate further
-        return leaseTerms.findLeaseTermByLeaseItemAndSequence(this, sequence);
+        return leaseTerms.findByLeaseItemAndSequence(this, sequence);
     }
 
     // //////////////////////////////////////
@@ -383,6 +383,36 @@ public class LeaseItem
 
     public List<Charge> choicesCharge() {
         return charges.allCharges();
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent
+    private LocalDate nextDueDate;
+
+    @Optional
+    @Disabled
+    public LocalDate getNextDueDate() {
+        return nextDueDate;
+    }
+
+    public void setNextDueDate(final LocalDate nextDueDate) {
+        this.nextDueDate = nextDueDate;
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Persistent
+    private LocalDate epochDate;
+
+    @Optional
+    @Hidden
+    public LocalDate getEpochDate() {
+        return epochDate;
+    }
+
+    public void setEpochDate(final LocalDate epochDate) {
+        this.epochDate = epochDate;
     }
 
     // //////////////////////////////////////

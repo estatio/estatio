@@ -145,4 +145,18 @@ public class Charge
         this.group = group;
     }
 
+    // //////////////////////////////////////
+
+    private String sortOrder;
+
+    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(final String sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
 }

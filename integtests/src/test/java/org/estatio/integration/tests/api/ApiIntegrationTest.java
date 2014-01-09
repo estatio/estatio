@@ -149,12 +149,12 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         assertThat(tax.getName(), is("APITAX Name"));
         Assert.assertNotNull(tax.percentageFor(LocalDate.now()));
 
-        api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APICHARGEGROUP", "APICHARGEEXTREF");
+        api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APISORTORDER", "APICHARGEGROUP", "APICHARGEGROUPNAME", "APICHARGEEXTREF");
 
         final ChargeGroup chargeGroup = chargeGroups.findChargeGroup("APICHARGEGROUP");
         Assert.assertNotNull(chargeGroup);
         assertThat(chargeGroup.getReference(), is("APICHARGEGROUP"));
-        assertThat(chargeGroup.getName(), is("APICHARGEGROUP"));
+        assertThat(chargeGroup.getName(), is("APICHARGEGROUPNAME"));
 
         final Charge charge = charges.findCharge("APICHARGEREF");
         Assert.assertNotNull(charge);
@@ -181,7 +181,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t03_putPartyCommunicationChannels() {
-        api.putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210", "test@api.local");
+        api.putPartyCommunicationChannels("APITENANT", "APITENANT", "Address1", "Address2", "NewAddress3", "CITY", "Postal Code", "NH", "NLD", "+31987654321", "+31876543210", "test@api.local", true);
         Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.POSTAL_ADDRESS));
         Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.FAX_NUMBER));
         Assert.assertNotNull(communicationChannels.findByReferenceAndType("APITENANT", CommunicationChannelType.PHONE_NUMBER));
@@ -189,7 +189,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t03_putPartyCommunicationChannelsWithoutReference() {
-        api.putPartyCommunicationChannels("APITENANT", null, "NewAddress1", "NewAddress2", "NewCity", "NewPostCode", "NH", "NLD", "+31222222222", "+31333333333", "test@example.com");
+        api.putPartyCommunicationChannels("APITENANT", null, "NewAddress1", "NewAddress2", "NewAddress3", "NewCity", "NewPostCode", "NH", "NLD", "+31222222222", "+31333333333", "test@example.com", true);
         Party party = parties.findPartyByReference("APITENANT");
         Assert.assertNotNull(postalAddresses.findByAddress(party, "NewAddress1", "NewPostCode", "NewCity", countries.findCountry("NLD")));
         Assert.assertNotNull(phoneOrFaxNumbers.findByPhoneOrFaxNumber(party, "+31222222222"));

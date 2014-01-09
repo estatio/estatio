@@ -10,7 +10,8 @@
             "tax": {},
             "description": {},
             "group": {},
-            "externalReference": {}
+            "externalReference": {},
+            "sortOrder": {}
           }
         }
       }
