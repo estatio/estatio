@@ -64,11 +64,11 @@ public enum InvoicingFrequency {
     SEMI_YEARLY_IN_ADVANCE(
             "RRULE:FREQ=MONTHLY;INTERVAL=6",
             PaidIn.ADVANCE,
-            BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
+            BigDecimal.valueOf(1), BigDecimal.valueOf(2)),
     SEMI_YEARLY_IN_ARREARS(
             "RRULE:FREQ=MONTHLY;INTERVAL=6",
             PaidIn.ARREARS,
-            BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
+            BigDecimal.valueOf(1), BigDecimal.valueOf(2)),
     YEARLY_IN_ADVANCE(
             "RRULE:FREQ=YEARLY;INTERVAL=1",
             PaidIn.ADVANCE,
