@@ -92,15 +92,6 @@ public class InvoiceCalculationService {
             return sum;
         }
     }
-    
-    private LocalDate applicationEpochDate;
-    
-    private LocalDate getApplicationEpochDate() {
-        if (applicationEpochDate == null) {
-            applicationEpochDate = estatioSettingsService.fetchEpochDate();
-        }
-        return applicationEpochDate;
-    }
 
     /**
      * Calculates term and creates invoice
@@ -222,7 +213,7 @@ public class InvoiceCalculationService {
             final LocalDate periodStartDate,
             final LocalDate dueDate,
             final InvoicingFrequency invoicingFrequency) {
-        
+
         LocalDateInterval interval = invoicingFrequency.intervalMatching(periodStartDate);
         List<CalculationResult> results = new ArrayList<InvoiceCalculationService.CalculationResult>();
         if (interval != null) {
@@ -270,8 +261,8 @@ public class InvoiceCalculationService {
 
         final LocalDate epochDate =
                 ObjectUtils.max(
-                        leaseTerm.getLeaseItem().getEpochDate(), 
-                        getApplicationEpochDate());
+                        leaseTerm.getLeaseItem().getEpochDate(),
+                        estatioSettingsService.fetchEpochDate());
         for (CalculationResult result : results) {
             BigDecimal invoicedValue;
             List<CalculationResult> mockResults = mockResults(leaseTerm, result, invoicingFrequency, epochDate);
