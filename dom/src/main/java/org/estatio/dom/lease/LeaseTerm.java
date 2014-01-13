@@ -29,7 +29,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
@@ -77,16 +76,25 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @javax.jdo.annotations.Indices({
         @javax.jdo.annotations.Index(
                 name = "LeaseTerm_leaseItem_sequence_IDX",
-                members = { "leaseItem", "sequence" }) })
+                members = { "leaseItem", "sequence" }),
+        @javax.jdo.annotations.Index(
+                name = "LeaseTerm_leaseItem_startDate_IDX",
+                members = { "leaseItem", "startDate" })
+})
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndSequence", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE leaseItem == :leaseItem "
-                        + "   && sequence == :sequence")
+                        + "   && sequence == :sequence"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseItemAndStartDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem == :leaseItem "
+                        + "   && startDate == :startDate")
 })
-@Unique(name = "LeaseTerm_leaseItem_sequence_IDX", members = { "leaseItem", "sequence" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm
         extends EstatioMutableObject<LeaseTerm>
@@ -455,7 +463,8 @@ public abstract class LeaseTerm
                 invoiceItemsForLease.findByLeaseTermAndIntervalAndDueDateAndStatus(
                         this, invoiceInterval, dueDate, InvoiceStatus.NEW);
         if (invoiceItems.size() > 0) {
-            //TODO: what should we do when we find more then one. Throw an error?
+            // TODO: what should we do when we find more then one. Throw an
+            // error?
             return invoiceItems.get(0);
         }
         return null;
