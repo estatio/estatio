@@ -225,7 +225,7 @@ public final class LocalDateInterval {
         StringBuilder builder =
                 new StringBuilder(
                         startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
-                        endDate() == null ? "----------" : endDate().toString("yyyy-MM-dd"));
+                        endDateExcluding() == null ? "----------" : endDateExcluding().toString("yyyy-MM-dd"));
         return builder.toString();
     }
 
