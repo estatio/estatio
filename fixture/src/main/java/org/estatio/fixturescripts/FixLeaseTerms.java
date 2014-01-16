@@ -18,6 +18,7 @@
  */
 package org.estatio.fixturescripts;
 
+import java.math.BigDecimal;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -35,17 +36,21 @@ public class FixLeaseTerms implements Callable<Object> {
     public Object call() throws Exception {
         int countEffectiveDate = 0;
         int countBaseStartDate = 0;
+        int countLevelling = 0;
         for (LeaseTerm term : leaseTerms.allLeaseTerms()) {
             if (term instanceof LeaseTermForIndexableRent) {
                 if (fixEffectiveDate((LeaseTermForIndexableRent) term)) {
                     countEffectiveDate++;
+                }
+                if (fixLevellingPercentage((LeaseTermForIndexableRent) term)) {
+                    countLevelling++;
                 }
                 if (fixBaseIndexStartDate((LeaseTermForIndexableRent) term)) {
                     countBaseStartDate++;
                 }
             }
         }
-        return String.format("%d effective dates fixed, %d base index dates fixed", countEffectiveDate, countBaseStartDate);
+        return String.format("%d effective dates fixed, %d base index dates fixed, %d levelling percentages fixed", countEffectiveDate, countBaseStartDate, countLevelling);
     }
 
     private boolean fixBaseIndexStartDate(LeaseTermForIndexableRent term) {
@@ -66,15 +71,36 @@ public class FixLeaseTerms implements Callable<Object> {
         return false;
     }
 
+    private boolean fixLevellingPercentage(LeaseTermForIndexableRent term) {
+        try {
+            if (term.getNext() == null) {
+                // last term
+                LeaseTermForIndexableRent previous = (LeaseTermForIndexableRent) term.getPrevious();
+                if (previous != null) {
+                    final BigDecimal levellingPercentage = previous.getLevellingPercentage();
+                    if (levellingPercentage != null) {
+                        if (ObjectUtils.notEqual(levellingPercentage, term.getLevellingPercentage())) {
+                            term.setLevellingPercentage(levellingPercentage);
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new IsisApplicationException();
+        }
+        return false;
+    }
+
     private boolean fixEffectiveDate(LeaseTermForIndexableRent term) {
         LocalDate indexAvailableDate = term.getNextIndexStartDate() == null ? null : term.getNextIndexStartDate().plusMonths(2).plusDays(16);
         LocalDate effectiveDate = null;
-        if (indexAvailableDate != null 
-                && indexAvailableDate.compareTo(term.getStartDate()) > 0 
+        if (indexAvailableDate != null
+                && indexAvailableDate.compareTo(term.getStartDate()) > 0
                 && term.getSettledValue() == null) {
             effectiveDate = term.getLeaseItem().getInvoicingFrequency().intervalContaining(indexAvailableDate).endDateExcluding();
         }
-        if (!ObjectUtils.equals(effectiveDate, term.getEffectiveDate())){
+        if (!ObjectUtils.equals(effectiveDate, term.getEffectiveDate())) {
             term.setEffectiveDate(effectiveDate);
             return true;
         }
