@@ -97,9 +97,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     }
 
     @Override
-    @Programmatic
-    public void update() {
-        super.update();
+    public void doAlign() {
         if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
             if (MathUtils.isNotZeroOrNull(getPrevious().getEffectiveValue())) {
                 setBudgetedValue(getPrevious().getEffectiveValue());

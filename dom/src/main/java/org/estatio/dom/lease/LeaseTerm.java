@@ -516,7 +516,7 @@ public abstract class LeaseTerm
 
     @Programmatic
     public void verifyUntil(final LocalDate date) {
-        update();
+        align();
         // convenience code to automatically create terms but not for terms who
         // have a start date after today
         LeaseTerm nextTerm = getNext();
@@ -548,7 +548,7 @@ public abstract class LeaseTerm
         nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate);
         nextTerm.initialize();
         nextTerm.modifyStartDate(nextStartDate);
-        nextTerm.update();
+        nextTerm.align();
         return nextTerm;
     }
 
@@ -566,15 +566,23 @@ public abstract class LeaseTerm
     }
 
     @Programmatic
-    protected void update() {
+    protected final void align() {
         // Get the end date from the next start date
         if (getEndDate() == null && getNext() != null) {
             modifyEndDate(getNext().getInterval().endDateFromStartDate());
         }
-
+        doAlign();
     }
 
+    /**
+     * Optional hook for subclasses to do additional initialization.
+     */
+    protected void doAlign() {
+    }
+
+    
     // //////////////////////////////////////
+
 
     @Programmatic
     public void copyValuesTo(final LeaseTerm target) {

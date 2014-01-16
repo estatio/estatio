@@ -272,10 +272,8 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // //////////////////////////////////////
 
-    @Programmatic
     @Override
-    public void update() {
-        super.update();
+    protected void doAlign() {
         LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
         if (previousTerm != null) {
             BigDecimal newBaseValue = MathUtils.firstNonZero(

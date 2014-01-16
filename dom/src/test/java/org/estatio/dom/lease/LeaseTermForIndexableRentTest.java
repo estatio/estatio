@@ -148,7 +148,7 @@ public class LeaseTermForIndexableRentTest {
                 will(returnValue(iv2));
             }
         });
-        term.update();
+        term.align();
         Assert.assertEquals(new BigDecimal("23691.35"), term.getIndexedValue());
     }
 
@@ -162,7 +162,7 @@ public class LeaseTermForIndexableRentTest {
                 will(returnValue(iv2));
             }
         });
-        term.update();
+        term.align();
         Assert.assertEquals(new BigDecimal("23691.35"), term.getIndexedValue());
     }
 

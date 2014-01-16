@@ -145,7 +145,7 @@ public class LeaseTermTest {
 
     @Test
     public void testEffectiveInterval() throws Exception {
-        term.update();
+        term.align();
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2013, 6, 30)));
         lease.setTenancyEndDate(new LocalDate(2012, 3, 31));
         assertThat(term.getEffectiveInterval().endDate(), Is.is(new LocalDate(2012, 3, 31)));

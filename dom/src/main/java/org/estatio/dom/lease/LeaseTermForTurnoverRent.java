@@ -127,7 +127,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    protected void update() {
+    protected void doAlign() {
         LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
         // TODO: Should not be hardcoded searching for rent and should return a
         // collection. Also move the value of rent to a different field

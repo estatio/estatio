@@ -493,12 +493,8 @@ public class LeaseItem
 
     @Programmatic
     public void verifyUntil(final LocalDate date) {
-        for (LeaseTerm term : getTerms()) {
-            if (term.getPrevious() == null) {
-                // since verify is recursive on terms only start on the main
-                // term
-                term.verifyUntil(date);
-            }
+        if (!getTerms().isEmpty()) {
+            getTerms().first().verifyUntil(date);
         }
     }
 
