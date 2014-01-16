@@ -11,6 +11,7 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
+import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -57,6 +58,8 @@ public class InvoiceService {
         return clockService.beginningOfNextQuarter();
     }
 
+    // ISIS-637
+    //
     // public String validateCalculateInvoicesForProperty(
     // final Property property,
     // final InvoiceRunType runType,
@@ -80,13 +83,20 @@ public class InvoiceService {
             final @Named("Due date") LocalDate dueDate,
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Period End Date") LocalDate endDate) {
-        final List<Lease> results = leases.findLeases(referenceOrName);
-        for (Lease lease : results) {
-            if (lease.getStatus() != LeaseStatus.SUSPENDED) {
-                lease.calculate(runType, dueDate, startDate, endDate);
+        
+        try {
+            EstatioInteractionCache.startInteraction();
+            
+            final List<Lease> results = leases.findLeases(referenceOrName);
+            for (Lease lease : results) {
+                if (lease.getStatus() != LeaseStatus.SUSPENDED) {
+                    lease.calculate(runType, dueDate, startDate, endDate);
+                }
             }
+            return invoiceSummaries.invoicesForPropertyDueDateStatus();
+        } finally {
+            EstatioInteractionCache.endInteraction();
         }
-        return invoiceSummaries.invoicesForPropertyDueDateStatus();
     }
 
     public LocalDate default2CalculateInvoicesForLeases() {

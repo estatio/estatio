@@ -20,6 +20,7 @@ package org.estatio.dom.index;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.joda.time.LocalDate;
 
@@ -32,6 +33,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.EstatioInteractionCache;
+import org.estatio.dom.lease.invoicing.InvoiceService;
 
 /**
  * Domain service acting as a repository of {@link IndexValue}s.
@@ -82,9 +85,16 @@ public class IndexValues
     public IndexValue findIndexValueByIndexAndStartDate(
             final Index index,
             final @Named("Start Date") LocalDate startDate) {
-        return firstMatch("findByIndexAndStartDate",
-                "index", index,
-                "startDate", startDate);
+        return EstatioInteractionCache.execute(
+                new Callable<IndexValue>() {
+                    @Override
+                    public IndexValue call() throws Exception {
+                        return firstMatch("findByIndexAndStartDate",
+                                "index", index,
+                                "startDate", startDate);
+                    }
+                }, 
+                IndexValues.class, "findIndexValueByIndexAndStartDate", index, startDate);
     }
 
     @ActionSemantics(Of.SAFE)

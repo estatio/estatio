@@ -52,6 +52,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
+import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
@@ -70,6 +71,7 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.dom.lease.invoicing.InvoiceService;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -628,11 +630,18 @@ public class Lease
             final @Named("Due date") LocalDate dueDate,
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Period End Date") @Optional LocalDate endDate) {
-        verifyUntil(endDate);
-        for (LeaseItem item : getItems()) {
-            item.calculate(startDate, endDate, dueDate, runType);
+        
+        boolean started = EstatioInteractionCache.startInteraction();
+        try {
+            verifyUntil(endDate);
+            for (LeaseItem item : getItems()) {
+                item.calculate(startDate, endDate, dueDate, runType);
+            }
+            return this;
+        } finally {
+            EstatioInteractionCache.endInteraction(started);
         }
-        return this;
+        
     }
 
     public String validateCalculate(
