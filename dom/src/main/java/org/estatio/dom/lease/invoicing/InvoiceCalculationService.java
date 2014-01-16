@@ -174,8 +174,8 @@ public class InvoiceCalculationService {
             final InvoicingFrequency invoicingFrequency) {
         final List<CalculationResult> results = Lists.newArrayList();
         final List<Interval> intervals = invoicingFrequency.intervalsInRange(periodStartDate, periodEndDate);
+        final LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
         for (final Interval interval : intervals) {
-            final LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
             final LocalDateInterval calculationInterval = new LocalDateInterval(interval);
             final LocalDateInterval overlap = calculationInterval.overlap(termInterval);
             if (overlap == null) {

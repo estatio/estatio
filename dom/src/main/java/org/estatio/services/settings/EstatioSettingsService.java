@@ -27,14 +27,15 @@ import org.apache.isis.applib.services.settings.ApplicationSetting;
 
 import org.estatio.dom.ApplicationSettingKey;
 
-
 /**
- * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch date}.
+ * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch
+ * date}.
  * 
  * <p>
- * Delegates to injected {@link ApplicationSettingsServiceForEstatio application settings service}
- * to actually do the persistence.  Also ensures that any {@link ApplicationSettingKey defaults for keys} 
- * have been installed if required.
+ * Delegates to injected {@link ApplicationSettingsServiceForEstatio application
+ * settings service} to actually do the persistence. Also ensures that any
+ * {@link ApplicationSettingKey defaults for keys} have been installed if
+ * required.
  */
 @Hidden
 public class EstatioSettingsService {
@@ -44,14 +45,21 @@ public class EstatioSettingsService {
      */
     public final static String EPOCH_DATE_KEY = ApplicationSettingKey.epochDate.name();
 
+    private LocalDate cachedEpochDate;
+
     /**
      * @see ApplicationSettingKey#epochDate
      */
     @Hidden
     public LocalDate fetchEpochDate() {
-        //getApplicationSettings().installDefaultsIfRequired();
-        final ApplicationSetting epochDate = applicationSettingsService.find(EPOCH_DATE_KEY);
-        return epochDate != null ? epochDate.valueAsLocalDate() : null;
+        if (cachedEpochDate == null) {
+            // getApplicationSettings().installDefaultsIfRequired();
+            final ApplicationSetting epochDate = applicationSettingsService.find(EPOCH_DATE_KEY);
+            if (epochDate != null) {
+                cachedEpochDate = epochDate.valueAsLocalDate();
+            }
+        }
+        return cachedEpochDate;
     }
 
     /**
@@ -60,19 +68,20 @@ public class EstatioSettingsService {
     @Hidden
     public void updateEpochDate(
             final LocalDate newEpochDate) {
-        //getApplicationSettings().installDefaultsIfRequired();
+        // getApplicationSettings().installDefaultsIfRequired();
         final ApplicationSettingForEstatio setting = find(EPOCH_DATE_KEY);
-        if(setting!=null) {
-            if(newEpochDate != null) {
+        if (setting != null) {
+            if (newEpochDate != null) {
                 setting.updateAsLocalDate(newEpochDate);
             } else {
                 setting.delete(true);
             }
         } else {
-            if(newEpochDate != null) {
+            if (newEpochDate != null) {
                 getApplicationSettings().newLocalDate(EPOCH_DATE_KEY, "Cutover date to Estatio", newEpochDate);
             } // else no-op
         }
+        cachedEpochDate = null;
     }
 
     @Hidden
@@ -83,7 +92,6 @@ public class EstatioSettingsService {
     private ApplicationSettingForEstatio find(final String key) {
         return (ApplicationSettingForEstatio) getApplicationSettings().find(key);
     }
-
 
     // //////////////////////////////////////
 
@@ -96,6 +104,5 @@ public class EstatioSettingsService {
     public final void injectApplicationSettings(final ApplicationSettingsServiceForEstatio applicationSettings) {
         this.applicationSettingsService = applicationSettings;
     }
-
 
 }
