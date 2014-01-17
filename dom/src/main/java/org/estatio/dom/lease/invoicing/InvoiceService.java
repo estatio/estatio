@@ -58,19 +58,17 @@ public class InvoiceService {
         return clockService.beginningOfNextQuarter();
     }
 
-    // ISIS-637
-    //
-    // public String validateCalculateInvoicesForProperty(
-    // final Property property,
-    // final InvoiceRunType runType,
-    // final LocalDate dueDate,
-    // final LocalDate startDate,
-    // final LocalDate endDate) {
-    // if(endDate.compareTo(startDate) < 0) {
-    // return "End date is before start date";
-    // }
-    // return null;
-    // }
+    public String validateCalculateInvoicesForProperty(
+            final Property property, 
+            final InvoiceRunType runType, 
+            final LocalDate dueDate, 
+            final LocalDate startDate, 
+            final LocalDate endDate) {
+        if (endDate.compareTo(startDate) < 0) {
+            return "End date is before start date";
+        }
+        return null;
+    }
 
     // //////////////////////////////////////
 
