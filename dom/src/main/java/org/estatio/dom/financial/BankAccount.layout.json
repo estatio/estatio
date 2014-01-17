@@ -5,10 +5,11 @@
       "memberGroups": {
         "General": {
           "members": {
-            "owner": {},
             "reference": {},
             "type": {},
-            "name": {}
+            "name": {},
+            "owner": {},
+            "externalReference": {}
           }
         }
       }

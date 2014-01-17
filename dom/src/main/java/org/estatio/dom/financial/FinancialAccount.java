@@ -25,6 +25,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
@@ -34,17 +35,17 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy = IdGeneratorStrategy.IDENTITY, 
+        strategy = IdGeneratorStrategy.IDENTITY,
         column = "id")
 @javax.jdo.annotations.Version(
-        strategy=VersionStrategy.VERSION_NUMBER, 
-        column="version")
+        strategy = VersionStrategy.VERSION_NUMBER,
+        column = "version")
 @javax.jdo.annotations.Discriminator(
-        strategy = DiscriminatorStrategy.CLASS_NAME, 
-        column="discriminator")
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 @javax.jdo.annotations.Uniques({
         @javax.jdo.annotations.Unique(
                 name = "FinancialAccount_reference_UNQ", members = "reference")
@@ -67,9 +68,9 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.financial.FinancialAccount "
                         + "WHERE owner == :owner")
 })
-public abstract class FinancialAccount 
-        extends EstatioMutableObject<FinancialAccount> 
-        implements WithNameGetter, WithReferenceUnique  {
+public abstract class FinancialAccount
+        extends EstatioMutableObject<FinancialAccount>
+        implements WithNameGetter, WithReferenceUnique {
 
     public FinancialAccount() {
         super("type, reference");
@@ -79,8 +80,8 @@ public abstract class FinancialAccount
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.REFERENCE)
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -93,7 +94,7 @@ public abstract class FinancialAccount
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @Title
     public String getName() {
         return name;
@@ -107,7 +108,7 @@ public abstract class FinancialAccount
 
     private FinancialAccountType type;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Hidden
     public FinancialAccountType getType() {
         return type;
@@ -121,7 +122,7 @@ public abstract class FinancialAccount
 
     private Party owner;
 
-    @javax.jdo.annotations.Column(name="ownerPartyId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "ownerPartyId", allowsNull = "false")
     public Party getOwner() {
         return owner;
     }
@@ -130,4 +131,17 @@ public abstract class FinancialAccount
         this.owner = owner;
     }
 
+    // //////////////////////////////////////
+
+    private String externalReference;
+
+    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(String externalReference) {
+        this.externalReference = externalReference;
+    }
 }

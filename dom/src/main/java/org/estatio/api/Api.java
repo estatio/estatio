@@ -773,7 +773,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nationalCheckCode") @Optional String nationalCheckCode,
             @Named("nationalBankCode") @Optional String nationalBankCode,
             @Named("branchCode") @Optional String branchCode,
-            @Named("accountNumber") @Optional String accountNumber
+            @Named("accountNumber") @Optional String accountNumber, 
+            @Named("externalReference") @Optional String externalReference
             ) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
         Party owner = parties.findPartyByReference(ownerReference);
@@ -784,6 +785,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         bankAccount.setProperty(fetchProperty(propertyReference, false));
         bankAccount.setReference(reference);
+        bankAccount.setExternalReference(externalReference);
         bankAccount.setAccountNumber(accountNumber);
         bankAccount.setBranchCode(branchCode);
         bankAccount.setName(name);
