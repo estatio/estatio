@@ -20,6 +20,7 @@ package org.estatio.dom.invoice;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
@@ -36,26 +37,31 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.financial.BankMandate;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 
-public class InvoiceTest_assignCollectionNumber {
+public class InvoiceTest_collect {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Mock
     Invoices mockInvoices;
-    
+
     @Ignoring
     @Mock
     DomainObjectContainer mockContainer;
-    
+
     @Ignoring
     @Mock
     Property invoiceProperty;
 
-    private Invoice invoice;
+    @Mock
+    Lease lease;
 
+    private Invoice invoice;
+    
     private Numerator numerator;
 
     @Before
@@ -72,10 +78,12 @@ public class InvoiceTest_assignCollectionNumber {
             public Property getProperty() {
                 return property;
             }
+
             @Override
             public PaymentMethod getPaymentMethod() {
                 return paymentMethod;
             }
+
             @Override
             public InvoiceStatus getStatus() {
                 return status;
@@ -89,17 +97,36 @@ public class InvoiceTest_assignCollectionNumber {
     @Test
     public void happyCase_directDebit_and_collected_andWhenNoInvoiceNumberPreviouslyAssigned() {
         allowingMockInvoicesRepoToReturn(numerator);
-
-        invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
-
-        assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(), is(nullValue()));
-        invoice.collect();
+        context.checking(new Expectations() {
+            {
+                allowing(lease).getPaidBy();
+                will(returnValue(new BankMandate()));
+            }
+        });
         
+        invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+        invoice.setLease(lease);
+        
+        assertThat(invoice.hideCollect(), is(false));
+        assertNull(invoice.disableCollect());
+        invoice.collect();
+
         assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
     }
 
-
+    @Test
+    public void whenNoMandateAssigned() {
+        allowingMockInvoicesRepoToReturn(numerator);
+        
+        invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+        invoice.setLease(new Lease());
+        
+        assertThat(invoice.hideCollect(), is(false));
+        assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
+        invoice.collect();
+        assertNull(invoice.getCollectionNumber());
+    }
+    
     @Test
     public void whenInvoiceNumberAlreadyAssigned() {
         allowingMockInvoicesRepoToReturn(numerator);
@@ -107,24 +134,24 @@ public class InvoiceTest_assignCollectionNumber {
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
         invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
-        
+
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(), is("Collection number already assigned"));
         invoice.collect();
-        
+
         assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
     }
 
     @Test
     public void whenNoProperty() {
-        
+
         allowingMockInvoicesRepoToReturn(null);
-        
+
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(), is("No 'collection number' numerator found for invoice's property"));
-        
+
         invoice.collect();
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
@@ -132,33 +159,31 @@ public class InvoiceTest_assignCollectionNumber {
     @Test
     public void whenNotDirectDebit() {
         allowingMockInvoicesRepoToReturn(numerator);
-        
+
         invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
-        
+        invoice.setLease(new Lease());
+
         assertThat(invoice.hideCollect(), is(true));
-        assertThat(invoice.disableCollect(), is(nullValue()));
-        
+        assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
+
         invoice.collect();
-        
+
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
-    
+
     @Test
     public void whenNotCollected() {
         allowingMockInvoicesRepoToReturn(numerator);
-        
+
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
-        
+
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(), is("Must be in status of 'approved'"));
-        
+
         invoice.collect();
-        
+
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
-    
-    
-
 
     private void allowingMockInvoicesRepoToReturn(final Numerator numerator) {
         context.checking(new Expectations() {

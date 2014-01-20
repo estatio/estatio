@@ -41,7 +41,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -379,13 +378,9 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (disableCollect() != null) {
             return this;
         }
-
         final Numerator numerator = invoices.findCollectionNumberNumerator();
-
         setCollectionNumber(numerator.increment());
         this.setStatus(InvoiceStatus.COLLECTED);
-
-        informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
         return this;
     }
 
@@ -403,9 +398,14 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
-
         if (getStatus() != InvoiceStatus.APPROVED) {
             return "Must be in status of 'approved'";
+        }
+        if (getLease() == null) {
+            return "No lease related to invoice";
+        }
+        if (getLease().getPaidBy() == null) {
+            return String.format("No mandate assigned to invoice's lease");
         }
         return null;
     }
@@ -502,13 +502,15 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @Prototype
     @Bulk
     public void remove() {
-        for (InvoiceItem item : getItems()) {
-            item.remove();
+        if (getStatus().equals(InvoiceStatus.NEW)) {
+
+            for (InvoiceItem item : getItems()) {
+                item.remove();
+            }
+            getContainer().remove(this);
         }
-        getContainer().remove(this);
     }
 
     // //////////////////////////////////////
