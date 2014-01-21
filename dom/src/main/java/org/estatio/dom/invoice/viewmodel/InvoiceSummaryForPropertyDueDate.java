@@ -31,7 +31,9 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -41,7 +43,9 @@ import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.services.clock.ClockService;
 
 /**
  * View model that surfaces information about each property along with summary
@@ -89,6 +93,49 @@ import org.estatio.dom.invoice.Invoices;
 @Bookmarkable
 @Immutable
 public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
+
+    public Object approve() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.approve();
+        }
+        return this;
+    }
+
+    public Object collect() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.collect();
+        }
+        return this;
+    }
+
+    public Object invoice(
+            final @Named("Invoice Date") LocalDate invoiceDate) {
+        for (Invoice invoice : getInvoices()) {
+            invoice.invoiceOn(invoiceDate);
+        }
+        return this;
+    }
+
+    public LocalDate default0Invoice() {
+        return clockService.now();
+    }
+
+    public Object removeAllNew() {
+        for (Invoice invoice : getInvoices()) {
+            if (invoice.getStatus().equals(InvoiceStatus.NEW)) {
+                invoice.remove();
+            }
+        }
+        return this;
+    }
+
+    @Prototype
+    public Object removeAll() {
+        for (Invoice invoice : getInvoices()) {
+            invoice.remove();
+        }
+        return this;
+    }
 
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
@@ -256,6 +303,12 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
         this.viewModelSupport = viewModelSupport;
+    }
+
+    private ClockService clockService;
+
+    public void injectClockService(final ClockService clockService) {
+        this.clockService = clockService;
     }
 
 }

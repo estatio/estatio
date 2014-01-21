@@ -45,6 +45,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.services.clock.ClockService;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.NONDURABLE,
@@ -92,30 +93,33 @@ import org.estatio.dom.invoice.Invoices;
 @Immutable
 public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
-    // //////////////////////////////////////
-
-    public InvoiceSummaryForPropertyDueDateStatus approve() {
+    public Object approve() {
         for (Invoice invoice : getInvoices()) {
             invoice.approve();
         }
         return this;
     }
 
-    public InvoiceSummaryForPropertyDueDateStatus collect() {
+    public Object collect() {
         for (Invoice invoice : getInvoices()) {
             invoice.collect();
         }
         return this;
     }
 
-    public InvoiceSummaryForPropertyDueDateStatus invoice() {
+    public Object invoice(
+            final @Named("Invoice Date") LocalDate invoiceDate) {
         for (Invoice invoice : getInvoices()) {
-            invoice.invoiceNow();
+            invoice.invoiceOn(invoiceDate);
         }
         return this;
     }
 
-    public InvoiceSummaryForPropertyDueDateStatus removeAllNew() {
+    public LocalDate default0Invoice() {
+        return clockService.now();
+    }
+
+    public Object removeAllNew() {
         for (Invoice invoice : getInvoices()) {
             if (invoice.getStatus().equals(InvoiceStatus.NEW)) {
                 invoice.remove();
@@ -125,7 +129,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     }
 
     @Prototype
-    public InvoiceSummaryForPropertyDueDateStatus removeNew() {
+    public Object removeAll() {
         for (Invoice invoice : getInvoices()) {
             invoice.remove();
         }
@@ -336,6 +340,12 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
         this.viewModelSupport = viewModelSupport;
+    }
+
+    private ClockService clockService;
+
+    public void setClockService(final ClockService clockService) {
+        this.clockService = clockService;
     }
 
 }
