@@ -62,8 +62,11 @@ import org.estatio.dom.WithStartDate;
                         + "ORDER BY startDate DESC")
 })
 @Immutable
-public class IndexValue 
-        extends EstatioMutableObject<IndexValue> 
+@javax.jdo.annotations.Unique(
+        name = "IndexValue_indexBase_startDate_IDX",
+        members = { "indexBase", "startDate" })
+public class IndexValue
+        extends EstatioMutableObject<IndexValue>
         implements WithStartDate {
 
     public static final int VALUE_SCALE = 4;
@@ -71,13 +74,13 @@ public class IndexValue
     public IndexValue() {
         super("indexBase, startDate desc");
     }
-    
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @javax.jdo.annotations.Column(allowsNull = "false")
     @Title(sequence = "2", prepend = ":")
     @Disabled
     @Override
@@ -94,7 +97,7 @@ public class IndexValue
 
     private IndexBase indexBase;
 
-    @javax.jdo.annotations.Column(name="indexBaseId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "2")
     @Disabled
@@ -126,7 +129,7 @@ public class IndexValue
 
     private BigDecimal value;
 
-    @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull="false")
+    @javax.jdo.annotations.Column(scale = VALUE_SCALE, allowsNull = "false")
     @Disabled
     public BigDecimal getValue() {
         return value;
@@ -142,6 +145,5 @@ public class IndexValue
     public void remove() {
         getContainer().remove(this);
     }
-
 
 }
