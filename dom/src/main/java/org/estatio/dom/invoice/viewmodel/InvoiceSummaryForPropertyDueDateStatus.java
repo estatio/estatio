@@ -344,7 +344,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     private ClockService clockService;
 
-    public void setClockService(final ClockService clockService) {
+    final public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
 

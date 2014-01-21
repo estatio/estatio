@@ -307,7 +307,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     private ClockService clockService;
 
-    public void injectClockService(final ClockService clockService) {
+    final public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
 
