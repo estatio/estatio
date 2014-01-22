@@ -33,8 +33,8 @@ public class InvoiceSummaryContributions {
 
     @NotInServiceMenu
     public URL reports(
-            final InvoiceSummaryForPropertyDueDate invoiceSummary,
-            final InvoiceSummaryReportType reportType
+            final @Named("Invoice Summary") InvoiceSummaryForPropertyDueDate invoiceSummary,
+            final @Named("Report") InvoiceSummaryReportType reportType
             ) {
         try {
             return new URL(reportType.parse(invoiceSummary));
