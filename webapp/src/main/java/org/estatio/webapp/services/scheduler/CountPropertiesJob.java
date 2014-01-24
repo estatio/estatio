@@ -1,6 +1,6 @@
 /*
  *
- *  Copyright 2012-2013 Eurocommercial Properties NV
+ *  Copyright 2012-2014 Eurocommercial Properties NV
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
@@ -18,11 +18,9 @@
  */
 package org.estatio.webapp.services.scheduler;
 
-import com.danhaywood.isis.domainservice.scheduler.AbstractIsisJob;
-
 import org.quartz.JobExecutionContext;
-
 import org.estatio.dom.asset.Properties;
+import org.estatio.services.scheduler.AbstractIsisJob;
 
 public class CountPropertiesJob extends AbstractIsisJob {
 

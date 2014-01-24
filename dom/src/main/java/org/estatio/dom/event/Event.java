@@ -1,6 +1,6 @@
 /*
  *
- *  Copyright 2012-2013 Eurocommercial Properties NV
+ *  Copyright 2012-2014 Eurocommercial Properties NV
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
@@ -85,7 +85,7 @@ public class Event
 
     @javax.jdo.annotations.Column(allowsNull = "false")
     @Mandatory
-    @Disabled
+    //@Disabled
     public LocalDate getDate() {
         return date;
     }

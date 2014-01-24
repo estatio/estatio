@@ -1,6 +1,6 @@
 /*
  *
- *  Copyright 2012-2013 Eurocommercial Properties NV
+ *  Copyright 2012-2014 Eurocommercial Properties NV
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
@@ -29,6 +29,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
 public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>> 
@@ -179,6 +180,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>>
 
         // //////////////////////////////////////
 
+        @Programmatic
         public T getPredecessor(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
@@ -187,6 +189,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>>
                             endDatePreceding(withInterval.getStartDate())));
         }
 
+        @Programmatic
         public T getSuccessor(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return WithInterval.Util.firstElseNull(
                     siblings,
@@ -216,6 +219,7 @@ public interface WithIntervalContiguous<T extends WithIntervalContiguous<T>>
 
         // //////////////////////////////////////
 
+        @Programmatic
         public SortedSet<T> getTimeline(final SortedSet<T> siblings, final Predicate<? super T> filter) {
             return Sets.newTreeSet(Sets.filter(siblings, filter));
         }
