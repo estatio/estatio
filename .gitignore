@@ -26,3 +26,5 @@ datanucleus.log
 *.ear
 
 /xml/
+
+rebel.xml
