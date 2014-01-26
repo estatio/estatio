@@ -37,8 +37,8 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
-import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento;
+import org.apache.isis.applib.services.memento.MementoService;
+import org.apache.isis.applib.services.memento.MementoService.Memento;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
@@ -142,7 +142,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      */
     @Override
     public String viewModelMemento() {
-        final Memento memento = viewModelSupport.create();
+        final Memento memento = mementoService.create();
 
         memento.set("reference", getReference())
                 .set("dueDate", getDueDate())
@@ -159,7 +159,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      */
     @Override
     public void viewModelInit(final String mementoStr) {
-        final Memento memento = viewModelSupport.parse(mementoStr);
+        final Memento memento = mementoService.parse(mementoStr);
 
         setReference(memento.get("reference", String.class));
         setDueDate(memento.get("dueDate", LocalDate.class));
@@ -299,10 +299,10 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
         this.invoicesService = invoicesService;
     }
 
-    private ViewModelSupport viewModelSupport;
+    private MementoService mementoService;
 
-    final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
-        this.viewModelSupport = viewModelSupport;
+    final public void injectMementoService(final MementoService mementoService) {
+        this.mementoService = mementoService;
     }
 
     private ClockService clockService;

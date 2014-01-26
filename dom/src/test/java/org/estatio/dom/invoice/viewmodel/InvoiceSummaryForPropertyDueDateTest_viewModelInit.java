@@ -28,7 +28,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
+import org.apache.isis.applib.services.memento.MementoService;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -38,10 +38,10 @@ public class InvoiceSummaryForPropertyDueDateTest_viewModelInit {
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_ONLY);
 
     @Mock
-    private ViewModelSupport viewModelSupport;
+    private MementoService mockMementoService;
     
     @Mock
-    private ViewModelSupport.Memento viewModelSupportMemento;
+    private MementoService.Memento mockMemento;
     
 
     private InvoiceSummaryForPropertyDueDate viewModel;
@@ -49,7 +49,7 @@ public class InvoiceSummaryForPropertyDueDateTest_viewModelInit {
     @Before
     public void setUp() throws Exception {
         viewModel = new InvoiceSummaryForPropertyDueDate();
-        viewModel.injectViewModelSupport(viewModelSupport);
+        viewModel.injectMementoService(mockMementoService);
         
         viewModel.setReference("OXF");
         viewModel.setDueDate(new LocalDate(2013,4,1));
@@ -64,23 +64,23 @@ public class InvoiceSummaryForPropertyDueDateTest_viewModelInit {
         
         context.checking(new Expectations() {
             {
-                oneOf(viewModelSupport).create();
-                will(returnValue(viewModelSupportMemento));
+                oneOf(mockMementoService).create();
+                will(returnValue(mockMemento));
                 
-                oneOf(viewModelSupportMemento).set("reference", "OXF");
-                will(returnValue(viewModelSupportMemento));
-                oneOf(viewModelSupportMemento).set("dueDate", new LocalDate(2013,4,1));
-                will(returnValue(viewModelSupportMemento));
-                oneOf(viewModelSupportMemento).set("netAmount", new BigDecimal("10.00"));
-                will(returnValue(viewModelSupportMemento));
-                oneOf(viewModelSupportMemento).set("vatAmount", new BigDecimal("1.75"));
-                will(returnValue(viewModelSupportMemento));
-                oneOf(viewModelSupportMemento).set("grossAmount", new BigDecimal("11.75"));
-                will(returnValue(viewModelSupportMemento));
-                oneOf(viewModelSupportMemento).set("total", 123);
-                will(returnValue(viewModelSupportMemento));
+                oneOf(mockMemento).set("reference", "OXF");
+                will(returnValue(mockMemento));
+                oneOf(mockMemento).set("dueDate", new LocalDate(2013,4,1));
+                will(returnValue(mockMemento));
+                oneOf(mockMemento).set("netAmount", new BigDecimal("10.00"));
+                will(returnValue(mockMemento));
+                oneOf(mockMemento).set("vatAmount", new BigDecimal("1.75"));
+                will(returnValue(mockMemento));
+                oneOf(mockMemento).set("grossAmount", new BigDecimal("11.75"));
+                will(returnValue(mockMemento));
+                oneOf(mockMemento).set("total", 123);
+                will(returnValue(mockMemento));
                 
-                oneOf(viewModelSupportMemento).asString();
+                oneOf(mockMemento).asString();
                 will(returnValue("encodedXml"));
             }
         });
@@ -93,20 +93,20 @@ public class InvoiceSummaryForPropertyDueDateTest_viewModelInit {
         
         context.checking(new Expectations() {
             {
-                oneOf(viewModelSupport).parse("encodedXml");
-                will(returnValue(viewModelSupportMemento));
+                oneOf(mockMementoService).parse("encodedXml");
+                will(returnValue(mockMemento));
                 
-                oneOf(viewModelSupportMemento).get("reference", String.class);
+                oneOf(mockMemento).get("reference", String.class);
                 will(returnValue("OXF"));
-                oneOf(viewModelSupportMemento).get("dueDate", LocalDate.class);
+                oneOf(mockMemento).get("dueDate", LocalDate.class);
                 will(returnValue(new LocalDate(2013,4,1)));
-                oneOf(viewModelSupportMemento).get("netAmount", BigDecimal.class);
+                oneOf(mockMemento).get("netAmount", BigDecimal.class);
                 will(returnValue(new BigDecimal("10.00")));
-                oneOf(viewModelSupportMemento).get("vatAmount", BigDecimal.class);
+                oneOf(mockMemento).get("vatAmount", BigDecimal.class);
                 will(returnValue(new BigDecimal("1.75")));
-                oneOf(viewModelSupportMemento).get("grossAmount", BigDecimal.class);
+                oneOf(mockMemento).get("grossAmount", BigDecimal.class);
                 will(returnValue(new BigDecimal("11.75")));
-                oneOf(viewModelSupportMemento).get("total", Integer.class);
+                oneOf(mockMemento).get("total", Integer.class);
                 will(returnValue(123));
             }
         });

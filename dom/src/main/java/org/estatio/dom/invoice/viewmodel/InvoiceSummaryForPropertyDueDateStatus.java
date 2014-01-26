@@ -37,8 +37,8 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport;
-import org.apache.isis.applib.services.viewmodelsupport.ViewModelSupport.Memento;
+import org.apache.isis.applib.services.memento.MementoService;
+import org.apache.isis.applib.services.memento.MementoService.Memento;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
@@ -336,9 +336,9 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
         this.invoicesService = invoicesService;
     }
 
-    private ViewModelSupport viewModelSupport;
+    private MementoService viewModelSupport;
 
-    final public void injectViewModelSupport(final ViewModelSupport viewModelSupport) {
+    final public void injectViewModelSupport(final MementoService viewModelSupport) {
         this.viewModelSupport = viewModelSupport;
     }
 
