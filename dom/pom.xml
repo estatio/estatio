@@ -160,6 +160,16 @@ language governing permissions and limitations under the License.
             <artifactId>jdom</artifactId>
         </dependency>
 
+        <!-- QUARTZ -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+		</dependency>
+
         <!-- GMAP3 -->
         <dependency>
             <groupId>com.danhaywood.isis.wicket</groupId>
