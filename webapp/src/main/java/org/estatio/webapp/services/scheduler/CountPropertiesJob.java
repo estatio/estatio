@@ -18,11 +18,11 @@
  */
 package org.estatio.webapp.services.scheduler;
 
-import org.quartz.JobExecutionContext;
-import org.estatio.dom.asset.Properties;
-import org.estatio.services.scheduler.AbstractIsisJob;
+//import org.quartz.JobExecutionContext;
+//import org.estatio.dom.asset.Properties;
+//import org.estatio.services.scheduler.AbstractIsisJob;
 
-public class CountPropertiesJob extends AbstractIsisJob {
+public class CountPropertiesJob { /* extends AbstractIsisJob {
 
     protected void doExecute(JobExecutionContext context) {
         Properties properties = getService(Properties.class);
@@ -30,5 +30,5 @@ public class CountPropertiesJob extends AbstractIsisJob {
         
         System.out.println("number of properties is: " + numProperties);
     }
-
+*/
 }
