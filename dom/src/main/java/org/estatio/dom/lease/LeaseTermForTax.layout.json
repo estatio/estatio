@@ -5,7 +5,6 @@
       "memberGroups": {
         "General": {
           "members": {
-            "type": {},
             "leaseItem": {},
             "frequency": {},
             "sequence": {},
@@ -28,19 +27,13 @@
     {
       "span": 4,
       "memberGroups": {
-        "Indexable Rent": {
+        "Tax": {
           "members": {
             "index": {},
-            "baseIndexStartDate": {},
-            "baseIndexValue": {},
-            "nextIndexStartDate": {},
-            "nextIndexValue": {},
-            "rebaseFactor": {},
-            "effectiveDate": {},
-            "indexationPercentage": {},
-            "levellingPercentage": {},
-            "levellingValue": {},
-            "indexable": {}
+            "taxPercentage": {},
+            "recoverablePercentage": {},
+            "taxableValue": {},
+            "taxValue": {}
           }
         }
       }

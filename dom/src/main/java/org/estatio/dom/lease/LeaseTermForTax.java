@@ -12,6 +12,7 @@ import org.apache.isis.applib.annotation.Optional;
 public class LeaseTermForTax extends LeaseTerm {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+
     private BigDecimal taxableValue;
 
     @Optional
