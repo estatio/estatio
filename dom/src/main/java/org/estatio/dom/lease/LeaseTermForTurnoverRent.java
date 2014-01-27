@@ -22,23 +22,18 @@ import java.math.BigDecimal;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.JdoColumnLength;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.PersistenceCapable
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForTurnoverRent extends LeaseTerm {
-
-    // //////////////////////////////////////
 
     private String turnoverRentRule;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.LeaseTermForTurnoverRent.RENT_RULE)
-    @Mandatory
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.LeaseTermForTurnoverRent.RENT_RULE)
+    @Optional
     public String getTurnoverRentRule() {
         return turnoverRentRule;
     }
@@ -59,7 +54,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private BigDecimal budgetedTurnover;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
     public BigDecimal getBudgetedTurnover() {
         return budgetedTurnover;
@@ -73,7 +68,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private BigDecimal auditedTurnover;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
     public BigDecimal getAuditedTurnover() {
         return auditedTurnover;
@@ -87,7 +82,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     private BigDecimal contractualRent;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
     public BigDecimal getContractualRent() {
         return contractualRent;
@@ -99,16 +94,30 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     // //////////////////////////////////////
 
-    private BigDecimal turnoverRentValue;
+    private BigDecimal auditedTurnoverRent;
 
-    @javax.jdo.annotations.Column(scale = 2, allowsNull="true")
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
-    public BigDecimal getTurnoverRentValue() {
-        return turnoverRentValue;
+    public BigDecimal getAuditedTurnoverRent() {
+        return auditedTurnoverRent;
     }
 
-    public void setTurnoverRentValue(final BigDecimal turnoverRentValue) {
-        this.turnoverRentValue = turnoverRentValue;
+    public void setAuditedTurnoverRent(final BigDecimal auditedTurnoverRent) {
+        this.auditedTurnoverRent = auditedTurnoverRent;
+    }
+
+    // //////////////////////////////////////
+
+    private BigDecimal budgetedTurnoverRent;
+
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Optional
+    public BigDecimal getBudgetedTurnoverRent() {
+        return budgetedTurnoverRent;
+    }
+
+    public void setBudgetedTurnoverRent(final BigDecimal budgetedTurnoverRent) {
+        this.budgetedTurnoverRent = budgetedTurnoverRent;
     }
 
     // //////////////////////////////////////
@@ -117,8 +126,8 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
     public BigDecimal getEffectiveValue() {
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         BigDecimal calculatedTurnoverRent = helper.calculateRent(getAuditedTurnover());
-        if (getContractualRent() != null && 
-            calculatedTurnoverRent.compareTo(getContractualRent()) > 0) {
+        if (getContractualRent() != null &&
+                calculatedTurnoverRent.compareTo(getContractualRent()) > 0) {
             return calculatedTurnoverRent.subtract(getContractualRent());
         }
         return BigDecimal.ZERO;
@@ -133,22 +142,21 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         // collection. Also move the value of rent to a different field
         if (rentItem != null) {
             final BigDecimal contractualRent = rentItem.valueForPeriod(
-                    getLeaseItem().getInvoicingFrequency(), 
-                    getStartDate(), 
+                    getLeaseItem().getInvoicingFrequency(),
+                    getStartDate(),
                     getStartDate().plusYears(2));
             setContractualRent(contractualRent);
         }
     }
 
     @Override
-    public void initialize() {
-        super.initialize();
+    public void doInitialize() {
         LeaseTermForTurnoverRent prev = (LeaseTermForTurnoverRent) getPrevious();
         if (prev != null) {
             setTurnoverRentRule(prev.getTurnoverRentRule());
         }
     }
-    
+
     // //////////////////////////////////////
 
     @Override
@@ -157,20 +165,20 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
         if (!getStatus().isApproved()) {
             // need this guard, cos may be called as bulk action
-            setTurnoverRentValue(getEffectiveValue());
+            setAuditedTurnoverRent(getEffectiveValue());
         }
 
         return this;
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Override
-    public void copyValuesTo(final LeaseTerm target){
+    public void copyValuesTo(final LeaseTerm target) {
         LeaseTermForTurnoverRent t = (LeaseTermForTurnoverRent) target;
         super.copyValuesTo(t);
         t.setTurnoverRentRule(getTurnoverRentRule());
-        t.setTurnoverRentValue(getTurnoverRentValue());
+        t.setAuditedTurnoverRent(getAuditedTurnoverRent());
         t.setBudgetedTurnover(getBudgetedTurnover());
         t.setAuditedTurnover(getAuditedTurnover());
         t.setContractualRent(getContractualRent());

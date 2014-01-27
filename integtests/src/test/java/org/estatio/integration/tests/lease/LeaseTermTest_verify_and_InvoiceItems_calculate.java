@@ -242,17 +242,18 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
 
+        estatioSettingsService.updateEpochDate(new LocalDate(1980, 1, 1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         leaseTopModelServiceChargeTerm0.approve();
         // partial period
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
         assertThat(
-                leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-07-01/2010-10-01"), new LocalDate(2010, 7, 1)).getNetAmount(), 
+                leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-07-01/2010-10-01"), new LocalDate(2010, 7, 1)).getNetAmount(),
                 is(new BigDecimal(1271.74).setScale(2, RoundingMode.HALF_UP)));
         // full period
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
         assertThat(
-                leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-10-01/2011-01-01"), new LocalDate(2010, 10, 1)).getNetAmount(), 
+                leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-10-01/2011-01-01"), new LocalDate(2010, 10, 1)).getNetAmount(),
                 is(new BigDecimal(1500.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile with mock date
         estatioSettingsService.updateEpochDate(new LocalDate(2011, 1, 1));
@@ -266,7 +267,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2012, 1, 1));
         assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-10-01/2011-01-01"), new LocalDate(2012, 1, 1)).getNetAmount(), is(new BigDecimal(150.00).setScale(2, RoundingMode.HALF_UP)));
         // reconcile without mock
-        estatioSettingsService.updateEpochDate(null);
+        estatioSettingsService.updateEpochDate(new LocalDate(1980, 1, 1));
         leaseTopModelServiceChargeTerm0.calculate(new LocalDate(2010, 10, 1), new LocalDate(2012, 1, 1));
         assertThat(leaseTopModelServiceChargeTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-10-01/2011-01-01"), new LocalDate(2012, 1, 1)).getNetAmount(), is(new BigDecimal(1650.00).setScale(2, RoundingMode.HALF_UP)));
     }

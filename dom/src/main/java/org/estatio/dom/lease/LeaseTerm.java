@@ -554,7 +554,8 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    protected void initialize() {
+    @Programmatic
+    protected final void initialize() {
         setStatus(LeaseTermStatus.NEW);
         LeaseTerm previousTerm = getPrevious();
         BigInteger sequence = BigInteger.ONE;
@@ -563,6 +564,11 @@ public abstract class LeaseTerm
             setFrequency(previousTerm.getFrequency());
         }
         setSequence(sequence);
+        doInitialize();
+    }
+
+    @Programmatic
+    protected void doInitialize() {
     }
 
     @Programmatic
@@ -577,12 +583,11 @@ public abstract class LeaseTerm
     /**
      * Optional hook for subclasses to do additional initialization.
      */
+    @Programmatic
     protected void doAlign() {
     }
 
-    
     // //////////////////////////////////////
-
 
     @Programmatic
     public void copyValuesTo(final LeaseTerm target) {

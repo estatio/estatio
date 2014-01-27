@@ -50,13 +50,16 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
             final LeaseItemType type,
             final Charge charge,
             final InvoicingFrequency invoicingFrequency,
-            final PaymentMethod paymentMethod) {
+            final PaymentMethod paymentMethod,
+            final LocalDate startDate) {
         LeaseItem leaseItem = newTransientInstance();
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
         leaseItem.setPaymentMethod(paymentMethod);
         leaseItem.setInvoicingFrequency(invoicingFrequency);
         leaseItem.setLease(lease);
+        leaseItem.setStartDate(startDate);
+        leaseItem.setStatus(LeaseItemStatus.ACTIVE);
         persistIfNotAlready(leaseItem);
         return leaseItem;
     }
@@ -76,10 +79,10 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
     @ActionSemantics(Of.SAFE)
     public LeaseItem findLeaseItem(
             final Lease lease, final LeaseItemType type, final LocalDate startDate, final BigInteger sequence) {
-        return firstMatch("findByLeaseAndTypeAndStartDateAndSequence", 
-                "lease", lease, 
-                "type", type, 
-                "startDate", startDate, 
+        return firstMatch("findByLeaseAndTypeAndStartDateAndSequence",
+                "lease", lease,
+                "type", type,
+                "startDate", startDate,
                 "sequence", sequence);
     }
 

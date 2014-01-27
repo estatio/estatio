@@ -352,9 +352,7 @@ public class Lease
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final @Named("Start date") LocalDate startDate) {
-        // TODO: there doesn't seem to be any disableXxx guard for this action
-        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod);
-        leaseItem.setStartDate(startDate);
+        LeaseItem leaseItem = leaseItems.newLeaseItem(this, type, charge, invoicingFrequency, paymentMethod, startDate);
         return leaseItem;
     }
 

@@ -1,0 +1,84 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "type": {},
+            "leaseItem": {},
+            "frequency": {},
+            "sequence": {},
+            "status": {}
+          }
+        },
+         "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "current": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Indexable Rent": {
+          "members": {
+            "index": {},
+            "baseIndexStartDate": {},
+            "baseIndexValue": {},
+            "nextIndexStartDate": {},
+            "nextIndexValue": {},
+            "rebaseFactor": {},
+            "effectiveDate": {},
+            "indexationPercentage": {},
+            "levellingPercentage": {},
+            "levellingValue": {},
+            "indexable": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Values": {
+          "members": {
+            "effectiveValue": {},
+            "baseValue": {},
+            "indexedValue": {},
+            "settledValue": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 12,
+      "collections": {
+        "invoiceItems": {
+          "actions": {
+            "calculate": {}
+          }
+        }
+      }
+    }
+  ],
+  "actions": {
+    "createNext": {},
+    "lock": {},
+    "unlock": {},
+    "verify": {}
+  }
+}

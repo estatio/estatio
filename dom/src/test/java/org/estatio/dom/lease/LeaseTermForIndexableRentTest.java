@@ -127,7 +127,7 @@ public class LeaseTermForIndexableRentTest {
         term.setLeaseItem(item);
         
         term.setStartDate(new LocalDate(2011, 1, 1));
-        term.initialize();
+        term.doInitialize();
         
         context.checking(new Expectations() {
             {
@@ -208,7 +208,7 @@ public class LeaseTermForIndexableRentTest {
         LeaseTermForIndexableRent nextTerm = new LeaseTermForIndexableRent();
         term.modifyNext(nextTerm);
         
-        nextTerm.initialize();
+        nextTerm.doInitialize();
         
         assertThat(nextTerm.getBaseIndexStartDate(), is(term.getNextIndexStartDate()));
         assertThat(nextTerm.getNextIndexStartDate(), is(term.getNextIndexStartDate().plusYears(1)));

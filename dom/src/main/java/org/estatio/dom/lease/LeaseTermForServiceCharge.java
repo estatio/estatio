@@ -30,7 +30,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
-// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
@@ -88,8 +87,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     @Override
     @Programmatic
-    public void initialize() {
-        super.initialize();
+    public void doInitialize() {
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPrevious();
         if (previousTerm != null) {
             this.setBudgetedValue(MathUtils.firstNonZero(previousTerm.getAuditedValue(), previousTerm.getBudgetedValue()));

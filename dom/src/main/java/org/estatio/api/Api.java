@@ -666,8 +666,8 @@ public class Api extends AbstractFactoryAndRepository {
             term.setNextIndexStartDate(nextIndexStartDate);
             term.setNextIndexValue(nextIndexValue);
             term.setIndexationPercentage(indexationPercentage);
-            term.setLevellingPercentage(levellingPercentage);
         }
+        term.setLevellingPercentage(levellingPercentage);
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -690,7 +690,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("turnoverRentValue") @Optional BigDecimal turnoverRentValue) {
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
-            term.setTurnoverRentValue(turnoverRentValue);
+            term.setAuditedTurnoverRent(turnoverRentValue);
             term.setBudgetedTurnover(budgetedTurnover);
             term.setAuditedTurnover(auditedTurnover);
             term.setTurnoverRentRule(turnoverRentRule);

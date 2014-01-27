@@ -205,14 +205,6 @@ public class LeaseItem
 
     @Programmatic
     public LeaseTerm findTermWithSequence(final BigInteger sequence) {
-        // for (LeaseTerm term : getTerms()) {
-        // if (sequence.equals(term.getSequence())) {
-        // return term;
-        // }
-        // }
-        // return null;
-        // TODO: the code above proved to be very unreliable when using the api.
-        // Have to investigate further
         return leaseTerms.findByLeaseItemAndSequence(this, sequence);
     }
 
@@ -420,11 +412,14 @@ public class LeaseItem
     @Disabled
     @Optional
     public BigDecimal getValue() {
-        final LeaseTerm currentTerm = currentTerm(getClockService().now());
-        return currentTerm != null ? currentTerm.getEffectiveValue() : null;
+        return valueForDate(getClockService().now());
     }
 
-    // //////////////////////////////////////
+    @Programmatic
+    public BigDecimal valueForDate(final LocalDate date) {
+        final LeaseTerm currentTerm = currentTerm(date);
+        return currentTerm != null ? currentTerm.valueForDate(date) : null;
+    }
 
     @Programmatic
     public LeaseTerm currentTerm(final LocalDate date) {
@@ -467,7 +462,6 @@ public class LeaseItem
             final @Named("Start date") LocalDate startDate) {
         LeaseTerm lastTerm = getTerms().size() > 0 ? getTerms().last() : null;
         LeaseTerm term = leaseTerms.newLeaseTerm(this, lastTerm, startDate);
-        term.initialize();
         return term;
     }
 

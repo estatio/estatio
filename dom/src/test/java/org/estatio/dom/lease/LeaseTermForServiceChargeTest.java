@@ -68,7 +68,7 @@ public class LeaseTermForServiceChargeTest {
         term.setLeaseItem(item);
         
         // when
-        term.initialize();
+        term.doInitialize();
         
         // then
         term.setStartDate(new LocalDate(2011, 1, 1));
@@ -85,7 +85,7 @@ public class LeaseTermForServiceChargeTest {
         nextTerm.setLeaseItem(item);
         
         nextTerm.modifyPrevious(term);
-        nextTerm.initialize();
+        nextTerm.doInitialize();
         nextTerm.align();
         assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
     }

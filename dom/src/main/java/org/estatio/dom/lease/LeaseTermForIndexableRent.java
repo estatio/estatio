@@ -36,10 +36,7 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
-// identityType=IdentityType.DATASTORE inherited from superclass
-@javax.jdo.annotations.Inheritance(
-        strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-// no @DatastoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     private Index index;
@@ -244,8 +241,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     @Programmatic
-    public void initialize() {
-        super.initialize();
+    public void doInitialize() {
         final LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
         if (previousTerm != null) {
             LeaseTermFrequency frequency = previousTerm.getFrequency();
