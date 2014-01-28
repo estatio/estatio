@@ -31,14 +31,15 @@ public enum FixtureScript {
     CreateBreakOptions(CreateBreakOptions.class),
     FixLeaseTerms(FixLeaseTerms.class),
     TruncateLeases(TruncateLeases.class),
-    TruncateInvoices(TruncateInvoices.class);
+    TruncateInvoices(TruncateInvoices.class),
+    CreateTaxItemsAndTerms(CreateTaxItemsAndTerms.class);
     
     private Class<? extends Callable<Object>> cls;
 
     private FixtureScript(Class<? extends Callable<Object>> cls) {
         this.cls = cls;
     }
-    
+
     public Object run(DomainObjectContainer container) {
         final Callable<Object> callable = (Callable<Object>) container.newTransientInstance(cls);
         try {
@@ -47,5 +48,5 @@ public enum FixtureScript {
             throw new ApplicationException(e);
         }
     }
-    
+
 }
