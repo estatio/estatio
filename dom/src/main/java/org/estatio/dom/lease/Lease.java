@@ -624,31 +624,33 @@ public class Lease
 
     @Bulk
     public Lease calculate(
-            final @Named("Run Type") InvoiceRunType runType,
+            final @Named("Run type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate) {
-        
+            final @Named("Period start date") LocalDate startDate,
+            final @Named("Period end date") @Optional LocalDate endDate) {
+
         boolean started = EstatioInteractionCache.startInteraction();
         try {
             verifyUntil(endDate);
             for (LeaseItem item : getItems()) {
-                item.calculate(startDate, endDate, dueDate, runType);
+                item.calculate(runType, dueDate, startDate, endDate);
             }
             return this;
         } finally {
             EstatioInteractionCache.endInteraction(started);
         }
-        
+
     }
 
     public String validateCalculate(
-            final @Named("Run Type") InvoiceRunType runType,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Period End Date") @Optional LocalDate endDate) {
-        return null; // TODO: return reason why action arguments are invalid,
-                     // null if ok
+            final InvoiceRunType runType,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (endDate != null && endDate.isBefore(startDate)) {
+            return "End date cannot be before start date";
+        }
+        return null;
     }
 
     // //////////////////////////////////////

@@ -495,14 +495,25 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseItem calculate(
-            final @Named("Period start Date") LocalDate startDate,
-            final @Named("Period end date") @Optional LocalDate endDate,
+            final @Named("Run type") InvoiceRunType runType,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period start date") LocalDate startDate,
+            final @Named("Period end date") @Optional LocalDate endDate) {
         for (LeaseTerm term : getTerms()) {
             term.calculate(startDate, endDate, dueDate, runType);
         }
         return this;
+    }
+    
+    public String validateCalculate(
+            final InvoiceRunType runType,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (endDate != null && endDate.isBefore(startDate)) {
+            return "End date cannot be before start date";
+        }
+        return null;
     }
 
     // //////////////////////////////////////
