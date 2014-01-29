@@ -335,22 +335,33 @@ public class InvoiceItem
             getContainer().remove(this);
         }
     }
-    
+
     @Programmatic
     private void calculateTax() {
-        BigDecimal vatAmount = BigDecimal.ZERO;
+        BigDecimal percentage = null;
         if (getTax() != null) {
-            BigDecimal percentage = tax.percentageFor(getDueDate());
-            if (percentage != null) {
-                BigDecimal rate = percentage.divide(LeaseConstants.PERCENTAGE_DIVISOR);
-                vatAmount = getNetAmount().multiply(rate).setScale(2, RoundingMode.HALF_UP);
-            }
+            percentage = tax.percentageFor(getDueDate());
         }
-        BigDecimal currentVatAmount = getVatAmount();
-        if (currentVatAmount == null || vatAmount.compareTo(currentVatAmount) != 0) {
-            setVatAmount(vatAmount);
-            setGrossAmount(getNetAmount().add(vatAmount));
+        setVatAmount(vatFromNet(getNetAmount(), percentage));
+        setGrossAmount(grossFromNet(getNetAmount(), percentage));
+    }
+
+    private BigDecimal vatFromNet(final BigDecimal net, final BigDecimal percentage) {
+        if (net == null || percentage == null) {
+            return BigDecimal.ZERO;
         }
+        BigDecimal rate = percentage.divide(LeaseConstants.PERCENTAGE_DIVISOR);
+        return net.multiply(rate).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal grossFromNet(final BigDecimal net, final BigDecimal percentage) {
+        if (net == null) {
+            return BigDecimal.ZERO;
+        }
+        if (percentage == null) {
+            return net;
+        }
+        return net.add(vatFromNet(net, percentage));
     }
 
     @Programmatic
