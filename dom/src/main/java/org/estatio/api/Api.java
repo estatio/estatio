@@ -282,7 +282,8 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("disposalDate") @Optional LocalDate disposalDate,
             @Named("openingDate") @Optional LocalDate openingDate,
             @Named("ownerReference") @Optional String ownerReference,
-            @Named("numeratorFormat") @Optional String numeratorFormat
+            @Named("numeratorFormat") @Optional String numeratorFormat,
+            @Named("externalReference") @Optional String externalReference
             ) {
         Party owner = fetchParty(ownerReference);
         Property property = fetchProperty(reference, true);
@@ -293,6 +294,7 @@ public class Api extends AbstractFactoryAndRepository {
         property.setAcquireDate(acquireDate);
         property.setDisposalDate(disposalDate);
         property.setOpeningDate(openingDate);
+        property.setExternalReference(externalReference);
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, null, null);
         if (numeratorFormat != null)
             invoices.createInvoiceNumberNumerator(property, numeratorFormat, BigInteger.ZERO);

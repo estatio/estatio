@@ -6,7 +6,8 @@
         "Asset": {
           "members": {
             "reference": {},
-            "name": {}
+            "name": {},
+            "externalReference": {}
           }
         },
         "Location": {

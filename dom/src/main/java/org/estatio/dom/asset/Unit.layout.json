@@ -8,7 +8,8 @@
             "reference": {},
             "name": {},
             "type": {},
-            "property": {}
+            "property": {},
+            "externalReference": {}
           }
         },
         "Dates": {

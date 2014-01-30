@@ -89,10 +89,10 @@ public abstract class FixedAsset
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @DescribedAs("Unique reference code for this asset")
     @Title(sequence = "1", prepend = "[", append = "] ")
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -123,7 +123,7 @@ public abstract class FixedAsset
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     @DescribedAs("Unique name for this property")
     @Title(sequence = "2")
     public String getName() {
@@ -132,6 +132,20 @@ public abstract class FixedAsset
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    // //////////////////////////////////////
+
+    private String externalReference;
+
+    @Optional
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.REFERENCE)
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(final String externalReference) {
+        this.externalReference = externalReference;
     }
 
     // //////////////////////////////////////
