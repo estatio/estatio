@@ -685,15 +685,13 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("status") @Optional String status,
             // end generic fields
             @Named("turnoverRentRule") @Optional String turnoverRentRule,
-            @Named("budgetedTurnover") @Optional BigDecimal budgetedTurnover,
             @Named("auditedTurnover") @Optional BigDecimal auditedTurnover,
-            @Named("turnoverRentValue") @Optional BigDecimal turnoverRentValue) {
+            @Named("auditedTurnoverRent") @Optional BigDecimal auditedTurnoverRent) {
         LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         if (term != null) {
-            term.setAuditedTurnoverRent(turnoverRentValue);
-            term.setBudgetedTurnover(budgetedTurnover);
-            term.setAuditedTurnover(auditedTurnover);
             term.setTurnoverRentRule(turnoverRentRule);
+            term.setAuditedTurnover(auditedTurnover);
+            term.setAuditedTurnoverRent(auditedTurnoverRent);
         }
     }
 

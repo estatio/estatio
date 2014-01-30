@@ -21,9 +21,10 @@
           "members": {
             "turnoverRentRule": {},
             "budgetedTurnover": {},
+            "budgetedTurnoverRent": {},
             "auditedTurnover": {},
-            "contractualRent": {},
-            "turnoverRentValue": {}
+            "auditedTurnoverRent": {},
+            "contractualRent": {}
           }
         },
         "Values": {

@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.JdoColumnLength;
@@ -48,20 +50,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         }
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(rule);
         return helper.isValid() ? null : "'" + rule + "' is not a valid rule";
-    }
-
-    // //////////////////////////////////////
-
-    private BigDecimal budgetedTurnover;
-
-    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Optional
-    public BigDecimal getBudgetedTurnover() {
-        return budgetedTurnover;
-    }
-
-    public void setBudgetedTurnover(final BigDecimal budgetedTurnover) {
-        this.budgetedTurnover = budgetedTurnover;
     }
 
     // //////////////////////////////////////
@@ -124,13 +112,13 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     public BigDecimal getEffectiveValue() {
-        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
-        BigDecimal calculatedTurnoverRent = helper.calculateRent(getAuditedTurnover());
-        if (getContractualRent() != null &&
-                calculatedTurnoverRent.compareTo(getContractualRent()) > 0) {
-            return calculatedTurnoverRent.subtract(getContractualRent());
-        }
-        return BigDecimal.ZERO;
+        return ObjectUtils.firstNonNull(getBudgetedTurnoverRent(),
+                getAuditedTurnoverRent(), BigDecimal.ZERO);
+    }
+
+    @Override
+    public LeaseTermValueType valueType() {
+        return getAuditedTurnoverRent() != null ? LeaseTermValueType.FIXED : LeaseTermValueType.ANNUAL;
     }
 
     // //////////////////////////////////////
@@ -141,11 +129,16 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         // TODO: Should not be hardcoded searching for rent and should return a
         // collection. Also move the value of rent to a different field
         if (rentItem != null) {
-            final BigDecimal contractualRent = rentItem.valueForPeriod(
+            BigDecimal newContractualRent = rentItem.valueForPeriod(
                     getLeaseItem().getInvoicingFrequency(),
                     getStartDate(),
                     getStartDate().plusYears(2));
-            setContractualRent(contractualRent);
+            setContractualRent(newContractualRent);
+            TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
+                BigDecimal newAuditedTurnoverRent = helper.calculateRent(getAuditedTurnover());
+                if (ObjectUtils.compare(newAuditedTurnoverRent, getContractualRent()) > 0) {
+                    setAuditedTurnoverRent(newAuditedTurnoverRent.subtract(getContractualRent()));
+                }
         }
     }
 
@@ -179,7 +172,6 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         super.copyValuesTo(t);
         t.setTurnoverRentRule(getTurnoverRentRule());
         t.setAuditedTurnoverRent(getAuditedTurnoverRent());
-        t.setBudgetedTurnover(getBudgetedTurnover());
         t.setAuditedTurnover(getAuditedTurnover());
         t.setContractualRent(getContractualRent());
     }
