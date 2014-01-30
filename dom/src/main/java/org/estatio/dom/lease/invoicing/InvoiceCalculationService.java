@@ -267,7 +267,11 @@ public class InvoiceCalculationService {
                 estatioSettingsService.fetchEpochDate());
         for (CalculationResult result : results) {
             BigDecimal invoicedValue;
-            List<CalculationResult> mockResults = mockResults(leaseTerm, result, invoicingFrequency, epochDate.minusDays(1));
+            List<CalculationResult> mockResults = mockResults(
+                    leaseTerm,
+                    result,
+                    invoicingFrequency,
+                    epochDate == null ? null : epochDate.minusDays(1));
             BigDecimal mockValue = CalculationResultsUtil.sum(mockResults);
             invoicedValue = leaseTerm.invoicedValueFor(result.invoicingInterval().startDate());
             BigDecimal newValue = result.value().subtract(invoicedValue).subtract(mockValue);
