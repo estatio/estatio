@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Ordering;
@@ -27,9 +28,9 @@ import com.google.common.collect.Ordering;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
+import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.utils.CalendarUtils;
 import org.estatio.dom.utils.StringUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public enum InvoicingFrequency {
 
@@ -99,30 +100,32 @@ public enum InvoicingFrequency {
     private final BigDecimal numerator;
     private final BigDecimal denominator;
 
-    public LocalDate dueDate(final LocalDate date) {
-        LocalDateInterval interval = intervalContaining(date);
-        return paidIn.equals(PaidIn.ADVANCE) ? interval.startDate() : interval.endDateExcluding();
-    }
-
-    public LocalDate nextDueDate(final LocalDate date) {
-        LocalDateInterval interval = intervalContaining(date);
-        return interval.endDateExcluding();
-    }
-
-    public LocalDateInterval intervalContaining(final LocalDate date) {
-        return new LocalDateInterval(CalendarUtils.intervalContaining(date, rrule));
-    }
-
-    public LocalDateInterval intervalMatching(final LocalDate startDate) {
-        final Interval intervalMatching = CalendarUtils.intervalMatching(startDate, this.rrule);
-        if (intervalMatching == null) {
+    private LocalDate dueDateOfInterval(final Interval interval) {
+        if (interval == null) {
             return null;
         }
-        return new LocalDateInterval(intervalMatching);
+        return paidIn == PaidIn.ADVANCE ? new LocalDate(interval.getStartMillis()) : new LocalDate(interval.getEndMillis());
     }
 
-    public List<Interval> intervalsInRange(final LocalDate periodStartDate, final LocalDate periodEndDate) {
-        return CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule);
+    public InvoicingInterval intervalContaining(final LocalDate date) {
+        Interval interval = CalendarUtils.intervalContaining(date, rrule);
+        return new InvoicingInterval(interval, dueDateOfInterval(interval));
+    }
+
+    public InvoicingInterval intervalMatching(final LocalDate startDate) {
+        final Interval interval = CalendarUtils.intervalMatching(startDate, this.rrule);
+        if (interval == null) {
+            return null;
+        }
+        return new InvoicingInterval(interval, dueDateOfInterval(interval));
+    }
+
+    public List<InvoicingInterval> intervalsInRange(final LocalDate periodStartDate, final LocalDate periodEndDate) {
+        List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
+        for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule)) {
+            invoicingIntervals.add(new InvoicingInterval(interval, dueDateOfInterval(interval)));
+        }
+        return invoicingIntervals;
     }
 
     public BigDecimal annualMultiplier() {

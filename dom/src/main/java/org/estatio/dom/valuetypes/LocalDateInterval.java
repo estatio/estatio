@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
-public final class LocalDateInterval {
+public class LocalDateInterval {
 
     public enum IntervalEnding {
         EXCLUDING_END_DATE, INCLUDING_END_DATE
