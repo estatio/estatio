@@ -255,10 +255,10 @@ public class Api extends AbstractFactoryAndRepository {
         Organisation org = (Organisation) parties.findPartyByReference(reference);
         if (org == null) {
             org = organisations.newOrganisation(reference, name);
-            org.setFiscalCode(fiscalCode);
-            org.setVatCode(vatCode);
         }
         org.setName(name);
+        org.setFiscalCode(fiscalCode);
+        org.setVatCode(vatCode);
     }
 
     private Party fetchParty(String partyReference) {
