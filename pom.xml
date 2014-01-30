@@ -658,15 +658,7 @@ language governing permissions and limitations under the License.
             </dependency>
 
 
-            <!-- the domain services -->
-			<!-- 
-            <dependency>
-                <groupId>com.danhaywood.isis.domainservice</groupId>
-                <artifactId>danhaywood-isis-domainservice-scheduler</artifactId>
-                <version>1.2.0</version>
-            </dependency>
-			-->
-			
+            <!-- scheduler -->
 			<dependency>
 				<groupId>org.quartz-scheduler</groupId>
 				<artifactId>quartz</artifactId>

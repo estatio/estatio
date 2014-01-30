@@ -204,11 +204,6 @@ language governing permissions and limitations under the License.
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- scheduler -->
-        <dependency>
-            <groupId>com.danhaywood.isis.domainservice</groupId>
-            <artifactId>danhaywood-isis-domainservice-scheduler</artifactId>
-        </dependency>
 
         <!-- 3rd party dependency -->
         <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
@@ -276,6 +271,8 @@ language governing permissions and limitations under the License.
 
         <!-- if running in Eclipse, this profile makes the SQL Server JDBC available on classpath 
         (nb: driver must be manually installed to local repo manually using mvn install-file)
+        
+        http://www.microsoft.com/en-us/download/confirmation.aspx?id=11774
         
         mvn install:install-file -DgroupId=com.microsoft.sqlserver \
                          -DartifactId=jdbc4 \
