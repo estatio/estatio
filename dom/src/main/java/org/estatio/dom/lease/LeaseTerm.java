@@ -491,14 +491,14 @@ public abstract class LeaseTerm
     public LeaseTerm calculate(
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due Date") LocalDate dueDate) {
-        return calculate(startDate, startDate, dueDate, InvoiceRunType.NORMAL_RUN);
+        return calculate(InvoiceRunType.NORMAL_RUN, dueDate, startDate, startDate);
     }
 
     public LeaseTerm calculate(
-            final @Named("Period start Date") LocalDate startDate,
-            final @Named("Period end Date") @Optional LocalDate endDate,
+            final @Named("Run Type") InvoiceRunType runType,
             final @Named("Due Date") LocalDate dueDate,
-            final @Named("Run Type") InvoiceRunType runType) {
+            final @Named("Period start Date") LocalDate startDate,
+            final @Named("Period end Date") @Optional LocalDate endDate) {
         if (!getLeaseItem().getStatus().equals(LeaseItemStatus.SUSPENDED)) {
             invoiceCalculationService.calculateAndInvoice(
                     this, startDate, endDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
@@ -585,6 +585,16 @@ public abstract class LeaseTerm
      */
     @Programmatic
     protected void doAlign() {
+    }
+
+    // //////////////////////////////////////
+
+    /**
+     * Be default all values are annual amounts.
+     */
+    @Programmatic
+    public LeaseTermValueType valueType() {
+        return LeaseTermValueType.ANNUAL;
     }
 
     // //////////////////////////////////////

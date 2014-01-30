@@ -500,7 +500,7 @@ public class LeaseItem
             final @Named("Period start date") LocalDate startDate,
             final @Named("Period end date") @Optional LocalDate endDate) {
         for (LeaseTerm term : getTerms()) {
-            term.calculate(startDate, endDate, dueDate, runType);
+            term.calculate(runType, dueDate, startDate, endDate);
         }
         return this;
     }

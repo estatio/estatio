@@ -67,6 +67,11 @@ public class LeaseTermForTax extends LeaseTerm {
     public BigDecimal getEffectiveValue() {
         return getTaxValue();
     }
+    
+    @Override
+    public LeaseTermValueType valueType() {
+        return LeaseTermValueType.FIXED;
+    }
 
     @Override
     protected void doInitialize() {
