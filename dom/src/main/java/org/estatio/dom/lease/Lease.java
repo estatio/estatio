@@ -633,7 +633,11 @@ public class Lease
         try {
             verifyUntil(endDate);
             for (LeaseItem item : getItems()) {
-                item.calculate(runType, dueDate, startDate, endDate);
+                // TODO: Tax is temporary excluded from automatic invoice
+                // calculation until we can select item types
+                if (item.getType() != LeaseItemType.TAX) {
+                    item.calculate(runType, dueDate, startDate, endDate);
+                }
             }
             return this;
         } finally {
