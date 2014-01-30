@@ -33,7 +33,6 @@ import org.estatio.dom.utils.MathUtils;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
-    private static final int MONTHS = 3;
     private BigDecimal budgetedValue;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
@@ -75,7 +74,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         // TODO: we might need an effective date on the Service Charge too
         LocalDate endDate = getInterval().endDateExcluding();
         if (endDate != null) {
-            LocalDate effectiveDate = endDate.plusMonths(MONTHS);
+            LocalDate effectiveDate = endDate;
             if (getEndDate() != null && effectiveDate.compareTo(dueDate) <= 0) {
                 return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
             }
@@ -90,7 +89,10 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     public void doInitialize() {
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPrevious();
         if (previousTerm != null) {
-            this.setBudgetedValue(MathUtils.firstNonZero(previousTerm.getAuditedValue(), previousTerm.getBudgetedValue()));
+            this.setBudgetedValue(
+                    MathUtils.firstNonZero(
+                            previousTerm.getAuditedValue(),
+                            previousTerm.getBudgetedValue()));
         }
     }
 
