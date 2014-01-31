@@ -23,7 +23,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
-import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
@@ -55,7 +55,6 @@ import org.estatio.dom.tax.Tax;
                         + "WHERE reference == :reference")
 })
 @Bounded
-@Immutable
 public class Charge
         extends EstatioMutableObject<Charge>
         implements WithReferenceUnique, WithNameUnique {
@@ -70,6 +69,8 @@ public class Charge
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
+    @Title(sequence = "1")
+    @Disabled
     public String getReference() {
         return reference;
     }
@@ -82,7 +83,7 @@ public class Charge
 
     private String name;
 
-    @Title(sequence = "1")
+    @Title(sequence = "2", prepend = "-")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.NAME)
     public String getName() {
         return name;
