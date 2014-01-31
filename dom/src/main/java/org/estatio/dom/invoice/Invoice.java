@@ -107,7 +107,7 @@ import org.estatio.dom.party.Party;
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
                 value = "SELECT " +
-                        "FROM org.estatio.dom.invoice.Invoice "+
+                        "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE status == :status " +
                         "ORDER BY invoiceNumber")
 })
@@ -504,13 +504,22 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @Bulk
     public void remove() {
-        if (getStatus().equals(InvoiceStatus.NEW)) {
-
-            for (InvoiceItem item : getItems()) {
-                item.remove();
-            }
-            getContainer().remove(this);
+        //Can be called as bulk so have a safeguard
+        if (disableRemove() == null) {
+            doRemove();
         }
+    }
+
+    public String disableRemove() {
+        return getStatus().equals(InvoiceStatus.INVOICED) ? "Cannot remove, already invoiced." : null;
+    }
+
+    @Programmatic
+    public void doRemove() {
+        for (InvoiceItem item : getItems()) {
+            item.remove();
+        }
+        getContainer().remove(this);
     }
 
     // //////////////////////////////////////

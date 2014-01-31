@@ -43,7 +43,6 @@ import org.apache.isis.applib.services.memento.MementoService.Memento;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.services.clock.ClockService;
 
@@ -120,19 +119,17 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
         return clockService.now();
     }
 
-    public Object removeAllNew() {
+    public Object removeAll(final @Named("Confirm") Boolean confirm) {
         for (Invoice invoice : getInvoices()) {
-            if (invoice.getStatus().equals(InvoiceStatus.NEW)) {
-                invoice.remove();
-            }
+            invoice.remove();
         }
         return this;
     }
 
     @Prototype
-    public Object removeAll() {
+    public Object zapAll(final @Named("Confirm") Boolean confirm) {
         for (Invoice invoice : getInvoices()) {
-            invoice.remove();
+            invoice.doRemove();
         }
         return this;
     }
