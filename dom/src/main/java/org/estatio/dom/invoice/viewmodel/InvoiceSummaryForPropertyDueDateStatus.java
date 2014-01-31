@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.memento.MementoService;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 
@@ -209,6 +210,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     private String status;
 
     @Title(sequence = "2", prepend = " - ")
+    @Hidden(where = Where.OBJECT_FORMS)
     public String getStatus() {
         return status;
     }
@@ -301,7 +303,8 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     private InvoiceStatus statusType;
 
     @Optional
-    @Named("status")
+    @Named("Status")
+    @Hidden(where = Where.ALL_TABLES)
     public InvoiceStatus getStatusType() {
         if (statusType == null) {
             setStatusType(InvoiceStatus.valueOf(getStatus()));
