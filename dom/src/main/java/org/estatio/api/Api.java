@@ -763,10 +763,10 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putBankAccount(
             // start generic fields
-            @Named("reference") @Optional String reference,
-            @Named("name") @Optional String name,
-            @Named("bankAccountType") @Optional String bankAccountType,
+            @Named("reference") String reference,
+            @Named("name") String name,
             @Named("ownerReference") String ownerReference,
+            @Named("bankAccountType") @Optional String bankAccountType,
             @Named("propertyReference") @Optional String propertyReference,
             @Named("iban") @Optional String iban,
             @Named("countryCode") @Optional String countryCode,
@@ -781,18 +781,17 @@ public class Api extends AbstractFactoryAndRepository {
         if (owner == null)
             return;
         if (bankAccount == null) {
-            bankAccount = financialAccounts.newBankAccount(owner, iban);
+            bankAccount = financialAccounts.newBankAccount(owner, reference, name);
         }
         bankAccount.setProperty(fetchProperty(propertyReference, false));
-        bankAccount.setReference(reference);
         bankAccount.setExternalReference(externalReference);
         bankAccount.setAccountNumber(accountNumber);
         bankAccount.setBranchCode(branchCode);
-        bankAccount.setName(name);
         bankAccount.setCountry(fetchCountry(countryCode, false));
         bankAccount.setNationalBankCode(nationalBankCode);
         bankAccount.setNationalCheckCode(nationalCheckCode);
         bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
+        bankAccount.setIban(iban);
         bankAccount.verifyIban();
     }
 

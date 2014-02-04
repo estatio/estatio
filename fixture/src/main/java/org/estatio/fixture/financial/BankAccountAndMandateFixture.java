@@ -56,7 +56,7 @@ public class BankAccountAndMandateFixture extends AbstractFixture {
         Party party = parties.findPartyByReference(partyStr);
         AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
-        BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountStr);
+        BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountStr, bankAccountStr);
         if (propertyStr != null) {
             bankAccount.setProperty(properties.findPropertyByReference(propertyStr));
         }

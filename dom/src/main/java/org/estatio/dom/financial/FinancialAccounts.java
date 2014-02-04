@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -40,12 +39,13 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     // //////////////////////////////////////
 
-    @Hidden
-    public BankAccount newBankAccount(final @Named("Owner") Party owner, final @Named("IBAN") String iban) {
+    public BankAccount newBankAccount(
+            final @Named("Owner") Party owner,
+            final @Named("Reference") String reference,
+            final @Named("Name") String name) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
-        bankAccount.setIban(iban);
-        bankAccount.setName(iban == null ? "TEMP" : iban);
-        bankAccount.setReference(iban == null ? "TEMP" : iban);
+        bankAccount.setReference(reference);
+        bankAccount.setName(name);
         persistIfNotAlready(bankAccount);
         bankAccount.setOwner(owner);
         return bankAccount;
@@ -58,27 +58,27 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     public FinancialAccount findAccountByReference(final @Named("Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
-    
+
     // //////////////////////////////////////
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Programmatic
     public List<BankAccount> findBankAccountsByOwner(final Party party) {
-        return (List)allMatches("findByTypeAndOwner", 
-                "type", FinancialAccountType.BANK_ACCOUNT, 
+        return (List) allMatches("findByTypeAndOwner",
+                "type", FinancialAccountType.BANK_ACCOUNT,
                 "owner", party);
     }
 
     // //////////////////////////////////////
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Programmatic
     public List<FinancialAccount> findAccountsByOwner(final Party party) {
-        return (List)allMatches("findByOwner", "owner", party);
+        return (List) allMatches("findByOwner", "owner", party);
     }
-    
+
     // //////////////////////////////////////
-    
+
     @ActionSemantics(Of.SAFE)
     @Prototype
     @MemberOrder(sequence = "99")
@@ -86,5 +86,4 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
         return allInstances();
     }
 
-    
 }

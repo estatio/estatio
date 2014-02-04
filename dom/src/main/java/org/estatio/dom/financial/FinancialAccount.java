@@ -141,7 +141,7 @@ public abstract class FinancialAccount
         return externalReference;
     }
 
-    public void setExternalReference(String externalReference) {
+    public void setExternalReference(final String externalReference) {
         this.externalReference = externalReference;
     }
 }
