@@ -83,7 +83,7 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
     @Test
     public void happyCase() throws Exception {
         Invoice invoice = invoices.newInvoice(buyer, seller, PaymentMethod.BANK_TRANSFER, currency, new LocalDate(2013, 1, 1), lease);
-        invoice.newItem(charge, new BigDecimal(1), new BigDecimal("10000.123"), "Test");
+        invoice.newItem(charge, new BigDecimal(1), new BigDecimal("10000.123"));
         Invoice foundInvoice = invoices.findMatchingInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, new LocalDate(2013, 1, 1));
         assertThat(foundInvoice.getNetAmount(), is(new BigDecimal("10000.123")));
         assertThat(foundInvoice.getItems().first().getNetAmount(), is(new BigDecimal("10000.123")));

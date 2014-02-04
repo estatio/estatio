@@ -24,11 +24,13 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
@@ -98,6 +100,7 @@ public class Charge
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
+    @MultiLine(numberOfLines=IsisMultilineLines.DESCRIPTION)
     public String getDescription() {
         return description;
     }

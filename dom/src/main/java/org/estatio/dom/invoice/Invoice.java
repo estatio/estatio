@@ -155,6 +155,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @javax.jdo.annotations.Column(name = "sellerPartyId", allowsNull = "false")
     @Disabled
+    @Hidden(where = Where.ALL_TABLES)
     public Party getSeller() {
         return seller;
     }
@@ -454,18 +455,22 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    public Invoice newItem(
+    public InvoiceItem newItem(
             final Charge charge,
             final @Named("Quantity") BigDecimal quantity,
-            final @Named("Net amount") BigDecimal netAmount,
-            final @Named("Description") String description) {
+            final @Named("Net amount") BigDecimal netAmount) {
         InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
         invoiceItem.setQuantity(quantity);
         invoiceItem.setCharge(charge);
+        invoiceItem.setDescription(charge.getDescription());
+        invoiceItem.setTax(charge.getTax());
         invoiceItem.setNetAmount(netAmount);
-        invoiceItem.setDescription(description);
         invoiceItem.verify();
-        return this;
+        return invoiceItem;
+    }
+
+    public BigDecimal default1NewItem() {
+        return BigDecimal.ONE;
     }
 
     // //////////////////////////////////////
@@ -504,7 +509,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @Bulk
     public void remove() {
-        //Can be called as bulk so have a safeguard
+        // Can be called as bulk so have a safeguard
         if (disableRemove() == null) {
             doRemove();
         }

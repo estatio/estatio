@@ -5,6 +5,7 @@
       "memberGroups": {
         "General": {
           "members": {
+            "number": {},
             "collectionNumber": {},
             "invoiceNumber": {},
             "lastItemSequence": {},
@@ -15,6 +16,7 @@
           "members": {
             "source": {},
             "property": {},
+            "lease": {},
             "paymentMethod": {}
           }
         }
@@ -53,7 +55,11 @@
     {
       "span": 12,
       "collections": {
-        "items": {}
+        "items": {
+        	"actions": {
+        		"newItem":{}
+        	}
+        }
       }
     }
   ],

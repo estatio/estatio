@@ -36,14 +36,17 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.TypicalLength;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.IsisMultilineLines;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithInterval;
@@ -217,8 +220,8 @@ public class InvoiceItem
     private String description;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    @Hidden(where = Where.PARENTED_TABLES)
-    @Disabled
+    @TypicalLength(JdoColumnLength.NAME)
+    @MultiLine(numberOfLines = IsisMultilineLines.DESCRIPTION)
     public String getDescription() {
         return description;
     }
