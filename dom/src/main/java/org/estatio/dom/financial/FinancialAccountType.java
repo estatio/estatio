@@ -18,11 +18,11 @@
  */
 package org.estatio.dom.financial;
 
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.DomainObjectContainer;
-
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.StringUtils;
+
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.FatalException;
 
 public enum FinancialAccountType implements PowerType<FinancialAccount> {
 
@@ -45,7 +45,7 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
             FinancialAccount account = container.newTransientInstance(clss);
             return account;
         } catch (Exception ex) {
-            throw new ApplicationException(ex);
+            throw new FatalException(ex);
         }
     }
     

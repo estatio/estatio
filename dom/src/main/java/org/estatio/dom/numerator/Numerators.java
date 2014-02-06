@@ -21,7 +21,9 @@ package org.estatio.dom.numerator;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.isis.applib.ApplicationException;
+import org.estatio.dom.EstatioDomainService;
+
+import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -29,8 +31,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-
-import org.estatio.dom.EstatioDomainService;
 
 public class Numerators extends EstatioDomainService<Numerator> {
 
@@ -106,7 +106,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
         try {
             String.format(format, lastIncrement);
         } catch(Exception ex) {
-            throw new ApplicationException("Invalid format string '" + format + "'");
+            throw new RecoverableException("Invalid format string '" + format + "'");
         }
 
         // existing?

@@ -20,8 +20,8 @@ package org.estatio.fixturescripts;
 
 import java.util.concurrent.Callable;
 
-import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.FatalException;
 import org.apache.isis.applib.annotation.Named;
 
 @Named("Script")
@@ -46,7 +46,7 @@ public enum FixtureScript {
         try {
             return callable.call();
         } catch (Exception e) {
-            throw new ApplicationException(e);
+            throw new FatalException(e);
         }
     }
 

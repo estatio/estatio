@@ -18,11 +18,11 @@
  */
 package org.estatio.dom.lease;
 
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.DomainObjectContainer;
-
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.StringUtils;
+
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.FatalException;
 
 
 public enum LeaseItemType implements PowerType<LeaseTerm>{
@@ -49,7 +49,7 @@ public enum LeaseItemType implements PowerType<LeaseTerm>{
             LeaseTerm term = container.newTransientInstance(clss);
             return term;
         } catch (Exception ex) {
-            throw new ApplicationException(ex);
+            throw new FatalException(ex);
         }
     }
 }
