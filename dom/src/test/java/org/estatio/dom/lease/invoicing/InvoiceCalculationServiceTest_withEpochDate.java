@@ -52,7 +52,7 @@ import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.services.settings.EstatioSettingsService;
 
-public class InvoiceCalculationServiceTest {
+public class InvoiceCalculationServiceTest_withEpochDate {
     private static final LocalDate LEASE_START_DATE = new LocalDate(2011, 11, 1);
     private static final LocalDate LEASE_END_DATE = new LocalDate(2011, 11, 1).plusYears(10).minusDays(1);
 
@@ -110,7 +110,7 @@ public class InvoiceCalculationServiceTest {
                 allowing(mockAgreementRoleTypes).findByTitle("Tenant");
                 will(returnValue(artTenant));
                 allowing(mockSettings).fetchEpochDate();
-                will(returnValue(new LocalDate(1980, 1, 1)));
+                will(returnValue(new LocalDate(2013, 1, 1)));
             }
         });
 
@@ -155,85 +155,14 @@ public class InvoiceCalculationServiceTest {
     }
 
     @Test
-    public void testCalculateFullQuarter() {
-        leaseTerm.setStartDate(LEASE_START_DATE);
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), null, 5000.00);
-    }
-
-    @Test
-    public void testCalculateExactPeriod() {
-        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
-        leaseTerm.setEndDate(new LocalDate(2012, 3, 31));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), null, 5000.00);
-    }
-
-    @Test
-    public void testCalculateSingleMonth() {
-        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
-        leaseTerm.setEndDate(new LocalDate(2012, 2, 29));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), null, 1593.41);
-    }
-
-    @Test
-    public void testCalculateWithFrequency() {
-        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
-        leaseTerm.setEndDate(new LocalDate(2012, 2, 29));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 3, 1), 1593.41);
-    }
-
-    @Test
-    public void testCalculateNothing() {
-        leaseTerm.setStartDate(new LocalDate(2013, 1, 1));
-        leaseTerm.setEndDate(new LocalDate(2013, 3, 1));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), null, 0.00);
-    }
-
-    @Test
-    public void testDateAfterTerminationDate() {
-        lease.terminate(new LocalDate(2013, 12, 31), true);
-        LeaseTermForTesting t2 = new LeaseTermForTesting(leaseItem, new LocalDate(2014, 1, 1), null, new BigDecimal("20000.00"));
-        tester(t2, new LocalDate(2014, 1, 1), null, 0.00);
-    }
-
-    @Test
-    public void testWithNonMatchingStartDate() {
-        leaseTerm.setStartDate(new LocalDate(2013, 1, 1));
-        leaseTerm.setEndDate(new LocalDate(2013, 3, 1));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 2), null, 0.00);
-    }
-
-    @Test
-    public void testwithTerminationDate() {
-        leaseTerm.setStartDate(new LocalDate(2012, 1, 1));
-        leaseTerm.setEndDate(new LocalDate(2012, 3, 31));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        lease.setTenancyEndDate(new LocalDate(2012, 1, 31));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), null, 1703.30);
-        tester(leaseTerm, new LocalDate(2014, 1, 1), null, 0.00);
-    }
-
-    @Test
     public void testFuture() {
         leaseItem.setCharge(charge);
         leaseTerm.setStartDate(new LocalDate(2014, 1, 1));
         leaseTerm.setEndDate(new LocalDate(2014, 12, 31));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
         leaseTerm.setAdjustedValue(BigDecimal.valueOf(22000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
-    }
-
-    @Test
-    public void testCalculateWithFrequencyDifferentEndDate() {
-        leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
-        leaseTerm.setEndDate(new LocalDate(2012, 2, 29));
-        leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 2, 28), 1593.41);
+        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), 
+                0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
     }
 
     @Test
@@ -252,7 +181,7 @@ public class InvoiceCalculationServiceTest {
         leaseTerm.setEndDate(new LocalDate(2013, 1, 31));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
         tester(leaseTerm, leaseTerm.getStartDate(), leaseTerm.getEndDate(),
-                3296.70, 5000.00, 5000.00, 5000.00, 1722.22);
+                0.00, 0.00, 0.00, 0.00, 1722.22);
         // TODO: Since 2012 is a leap year, the sum of the invoices is greater
         // than the value of the term.....
     }
