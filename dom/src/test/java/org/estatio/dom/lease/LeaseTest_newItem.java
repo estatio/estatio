@@ -21,6 +21,9 @@ package org.estatio.dom.lease;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+
 import org.hamcrest.Matchers;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -29,6 +32,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
@@ -58,6 +62,7 @@ public class LeaseTest_newItem {
         lease.injectLeaseItems(leaseItems);
     }
     
+    @SuppressWarnings("unchecked")
     @Test
     public void test() {
         assertThat(lease.getItems(), Matchers.empty());
@@ -68,12 +73,16 @@ public class LeaseTest_newItem {
                 oneOf(mockContainer).newTransientInstance(LeaseItem.class);
                 will(returnValue(leaseItem));
                 oneOf(mockContainer).persistIfNotAlready(leaseItem);
+                oneOf(mockContainer).allMatches(with(any(QueryDefault.class)) );
+                will(returnValue(new ArrayList<LeaseItem>()));
+
             }
         });
         
         final LeaseItem newItem = lease.newItem(LeaseItemType.RENT, new Charge(), InvoicingFrequency.MONTHLY_IN_ADVANCE, PaymentMethod.BANK_TRANSFER, null);
         assertThat(newItem, is(leaseItem));
         assertThat(leaseItem.getLease(), is(lease));
+        assertThat(leaseItem.getSequence(), is(BigInteger.ONE));
         
         // this assertion not true for unit tests, because we rely on JDO
         // to manage the bidir relationship for us.

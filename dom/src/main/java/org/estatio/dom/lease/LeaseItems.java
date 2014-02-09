@@ -21,6 +21,8 @@ package org.estatio.dom.lease;
 import java.math.BigInteger;
 import java.util.List;
 
+import com.google.common.collect.Iterables;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -52,6 +54,7 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final LocalDate startDate) {
+        BigInteger nextSequence = nextSequenceFor(lease, type);
         LeaseItem leaseItem = newTransientInstance();
         leaseItem.setType(type);
         leaseItem.setCharge(charge);
@@ -60,8 +63,17 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
         leaseItem.setLease(lease);
         leaseItem.setStartDate(startDate);
         leaseItem.setStatus(LeaseItemStatus.ACTIVE);
+        leaseItem.setSequence(nextSequence);
         persistIfNotAlready(leaseItem);
         return leaseItem;
+    }
+
+    private BigInteger nextSequenceFor(final Lease lease, final LeaseItemType type) {
+        LeaseItem last = Iterables.getLast(findLeaseItemsByType(lease, type), null);
+        if (last == null) {
+            return BigInteger.ONE;
+        }
+        return last.getSequence() == null ? BigInteger.ONE : last.getSequence().add(BigInteger.ONE);
     }
 
     // //////////////////////////////////////
@@ -84,6 +96,14 @@ public class LeaseItems extends EstatioDomainService<LeaseItem> {
                 "type", type,
                 "startDate", startDate,
                 "sequence", sequence);
+    }
+
+    @Hidden
+    @ActionSemantics(Of.SAFE)
+    public List<LeaseItem> findLeaseItemsByType(
+            final Lease lease,
+            final LeaseItemType type) {
+        return allMatches("findByLeaseAndType", "lease", lease, "type", type);
     }
 
 }

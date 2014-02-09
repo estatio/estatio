@@ -47,6 +47,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
@@ -101,7 +102,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
     @Test
     public void step2_caluclate() throws Exception {
         assertThat("Before calculation", rItem.getTerms().size(), is(2));
-        lease.calculate(InvoiceRunType.NORMAL_RUN, START_DATE, new LocalDate(2013, 11, 13), new LocalDate(2015, 3, 31));
+        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, START_DATE, new LocalDate(2013, 11, 13), new LocalDate(2015, 3, 31));
         assertThat(rItem.getTerms().size(), is(2));
         LeaseTerm last = rItem.getTerms().last();
         LeaseTerm first = rItem.findTerm(START_DATE);
@@ -118,7 +119,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         List<Invoice> allInvoices = invoices.allInvoices();
         Invoice invoice = allInvoices.get(allInvoices.size() - 1);
         invoice.approve();
-        invoice.invoiceOn(new LocalDate(2013, 11, 7));
+        invoice.invoice(new LocalDate(2013, 11, 7));
         assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
         assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
     }
@@ -138,13 +139,13 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
 
     @Test
     public void step5_normalInvoice() throws Exception {
-        lease.calculate(InvoiceRunType.NORMAL_RUN, new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1));
+        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE,new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1));
         assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("249105.98")));
     }
 
     @Test
     public void step6_retroInvoice() throws Exception {
-        lease.calculate(InvoiceRunType.RETRO_RUN, new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1));
+        lease.calculate(InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1));
         // (156750 - 150000) / = 1687.5 added
         assertThat(totalInvoicedForItem(rItem), is(new BigDecimal("249105.98").add(new BigDecimal("1687.50"))));
     }

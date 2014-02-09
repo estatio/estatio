@@ -58,6 +58,7 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -416,31 +417,36 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Programmatic
     @Prototype
-    public void remove() {
-        if (getNext() != null) {
-            getNext().remove();
-        }
-        if (this.getInvoiceItems().size() == 0) {
-            this.modifyPrevious(null);
-            getContainer().remove(this);
+    public void remove(@Named("Are you sure?") Boolean confirm) {
+        if (confirm) {
+            doRemove();
         }
     }
 
     @Programmatic
-    public void removeUnapprovedInvoiceItemsForDate(final LocalDate startDate, final LocalDate dueDate) {
-        for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
+    public boolean doRemove() {
+        boolean success = true;
+        if (getNext() != null) {
+            success = getNext().doRemove();
+        }
+        if (success) {
+            this.modifyPrevious(null);
+            getContainer().remove(this);
+        }
+        return success;
+    }
+
+    @Programmatic
+    public void removeUnapprovedInvoiceItemsForDate(LocalDateInterval interval) {
+        List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTermAndInterval(this, interval);
+        for (InvoiceItemForLease invoiceItem : invoiceItems) {
             Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) &&
-                    startDate.equals(invoiceItem.getStartDate()) &&
-                    dueDate.equals(invoiceItem.getDueDate())) {
-                invoiceItem.setInvoice(null);
-                invoiceItem.clearLeaseTerm();
-                getContainer().flush();
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) ) {
                 remove(invoiceItem);
             }
         }
+        getContainer().flush();
     }
 
     @Programmatic
@@ -471,16 +477,15 @@ public abstract class LeaseTerm
     }
 
     @Programmatic
-    public BigDecimal invoicedValueFor(final LocalDate startDate) {
+    public BigDecimal invoicedValueFor(final LocalDateInterval interval) {
         BigDecimal invoicedValue = new BigDecimal(0);
-        for (InvoiceItemForLease invoiceItem : getInvoiceItems()) {
+
+        List<InvoiceItemForLease> items = invoiceItemsForLease.findByLeaseTermAndInterval(this, interval);
+        for (InvoiceItemForLease invoiceItem : items) {
             Invoice invoice = invoiceItem.getInvoice();
-            if (invoice == null || invoice.getStatus() == InvoiceStatus.NEW ||
-                    invoiceItem.getStartDate() == null ||
-                    invoiceItem.getStartDate().compareTo(startDate) != 0) {
-                continue;
+            if (invoice.getStatus() != InvoiceStatus.NEW) {
+                invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
             }
-            invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
         }
         return invoicedValue;
     }
@@ -488,20 +493,21 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Programmatic
+    @Deprecated
     public LeaseTerm calculate(
             final @Named("Period Start Date") LocalDate startDate,
             final @Named("Due Date") LocalDate dueDate) {
-        return calculate(InvoiceRunType.NORMAL_RUN, dueDate, startDate, startDate);
+        return calculate(InvoiceRunType.NORMAL_RUN, dueDate, startDate, dueDate.plusDays(1));
     }
 
     public LeaseTerm calculate(
             final @Named("Run Type") InvoiceRunType runType,
-            final @Named("Due Date") LocalDate dueDate,
-            final @Named("Period start Date") LocalDate startDate,
-            final @Named("Period end Date") @Optional LocalDate endDate) {
+            final @Named("Invoice Due Date") LocalDate invoiceDueDate,
+            final @Named("Start Due Date") LocalDate startDueDate,
+            final @Named("Next Due Date") LocalDate nextDueDate) {
         if (!getLeaseItem().getStatus().equals(LeaseItemStatus.SUSPENDED)) {
             invoiceCalculationService.calculateAndInvoice(
-                    this, startDate, endDate, dueDate, getLeaseItem().getInvoicingFrequency(), runType);
+                    this, startDueDate, nextDueDate, invoiceDueDate, getLeaseItem().getInvoicingFrequency(), runType);
         }
         return this;
     }
@@ -626,13 +632,14 @@ public abstract class LeaseTerm
     }
 
     @Programmatic
-    BigDecimal valueForPeriod(
-            final LocalDate periodStartDate,
-            final LocalDate dueDate,
-            final InvoicingFrequency frequency) {
-        return invoiceCalculationService.calculateSumForAllPeriods(this, periodStartDate, dueDate, frequency);
+    public List<CalculationResult> calculationResults(
+            final InvoicingFrequency invoicingFrequency,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate
+            ){
+        return invoiceCalculationService.calculateDueDateRange(this, startDueDate, nextDueDate, invoicingFrequency);
     }
-
+    
     // //////////////////////////////////////
 
     @Override

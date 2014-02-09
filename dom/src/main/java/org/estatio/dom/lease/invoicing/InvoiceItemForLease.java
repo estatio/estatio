@@ -62,6 +62,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& dueDate == :dueDate "
                         + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
+                name = "findByLeaseTermAndInterval", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm == :leaseTerm " +
+                        "&& startDate == :startDate " +
+                        "&& endDate == :endDate "),
+        @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndIntervalAndDueDateAndStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
@@ -81,7 +88,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
         members = { "leaseTerm", "startDate", "endDate", "dueDate" })
 public class InvoiceItemForLease extends InvoiceItem {
-
+    
     private LeaseTerm leaseTerm;
 
     // REVIEW: this is optional because of the #remove() method,
@@ -124,7 +131,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Override
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
-        return getInterval().overlap(getLeaseTerm().getInterval());
+        return getInterval().overlap(getLeaseTerm().getEffectiveInterval());
     }
 
     // //////////////////////////////////////

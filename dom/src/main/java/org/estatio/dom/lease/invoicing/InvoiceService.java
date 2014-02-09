@@ -34,13 +34,14 @@ public class InvoiceService {
     public List<InvoiceSummaryForPropertyDueDateStatus> calculateInvoicesForProperty(
             final @Named("Property") @DescribedAs("") Property property,
             final @Named("Run Type") InvoiceRunType runType,
+            final @Named("Selection") InvoiceCalculationSelection calculationSelection,
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
         final List<Lease> results = leases.findLeasesByProperty(property);
         for (Lease lease : results) {
             if (lease.getStatus() != LeaseStatus.SUSPENDED) {
-                lease.calculate(runType, invoiceDueDate, startDueDate, nextDueDate);
+                lease.calculate(runType, calculationSelection, invoiceDueDate, startDueDate, nextDueDate);
             }
         }
         return invoiceSummaries.invoicesForPropertyDueDateStatus();
@@ -78,6 +79,7 @@ public class InvoiceService {
     public List<InvoiceSummaryForPropertyDueDateStatus> calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Run Type") InvoiceRunType runType,
+            final @Named("Selection") InvoiceCalculationSelection selection,
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
@@ -88,7 +90,7 @@ public class InvoiceService {
             final List<Lease> results = leases.findLeases(referenceOrName);
             for (Lease lease : results) {
                 if (lease.getStatus() != LeaseStatus.SUSPENDED) {
-                    lease.calculate(runType, invoiceDueDate, startDueDate, nextDueDate);
+                    lease.calculate(runType, selection, invoiceDueDate, startDueDate, nextDueDate);
                 }
             }
             return invoiceSummaries.invoicesForPropertyDueDateStatus();

@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.SortedSet;
@@ -44,6 +45,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -57,6 +59,8 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResultsUtil;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
@@ -105,12 +109,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& startDate == :startDate "
                         + "&& sequence == :sequence"),
         @javax.jdo.annotations.Query(
-                name = "findByLeaseAndTypeAndEndDate",
+                name = "findByLeaseAndType",
                 language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseItem "
                         + "WHERE lease == :lease "
-                        + "   && endDate == :endDate")
+                        + "&& type == :type "
+                        + "ORDER BY sequence ")
 })
 @Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = { "lease", "type", "startDate", "sequence" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
@@ -129,7 +134,7 @@ public class LeaseItem
     }
 
     public LeaseItem() {
-        super("lease, type, sequence desc");
+        super("lease, type, sequence");
     }
 
     // //////////////////////////////////////
@@ -170,6 +175,27 @@ public class LeaseItem
 
     public boolean hideActivate() {
         return getStatus().equals(LeaseItemStatus.ACTIVE);
+    }
+
+    // //////////////////////////////////////
+
+    @Prototype
+    public void remove(@Named("Are you sure?") Boolean confirm) {
+        if (confirm) {
+            doRemove();
+        }
+    }
+
+    @Programmatic
+    public boolean doRemove() {
+        boolean success = true;
+        for (LeaseTerm term : getTerms()) {
+            success = !term.doRemove() ? false : success;
+        }
+        if (success) {
+            getContainer().remove(this);
+        }
+        return success;
     }
 
     // //////////////////////////////////////
@@ -243,7 +269,6 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Hidden(where = Where.PARENTED_TABLES)
     @Optional
     @Disabled
     public LocalDate getEndDate() {
@@ -294,13 +319,14 @@ public class LeaseItem
     }
 
     public LeaseItem copyAndTerminate(
-            final LocalDate startDate,
+            final @Named("Start date") LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
             final Charge charge
             ) {
         LeaseItem newItem = getLease().newItem(this.getType(), charge, invoicingFrequency, paymentMethod, startDate);
         this.copyTerms(startDate, newItem);
+        this.changeDates(getStartDate(), newItem.getInterval().endDateFromStartDate());
         return newItem;
     }
 
@@ -384,6 +410,7 @@ public class LeaseItem
 
     @Optional
     @Disabled
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getNextDueDate() {
         return nextDueDate;
     }
@@ -496,15 +523,15 @@ public class LeaseItem
 
     public LeaseItem calculate(
             final @Named("Run type") InvoiceRunType runType,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Period start date") LocalDate startDate,
-            final @Named("Period end date") @Optional LocalDate endDate) {
+            final @Named("Invoice due date") LocalDate invoiceDueDate,
+            final @Named("Start due date") LocalDate startDueDate,
+            final @Named("Next due date") LocalDate nextDueDate) {
         for (LeaseTerm term : getTerms()) {
-            term.calculate(runType, dueDate, startDate, endDate);
+            term.calculate(runType, invoiceDueDate, startDueDate, nextDueDate);
         }
         return this;
     }
-    
+
     public String validateCalculate(
             final InvoiceRunType runType,
             final LocalDate dueDate,
@@ -536,17 +563,28 @@ public class LeaseItem
     }
 
     // //////////////////////////////////////
-
-    BigDecimal valueForPeriod(
-            final InvoicingFrequency frequency,
-            final LocalDate periodStartDate,
-            final LocalDate dueDate) {
-        BigDecimal total = new BigDecimal(0);
+    
+    @Programmatic
+    public List<CalculationResult> calculationResults(
+            final InvoicingFrequency invoicingFrequency,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate
+            ){
+        List<CalculationResult> results = new ArrayList<CalculationResult>();
         for (LeaseTerm term : getTerms()) {
-            total = total.add(term.valueForPeriod(periodStartDate, dueDate, frequency));
+            results.addAll(term.calculationResults(invoicingFrequency, startDueDate, nextDueDate));
         }
-        return total;
+        return results;
     }
+
+    @Programmatic
+    public BigDecimal valueForPeriod(
+            final InvoicingFrequency invoicingFrequency,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate
+            ){
+        return CalculationResultsUtil.sum(calculationResults(invoicingFrequency, startDueDate, nextDueDate));
+    }    
 
     // //////////////////////////////////////
 

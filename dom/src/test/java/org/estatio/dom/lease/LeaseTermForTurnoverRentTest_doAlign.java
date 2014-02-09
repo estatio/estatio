@@ -1,11 +1,11 @@
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -32,14 +32,26 @@ public class LeaseTermForTurnoverRentTest_doAlign {
 
     private LeaseItem torItem;
 
+    private List<LeaseItem> rentItems = new ArrayList<LeaseItem>();
+
     @Before
     public void setup() {
         context.checking(new Expectations() {
             {
-                allowing(mockLease).findFirstItemOfType(LeaseItemType.RENT);
-                will(returnValue(rentItem));
-                allowing(rentItem).valueForPeriod(with(aNull(InvoicingFrequency.class)), with(any(LocalDate.class)), with(any(LocalDate.class)));
-                will(returnValue(new BigDecimal("100000.00")));
+                allowing(mockLease).findItemsOfType(LeaseItemType.RENT);
+                will(returnValue(new ArrayList<LeaseItem>() {
+                    /**
+                     * 
+                     */
+                    private static final long serialVersionUID = 8666017984548841746L;
+
+                    {
+                        add(rentItem);
+                    }
+                }));
+                 oneOf(rentItem).valueForPeriod(with(aNull(InvoicingFrequency.class)),
+                 with(any(LocalDate.class)), with(any(LocalDate.class)));
+                 will(returnValue(new BigDecimal("100000.00")));
             }
         });
 
@@ -53,6 +65,7 @@ public class LeaseTermForTurnoverRentTest_doAlign {
         rentItem = new LeaseItem();
         rentItem.setInvoicingFrequency(InvoicingFrequency.QUARTERLY_IN_ADVANCE);
         rentItem.setLease(mockLease);
+
     }
 
     // @Ignore

@@ -24,8 +24,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.lease.Lease;
-
 public class LeaseTest_getEffectiveInterval {
 
     private Lease agreement;

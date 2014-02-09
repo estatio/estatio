@@ -20,6 +20,7 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
@@ -71,7 +72,7 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.dom.lease.invoicing.InvoiceService;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -263,8 +264,6 @@ public class Lease
         this.tenancyStartDate = tenancyStartDate;
     }
 
-    // //////////////////////////////////////
-
     @javax.jdo.annotations.Persistent
     public LocalDate tenancyEndDate;
 
@@ -279,6 +278,23 @@ public class Lease
         this.tenancyEndDate = tenancyEndDate;
     }
 
+    public Lease changeTenancyDates(
+            final @Named("Start Date") LocalDate startDate,
+            final @Named("End Date") @Optional LocalDate endDate
+            ) {
+        setTenancyStartDate(startDate);
+        setTenancyEndDate(endDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeTenancyDates() {
+        return getTenancyStartDate();
+    }
+
+    public LocalDate default1ChangeTenancyDates() {
+        return getTenancyEndDate();
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -291,8 +307,7 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Optional
-    @Disabled
+    @Programmatic
     public LocalDate getTerminationDate() {
         return getTenancyEndDate();
     }
@@ -368,7 +383,7 @@ public class Lease
         return leaseItems.findLeaseItem(this, itemType, itemStartDate, sequence);
     }
 
-    @Hidden
+    @Programmatic
     public LeaseItem findFirstItemOfType(final LeaseItemType type) {
         for (LeaseItem item : getItems()) {
             if (item.getType().equals(type)) {
@@ -376,6 +391,17 @@ public class Lease
             }
         }
         return null;
+    }
+
+    @Programmatic
+    public List<LeaseItem> findItemsOfType(final LeaseItemType type) {
+        List<LeaseItem> items = new ArrayList<LeaseItem>();
+        for (LeaseItem item : getItems()) {
+            if (item.getType().equals(type)) {
+                items.add(item);
+            }
+        }
+        return items;
     }
 
     // //////////////////////////////////////
@@ -584,10 +610,6 @@ public class Lease
         return agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
     }
 
-    private AgreementRoleType creditorRoleType() {
-        return agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
-    }
-
     private AgreementType bankMandateAgreementType() {
         return agreementTypes.find(FinancialConstants.AT_MANDATE);
     }
@@ -613,7 +635,7 @@ public class Lease
         return this;
     }
 
-    @Programmatic
+    @Prototype
     public void verifyUntil(final LocalDate date) {
         for (LeaseItem item : getItems()) {
             item.verifyUntil(date);
@@ -625,29 +647,29 @@ public class Lease
     @Bulk
     public Lease calculate(
             final @Named("Run type") InvoiceRunType runType,
-            final @Named("Due date") LocalDate dueDate,
-            final @Named("Period start date") LocalDate startDate,
-            final @Named("Period end date") @Optional LocalDate endDate) {
+            final @Named("Selection") InvoiceCalculationSelection calculationSelection,
+            final @Named("Invoice due date") LocalDate invoiceDueDate,
+            final @Named("Start due date") LocalDate startDueDate,
+            final @Named("Next due date") LocalDate nextDueDate) {
 
         boolean started = EstatioInteractionCache.startInteraction();
         try {
-            verifyUntil(endDate);
+            verifyUntil(nextDueDate);
+            List<LeaseItemType> allowedTypes = Arrays.asList(calculationSelection.selectedTypes());
             for (LeaseItem item : getItems()) {
-                // TODO: Tax is temporary excluded from automatic invoice
-                // calculation until we can select item types
-                if (item.getType() != LeaseItemType.TAX) {
-                    item.calculate(runType, dueDate, startDate, endDate);
+                if (allowedTypes.contains(item.getType())) {
+                    item.calculate(runType, invoiceDueDate, startDueDate, nextDueDate);
                 }
             }
             return this;
         } finally {
             EstatioInteractionCache.endInteraction(started);
         }
-
     }
 
     public String validateCalculate(
             final InvoiceRunType runType,
+            final InvoiceCalculationSelection selection,
             final LocalDate dueDate,
             final LocalDate startDate,
             final LocalDate endDate) {
@@ -662,19 +684,6 @@ public class Lease
     public Lease terminate(
             final @Named("Termination Date") LocalDate terminationDate,
             final @Named("Are you sure?") Boolean confirm) {
-        for (LeaseItem item : getItems()) {
-            for (LeaseTerm term : item.getTerms()) {
-                if (term.getInterval().contains(terminationDate)) {
-                    term.setEndDate(terminationDate);
-                }
-                if (term.getNext() != null) {
-                    term.getNext().remove();
-                    break; // there are no more terms after this one that we
-                           // want to save and the remove recursively deals with
-                           // them
-                }
-            }
-        }
         for (Occupancy occupancy : getOccupancies()) {
             if (occupancy.getInterval().contains(terminationDate)) {
                 occupancy.terminate(terminationDate);
@@ -855,6 +864,28 @@ public class Lease
             return "End date can not be before start date.";
         }
         return leases.findLeaseByReference(reference) == null ? null : "Lease reference already exists.";
+    }
+
+    // //////////////////////////////////////
+
+    @Prototype
+    public void remove(@Named("Are you sure?") Boolean confirm) {
+        if (confirm) {
+            doRemove();
+        }
+    }
+
+    @Programmatic
+    public boolean doRemove() {
+        boolean success = true;
+
+        for (LeaseItem item : getItems()) {
+            success = !item.doRemove() ? false : success;
+        }
+        if (success) {
+            getContainer().remove(this);
+        }
+        return success;
     }
 
     // //////////////////////////////////////

@@ -40,7 +40,11 @@
               }
             },
             "tenancyStartDate": {},
-            "tenancyEndDate": {},
+            "tenancyEndDate": {
+              "actions": {
+                "changeTenancyDates": {}
+              }
+            },
             "terminationDate": {
               "actions": {
                 "terminate": {}

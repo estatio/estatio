@@ -58,9 +58,9 @@ public class LeaseItemTest_compareTo extends ComparableContractTest_compareTo<Le
                         ),
                 listOf(
                         newLeaseItem(lease1, LeaseItemType.RENT, null),
-                        newLeaseItem(lease1, LeaseItemType.RENT, 2),
-                        newLeaseItem(lease1, LeaseItemType.RENT, 2),
-                        newLeaseItem(lease1, LeaseItemType.RENT, 1)
+                        newLeaseItem(lease1, LeaseItemType.RENT, 1),
+                        newLeaseItem(lease1, LeaseItemType.RENT, 1),
+                        newLeaseItem(lease1, LeaseItemType.RENT, 2)
                         )
                 );
     }

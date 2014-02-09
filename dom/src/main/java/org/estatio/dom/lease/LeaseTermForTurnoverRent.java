@@ -19,6 +19,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -125,20 +126,20 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     protected void doAlign() {
-        LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
-        // TODO: Should not be hardcoded searching for rent and should return a
-        // collection. Also move the value of rent to a different field
-        if (rentItem != null) {
-            BigDecimal newContractualRent = rentItem.valueForPeriod(
+        List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
+
+        BigDecimal rentValue = BigDecimal.ZERO;
+        for (LeaseItem rentItem : rentItems) {
+            rentValue = rentValue.add(rentItem.valueForPeriod(
                     getLeaseItem().getInvoicingFrequency(),
                     getStartDate(),
-                    getStartDate().plusYears(2));
-            setContractualRent(newContractualRent);
-            TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
-                BigDecimal newAuditedTurnoverRent = helper.calculateRent(getAuditedTurnover());
-                if (ObjectUtils.compare(newAuditedTurnoverRent, getContractualRent()) > 0) {
-                    setAuditedTurnoverRent(newAuditedTurnoverRent.subtract(getContractualRent()));
-                }
+                    getStartDate().plusYears(2)));
+        }
+        setContractualRent(rentValue);
+        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
+        BigDecimal newAuditedTurnoverRent = helper.calculateRent(getAuditedTurnover());
+        if (ObjectUtils.compare(newAuditedTurnoverRent, getContractualRent()) > 0) {
+            setAuditedTurnoverRent(newAuditedTurnoverRent.subtract(getContractualRent()));
         }
     }
 

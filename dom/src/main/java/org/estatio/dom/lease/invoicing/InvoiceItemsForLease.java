@@ -95,6 +95,17 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
                 "invoiceStatus", invoiceStatus);
     }
 
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<InvoiceItemForLease> findByLeaseTermAndInterval(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval interval) {
+        return allMatches(
+                "findByLeaseTermAndInterval",
+                "leaseTerm", leaseTerm,
+                "startDate", interval.startDate(),
+                "endDate", interval.endDate());
+    }
     // //////////////////////////////////////
 
     @Prototype

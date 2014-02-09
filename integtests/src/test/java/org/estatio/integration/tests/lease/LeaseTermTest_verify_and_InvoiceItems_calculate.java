@@ -39,6 +39,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
+
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -49,6 +52,8 @@ import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
@@ -70,8 +75,12 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
     private LeaseItem leaseTopModelRentItem;
     private LeaseItem leaseTopModelServiceChargeItem;
 
+    protected IsisJdoSupport isisJdoSupport;
+
     @Before
     public void setup() {
+        isisJdoSupport = service(IsisJdoSupportImpl.class);
+
         leases = service(Leases.class);
         leaseTerms = service(LeaseTerms.class);
         estatioSettingsService = service(EstatioSettingsService.class);
@@ -189,7 +198,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         // when
         leaseTopModelRentTerm.verifyUntil(new LocalDate(2014, 1, 1));
         // and when
-        leaseTopModelRentTerm.calculate(new LocalDate(2010, 7, 2), new LocalDate(2010, 7, 1));
+        leaseTopModelRentTerm.calculate(new LocalDate(2010, 7, 1), new LocalDate(2010, 7, 1));
 
         // then
         assertThat(leaseTopModelRentTerm.getInvoiceItems().size(), is(1));
@@ -231,11 +240,14 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         assertThat(
                 leaseTopModelRentTerm0.findUnapprovedInvoiceItemFor(LocalDateInterval.parseString("2010-10-01/2011-01-01"), new LocalDate(2011, 4, 1)).getNetAmount(),
                 is(new BigDecimal(50.00).setScale(2, RoundingMode.HALF_UP)));
-
         // remove
-        leaseTopModelRentTerm0.removeUnapprovedInvoiceItemsForDate(new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1));
+        leaseTopModelRentTerm0.removeUnapprovedInvoiceItemsForDate(LocalDateInterval.parseString("2010-10-01/2011-01-01"));
         estatioSettingsService.updateEpochDate(null);
-        assertThat(leaseTopModelRentTerm0.getInvoiceItems().size(), is(2));
+        // TODO: without this code there will be 4 items in the set
+        isisJdoSupport.refresh(leaseTopModelRentTerm0);
+        SortedSet<InvoiceItemForLease> invoiceItems = leaseTopModelRentTerm0.getInvoiceItems();
+        ;
+        assertThat(invoiceItems.size(), is(3));
     }
 
     // scenario: invoiceItemsForServiceChargeCreated
@@ -278,7 +290,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, new LocalDate(2010, 7, 15), BigInteger.valueOf(1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         // call calculate on leaseTopModel
-        lease.calculate(InvoiceRunType.NORMAL_RUN, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), null);
+        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, new LocalDate(2010, 10, 1), new LocalDate(2010, 10, 1), null);
         assertThat(leaseTopModelServiceChargeTerm0.getInvoiceItems().size(), is(2)); // the
                                                                                      // previous
                                                                                      // test
