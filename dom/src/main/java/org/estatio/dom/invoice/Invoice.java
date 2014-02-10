@@ -109,19 +109,42 @@ import org.estatio.dom.party.Party;
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE status == :status " +
-                        "ORDER BY invoiceNumber")
+                        "ORDER BY invoiceNumber"),
+        @javax.jdo.annotations.Query(
+                name = "findByLease", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE lease == :lease ")
 })
 @Bookmarkable
 public class Invoice extends EstatioMutableObject<Invoice> {
 
     public Invoice() {
-        super("invoiceNumber");
+        super("invoiceNumber, collectionNumber, buyer, dueDate, lease, uuid");
+    }
+
+    private String uuid;
+
+    @Hidden
+    @Optional
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
     }
 
     // //////////////////////////////////////
 
     public String title() {
-        return String.format("*%08d", Integer.parseInt(getId()));
+        if (getInvoiceNumber() != null) {
+            return String.format("Invoice %s", getInvoiceNumber());
+        }
+        if (getCollectionNumber() != null) {
+            return String.format("Collection %s", getCollectionNumber());
+        }
+        return String.format("Temp *%08d", Integer.parseInt(getId()));
     }
 
     // //////////////////////////////////////
@@ -370,19 +393,10 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     // //////////////////////////////////////
 
     @Bulk
-    public Invoice collect() {
-
-        // bulk action, so need these guards
-        if (hideCollect()) {
-            return this;
-        }
-        if (disableCollect() != null) {
-            return this;
-        }
-        final Numerator numerator = invoices.findCollectionNumberNumerator();
-        setCollectionNumber(numerator.increment());
-        this.setStatus(InvoiceStatus.COLLECTED);
-        return this;
+    public Invoice collect(
+            final @Named("Are you sure?") Boolean confirm
+            ) {
+        return doCollect();
     }
 
     public boolean hideCollect() {
@@ -390,7 +404,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         return !getPaymentMethod().isDirectDebit();
     }
 
-    public String disableCollect() {
+    public String disableCollect(Boolean confirm) {
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
@@ -399,9 +413,9 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
-        if (getStatus() != InvoiceStatus.APPROVED) {
-            return "Must be in status of 'approved'";
-        }
+        // if (getStatus() != InvoiceStatus.APPROVED) {
+        // return "Must be in status of 'approved'";
+        // }
         if (getLease() == null) {
             return "No lease related to invoice";
         }
@@ -411,18 +425,44 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         return null;
     }
 
+    @Programmatic
+    public Invoice doCollect() {
+        if (hideCollect()) {
+            return this;
+        }
+        if (disableCollect(true) != null) {
+            return this;
+        }
+        final Numerator numerator = invoices.findCollectionNumberNumerator();
+        setCollectionNumber(numerator.increment());
+        this.setStatus(InvoiceStatus.COLLECTED);
+        return this;
+    }
+
     // //////////////////////////////////////
 
-    @Bulk
-    public Invoice invoiceNow() {
-        return invoiceOn(getClockService().now());
+    public Invoice invoice(
+            final @Named("Invoice date") LocalDate invoiceDate,
+            final @Named("Are you sure?") Boolean confirm) {
+        return doInvoice(invoiceDate);
     }
 
-    public boolean hideInvoiceNow() {
-        return false; // TODO: return true if action is hidden, false if visible
+    @Programmatic
+    public Invoice doInvoice(
+            final @Named("Invoice date") LocalDate invoiceDate) {
+        // bulk action, so need these guards
+        if (disableInvoice(invoiceDate, true) != null) {
+            return this;
+        }
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
+        setInvoiceNumber(numerator.increment());
+        setInvoiceDate(invoiceDate);
+        this.setStatus(InvoiceStatus.INVOICED);
+        informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
+        return this;
     }
 
-    public String disableInvoiceNow() {
+    public String disableInvoice(final LocalDate invoiceDate, Boolean confirm) {
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
@@ -437,20 +477,6 @@ public class Invoice extends EstatioMutableObject<Invoice> {
             return "Must be in status of 'collected'";
         }
         return null;
-    }
-
-    @Programmatic
-    public Invoice invoiceOn(final LocalDate invoiceDate) {
-        // bulk action, so need these guards
-        if (disableInvoiceNow() != null) {
-            return this;
-        }
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
-        setInvoiceNumber(numerator.increment());
-        setInvoiceDate(invoiceDate);
-        this.setStatus(InvoiceStatus.INVOICED);
-        informUser("Assigned " + this.getCollectionNumber() + " to invoice " + getContainer().titleOf(this));
-        return this;
     }
 
     // //////////////////////////////////////
@@ -488,7 +514,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     @Bulk
     @ActionSemantics(Of.IDEMPOTENT)
     public Invoice submitToCoda() {
-        collect();
+        doCollect();
         return this;
     }
 

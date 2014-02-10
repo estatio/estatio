@@ -97,9 +97,8 @@ public class InvoiceTest_assignInvoiceNumber {
         allowingMockInvoicesRepoToReturn(numerator);
         invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
 
-        assertThat(invoice.hideInvoiceNow(), is(false));
-        assertThat(invoice.disableInvoiceNow(), is(nullValue()));
-        invoice.invoiceNow();
+        assertThat(invoice.disableInvoice(null, true), is(nullValue()));
+        invoice.doInvoice(mockClockService.now());
 
         assertThat(invoice.getInvoiceNumber(), is("XXX-00011"));
         assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
@@ -111,9 +110,8 @@ public class InvoiceTest_assignInvoiceNumber {
         invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
         invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
-        assertThat(invoice.hideInvoiceNow(), is(false));
-        assertThat(invoice.disableInvoiceNow(), is("Invoice number already assigned"));
-        invoice.invoiceNow();
+        assertThat(invoice.disableInvoice(null, true), is("Invoice number already assigned"));
+        invoice.doInvoice(mockClockService.now());
 
         assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
     }
@@ -124,10 +122,9 @@ public class InvoiceTest_assignInvoiceNumber {
         allowingMockInvoicesRepoToReturn(null);
         invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
 
-        assertThat(invoice.hideInvoiceNow(), is(false));
-        assertThat(invoice.disableInvoiceNow(), is("No 'invoice number' numerator found for invoice's property"));
+        assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
 
-        invoice.invoiceNow();
+        invoice.doInvoice(mockClockService.now());
         assertThat(invoice.getInvoiceNumber(), is(nullValue()));
     }
 
@@ -137,10 +134,9 @@ public class InvoiceTest_assignInvoiceNumber {
         allowingMockInvoicesRepoToReturn(null);
         invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
-        assertThat(invoice.hideInvoiceNow(), is(false));
-        assertThat(invoice.disableInvoiceNow(), is("No 'invoice number' numerator found for invoice's property"));
+        assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
 
-        invoice.invoiceNow();
+        invoice.doInvoice(mockClockService.now());
         assertThat(invoice.getInvoiceNumber(), is(nullValue()));
     }
 

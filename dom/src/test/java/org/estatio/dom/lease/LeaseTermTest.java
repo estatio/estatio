@@ -144,7 +144,6 @@ public class LeaseTermTest {
         item2.modifyLeaseTerm(term);
         item2.setStartDate(interval.startDate());
 
-        Assert.assertThat(term.invoicedValueFor(interval), Is.is(new BigDecimal("2468.90")));
     }
 
     @Test

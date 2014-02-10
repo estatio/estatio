@@ -54,8 +54,6 @@ import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
@@ -435,59 +433,6 @@ public abstract class LeaseTerm
             getContainer().remove(this);
         }
         return success;
-    }
-
-    @Programmatic
-    public void removeUnapprovedInvoiceItemsForDate(LocalDateInterval interval) {
-        List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseTermAndInterval(this, interval);
-        for (InvoiceItemForLease invoiceItem : invoiceItems) {
-            Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW)) ) {
-                remove(invoiceItem);
-            }
-        }
-        getContainer().flush();
-    }
-
-    @Programmatic
-    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(
-            final LocalDateInterval invoiceInterval,
-            final LocalDate dueDate) {
-        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(invoiceInterval, dueDate);
-        if (ii == null) {
-            ii = invoiceItemsForLease.newInvoiceItem(this, invoiceInterval, dueDate);
-        }
-        return ii;
-    }
-
-    @Programmatic
-    public InvoiceItemForLease findUnapprovedInvoiceItemFor(
-            final LocalDateInterval invoiceInterval,
-            final LocalDate dueDate) {
-
-        List<InvoiceItemForLease> invoiceItems =
-                invoiceItemsForLease.findByLeaseTermAndIntervalAndDueDateAndStatus(
-                        this, invoiceInterval, dueDate, InvoiceStatus.NEW);
-        if (invoiceItems.size() > 0) {
-            // TODO: what should we do when we find more then one. Throw an
-            // error?
-            return invoiceItems.get(0);
-        }
-        return null;
-    }
-
-    @Programmatic
-    public BigDecimal invoicedValueFor(final LocalDateInterval interval) {
-        BigDecimal invoicedValue = new BigDecimal(0);
-
-        List<InvoiceItemForLease> items = invoiceItemsForLease.findByLeaseTermAndInterval(this, interval);
-        for (InvoiceItemForLease invoiceItem : items) {
-            Invoice invoice = invoiceItem.getInvoice();
-            if (invoice.getStatus() != InvoiceStatus.NEW) {
-                invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
-            }
-        }
-        return invoicedValue;
     }
 
     // //////////////////////////////////////

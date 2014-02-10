@@ -6,8 +6,6 @@ import java.util.concurrent.Callable;
 
 import com.google.common.collect.Maps;
 
-import org.estatio.dom.EstatioInteractionCache.CacheKey;
-
 
 public class EstatioInteractionCache {
 

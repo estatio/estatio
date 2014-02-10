@@ -26,6 +26,8 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 
 import org.estatio.dom.ApplicationSettingKey;
+import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.currency.Currency;
 
 /**
  * Estatio-specific settings (eg {@link ApplicationSettingKey#epochDate epoch
@@ -46,6 +48,18 @@ public class EstatioSettingsService {
     public final static String EPOCH_DATE_KEY = ApplicationSettingKey.epochDate.name();
 
     private LocalDate cachedEpochDate;
+
+    private Currency cachedCurrency;
+
+    @Hidden
+    public Currency systemCurrency() {
+        return currencies.findCurrency("EUR");
+//        if (cachedCurrency == null) {
+//            //TODO: Make system default currency configurable
+//            cachedCurrency = currencies.findCurrency("EUR");
+//        }
+//        return cachedCurrency;
+    }
 
     /**
      * @see ApplicationSettingKey#epochDate
@@ -103,6 +117,12 @@ public class EstatioSettingsService {
 
     public final void injectApplicationSettings(final ApplicationSettingsServiceForEstatio applicationSettings) {
         this.applicationSettingsService = applicationSettings;
+    }
+
+    private Currencies currencies;
+
+    public final void injectCurrencies(final Currencies currencies) {
+        this.currencies = currencies;
     }
 
 }

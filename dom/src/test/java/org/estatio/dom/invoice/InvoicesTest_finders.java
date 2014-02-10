@@ -38,6 +38,7 @@ import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
@@ -157,8 +158,11 @@ public class InvoicesTest_finders {
             public List<Invoice> findMatchingInvoices(Party seller, Party buyer, PaymentMethod paymentMethod, Lease lease, InvoiceStatus invoiceStatus, LocalDate dueDate) {
                 return Arrays.<Invoice>asList();
             }
+            @Override
+            public Invoice newInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease) {
+                return null;
+            }
         };
-        
         assertThat(invoices.findMatchingInvoice(null, null, null, null, null, null), is(nullValue()));
     }
 

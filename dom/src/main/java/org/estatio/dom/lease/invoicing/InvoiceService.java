@@ -47,10 +47,6 @@ public class InvoiceService {
         return invoiceSummaries.invoicesForPropertyDueDateStatus();
     }
 
-    public LocalDate default2CalculateInvoicesForProperty() {
-        return clockService.beginningOfNextQuarter();
-    }
-
     public LocalDate default3CalculateInvoicesForProperty() {
         return clockService.beginningOfNextQuarter();
     }
@@ -59,11 +55,16 @@ public class InvoiceService {
         return clockService.beginningOfNextQuarter();
     }
 
+    public LocalDate default5CalculateInvoicesForProperty() {
+        return clockService.beginningOfNextQuarter();
+    }
+
     public String validateCalculateInvoicesForProperty(
-            final Property property, 
-            final InvoiceRunType runType, 
-            final LocalDate dueDate, 
-            final LocalDate startDate, 
+            final Property property,
+            final InvoiceRunType runType,
+            final InvoiceCalculationSelection calculationSelection,
+            final LocalDate dueDate,
+            final LocalDate startDate,
             final LocalDate endDate) {
         if (endDate.compareTo(startDate) < 0) {
             return "End date is before start date";
@@ -83,10 +84,10 @@ public class InvoiceService {
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-        
+
         try {
             EstatioInteractionCache.startInteraction();
-            
+
             final List<Lease> results = leases.findLeases(referenceOrName);
             for (Lease lease : results) {
                 if (lease.getStatus() != LeaseStatus.SUSPENDED) {
@@ -99,15 +100,28 @@ public class InvoiceService {
         }
     }
 
-    public LocalDate default2CalculateInvoicesForLeases() {
-        return clockService.beginningOfNextQuarter();
+    public String validateCalculateInvoicesForLeases(
+            final String referenceOrName,
+            final InvoiceRunType runType,
+            final InvoiceCalculationSelection calculationSelection,
+            final LocalDate dueDate,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (endDate.compareTo(startDate) < 0) {
+            return "End date is before start date";
+        }
+        return null;
     }
-
+    
     public LocalDate default3CalculateInvoicesForLeases() {
         return clockService.beginningOfNextQuarter();
     }
 
     public LocalDate default4CalculateInvoicesForLeases() {
+        return clockService.beginningOfNextQuarter();
+    }
+
+    public LocalDate default5CalculateInvoicesForLeases() {
         return clockService.beginningOfNextQuarter();
     }
 

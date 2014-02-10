@@ -130,10 +130,10 @@ public enum InvoicingFrequency {
 
     public List<InvoicingInterval> intervalsInDueDateRange(final LocalDate periodStartDate, final LocalDate periodEndDate) {
         List<InvoicingInterval> invoicingIntervals = new ArrayList<InvoicingInterval>();
-        if (periodEndDate.compareTo(periodStartDate) >= 0) {
+        if (periodEndDate.compareTo(periodStartDate) > 0) {
             for (Interval interval : CalendarUtils.intervalsInRange(periodStartDate, periodEndDate, this.rrule)) {
                 LocalDate dueDate = dueDateOfInterval(interval);
-                if (dueDate.compareTo(periodEndDate) <= 0) {
+                if (dueDate.compareTo(periodEndDate) < 0) {
                     invoicingIntervals.add(new InvoicingInterval(interval, dueDate));
                 }
             }

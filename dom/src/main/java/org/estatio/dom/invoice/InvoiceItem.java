@@ -81,7 +81,21 @@ public class InvoiceItem
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
 
     public InvoiceItem() {
-        super("invoice, startDate desc nullsLast, charge, description, sequence");
+        super("invoice, charge, startDate desc nullsLast, description, grossAmount, uuid");
+    }
+
+    // TODO: added a uuid since there can be similar invoice items having a
+    // different source (leaseTerm)
+    private String uuid;
+
+    @Hidden
+    @Optional
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(final String uuid) {
+        this.uuid = uuid;
     }
 
     // //////////////////////////////////////
@@ -252,6 +266,7 @@ public class InvoiceItem
 
     @Disabled
     @Optional
+    @Hidden(where = Where.PARENTED_TABLES)
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -267,6 +282,7 @@ public class InvoiceItem
 
     @Disabled
     @Optional
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -277,14 +293,30 @@ public class InvoiceItem
 
     // //////////////////////////////////////
 
-    @Hidden(where = Where.PARENTED_TABLES)
+    @javax.jdo.annotations.Persistent
+    private LocalDate effectiveStartDate;
+
+    @Disabled
+    @Optional
     public LocalDate getEffectiveStartDate() {
-        return getEffectiveInterval().startDate();
+        return this.effectiveStartDate;
     }
 
-    @Hidden(where = Where.PARENTED_TABLES)
+    public void setEffectiveStartDate(final LocalDate effectiveStartDate) {
+        this.effectiveStartDate = effectiveStartDate;
+    }
+
+    @javax.jdo.annotations.Persistent
+    private LocalDate effectiveEndDate;
+
+    @Disabled
+    @Optional
     public LocalDate getEffectiveEndDate() {
-        return getEffectiveInterval().endDate();
+        return effectiveEndDate;
+    }
+
+    public void setEffectiveEndDate(final LocalDate effectiveEndDate) {
+        this.effectiveEndDate = effectiveEndDate;
     }
 
     // //////////////////////////////////////
@@ -298,7 +330,7 @@ public class InvoiceItem
     @Programmatic
     @Override
     public LocalDateInterval getEffectiveInterval() {
-        return getInterval();
+        return LocalDateInterval.including(getEffectiveStartDate(), getEffectiveEndDate());
     }
 
     // //////////////////////////////////////

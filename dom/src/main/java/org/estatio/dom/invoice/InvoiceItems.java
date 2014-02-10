@@ -36,7 +36,7 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
     public InvoiceItems() {
         super(InvoiceItems.class, InvoiceItem.class);
     }
-    
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
@@ -47,15 +47,16 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
         InvoiceItem invoiceItem = newTransientInstance();
         invoiceItem.setInvoice(invoice);
         invoiceItem.setDueDate(dueDate);
+        invoiceItem.setUuid(java.util.UUID.randomUUID().toString());
         persistIfNotAlready(invoiceItem);
         return invoiceItem;
     }
 
     // //////////////////////////////////////
-    
+
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Invoices", sequence = "99")
+    @MemberOrder(name = "Invoices", sequence = "99")
     public List<InvoiceItem> allInvoiceItems() {
         return allInstances();
     }

@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
 
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
@@ -66,22 +65,6 @@ public class InvoiceItemsForLeaseTest_finders {
                 return null;
             }
         };
-    }
-
-    @Test
-    public void findInvoiceItemsByLease() {
-        
-        invoiceItems.findInvoiceItemsByLease("*REF?1*", startDate, dueDate);
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-        
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(InvoiceItemForLease.class));
-        assertThat(finderInteraction.getQueryName(), is("findByLeaseAndStartDateAndDueDate"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("leaseReferenceOrName"), is((Object)"(?i).*REF.1.*"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object)startDate));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("dueDate"), is((Object)dueDate));
-        
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
     }
 
     @Test

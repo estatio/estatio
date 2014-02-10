@@ -24,19 +24,6 @@
     {
       "span": 4,
       "memberGroups": {
-        "Amounts": {
-          "members": {
-            "netAmount": {},
-            "vatAmount": {},
-            "tax": {},
-            "grossAmount": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
         "Dates": {
           "members": {
             "dueDate": {},
@@ -44,6 +31,19 @@
             "endDate": {},
             "effectiveStartDate": {},
             "effectiveEndDate": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Amounts": {
+          "members": {
+            "netAmount": {},
+            "vatAmount": {},
+            "tax": {},
+            "grossAmount": {}
           }
         }
       }

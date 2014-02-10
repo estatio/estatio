@@ -109,7 +109,7 @@ public class InvoiceTest_collect {
         
         assertThat(invoice.hideCollect(), is(false));
         assertNull(invoice.disableCollect());
-        invoice.collect();
+        invoice.doCollect();
 
         assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
     }
@@ -123,7 +123,7 @@ public class InvoiceTest_collect {
         
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
-        invoice.collect();
+        invoice.doCollect();
         assertNull(invoice.getCollectionNumber());
     }
     
@@ -137,7 +137,7 @@ public class InvoiceTest_collect {
 
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(), is("Collection number already assigned"));
-        invoice.collect();
+        invoice.doCollect();
 
         assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
     }
@@ -152,7 +152,7 @@ public class InvoiceTest_collect {
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(), is("No 'collection number' numerator found for invoice's property"));
 
-        invoice.collect();
+        invoice.doCollect();
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
 
@@ -166,7 +166,7 @@ public class InvoiceTest_collect {
         assertThat(invoice.hideCollect(), is(true));
         assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
 
-        invoice.collect();
+        invoice.doCollect();
 
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }
@@ -178,9 +178,9 @@ public class InvoiceTest_collect {
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
         assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(), is("Must be in status of 'approved'"));
+        assertThat(invoice.disableCollect(), is("No lease related to invoice"));
 
-        invoice.collect();
+        invoice.doCollect();
 
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
     }

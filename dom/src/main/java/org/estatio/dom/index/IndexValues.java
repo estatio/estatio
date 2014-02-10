@@ -34,7 +34,6 @@ import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.EstatioInteractionCache;
-import org.estatio.dom.lease.invoicing.InvoiceService;
 
 /**
  * Domain service acting as a repository of {@link IndexValue}s.

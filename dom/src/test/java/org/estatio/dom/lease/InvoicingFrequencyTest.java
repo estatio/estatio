@@ -27,8 +27,15 @@ public class InvoicingFrequencyTest {
     }
     @Test
     public void intervalsInDueDateRange() {
-        List<InvoicingInterval> intervalsInDueDateRange = InvoicingFrequency.QUARTERLY_IN_ADVANCE.intervalsInDueDateRange(new LocalDate(2012,1,1), new LocalDate(2014,4,1));
-        assertThat(intervalsInDueDateRange.size(), is(9));
+        dueDateRangeTester("2012-01-01", "2014-04-01", 9);
+        dueDateRangeTester("2013-12-31", "2014-04-01", 2);
+        dueDateRangeTester("2013-12-30", "2013-12-31", 1);
+        dueDateRangeTester("2014-01-01", "2014-01-01", 0);
+    }
+
+    public void dueDateRangeTester(String start, String end, int result) {
+        List<InvoicingInterval> intervalsInDueDateRange = InvoicingFrequency.QUARTERLY_IN_ADVANCE.intervalsInDueDateRange(new LocalDate(start), new LocalDate(end));
+        assertThat(intervalsInDueDateRange.size(), is(result));
     }
 
 }

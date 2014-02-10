@@ -26,11 +26,7 @@ public class CurrencyFixture extends AbstractFixture {
 
     @Override
     public void install() {
-        createCurrency("EUR", "Euro");
-    }
-
-    private void createCurrency(String reference, String description) {
-        currencies.newCurrency(reference, description);
+        currencies.newCurrency("EUR", "Euro");
     }
 
     // //////////////////////////////////////

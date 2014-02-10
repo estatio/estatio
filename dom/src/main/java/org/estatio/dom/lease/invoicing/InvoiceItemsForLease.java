@@ -18,6 +18,7 @@
  */
 package org.estatio.dom.lease.invoicing;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -30,9 +31,12 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
@@ -46,10 +50,17 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Programmatic
     public InvoiceItemForLease newInvoiceItem(
-            final LeaseTerm leaseTerm, 
-            final LocalDateInterval interval, 
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval interval,
             final LocalDate dueDate) {
+        Lease lease = leaseTerm.getLeaseItem().getLease();
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(
+                leaseTerm.getLeaseItem().getPaymentMethod(),
+                lease, 
+                InvoiceStatus.NEW, 
+                dueDate);
         InvoiceItemForLease invoiceItem = newTransientInstance();
+        invoiceItem.setInvoice(invoice);
         invoiceItem.setStartDate(interval.startDate());
         invoiceItem.setEndDate(interval.endDate());
         invoiceItem.setDueDate(dueDate);
@@ -59,25 +70,6 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     }
 
     // //////////////////////////////////////
-
-    /**
-     * 
-     * @param leaseReference
-     *            - not a <tt>Lease</tt>, because reference supports wildcards;
-     *            there could be multiple leases to find.
-     */
-    @ActionSemantics(Of.SAFE)
-    @Hidden
-    public List<InvoiceItemForLease> findInvoiceItemsByLease(
-            final String leaseReferenceOrName,
-            final LocalDate startDate,
-            final LocalDate dueDate) {
-        return allMatches(
-                "findByLeaseAndStartDateAndDueDate",
-                "leaseReferenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(leaseReferenceOrName),
-                "startDate", startDate,
-                "dueDate", dueDate);
-    }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
@@ -106,6 +98,40 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
                 "startDate", interval.startDate(),
                 "endDate", interval.endDate());
     }
+
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<InvoiceItemForLease> findByLeaseAndInvoiceStatus(
+            final Lease lease,
+            final InvoiceStatus invoiceStatus) {
+        return allMatches(
+                "findByLeaseAndInvoiceStatus",
+                "lease", lease,
+                "invoiceStatus", invoiceStatus);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<InvoiceItemForLease> findByLeaseItemAndInvoiceStatus(
+            final LeaseItem leaseItem,
+            final InvoiceStatus invoiceStatus) {
+        return allMatches(
+                "findByLeaseItemAndInvoiceStatus",
+                "leaseItem", leaseItem,
+                "invoiceStatus", invoiceStatus);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<InvoiceItemForLease> findByLeaseTermAndInvoiceStatus(
+            final LeaseTerm leaseTerm,
+            final InvoiceStatus invoiceStatus) {
+        return allMatches(
+                "findByLeaseTermAndInvoiceStatus",
+                "leaseTerm", leaseTerm,
+                "invoiceStatus", invoiceStatus);
+    }
+
     // //////////////////////////////////////
 
     @Prototype
@@ -113,6 +139,71 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     @MemberOrder(name = "Invoices", sequence = "99")
     public List<InvoiceItemForLease> allInvoiceItems() {
         return allInstances();
+    }
+
+    @Programmatic
+    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval invoiceInterval,
+            final LocalDate dueDate) {
+        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(leaseTerm, invoiceInterval, dueDate);
+        if (ii == null) {
+            ii = newInvoiceItem(leaseTerm, invoiceInterval, dueDate);
+        }
+        return ii;
+    }
+
+    @Programmatic
+    public InvoiceItemForLease findUnapprovedInvoiceItemFor(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval invoiceInterval,
+            final LocalDate dueDate) {
+
+        List<InvoiceItemForLease> invoiceItems =
+                findByLeaseTermAndIntervalAndDueDateAndStatus(
+                        leaseTerm, invoiceInterval, dueDate, InvoiceStatus.NEW);
+        if (invoiceItems.size() > 0) {
+            // TODO: what should we do when we find more then one. Throw an
+            // error?
+            return invoiceItems.get(0);
+        }
+        return null;
+    }
+
+    @Programmatic
+    public BigDecimal invoicedValueFor(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval interval) {
+        BigDecimal invoicedValue = new BigDecimal(0);
+
+        List<InvoiceItemForLease> items = findByLeaseTermAndInterval(leaseTerm, interval);
+        for (InvoiceItemForLease invoiceItem : items) {
+            Invoice invoice = invoiceItem.getInvoice();
+            if (invoice.getStatus() != InvoiceStatus.NEW) {
+                invoicedValue = invoicedValue.add(invoiceItem.getNetAmount());
+            }
+        }
+        return invoicedValue;
+    }
+
+    @Programmatic
+    public void removeUnapprovedInvoiceItemsForDate(LeaseTerm leaseTerm, LocalDateInterval interval) {
+        List<InvoiceItemForLease> invoiceItems = findByLeaseTermAndInterval(leaseTerm, interval);
+        for (InvoiceItemForLease invoiceItem : invoiceItems) {
+            Invoice invoice = invoiceItem.getInvoice();
+            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW))) {
+                invoiceItem.remove();
+            }
+        }
+        getContainer().flush();
+    }
+
+    // //////////////////////////////////////
+
+    private Invoices invoices;
+
+    public void injectInvoices(final Invoices invoices) {
+        this.invoices = invoices;
     }
 
 }

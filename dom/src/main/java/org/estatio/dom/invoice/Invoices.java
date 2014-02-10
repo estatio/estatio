@@ -41,7 +41,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.ValueUtils;
+import org.estatio.services.settings.EstatioSettingsService;
 
 public class Invoices extends EstatioDomainService<Invoice> {
 
@@ -124,15 +124,15 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Currency currency
             ) {
-        return newInvoice(lease.getSecondaryParty(), lease.getPrimaryParty(), paymentMethod, currency, dueDate, lease);
+        return newInvoice(lease.getPrimaryParty(), lease.getSecondaryParty(), paymentMethod, currency, dueDate, lease);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public Invoice newInvoice(
-            final @Named("Buyer") Party buyer,
             final @Named("Seller") Party seller,
+            final @Named("Buyer") Party buyer,
             final PaymentMethod paymentMethod,
             final Currency currency,
             final @Named("Due date") LocalDate dueDate,
@@ -146,11 +146,24 @@ public class Invoices extends EstatioDomainService<Invoice> {
         invoice.setCurrency(currency);
         invoice.setLease(lease);
         invoice.setDueDate(dueDate);
+        invoice.setUuid(java.util.UUID.randomUUID().toString());
         persistIfNotAlready(invoice);
+        getContainer().flush();
         return invoice;
     }
 
-    @Hidden
+    @Programmatic
+    public Invoice findOrCreateMatchingInvoice(
+            final PaymentMethod paymentMethod,
+            final Lease lease,
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dueDate) {
+        Party buyer = lease.getSecondaryParty();
+        Party seller = lease.getPrimaryParty();
+        return findOrCreateMatchingInvoice(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+    }
+
+    @Programmatic
     public Invoice findMatchingInvoice(
             final Party seller,
             final Party buyer,
@@ -160,11 +173,26 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final LocalDate dueDate) {
         final List<Invoice> invoices = findMatchingInvoices(
                 seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
-        return ValueUtils.firstElseNull(invoices);
-        
-        
-        
-        
+        if (invoices == null || invoices.size() == 0) {
+            return null;
+        }
+        return invoices.get(0);
+    }
+    
+    @Programmatic
+    public Invoice findOrCreateMatchingInvoice(
+            final Party seller,
+            final Party buyer,
+            final PaymentMethod paymentMethod,
+            final Lease lease,
+            final InvoiceStatus invoiceStatus,
+            final LocalDate dueDate) {
+        final List<Invoice> invoices = findMatchingInvoices(
+                seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+        if (invoices == null || invoices.size() == 0) {
+            return newInvoice(seller, buyer, paymentMethod, settings.systemCurrency(), dueDate, lease);
+        }
+        return invoices.get(0);
     }
 
     @Hidden
@@ -183,6 +211,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
                 "lease", lease,
                 "status", invoiceStatus,
                 "dueDate", dueDate);
+    }
+
+    // //////////////////////////////////////
+
+    @Named("Invoices for lease")
+    public List<Invoice> findInvoices(final Lease lease) {
+        return allMatches("findByLease", "lease", lease);
     }
 
     // //////////////////////////////////////
@@ -261,4 +296,9 @@ public class Invoices extends EstatioDomainService<Invoice> {
         this.numerators = numerators;
     }
 
+    private EstatioSettingsService settings;
+
+    public void injectSettings(final EstatioSettingsService settings) {
+        this.settings = settings;
+    }
 }

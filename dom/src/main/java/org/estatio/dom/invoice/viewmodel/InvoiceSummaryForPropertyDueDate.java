@@ -100,17 +100,21 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
         return this;
     }
 
-    public Object collect() {
+    public Object collect(
+            final @Named("Are you sure?") Boolean confirm
+            ) {
         for (Invoice invoice : getInvoices()) {
-            invoice.collect();
+            invoice.doCollect();
         }
         return this;
     }
 
     public Object invoice(
-            final @Named("Invoice Date") LocalDate invoiceDate) {
+            final @Named("Invoice Date") LocalDate invoiceDate,
+            final @Named("Are you sure?") Boolean confirm
+            ) {
         for (Invoice invoice : getInvoices()) {
-            invoice.invoiceOn(invoiceDate);
+            invoice.doInvoice(invoiceDate);
         }
         return this;
     }

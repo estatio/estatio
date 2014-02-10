@@ -72,7 +72,7 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
 
     @Test
     public void findMatchingInvoice() throws Exception {
-        Invoice invoice = invoices.findMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
         Assert.assertNotNull(invoice);
     }
     

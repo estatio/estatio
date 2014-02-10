@@ -28,19 +28,12 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
@@ -53,14 +46,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
-        @javax.jdo.annotations.Query(
-                name = "findByLeaseAndStartDateAndDueDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease "
-                        + "WHERE (leaseTerm.leaseItem.lease.reference.matches(:leaseReferenceOrName) "
-                        + "    || leaseTerm.leaseItem.lease.name.matches(:leaseReferenceOrName)) "
-                        + "&& dueDate == :dueDate "
-                        + "&& startDate == :startDate"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseTermAndInterval", language = "JDOQL",
                 value = "SELECT " +
@@ -78,17 +63,28 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& dueDate == :dueDate " +
                         "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
-                name = "findByInvoiceAndLeaseTermAndEndDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease "
-                        + "WHERE invoice == :invoice "
-                        + "&& leaseTerm == :leaseTerm "
-                        + "&& endDate == :endDate")
+                name = "findByLeaseAndInvoiceStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm.leaseItem.lease == :lease " +
+                        "&& invoice.status == :invoiceStatus"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseItemAndInvoiceStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm.leaseItem == :leaseItem " +
+                        "&& invoice.status == :invoiceStatus"),
+        @javax.jdo.annotations.Query(
+                name = "findByLeaseTermAndInvoiceStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
+                        "WHERE leaseTerm == :leaseTerm " +
+                        "&& invoice.status == :invoiceStatus")
 })
 @Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
         members = { "leaseTerm", "startDate", "endDate", "dueDate" })
 public class InvoiceItemForLease extends InvoiceItem {
-    
+
     private LeaseTerm leaseTerm;
 
     // REVIEW: this is optional because of the #remove() method,
@@ -132,40 +128,6 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Programmatic
     public LocalDateInterval getEffectiveInterval() {
         return getInterval().overlap(getLeaseTerm().getEffectiveInterval());
-    }
-
-    // //////////////////////////////////////
-
-    @Hidden
-    public void attachToInvoice() {
-        final Lease lease = getLeaseTerm().getLeaseItem().getLease();
-        if (lease == null) {
-            return;
-        }
-        final AgreementRoleType landlord = agreementRoleTypes.findByTitle(LeaseConstants.ART_LANDLORD);
-        final AgreementRoleType tenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
-
-        final AgreementRole role = lease.findRoleWithType(landlord, getDueDate());
-        final Party seller = role.getParty();
-        final Party buyer = lease.findRoleWithType(tenant, getDueDate()).getParty();
-        final PaymentMethod paymentMethod = getLeaseTerm().getLeaseItem().getPaymentMethod();
-        Invoice invoice = invoices.findMatchingInvoice(
-                seller, buyer, paymentMethod, lease, InvoiceStatus.NEW, getDueDate());
-        if (invoice == null) {
-            invoice = createInvoice(seller, buyer, paymentMethod, lease);
-        }
-        setSequence(invoice.nextItemSequence());
-        this.setInvoice(invoice);
-    }
-
-    private Invoice createInvoice(
-            final Party seller,
-            final Party buyer,
-            final PaymentMethod paymentMethod,
-            final Lease lease) {
-        Invoice invoice;
-        invoice = invoices.newInvoice(buyer, seller, paymentMethod, null, getDueDate(), lease);
-        return invoice;
     }
 
     // //////////////////////////////////////
