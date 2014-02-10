@@ -33,11 +33,13 @@ import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
 
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
+import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.fixturescripts.FixtureScript;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
@@ -50,6 +52,7 @@ public class EstatioAdministrationService {
             final @Named("Epoch Date") @Optional LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
     }
+
     public LocalDate default0UpdateEpochDate() {
         return settingsService.fetchEpochDate();
     }
@@ -62,7 +65,6 @@ public class EstatioAdministrationService {
         return settingsService.listAll();
     }
 
-    
     // //////////////////////////////////////
 
     @Prototype
@@ -75,7 +77,7 @@ public class EstatioAdministrationService {
     public String disableInstallDemoFixtures() {
         return !propertiesService.allProperties().isEmpty() ? "Demo fixtures already installed" : null;
     }
-    
+
     // //////////////////////////////////////
 
     @Prototype
@@ -104,7 +106,6 @@ public class EstatioAdministrationService {
 
     // //////////////////////////////////////
 
-
     @MemberOrder(sequence = "9")
     @Prototype
     public Object runScript(FixtureScript fixtureScript) {
@@ -115,6 +116,17 @@ public class EstatioAdministrationService {
         return FixtureScript.CreateBreakOptions;
     }
 
+    // //////////////////////////////////////
+
+    @MemberOrder(sequence = "9")
+    @Prototype
+    public void createRetroInvoices(
+            final Property property,
+            final @Named("Start due date") LocalDate startDueDate,
+            final @Named("Next due date") LocalDate nextDueDate) {
+        CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        creator.create(property, startDueDate, nextDueDate);
+    }
 
     // //////////////////////////////////////
 
@@ -151,7 +163,7 @@ public class EstatioAdministrationService {
     }
 
     private Invoices invoices;
-    
+
     public void injectInvoices(Invoices invoices) {
         this.invoices = invoices;
     }

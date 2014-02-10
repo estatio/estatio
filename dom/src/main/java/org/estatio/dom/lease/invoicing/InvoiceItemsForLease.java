@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
@@ -56,8 +57,8 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
         Lease lease = leaseTerm.getLeaseItem().getLease();
         Invoice invoice = invoices.findOrCreateMatchingInvoice(
                 leaseTerm.getLeaseItem().getPaymentMethod(),
-                lease, 
-                InvoiceStatus.NEW, 
+                lease,
+                InvoiceStatus.NEW,
                 dueDate);
         InvoiceItemForLease invoiceItem = newTransientInstance();
         invoiceItem.setInvoice(invoice);
@@ -162,9 +163,10 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
         List<InvoiceItemForLease> invoiceItems =
                 findByLeaseTermAndIntervalAndDueDateAndStatus(
                         leaseTerm, invoiceInterval, dueDate, InvoiceStatus.NEW);
-        if (invoiceItems.size() > 0) {
-            // TODO: what should we do when we find more then one. Throw an
-            // error?
+        if (invoiceItems.size() > 1) {
+            throw new ApplicationException("Found more then one unapproved invoice items for" + leaseTerm.toString());
+        }
+        if (invoiceItems.size() == 1) {
             return invoiceItems.get(0);
         }
         return null;

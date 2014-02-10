@@ -27,6 +27,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 
 public class GenerateTopModelInvoice implements Callable<Object> {
 
@@ -46,7 +47,7 @@ public class GenerateTopModelInvoice implements Callable<Object> {
 
             for (LeaseTerm leaseTerm : terms) {
                 if (leaseTerm.getStartDate().equals(new LocalDate(2012, 7, 15))) {
-                    leaseTerm.calculate(new LocalDate(2013, 4, 1), new LocalDate(2013, 4, 1));
+                    leaseTerm.calculate(InvoiceRunType.NORMAL_RUN, new LocalDate(2013, 4, 1), new LocalDate(2013, 4, 1), new LocalDate(2013, 4, 1));
                 }
             }
         }

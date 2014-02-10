@@ -32,8 +32,9 @@ public enum FixtureScript {
     FixLeaseTerms(FixLeaseTerms.class),
     TruncateLeases(TruncateLeases.class),
     TruncateInvoices(TruncateInvoices.class),
-    CreateTaxItemsAndTerms(CreateTaxItemsAndTerms.class);
-    
+    CreateTaxItemsAndTerms(CreateTaxItemsAndTerms.class),
+    CreateRetroInvoices(CreateRetroInvoices.class);
+
     private Class<? extends Callable<Object>> cls;
 
     private FixtureScript(Class<? extends Callable<Object>> cls) {

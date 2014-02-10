@@ -437,14 +437,6 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Programmatic
-    @Deprecated
-    public LeaseTerm calculate(
-            final @Named("Period Start Date") LocalDate startDate,
-            final @Named("Due Date") LocalDate dueDate) {
-        return calculate(InvoiceRunType.NORMAL_RUN, dueDate, startDate, dueDate.plusDays(1));
-    }
-
     public LeaseTerm calculate(
             final @Named("Run Type") InvoiceRunType runType,
             final @Named("Invoice Due Date") LocalDate invoiceDueDate,

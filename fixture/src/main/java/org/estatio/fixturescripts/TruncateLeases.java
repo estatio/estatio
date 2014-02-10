@@ -27,18 +27,13 @@ public class TruncateLeases implements Callable<Object> {
     @Override
     public Object call() throws Exception {
 
-        deleteFrom("InvoiceItem");
-        deleteFrom("Invoice");
         deleteFrom("Lease");
-        deleteFrom("LeaseItem");
-        deleteFrom("LeaseTerm");
-        deleteFrom("LeaseItem");
- 
+
         return null;
     }
 
     private void deleteFrom(final String table) {
-        isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
+        isisJdoSupport.executeUpdate("TRUNCATE " + "\"" + table + "\" CASCADE");
     }
 
     private IsisJdoSupport isisJdoSupport;
