@@ -141,11 +141,12 @@ public class InvoiceCalculationService {
             final InvoicingFrequency invoicingFrequency,
             final InvoiceRunType runType) {
         final List<CalculationResult> results;
+        LocalDate termStartDate = leaseTerm.getStartDate();
         LocalDate start = startDueDate;
-        LocalDate end = nextDueDate == null ? startDueDate : nextDueDate;
-        if (runType.equals(InvoiceRunType.RETRO_RUN)) {
-            // Retro run only means re-calculate the term from the beginning
-            start = leaseTerm.getStartDate().compareTo(end) > 0 ? start : leaseTerm.getStartDate();
+        // Use the start date of the term when start due date is before or retro
+        // run
+        if (runType.equals(InvoiceRunType.RETRO_RUN) || startDueDate.compareTo(termStartDate) < 0) {
+            start = termStartDate;
         }
         results = calculateDueDateRange(leaseTerm, start, nextDueDate, invoicingFrequency);
         createInvoiceItems(leaseTerm, invoiceDueDate, results, invoicingFrequency);
@@ -182,7 +183,7 @@ public class InvoiceCalculationService {
                         overlap,
                         calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(nextDueDate.minusDays(1))),
                         calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(invoicingInterval.dueDate())),
-                        calculateValue(rangeFactor, annualFactor, epochDate == null || invoicingInterval.dueDate().compareTo(epochDate) >= 0 ? null : leaseTerm.valueForDate(epochDate))));
+                        calculateValue(rangeFactor, annualFactor, epochDate == null || invoicingInterval.dueDate().compareTo(epochDate) >= 0 ? null : leaseTerm.valueForDate(epochDate.minusDays(1)))));
             }
         }
         return results;
