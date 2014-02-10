@@ -108,7 +108,7 @@ public class InvoiceTest_collect {
         invoice.setLease(lease);
         
         assertThat(invoice.hideCollect(), is(false));
-        assertNull(invoice.disableCollect());
+        assertNull(invoice.disableCollect(true));
         invoice.doCollect();
 
         assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
@@ -122,7 +122,7 @@ public class InvoiceTest_collect {
         invoice.setLease(new Lease());
         
         assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
+        assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
         invoice.doCollect();
         assertNull(invoice.getCollectionNumber());
     }
@@ -136,7 +136,7 @@ public class InvoiceTest_collect {
         invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
 
         assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(), is("Collection number already assigned"));
+        assertThat(invoice.disableCollect(true), is("Collection number already assigned"));
         invoice.doCollect();
 
         assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
@@ -150,7 +150,7 @@ public class InvoiceTest_collect {
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
         assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(), is("No 'collection number' numerator found for invoice's property"));
+        assertThat(invoice.disableCollect(true), is("No 'collection number' numerator found for invoice's property"));
 
         invoice.doCollect();
         assertThat(invoice.getCollectionNumber(), is(nullValue()));
@@ -164,7 +164,7 @@ public class InvoiceTest_collect {
         invoice.setLease(new Lease());
 
         assertThat(invoice.hideCollect(), is(true));
-        assertThat(invoice.disableCollect(), is("No mandate assigned to invoice's lease"));
+        assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
 
         invoice.doCollect();
 
@@ -178,7 +178,7 @@ public class InvoiceTest_collect {
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
         assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(), is("No lease related to invoice"));
+        assertThat(invoice.disableCollect(true), is("No lease related to invoice"));
 
         invoice.doCollect();
 
