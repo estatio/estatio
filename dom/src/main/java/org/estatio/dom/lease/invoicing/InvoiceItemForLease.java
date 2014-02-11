@@ -25,6 +25,7 @@ import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
 
@@ -87,11 +88,6 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     private LeaseTerm leaseTerm;
 
-    // REVIEW: this is optional because of the #remove() method,
-    // also because the ordering of flushes in #attachToInvoice()
-    //
-    // suspect this should be mandatory, however (ie get rid of #remove(),
-    // and refactor #attachToInvoice())
     @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
@@ -121,7 +117,20 @@ public class InvoiceItemForLease extends InvoiceItem {
         }
         currentLeaseTerm.removeFromInvoiceItems(this);
     }
-
+    
+    // //////////////////////////////////////
+    
+    private Boolean adjustment;
+    
+    @Optional
+    public Boolean isAdjustment() {
+        return adjustment;
+    }
+    
+    public void setAdjustment(final Boolean adjustment) {
+        this.adjustment = adjustment;
+    }
+    
     // //////////////////////////////////////
 
     @Override

@@ -201,7 +201,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         // when
         leaseTopModelRentTerm.verifyUntil(new LocalDate(2014, 1, 1));
         // and when
-        test(leaseTopModelRentTerm, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 4239.13);
+        test(leaseTopModelRentTerm, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 4239.13, false);
     }
 
     // scenario: invoiceItemsForRentCreated
@@ -213,15 +213,15 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         // unapproved doesn't work
         LeaseTerm leaseTopModelRentTerm0 = (LeaseTerm) leaseTopModelRentItem.getTerms().first();
         // partial period
-        test(leaseTopModelRentTerm0, "2010-07-1", "2010-07-1", "2010-07-01/2010-10-01", 4239.13);
+        test(leaseTopModelRentTerm0, "2010-07-1", "2010-07-1", "2010-07-01/2010-10-01", 4239.13, false);
         // full term
-        test(leaseTopModelRentTerm0, "2010-10-01", "2010-10-02", "2010-10-01/2011-01-01", 5000.00);
+        test(leaseTopModelRentTerm0, "2010-10-01", "2010-10-02", "2010-10-01/2011-01-01", 5000.00, false);
         // invoice after effective date
-        test(leaseTopModelRentTerm0, "2010-10-01", "2011-04-02", "2010-10-01/2011-01-01", 5050.00);
+        test(leaseTopModelRentTerm0, "2010-10-01", "2011-04-02", "2010-10-01/2011-01-01", 5050.00, false);
         // invoice after effective date with mock
         estatioSettingsService.updateEpochDate(new LocalDate(2011, 1, 1));
 
-        test(leaseTopModelRentTerm0, "2010-10-01", "2011-04-2", "2010-10-01/2011-01-01", 50.00);
+        test(leaseTopModelRentTerm0, "2010-10-01", "2011-04-2", "2010-10-01/2011-01-01", 50.00, true);
 
         invoiceItemsForLease.removeUnapprovedInvoiceItemsForDate(leaseTopModelRentTerm0, LocalDateInterval.parseString("2010-10-01/2011-01-01"));
         estatioSettingsService.updateEpochDate(null);
@@ -239,23 +239,23 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         leaseTopModelServiceChargeTerm0.approve();
         // partial period
-        test(leaseTopModelServiceChargeTerm0, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 1271.74);
+        test(leaseTopModelServiceChargeTerm0, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 1271.74, false);
         // full period
 
-        test(leaseTopModelServiceChargeTerm0, "2010-01-10", "2010-10-02", "2010-10-01/2011-01-01", 1500.00);
+        test(leaseTopModelServiceChargeTerm0, "2010-01-10", "2010-10-02", "2010-10-01/2011-01-01", 1500.00, false);
         // reconcile with mock date
         estatioSettingsService.updateEpochDate(new LocalDate(2011, 1, 1));
 
-        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00);
+        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
 
-        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00);
+        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
 
         leaseTopModelServiceChargeTerm0.setAuditedValue(new BigDecimal(6600.00));
         leaseTopModelServiceChargeTerm0.verify();
-        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 150.00);
+        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 150.00, true);
         // reconcile without mock
         estatioSettingsService.updateEpochDate(new LocalDate(1980, 1, 1));
-        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 1650.00);
+        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 1650.00, false);
     }
 
     @Ignore
@@ -273,7 +273,8 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
             final String startDueDateStr,
             final String nextDueDateStr,
             final String intervalStr,
-            final Double value) {
+            final Double value,
+            final boolean expectedAdjustment) {
         final LocalDate startDueDate = LocalDate.parse(startDueDateStr);
         final LocalDate nextDueDate = LocalDate.parse(nextDueDateStr);
         final BigDecimal expected = value == null ? null : new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
@@ -281,8 +282,10 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItemFor(leaseTerm, LocalDateInterval.parseString(intervalStr), startDueDate);
 
         BigDecimal netAmount = invoiceItem == null ? new BigDecimal("0.00") : invoiceItem.getNetAmount();
-        assertThat("size "+invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size(),
+        Boolean adjustment = invoiceItem == null ? false : invoiceItem.isAdjustment();
+        assertThat("size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size(),
                 netAmount, is(expected));
+        assertThat(adjustment, is(expectedAdjustment));
     }
 
 }

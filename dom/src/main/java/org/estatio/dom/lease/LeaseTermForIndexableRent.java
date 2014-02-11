@@ -311,15 +311,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     public BigDecimal valueForDate(final LocalDate dueDate) {
         // use the indexed value on or after the effective date, use the base
         // otherwise
-
-        // TODO: doesn't smell well
-        if (getEffectiveDate() == null) {
-            return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
-        }
-        if (getStartDate().compareTo(getEffectiveDate()) == 0) {
-            return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
-        }
-        if (dueDate.compareTo(getEffectiveDate()) >= 0) {
+        if (getEffectiveDate() == null || dueDate.compareTo(getEffectiveDate()) >= 0) {
             return MathUtils.firstNonZero(getSettledValue(), getIndexedValue(), getBaseValue());
         }
         return MathUtils.firstNonZero(getBaseValue(), getSettledValue());

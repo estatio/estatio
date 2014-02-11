@@ -30,7 +30,8 @@
             "startDate": {},
             "endDate": {},
             "effectiveStartDate": {},
-            "effectiveEndDate": {}
+            "effectiveEndDate": {},
+            "adjustment": {}
           }
         }
       }

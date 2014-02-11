@@ -32,14 +32,12 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
-import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.settings.EstatioSettingsService;
 
@@ -145,7 +143,7 @@ public class InvoiceCalculationService {
         LocalDate start = startDueDate;
         // Use the start date of the term when start due date is before or retro
         // run
-        if (runType.equals(InvoiceRunType.RETRO_RUN) || startDueDate.compareTo(termStartDate) < 0) {
+        if (runType.equals(InvoiceRunType.RETRO_RUN)) {
             start = termStartDate;
         }
         results = calculateDueDateRange(leaseTerm, start, nextDueDate, invoicingFrequency);
@@ -245,46 +243,33 @@ public class InvoiceCalculationService {
             BigDecimal invoicedValue = invoiceItemsForLease.invoicedValueFor(leaseTerm, result.invoicingInterval());
             BigDecimal newValue = result.value().subtract(invoicedValue).subtract(result.mockValue());
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
-                createInvoiceItem(leaseTerm, dueDate, result, newValue);
+                boolean adjustment = invoicedValue.add(result.mockValue()).compareTo(BigDecimal.ZERO) != 0;
+                InvoiceItemForLease invoiceItem =
+                        invoiceItemsForLease.findOrCreateUnapprovedInvoiceItemFor(
+                                leaseTerm,
+                                result.invoicingInterval(),
+                                dueDate);
+                invoiceItem.setNetAmount(newValue);
+                invoiceItem.setQuantity(BigDecimal.ONE);
+                LeaseItem leaseItem = leaseTerm.getLeaseItem();
+                Charge charge = leaseItem.getCharge();
+                invoiceItem.setCharge(charge);
+                invoiceItem.setDescription(charge.getDescription());
+                invoiceItem.setDueDate(dueDate);
+                invoiceItem.setStartDate(result.invoicingInterval().startDate());
+                invoiceItem.setEndDate(result.invoicingInterval().endDate());
+                if (adjustment) {
+                    invoiceItem.setEffectiveStartDate(result.invoicingInterval().startDate());
+                    invoiceItem.setEffectiveEndDate(result.invoicingInterval().endDate());
+                } else {
+                    invoiceItem.setEffectiveStartDate(result.effectiveInterval().startDate());
+                    invoiceItem.setEffectiveEndDate(result.effectiveInterval().endDate());
+                }
+                invoiceItem.setTax(charge.getTax());
+                invoiceItem.verify();
+                invoiceItem.setAdjustment(adjustment);
             }
         }
-    }
-
-    /**
-     * Creates an invoice item
-     * 
-     * @param leaseTerm
-     * @param invoiceDueDate
-     * @param calculationResult
-     *            the result of the calculation of the lease term
-     * @param overrideValue
-     *            the value that overrides the calculation result usually based
-     *            on the already invoiced amounts
-     */
-    private void createInvoiceItem(
-            final LeaseTerm leaseTerm,
-            final LocalDate invoiceDueDate,
-            final CalculationResult calculationResult,
-            final BigDecimal overrideValue) {
-
-        InvoiceItemForLease invoiceItem =
-                invoiceItemsForLease.findOrCreateUnapprovedInvoiceItemFor(
-                        leaseTerm, calculationResult.invoicingInterval(), invoiceDueDate);
-        invoiceItem.setNetAmount(overrideValue);
-        invoiceItem.setQuantity(BigDecimal.ONE);
-        LeaseItem leaseItem = leaseTerm.getLeaseItem();
-        Charge charge = leaseItem.getCharge();
-        invoiceItem.setCharge(charge);
-        invoiceItem.setDescription(charge.getDescription());
-        invoiceItem.setDueDate(invoiceDueDate);
-        invoiceItem.setStartDate(calculationResult.invoicingInterval().startDate());
-        invoiceItem.setEndDate(calculationResult.invoicingInterval().endDate());
-        invoiceItem.setEffectiveStartDate(calculationResult.effectiveInterval().startDate());
-        invoiceItem.setEffectiveEndDate(calculationResult.effectiveInterval().endDate());
-        Tax tax = charge.getTax();
-        invoiceItem.setTax(tax);
-        invoiceItem.verify();
-
     }
 
     // //////////////////////////////////////
@@ -293,12 +278,6 @@ public class InvoiceCalculationService {
 
     public void setEstatioSettings(final EstatioSettingsService estatioSettings) {
         this.estatioSettingsService = estatioSettings;
-    }
-
-    private Invoices invoices;
-
-    public void injctInvoices(final Invoices invoices) {
-        this.invoices = invoices;
     }
 
     private InvoiceItemsForLease invoiceItemsForLease;

@@ -22,12 +22,14 @@
     {
       "span": 4,
       "memberGroups": {
-        "Amounts": {
+        "Dates": {
           "members": {
-            "netAmount": {},
-            "vatAmount": {},
-            "tax": {},
-            "grossAmount": {}
+            "dueDate": {},
+            "startDate": {},
+            "endDate": {},
+            "effectiveStartDate": {},
+            "effectiveEndDate": {},
+            "adjustment": {}
           }
         }
       }
@@ -35,13 +37,12 @@
     {
       "span": 4,
       "memberGroups": {
-        "Dates": {
+        "Amounts": {
           "members": {
-            "dueDate": {},
-            "startDate": {},
-            "endDate": {},
-            "effectiveStartDate": {},
-            "effectiveEndDate": {}
+            "netAmount": {},
+            "vatAmount": {},
+            "tax": {},
+            "grossAmount": {}
           }
         }
       }
