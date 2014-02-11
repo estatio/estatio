@@ -83,14 +83,14 @@ public abstract class Party
         super("name");
     }
 
-
     // //////////////////////////////////////
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = false)
     @Disabled
+    @Title(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -103,8 +103,8 @@ public abstract class Party
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.Party.NAME)
-    @Title
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Party.NAME)
+    @Title(sequence = "2", prepend = "-")
     public String getName() {
         return name;
     }
