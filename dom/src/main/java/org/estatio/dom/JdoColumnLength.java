@@ -137,6 +137,16 @@ public final class JdoColumnLength {
         public static final int INITIALS = 3;
     }
 
+    public final static class FinacialAccount {
+        private FinacialAccount() {
+        }
+        /**
+         * To store the IBAN code as reference we need to increase this
+         * 
+         */
+        public final static int REFERENCE = 34;
+    }
+
     public final static class BankAccount {
         private BankAccount() {
         }
@@ -144,9 +154,8 @@ public final class JdoColumnLength {
         /**
          * eg http://en.wikipedia.org/wiki/International_Bank_Account_Number
          * 
-         * max length currently is Malta, 31 chars.
          */
-        public final static int IBAN = 32;
+        public final static int IBAN = 34;
 
         /**
          * TODO: review
