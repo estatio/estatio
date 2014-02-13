@@ -40,6 +40,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @Hidden
@@ -166,9 +167,9 @@ public class InvoiceCalculationService {
             final InvoicingFrequency invoicingFrequency) {
         final List<CalculationResult> results = Lists.newArrayList();
         final LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
-        final List<InvoicingInterval> intervals = invoicingFrequency.intervalsInDueDateRange(startDueDate, nextDueDate);
-//                invoicingFrequency.intervalsInDueDateRange(
-//                        new LocalDateInterval(startDueDate, nextDueDate), termInterval);
+        final List<InvoicingInterval> intervals = invoicingFrequency.intervalsInDueDateRange(
+                new LocalDateInterval(startDueDate, nextDueDate, IntervalEnding.EXCLUDING_END_DATE), termInterval);
+
         for (final InvoicingInterval invoicingInterval : intervals) {
             final LocalDateInterval effectiveInterval = invoicingInterval.overlap(termInterval);
             if (effectiveInterval == null) {

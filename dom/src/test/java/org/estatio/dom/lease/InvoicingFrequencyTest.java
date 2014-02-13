@@ -29,41 +29,45 @@ public class InvoicingFrequencyTest {
 
     @Test
     public void testIntervalsInDueDateRange() {
-        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE,"2012-01-01", "2014-04-01", 9);
-        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE,"2013-12-31", "2014-04-01", 2);
-        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE,"2013-12-30", "2013-12-31", 1);
-        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE,"2014-01-01", "2014-01-01", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2012-01-01/2014-04-01", 9);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-31/2014-04-01", 2);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2013-12-30/2013-12-31", 1);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2014-01-01/2014-01-01", 0);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2012-01-01/2014-01-01", 8);
     }
 
     @Test
     public void testIntervalsInDueDateRangeWithInterval() {
-        dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-04-01", "2012-02-15/2012-06-16", "2012-02-15/2012-06-16");
-        dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-04-01", "2015-02-15/2015-06-16", null);
+        dueDateRangeTester(InvoicingFrequency.QUARTERLY_IN_ADVANCE, "2012-01-01/2014-01-01", "2013-01-15/2014-01-16", "2012-01-01/2012-04-01", 8);
+        dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-01-01", "2012-01-01/2014-01-01", "2012-01-01/2014-01-01", 1);
+        dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-04-01", "2015-02-15/2015-06-16", null, 0);
+        dueDateRangeTester(InvoicingFrequency.FIXED_IN_ARREARS, "2012-01-01/2014-04-01", "2011-01-31/2012-01-30", null, 0);
     }
 
     private void dueDateRangeTester(
-            final InvoicingFrequency frequency, 
-            final String start,
-            final String end, 
+            final InvoicingFrequency frequency,
+            final String intervalStr,
             final int result) {
         List<InvoicingInterval> intervalsInDueDateRange =
                 frequency.intervalsInDueDateRange(
-                        new LocalDate(start),
-                        new LocalDate(end));
+                        LocalDateInterval.parseString(intervalStr),
+                        LocalDateInterval.parseString(intervalStr));
         assertThat(intervalsInDueDateRange.size(), is(result));
     }
 
     private void dueDateRangeTester(
-            final InvoicingFrequency frequency, 
-            final String periodIntervalStr, 
-            final String sourceIntervalStr, 
-            final String expectedInterval) {
+            final InvoicingFrequency frequency,
+            final String periodIntervalStr,
+            final String sourceIntervalStr,
+            final String expectedIntervalStr,
+            final int expectedSize) {
         List<InvoicingInterval> intervalsInDueDateRange =
                 frequency.intervalsInDueDateRange(
                         LocalDateInterval.parseString(periodIntervalStr),
                         LocalDateInterval.parseString(sourceIntervalStr));
         String result = intervalsInDueDateRange.size() == 0 ? null : intervalsInDueDateRange.get(0).toString();
-        assertThat(result, is(expectedInterval));
+        assertThat(intervalsInDueDateRange.size(), is(expectedSize));
+        assertThat(result, is(expectedIntervalStr));
     }
 
     private void testRange(

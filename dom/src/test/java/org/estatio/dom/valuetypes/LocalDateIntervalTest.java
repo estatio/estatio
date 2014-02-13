@@ -130,7 +130,7 @@ public class LocalDateIntervalTest {
     }
 
     @Test
-    public void testContains() {
+    public void testContainsDate() {
         assertTrue(period120101to120401.contains(new LocalDate(2012, 1, 1)));
         assertTrue(period120101to120401.contains(new LocalDate(2012, 3, 31)));
         assertTrue(interval120201toOpen.contains(new LocalDate(2099, 1, 1)));
@@ -138,6 +138,12 @@ public class LocalDateIntervalTest {
         assertTrue(interval120201toOpen.contains(new LocalDate(2012, 3, 1)));
         assertTrue(intervalOpen.contains(new LocalDate(2012, 3, 31)));
         assertFalse(period120101to120401.contains(new LocalDate(2012, 4, 1)));
+    }
+    
+    @Test 
+    public void  testContainsLocalDateInterval() {
+        containsLocalDateInterval("2010-01-01/2010-04-01", "2010-01-01/2010-04-01", true);
+        containsLocalDateInterval("2010-01-01/2010-04-01", "2010-01-01/2010-05-01", false);
     }
 
     @Test
@@ -185,12 +191,22 @@ public class LocalDateIntervalTest {
         assertThat(LocalDateInterval.parseString("2010-07-01/2010-10-01").endDateExcluding(), is(new LocalDate(2010, 10, 1)));
     }
 
-    private void testOverlap(String firstIntervalStr, String secondIntervalStr, String resultIntervalStr) {
+    private void testOverlap(
+            final String firstIntervalStr, 
+            final String secondIntervalStr, 
+            final String expectedIntervalStr) {
         LocalDateInterval first = LocalDateInterval.parseString(firstIntervalStr);
         LocalDateInterval second = LocalDateInterval.parseString(secondIntervalStr);
         LocalDateInterval overlap = first.overlap(second);
-        LocalDateInterval expected = resultIntervalStr == null ? null : LocalDateInterval.parseString(resultIntervalStr);
+        LocalDateInterval expected = expectedIntervalStr == null ? null : LocalDateInterval.parseString(expectedIntervalStr);
         assertThat(overlap, is(expected));
     }
 
+    private void containsLocalDateInterval(
+            final String firstIntervalStr,
+            final String secondIntevalStr,
+            final boolean expected){
+      assertThat(LocalDateInterval.parseString(firstIntervalStr).contains(LocalDateInterval.parseString(secondIntevalStr)), is(expected));
+    }
+    
 }
