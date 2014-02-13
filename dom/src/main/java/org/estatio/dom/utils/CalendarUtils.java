@@ -19,6 +19,7 @@
 package org.estatio.dom.utils;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -29,6 +30,7 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import org.estatio.dom.EstatioApplicationException;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public final class CalendarUtils {
 
@@ -111,7 +113,9 @@ public final class CalendarUtils {
     }
 
     public static List<Interval> intervalsInRange(
-            final LocalDate startDate, final LocalDate endDate, final String rrule) {
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final String rrule) {
         if (startDate.compareTo(endDate) > 0) {
             throw new IllegalArgumentException(
                     String.format("Start date %s is after end date %s", startDate.toString(), endDate.toString()));
@@ -127,6 +131,17 @@ public final class CalendarUtils {
             }
         } while (interval != null && start.isBefore(endDate));
         return intervals;
+    }
+
+    public static List<LocalDateInterval> localDateIintervalsInRange(
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final String rrule) {
+        List<LocalDateInterval> localDateIntervals = new ArrayList<LocalDateInterval>();
+        for (Interval interval : intervalsInRange(startDate, endDate, rrule)) {
+            localDateIntervals.add(new LocalDateInterval(interval));
+        }
+        return localDateIntervals;
     }
 
 }

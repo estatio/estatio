@@ -16,6 +16,11 @@ public class InvoicingInterval extends LocalDateInterval {
     public InvoicingInterval(final Interval interval, final LocalDate dueDate) {
         super(interval);
         this.dueDate = dueDate;
+    }
+
+    public InvoicingInterval(final LocalDateInterval interval, final LocalDate dueDate) {
+        super(interval.startDate(), interval.endDateExcluding(), IntervalEnding.EXCLUDING_END_DATE);
+        this.dueDate = dueDate;
 
     }
 
