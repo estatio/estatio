@@ -34,8 +34,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 
 public class LocalDateIntervalTest {
 
-    private LocalDateInterval period120101to120401
-    = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
+    private LocalDateInterval period120101to120401 = LocalDateInterval.excluding(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1));
     private LocalDateInterval interval120101to120331incl = LocalDateInterval.including(new LocalDate(2012, 1, 1), new LocalDate(2012, 3, 31));
     private LocalDateInterval interval111101to120501 = LocalDateInterval.excluding(new LocalDate(2011, 11, 1), new LocalDate(2012, 5, 1));
     private LocalDateInterval interval111101to120301 = LocalDateInterval.excluding(new LocalDate(2011, 11, 1), new LocalDate(2012, 3, 1));
@@ -61,12 +60,12 @@ public class LocalDateIntervalTest {
         assertThat(interval.startDate(), is(startDate));
         assertThat(interval.endDate(), is(endDate));
     }
-    
+
     @Test
     public void testInvalid() {
-        assertFalse(new LocalDateInterval(new LocalDate(2011,1,1), new LocalDate(2010,1,1)).isValid());
-        assertFalse(new LocalDateInterval(new LocalDate(2011,1,1), new LocalDate(2010,12,30)).isValid());
-        assertTrue(new LocalDateInterval(new LocalDate(2011,1,1), new LocalDate(2010,12,31)).isValid());
+        assertFalse(new LocalDateInterval(new LocalDate(2011, 1, 1), new LocalDate(2010, 1, 1)).isValid());
+        assertFalse(new LocalDateInterval(new LocalDate(2011, 1, 1), new LocalDate(2010, 12, 30)).isValid());
+        assertTrue(new LocalDateInterval(new LocalDate(2011, 1, 1), new LocalDate(2010, 12, 31)).isValid());
     }
 
     @Test
@@ -155,38 +154,43 @@ public class LocalDateIntervalTest {
 
     @Test
     public void testOverlap() {
-        LocalDateInterval interval1 = LocalDateInterval.excluding(new LocalDate(2000, 1, 1), null);
-        LocalDateInterval interval2 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
-        assertThat(interval1.overlap(interval2).startDate(), is(new LocalDate(2000, 1, 1)));
-        assertThat(interval1.overlap(interval2).endDate(), is(new LocalDate(2010, 1, 1)));
-
-        LocalDateInterval myInterval3 = LocalDateInterval.excluding(new LocalDate(2011, 1, 1), null);
-        LocalDateInterval myInterval4 = LocalDateInterval.including(null, new LocalDate(2010, 1, 1));
-        assertNull(myInterval3.overlap(myInterval4));
-        
-        assertThat(interval120101toOpen.overlap(interval120201toOpen), is(new LocalDateInterval(new LocalDate(2012,2,1), null)));
-        
+        testOverlap("----------/----------", "----------/----------", "----------/----------");
+        testOverlap("2010-01-01/----------", "----------/----------", "2010-01-01/----------");
+        testOverlap("----------/----------", "2010-01-01/----------", "2010-01-01/----------");
+        testOverlap("2010-01-01/----------", "2011-01-01/----------", "2011-01-01/----------");
+        testOverlap("2011-01-01/----------", "2010-01-01/----------", "2011-01-01/----------");
+        testOverlap("----------/2010-01-01", "2010-01-01/----------", null);
+        testOverlap("----------/2010-02-01", "2010-01-01/----------", "2010-01-01/2010-02-01");
+        testOverlap("2010-01-01/----------", "----------/2010-02-01", "2010-01-01/2010-02-01");
     }
 
     @Test
     public void testOpen() {
         assertThat(LocalDateInterval.parseString("*/*").overlap(LocalDateInterval.parseString("*/*")), is(LocalDateInterval.parseString("*/*")));
     }
-    
+
     @Test
     public void testString() {
         assertThat(interval120201toOpen.toString(), is("2012-02-01/----------"));
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
         assertTrue(new LocalDateInterval().equals(new LocalDateInterval()));
         assertTrue(new LocalDateInterval(null, null, IntervalEnding.EXCLUDING_END_DATE).equals(new LocalDateInterval(null, null, IntervalEnding.INCLUDING_END_DATE)));
     }
-    
+
     @Test
     public void testParseString() throws Exception {
         assertThat(LocalDateInterval.parseString("2010-07-01/2010-10-01").endDateExcluding(), is(new LocalDate(2010, 10, 1)));
     }
-    
+
+    private void testOverlap(String firstIntervalStr, String secondIntervalStr, String resultIntervalStr) {
+        LocalDateInterval first = LocalDateInterval.parseString(firstIntervalStr);
+        LocalDateInterval second = LocalDateInterval.parseString(secondIntervalStr);
+        LocalDateInterval overlap = first.overlap(second);
+        LocalDateInterval expected = resultIntervalStr == null ? null : LocalDateInterval.parseString(resultIntervalStr);
+        assertThat(overlap, is(expected));
+    }
+
 }

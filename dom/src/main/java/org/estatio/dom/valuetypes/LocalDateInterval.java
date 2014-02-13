@@ -197,6 +197,9 @@ public class LocalDateInterval {
         if (otherInterval.isInfinite()) {
             return this;
         }
+        if (this.isInfinite()) {
+            return otherInterval;
+        }
         final Interval thisAsInterval = asInterval();
         final Interval otherAsInterval = otherInterval.asInterval();
         Interval overlap = thisAsInterval.overlap(otherAsInterval);
