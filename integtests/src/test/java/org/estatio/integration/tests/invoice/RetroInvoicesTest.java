@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -69,8 +70,14 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
     }
 
     @Test
+    public void step0_dueDates() {
+        SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), lease);
+        assertThat(dueDates.size(), is(10));
+    }
+
+    @Test
     public void step1_retroRun() {
-        creator.create(properties.findProperties("OXF*"), new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1));
+        creator.create(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1));
         assertThat(invoices.findInvoices(lease).size(), is(8));
     }
 

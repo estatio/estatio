@@ -19,12 +19,11 @@
 package org.estatio.fixturescripts;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
-
-import javax.print.attribute.standard.Fidelity;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
@@ -54,10 +53,10 @@ public class CreateRetroInvoices implements Callable<Object> {
 
     @Override
     public Object call() throws Exception {
-        LocalDate epochDate = estatioSettingsService.fetchEpochDate();
-        LocalDate nextDueDate = (new LocalDate(2014, 1, 1));
-        List<Property> properties = propertiesService.allProperties();
-        create(properties, epochDate, nextDueDate);
+        create(
+                propertiesService.allProperties(),
+                estatioSettingsService.fetchEpochDate(),
+                new LocalDate(2014, 1, 1));
         return "Finished";
     }
 
@@ -70,36 +69,49 @@ public class CreateRetroInvoices implements Callable<Object> {
 
     @Programmatic
     public void create(List<Property> properties, LocalDate startDueDate, LocalDate nextDueDate) {
-        doCreate(properties, startDueDate, nextDueDate);
-    }
-
-    private void doCreate(List<Property> properties, LocalDate startDueDate, LocalDate nextDueDate) {
         for (Property property : properties) {
             List<Lease> leaseList = leases.findLeasesByProperty(property);
             for (Lease lease : leaseList) {
-                for (LocalDate invoiceDueDate : findDueDatesForLease(startDueDate, nextDueDate, lease)) {
-                    lease.calculate(
-                            InvoiceRunType.NORMAL_RUN,
-                            InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE,
-                            invoiceDueDate,
-                            startDueDate,
-                            invoiceDueDate.plusDays(1));
-                    for (Invoice invoice : invoices.findInvoicesToBeApproved()) {
-                        invoice.setStatus(InvoiceStatus.APPROVED);
-                    }
-                }
+                create(lease, startDueDate, nextDueDate);
             }
         }
     }
 
-    private SortedSet<LocalDate> findDueDatesForLease(LocalDate epochDate, LocalDate nextDueDate, Lease lease) {
-        SortedSet<LocalDate> dates = new TreeSet<LocalDate>();
-        for (LeaseItem item : lease.getItems()) {
-            List<InvoicingInterval> invoiceIntervals = item.getInvoicingFrequency().intervalsInDueDateRange(
-                    epochDate, ObjectUtils.firstNonNull(item.getNextDueDate(), nextDueDate));
-            for (InvoicingInterval interval : invoiceIntervals) {
-                dates.add(interval.dueDate());
+    @Programmatic
+    public void create(Lease lease, LocalDate startDueDate, LocalDate nextDueDate) {
+        lease.verifyUntil(nextDueDate);
+        for (LocalDate dueDate : findDueDatesForLease(startDueDate, nextDueDate, lease)) {
+            for (LeaseItem leaseItem : lease.getItems()) {
+                if (InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.contains(leaseItem.getType())) {
+                    leaseItem.calculate(
+                            InvoiceRunType.NORMAL_RUN,
+                            dueDate,
+                            startDueDate,
+                            dueDate.plusDays(1));
+                }
             }
+            for (Invoice invoice : invoices.findInvoicesToBeApproved()) {
+                invoice.setStatus(InvoiceStatus.APPROVED);
+            }
+        }
+    }
+
+    @Programmatic
+    public SortedSet<LocalDate> findDueDatesForLease(LocalDate startDueDate, LocalDate nextDueDate, Lease lease) {
+        SortedSet<LocalDate> dates = new TreeSet<LocalDate>();
+        for (LeaseItem leaseItem : lease.getItems()) {
+            dates.addAll(findDueDatesForLeaseItem(startDueDate, nextDueDate, leaseItem));
+        }
+        return dates;
+    }
+
+    @Programmatic
+    private SortedSet<LocalDate> findDueDatesForLeaseItem(LocalDate startDueDate, LocalDate nextDueDate, LeaseItem leaseItem) {
+        SortedSet<LocalDate> dates = new TreeSet<LocalDate>();
+        List<InvoicingInterval> invoiceIntervals = leaseItem.getInvoicingFrequency().intervalsInDueDateRange(
+                startDueDate, ObjectUtils.firstNonNull(leaseItem.getNextDueDate(), nextDueDate));
+        for (InvoicingInterval interval : invoiceIntervals) {
+            dates.add(interval.dueDate());
         }
         return dates;
     }

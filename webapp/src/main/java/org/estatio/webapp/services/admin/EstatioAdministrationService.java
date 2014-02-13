@@ -36,6 +36,7 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
@@ -120,7 +121,7 @@ public class EstatioAdministrationService {
 
     @MemberOrder(sequence = "9")
     @Prototype
-    public void createRetroInvoices(
+    public void createRetroInvoicesForProperty(
             final Property property,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
@@ -128,7 +129,17 @@ public class EstatioAdministrationService {
         creator.create(property, startDueDate, nextDueDate);
     }
 
-    // //////////////////////////////////////
+    @MemberOrder(sequence = "9")
+    @Prototype
+    public void createRetroInvoicesForLease(
+            final Lease lease,
+            final @Named("Start due date") LocalDate startDueDate,
+            final @Named("Next due date") LocalDate nextDueDate) {
+        CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        creator.create(lease, startDueDate, nextDueDate);
+    }
+
+// //////////////////////////////////////
 
     private static void installFixtures(final Object fixture) {
         final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
