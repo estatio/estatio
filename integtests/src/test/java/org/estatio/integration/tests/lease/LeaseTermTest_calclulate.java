@@ -61,7 +61,7 @@ import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioIntegrationTest {
+public class LeaseTermTest_calclulate extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -211,10 +211,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
 
         estatioSettingsService.updateEpochDate(null);
 
-        // unapproved doesn't work
         LeaseTerm leaseTopModelRentTerm0 = (LeaseTerm) leaseTopModelRentItem.getTerms().first();
-        // partial period
-        test(leaseTopModelRentTerm0, "2010-07-1", "2010-07-1", "2010-07-01/2010-10-01", 4239.13, false);
         // full term
         test(leaseTopModelRentTerm0, "2010-10-01", "2010-10-02", "2010-10-01/2011-01-01", 5000.00, false);
         // invoice after effective date
@@ -245,18 +242,21 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
 
         test(leaseTopModelServiceChargeTerm0, "2010-01-10", "2010-10-02", "2010-10-01/2011-01-01", 1500.00, false);
         // reconcile with mock date
+    }
+
+    @Ignore
+    @Test
+    public void t15_invoiceItemsForServiceChargeCreatedWithEpochDate() throws Exception {
         estatioSettingsService.updateEpochDate(new LocalDate(2011, 1, 1));
+        LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
 
         test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
-
-        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
-
         leaseTopModelServiceChargeTerm0.setAuditedValue(new BigDecimal(6600.00));
         leaseTopModelServiceChargeTerm0.verify();
+
         test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 150.00, true);
         // reconcile without mock
         estatioSettingsService.updateEpochDate(new LocalDate(1980, 1, 1));
-        test(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 1650.00, false);
     }
 
     @Ignore
@@ -279,9 +279,11 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         final LocalDate startDueDate = LocalDate.parse(startDueDateStr);
         final LocalDate nextDueDate = LocalDate.parse(nextDueDateStr);
         final BigDecimal expected = value == null ? null : new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
-        final LocalDateInterval interval = LocalDateInterval.parseString(intervalStr);
+        invoiceItemsForLease.removeUnapprovedInvoiceItems(leaseTerm, LocalDateInterval.parseString(intervalStr));
+        isisJdoSupport.refresh(leaseTerm);
         leaseTerm.calculate(InvoiceRunType.NORMAL_RUN, startDueDate, startDueDate, nextDueDate);
-        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, interval);
+        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, LocalDateInterval.parseString(intervalStr));
+        isisJdoSupport.refresh(leaseTerm);
         BigDecimal netAmount = invoiceItem == null ? new BigDecimal("0.00") : invoiceItem.getNetAmount();
         Boolean adjustment = invoiceItem == null ? false : invoiceItem.isAdjustment();
         assertThat("size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size(),

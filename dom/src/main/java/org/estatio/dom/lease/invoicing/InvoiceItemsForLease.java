@@ -74,25 +74,22 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<InvoiceItemForLease> findByLeaseTermAndIntervalAndDueDateAndStatus(
+    public List<InvoiceItemForLease> findByLeaseTermAndInterval(
             final LeaseTerm leaseTerm,
-            final LocalDateInterval interval,
-            final LocalDate dueDate,
-            final InvoiceStatus invoiceStatus) {
+            final LocalDateInterval interval) {
         return allMatches(
-                "findByLeaseTermAndIntervalAndDueDateAndStatus",
+                "findByLeaseTermAndInterval",
                 "leaseTerm", leaseTerm,
                 "startDate", interval.startDate(),
-                "endDate", interval.endDate(),
-                "dueDate", dueDate,
-                "invoiceStatus", invoiceStatus);
+                "endDate", interval.endDate());
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<InvoiceItemForLease> findByLeaseTermAndInterval(
+    public List<InvoiceItemForLease> findByLeaseTermAndIntervalAndInvoiceStatus(
             final LeaseTerm leaseTerm,
-            final LocalDateInterval interval) {
+            final LocalDateInterval interval,
+            final InvoiceStatus invoiceStatus) {
         return allMatches(
                 "findByLeaseTermAndInterval",
                 "leaseTerm", leaseTerm,
@@ -143,28 +140,26 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     }
 
     @Programmatic
-    public InvoiceItemForLease findOrCreateUnapprovedInvoiceItemFor(
+    public InvoiceItemForLease createUnapprovedInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval invoiceInterval,
             final LocalDate dueDate) {
-        InvoiceItemForLease ii = findUnapprovedInvoiceItemFor(leaseTerm, invoiceInterval, dueDate);
-        if (ii == null) {
-            ii = newInvoiceItem(leaseTerm, invoiceInterval, dueDate);
-        }
-        return ii;
+        // TODO:Removing items returns unwanted results, perhaps remove all old
+        // runs before?
+        // removeUnapprovedInvoiceItems(leaseTerm, invoiceInterval);
+        return newInvoiceItem(leaseTerm, invoiceInterval, dueDate);
     }
 
     @Programmatic
-    public InvoiceItemForLease findUnapprovedInvoiceItemFor(
+    public InvoiceItemForLease findUnapprovedInvoiceItem(
             final LeaseTerm leaseTerm,
-            final LocalDateInterval invoiceInterval,
-            final LocalDate dueDate) {
+            final LocalDateInterval invoiceInterval) {
 
         List<InvoiceItemForLease> invoiceItems =
-                findByLeaseTermAndIntervalAndDueDateAndStatus(
-                        leaseTerm, invoiceInterval, dueDate, InvoiceStatus.NEW);
+                findByLeaseTermAndIntervalAndInvoiceStatus(
+                        leaseTerm, invoiceInterval, InvoiceStatus.NEW);
         if (invoiceItems.size() > 1) {
-            throw new ApplicationException("Found more then one unapproved invoice items for" + leaseTerm.toString());
+            throw new ApplicationException("Found more then one unapproved invoice items for" + leaseTerm.toString() + invoiceInterval.toString());
         }
         if (invoiceItems.size() == 1) {
             return invoiceItems.get(0);
@@ -173,11 +168,10 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     }
 
     @Programmatic
-    public BigDecimal invoicedValueFor(
+    public BigDecimal invoicedValue(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval) {
         BigDecimal invoicedValue = new BigDecimal(0);
-
         List<InvoiceItemForLease> items = findByLeaseTermAndInterval(leaseTerm, interval);
         for (InvoiceItemForLease invoiceItem : items) {
             Invoice invoice = invoiceItem.getInvoice();
@@ -189,13 +183,15 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     }
 
     @Programmatic
-    public void removeUnapprovedInvoiceItemsForDate(LeaseTerm leaseTerm, LocalDateInterval interval) {
-        List<InvoiceItemForLease> invoiceItems = findByLeaseTermAndInterval(leaseTerm, interval);
+    public void removeUnapprovedInvoiceItems(
+            final LeaseTerm leaseTerm,
+            final LocalDateInterval interval) {
+        List<InvoiceItemForLease> invoiceItems = findByLeaseTermAndIntervalAndInvoiceStatus(
+                leaseTerm,
+                interval,
+                InvoiceStatus.NEW);
         for (InvoiceItemForLease invoiceItem : invoiceItems) {
-            Invoice invoice = invoiceItem.getInvoice();
-            if ((invoice == null || invoice.getStatus().equals(InvoiceStatus.NEW))) {
-                invoiceItem.remove();
-            }
+            invoiceItem.remove();
         }
         getContainer().flush();
     }

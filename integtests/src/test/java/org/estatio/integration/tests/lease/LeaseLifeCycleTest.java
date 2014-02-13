@@ -111,7 +111,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
                 START_DATE,
                 new LocalDate(2013, 10, 1),
                 new LocalDate(2015, 4, 1));
-        approve();
+        approveInvoices();
         assertThat(totalApporvedOrInvoicedForItem(rItem), is(new BigDecimal("209918.48")));
         assertThat(totalApporvedOrInvoicedForItem(sItem), is(new BigDecimal("18103.26")));
         assertThat(invoices.findInvoices(lease).size(), is(1));
@@ -144,7 +144,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
     @Test
     public void step5_normalInvoice() throws Exception {
         lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1));
-        approve();
+        approveInvoices();
         assertThat(totalApporvedOrInvoicedForItem(rItem), is(new BigDecimal("209918.48")));
     }
 
@@ -152,7 +152,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
     public void step6_retroInvoice() throws Exception {
         lease.calculate(InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1), new LocalDate(2015, 4, 1));
         // (156750 - 150000) / = 1687.5 added
-        approve();
+        approveInvoices();
         assertThat(invoices.findInvoices(lease).size(), is(2));
         assertThat(totalApporvedOrInvoicedForItem(rItem), is(new BigDecimal("209918.48").add(new BigDecimal("1687.50"))));
     }
@@ -178,7 +178,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         return total;
     }
 
-    private void approve() {
+    private void approveInvoices() {
         for (Invoice invoice : invoices.findInvoices(lease)){
             invoice.approve();
         }

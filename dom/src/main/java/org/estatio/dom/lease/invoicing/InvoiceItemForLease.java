@@ -55,13 +55,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate "),
         @javax.jdo.annotations.Query(
-                name = "findByLeaseTermAndIntervalAndDueDateAndStatus", language = "JDOQL",
+                name = "findByLeaseTermAndIntervalAndInvoiceStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.invoicing.InvoiceItemForLease " +
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& startDate == :startDate " +
                         "&& endDate == :endDate " +
-                        "&& dueDate == :dueDate " +
                         "&& invoice.status == :invoiceStatus"),
         @javax.jdo.annotations.Query(
                 name = "findByLeaseAndInvoiceStatus", language = "JDOQL",

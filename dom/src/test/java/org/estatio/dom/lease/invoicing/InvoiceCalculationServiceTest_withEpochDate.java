@@ -151,7 +151,7 @@ public class InvoiceCalculationServiceTest_withEpochDate {
         invoiceItemForLease.injectAgreementTypes(mockAgreementTypes);
 
         ic = new InvoiceCalculationService();
-        ic.setEstatioSettings(mockSettings);
+        ic.injectEstatioSettings(mockSettings);
     }
 
     @Test

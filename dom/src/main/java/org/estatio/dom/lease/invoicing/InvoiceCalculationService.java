@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoicingInterval;
@@ -62,7 +63,7 @@ public class InvoiceCalculationService {
         }
 
         public CalculationResult(final InvoicingInterval interval) {
-            this(interval, null, ZERO, ZERO, ZERO);
+            this(interval, interval, ZERO, ZERO, ZERO);
         }
 
         public CalculationResult(
@@ -119,6 +120,10 @@ public class InvoiceCalculationService {
             return sum;
         }
     }
+    
+    private LocalDate systemEpochDate(){
+        return estatioSettingsService.fetchEpochDate();
+    }
 
     /**
      * Calculates term and creates invoice
@@ -130,7 +135,7 @@ public class InvoiceCalculationService {
      * @param invoicingFrequency
      * @param runType
      */
-    @NotContributed
+    @Programmatic
     public void calculateAndInvoice(
             final LeaseTerm leaseTerm,
             final LocalDate startDueDate,
@@ -153,35 +158,41 @@ public class InvoiceCalculationService {
     /**
      * Calculates a term with a given invoicing frequency
      */
+    @Programmatic
     public List<CalculationResult> calculateDueDateRange(
             final LeaseTerm leaseTerm,
             final LocalDate startDueDate,
             final LocalDate nextDueDate,
             final InvoicingFrequency invoicingFrequency) {
         final List<CalculationResult> results = Lists.newArrayList();
-        final List<InvoicingInterval> intervals = invoicingFrequency.intervalsInDueDateRange(startDueDate, nextDueDate);
         final LocalDateInterval termInterval = leaseTerm.getEffectiveInterval();
-        final LocalDate epochDate =
-                ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(),
-                        estatioSettingsService.fetchEpochDate());
+        final List<InvoicingInterval> intervals = invoicingFrequency.intervalsInDueDateRange(startDueDate, nextDueDate);
+//                invoicingFrequency.intervalsInDueDateRange(
+//                        new LocalDateInterval(startDueDate, nextDueDate), termInterval);
         for (final InvoicingInterval invoicingInterval : intervals) {
-            final LocalDateInterval overlap = invoicingInterval.overlap(termInterval);
-            if (overlap == null) {
+            final LocalDateInterval effectiveInterval = invoicingInterval.overlap(termInterval);
+            if (effectiveInterval == null) {
                 results.add(new CalculationResult(invoicingInterval));
             } else {
-                final BigDecimal overlapDays = new BigDecimal(overlap.days());
+                final BigDecimal overlapDays = new BigDecimal(effectiveInterval.days());
                 final BigDecimal frequencyDays = new BigDecimal(invoicingInterval.days());
                 final BigDecimal rangeFactor =
                         leaseTerm.valueType().equals(LeaseTermValueType.FIXED) ?
                                 BigDecimal.ONE :
                                 overlapDays.divide(frequencyDays, MathContext.DECIMAL64);
                 final BigDecimal annualFactor = invoicingFrequency.annualMultiplier();
+                final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
+                BigDecimal mockValue = BigDecimal.ZERO;
+                if (epochDate != null && invoicingInterval.dueDate().isBefore(epochDate)){
+                    mockValue =leaseTerm.valueForDate(epochDate);;
+                }
+                 
                 results.add(new CalculationResult(
                         invoicingInterval,
-                        overlap,
+                        effectiveInterval,
                         calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(nextDueDate.minusDays(1))),
                         calculateValue(rangeFactor, annualFactor, leaseTerm.valueForDate(invoicingInterval.dueDate())),
-                        calculateValue(rangeFactor, annualFactor, epochDate == null || invoicingInterval.dueDate().compareTo(epochDate) >= 0 ? null : leaseTerm.valueForDate(epochDate.minusDays(1)))));
+                        calculateValue(rangeFactor, annualFactor, mockValue)));
             }
         }
         return results;
@@ -207,23 +218,6 @@ public class InvoiceCalculationService {
         return new BigDecimal("0.00");
     }
 
-    // //////////////////////////////////////
-    // Creation of invoice items
-
-    /**
-     * Creates invoice items for a list of calculation results
-     * 
-     * @param leaseTerm
-     * @param dueDate
-     * @param results
-     */
-    void createInvoiceItems(
-            final LeaseTerm leaseTerm,
-            final LocalDate dueDate,
-            final List<CalculationResult> results) {
-        createInvoiceItems(leaseTerm, dueDate, results, leaseTerm.getLeaseItem().getInvoicingFrequency());
-    }
-
     /**
      * Calculates an invoice item with the difference between the already
      * invoiced and calculated value.
@@ -240,12 +234,12 @@ public class InvoiceCalculationService {
             final InvoicingFrequency invoicingFrequency) {
 
         for (CalculationResult result : results) {
-            BigDecimal invoicedValue = invoiceItemsForLease.invoicedValueFor(leaseTerm, result.invoicingInterval());
+            BigDecimal invoicedValue = invoiceItemsForLease.invoicedValue(leaseTerm, result.invoicingInterval());
             BigDecimal newValue = result.value().subtract(invoicedValue).subtract(result.mockValue());
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
                 boolean adjustment = invoicedValue.add(result.mockValue()).compareTo(BigDecimal.ZERO) != 0;
                 InvoiceItemForLease invoiceItem =
-                        invoiceItemsForLease.findOrCreateUnapprovedInvoiceItemFor(
+                        invoiceItemsForLease.createUnapprovedInvoiceItem(
                                 leaseTerm,
                                 result.invoicingInterval(),
                                 dueDate);
@@ -276,7 +270,7 @@ public class InvoiceCalculationService {
 
     private EstatioSettingsService estatioSettingsService;
 
-    public void setEstatioSettings(final EstatioSettingsService estatioSettings) {
+    public void injectEstatioSettings(final EstatioSettingsService estatioSettings) {
         this.estatioSettingsService = estatioSettings;
     }
 
