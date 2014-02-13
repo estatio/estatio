@@ -566,7 +566,6 @@ public class Api extends AbstractFactoryAndRepository {
             item.setSequence(sequence);
         }
         item.setNextDueDate(nextDueDate);
-        item.setEpochDate(nextDueDate);
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.ACTIVE);
         item.modifyStatus(leaseItemStatus, "Updated through API");
     }
@@ -654,21 +653,19 @@ public class Api extends AbstractFactoryAndRepository {
                 endDate,
                 sequence,
                 statusStr);
-        if (term != null) {
-            Index index = indices.findIndex(indexReference);
-            LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
-            term.setIndex(index);
-            term.setFrequency(indexationFreq);
-            term.setEffectiveDate(effectiveDate);
-            term.setBaseValue(baseValue);
-            term.setIndexedValue(indexedValue);
-            term.setSettledValue(settledValue);
-            term.setBaseIndexStartDate(baseIndexStartDate);
-            term.setBaseIndexValue(baseIndexValue);
-            term.setNextIndexStartDate(nextIndexStartDate);
-            term.setNextIndexValue(nextIndexValue);
-            term.setIndexationPercentage(indexationPercentage);
-        }
+        Index index = indices.findIndex(indexReference);
+        LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
+        term.setIndex(index);
+        term.setFrequency(indexationFreq);
+        term.setEffectiveDate(effectiveDate);
+        term.setBaseValue(baseValue);
+        term.setIndexedValue(indexedValue);
+        term.setSettledValue(settledValue);
+        term.setBaseIndexStartDate(baseIndexStartDate);
+        term.setBaseIndexValue(baseIndexValue);
+        term.setNextIndexStartDate(nextIndexStartDate);
+        term.setNextIndexValue(nextIndexValue);
+        term.setIndexationPercentage(indexationPercentage);
         term.setLevellingPercentage(levellingPercentage);
     }
 
@@ -764,7 +761,7 @@ public class Api extends AbstractFactoryAndRepository {
     public void putBankAccount(
             // start generic fields
             @Named("reference") String reference,
-            @Named("name") String name,
+            @Named("name") @Optional String name,
             @Named("ownerReference") String ownerReference,
             @Named("bankAccountType") @Optional String bankAccountType,
             @Named("propertyReference") @Optional String propertyReference,
@@ -773,7 +770,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nationalCheckCode") @Optional String nationalCheckCode,
             @Named("nationalBankCode") @Optional String nationalBankCode,
             @Named("branchCode") @Optional String branchCode,
-            @Named("accountNumber") @Optional String accountNumber, 
+            @Named("accountNumber") @Optional String accountNumber,
             @Named("externalReference") @Optional String externalReference
             ) {
         BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
@@ -781,7 +778,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (owner == null)
             return;
         if (bankAccount == null) {
-            bankAccount = financialAccounts.newBankAccount(owner, reference, name);
+            bankAccount = financialAccounts.newBankAccount(owner, reference, name == null ? reference : name);
         }
         bankAccount.setProperty(fetchProperty(propertyReference, false));
         bankAccount.setExternalReference(externalReference);
