@@ -19,6 +19,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
@@ -28,6 +29,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -129,12 +131,21 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
         List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
 
         BigDecimal rentValue = BigDecimal.ZERO;
+        List<CalculationResult> calculationResults = new ArrayList<CalculationResult>();
+        
+        //Collect all results
         for (LeaseItem rentItem : rentItems) {
-            rentValue = rentValue.add(rentItem.valueForPeriod(
-                    getLeaseItem().getInvoicingFrequency(),
+            calculationResults.addAll(rentItem.calculationResults(
+                    rentItem.getInvoicingFrequency(),
                     getStartDate(),
-                    getStartDate().plusYears(2)));
+                    getStartDate().plusYears(2))); 
         }
+        for (CalculationResult result : calculationResults) {
+            if (getInterval().contains(result.invoicingInterval())){
+                rentValue = rentValue.add(result.value());
+            }
+        }
+        
         setContractualRent(rentValue);
         TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
         BigDecimal newAuditedTurnoverRent = helper.calculateRent(getAuditedTurnover());

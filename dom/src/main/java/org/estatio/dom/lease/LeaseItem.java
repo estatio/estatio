@@ -60,7 +60,6 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResultsUtil;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
@@ -576,15 +575,6 @@ public class LeaseItem
         }
         return results;
     }
-
-    @Programmatic
-    public BigDecimal valueForPeriod(
-            final InvoicingFrequency invoicingFrequency,
-            final LocalDate startDueDate,
-            final LocalDate nextDueDate
-            ){
-        return CalculationResultsUtil.sum(calculationResults(invoicingFrequency, startDueDate, nextDueDate));
-    }    
 
     // //////////////////////////////////////
 

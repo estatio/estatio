@@ -36,6 +36,9 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -93,8 +96,10 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
     }
 
     @Test
-    public void step3_approveInvoice() throws Exception {
-
+    public void step3_checkContractualRent() throws Exception {
+        LeaseItem leaseItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
+        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) leaseItem.findTerm(new LocalDate(2012, 1, 1));
+        assertThat(term.getContractualRent(), is(new BigDecimal("21058.27")));
     }
 
     @Test
