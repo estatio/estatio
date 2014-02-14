@@ -19,7 +19,7 @@ package org.estatio.app.bulkupdate;
 
 import java.util.List;
 
-import com.danhaywood.isis.domainservice.excel.ExcelService;
+import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
