@@ -30,7 +30,6 @@ import com.google.common.collect.Sets;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import org.estatio.dom.EstatioDomainService;
 

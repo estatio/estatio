@@ -30,7 +30,7 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
+import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 
 public class LocalDateIntervalTest {
 

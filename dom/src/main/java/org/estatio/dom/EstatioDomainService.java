@@ -22,12 +22,9 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.estatio.dom.lease.LeaseTerm;
-
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 public abstract class EstatioDomainService<T> extends EstatioService<T> {

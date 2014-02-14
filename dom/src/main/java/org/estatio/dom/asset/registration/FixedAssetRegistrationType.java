@@ -21,10 +21,8 @@ package org.estatio.dom.asset.registration;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 
-import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.NonRecoverableException;
-import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.NonRecoverableException;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;

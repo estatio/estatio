@@ -37,8 +37,8 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 
 public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
 

@@ -19,15 +19,15 @@ package org.estatio.app.bulkupdate;
 
 import java.math.BigDecimal;
 
-import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTerms;
-
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
+
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTerms;
 
 @MemberGroupLayout(left={"Selected","Next"})
 @Bookmarkable

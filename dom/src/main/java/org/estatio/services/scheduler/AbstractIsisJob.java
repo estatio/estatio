@@ -20,6 +20,13 @@ package org.estatio.services.scheduler;
 
 import java.util.List;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
 import org.apache.isis.core.commons.authentication.AuthenticationSession;
 import org.apache.isis.core.runtime.authentication.standard.SimpleSession;
 import org.apache.isis.core.runtime.system.context.IsisContext;
@@ -27,13 +34,6 @@ import org.apache.isis.core.runtime.system.persistence.PersistenceSession;
 import org.apache.isis.core.runtime.system.session.IsisSession;
 import org.apache.isis.core.runtime.system.transaction.IsisTransactionManager;
 import org.apache.isis.core.runtime.system.transaction.TransactionalClosure;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
 
 public abstract class AbstractIsisJob implements Job {
 

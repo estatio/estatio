@@ -18,11 +18,11 @@
  */
 package org.estatio.dom.financial;
 
-import org.estatio.dom.PowerType;
-import org.estatio.dom.utils.StringUtils;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.FatalException;
+
+import org.estatio.dom.PowerType;
+import org.estatio.dom.utils.StringUtils;
 
 public enum FinancialAccountType implements PowerType<FinancialAccount> {
 

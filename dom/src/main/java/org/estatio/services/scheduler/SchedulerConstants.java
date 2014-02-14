@@ -16,18 +16,6 @@
  */
 package org.estatio.services.scheduler;
 
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.impl.StdSchedulerFactory;
-
-import com.google.common.base.Joiner;
 
 public final class SchedulerConstants {
 

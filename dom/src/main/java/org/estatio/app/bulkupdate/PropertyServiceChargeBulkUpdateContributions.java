@@ -19,9 +19,6 @@ package org.estatio.app.bulkupdate;
 
 import java.util.List;
 
-import org.estatio.dom.EstatioService;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
@@ -31,6 +28,10 @@ import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
+
+import org.estatio.dom.EstatioService;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.LeaseTerms;
 
 @Immutable
 public class PropertyServiceChargeBulkUpdateContributions extends EstatioService<PropertyServiceChargeBulkUpdateContributions> {

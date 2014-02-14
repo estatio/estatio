@@ -43,8 +43,8 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 import org.estatio.services.clock.ClockService;
 
 public class LeaseTermTest {

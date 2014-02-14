@@ -19,14 +19,10 @@ package org.estatio.app.bulkupdate;
 
 import java.util.List;
 
-import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
+import com.danhaywood.isis.domainservice.excel.ExcelService;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
-import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -38,6 +34,11 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Blob;
+
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTerms;
 
 @Immutable
 @Bookmarkable
