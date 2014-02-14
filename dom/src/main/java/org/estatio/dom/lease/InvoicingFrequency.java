@@ -85,7 +85,7 @@ public enum InvoicingFrequency {
             null, null),
     FIXED_IN_ARREARS(
             null,
-            PaidIn.ADVANCE,
+            PaidIn.ARREARS,
             null, null);
 
     static enum PaidIn {

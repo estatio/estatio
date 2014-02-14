@@ -29,7 +29,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.charge.Charge;
@@ -39,8 +38,8 @@ import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.dom.valuetypes.LocalDateInterval.IntervalEnding;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @Hidden
@@ -64,7 +63,7 @@ public class InvoiceCalculationService {
         }
 
         public CalculationResult(final InvoicingInterval interval) {
-            this(interval, interval, ZERO, ZERO, ZERO);
+            this(interval, interval.asLocalDateInterval(), ZERO, ZERO, ZERO);
         }
 
         public CalculationResult(
@@ -171,7 +170,7 @@ public class InvoiceCalculationService {
                 new LocalDateInterval(startDueDate, nextDueDate, IntervalEnding.EXCLUDING_END_DATE), termInterval);
 
         for (final InvoicingInterval invoicingInterval : intervals) {
-            final LocalDateInterval effectiveInterval = invoicingInterval.overlap(termInterval);
+            final LocalDateInterval effectiveInterval = invoicingInterval.asLocalDateInterval().overlap(termInterval);
             if (effectiveInterval == null) {
                 results.add(new CalculationResult(invoicingInterval));
             } else {
@@ -235,14 +234,14 @@ public class InvoiceCalculationService {
             final InvoicingFrequency invoicingFrequency) {
 
         for (CalculationResult result : results) {
-            BigDecimal invoicedValue = invoiceItemsForLease.invoicedValue(leaseTerm, result.invoicingInterval());
+            BigDecimal invoicedValue = invoiceItemsForLease.invoicedValue(leaseTerm, result.invoicingInterval().asLocalDateInterval());
             BigDecimal newValue = result.value().subtract(invoicedValue).subtract(result.mockValue());
             if (newValue.compareTo(BigDecimal.ZERO) != 0) {
                 boolean adjustment = invoicedValue.add(result.mockValue()).compareTo(BigDecimal.ZERO) != 0;
                 InvoiceItemForLease invoiceItem =
                         invoiceItemsForLease.createUnapprovedInvoiceItem(
                                 leaseTerm,
-                                result.invoicingInterval(),
+                                result.invoicingInterval().asLocalDateInterval(),
                                 dueDate);
                 invoiceItem.setNetAmount(newValue);
                 invoiceItem.setQuantity(BigDecimal.ONE);

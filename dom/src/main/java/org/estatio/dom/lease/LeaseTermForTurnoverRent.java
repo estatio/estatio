@@ -141,7 +141,7 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
                     getStartDate().plusYears(2))); 
         }
         for (CalculationResult result : calculationResults) {
-            if (getInterval().contains(result.invoicingInterval())){
+            if (getInterval().contains(result.invoicingInterval().asLocalDateInterval())){
                 rentValue = rentValue.add(result.value());
             }
         }

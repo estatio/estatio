@@ -19,51 +19,11 @@
 package org.estatio.dom.valuetypes;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
 
-public class LocalDateInterval {
-
-    public enum IntervalEnding {
-        EXCLUDING_END_DATE, INCLUDING_END_DATE
-    }
-
-    private static class IntervalUtil {
-        private static final long MIN_VALUE = 0;
-        private static final long MAX_VALUE = Long.MAX_VALUE;
-
-        public static Interval toInterval(final LocalDateInterval localDateInterval) {
-            Long startInstant = toStartInstant(localDateInterval.startDate());
-            Long endInstant = toEndInstant(localDateInterval.endDateExcluding());
-            return new Interval(startInstant, endInstant);
-        }
-
-        public static LocalDate toLocalDate(final long instant) {
-            if (instant == MAX_VALUE || instant == MIN_VALUE) {
-                return null;
-            }
-            return new LocalDate(instant);
-        }
-
-        private static long toStartInstant(final LocalDate date) {
-            if (date == null) {
-                return MIN_VALUE;
-            }
-            return date.toInterval().getStartMillis();
-        }
-
-        private static long toEndInstant(final LocalDate date) {
-            if (date == null) {
-                return MAX_VALUE;
-            }
-            return date.toInterval().getStartMillis();
-        }
-
-    }
-
-    private static final IntervalEnding PERSISTENT_ENDING = IntervalEnding.INCLUDING_END_DATE;
+public class LocalDateInterval extends AbstractInterval<LocalDateInterval>{
 
     public static LocalDateInterval excluding(final LocalDate startDate, final LocalDate endDate) {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.EXCLUDING_END_DATE);
@@ -73,97 +33,34 @@ public class LocalDateInterval {
         return new LocalDateInterval(startDate, endDate, IntervalEnding.INCLUDING_END_DATE);
     }
 
-    private LocalDate endDate;
-    private LocalDate startDate;
-
+    // //////////////////////////////////////
+    
     public LocalDateInterval() {
     }
 
     public LocalDateInterval(final Interval interval) {
-        if (interval == null) {
-            throw new IllegalArgumentException("interval cannot be null");
-        }
-        startDate = IntervalUtil.toLocalDate(interval.getStartMillis());
-        endDate = IntervalUtil.toLocalDate(interval.getEndMillis());
+        super(interval);
     }
 
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate) {
-        this(startDate, endDate, PERSISTENT_ENDING);
+        super(startDate, endDate);
     }
 
     public LocalDateInterval(final LocalDate startDate, final LocalDate endDate, final IntervalEnding ending) {
-        this.startDate = startDate;
-        this.endDate = adjustDateIn(endDate, ending);
+        super(startDate, endDate, ending);
     }
 
-    public Interval asInterval() {
-        return IntervalUtil.toInterval(this);
+    // //////////////////////////////////////
+
+    @Override
+    protected LocalDateInterval newInterval(Interval overlap) {
+        return new LocalDateInterval(overlap);
     }
 
-    /**
-     * Does this date contain the specified time interval.
-     * 
-     * @param date
-     * @return
-     */
-    public boolean contains(final LocalDate date) {
-        if (endDate() == null) {
-            if (startDate() == null) {
-                return true;
-            }
-            if (date.isEqual(startDate()) || date.isAfter(startDate())) {
-                return true;
-            }
-            return false;
-        }
-        return asInterval().contains(date.toInterval());
-    }
-
-    /**
-     * Does this time interval contain the specified time interval.
-     * 
-     * @param localDateInterval
-     * @return
-     */
-    public boolean contains(final LocalDateInterval localDateInterval) {
-        return asInterval().contains(localDateInterval.asInterval());
-    }
-
-    /**
-     * The duration in days
-     * 
-     * @return
-     */
-    public int days() {
-        if (isInfinite()) {
-            return 0;
-        }
-        Period p = new Period(asInterval(), PeriodType.days());
-        return p.getDays();
-    }
-
-    public LocalDate endDate() {
-        return endDate(PERSISTENT_ENDING);
-    }
-
-    public LocalDate endDate(final IntervalEnding ending) {
-        if (endDate == null) {
-            return null;
-        }
-        return adjustDateOut(endDate, ending);
-    }
-
-    public LocalDate endDateExcluding() {
-        return endDate(IntervalEnding.EXCLUDING_END_DATE);
-    }
-
-    public LocalDate endDateFromStartDate() {
-        return adjustDateOut(startDate(), PERSISTENT_ENDING);
-    }
+    // //////////////////////////////////////
 
     @Override
     public boolean equals(final Object obj) {
-        // TODO: use Isis' ObjectContracts?
         if (obj == null) {
             return false;
         }
@@ -180,86 +77,23 @@ public class LocalDateInterval {
                 isEquals();
     }
 
-    public boolean isValid() {
-        return startDate == null || endDate == null || endDate.isAfter(startDate) || endDate.equals(startDate);
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(startDate).append(endDate).hashCode();
     }
-
-    /**
-     * Gets the overlap between this interval and another interval.
-     * 
-     * @param otherInterval
-     * @return
-     */
-    public LocalDateInterval overlap(final LocalDateInterval otherInterval) {
-        if (otherInterval == null) {
-            return null;
-        }
-        if (otherInterval.isInfinite()) {
-            return this;
-        }
-        if (this.isInfinite()) {
-            return otherInterval;
-        }
-        final Interval thisAsInterval = asInterval();
-        final Interval otherAsInterval = otherInterval.asInterval();
-        Interval overlap = thisAsInterval.overlap(otherAsInterval);
-        if (overlap == null) {
-            return null;
-        }
-        return new LocalDateInterval(overlap);
-    }
-
-    /**
-     * Does this time interval contain the specified time interval.
-     * 
-     * @param interval
-     * @return
-     */
-    public boolean overlaps(final LocalDateInterval interval) {
-        return asInterval().overlaps(interval.asInterval());
-    }
-
-    public LocalDate startDate() {
-        return startDate;
-    }
-
+    
     @Override
     public String toString() {
         StringBuilder builder =
                 new StringBuilder(
-                        startDate() == null ? "----------" : startDate().toString("yyyy-MM-dd")).append("/").append(
-                        endDateExcluding() == null ? "----------" : endDateExcluding().toString("yyyy-MM-dd"));
+                        yyyyMMdd(startDate))
+                        .append("/")
+                        .append(yyyyMMdd(endDateExcluding()));
         return builder.toString();
     }
 
-    /**
-     * Does this interval is within the specified interval
-     * 
-     * @param interval
-     * @return
-     */
-    public boolean within(final LocalDateInterval interval) {
-        return interval.asInterval().contains(asInterval());
-    }
-
-    private LocalDate adjustDateIn(final LocalDate date, final IntervalEnding ending) {
-        if (date == null) {
-            return null;
-        }
-        return ending == IntervalEnding.INCLUDING_END_DATE ? date.plusDays(1) : date;
-    }
-
-    private LocalDate adjustDateOut(final LocalDate date, final IntervalEnding ending) {
-        if (date == null) {
-            return null;
-        }
-        return ending == IntervalEnding.INCLUDING_END_DATE ? date.minusDays(1) : date;
-    }
-
-    private boolean isInfinite() {
-        return startDate == null && endDate == null;
-    }
-
+    // //////////////////////////////////////
+    
     /**
      * Parse a string representation of a LocalDateInterval
      * 
@@ -288,6 +122,6 @@ public class LocalDateInterval {
             return null;
         }
         return LocalDate.parse(input);
-
     }
+    
 }
