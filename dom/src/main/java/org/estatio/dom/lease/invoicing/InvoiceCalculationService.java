@@ -120,8 +120,8 @@ public class InvoiceCalculationService {
             return sum;
         }
     }
-    
-    private LocalDate systemEpochDate(){
+
+    private LocalDate systemEpochDate() {
         return estatioSettingsService.fetchEpochDate();
     }
 
@@ -183,10 +183,9 @@ public class InvoiceCalculationService {
                 final BigDecimal annualFactor = invoicingFrequency.annualMultiplier();
                 final LocalDate epochDate = ObjectUtils.firstNonNull(leaseTerm.getLeaseItem().getEpochDate(), systemEpochDate());
                 BigDecimal mockValue = BigDecimal.ZERO;
-                if (epochDate != null && invoicingInterval.dueDate().isBefore(epochDate)){
-                    mockValue =leaseTerm.valueForDate(epochDate);;
+                if (epochDate != null && invoicingInterval.dueDate().isBefore(epochDate)) {
+                    mockValue = leaseTerm.valueForDate(epochDate);
                 }
-                 
                 results.add(new CalculationResult(
                         invoicingInterval,
                         effectiveInterval,
@@ -252,13 +251,14 @@ public class InvoiceCalculationService {
                 invoiceItem.setDueDate(dueDate);
                 invoiceItem.setStartDate(result.invoicingInterval().startDate());
                 invoiceItem.setEndDate(result.invoicingInterval().endDate());
-                if (adjustment) {
-                    invoiceItem.setEffectiveStartDate(result.invoicingInterval().startDate());
-                    invoiceItem.setEffectiveEndDate(result.invoicingInterval().endDate());
-                } else {
-                    invoiceItem.setEffectiveStartDate(result.effectiveInterval().startDate());
-                    invoiceItem.setEffectiveEndDate(result.effectiveInterval().endDate());
-                }
+
+                LocalDateInterval intervalToUse =
+                        adjustment
+                                ? result.invoicingInterval().asLocalDateInterval()
+                                : result.effectiveInterval();
+                invoiceItem.setEffectiveStartDate(intervalToUse.startDate());
+                invoiceItem.setEffectiveEndDate(intervalToUse.endDate());
+
                 invoiceItem.setTax(charge.getTax());
                 invoiceItem.verify();
                 invoiceItem.setAdjustment(adjustment);
