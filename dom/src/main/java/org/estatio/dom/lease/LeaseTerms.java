@@ -19,8 +19,20 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.Property;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -28,8 +40,6 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Prototype;
-
-import org.estatio.dom.EstatioDomainService;
 
 public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
@@ -71,10 +81,6 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     /**
      * Returns terms by LeaseItem and sequence. Used by the API
-     * 
-     * @param leaseItem
-     * @param sequence
-     * @return
      */
     @Hidden
     public LeaseTerm findByLeaseItemAndSequence(final LeaseItem leaseItem, final BigInteger sequence) {
@@ -87,5 +93,65 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     public List<LeaseTerm> allLeaseTerms() {
         return allInstances();
     }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
+            final Property property, final LocalDate startDate) {
+        return Lists.newArrayList(
+                Iterables.filter(
+                    Iterables.filter(allLeaseTerms(), LeaseTermForServiceCharge.class),
+                    whetherForPropertyAndStartDate(property, startDate)));
+    }
+
+    private static Predicate<LeaseTermForServiceCharge> whetherForPropertyAndStartDate(
+            final Property property, final LocalDate startDate) {
+        return new Predicate<LeaseTermForServiceCharge>() {
+            @Override
+            public boolean apply(final LeaseTermForServiceCharge input) {
+                Property candidateProperty = input.getLeaseItem().getLease().getProperty();
+                LocalDate candidateStartDate = input.getStartDate();
+                return Objects.equal(candidateProperty, property) && Objects.equal(candidateStartDate, startDate);
+            }
+        };
+    }
+
+    // //////////////////////////////////////
+    
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<LocalDate> findServiceChargeDatesByProperty(Property property) {
+        return Lists.newArrayList(
+                Sets.newTreeSet(
+                    Iterables.transform(
+                        Iterables.filter(
+                            Iterables.filter(allLeaseTerms(), LeaseTermForServiceCharge.class),
+                            whetherForProperty(property)),
+                        startDateOf())));
+    }
+
+    private static Function<LeaseTermForServiceCharge, LocalDate> startDateOf() {
+        return new Function<LeaseTermForServiceCharge, LocalDate>(){
+            @Override
+            public LocalDate apply(LeaseTermForServiceCharge input) {
+                return input.getStartDate();
+            }};
+    }
+
+    private static Predicate<LeaseTermForServiceCharge> whetherForProperty(
+            final Property property) {
+        return new Predicate<LeaseTermForServiceCharge>() {
+            @Override
+            public boolean apply(final LeaseTermForServiceCharge input) {
+                Property candidateProperty = input.getLeaseItem().getLease().getProperty();
+                return Objects.equal(candidateProperty, property);
+            }
+        };
+    }
+
+
+
 
 }

@@ -24,9 +24,13 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.Invoices;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.AbstractViewModel;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
@@ -39,12 +43,6 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.memento.MementoService;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
-
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.services.clock.ClockService;
 
 /**
  * View model that surfaces information about each property along with summary
@@ -91,7 +89,7 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
-public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
+public class InvoiceSummaryForPropertyDueDate extends EstatioViewModel {
 
     public Object approve() {
         for (Invoice invoice : getInvoices()) {
@@ -120,7 +118,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
     }
 
     public LocalDate default0Invoice() {
-        return clockService.now();
+        return getClockService().now();
     }
 
     public Object removeAll(final @Named("Confirm") Boolean confirm) {
@@ -143,7 +141,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      */
     @Override
     public String viewModelMemento() {
-        final Memento memento = mementoService.create();
+        final Memento memento = getMementoService().create();
 
         memento.set("reference", getReference())
                 .set("dueDate", getDueDate())
@@ -160,7 +158,7 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
      */
     @Override
     public void viewModelInit(final String mementoStr) {
-        final Memento memento = mementoService.parse(mementoStr);
+        final Memento memento = getMementoService().parse(mementoStr);
 
         setReference(memento.get("reference", String.class));
         setDueDate(memento.get("dueDate", LocalDate.class));
@@ -298,18 +296,6 @@ public class InvoiceSummaryForPropertyDueDate extends AbstractViewModel {
 
     final public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
-    }
-
-    private MementoService mementoService;
-
-    final public void injectMementoService(final MementoService mementoService) {
-        this.mementoService = mementoService;
-    }
-
-    private ClockService clockService;
-
-    final public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
     }
 
 }

@@ -41,6 +41,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.memento.MementoService;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 
+import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
@@ -92,7 +93,7 @@ import org.estatio.services.clock.ClockService;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
-public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
+public class InvoiceSummaryForPropertyDueDateStatus extends EstatioViewModel {
 
     public Object approve() {
         for (Invoice invoice : getInvoices()) {
@@ -121,7 +122,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
     }
 
     public LocalDate default0Invoice() {
-        return clockService.now();
+        return getClockService().now();
     }
 
     public Object removeAll(final @Named("Confirm") Boolean confirm) {
@@ -144,7 +145,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
      */
     @Override
     public String viewModelMemento() {
-        final Memento memento = viewModelSupport.create();
+        final Memento memento = getMementoService().create();
 
         memento.set("reference", getReference())
                 .set("dueDate", getDueDate())
@@ -162,7 +163,7 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
      */
     @Override
     public void viewModelInit(final String mementoStr) {
-        final Memento memento = viewModelSupport.parse(mementoStr);
+        final Memento memento = getMementoService().parse(mementoStr);
 
         setReference(memento.get("reference", String.class));
         setDueDate(memento.get("dueDate", LocalDate.class));
@@ -339,18 +340,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends AbstractViewModel {
 
     final public void injectInvoicesService(final Invoices invoicesService) {
         this.invoicesService = invoicesService;
-    }
-
-    private MementoService viewModelSupport;
-
-    final public void injectViewModelSupport(final MementoService viewModelSupport) {
-        this.viewModelSupport = viewModelSupport;
-    }
-
-    private ClockService clockService;
-
-    final public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
     }
 
 }

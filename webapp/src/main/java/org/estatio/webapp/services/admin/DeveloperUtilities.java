@@ -46,4 +46,14 @@ public class DeveloperUtilities extends DeveloperUtilitiesServiceDefault {
     public Blob downloadLayouts() {
         return super.downloadLayouts();
     }
+    
+    /**
+     * 'Move' the action underneath the 'Administration' menu item. 
+     */
+    @MemberOrder(name="Administration", sequence="92")
+    @ActionSemantics(Of.IDEMPOTENT)
+    @Override
+    public void refreshServices() {
+        super.refreshServices();
+    }
 }

@@ -19,7 +19,9 @@
 package org.estatio.dom;
 
 import org.apache.isis.applib.AbstractService;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.applib.services.memento.MementoService;
 import org.apache.isis.core.commons.lang.StringExtensions;
 
 import org.estatio.services.clock.ClockService;
@@ -76,6 +78,24 @@ public abstract class EstatioService<T> extends AbstractService {
     public void injectEventBusService(final EventBusService eventBusService) {
         this.eventBusService = eventBusService;
         eventBusService.register(this);
+    }
+
+    private MementoService mementoService;
+    protected MementoService getMementoService() {
+        return mementoService;
+    }
+
+    final public void injectMementoService(final MementoService mementoService) {
+        this.mementoService = mementoService;
+    }
+
+    
+    private BookmarkService bookmarkService;
+    protected BookmarkService getBookmarkService() {
+        return bookmarkService;
+    }
+    public final void injectBookmarkService(BookmarkService bookmarkService) {
+        this.bookmarkService = bookmarkService;
     }
 
 }

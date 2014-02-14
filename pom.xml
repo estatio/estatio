@@ -95,6 +95,7 @@ language governing permissions and limitations under the License.
         <danhaywood-isis-wicket-fullcalendar2.version>1.3.0</danhaywood-isis-wicket-fullcalendar2.version>
         <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
+        <danhaywood-isis-domainservice-excel.version>1.4.0-SNAPSHOT</danhaywood-isis-domainservice-excel.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
@@ -712,6 +713,15 @@ language governing permissions and limitations under the License.
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-excel</artifactId>
                 <version>${danhaywood-isis-wicket-excel.version}</version>
+            </dependency>
+
+            <!-- EXCEL DOMAIN SERVICE: uncomment to use https://github.com/danhaywood/isis-domainservice-excel -->
+            <dependency>
+                <groupId>com.danhaywood.isis.domainservice</groupId>
+                <artifactId>danhaywood-isis-domainservice-excel</artifactId>
+                <version>${danhaywood-isis-domainservice-excel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
         </dependencies>

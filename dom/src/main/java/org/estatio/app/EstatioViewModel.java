@@ -19,7 +19,9 @@
 package org.estatio.app;
 
 import org.apache.isis.applib.AbstractViewModel;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
+import org.apache.isis.applib.services.memento.MementoService;
 
 import org.estatio.services.clock.ClockService;
 
@@ -32,6 +34,9 @@ public abstract class EstatioViewModel extends AbstractViewModel {
     public final void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
+    
+    // //////////////////////////////////////
+
     
     /**
      * a default value is used to prevent null pointers for objects 
@@ -50,6 +55,23 @@ public abstract class EstatioViewModel extends AbstractViewModel {
         this.eventBusService = eventBusService;
     }    
 
+    // //////////////////////////////////////
+
     
-    
+    private MementoService mementoService;
+    protected MementoService getMementoService() {
+        return mementoService;
+    }
+
+    final public void injectMementoService(final MementoService mementoService) {
+        this.mementoService = mementoService;
+    }
+
+    private BookmarkService bookmarkService;
+    protected BookmarkService getBookmarkService() {
+        return bookmarkService;
+    }
+    public final void injectBookmarkService(BookmarkService bookmarkService) {
+        this.bookmarkService = bookmarkService;
+    }
 }

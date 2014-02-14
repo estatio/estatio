@@ -58,7 +58,7 @@ public class Tags extends EstatioDomainService<Tag> {
         return new Predicate<Tag>(){
             @Override
             public boolean apply(final Tag t) {
-                final Bookmark bookmark = bookmarkService.bookmarkFor(taggable);
+                final Bookmark bookmark = getBookmarkService().bookmarkFor(taggable);
                 return Objects.equal(t.getObjectType(), bookmark.getObjectType()) &&
                        Objects.equal(t.getName(), tagName);
             }
@@ -98,7 +98,7 @@ public class Tags extends EstatioDomainService<Tag> {
         if (taggable == null) {
             return null;
         } 
-        final Bookmark bookmark = bookmarkService.bookmarkFor(taggable);
+        final Bookmark bookmark = getBookmarkService().bookmarkFor(taggable);
         if (bookmark == null) {
             return null;
         }
@@ -106,13 +106,4 @@ public class Tags extends EstatioDomainService<Tag> {
 
     }
 
-
-    // //////////////////////////////////////
-
-    private BookmarkService bookmarkService;
-
-    public void injectBookmarkService(final BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
-    }
- 
 }

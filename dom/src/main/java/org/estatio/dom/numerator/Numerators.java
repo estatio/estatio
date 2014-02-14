@@ -65,7 +65,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
         if(scopedToIfAny == null) {
             return firstMatch("findByName", "name", numeratorName);
         } else {
-            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
+            final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
             final String objectType = bookmark.getObjectType();
             final String objectIdentifier = bookmark.getIdentifier();
             return firstMatch("findByNameAndObjectTypeAndObjectIdentifier", 
@@ -132,7 +132,7 @@ public class Numerators extends EstatioDomainService<Numerator> {
         final Numerator numerator = newTransientInstance();
         numerator.setName(numeratorName);
         if(scopedToIfAny != null) {
-            final Bookmark bookmark = bookmarkService.bookmarkFor(scopedToIfAny);
+            final Bookmark bookmark = getBookmarkService().bookmarkFor(scopedToIfAny);
             numerator.setObjectType(bookmark.getObjectType());
             numerator.setObjectIdentifier(bookmark.getIdentifier());
         }
@@ -143,11 +143,4 @@ public class Numerators extends EstatioDomainService<Numerator> {
     }
 
 
-
-    // //////////////////////////////////////
-
-    private BookmarkService bookmarkService;
-    public void injectBookmarkService(final BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
-    }
 }

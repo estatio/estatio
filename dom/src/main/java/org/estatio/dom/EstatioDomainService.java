@@ -22,7 +22,12 @@ import java.util.List;
 
 import javax.jdo.Query;
 
+import org.estatio.dom.lease.LeaseTerm;
+
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 public abstract class EstatioDomainService<T> extends EstatioService<T> {
@@ -74,6 +79,23 @@ public abstract class EstatioDomainService<T> extends EstatioService<T> {
         return allInstances(getEntityType());
     }
 
+    
+    // //////////////////////////////////////
+
+    @Programmatic
+    public String identifierFor(final T object) {
+        final Bookmark bookmark = getBookmarkService().bookmarkFor(object);
+        return bookmark.getIdentifier();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Programmatic
+    public T lookupByIdentifier(String identifier) {
+        Bookmark bookmark = getBookmarkService().bookmarkFor(getEntityType(), identifier);
+        return (T)getBookmarkService().lookup(bookmark);
+    }
+
+    
     // //////////////////////////////////////
     
     protected Query newQuery(final String jdoql) {
