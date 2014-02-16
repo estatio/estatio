@@ -88,6 +88,32 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE leaseItem == :leaseItem "
                         + "   && sequence == :sequence"),
         @javax.jdo.annotations.Query(
+                name = "findByPropertyAndTypeAndStartDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem.type == :leaseItemType "
+                        + "   && startDate == :startDate "
+                        + "   && leaseItem.lease.occupancies.contains(lu) "
+                        + "   && (lu.unit.property == :property) " 
+                        + "VARIABLES org.estatio.dom.lease.Occupancy lu"),
+        @javax.jdo.annotations.Query(
+                name = "findByPropertyAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem.type == :leaseItemType "
+                        + "   && leaseItem.lease.occupancies.contains(lu) "
+                        + "   && (lu.unit.property == :property) " 
+                        + "VARIABLES org.estatio.dom.lease.Occupancy lu"),
+        @javax.jdo.annotations.Query(
+                name = "findStartDatesByPropertyAndType", language = "JDOQL",
+                value = "SELECT DISTINCT startDate "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE leaseItem.type == :leaseItemType "
+                        + "   && leaseItem.lease.occupancies.contains(lu) "
+                        + "   && (lu.unit.property == :property) " 
+                        + "VARIABLES org.estatio.dom.lease.Occupancy lu "
+                        + "ORDER BY startDate"),
+        @javax.jdo.annotations.Query(
                 name = "findByLeaseItemAndStartDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseTerm "
@@ -106,9 +132,9 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @javax.jdo.annotations.Persistent
     private LeaseItem leaseItem;
 
+    @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull = "false")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled

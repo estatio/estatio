@@ -20,10 +20,9 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.SortedSet;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -35,6 +34,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Property;
@@ -96,60 +96,37 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
-            final Property property, final LocalDate startDate) {
-        return Lists.newArrayList(
-                Iterables.filter(
-                    Iterables.filter(allLeaseTerms(), LeaseTermForServiceCharge.class),
-                    whetherForPropertyAndStartDate(property, startDate)));
+    public List<LeaseTerm> findByPropertyAndTypeAndStartDate(
+            final Property property, final LeaseItemType leaseItemType, final LocalDate startDate) {
+        return allMatches("findByPropertyAndTypeAndStartDate", 
+                "property", property, "leaseItemType", leaseItemType, "startDate", startDate);
     }
 
-    private static Predicate<LeaseTermForServiceCharge> whetherForPropertyAndStartDate(
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
             final Property property, final LocalDate startDate) {
-        return new Predicate<LeaseTermForServiceCharge>() {
-            @Override
-            public boolean apply(final LeaseTermForServiceCharge input) {
-                Property candidateProperty = input.getLeaseItem().getLease().getProperty();
-                LocalDate candidateStartDate = input.getStartDate();
-                return Objects.equal(candidateProperty, property) && Objects.equal(candidateStartDate, startDate);
-            }
-        };
+        final List leaseTerms = findByPropertyAndTypeAndStartDate(property, LeaseItemType.SERVICE_CHARGE, startDate);
+        return leaseTerms;
     }
 
     // //////////////////////////////////////
     
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public List<LocalDate> findServiceChargeDatesByProperty(Property property) {
-        return Lists.newArrayList(
-                Sets.newTreeSet(
-                    Iterables.transform(
-                        Iterables.filter(
-                            Iterables.filter(allLeaseTerms(), LeaseTermForServiceCharge.class),
-                            whetherForProperty(property)),
-                        startDateOf())));
+    public List<LocalDate> findStartDatesByPropertyAndType(
+            final Property property, final LeaseItemType leaseItemType) {
+        List startDates = allMatches(
+                "findStartDatesByPropertyAndType", 
+                "property", property, "leaseItemType", leaseItemType);
+        return startDates;
     }
 
-    private static Function<LeaseTermForServiceCharge, LocalDate> startDateOf() {
-        return new Function<LeaseTermForServiceCharge, LocalDate>(){
-            @Override
-            public LocalDate apply(LeaseTermForServiceCharge input) {
-                return input.getStartDate();
-            }};
+    @ActionSemantics(Of.SAFE)
+    @Hidden
+    public List<LocalDate> findServiceChargeDatesByProperty(final Property property) {
+        return findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
     }
-
-    private static Predicate<LeaseTermForServiceCharge> whetherForProperty(
-            final Property property) {
-        return new Predicate<LeaseTermForServiceCharge>() {
-            @Override
-            public boolean apply(final LeaseTermForServiceCharge input) {
-                Property candidateProperty = input.getLeaseItem().getLease().getProperty();
-                return Objects.equal(candidateProperty, property);
-            }
-        };
-    }
-
-
-
-
 }

@@ -95,12 +95,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "|| name.matches(:referenceOrName)"),
         @javax.jdo.annotations.Query(
                 name = "findByProperty", language = "JDOQL",
-                value = "SELECT " +
-                        "FROM org.estatio.dom.lease.Lease " +
-                        "WHERE occupancies.contains(lu) " +
-                        "&& (lu.unit.property == :property) " +
-                        "VARIABLES " +
-                        "org.estatio.dom.lease.Occupancy lu"),
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Lease "
+                        + "WHERE occupancies.contains(lu) "
+                        + "   && (lu.unit.property == :property) "
+                        + "VARIABLES "
+                        + "org.estatio.dom.lease.Occupancy lu"),
         @javax.jdo.annotations.Query(
                 name = "findByAssetAndActiveOnDate", language = "JDOQL",
                 value = "SELECT "

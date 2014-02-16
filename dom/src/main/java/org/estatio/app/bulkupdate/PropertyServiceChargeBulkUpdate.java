@@ -18,6 +18,7 @@
 package org.estatio.app.bulkupdate;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
 import com.google.common.base.Function;
@@ -147,6 +148,7 @@ public class PropertyServiceChargeBulkUpdate extends EstatioViewModel {
         for (LeaseTermForServiceChargeBulkUpdate ltfscbu : lineItems) {
             final LeaseTermForServiceCharge leaseTerm = ltfscbu.getLeaseTerm();
             leaseTerm.setAuditedValue(ltfscbu.getAuditedValue());
+            leaseTerm.setBudgetedValue(ltfscbu.getBudgetedValue());
 
             final LeaseTermForServiceCharge nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
             final LeaseTermForServiceCharge nextLeaseTermUploaded = ltfscbu.getNextLeaseTerm();

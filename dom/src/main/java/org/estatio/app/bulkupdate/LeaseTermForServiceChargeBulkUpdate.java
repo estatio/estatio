@@ -51,6 +51,7 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
     public void viewModelInit(String memento) {
         this.leaseTerm = (LeaseTermForServiceCharge) leaseTerms.lookupByIdentifier(memento);
         this.setAuditedValue(leaseTerm.getAuditedValue());
+        this.setBudgetedValue(leaseTerm.getBudgetedValue());
         this.nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
         if(nextLeaseTerm != null) {
             this.setNextBudgetedValue(nextLeaseTerm.getBudgetedValue());
@@ -69,11 +70,26 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
 
     // //////////////////////////////////////
 
-    private BigDecimal auditedValue;
+    private BigDecimal budgetedValue;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
     @MemberOrder(name="Selected", sequence="2")
+    public BigDecimal getBudgetedValue() {
+        return budgetedValue;
+    }
+
+    public void setBudgetedValue(final BigDecimal budgetedValue) {
+        this.budgetedValue = budgetedValue;
+    }
+
+    // //////////////////////////////////////
+
+    private BigDecimal auditedValue;
+
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Optional
+    @MemberOrder(name="Selected", sequence="3")
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }

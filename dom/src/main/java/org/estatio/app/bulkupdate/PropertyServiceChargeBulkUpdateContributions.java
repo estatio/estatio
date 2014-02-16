@@ -18,6 +18,7 @@
 package org.estatio.app.bulkupdate;
 
 import java.util.List;
+import java.util.SortedSet;
 
 import org.joda.time.LocalDate;
 
@@ -45,13 +46,13 @@ public class PropertyServiceChargeBulkUpdateContributions extends EstatioService
     
     @NotContributed(As.ASSOCIATION) // ie *is* contributed as action
     @NotInServiceMenu
-    public PropertyServiceChargeBulkUpdate bulkUpdate(
+    public PropertyServiceChargeBulkUpdate bulkUpdateForDate(
             final Property property, 
             @Named("Start date") final LocalDate startDate) {
         final String memento = mementoFor(property, startDate);
         return getContainer().newViewModelInstance(PropertyServiceChargeBulkUpdate.class, memento);
     }
-    public List<LocalDate> choices1BulkUpdate(Property property) {
+    public List<LocalDate> choices1BulkUpdateForDate(Property property) {
         return leaseTerms.findServiceChargeDatesByProperty(property);
     }
 
