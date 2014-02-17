@@ -1,55 +1,62 @@
 {
-  "columns": [
-    {
-      "span": 4,
-      "memberGroups": {
-        "General": {
-          "members": {
-            "invoice": {},
-            "sequence": {},
-            "current": {}
-          }
+    "columns": [
+        {
+            "span": 4,
+            "memberGroups": {
+                "General": {
+                    "members": {
+                        "invoice": {},
+                        "sequence": {},
+                        "current": {}
+                    }
+                },
+                "Details": {
+                    "members": {
+                        "charge": {},
+                        "quantity": {},
+                        "description": {}
+                    }
+                }
+            }
         },
-        "Details": {
-          "members": {
-            "charge": {},
-            "quantity": {},
-            "description": {}
-          }
+        {
+            "span": 4,
+            "memberGroups": {
+                "Dates": {
+                    "members": {
+                        "dueDate": {},
+                        "startDate": {},
+                        "endDate": {},
+                        "effectiveStartDate": {},
+                        "effectiveEndDate": {},
+                        "adjustment": {}
+                    }
+                },
+                "Source": {
+                    "members": {
+                        "lease": {},
+                        "source": {},
+                        "fixedAsset": {}
+                    }
+                }
+            }
+        },
+        {
+            "span": 4,
+            "memberGroups": {
+                "Amounts": {
+                    "members": {
+                        "netAmount": {},
+                        "vatAmount": {},
+                        "tax": {},
+                        "grossAmount": {}
+                    }
+                }
+            }
+        },
+        {
+            "span": 12,
+            "collections": {}
         }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Dates": {
-          "members": {
-            "dueDate": {},
-            "startDate": {},
-            "endDate": {},
-            "effectiveStartDate": {},
-            "effectiveEndDate": {},
-            "adjustment": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Amounts": {
-          "members": {
-            "netAmount": {},
-            "vatAmount": {},
-            "tax": {},
-            "grossAmount": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 12,
-      "collections": {}
-    }
-  ]
+    ]
 }

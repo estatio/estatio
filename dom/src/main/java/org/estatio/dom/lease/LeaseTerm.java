@@ -54,6 +54,7 @@ import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
+import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
@@ -124,7 +125,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm
         extends EstatioMutableObject<LeaseTerm>
-        implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence {
+        implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence, InvoiceSource {
 
     public LeaseTerm() {
         // TODO: the integration tests fail if this is made DESCending.

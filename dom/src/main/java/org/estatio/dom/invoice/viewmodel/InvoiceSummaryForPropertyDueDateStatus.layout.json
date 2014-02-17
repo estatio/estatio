@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 6,
       "memberGroups": {
         "General": {
           "members": {
@@ -13,21 +13,25 @@
       }
     },
     {
-      "span": 4,
+      "span": 3,
+      "memberGroups": {
+        "Stats": {
+          "members": {
+            "total": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
       "memberGroups": {
       	"Totals": {
           "members": {
-            "total": {},
             "netAmount": {},
-            "vatAmount": {},
             "grossAmount": {}
           }
       	}
       }
-    },
-    {
-      "span": 0,
-      "memberGroups": {}
     },
     {
       "span": 12,

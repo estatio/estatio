@@ -141,7 +141,7 @@ public class CreateRetroInvoices implements Callable<Object> {
 
     private InvoiceCalculationService invoiceCalculationService;
 
-    public final void setInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
+    public final void injectCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
 

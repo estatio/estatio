@@ -22,7 +22,10 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.party.Party;
@@ -37,6 +40,8 @@ public class InvoiceTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Party.class, PartyForTesting.class))
 	        .withFixture(pojos(Currency.class))
 	        .withFixture(pojos(Lease.class))
+            .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
+            .withFixture(pojos(BankMandate.class))
 	        .exercise(new Invoice());
 	}
 

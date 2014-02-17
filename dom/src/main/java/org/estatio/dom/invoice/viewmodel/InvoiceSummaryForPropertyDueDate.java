@@ -71,7 +71,7 @@ import org.estatio.dom.invoice.Invoices;
                                 "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
                                 "  FROM \"Invoice\" " +
                                 "  INNER JOIN \"Lease\"   " +
-                                "    ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                                "    ON \"Invoice\".\"leaseId\" = \"Lease\".\"id\" " +
                                 "  INNER JOIN \"Occupancy\" " +
                                 "    ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
                                 "  INNER JOIN \"Unit\"   " +
@@ -245,6 +245,7 @@ public class InvoiceSummaryForPropertyDueDate extends EstatioViewModel {
 
     private BigDecimal vatAmount;
 
+    @Hidden
     public BigDecimal getVatAmount() {
         return vatAmount;
     }

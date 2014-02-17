@@ -146,7 +146,6 @@ public class InvoiceCalculationServiceTest_withEpochDate {
         invoiceItemForLease = new InvoiceItemForLease();
         invoiceItemForLease.modifyLeaseTerm(leaseTerm);
 
-        invoiceItemForLease.injectInvoices(mockInvoices);
         invoiceItemForLease.injectAgreementRoleTypes(mockAgreementRoleTypes);
         invoiceItemForLease.injectAgreementTypes(mockAgreementTypes);
 
@@ -161,7 +160,7 @@ public class InvoiceCalculationServiceTest_withEpochDate {
         leaseTerm.setEndDate(new LocalDate(2014, 12, 31));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
         leaseTerm.setAdjustedValue(BigDecimal.valueOf(22000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), 
+        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1),
                 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
     }
 
@@ -185,7 +184,7 @@ public class InvoiceCalculationServiceTest_withEpochDate {
         // TODO: Since 2012 is a leap year, the sum of the invoices is greater
         // than the value of the term.....
     }
-    
+
     // //////////////////////////////////////
 
     private void tester(

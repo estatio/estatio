@@ -11,12 +11,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 
-import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDateStatus;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.services.clock.ClockService;
@@ -31,7 +28,7 @@ public class InvoiceService {
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "6")
-    public void calculateInvoicesForProperty(
+    public Object calculateInvoicesForProperty(
             final @Named("Property") Property property,
             final @Named("Run Type") InvoiceRunType invoiceRunType,
             final @Named("Selection") InvoiceCalculationSelection calculationSelection,
@@ -40,12 +37,13 @@ public class InvoiceService {
             final @Named("Next due date") LocalDate nextDueDate) {
         invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
-                        property, 
-                        calculationSelection.selectedTypes(), 
-                        invoiceRunType, 
-                        invoiceDueDate, 
-                        startDueDate, 
+                        property,
+                        calculationSelection.selectedTypes(),
+                        invoiceRunType,
+                        invoiceDueDate,
+                        startDueDate,
                         nextDueDate));
+        return invoiceSummariesForInvoiceRun.invoicesForInvoiceRun();
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
@@ -78,7 +76,7 @@ public class InvoiceService {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "99")
     @Prototype
-    public List<InvoiceSummaryForPropertyDueDateStatus> calculateInvoicesForLeases(
+    public Object calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,
             final @Named("Run Type") InvoiceRunType runType,
             final @Named("Selection") InvoiceCalculationSelection selection,
@@ -86,19 +84,18 @@ public class InvoiceService {
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
 
-        try {
-            EstatioInteractionCache.startInteraction();
-
-            final List<Lease> results = leases.findLeases(referenceOrName);
-            for (Lease lease : results) {
-                if (lease.getStatus() != LeaseStatus.SUSPENDED) {
-                    lease.calculate(runType, selection, invoiceDueDate, startDueDate, nextDueDate);
-                }
-            }
-            return invoiceSummaries.invoicesForPropertyDueDateStatus();
-        } finally {
-            EstatioInteractionCache.endInteraction();
+        final List<Lease> results = leases.findLeases(referenceOrName);
+        if (results != null && results.size() > 0) {
+            invoiceCalculationService.calculateAndInvoice(
+                    new InvoiceCalculationParameters(
+                            results,
+                            selection.selectedTypes(),
+                            runType,
+                            invoiceDueDate,
+                            startDueDate,
+                            nextDueDate));
         }
+        return invoiceSummariesForInvoiceRun.invoicesForInvoiceRun();
     }
 
     public String validateCalculateInvoicesForLeases(
@@ -113,7 +110,7 @@ public class InvoiceService {
         }
         return null;
     }
-    
+
     public LocalDate default3CalculateInvoicesForLeases() {
         return clockService.beginningOfNextQuarter();
     }
@@ -128,12 +125,6 @@ public class InvoiceService {
 
     // //////////////////////////////////////
 
-    private InvoiceSummariesForPropertyDueDateStatus invoiceSummaries;
-
-    public void injectInvoiceSummaries(final InvoiceSummariesForPropertyDueDateStatus invoiceSummaries) {
-        this.invoiceSummaries = invoiceSummaries;
-    }
-
     private Leases leases;
 
     public void setLeases(final Leases leases) {
@@ -141,14 +132,21 @@ public class InvoiceService {
     }
 
     private InvoiceCalculationService invoiceCalculationService;
-    
+
     public final void setInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
     }
-    
+
     private ClockService clockService;
 
     public void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
+
+    private InvoiceSummariesForInvoiceRun invoiceSummariesForInvoiceRun;
+
+    public final void injectInvoiceSummariesForInvoiceRun(final InvoiceSummariesForInvoiceRun invoiceSummariesForInvoiceRun) {
+        this.invoiceSummariesForInvoiceRun = invoiceSummariesForInvoiceRun;
+    }
+
 }

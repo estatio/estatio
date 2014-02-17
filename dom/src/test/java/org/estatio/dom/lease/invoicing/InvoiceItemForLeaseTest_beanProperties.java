@@ -21,8 +21,11 @@ package org.estatio.dom.lease.invoicing;
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetForTesting;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
 import org.estatio.dom.tax.Tax;
@@ -36,6 +39,8 @@ public class InvoiceItemForLeaseTest_beanProperties extends AbstractBeanProperti
 	        .withFixture(pojos(Charge.class))
 	        .withFixture(pojos(Invoice.class))
 	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
+	        .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
+	        .withFixture(pojos(Lease.class))
 	        .exercise(new InvoiceItemForLease());
 	}
 

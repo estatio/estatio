@@ -100,6 +100,16 @@ public class InvoiceItem
 
     // //////////////////////////////////////
 
+    /**
+     * Optional, for subclasses to indicate their source (UI purposes only)
+     */
+    @Hidden(where = Where.REFERENCES_PARENT)
+    public InvoiceSource getSource() {
+        return null;
+    }
+
+    // //////////////////////////////////////
+
     private BigInteger sequence;
 
     @javax.jdo.annotations.Column(allowsNull = "false")
@@ -190,7 +200,7 @@ public class InvoiceItem
     private BigDecimal vatAmount;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Hidden(where = Where.PARENTED_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     @Disabled
     public BigDecimal getVatAmount() {
         return vatAmount;

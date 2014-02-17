@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
@@ -53,42 +54,41 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @ActionSemantics(Of.SAFE)
     @Programmatic
-    public List<Invoice> findInvoices(final Property property, final InvoiceStatus status) {
-        return allMatches("findByPropertyAndStatus",
-                "property", property,
-                "status", status);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @Programmatic
-    public List<Invoice> findInvoices(
-            final Property property, final LocalDate dueDate) {
-        return allMatches("findByPropertyAndDueDate",
-                "property", property, "dueDate", dueDate);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @Programmatic
     public List<Invoice> findInvoicesByRunId(final String runId) {
         return allMatches("findByRunId",
                 "runId", runId);
     }
 
     @ActionSemantics(Of.SAFE)
+    @Programmatic
+    public List<Invoice> findInvoices(
+            final FixedAsset fixedAsset, final InvoiceStatus status) {
+        return allMatches("findByFixedAssetAndStatus",
+                "fixedAsset", fixedAsset,
+                "status", status);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @Programmatic
+    public List<Invoice> findInvoices(
+            final FixedAsset fixedAsset, final LocalDate dueDate) {
+        return allMatches("findByFixedAssetAndDueDate",
+                "fixedAsset", fixedAsset, "dueDate", dueDate);
+    }
+
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public List<Invoice> findInvoices(
-            final Property property,
+            final FixedAsset fixedAsset,
             final @Named("Due Date") @Optional LocalDate dueDate,
             final @Optional InvoiceStatus status) {
         if (status == null) {
-            return allMatches("findByPropertyAndDueDate",
-                    "property", property, "dueDate", dueDate);
+            return findInvoices(fixedAsset, dueDate);
         } else if (dueDate == null) {
-            return allMatches("findByPropertyAndStatus",
-                    "property", property, "status", status);
+            return findInvoices(fixedAsset, status);
         } else {
-            return allMatches("findByPropertyAndDueDateAndStatus",
-                    "property", property, "dueDate", dueDate, "status", status);
+            return allMatches("findByFixedAssetAndDueDateAndStatus",
+                    "fixedAsset", fixedAsset, "dueDate", dueDate, "status", status);
         }
     }
 
@@ -143,7 +143,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Currency currency,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Lease") Lease lease,
+            final Lease lease,
             final String interactionId
             ) {
         Invoice invoice = newTransientInstance();
@@ -156,6 +156,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
         invoice.setDueDate(dueDate);
         invoice.setUuid(java.util.UUID.randomUUID().toString());
         invoice.setRunId(interactionId);
+        
+        // copy down form the agreement, we require all invoice items to relate back to this (root) fixed asset
+        invoice.setPaidBy(lease.getPaidBy());
+        invoice.setFixedAsset(lease.getFixedAsset());
+        
         persistIfNotAlready(invoice);
         getContainer().flush();
         return invoice;
@@ -274,8 +279,8 @@ public class Invoices extends EstatioDomainService<Invoice> {
     @MemberOrder(name = "Administration", sequence = "numerators.invoices.3")
     @NotContributed
     public Numerator findInvoiceNumberNumerator(
-            final Property property) {
-        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
+            final FixedAsset fixedAsset) {
+        return numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, fixedAsset);
     }
 
     // //////////////////////////////////////

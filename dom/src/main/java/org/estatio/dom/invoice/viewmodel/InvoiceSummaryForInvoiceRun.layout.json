@@ -1,18 +1,17 @@
 {
   "columns": [
     {
-      "span": 6,
+      "span": 8,
       "memberGroups": {
         "General": {
           "members": {
-            "property": {},
-            "dueDate": {}
+            "runId": {}
           }
         }
       }
     },
     {
-      "span": 3,
+      "span": 2,
       "memberGroups": {
         "Stats": {
           "members": {
@@ -22,7 +21,7 @@
       }
     },
     {
-      "span": 3,
+      "span": 2,
       "memberGroups": {
       	"Totals": {
           "members": {

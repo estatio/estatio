@@ -18,13 +18,13 @@
  */
 package org.estatio.dom.invoice;
 
-import org.estatio.dom.asset.Property;
 
 /**
- * The reason why the invoice was raised.
+ * For UI purposes only. allows an {@link InvoiceItem} to indicate its source.
+ * 
+ * <p>
+ * The {@link InvoiceItem#getSource()} is therefore rendered in the UI as a column in tables, enabling a drill-down.
  */
 public interface InvoiceSource {
-
-    Property getProperty();
 
 }

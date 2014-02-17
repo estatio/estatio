@@ -50,9 +50,10 @@ import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
@@ -78,33 +79,27 @@ import org.estatio.dom.party.Party;
                         "status == :status && " +
                         "dueDate == :dueDate"),
         @javax.jdo.annotations.Query(
-                name = "findByPropertyAndStatus", language = "JDOQL",
+                name = "findByFixedAssetAndStatus", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE " +
-                        "lease.occupancies.contains(o) && " +
-                        "o.unit.property == :property && " +
+                        "fixedAsset == :fixedAsset && " +
                         "status == :status " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
-                name = "findByPropertyAndDueDateAndStatus", language = "JDOQL",
+                name = "findByFixedAssetAndDueDateAndStatus", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE " +
-                        "lease.occupancies.contains(o) &&" +
-                        "o.unit.property == :property && " +
+                        "fixedAsset == :fixedAsset && " +
                         "status == :status && " +
                         "dueDate == :dueDate " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
-                name = "findByPropertyAndDueDate", language = "JDOQL",
+                name = "findByFixedAssetAndDueDate", language = "JDOQL",
                 value = "SELECT FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE " +
-                        "lease.occupancies.contains(o) &&" +
-                        "o.unit.property == :property && " +
+                        "fixedAsset == :fixedAsset && " +
                         "dueDate == :dueDate " +
-                        "VARIABLES org.estatio.dom.lease.Occupancy o " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByStatus", language = "JDOQL",
@@ -124,10 +119,10 @@ import org.estatio.dom.party.Party;
                         "WHERE runId == :runId ")
 })
 @Indices({
-//        @Index(name = "Invoice_Property_DueDate_IDX",
-//                members = { "property", "dueDate" }),
-//        @Index(name = "Invoice_Property_DueDate_Status_IDX",
-//                members = { "property", "dueDate", "status" }),
+        // @Index(name = "Invoice_Property_DueDate_IDX",
+        // members = { "property", "dueDate" }),
+        // @Index(name = "Invoice_Property_DueDate_Status_IDX",
+        // members = { "property", "dueDate", "status" }),
         @Index(name = "Invoice_runId_IDX",
                 members = { "runId" }),
         @Index(name = "Invoice_Lease_Seller_Buyer_PaymentMethod_DueDate_Status_IDX",
@@ -253,7 +248,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     private Lease lease;
 
-    @javax.jdo.annotations.Column(name = "sourceLeaseId", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "true")
     @Optional
     @Disabled
     public Lease getLease() {
@@ -388,6 +383,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         return total;
     }
 
+    @Hidden(where = Where.ALL_TABLES)
     @NotPersisted
     public BigDecimal getVatAmount() {
         BigDecimal total = BigDecimal.ZERO;
@@ -457,6 +453,10 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         return null;
     }
 
+    // perhaps we should also store the specific bank mandate on the invoice
+    // that we want to deduct the money from
+    // is this a concept of account then?
+
     @Programmatic
     public Invoice doCollect() {
         if (hideCollect()) {
@@ -486,7 +486,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (disableInvoice(invoiceDate, true) != null) {
             return this;
         }
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
         setInvoiceNumber(numerator.increment());
         setInvoiceDate(invoiceDate);
         this.setStatus(InvoiceStatus.INVOICED);
@@ -498,7 +498,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (getInvoiceNumber() != null) {
             return "Invoice number already assigned";
         }
-        final Numerator numerator = invoices.findInvoiceNumberNumerator(getProperty());
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
@@ -533,11 +533,57 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
+    private FixedAsset fixedAsset;
+
     /**
-     * Derived from the {@link #getLease() invoice source}.
+     * Derived from the {@link #getLease() lease}, but safe to persist since
+     * business rule states that we never generate invoices for invoice items
+     * that relate to different properties.
+     * 
+     * <p>
+     * Another reason for persisting this is that it allows eager validation
+     * when attaching additional {@link InvoiceItem}s to an invoice, to check
+     * that they relate to the same fixed asset.
      */
-    public Property getProperty() {
-        return getLease().getProperty();
+    @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
+    @Hidden(where = Where.PARENTED_TABLES)
+    @Named("Property")
+    // for the moment, might be generalized (to the user) in the future
+    @Disabled
+    public FixedAsset getFixedAsset() {
+        return fixedAsset;
+    }
+
+    public void setFixedAsset(final FixedAsset fixedAsset) {
+        this.fixedAsset = fixedAsset;
+    }
+
+    // //////////////////////////////////////
+
+    @javax.jdo.annotations.Column(name = "paidByBankMandateId")
+    private BankMandate paidBy;
+
+    /**
+     * Derived from the {@link #getLease() lease}, but safe to persist since
+     * business rule states that all invoice items that are paid by
+     * {@link BankMandate} (as opposed to simply by bank transfer) will be for
+     * the same bank mandate.
+     * 
+     * <p>
+     * Another reason for persisting this is that it allows eager validation
+     * when attaching additional {@link InvoiceItem}s to an invoice, to check
+     * that they relate to the same bank mandate (if they are to be paid by bank
+     * mandate).
+     */
+    @Hidden(where = Where.ALL_TABLES)
+    @Disabled
+    @Optional
+    public BankMandate getPaidBy() {
+        return paidBy;
+    }
+
+    public void setPaidBy(final BankMandate paidBy) {
+        this.paidBy = paidBy;
     }
 
     // //////////////////////////////////////

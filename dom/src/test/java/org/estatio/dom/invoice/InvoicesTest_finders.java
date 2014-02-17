@@ -64,7 +64,7 @@ public class InvoicesTest_finders {
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         lease = new Lease(){
             @Override
-            public Property getProperty() {
+            public Property getFixedAsset() {
                 return null;
             }
         };

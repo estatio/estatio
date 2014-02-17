@@ -27,12 +27,12 @@ import javax.jdo.annotations.InheritanceStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.TypicalLength;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 
@@ -52,7 +52,6 @@ import org.estatio.dom.invoice.Invoices;
                         value = "CREATE VIEW \"InvoiceSummaryForInvoiceRun\" " +
                                 "( " +
                                 "  {this.runId}, " +
-                                "  {this.dueDate}, " +
                                 "  {this.total}, " +
                                 "  {this.netAmount}, " +
                                 "  {this.vatAmount}, " +
@@ -60,29 +59,27 @@ import org.estatio.dom.invoice.Invoices;
                                 ") AS " +
                                 "SELECT " +
                                 "   \"Invoice\".\"runId\" , " +
-                                "   \"Invoice\".\"dueDate\", " +
                                 "   COUNT(DISTINCT(\"Invoice\".\"id\")) AS \"total\", " +
                                 "   SUM(\"InvoiceItem\".\"netAmount\") AS \"netAmount\", " +
                                 "   SUM(\"InvoiceItem\".\"vatAmount\") AS \"vatAmount\", " +
                                 "   SUM(\"InvoiceItem\".\"grossAmount\") AS \"grossAmount\" " +
                                 "FROM \"Invoice\" " +
                                 "  INNER JOIN \"Lease\"   " +
-                                "    ON \"Invoice\".\"sourceLeaseId\" = \"Lease\".\"id\" " +
+                                "    ON \"Invoice\".\"leaseId\" = \"Lease\".\"id\" " +
                                 "  INNER JOIN \"Occupancy\" " +
-                                "    ON \"Lease\".\"id\"              = \"Occupancy\".\"leaseId\" " +
+                                "    ON \"Lease\".\"id\" = \"Occupancy\".\"leaseId\" " +
                                 "  INNER JOIN \"Unit\"   " +
-                                "    ON \"Unit\".\"id\"               = \"Occupancy\".\"unitId\" " +
+                                "    ON \"Unit\".\"id\" = \"Occupancy\".\"unitId\" " +
                                 "  INNER JOIN \"Property\" " +
-                                "    ON \"Property\".\"id\"           = \"Unit\".\"propertyId\" " +
+                                "    ON \"Property\".\"id\" = \"Unit\".\"propertyId\" " +
                                 "  INNER JOIN \"FixedAsset\" " +
-                                "    ON \"FixedAsset\".\"id\"         = \"Property\".\"id\" " +
+                                "    ON \"FixedAsset\".\"id\" = \"Property\".\"id\" " +
                                 "  INNER JOIN \"InvoiceItem\" " +
                                 "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
                                 "WHERE " +
                                 "   NOT \"Invoice\".\"runId\" IS NULL " +
                                 "GROUP BY " +
-                                "   \"Invoice\".\"runId\", " +
-                                "   \"Invoice\".\"dueDate\"")
+                                "   \"Invoice\".\"runId\"")
         })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
@@ -142,7 +139,6 @@ public class InvoiceSummaryForInvoiceRun extends EstatioViewModel {
         final Memento memento = getMementoService().create();
 
         memento.set("runId", getRunId())
-                .set("dueDate", getDueDate())
                 .set("netAmount", getNetAmount())
                 .set("vatAmount", getVatAmount())
                 .set("grossAmount", getGrossAmount())
@@ -159,7 +155,6 @@ public class InvoiceSummaryForInvoiceRun extends EstatioViewModel {
         final Memento memento = getMementoService().parse(mementoStr);
 
         setRunId(memento.get("runId", String.class));
-        setDueDate(memento.get("dueDate", LocalDate.class));
         setNetAmount(memento.get("netAmount", BigDecimal.class));
         setVatAmount(memento.get("vatAmount", BigDecimal.class));
         setGrossAmount(memento.get("grossAmount", BigDecimal.class));
@@ -182,19 +177,6 @@ public class InvoiceSummaryForInvoiceRun extends EstatioViewModel {
 
     // //////////////////////////////////////
 
-    private LocalDate dueDate;
-
-    @Title(sequence = "2", prepend = " - ")
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(final LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    // //////////////////////////////////////
-
     private int total;
 
     public int getTotal() {
@@ -209,6 +191,7 @@ public class InvoiceSummaryForInvoiceRun extends EstatioViewModel {
 
     private BigDecimal vatAmount;
 
+    @Hidden
     public BigDecimal getVatAmount() {
         return vatAmount;
     }

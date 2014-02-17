@@ -64,7 +64,6 @@ import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.FinancialConstants;
-import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
@@ -122,8 +121,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 @AutoComplete(repository = Leases.class, action = "autoComplete")
 @Bookmarkable
 public class Lease
-        extends Agreement
-        implements InvoiceSource {
+        extends Agreement {
 
     // //////////////////////////////////////
 
@@ -227,8 +225,7 @@ public class Lease
      * {@link Property properties}, and so it is sufficient to obtain the
      * {@link Property} of the first such {@link Occupancy occupancy}.
      */
-    @Override
-    public Property getProperty() {
+    public Property getFixedAsset() {
         if (getOccupancies().isEmpty()) {
             return null;
         }

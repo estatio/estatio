@@ -36,6 +36,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.services.clock.ClockService;
@@ -78,11 +79,11 @@ public class InvoiceTest_assignInvoiceNumber {
 
     }
 
-    private Invoice createInvoice(final Property property, final InvoiceStatus invoiceStatus) {
+    private Invoice createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
         final Invoice invoice = new Invoice() {
             @Override
-            public Property getProperty() {
-                return property;
+            public FixedAsset getFixedAsset() {
+                return fixedAsset;
             }
         };
         invoice.setStatus(invoiceStatus);

@@ -5,13 +5,6 @@
  * {@link org.estatio.dom.invoice.Invoice#getBuyer() party} for a particular reason.
  * 
  * <p>
- * The reason - or {@link org.estatio.dom.invoice.InvoiceSource source} - of the 
- * {@link org.estatio.dom.invoice.InvoiceItem} is a polymorphic relationship, decoupling the <tt>invoice</tt> module
- * from the detail of the rest of the model.  Currently, {@link org.estatio.dom.invoice.InvoiceSource} is implemented
- * only by <tt>Lease</tt>.  But invoicing is potentially reusable for other services that the company might offer in 
- * the future.
- * 
- * <p>
  * Every invoice {@link org.estatio.dom.invoice.Invoice#getStatus() has} a
  * {@link org.estatio.dom.invoice.InvoiceStatus status}; this defines a fixed set of statii (
  * <i>NEW</i>, <i>APPROVED</i>, <i>COLLECTED</i> and <i>INVOICED</i>.  After an invoice has been

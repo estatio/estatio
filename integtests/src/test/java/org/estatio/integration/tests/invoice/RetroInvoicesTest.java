@@ -42,6 +42,7 @@ import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integration.tests.EstatioIntegrationTest;
@@ -58,6 +59,7 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
     private Properties properties;
     private Leases leases;
     private CreateRetroInvoices creator;
+    private InvoiceCalculationService calculationService;
     Lease lease;
 
     @Before
@@ -65,10 +67,13 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
         invoices = service(Invoices.class);
         properties = service(Properties.class);
         leases = service(Leases.class);
+        calculationService = service(InvoiceCalculationService.class);
         creator = new CreateRetroInvoices();
         creator.injectLeases(leases);
         creator.injectInvoices(invoices);
         creator.injectProperties(properties);
+        creator.injectCalculationService(calculationService);
+
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
     }
 

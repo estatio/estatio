@@ -26,15 +26,19 @@ import com.google.common.collect.Ordering;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceItem;
-import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.InvoiceSource;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -91,11 +95,34 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 public class InvoiceItemForLease extends InvoiceItem {
 
+    @Override
+    public InvoiceSource getSource() {
+        return getLeaseTerm();
+    }
+
+    // //////////////////////////////////////
+
+    private Lease lease;
+
+    @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
+    @Hidden(where = Where.PARENTED_TABLES)
+    @Title(sequence = "1", append = ":")
+    public Lease getLease() {
+        return lease;
+    }
+
+    public void setLease(final Lease lease) {
+        this.lease = lease;
+    }
+
+    // //////////////////////////////////////
+
     private LeaseTerm leaseTerm;
 
     @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
     @Disabled
-    @Hidden(where = Where.REFERENCES_PARENT)
+    @Hidden
+    //@Hidden(where = Where.REFERENCES_PARENT)
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
     }
@@ -121,6 +148,23 @@ public class InvoiceItemForLease extends InvoiceItem {
             return;
         }
         currentLeaseTerm.removeFromInvoiceItems(this);
+    }
+
+    // //////////////////////////////////////
+
+    private FixedAsset fixedAsset;
+
+    @javax.jdo.annotations.Column(name = "fixedAssetId", allowsNull = "false")
+    @Hidden(where = Where.PARENTED_TABLES)
+    @Named("Unit")
+    // for the moment, might be generalized (to the user) in the future
+    @Disabled
+    public FixedAsset getFixedAsset() {
+        return fixedAsset;
+    }
+
+    public void setFixedAsset(final FixedAsset fixedAsset) {
+        this.fixedAsset = fixedAsset;
     }
 
     // //////////////////////////////////////
@@ -165,12 +209,6 @@ public class InvoiceItemForLease extends InvoiceItem {
 
     public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
-    }
-
-    private Invoices invoices;
-
-    public final void injectInvoices(final Invoices invoices) {
-        this.invoices = invoices;
     }
 
     // //////////////////////////////////////

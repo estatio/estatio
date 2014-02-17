@@ -38,6 +38,7 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
@@ -53,7 +54,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
-            final LocalDate dueDate, 
+            final LocalDate dueDate,
             final String interactionId) {
         Lease lease = leaseTerm.getLeaseItem().getLease();
         Invoice invoice = invoices.findOrCreateMatchingInvoice(
@@ -68,6 +69,13 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
         invoiceItem.setEndDate(interval.endDate());
         invoiceItem.setDueDate(dueDate);
         invoiceItem.modifyLeaseTerm(leaseTerm);
+
+        // redundantly persist, these are immutable
+        // assumes only one occupancy per lease...
+        invoiceItem.setLease(lease);
+        UnitForLease unit = lease.getOccupancies().first().getUnit();
+        invoiceItem.setFixedAsset(unit);
+
         persistIfNotAlready(invoiceItem);
         return invoiceItem;
     }
@@ -145,7 +153,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     public InvoiceItemForLease createUnapprovedInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval invoiceInterval,
-            final LocalDate dueDate, 
+            final LocalDate dueDate,
             final String interactionId) {
         // TODO:Removing items returns unwanted results, perhaps remove all old
         // runs before?

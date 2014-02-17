@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.enterprise.context.RequestScoped;
-
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -38,7 +36,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioInteractionCache;
-import org.estatio.dom.asset.Properties;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.InvoicingFrequency;
@@ -54,7 +51,7 @@ import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.settings.EstatioSettingsService;
 
-@RequestScoped
+//@RequestScoped
 @Hidden
 public class InvoiceCalculationService {
 
@@ -142,7 +139,7 @@ public class InvoiceCalculationService {
 
     private void startInteraction(final String parameters) {
         if (interactionId == null) {
-            interactionId = LocalDateTime.now().toString(); //.concat(" - ").concat(parameters);
+            interactionId = LocalDateTime.now().toString().concat(" - ").concat(parameters);
             EstatioInteractionCache.startInteraction();
         }
     }
@@ -343,12 +340,6 @@ public class InvoiceCalculationService {
 
     public void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
-    }
-
-    private Properties properties;
-
-    public final void injectProperties(final Properties properties) {
-        this.properties = properties;
     }
 
     private Leases leases;
