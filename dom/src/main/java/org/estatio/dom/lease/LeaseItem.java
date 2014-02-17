@@ -59,6 +59,9 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -525,9 +528,8 @@ public class LeaseItem
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-        for (LeaseTerm term : getTerms()) {
-            term.calculate(runType, invoiceDueDate, startDueDate, nextDueDate);
-        }
+        invoiceCalculationService.calculateAndInvoice(
+                new InvoiceCalculationParameters(this, runType, invoiceDueDate, startDueDate, nextDueDate));
         return this;
     }
 
@@ -562,13 +564,13 @@ public class LeaseItem
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public List<CalculationResult> calculationResults(
             final InvoicingFrequency invoicingFrequency,
             final LocalDate startDueDate,
             final LocalDate nextDueDate
-            ){
+            ) {
         List<CalculationResult> results = new ArrayList<CalculationResult>();
         for (LeaseTerm term : getTerms()) {
             results.addAll(term.calculationResults(invoicingFrequency, startDueDate, nextDueDate));
@@ -588,6 +590,12 @@ public class LeaseItem
 
     public final void injectLeaseTerms(final LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
+    }
+
+    private InvoiceCalculationService invoiceCalculationService;
+
+    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
+        this.invoiceCalculationService = invoiceCalculationService;
     }
 
 }

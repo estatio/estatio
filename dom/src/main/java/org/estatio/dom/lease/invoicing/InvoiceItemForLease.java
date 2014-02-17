@@ -19,6 +19,7 @@
 package org.estatio.dom.lease.invoicing;
 
 import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
@@ -81,8 +82,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         "WHERE leaseTerm == :leaseTerm " +
                         "&& invoice.status == :invoiceStatus")
 })
-@Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
-        members = { "leaseTerm", "startDate", "endDate", "dueDate" })
+@Indices({
+        @Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_DueDate_IDX",
+                members = { "leaseTerm", "startDate", "endDate", "dueDate" }),
+        @Index(name = "InvoiceItemForLease_LeaseTerm_StartDate_EndDate_IDX",
+                members = { "leaseTerm", "startDate", "endDate" }),
+
+})
 public class InvoiceItemForLease extends InvoiceItem {
 
     private LeaseTerm leaseTerm;
@@ -116,20 +122,20 @@ public class InvoiceItemForLease extends InvoiceItem {
         }
         currentLeaseTerm.removeFromInvoiceItems(this);
     }
-    
+
     // //////////////////////////////////////
-    
+
     private Boolean adjustment;
-    
+
     @Optional
     public Boolean isAdjustment() {
         return adjustment;
     }
-    
+
     public void setAdjustment(final Boolean adjustment) {
         this.adjustment = adjustment;
     }
-    
+
     // //////////////////////////////////////
 
     @Override

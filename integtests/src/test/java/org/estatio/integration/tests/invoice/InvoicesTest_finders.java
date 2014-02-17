@@ -52,6 +52,8 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
     private Party buyer;
     private Lease lease;
     private Properties properties;
+    private Invoice invoice;
+    private static String runId = "2014-02-16T02:30:03.156 - OXF - [OXF-TOPMODEL-001] - [RENT, SERVICE_CHARGE, TURNOVER_RENT, TAX] - 2012-01-01 - 2012-01-01/2012-01-02";
 
     @BeforeClass
     public static void setupTransactionalData() {
@@ -68,14 +70,16 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
         seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
+        invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        invoice.setRunId(runId);
+
     }
 
     @Test
     public void findMatchingInvoice() throws Exception {
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE);
         Assert.assertNotNull(invoice);
     }
-    
+
     @Test
     public void findInvoicesByPropertyDueDate() {
         Property property = properties.findPropertyByReference("KAL");
@@ -89,6 +93,12 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
         List<Invoice> result = invoices.findInvoices(property, new LocalDate(2012, 1, 1), InvoiceStatus.NEW);
         assertThat(result.size(), is(1));
 
+    }
+    
+    @Test
+    public void findByRunId() {
+        List<Invoice> result = invoices.findInvoicesByRunId(runId);
+        assertThat(result.size(), is(1));
     }
 
 }

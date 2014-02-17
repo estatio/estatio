@@ -69,12 +69,12 @@ public class InvoiceAndInvoiceItemFixture extends AbstractFixture {
         final Party seller = parties.findPartyByReference(sellerStr);
         final Lease lease = leases.findLeaseByReference(leaseStr);
         final Currency currency = currencies.findCurrency(currencyStr);
-        final Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, currency, START_DATE, lease);
+        final Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, currency, START_DATE, lease, null);
         invoice.setInvoiceDate(START_DATE);
 
         final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, INTERVAL, START_DATE);
+            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, INTERVAL, START_DATE, null);
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
         }

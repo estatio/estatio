@@ -10,8 +10,8 @@ import org.estatio.dom.lease.LeaseItemType;
 public class InvoiceCalculationSelectionTest {
 
     @Test
-    public void testContains() {
-        assertThat(InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.contains(LeaseItemType.RENT), is(true));
+    public void selectedItemTypes() {
+        assertThat(InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.selectedTypes().contains(LeaseItemType.RENT), is(true));
     }
 
     @Test

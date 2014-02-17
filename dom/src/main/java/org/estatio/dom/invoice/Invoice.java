@@ -25,6 +25,8 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
@@ -114,7 +116,22 @@ import org.estatio.dom.party.Party;
                 name = "findByLease", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE lease == :lease ")
+                        "WHERE lease == :lease "),
+        @javax.jdo.annotations.Query(
+                name = "findByRunId", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE runId == :runId ")
+})
+@Indices({
+//        @Index(name = "Invoice_Property_DueDate_IDX",
+//                members = { "property", "dueDate" }),
+//        @Index(name = "Invoice_Property_DueDate_Status_IDX",
+//                members = { "property", "dueDate", "status" }),
+        @Index(name = "Invoice_runId_IDX",
+                members = { "runId" }),
+        @Index(name = "Invoice_Lease_Seller_Buyer_PaymentMethod_DueDate_Status_IDX",
+                members = { "lease", "seller", "buyer", "paymentMethod", "dueDate", "status" }),
 })
 @Bookmarkable
 public class Invoice extends EstatioMutableObject<Invoice> {
@@ -215,6 +232,21 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     public void setInvoiceNumber(final String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
+    }
+
+    // //////////////////////////////////////
+
+    private String runId;
+
+    @Disabled
+    @Optional
+    @Hidden(where = Where.ALL_TABLES)
+    public String getRunId() {
+        return runId;
+    }
+
+    public void setRunId(final String runId) {
+        this.runId = runId;
     }
 
     // //////////////////////////////////////

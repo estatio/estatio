@@ -19,7 +19,6 @@
 package org.estatio.fixturescripts;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -40,7 +39,9 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.services.settings.EstatioSettingsService;
 
 /**
@@ -55,7 +56,7 @@ public class CreateRetroInvoices implements Callable<Object> {
     public Object call() throws Exception {
         create(
                 propertiesService.allProperties(),
-                estatioSettingsService.fetchEpochDate(),
+                ObjectUtils.firstNonNull(estatioSettingsService.fetchEpochDate(), new LocalDate(2012,1,1)),
                 new LocalDate(2014, 1, 1));
         return "Finished";
     }
@@ -70,8 +71,7 @@ public class CreateRetroInvoices implements Callable<Object> {
     @Programmatic
     public void create(List<Property> properties, LocalDate startDueDate, LocalDate nextDueDate) {
         for (Property property : properties) {
-            List<Lease> leaseList = leases.findLeasesByProperty(property);
-            for (Lease lease : leaseList) {
+            for (Lease lease : leases.findLeasesByProperty(property)) {
                 create(lease, startDueDate, nextDueDate);
             }
         }
@@ -79,20 +79,23 @@ public class CreateRetroInvoices implements Callable<Object> {
 
     @Programmatic
     public void create(Lease lease, LocalDate startDueDate, LocalDate nextDueDate) {
-        lease.verifyUntil(nextDueDate);
         for (LocalDate dueDate : findDueDatesForLease(startDueDate, nextDueDate, lease)) {
-            for (LeaseItem leaseItem : lease.getItems()) {
-                if (InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.contains(leaseItem.getType())) {
-                    leaseItem.calculate(
+            InvoiceCalculationParameters parameters =
+                    new InvoiceCalculationParameters(
+                            lease,
+                            InvoiceCalculationSelection.ALL.selectedTypes(),
                             InvoiceRunType.NORMAL_RUN,
                             dueDate,
                             startDueDate,
                             dueDate.plusDays(1));
-                }
-            }
-            for (Invoice invoice : invoices.findInvoicesToBeApproved()) {
-                invoice.setStatus(InvoiceStatus.APPROVED);
-            }
+            createAndApprove(parameters);
+        }
+    }
+
+    private void createAndApprove(InvoiceCalculationParameters parameters) {
+        invoiceCalculationService.calculateAndInvoice(parameters);
+        for (Invoice invoice : invoices.findInvoicesToBeApproved()) {
+            invoice.setStatus(InvoiceStatus.APPROVED);
         }
     }
 
@@ -124,16 +127,22 @@ public class CreateRetroInvoices implements Callable<Object> {
         this.invoices = invoices;
     }
 
+    private Leases leases;
+
+    public final void injectLeases(final Leases leases) {
+        this.leases = leases;
+    }
+
     Properties propertiesService;
 
     final public void injectProperties(final Properties properties) {
         this.propertiesService = properties;
     }
 
-    private Leases leases;
+    private InvoiceCalculationService invoiceCalculationService;
 
-    public void injectLeases(final Leases leases) {
-        this.leases = leases;
+    public final void setInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
+        this.invoiceCalculationService = invoiceCalculationService;
     }
 
     private EstatioSettingsService estatioSettingsService;

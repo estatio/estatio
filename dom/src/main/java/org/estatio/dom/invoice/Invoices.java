@@ -68,6 +68,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
     }
 
     @ActionSemantics(Of.SAFE)
+    @Programmatic
+    public List<Invoice> findInvoicesByRunId(final String runId) {
+        return allMatches("findByRunId",
+                "runId", runId);
+    }
+
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "1")
     public List<Invoice> findInvoices(
             final Property property,
@@ -124,7 +131,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Currency currency
             ) {
-        return newInvoice(lease.getPrimaryParty(), lease.getSecondaryParty(), paymentMethod, currency, dueDate, lease);
+        return newInvoice(lease.getPrimaryParty(), lease.getSecondaryParty(), paymentMethod, currency, dueDate, lease, null);
     }
 
     // //////////////////////////////////////
@@ -136,7 +143,8 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Currency currency,
             final @Named("Due date") LocalDate dueDate,
-            final @Named("Lease") Lease lease
+            final @Named("Lease") Lease lease,
+            final String interactionId
             ) {
         Invoice invoice = newTransientInstance();
         invoice.setBuyer(buyer);
@@ -147,6 +155,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
         invoice.setLease(lease);
         invoice.setDueDate(dueDate);
         invoice.setUuid(java.util.UUID.randomUUID().toString());
+        invoice.setRunId(interactionId);
         persistIfNotAlready(invoice);
         getContainer().flush();
         return invoice;
@@ -157,10 +166,11 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Lease lease,
             final InvoiceStatus invoiceStatus,
-            final LocalDate dueDate) {
+            final LocalDate dueDate,
+            final String interactionId) {
         Party buyer = lease.getSecondaryParty();
         Party seller = lease.getPrimaryParty();
-        return findOrCreateMatchingInvoice(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
+        return findOrCreateMatchingInvoice(seller, buyer, paymentMethod, lease, invoiceStatus, dueDate, interactionId);
     }
 
     @Programmatic
@@ -178,7 +188,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
         }
         return invoices.get(0);
     }
-    
+
     @Programmatic
     public Invoice findOrCreateMatchingInvoice(
             final Party seller,
@@ -186,11 +196,12 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Lease lease,
             final InvoiceStatus invoiceStatus,
-            final LocalDate dueDate) {
+            final LocalDate dueDate,
+            final String interactionId) {
         final List<Invoice> invoices = findMatchingInvoices(
                 seller, buyer, paymentMethod, lease, invoiceStatus, dueDate);
         if (invoices == null || invoices.size() == 0) {
-            return newInvoice(seller, buyer, paymentMethod, settings.systemCurrency(), dueDate, lease);
+            return newInvoice(seller, buyer, paymentMethod, settings.systemCurrency(), dueDate, lease, interactionId);
         }
         return invoices.get(0);
     }
@@ -301,4 +312,5 @@ public class Invoices extends EstatioDomainService<Invoice> {
     public void injectSettings(final EstatioSettingsService settings) {
         this.settings = settings;
     }
+
 }

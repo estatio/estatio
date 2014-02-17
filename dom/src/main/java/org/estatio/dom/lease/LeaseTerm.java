@@ -55,6 +55,7 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithSequence;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
@@ -470,7 +471,7 @@ public abstract class LeaseTerm
             final @Named("Next Due Date") LocalDate nextDueDate) {
         if (!getLeaseItem().getStatus().equals(LeaseItemStatus.SUSPENDED)) {
             invoiceCalculationService.calculateAndInvoice(
-                    this, startDueDate, nextDueDate, invoiceDueDate, getLeaseItem().getInvoicingFrequency(), runType);
+                    new InvoiceCalculationParameters(this, runType, invoiceDueDate, startDueDate, nextDueDate));
         }
         return this;
     }
@@ -599,10 +600,10 @@ public abstract class LeaseTerm
             final InvoicingFrequency invoicingFrequency,
             final LocalDate startDueDate,
             final LocalDate nextDueDate
-            ){
+            ) {
         return invoiceCalculationService.calculateDueDateRange(this, startDueDate, nextDueDate, invoicingFrequency);
     }
-    
+
     // //////////////////////////////////////
 
     @Override

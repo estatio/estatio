@@ -31,20 +31,21 @@ public class InvoiceService {
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Invoices", sequence = "6")
-    public List<InvoiceSummaryForPropertyDueDateStatus> calculateInvoicesForProperty(
-            final @Named("Property") @DescribedAs("") Property property,
-            final @Named("Run Type") InvoiceRunType runType,
+    public void calculateInvoicesForProperty(
+            final @Named("Property") Property property,
+            final @Named("Run Type") InvoiceRunType invoiceRunType,
             final @Named("Selection") InvoiceCalculationSelection calculationSelection,
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-        final List<Lease> results = leases.findLeasesByProperty(property);
-        for (Lease lease : results) {
-            if (lease.getStatus() != LeaseStatus.SUSPENDED) {
-                lease.calculate(runType, calculationSelection, invoiceDueDate, startDueDate, nextDueDate);
-            }
-        }
-        return invoiceSummaries.invoicesForPropertyDueDateStatus();
+        invoiceCalculationService.calculateAndInvoice(
+                new InvoiceCalculationParameters(
+                        property, 
+                        calculationSelection.selectedTypes(), 
+                        invoiceRunType, 
+                        invoiceDueDate, 
+                        startDueDate, 
+                        nextDueDate));
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
@@ -56,7 +57,7 @@ public class InvoiceService {
     }
 
     public LocalDate default5CalculateInvoicesForProperty() {
-        return clockService.beginningOfNextQuarter();
+        return clockService.beginningOfNextQuarter().plusDays(1);
     }
 
     public String validateCalculateInvoicesForProperty(
@@ -139,6 +140,12 @@ public class InvoiceService {
         this.leases = leases;
     }
 
+    private InvoiceCalculationService invoiceCalculationService;
+    
+    public final void setInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
+        this.invoiceCalculationService = invoiceCalculationService;
+    }
+    
     private ClockService clockService;
 
     public void injectClockService(final ClockService clockService) {

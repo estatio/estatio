@@ -53,13 +53,15 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     public InvoiceItemForLease newInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval interval,
-            final LocalDate dueDate) {
+            final LocalDate dueDate, 
+            final String interactionId) {
         Lease lease = leaseTerm.getLeaseItem().getLease();
         Invoice invoice = invoices.findOrCreateMatchingInvoice(
                 leaseTerm.getLeaseItem().getPaymentMethod(),
                 lease,
                 InvoiceStatus.NEW,
-                dueDate);
+                dueDate,
+                interactionId);
         InvoiceItemForLease invoiceItem = newTransientInstance();
         invoiceItem.setInvoice(invoice);
         invoiceItem.setStartDate(interval.startDate());
@@ -143,11 +145,12 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
     public InvoiceItemForLease createUnapprovedInvoiceItem(
             final LeaseTerm leaseTerm,
             final LocalDateInterval invoiceInterval,
-            final LocalDate dueDate) {
+            final LocalDate dueDate, 
+            final String interactionId) {
         // TODO:Removing items returns unwanted results, perhaps remove all old
         // runs before?
         // removeUnapprovedInvoiceItems(leaseTerm, invoiceInterval);
-        return newInvoiceItem(leaseTerm, invoiceInterval, dueDate);
+        return newInvoiceItem(leaseTerm, invoiceInterval, dueDate, interactionId);
     }
 
     @Programmatic

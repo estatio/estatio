@@ -21,27 +21,40 @@ package org.estatio.dom.lease.invoicing;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.enterprise.context.RequestScoped;
 
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
 
+import org.estatio.dom.EstatioInteractionCache;
+import org.estatio.dom.asset.Properties;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.settings.EstatioSettingsService;
 
+@RequestScoped
 @Hidden
 public class InvoiceCalculationService {
 
@@ -125,6 +138,57 @@ public class InvoiceCalculationService {
         return estatioSettingsService.fetchEpochDate();
     }
 
+    private String interactionId;
+
+    private void startInteraction(final String parameters) {
+        if (interactionId == null) {
+            interactionId = LocalDateTime.now().toString(); //.concat(" - ").concat(parameters);
+            EstatioInteractionCache.startInteraction();
+        }
+    }
+
+    private void endInteraction() {
+        EstatioInteractionCache.endInteraction(interactionId != null);
+        interactionId = null;
+    }
+
+    @Programmatic
+    public void calculateAndInvoice(InvoiceCalculationParameters parameters) {
+        try {
+            startInteraction(parameters.toString());
+            for (Lease lease : parameters.leases() == null ? leases.findLeasesByProperty(parameters.property()) : parameters.leases()) {
+                lease.verifyUntil(parameters.dueDateRange().endDateExcluding());
+                if (lease.getStatus() != LeaseStatus.SUSPENDED) {
+                    SortedSet<LeaseItem> leaseItems =
+                            parameters.leaseItem() == null ?
+                                    lease.getItems() :
+                                    new TreeSet<LeaseItem>(Arrays.asList(parameters.leaseItem()));
+                    for (LeaseItem leaseItem : leaseItems) {
+                        if (!leaseItem.getStatus().equals(LeaseItemStatus.SUSPENDED)) {
+                            if (parameters.leaseItemTypes() == null || parameters.leaseItemTypes().contains(leaseItem.getType())) {
+                                SortedSet<LeaseTerm> leaseTerms =
+                                        parameters.leaseTerm() == null ?
+                                                leaseItem.getTerms() :
+                                                new TreeSet<LeaseTerm>(Arrays.asList(parameters.leaseTerm()));
+                                for (LeaseTerm leaseTerm : leaseTerms) {
+                                    calculateAndInvoice(
+                                            leaseTerm,
+                                            parameters.dueDateRange().startDate(),
+                                            parameters.dueDateRange().endDateExcluding(),
+                                            parameters.invoiceDueDate(),
+                                            leaseItem.getInvoicingFrequency(),
+                                            parameters.invoiceRunType());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } finally {
+            endInteraction();
+        }
+    }
+
     /**
      * Calculates term and creates invoice
      * 
@@ -146,8 +210,8 @@ public class InvoiceCalculationService {
         final List<CalculationResult> results;
         LocalDate termStartDate = leaseTerm.getStartDate();
         LocalDate start = startDueDate;
-        // Use the start date of the term when start due date is before or retro
-        // run
+        // Use the start date of the term when start due date is before or
+        // retro run
         if (runType.equals(InvoiceRunType.RETRO_RUN)) {
             start = termStartDate;
         }
@@ -241,7 +305,8 @@ public class InvoiceCalculationService {
                         invoiceItemsForLease.createUnapprovedInvoiceItem(
                                 leaseTerm,
                                 result.invoicingInterval().asLocalDateInterval(),
-                                dueDate);
+                                dueDate,
+                                interactionId);
                 invoiceItem.setNetAmount(newValue);
                 invoiceItem.setQuantity(BigDecimal.ONE);
                 LeaseItem leaseItem = leaseTerm.getLeaseItem();
@@ -278,6 +343,18 @@ public class InvoiceCalculationService {
 
     public void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
+    }
+
+    private Properties properties;
+
+    public final void injectProperties(final Properties properties) {
+        this.properties = properties;
+    }
+
+    private Leases leases;
+
+    public final void injectLeases(final Leases leases) {
+        this.leases = leases;
     }
 
 }

@@ -159,7 +159,7 @@ public class InvoicesTest_finders {
                 return Arrays.<Invoice>asList();
             }
             @Override
-            public Invoice newInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease) {
+            public Invoice newInvoice(Party seller, Party buyer, PaymentMethod paymentMethod, Currency currency, LocalDate dueDate, Lease lease, String interactionId) {
                 return null;
             }
         };

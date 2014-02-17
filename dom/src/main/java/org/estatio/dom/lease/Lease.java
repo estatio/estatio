@@ -20,7 +20,6 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
@@ -53,7 +52,6 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
-import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
@@ -72,7 +70,9 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -651,20 +651,15 @@ public class Lease
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-
-        boolean started = EstatioInteractionCache.startInteraction();
-        try {
-            verifyUntil(nextDueDate);
-            List<LeaseItemType> allowedTypes = Arrays.asList(calculationSelection.selectedTypes());
-            for (LeaseItem item : getItems()) {
-                if (allowedTypes.contains(item.getType())) {
-                    item.calculate(runType, invoiceDueDate, startDueDate, nextDueDate);
-                }
-            }
-            return this;
-        } finally {
-            EstatioInteractionCache.endInteraction(started);
-        }
+        invoiceCalculationService.calculateAndInvoice(
+                new InvoiceCalculationParameters(
+                        this,
+                        calculationSelection.selectedTypes(),
+                        runType,
+                        invoiceDueDate,
+                        startDueDate,
+                        nextDueDate));
+        return this;
     }
 
     public String validateCalculate(
@@ -918,6 +913,12 @@ public class Lease
 
     public final void injectLeases(final Leases leases) {
         this.leases = leases;
+    }
+
+    private InvoiceCalculationService invoiceCalculationService;
+
+    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
+        this.invoiceCalculationService = invoiceCalculationService;
     }
 
 }
