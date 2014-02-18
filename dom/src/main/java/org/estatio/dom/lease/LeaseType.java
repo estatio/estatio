@@ -23,6 +23,9 @@ import javax.jdo.annotations.IdentityType;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioImmutableObject;
@@ -63,6 +66,7 @@ public class LeaseType
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @MemberOrder(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -77,12 +81,29 @@ public class LeaseType
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
     @Title()
+    @MemberOrder(sequence = "2")
     public String getName() {
         return name;
     }
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    // //////////////////////////////////////
+
+    private String description;
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    @MultiLine(numberOfLines = 3)
+    @Optional
+    @MemberOrder(sequence = "1")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

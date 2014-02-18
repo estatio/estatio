@@ -19,6 +19,7 @@ package org.estatio.api;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -168,7 +169,10 @@ public class Api extends AbstractFactoryAndRepository {
     public void putLeaseType(
             @Named("reference") String reference,
             @Named("name") String name) {
-        leaseTypes.findOrCreate(reference, name);
+        LeaseType leaseType = leaseTypes.findOrCreate(reference, name);
+        if (ObjectUtils.compare(name, leaseType.getName()) != 0) {
+            leaseType.setName(name);
+        }
     }
 
     // //////////////////////////////////////
