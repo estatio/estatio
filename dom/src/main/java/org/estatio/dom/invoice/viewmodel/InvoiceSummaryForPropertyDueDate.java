@@ -30,19 +30,15 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
-import org.estatio.dom.invoice.Invoices;
 
 /**
  * View model that surfaces information about each property along with summary
@@ -89,52 +85,7 @@ import org.estatio.dom.invoice.Invoices;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
-public class InvoiceSummaryForPropertyDueDate extends EstatioViewModel {
-
-    public Object approve() {
-        for (Invoice invoice : getInvoices()) {
-            invoice.approve();
-        }
-        return this;
-    }
-
-    public Object collect(
-            final @Named("Are you sure?") Boolean confirm
-            ) {
-        for (Invoice invoice : getInvoices()) {
-            invoice.doCollect();
-        }
-        return this;
-    }
-
-    public Object invoice(
-            final @Named("Invoice Date") LocalDate invoiceDate,
-            final @Named("Are you sure?") Boolean confirm
-            ) {
-        for (Invoice invoice : getInvoices()) {
-            invoice.doInvoice(invoiceDate);
-        }
-        return this;
-    }
-
-    public LocalDate default0Invoice() {
-        return getClockService().now();
-    }
-
-    public Object removeAll(final @Named("Confirm") Boolean confirm) {
-        for (Invoice invoice : getInvoices()) {
-            invoice.remove();
-        }
-        return this;
-    }
-
-    @Prototype
-    public Object zapAll(final @Named("Confirm") Boolean confirm) {
-        for (Invoice invoice : getInvoices()) {
-            invoice.doRemove();
-        }
-        return this;
-    }
+public class InvoiceSummaryForPropertyDueDate extends InvoiceSummaryAbstract {
 
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
@@ -291,12 +242,6 @@ public class InvoiceSummaryForPropertyDueDate extends EstatioViewModel {
 
     final public void injectProperties(final Properties properties) {
         this.properties = properties;
-    }
-
-    private Invoices invoicesService;
-
-    final public void injectInvoicesService(final Invoices invoicesService) {
-        this.invoicesService = invoicesService;
     }
 
 }
