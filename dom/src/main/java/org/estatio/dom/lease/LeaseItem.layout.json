@@ -11,7 +11,18 @@
             "status": {},
             "invoicingFrequency": {},
             "paymentMethod": {},
-            "charge": {}
+            "charge": {},
+            "tax": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
+        "Current Value": {
+          "members": {
+            "value": {}
           }
         },
         "Dates": {
@@ -23,16 +34,6 @@
               }
             },
             "nextDueDate": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 3,
-      "memberGroups": {
-        "Current Value": {
-          "members": {
-            "value": {}
           }
         }
       }

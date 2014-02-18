@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 3,
+      "span": 4,
       "memberGroups": {
         "General": {
           "members": {
@@ -25,11 +25,17 @@
             "primaryParty": {},
             "secondaryParty": {}
           }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
         }
       }
     },
     {
-      "span": 3,
+      "span": 2,
       "memberGroups": {
         "Dates": {
           "members": {
@@ -50,12 +56,6 @@
                 "terminate": {}
               }
             }
-          }
-        },
-        "Related": {
-          "members": {
-            "previous": {},
-            "next": {}
           }
         }
       }

@@ -39,6 +39,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
@@ -62,6 +63,7 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
@@ -206,12 +208,33 @@ public class LeaseItem
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
+    @Disabled
     public Lease getLease() {
         return lease;
     }
 
     public void setLease(final Lease lease) {
         this.lease = lease;
+    }
+
+    // //////////////////////////////////////
+
+    private Tax tax;
+
+    @Hidden(where = Where.ALL_TABLES)
+    @Optional
+    @DescribedAs("WHen left empty the tax of the charge will be used")
+    public Tax getTax() {
+        return tax;
+    }
+
+    public void setTax(final Tax tax) {
+        this.tax = tax;
+    }
+
+    @Programmatic
+    public Tax getEffectiveTax() {
+        return getTax() == null && getCharge() != null ? getCharge().getTax() : getTax();
     }
 
     // //////////////////////////////////////
@@ -242,6 +265,7 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Title(sequence = "2")
+    @Disabled
     public LeaseItemType getType() {
         return type;
     }
@@ -365,6 +389,7 @@ public class LeaseItem
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.INVOICING_FREQUENCY_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
+    @Disabled
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
     }

@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.tax.Tax;
 
 public class LeaseItemTest_beanProperties extends AbstractBeanPropertiesTest {
 
@@ -33,6 +34,7 @@ public class LeaseItemTest_beanProperties extends AbstractBeanPropertiesTest {
 	        .withFixture(pojos(Charge.class))
 	        .withFixture(pojos(Lease.class))
 	        .withFixture(statii())
+	        .withFixture(pojos(Tax.class))
 	        .exercise(new LeaseItem());
 	}
 

@@ -321,7 +321,7 @@ public class InvoiceCalculationService {
                 invoiceItem.setEffectiveStartDate(intervalToUse.startDate());
                 invoiceItem.setEffectiveEndDate(intervalToUse.endDate());
 
-                invoiceItem.setTax(charge.getTax());
+                invoiceItem.setTax(leaseItem.getEffectiveTax());
                 invoiceItem.verify();
                 invoiceItem.setAdjustment(adjustment);
             }
