@@ -18,12 +18,15 @@
 package org.estatio.app.bulkupdate;
 
 import java.util.List;
-import java.util.SortedSet;
 
 import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -36,27 +39,24 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.value.Blob;
 
-import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTerms;
-
 @Immutable
 @Bookmarkable
-public class PropertyServiceChargeBulkUpdate extends EstatioViewModel {
+public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewModel {
 
     
     @Override
     public String viewModelMemento() {
-        return propertyServiceChargeBulkUpdateContributions.mementoFor(property, startDate);
+        return propertyServiceChargeBulkUpdateService.mementoFor(this);
     }
 
     @Override
     public void viewModelInit(String mementoStr) {
-        propertyServiceChargeBulkUpdateContributions.init(mementoStr, this);
+        propertyServiceChargeBulkUpdateService.initOf(mementoStr, this);
     }
 
     
+    // //////////////////////////////////////
+    // property (property)
     // //////////////////////////////////////
 
     private Property property;
@@ -72,17 +72,20 @@ public class PropertyServiceChargeBulkUpdate extends EstatioViewModel {
 
     @Named("Select")
     @MemberOrder(name="property", sequence="1")
-    public PropertyServiceChargeBulkUpdate selectProperty(
+    public PropertyLeaseServiceChargesBulkUpdateManager selectProperty(
             final Property property,
             @Named("Start date") final LocalDate startDate) {
-        final String memento = propertyServiceChargeBulkUpdateContributions.mementoFor(property, startDate);
-        return getContainer().newViewModelInstance(PropertyServiceChargeBulkUpdate.class, memento);
+        setProperty(property);
+        setStartDate(startDate);
+        return propertyServiceChargeBulkUpdateService.newManager(this);
     }
     public List<LocalDate> choices1SelectProperty(Property property) {
         return leaseTerms.findServiceChargeDatesByProperty(property);
     }
 
 
+    // //////////////////////////////////////
+    // startDate (property)
     // //////////////////////////////////////
 
     private LocalDate startDate;
@@ -98,12 +101,15 @@ public class PropertyServiceChargeBulkUpdate extends EstatioViewModel {
         this.startDate = startDate;
     }
 
+    // //////////////////////////////////////
+
+    
     @Named("Select")
     @MemberOrder(name="startDate", sequence="1")
-    public PropertyServiceChargeBulkUpdate selectStartDate(
+    public PropertyLeaseServiceChargesBulkUpdateManager selectStartDate(
             @Named("Start date") final LocalDate startDate) {
-        final String memento = propertyServiceChargeBulkUpdateContributions.mementoFor(property, startDate);
-        return getContainer().newViewModelInstance(PropertyServiceChargeBulkUpdate.class, memento);
+        setStartDate(startDate);
+        return propertyServiceChargeBulkUpdateService.newManager(this);
     }
     public List<LocalDate> choices0SelectStartDate() {
         return leaseTerms.findServiceChargeDatesByProperty(property);
@@ -114,38 +120,47 @@ public class PropertyServiceChargeBulkUpdate extends EstatioViewModel {
 
     
     // //////////////////////////////////////
+    // serviceCharges (collection)
+    // //////////////////////////////////////
 
     @Render(Type.EAGERLY)
-    public List<LeaseTermForServiceChargeBulkUpdate> getServiceCharges() { 
+    public List<LeaseTermForServiceChargeBulkUpdateLineItem> getServiceCharges() { 
         final List<LeaseTermForServiceCharge> terms = leaseTerms.findServiceChargeByPropertyAndStartDate(getProperty(), getStartDate());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
-    private Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBulkUpdate> newLeaseTermForServiceChargeAuditBulkUpdate() {
-        return new Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBulkUpdate>(){
+    private Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBulkUpdateLineItem> newLeaseTermForServiceChargeAuditBulkUpdate() {
+        return new Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBulkUpdateLineItem>(){
             @Override
-            public LeaseTermForServiceChargeBulkUpdate apply(final LeaseTermForServiceCharge leaseTerm) {
-                return getContainer().newViewModelInstance(LeaseTermForServiceChargeBulkUpdate.class, leaseTerms.identifierFor(leaseTerm));
+            public LeaseTermForServiceChargeBulkUpdateLineItem apply(final LeaseTermForServiceCharge leaseTerm) {
+                LeaseTermForServiceChargeBulkUpdateLineItem template = newTransientInstance(LeaseTermForServiceChargeBulkUpdateLineItem.class);
+                template.modifyLeaseTerm(leaseTerm);
+                return propertyServiceChargeBulkUpdateService.newLineItem(template);
             }};
     }
+
+    // //////////////////////////////////////
+    // download (action)
+    // //////////////////////////////////////
 
     @Named("Download")
     @MemberOrder(name="serviceCharges", sequence="1")
     public Blob downloadForServiceChargeBulkUpdate() {
         final String fileName = "ServiceChargeBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
-        final List<LeaseTermForServiceChargeBulkUpdate> viewModels = getServiceCharges();
-        return excelService.toExcel(viewModels, LeaseTermForServiceChargeBulkUpdate.class, fileName);
+        final List<LeaseTermForServiceChargeBulkUpdateLineItem> viewModels = getServiceCharges();
+        return excelService.toExcel(viewModels, LeaseTermForServiceChargeBulkUpdateLineItem.class, fileName);
     }
 
     // //////////////////////////////////////
+    // upload (action)
+    // //////////////////////////////////////
 
-    
     @Named("Upload")
     @MemberOrder(name="serviceCharges", sequence="2")
-    public PropertyServiceChargeBulkUpdate uploadForServiceChargeBulkUpdate(final @Named("Excel spreadsheet") Blob spreadsheet) {
-        List<LeaseTermForServiceChargeBulkUpdate> lineItems = 
-                excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBulkUpdate.class);
-        for (LeaseTermForServiceChargeBulkUpdate ltfscbu : lineItems) {
+    public PropertyLeaseServiceChargesBulkUpdateManager uploadForServiceChargeBulkUpdate(final @Named("Excel spreadsheet") Blob spreadsheet) {
+        List<LeaseTermForServiceChargeBulkUpdateLineItem> lineItems = 
+                excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBulkUpdateLineItem.class);
+        for (LeaseTermForServiceChargeBulkUpdateLineItem ltfscbu : lineItems) {
             final LeaseTermForServiceCharge leaseTerm = ltfscbu.getLeaseTerm();
             leaseTerm.setAuditedValue(ltfscbu.getAuditedValue());
             leaseTerm.setBudgetedValue(ltfscbu.getBudgetedValue());
@@ -159,21 +174,18 @@ public class PropertyServiceChargeBulkUpdate extends EstatioViewModel {
         return this;
     }
     
+    
+    // //////////////////////////////////////
+    // injected services
     // //////////////////////////////////////
 
+    @javax.inject.Inject
     private LeaseTerms leaseTerms;
-    public final void injectLeaseTerms(LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
-    }
     
+    @javax.inject.Inject
     private ExcelService excelService;
-    public final void injectExcelService(ExcelService excelService) {
-        this.excelService = excelService;
-    }
 
-    private PropertyServiceChargeBulkUpdateContributions propertyServiceChargeBulkUpdateContributions;
-    public final void injectPropertyContributionsForBulkUpdate(PropertyServiceChargeBulkUpdateContributions pscbuc) {
-        this.propertyServiceChargeBulkUpdateContributions = pscbuc;
-    }
+    @javax.inject.Inject
+    private PropertyLeaseServiceChargesBulkUpdateService propertyServiceChargeBulkUpdateService;
 
 }

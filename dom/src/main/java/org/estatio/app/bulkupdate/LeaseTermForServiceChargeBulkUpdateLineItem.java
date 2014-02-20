@@ -31,7 +31,7 @@ import org.estatio.dom.lease.LeaseTerms;
 
 @MemberGroupLayout(left={"Selected","Next"})
 @Bookmarkable
-public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
+public class LeaseTermForServiceChargeBulkUpdateLineItem extends EstatioViewModel {
 
     
     // //////////////////////////////////////
@@ -41,7 +41,7 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
      */
     @Override
     public String viewModelMemento() {
-        return leaseTerms.identifierFor(leaseTerm);
+        return propertyLeaseServiceChargesBulkUpdateService.mementoFor(this);
     }
 
     /**
@@ -49,13 +49,7 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
      */
     @Override
     public void viewModelInit(String memento) {
-        this.leaseTerm = (LeaseTermForServiceCharge) leaseTerms.lookupByIdentifier(memento);
-        this.setAuditedValue(leaseTerm.getAuditedValue());
-        this.setBudgetedValue(leaseTerm.getBudgetedValue());
-        this.nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
-        if(nextLeaseTerm != null) {
-            this.setNextBudgetedValue(nextLeaseTerm.getBudgetedValue());
-        }
+        propertyLeaseServiceChargesBulkUpdateService.initOf(memento, this);
     }
 
     // //////////////////////////////////////
@@ -67,6 +61,19 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
     public LeaseTermForServiceCharge getLeaseTerm() {
         return leaseTerm;
     }
+    public void setLeaseTerm(LeaseTermForServiceCharge leaseTerm) {
+        this.leaseTerm = leaseTerm;
+    }
+    public void modifyLeaseTerm(LeaseTermForServiceCharge leaseTerm) {
+        setLeaseTerm(leaseTerm);
+        setAuditedValue(leaseTerm.getAuditedValue());
+        setBudgetedValue(leaseTerm.getBudgetedValue());
+        nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
+        if(nextLeaseTerm != null) {
+            this.setNextBudgetedValue(nextLeaseTerm.getBudgetedValue());
+        }
+    }
+
 
     // //////////////////////////////////////
 
@@ -106,6 +113,9 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
     public LeaseTermForServiceCharge getNextLeaseTerm() {
         return nextLeaseTerm;
     }
+    public void setNextLeaseTerm(LeaseTermForServiceCharge nextLeaseTerm) {
+        this.nextLeaseTerm = nextLeaseTerm;
+    }
 
     // //////////////////////////////////////
 
@@ -125,12 +135,9 @@ public class LeaseTermForServiceChargeBulkUpdate extends EstatioViewModel {
 
     // //////////////////////////////////////
     
-    
-    private LeaseTerms leaseTerms;
 
-    public final void injectLeaseTerms(final LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
-    }
+    @javax.inject.Inject
+    private PropertyLeaseServiceChargesBulkUpdateService propertyLeaseServiceChargesBulkUpdateService;
 
 
 }

@@ -78,22 +78,6 @@ public abstract class EstatioDomainService<T> extends EstatioService<T> {
 
     
     // //////////////////////////////////////
-
-    @Programmatic
-    public String identifierFor(final T object) {
-        final Bookmark bookmark = getBookmarkService().bookmarkFor(object);
-        return bookmark.getIdentifier();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Programmatic
-    public T lookupByIdentifier(String identifier) {
-        Bookmark bookmark = getBookmarkService().bookmarkFor(getEntityType(), identifier);
-        return (T)getBookmarkService().lookup(bookmark);
-    }
-
-    
-    // //////////////////////////////////////
     
     protected Query newQuery(final String jdoql) {
         return isisJdoSupport.getJdoPersistenceManager().newQuery(jdoql);
