@@ -15,24 +15,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.bulkupdate;
+package org.estatio.app.lease.budgetaudit;
 
 import java.math.BigDecimal;
 
-import org.apache.isis.applib.annotation.Bookmarkable;
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTerms;
-
-@MemberGroupLayout(left={"Selected","Next"})
-@Bookmarkable
-public class LeaseTermForServiceChargeBulkUpdateLineItem extends EstatioViewModel {
-
+@MemberGroupLayout(columnSpans={4,4,4,0}, left={"Selected"}, right={"Next"})
+public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewModel {
     
     // //////////////////////////////////////
     
@@ -41,7 +37,7 @@ public class LeaseTermForServiceChargeBulkUpdateLineItem extends EstatioViewMode
      */
     @Override
     public String viewModelMemento() {
-        return propertyLeaseServiceChargesBulkUpdateService.mementoFor(this);
+        return budgetAuditService.mementoFor(this);
     }
 
     /**
@@ -49,7 +45,7 @@ public class LeaseTermForServiceChargeBulkUpdateLineItem extends EstatioViewMode
      */
     @Override
     public void viewModelInit(String memento) {
-        propertyLeaseServiceChargesBulkUpdateService.initOf(memento, this);
+        budgetAuditService.initOf(memento, this);
     }
 
     // //////////////////////////////////////
@@ -137,7 +133,7 @@ public class LeaseTermForServiceChargeBulkUpdateLineItem extends EstatioViewMode
     
 
     @javax.inject.Inject
-    private PropertyLeaseServiceChargesBulkUpdateService propertyLeaseServiceChargesBulkUpdateService;
+    private LeaseTermForServiceChargeBudgetAuditService budgetAuditService;
 
 
 }

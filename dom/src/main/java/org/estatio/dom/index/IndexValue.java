@@ -99,7 +99,7 @@ public class IndexValue
 
     @javax.jdo.annotations.Column(name = "indexBaseId", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
-    @Title(sequence = "2")
+    @Title(sequence = "1")
     @Disabled
     public IndexBase getIndexBase() {
         return indexBase;

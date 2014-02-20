@@ -28,6 +28,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
@@ -74,6 +75,7 @@ import org.estatio.dom.WithReferenceComparable;
                         + "FROM org.estatio.dom.index.Index "
                         + "WHERE reference == :reference")
 })
+@Bounded
 @Immutable
 public class Index
         extends EstatioMutableObject<Index>

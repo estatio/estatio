@@ -67,7 +67,7 @@ public class IndexBase
         extends EstatioMutableObject<IndexBase> 
         implements WithStartDate, Chained<IndexBase> {
 
-    private static final int FACTOR_SCALE = 4;
+    public static final int FACTOR_SCALE = 4;
 
     public IndexBase() {
         super("index, startDate desc");

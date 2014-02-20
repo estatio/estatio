@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.bulkupdate;
+package org.estatio.app.lease.budgetaudit;
 
 import java.util.List;
 
@@ -24,6 +24,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTerms;
@@ -41,17 +42,17 @@ import org.apache.isis.applib.value.Blob;
 
 @Immutable
 @Bookmarkable
-public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewModel {
+public class LeaseTermForServiceChargeBudgetAuditManager extends EstatioViewModel {
 
     
     @Override
     public String viewModelMemento() {
-        return propertyServiceChargeBulkUpdateService.mementoFor(this);
+        return budgetAuditService.mementoFor(this);
     }
 
     @Override
     public void viewModelInit(String mementoStr) {
-        propertyServiceChargeBulkUpdateService.initOf(mementoStr, this);
+        budgetAuditService.initOf(mementoStr, this);
     }
 
     
@@ -72,12 +73,12 @@ public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewMod
 
     @Named("Select")
     @MemberOrder(name="property", sequence="1")
-    public PropertyLeaseServiceChargesBulkUpdateManager selectProperty(
+    public LeaseTermForServiceChargeBudgetAuditManager selectProperty(
             final Property property,
             @Named("Start date") final LocalDate startDate) {
         setProperty(property);
         setStartDate(startDate);
-        return propertyServiceChargeBulkUpdateService.newManager(this);
+        return budgetAuditService.newManager(this);
     }
     public List<LocalDate> choices1SelectProperty(Property property) {
         return leaseTerms.findServiceChargeDatesByProperty(property);
@@ -106,10 +107,10 @@ public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewMod
     
     @Named("Select")
     @MemberOrder(name="startDate", sequence="1")
-    public PropertyLeaseServiceChargesBulkUpdateManager selectStartDate(
+    public LeaseTermForServiceChargeBudgetAuditManager selectStartDate(
             @Named("Start date") final LocalDate startDate) {
         setStartDate(startDate);
-        return propertyServiceChargeBulkUpdateService.newManager(this);
+        return budgetAuditService.newManager(this);
     }
     public List<LocalDate> choices0SelectStartDate() {
         return leaseTerms.findServiceChargeDatesByProperty(property);
@@ -124,18 +125,18 @@ public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewMod
     // //////////////////////////////////////
 
     @Render(Type.EAGERLY)
-    public List<LeaseTermForServiceChargeBulkUpdateLineItem> getServiceCharges() { 
+    public List<LeaseTermForServiceChargeBudgetAuditLineItem> getServiceCharges() { 
         final List<LeaseTermForServiceCharge> terms = leaseTerms.findServiceChargeByPropertyAndStartDate(getProperty(), getStartDate());
         return Lists.transform(terms, newLeaseTermForServiceChargeAuditBulkUpdate());
     }
 
-    private Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBulkUpdateLineItem> newLeaseTermForServiceChargeAuditBulkUpdate() {
-        return new Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBulkUpdateLineItem>(){
+    private Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBudgetAuditLineItem> newLeaseTermForServiceChargeAuditBulkUpdate() {
+        return new Function<LeaseTermForServiceCharge, LeaseTermForServiceChargeBudgetAuditLineItem>(){
             @Override
-            public LeaseTermForServiceChargeBulkUpdateLineItem apply(final LeaseTermForServiceCharge leaseTerm) {
-                LeaseTermForServiceChargeBulkUpdateLineItem template = newTransientInstance(LeaseTermForServiceChargeBulkUpdateLineItem.class);
+            public LeaseTermForServiceChargeBudgetAuditLineItem apply(final LeaseTermForServiceCharge leaseTerm) {
+                LeaseTermForServiceChargeBudgetAuditLineItem template = newTransientInstance(LeaseTermForServiceChargeBudgetAuditLineItem.class);
                 template.modifyLeaseTerm(leaseTerm);
-                return propertyServiceChargeBulkUpdateService.newLineItem(template);
+                return budgetAuditService.newLineItem(template);
             }};
     }
 
@@ -143,32 +144,30 @@ public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewMod
     // download (action)
     // //////////////////////////////////////
 
-    @Named("Download")
     @MemberOrder(name="serviceCharges", sequence="1")
-    public Blob downloadForServiceChargeBulkUpdate() {
+    public Blob download() {
         final String fileName = "ServiceChargeBulkUpdate-" + getProperty().getReference() + "@" + getStartDate() + ".xlsx";
-        final List<LeaseTermForServiceChargeBulkUpdateLineItem> viewModels = getServiceCharges();
-        return excelService.toExcel(viewModels, LeaseTermForServiceChargeBulkUpdateLineItem.class, fileName);
+        final List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems = getServiceCharges();
+        return excelService.toExcel(lineItems, LeaseTermForServiceChargeBudgetAuditLineItem.class, fileName);
     }
 
     // //////////////////////////////////////
     // upload (action)
     // //////////////////////////////////////
 
-    @Named("Upload")
     @MemberOrder(name="serviceCharges", sequence="2")
-    public PropertyLeaseServiceChargesBulkUpdateManager uploadForServiceChargeBulkUpdate(final @Named("Excel spreadsheet") Blob spreadsheet) {
-        List<LeaseTermForServiceChargeBulkUpdateLineItem> lineItems = 
-                excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBulkUpdateLineItem.class);
-        for (LeaseTermForServiceChargeBulkUpdateLineItem ltfscbu : lineItems) {
-            final LeaseTermForServiceCharge leaseTerm = ltfscbu.getLeaseTerm();
-            leaseTerm.setAuditedValue(ltfscbu.getAuditedValue());
-            leaseTerm.setBudgetedValue(ltfscbu.getBudgetedValue());
+    public LeaseTermForServiceChargeBudgetAuditManager upload(final @Named("Excel spreadsheet") Blob spreadsheet) {
+        List<LeaseTermForServiceChargeBudgetAuditLineItem> lineItems = 
+                excelService.fromExcel(spreadsheet, LeaseTermForServiceChargeBudgetAuditLineItem.class);
+        for (LeaseTermForServiceChargeBudgetAuditLineItem lineItem : lineItems) {
+            final LeaseTermForServiceCharge leaseTerm = lineItem.getLeaseTerm();
+            leaseTerm.setAuditedValue(lineItem.getAuditedValue());
+            leaseTerm.setBudgetedValue(lineItem.getBudgetedValue());
 
             final LeaseTermForServiceCharge nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
-            final LeaseTermForServiceCharge nextLeaseTermUploaded = ltfscbu.getNextLeaseTerm();
+            final LeaseTermForServiceCharge nextLeaseTermUploaded = lineItem.getNextLeaseTerm();
             if(nextLeaseTerm != null && nextLeaseTerm == nextLeaseTermUploaded) {
-                nextLeaseTerm.setBudgetedValue(ltfscbu.getNextBudgetedValue());
+                nextLeaseTerm.setBudgetedValue(lineItem.getNextBudgetedValue());
             }
         }
         return this;
@@ -180,12 +179,15 @@ public class PropertyLeaseServiceChargesBulkUpdateManager extends EstatioViewMod
     // //////////////////////////////////////
 
     @javax.inject.Inject
+    private Properties properties;
+    
+    @javax.inject.Inject
     private LeaseTerms leaseTerms;
     
     @javax.inject.Inject
     private ExcelService excelService;
 
     @javax.inject.Inject
-    private PropertyLeaseServiceChargesBulkUpdateService propertyServiceChargeBulkUpdateService;
+    private LeaseTermForServiceChargeBudgetAuditService budgetAuditService;
 
 }

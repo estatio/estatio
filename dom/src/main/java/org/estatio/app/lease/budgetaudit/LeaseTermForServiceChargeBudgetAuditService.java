@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.app.bulkupdate;
+package org.estatio.app.lease.budgetaudit;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,10 +40,10 @@ import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 
 @Immutable
-public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService<PropertyLeaseServiceChargesBulkUpdateService> {
+public class LeaseTermForServiceChargeBudgetAuditService extends EstatioService<LeaseTermForServiceChargeBudgetAuditService> {
 
-    public PropertyLeaseServiceChargesBulkUpdateService() {
-        super(PropertyLeaseServiceChargesBulkUpdateService.class);
+    public LeaseTermForServiceChargeBudgetAuditService() {
+        super(LeaseTermForServiceChargeBudgetAuditService.class);
     }
 
     // //////////////////////////////////////
@@ -62,10 +62,10 @@ public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService
     
     @NotContributed(As.ASSOCIATION) // ie *is* contributed as action
     @NotInServiceMenu
-    public PropertyLeaseServiceChargesBulkUpdateManager bulkUpdateForDate(
+    public LeaseTermForServiceChargeBudgetAuditManager bulkUpdateForDate(
             final Property property, 
             @Named("Start date") final LocalDate startDate) {
-        PropertyLeaseServiceChargesBulkUpdateManager template = new PropertyLeaseServiceChargesBulkUpdateManager();
+        LeaseTermForServiceChargeBudgetAuditManager template = new LeaseTermForServiceChargeBudgetAuditManager();
         template.setProperty(property);
         template.setStartDate(startDate);
         return newManager(template);
@@ -80,7 +80,7 @@ public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService
     // memento for manager
     // //////////////////////////////////////
     
-    String mementoFor(final PropertyLeaseServiceChargesBulkUpdateManager manager) {
+    String mementoFor(final LeaseTermForServiceChargeBudgetAuditManager manager) {
         final Memento memento = getMementoService().create();
         final Bookmark propertyBookmark = getBookmarkService().bookmarkFor(manager.getProperty());
         memento.set("property", propertyBookmark);
@@ -88,23 +88,23 @@ public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService
         return memento.asString();
     }
     
-    void initOf(final String mementoStr, final PropertyLeaseServiceChargesBulkUpdateManager manager) {
+    void initOf(final String mementoStr, final LeaseTermForServiceChargeBudgetAuditManager manager) {
         final Memento memento = getMementoService().parse(mementoStr);
         final Bookmark propertyBookmark = memento.get("property", Bookmark.class);
         manager.setProperty(getBookmarkService().lookup(propertyBookmark, Property.class));
         manager.setStartDate(memento.get("startDate", LocalDate.class));
     }
 
-    PropertyLeaseServiceChargesBulkUpdateManager newManager(PropertyLeaseServiceChargesBulkUpdateManager manager) {
+    LeaseTermForServiceChargeBudgetAuditManager newManager(LeaseTermForServiceChargeBudgetAuditManager manager) {
         final String memento = mementoFor(manager);
-        return getContainer().newViewModelInstance(PropertyLeaseServiceChargesBulkUpdateManager.class, memento);
+        return getContainer().newViewModelInstance(LeaseTermForServiceChargeBudgetAuditManager.class, memento);
     }
 
     // //////////////////////////////////////
     // memento for lease term "line item"
     // //////////////////////////////////////
     
-    String mementoFor(final LeaseTermForServiceChargeBulkUpdateLineItem lineItem) {
+    String mementoFor(final LeaseTermForServiceChargeBudgetAuditLineItem lineItem) {
         final Memento memento = getMementoService().create();
         
         memento.set("leaseTerm", bookmarkService.bookmarkFor(lineItem.getLeaseTerm()));
@@ -116,7 +116,7 @@ public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService
         return memento.asString();
     }
     
-    void initOf(final String mementoStr, final LeaseTermForServiceChargeBulkUpdateLineItem lineItem) {
+    void initOf(final String mementoStr, final LeaseTermForServiceChargeBudgetAuditLineItem lineItem) {
         final Memento memento = getMementoService().parse(mementoStr);
 
         lineItem.setLeaseTerm(bookmarkService.lookup(memento.get("leaseTerm", Bookmark.class), LeaseTermForServiceCharge.class));
@@ -126,9 +126,9 @@ public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService
         lineItem.setNextBudgetedValue(memento.get("nextBudgetedValue", BigDecimal.class));
     }
 
-    LeaseTermForServiceChargeBulkUpdateLineItem newLineItem(LeaseTermForServiceChargeBulkUpdateLineItem lineItem) {
+    LeaseTermForServiceChargeBudgetAuditLineItem newLineItem(LeaseTermForServiceChargeBudgetAuditLineItem lineItem) {
         final String memento = mementoFor(lineItem);
-        return getContainer().newViewModelInstance(LeaseTermForServiceChargeBulkUpdateLineItem.class, memento);
+        return getContainer().newViewModelInstance(LeaseTermForServiceChargeBudgetAuditLineItem.class, memento);
     }
 
     // //////////////////////////////////////
@@ -141,11 +141,7 @@ public class PropertyLeaseServiceChargesBulkUpdateService extends EstatioService
     @javax.inject.Inject
     private BookmarkService bookmarkService;
     
+    @javax.inject.Inject
     private LeaseTerms leaseTerms;
-    public final void injectLeaseTerms(LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
-    }
-
-
     
 }
