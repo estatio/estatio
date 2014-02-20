@@ -115,8 +115,10 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     public BigDecimal getEffectiveValue() {
-        return ObjectUtils.firstNonNull(getBudgetedTurnoverRent(),
-                getAuditedTurnoverRent(), BigDecimal.ZERO);
+        return ObjectUtils.firstNonNull(
+                getBudgetedTurnoverRent(),
+                getAuditedTurnoverRent(), 
+                BigDecimal.ZERO);
     }
 
     @Override
@@ -128,30 +130,37 @@ public class LeaseTermForTurnoverRent extends LeaseTerm {
 
     @Override
     protected void doAlign() {
-        List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
 
         BigDecimal rentValue = BigDecimal.ZERO;
+        List<LeaseItem> rentItems = getLeaseItem().getLease().findItemsOfType(LeaseItemType.RENT);
         List<CalculationResult> calculationResults = new ArrayList<CalculationResult>();
-        
-        //Collect all results
+
+        // Collect all results
         for (LeaseItem rentItem : rentItems) {
             calculationResults.addAll(rentItem.calculationResults(
                     rentItem.getInvoicingFrequency(),
                     getStartDate(),
-                    getStartDate().plusYears(2))); 
+                    getStartDate().plusYears(2)));
         }
+
+        // TODO: do prorata when intervals don't match
         for (CalculationResult result : calculationResults) {
-            if (getInterval().contains(result.invoicingInterval().asLocalDateInterval())){
+            if (getInterval().contains(result.invoicingInterval().asLocalDateInterval())) {
                 rentValue = rentValue.add(result.value());
             }
         }
-        
+
         setContractualRent(rentValue);
-        TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
-        BigDecimal newAuditedTurnoverRent = helper.calculateRent(getAuditedTurnover());
-        if (ObjectUtils.compare(newAuditedTurnoverRent, getContractualRent()) > 0) {
-            setAuditedTurnoverRent(newAuditedTurnoverRent.subtract(getContractualRent()));
+
+        if (getTurnoverRentRule() != null) {
+            // Ignore the rule when empty
+            TurnoverRentRuleHelper helper = new TurnoverRentRuleHelper(getTurnoverRentRule());
+            BigDecimal newAuditedTurnoverRent = helper.calculateRent(getAuditedTurnover());
+            if (ObjectUtils.compare(newAuditedTurnoverRent, getContractualRent()) > 0) {
+                setAuditedTurnoverRent(newAuditedTurnoverRent.subtract(getContractualRent()));
+            }
         }
+
     }
 
     @Override
