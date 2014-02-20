@@ -32,9 +32,9 @@ import org.estatio.dom.invoice.Invoices;
 
 public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
 
-    public Object approve() {
+    public Object approveAll() {
         for (Invoice invoice : getInvoices()) {
-            invoice.approve();
+            invoice.doApprove();
         }
         return this;
     }

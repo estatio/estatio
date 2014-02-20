@@ -39,6 +39,7 @@ import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
@@ -156,11 +157,12 @@ public class Invoices extends EstatioDomainService<Invoice> {
         invoice.setDueDate(dueDate);
         invoice.setUuid(java.util.UUID.randomUUID().toString());
         invoice.setRunId(interactionId);
-        
-        // copy down form the agreement, we require all invoice items to relate back to this (root) fixed asset
+
+        // copy down form the agreement, we require all invoice items to relate
+        // back to this (root) fixed asset
         invoice.setPaidBy(lease.getPaidBy());
         invoice.setFixedAsset(lease.getFixedAsset());
-        
+
         persistIfNotAlready(invoice);
         getContainer().flush();
         return invoice;
@@ -316,6 +318,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     public void injectSettings(final EstatioSettingsService settings) {
         this.settings = settings;
+    }
+
+    public void removeRuns(InvoiceCalculationParameters parameters) {
+        List<Invoice> invoices = findInvoices(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
+        for (Invoice invoice : invoices) {
+            invoice.remove();
+        }
     }
 
 }

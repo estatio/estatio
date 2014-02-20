@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.InvoicingInterval;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
@@ -151,6 +152,7 @@ public class InvoiceCalculationService {
 
     @Programmatic
     public void calculateAndInvoice(InvoiceCalculationParameters parameters) {
+        invoices.removeRuns(parameters);
         try {
             startInteraction(parameters.toString());
             for (Lease lease : parameters.leases() == null ? leases.findLeasesByProperty(parameters.property()) : parameters.leases()) {
@@ -332,13 +334,19 @@ public class InvoiceCalculationService {
 
     private EstatioSettingsService estatioSettingsService;
 
-    public void injectEstatioSettings(final EstatioSettingsService estatioSettings) {
+    public final void injectEstatioSettings(final EstatioSettingsService estatioSettings) {
         this.estatioSettingsService = estatioSettings;
+    }
+
+    private Invoices invoices;
+
+    public final void setInvoices(final Invoices invoices) {
+        this.invoices = invoices;
     }
 
     private InvoiceItemsForLease invoiceItemsForLease;
 
-    public void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
+    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
         this.invoiceItemsForLease = invoiceItemsForLease;
     }
 

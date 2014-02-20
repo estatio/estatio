@@ -406,7 +406,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     @Bulk
     public Invoice approve() {
-        setStatus(InvoiceStatus.APPROVED);
+        doApprove();
         return this;
     }
 
@@ -416,6 +416,15 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     public String disableApprove() {
         return getStatus() != InvoiceStatus.NEW ? "Can only approve 'new' invoices" : null;
+    }
+
+    @Programmatic
+    public void doApprove() {
+        // Bulk guard
+        if (!hideApprove() && disableApprove() == null) {
+            setStatus(InvoiceStatus.APPROVED);
+            setRunId(null);
+        }
     }
 
     // //////////////////////////////////////
