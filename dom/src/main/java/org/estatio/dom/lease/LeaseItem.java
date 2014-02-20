@@ -223,7 +223,8 @@ public class LeaseItem
 
     @Hidden(where = Where.ALL_TABLES)
     @Optional
-    @DescribedAs("WHen left empty the tax of the charge will be used")
+    @DescribedAs("When left empty the tax of the charge will be used")
+    @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
     public Tax getTax() {
         return tax;
     }
