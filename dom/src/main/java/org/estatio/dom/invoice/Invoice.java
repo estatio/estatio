@@ -119,12 +119,14 @@ import org.estatio.dom.party.Party;
                         "WHERE runId == :runId ")
 })
 @Indices({
-        // @Index(name = "Invoice_Property_DueDate_IDX",
-        // members = { "property", "dueDate" }),
-        // @Index(name = "Invoice_Property_DueDate_Status_IDX",
-        // members = { "property", "dueDate", "status" }),
         @Index(name = "Invoice_runId_IDX",
                 members = { "runId" }),
+        @Index(name = "Invoice_fixedAsset_status_IDX",
+                members = { "fixedAsset", "status" }),
+        @Index(name = "Invoice_fixedAsset_dueDate_IDX",
+                members = { "fixedAsset", "dueDate" }),
+        @Index(name = "Invoice_fixedAsset_dueDate_status_IDX",
+                members = { "fixedAsset", "dueDate", "status" }),
         @Index(name = "Invoice_Lease_Seller_Buyer_PaymentMethod_DueDate_Status_IDX",
                 members = { "lease", "seller", "buyer", "paymentMethod", "dueDate", "status" }),
 })
