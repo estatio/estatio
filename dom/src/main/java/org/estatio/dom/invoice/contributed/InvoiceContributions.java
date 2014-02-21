@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.utils.StringUtils;
 
 @Hidden
 public class InvoiceContributions {
@@ -46,8 +47,8 @@ public class InvoiceContributions {
 
     public enum InvoiceReportType {
 
-        INVOICE("http://ams-s-sql08/reportserver?/Estatio/Invoice&invoiceId={invoiceId}"),
-        PRELIMINARY_LETTER("http://ams-s-sql08/reportserver?/Estatio/Preliminary Letter&invoiceId={invoiceId}");
+        INVOICE("http://ams-s-sql08/reportserver?/Estatio/Invoice&id={invoiceId}&rs:Command=Render"),
+        PRELIMINARY_LETTER("http://ams-s-sql08/reportserver?/Estatio/Preliminary+Letter&id={invoiceId}&rs:Command=Render");
 
         private String url;
 
@@ -57,6 +58,10 @@ public class InvoiceContributions {
 
         public String parse(final Invoice invoice) {
             return url.replace("{invoiceId}", invoice.getId().toString());
+        }
+
+        public String title() {
+            return StringUtils.enumTitle(this.name());
         }
 
     }

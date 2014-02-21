@@ -27,6 +27,7 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.dom.utils.StringUtils;
 
 @Hidden
 public class InvoiceSummaryContributions {
@@ -61,7 +62,10 @@ public class InvoiceSummaryContributions {
 
     public enum InvoiceSummaryReportType {
 
-        INVOICES_OVERVIEW("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoices&dueDate={dueDate}&propertyId={propertyId}");
+        INVOICES_OVERVIEW("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoices&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render"),
+        PRELIMINARY_LETTER("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Preliminary+Letter&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render"),
+        INVOICE("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoice&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render");
+
         private String url;
 
         InvoiceSummaryReportType(final String url) {
@@ -79,6 +83,10 @@ public class InvoiceSummaryContributions {
                     .replace("{dueDate}", invoiceSummary.getDueDate().toString())
                     .replace("{invoiceStatus}", invoiceSummary.getStatus())
                     .replace("{propertyId}", invoiceSummary.getProperty().getId());
+        }
+
+        public String title() {
+            return StringUtils.enumTitle(this.name());
         }
 
     }
