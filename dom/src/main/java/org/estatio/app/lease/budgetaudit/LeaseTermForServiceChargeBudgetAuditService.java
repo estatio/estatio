@@ -62,7 +62,7 @@ public class LeaseTermForServiceChargeBudgetAuditService extends EstatioService<
     
     @NotContributed(As.ASSOCIATION) // ie *is* contributed as action
     @NotInServiceMenu
-    public LeaseTermForServiceChargeBudgetAuditManager bulkUpdateForDate(
+    public LeaseTermForServiceChargeBudgetAuditManager maintainServiceCharges(
             final Property property, 
             @Named("Start date") final LocalDate startDate) {
         LeaseTermForServiceChargeBudgetAuditManager template = new LeaseTermForServiceChargeBudgetAuditManager();
@@ -71,7 +71,7 @@ public class LeaseTermForServiceChargeBudgetAuditService extends EstatioService<
         return newManager(template);
     }
 
-    public List<LocalDate> choices1BulkUpdateForDate(Property property) {
+    public List<LocalDate> choices1MaintainServiceCharges(final Property property) {
         return leaseTerms.findServiceChargeDatesByProperty(property);
     }
 

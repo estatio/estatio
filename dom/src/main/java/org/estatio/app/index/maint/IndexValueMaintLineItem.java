@@ -37,11 +37,13 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.services.scratchpad.Scratchpad;
 
+@Paged(Integer.MAX_VALUE)
 @MemberGroupLayout(
         columnSpans={4,4,4,0},
         left={"Index"},

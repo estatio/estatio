@@ -25,8 +25,10 @@ import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Title;
 
+@Paged(Integer.MAX_VALUE)
 @MemberGroupLayout(columnSpans={4,4,4,0}, left={"Selected"}, right={"Next"})
 public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewModel {
     
