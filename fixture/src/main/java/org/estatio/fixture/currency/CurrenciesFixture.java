@@ -16,25 +16,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.charge;
+package org.estatio.fixture.currency;
 
 import org.apache.isis.applib.fixtures.AbstractFixture;
 
 import org.estatio.dom.currency.Currencies;
 
-public class CurrencyFixture extends AbstractFixture {
+
+public class CurrenciesFixture extends AbstractFixture {
 
     @Override
     public void install() {
         currencies.newCurrency("EUR", "Euro");
+        currencies.newCurrency("SEK", "Swedish krona");
+        currencies.newCurrency("GBP", "Pound sterling");
+        currencies.newCurrency("USD", "US dollar");
     }
 
-    // //////////////////////////////////////
-
-    private Currencies currencies;
-
-    public void injectCurrencies(Currencies currencies) {
+    Currencies currencies;
+    
+    public void injectCurrencies(final Currencies currencies) {
         this.currencies = currencies;
     }
-
+    
+    
 }

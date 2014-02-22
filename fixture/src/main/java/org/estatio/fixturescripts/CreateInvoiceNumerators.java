@@ -18,28 +18,33 @@
  */
 package org.estatio.fixturescripts;
 
-import java.util.Properties;
+import java.math.BigInteger;
 import java.util.concurrent.Callable;
 
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoices;
 
-public class CreateNumerators implements Callable<Object> {
+public class CreateInvoiceNumerators implements Callable<Object> {
 
     @Override
     public Object call() throws Exception {
+        for (Property property : properties.allProperties()) {
+            invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), BigInteger.ZERO);
+        }
         return "Finished";
     }
-    
+
     private Invoices invoices;
-    
+
     final public void setInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
-    
+
     private Properties properties;
-    
+
     final public void injectProperties(final Properties properties) {
         this.properties = properties;
     }
-       
+
 }

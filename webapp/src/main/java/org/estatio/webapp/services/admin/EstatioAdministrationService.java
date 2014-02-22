@@ -39,6 +39,7 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
+import org.estatio.fixture.currency.CurrenciesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.fixturescripts.FixtureScript;
@@ -95,16 +96,27 @@ public class EstatioAdministrationService {
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(sequence = "5")
+    @MemberOrder(sequence = "9")
     public String installConstants() {
         AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
         fixture.install();
+        CurrenciesFixture currenciesFixture = container.newTransientInstance(CurrenciesFixture.class);
+        currenciesFixture.install();
 
-        invoices.createCollectionNumberNumerator("%09d", BigInteger.ZERO);
+        invoices.createCollectionNumberNumerator("%08d", BigInteger.ZERO);
 
         return "Constants successfully installed";
     }
 
+    // //////////////////////////////////////
+    
+    @Prototype
+    @MemberOrder(sequence = "9")
+    public String installCurrencies() {
+        CurrenciesFixture currenciesFixture = container.newTransientInstance(CurrenciesFixture.class);
+        currenciesFixture.install();
+        return "Constants successfully installed";
+    }
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "9")
@@ -114,19 +126,28 @@ public class EstatioAdministrationService {
     }
 
     public FixtureScript default0RunScript() {
-        return FixtureScript.CreateBreakOptions;
+        return FixtureScript.CREATE_BREAK_OPTIONS;
     }
 
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "9")
     @Prototype
+    public void createRetroInvoicesForAllProperties(
+            final @Named("Start due date") LocalDate startDueDate,
+            final @Named("Next due date") @Optional LocalDate nextDueDate) {
+        CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
+        creator.createAllProperties(startDueDate, nextDueDate);
+    }
+
+    @MemberOrder(sequence = "9")
+    @Prototype
     public void createRetroInvoicesForProperty(
             final Property property,
             final @Named("Start due date") LocalDate startDueDate,
-            final @Named("Next due date") LocalDate nextDueDate) {
+            final @Named("Next due date") @Optional LocalDate nextDueDate) {
         CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
-        creator.create(property, startDueDate, nextDueDate);
+        creator.createProperty(property, startDueDate, nextDueDate);
     }
 
     @MemberOrder(sequence = "9")
@@ -136,10 +157,10 @@ public class EstatioAdministrationService {
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
         CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
-        creator.create(lease, startDueDate, nextDueDate);
+        creator.createLease(lease, startDueDate, nextDueDate);
     }
 
-// //////////////////////////////////////
+    // //////////////////////////////////////
 
     private static void installFixtures(final Object fixture) {
         final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();

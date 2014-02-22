@@ -42,43 +42,59 @@ import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.services.settings.EstatioSettingsService;
 
 /**
  * Replays the invoice creation process
  * 
- * @author jvanderwal
- * 
  */
 public class CreateRetroInvoices implements Callable<Object> {
 
+    private static LocalDate MOCK_START_DATE = new LocalDate(2013, 1, 1);
+    private static LocalDate MOCK_END_DATE = new LocalDate(2014, 4, 1);
+
     @Override
     public Object call() throws Exception {
-        create(
+        createProperties(
                 propertiesService.allProperties(),
-                ObjectUtils.firstNonNull(estatioSettingsService.fetchEpochDate(), new LocalDate(2012,1,1)),
-                new LocalDate(2014, 1, 1));
+                ObjectUtils.firstNonNull(MOCK_START_DATE, new LocalDate(2013, 1, 1)),
+                MOCK_END_DATE);
         return "Finished";
     }
 
     @Programmatic
-    public void create(Property property, LocalDate startDueDate, LocalDate nextDueDate) {
-        List<Property> properties = new ArrayList<Property>();
-        properties.add(property);
-        create(properties, startDueDate, nextDueDate);
+    public void createAllProperties(
+            final LocalDate startDueDate,
+            final LocalDate endDueDate) {
+        createProperties(
+                propertiesService.allProperties(),
+                startDueDate,
+                endDueDate);
     }
 
     @Programmatic
-    public void create(List<Property> properties, LocalDate startDueDate, LocalDate nextDueDate) {
+    public void createProperty(
+            final Property property,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate) {
+        List<Property> properties = new ArrayList<Property>();
+        properties.add(property);
+        createProperties(properties, startDueDate, nextDueDate);
+    }
+
+    @Programmatic
+    public void createProperties(
+            final List<Property> properties,
+            final LocalDate startDueDate,
+            final LocalDate nextDueDate) {
         for (Property property : properties) {
             for (Lease lease : leases.findLeasesByProperty(property)) {
-                create(lease, startDueDate, nextDueDate);
+                createLease(lease, startDueDate, nextDueDate);
             }
         }
     }
 
     @Programmatic
-    public void create(Lease lease, LocalDate startDueDate, LocalDate nextDueDate) {
+    public void createLease(Lease lease, LocalDate startDueDate, LocalDate nextDueDate) {
         for (LocalDate dueDate : findDueDatesForLease(startDueDate, nextDueDate, lease)) {
             InvoiceCalculationParameters parameters =
                     new InvoiceCalculationParameters(
@@ -92,12 +108,16 @@ public class CreateRetroInvoices implements Callable<Object> {
         }
     }
 
+    // //////////////////////////////////////
+
     private void createAndApprove(InvoiceCalculationParameters parameters) {
         invoiceCalculationService.calculateAndInvoice(parameters);
         for (Invoice invoice : invoices.findInvoicesToBeApproved()) {
-            invoice.setStatus(InvoiceStatus.APPROVED);
+            invoice.setStatus(InvoiceStatus.HISTORIC);
         }
     }
+
+    // //////////////////////////////////////
 
     @Programmatic
     public SortedSet<LocalDate> findDueDatesForLease(LocalDate startDueDate, LocalDate nextDueDate, Lease lease) {
@@ -108,7 +128,6 @@ public class CreateRetroInvoices implements Callable<Object> {
         return dates;
     }
 
-    @Programmatic
     private SortedSet<LocalDate> findDueDatesForLeaseItem(LocalDate startDueDate, LocalDate nextDueDate, LeaseItem leaseItem) {
         SortedSet<LocalDate> dates = new TreeSet<LocalDate>();
         List<InvoicingInterval> invoiceIntervals = leaseItem.getInvoicingFrequency().intervalsInDueDateRange(
@@ -143,12 +162,6 @@ public class CreateRetroInvoices implements Callable<Object> {
 
     public final void injectCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
-    }
-
-    private EstatioSettingsService estatioSettingsService;
-
-    public void setEstatioSettingsService(final EstatioSettingsService estatioSettingsService) {
-        this.estatioSettingsService = estatioSettingsService;
     }
 
 }

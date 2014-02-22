@@ -85,7 +85,7 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
 
     @Test
     public void step1_retroRun() {
-        creator.create(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1));
+        creator.createLease(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1));
         assertThat(invoices.findInvoices(lease).size(), is(8));
     }
 

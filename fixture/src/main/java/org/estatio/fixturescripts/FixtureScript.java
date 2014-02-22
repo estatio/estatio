@@ -24,16 +24,17 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.FatalException;
 import org.apache.isis.applib.annotation.Named;
 
+import org.estatio.dom.utils.StringUtils;
+
 @Named("Script")
 public enum FixtureScript {
 
-    GenerateTopModelInvoice(GenerateTopModelInvoice.class),
-    CreateBreakOptions(CreateBreakOptions.class),
-    FixLeaseTerms(FixLeaseTerms.class),
-    TruncateLeases(TruncateLeases.class),
-    TruncateInvoices(TruncateInvoices.class),
-    CreateTaxItemsAndTerms(CreateTaxItemsAndTerms.class),
-    CreateRetroInvoices(CreateRetroInvoices.class);
+    GENERATE_TOPMODEL_INVOICE(GenerateTopModelInvoice.class),
+    CREATE_BREAK_OPTIONS(CreateBreakOptions.class),
+    CREATE_RETRO_INVOICES(CreateRetroInvoices.class),
+    FIX_LEASE_TERMS(FixLeaseTerms.class),
+    TRUNCATE_LEASES(TruncateLeases.class),
+    TRUNCATE_INVOICES(TruncateInvoices.class);
 
     private Class<? extends Callable<Object>> cls;
 
@@ -48,6 +49,10 @@ public enum FixtureScript {
         } catch (Exception e) {
             throw new FatalException(e);
         }
+    }
+
+    public String title() {
+        return StringUtils.enumTitle(this.name());
     }
 
 }
