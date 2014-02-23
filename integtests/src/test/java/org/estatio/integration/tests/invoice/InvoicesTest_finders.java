@@ -81,6 +81,13 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
     }
 
     @Test
+    public void findInvoicesByStatus() {
+        List<Invoice> result = invoices.findInvoices(InvoiceStatus.NEW);
+        assertThat(result.size(), is(2));
+    }
+
+    
+    @Test
     public void findInvoicesByPropertyDueDate() {
         Property property = properties.findPropertyByReference("KAL");
         List<Invoice> result = invoices.findInvoices(property, new LocalDate(2012, 1, 1));
@@ -97,6 +104,7 @@ public class InvoicesTest_finders extends EstatioIntegrationTest {
     
     @Test
     public void findByRunId() {
+        invoices.findInvoices(InvoiceStatus.NEW).get(0).setRunId(runId);
         List<Invoice> result = invoices.findInvoicesByRunId(runId);
         assertThat(result.size(), is(1));
     }

@@ -82,11 +82,11 @@ public enum InvoicingFrequency {
     FIXED_IN_ADVANCE(
             null,
             PaidIn.ADVANCE,
-            null, null),
+            BigDecimal.valueOf(1), BigDecimal.valueOf(1)),
     FIXED_IN_ARREARS(
             null,
             PaidIn.ARREARS,
-            null, null);
+            BigDecimal.valueOf(1), BigDecimal.valueOf(1));
 
     static enum PaidIn {
         ADVANCE,
@@ -123,7 +123,6 @@ public enum InvoicingFrequency {
         return paidIn == PaidIn.ADVANCE ? interval.startDate() : interval.endDate();
     }
 
-    
     public InvoicingInterval intervalContaining(final LocalDate date) {
         Interval interval = CalendarUtils.intervalContaining(date, rrule);
         return new InvoicingInterval(interval, dueDateOfInterval(interval));
@@ -170,14 +169,14 @@ public enum InvoicingFrequency {
                 invoicingIntervals.add(new InvoicingInterval(sourceInterval, dueDateOfSourceInterval));
             }
         } else {
-                for (Interval interval : CalendarUtils.intervalsInRange(
-                        rangeInterval.startDate(), 
-                        rangeInterval.endDateExcluding(), 
-                        this.rrule)) {
-                    LocalDate dueDate = dueDateOfInterval(interval);
-                    if (dueDate.compareTo(rangeInterval.endDateExcluding()) < 0) {
-                        invoicingIntervals.add(new InvoicingInterval(interval, dueDate));
-                    }
+            for (Interval interval : CalendarUtils.intervalsInRange(
+                    rangeInterval.startDate(),
+                    rangeInterval.endDateExcluding(),
+                    this.rrule)) {
+                LocalDate dueDate = dueDateOfInterval(interval);
+                if (dueDate.compareTo(rangeInterval.endDateExcluding()) < 0) {
+                    invoicingIntervals.add(new InvoicingInterval(interval, dueDate));
+                }
             }
         }
         return invoicingIntervals;

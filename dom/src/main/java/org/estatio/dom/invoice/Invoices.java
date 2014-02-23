@@ -61,7 +61,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
     @Programmatic
     public List<Invoice> findInvoices(
             final InvoiceStatus status) {
-        return allMatches("findByFixedAssetAndStatus",
+        return allMatches("findByStatus",
                 "status", status);
     }
 
