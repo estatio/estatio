@@ -178,7 +178,7 @@ public class InvoiceTest_collect {
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
         assertThat(invoice.hideCollect(), is(false));
-        assertThat(invoice.disableCollect(true), is("No lease related to invoice"));
+        assertThat(invoice.disableCollect(true), is("Must be in status of 'approved'"));
 
         invoice.doCollect();
 

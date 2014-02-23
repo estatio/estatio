@@ -29,11 +29,21 @@
       "memberGroups": {
         "Tax": {
           "members": {
-            "index": {},
+            "taxable": {},
             "taxPercentage": {},
             "recoverablePercentage": {},
             "taxableValue": {},
-            "taxValue": {}
+            "taxValue": {},
+            "paymentDate":{}
+          }
+        },
+        "Registration": {
+          "members": {
+            "registrationDate": {},
+            "registrationNumber": {},
+            "officeCode": {},
+            "officeName": {},
+            "description": {}
           }
         }
       }

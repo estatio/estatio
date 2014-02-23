@@ -3,8 +3,12 @@ package org.estatio.dom.lease;
 import java.math.BigDecimal;
 
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Persistent;
+
+import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Optional;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -12,6 +16,18 @@ import org.apache.isis.applib.annotation.Optional;
 public class LeaseTermForTax extends LeaseTerm {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+
+    private Boolean taxable;
+
+    public Boolean getTaxable() {
+        return taxable;
+    }
+
+    public void setTaxable(final Boolean taxable) {
+        this.taxable = taxable;
+    }
+
+    // //////////////////////////////////////
 
     private BigDecimal taxableValue;
 
@@ -63,11 +79,84 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    @Persistent
+    private LocalDate paymentDate;
+
+    @Optional
+    public LocalDate getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(final LocalDate paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    // //////////////////////////////////////
+
+    private String officeName;
+
+    @Optional
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(final String officeName) {
+        this.officeName = officeName;
+    }
+
+    private String officeCode;
+
+    @Optional
+    public String getOfficeCode() {
+        return officeCode;
+    }
+
+    public void setOfficeCode(final String officeCode) {
+        this.officeCode = officeCode;
+    }
+
+    @Persistent
+    private LocalDate registrationDate;
+
+    @Optional
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(final LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    private String registrationNumber;
+
+    @Optional
+    public String getRegistrationNumber() {
+        return registrationNumber;
+    }
+
+    public void setRegistrationNumber(final String registrationNumber) {
+        this.registrationNumber = registrationNumber;
+    }
+
+    private String description;
+
+    @Optional
+    @MultiLine(numberOfLines = 3)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    // //////////////////////////////////////
+
     @Override
     public BigDecimal getEffectiveValue() {
         return getTaxValue();
     }
-    
+
     @Override
     public LeaseTermValueType valueType() {
         return LeaseTermValueType.FIXED;
@@ -85,12 +174,18 @@ public class LeaseTermForTax extends LeaseTerm {
     @Override
     protected void doAlign() {
         LeaseItem rentItem = getLeaseItem().getLease().findFirstItemOfType(LeaseItemType.RENT);
-        setTaxableValue(rentItem.valueForDate(getStartDate()));
-        if (getTaxableValue() != null) {
-            BigDecimal taxFactor = getTaxPercentage().divide(HUNDRED);
-            BigDecimal recoverableFactor = getRecoverablePercentage().divide(HUNDRED);
-            BigDecimal taxValue = getTaxableValue().multiply(taxFactor).multiply(recoverableFactor);
-            setTaxValue(taxValue);
+        if (rentItem != null) {
+            setTaxableValue(rentItem.valueForDate(getStartDate()));
         }
+        // TODO: Disabled the calculation of tax. To be discussed with the users
+
+        // if (getTaxableValue() != null && getTaxValue() == null) {
+        // BigDecimal taxFactor = getTaxPercentage().divide(HUNDRED);
+        // BigDecimal recoverableFactor =
+        // getRecoverablePercentage().divide(HUNDRED);
+        // BigDecimal taxValue =
+        // getTaxableValue().multiply(taxFactor).multiply(recoverableFactor);
+        // setTaxValue(taxValue);
+        // }
     }
 }

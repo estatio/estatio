@@ -717,6 +717,43 @@ public class Api extends AbstractFactoryAndRepository {
         }
     }
 
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putLeaseTermForTax(
+            // start generic fields
+            @Named("leaseReference") String leaseReference,
+            @Named("tenantReference") String tenantReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("itemSequence") BigInteger itemSequence,
+            @Named("itemType") String itemType,
+            @Named("itemStartDate") LocalDate itemStartDate,
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("status") @Optional String status,
+            // end generic fields
+            @Named("taxPercentage") @Optional BigDecimal taxPercentage,
+            @Named("recoverablePercentage") @Optional BigDecimal recoverablePercentage,
+            @Named("taxable") @Optional Boolean taxable,
+            @Named("taxValue") @Optional BigDecimal taxValue,
+            @Named("paymentDate") @Optional LocalDate paymentDate,
+            @Named("registrationDate") @Optional LocalDate registrationDate,
+            @Named("registrationNumber") @Optional String registrationNumber,
+            @Named("officeCode") @Optional String officeCode,
+            @Named("officeName") @Optional String officeName,
+            @Named("description") @Optional String description) {
+        LeaseTermForTax term = (LeaseTermForTax) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
+        term.setTaxPercentage(taxPercentage);
+        term.setRecoverablePercentage(recoverablePercentage);
+        term.setTaxable(taxable);
+        term.setTaxValue(taxValue);
+        term.setPaymentDate(paymentDate);
+        term.setRegistrationDate(registrationDate);
+        term.setRegistrationNumber(registrationNumber);
+        term.setOfficeCode(officeCode);
+        term.setOfficeName(officeName);
+        term.setDescription(description);
+    }
+
     private LeaseTerm putLeaseTerm(
             final String leaseReference,
             final String unitReference,
