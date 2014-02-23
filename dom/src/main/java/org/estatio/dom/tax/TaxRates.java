@@ -38,17 +38,19 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
 
     // //////////////////////////////////////
 
-    
-    @MemberOrder(name="Other", sequence = "taxStuff.taxes.3")
+    @MemberOrder(name = "Other", sequence = "taxStuff.taxes.3")
     @ActionSemantics(Of.SAFE)
     public List<TaxRate> allTaxRates() {
         return allInstances();
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
-    public TaxRate newRate(final Tax tax, final LocalDate startDate, final BigDecimal percentage) {
+    public TaxRate newRate(
+            final Tax tax,
+            final LocalDate startDate,
+            final BigDecimal percentage) {
         TaxRate currentRate = tax.taxRateFor(startDate);
         TaxRate rate;
         if (currentRate == null || !startDate.equals(currentRate.getStartDate())) {
@@ -67,7 +69,6 @@ public class TaxRates extends EstatioDomainService<TaxRate> {
         }
         return rate;
     }
-
 
     @Programmatic
     public TaxRate findTaxRateByTaxAndDate(final Tax tax, final LocalDate date) {

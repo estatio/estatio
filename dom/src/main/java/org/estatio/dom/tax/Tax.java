@@ -76,8 +76,8 @@ public class Tax
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
-    @Title
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
+    @Title(sequence = "1")
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
@@ -91,7 +91,8 @@ public class Tax
 
     private String name;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.NAME)
+    @Title(sequence = "2", prepend = "-")
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     public String getName() {
         return name;
     }
@@ -101,19 +102,19 @@ public class Tax
     }
 
     // //////////////////////////////////////
-    
+
     private String externalReference;
-    
+
     @Optional
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.NAME)
     public String getExternalReference() {
         return externalReference;
     }
-    
+
     public void setExternalReference(final String externalReference) {
         this.externalReference = externalReference;
     }
-    
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "tax")

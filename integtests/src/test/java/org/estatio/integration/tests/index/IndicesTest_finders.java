@@ -48,7 +48,6 @@ public class IndicesTest_finders extends EstatioIntegrationTest {
     private IndexValues indexValues;
     private IndexBases indexBases;
 
-    
     @Before
     public void setup() {
         indices = service(Indices.class);
@@ -65,22 +64,22 @@ public class IndicesTest_finders extends EstatioIntegrationTest {
     @Test
     public void findByIndexAndDate() throws Exception {
         Index index = indices.findIndex("ISTAT-FOI");
-        final IndexBase indexBase = indexBases.findByIndexAndDate(index, new LocalDate(2013,1,1));
-        assertThat(indexBase.getStartDate(), is(new LocalDate(2011,1,1)));
+        final IndexBase indexBase = indexBases.findByIndexAndDate(index, new LocalDate(2013, 1, 1));
+        assertThat(indexBase.getStartDate(), is(new LocalDate(2011, 1, 1)));
     }
-   
+
     @Test
     public void findIndexValueByIndexAndStartDate() throws Exception {
         Index index = indices.findIndex("ISTAT-FOI");
-        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, new LocalDate(2013,1,1)).getValue(), is(new BigDecimal("106.7000")));
-        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, new LocalDate(2013,10,1)).getValue(), is(new BigDecimal("107.1000")));
+        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, new LocalDate(2013, 1, 1)).getValue(), is(new BigDecimal("106.7000")));
+        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, new LocalDate(2013, 10, 1)).getValue(), is(new BigDecimal("107.1000")));
     }
 
     @Test
     public void findLastByIndex() throws Exception {
         Index index = indices.findIndex("ISTAT-FOI");
         final IndexValue indexValue = indexValues.findLastByIndex(index);
-        assertThat(indexValue.getStartDate(), is(new LocalDate(2013,10,1)));
+        assertThat(indexValue.getStartDate(), is(new LocalDate(2013, 12, 01)));
     }
-    
+
 }

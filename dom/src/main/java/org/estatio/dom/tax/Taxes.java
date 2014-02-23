@@ -64,4 +64,14 @@ public class Taxes extends EstatioDomainService<Tax> {
         return firstMatch("findByReference", "reference", reference);
     }
 
+    @Programmatic
+    public Tax findOrCreate(final String reference, String name) {
+        Tax tax =  firstMatch("findByReference", "reference", reference);
+        if(tax == null) {
+            tax = newTax(reference, name);
+        }
+        return tax;
+    }
+
+    
 }

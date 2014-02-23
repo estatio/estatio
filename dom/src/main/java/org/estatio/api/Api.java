@@ -78,6 +78,7 @@ import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTermFrequency;
 import org.estatio.dom.lease.LeaseType;
@@ -187,7 +188,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("chargeGroupReference") String chargeGroupReference,
             @Named("chargeGroupName") String chargeGroupName,
             @Named("externalReference") @Optional String externalReference) {
-        Tax tax = fetchTaxIfAny(taxReference);
+        Tax tax = taxes.findOrCreate(taxReference, taxReference);
         ChargeGroup chargeGroup = fetchOrCreateChargeGroup(chargeGroupReference, chargeGroupName);
         Charge charge = charges.newCharge(reference, name, description, tax, chargeGroup);
         charge.setExternalReference(externalReference);
@@ -218,20 +219,15 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("reference") String reference,
             @Named("name") String name,
             @Named("externalReference") @Optional String externalReference,
+            @Named("ratePercentage") BigDecimal percentage,
             @Named("rateStartDate") LocalDate startDate,
             @Named("rateExternalReference") @Optional String rateExternalReference,
-            @Named("ratePercentage") BigDecimal percentage) {
-        Tax tax = fetchTaxIfAny(reference);
-        if (tax == null) {
-            tax = taxes.newTax(reference, name);
-            tax.setExternalReference(externalReference);
-        }
+            @Named("rateDescription") @Optional String rateDescription) {
+        Tax tax = taxes.findOrCreate(reference, name);
+        tax.setExternalReference(externalReference);
         TaxRate rate = tax.newRate(startDate, percentage);
         rate.setExternalReference(rateExternalReference);
-    }
-
-    private Tax fetchTaxIfAny(String reference) {
-        return taxes.findTaxByReference(reference);
+        rate.setDescription(rateDescription);
     }
 
     // //////////////////////////////////////

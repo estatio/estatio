@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -116,6 +117,21 @@ public class TaxRate
 
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    // //////////////////////////////////////
+
+    private String description;
+
+    @Optional
+    @MultiLine(numberOfLines = 3)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
     // //////////////////////////////////////
