@@ -25,7 +25,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -53,28 +52,35 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
     @Programmatic
     public List<Invoice> findInvoicesByRunId(final String runId) {
         return allMatches("findByRunId",
                 "runId", runId);
     }
 
-    @ActionSemantics(Of.SAFE)
     @Programmatic
     public List<Invoice> findInvoices(
-            final FixedAsset fixedAsset, final InvoiceStatus status) {
+            final InvoiceStatus status) {
+        return allMatches("findByFixedAssetAndStatus",
+                "status", status);
+    }
+
+    @Programmatic
+    public List<Invoice> findInvoices(
+            final FixedAsset fixedAsset,
+            final InvoiceStatus status) {
         return allMatches("findByFixedAssetAndStatus",
                 "fixedAsset", fixedAsset,
                 "status", status);
     }
 
-    @ActionSemantics(Of.SAFE)
     @Programmatic
     public List<Invoice> findInvoices(
-            final FixedAsset fixedAsset, final LocalDate dueDate) {
+            final FixedAsset fixedAsset,
+            final LocalDate dueDate) {
         return allMatches("findByFixedAssetAndDueDate",
-                "fixedAsset", fixedAsset, "dueDate", dueDate);
+                "fixedAsset", fixedAsset,
+                "dueDate", dueDate);
     }
 
     @ActionSemantics(Of.SAFE)
@@ -91,34 +97,6 @@ public class Invoices extends EstatioDomainService<Invoice> {
             return allMatches("findByFixedAssetAndDueDateAndStatus",
                     "fixedAsset", fixedAsset, "dueDate", dueDate, "status", status);
         }
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @DescribedAs("New invoices, to be approved")
-    @MemberOrder(sequence = "10")
-    public List<Invoice> findInvoicesToBeApproved() {
-        return allMatches("findByStatus", "status", InvoiceStatus.NEW);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @DescribedAs("Approved invoices, to be collected")
-    @MemberOrder(sequence = "11")
-    public List<Invoice> findInvoicesToBeCollected() {
-        return allMatches("findByStatus", "status", InvoiceStatus.APPROVED);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @DescribedAs("Collected invoices, to be invoiced")
-    @MemberOrder(sequence = "12")
-    public List<Invoice> findInvoicesToBeInvoiced() {
-        return allMatches("findByStatus", "status", InvoiceStatus.COLLECTED);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @DescribedAs("Already invoiced")
-    @MemberOrder(sequence = "13")
-    public List<Invoice> findInvoicesPreviouslyInvoiced() {
-        return allMatches("findByStatus", "status", InvoiceStatus.INVOICED);
     }
 
     // //////////////////////////////////////

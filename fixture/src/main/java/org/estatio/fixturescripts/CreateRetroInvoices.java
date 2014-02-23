@@ -112,7 +112,7 @@ public class CreateRetroInvoices implements Callable<Object> {
 
     private void createAndApprove(InvoiceCalculationParameters parameters) {
         invoiceCalculationService.calculateAndInvoice(parameters);
-        for (Invoice invoice : invoices.findInvoicesToBeApproved()) {
+        for (Invoice invoice : invoices.findInvoices(InvoiceStatus.NEW)) {
             invoice.setStatus(InvoiceStatus.HISTORIC);
         }
     }

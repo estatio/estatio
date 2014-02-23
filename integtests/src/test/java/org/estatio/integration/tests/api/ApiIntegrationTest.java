@@ -140,8 +140,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
         assertThat(state.getName(), is("North Holland"));
         assertThat(state.getCountry(), is(netherlands));
 
-        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", new LocalDate(1980, 1, 1), "APITAXEXTRATEREF", BigDecimal.valueOf(21.0));
-        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", new LocalDate(1980, 1, 1), "APITAXEXTRATEREF", BigDecimal.valueOf(21));
+        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1), "APITAXEXTRATEREF", "APITAXDESCRIPTION");
+        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", BigDecimal.valueOf(21), new LocalDate(1980, 1, 1), "APITAXEXTRATEREF", "APITAXDESCRIPTION");
 
         final Tax tax = taxes.findTaxByReference("APITAXREF");
         Assert.assertNotNull(tax);

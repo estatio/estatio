@@ -452,9 +452,9 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
         }
-        // if (getStatus() != InvoiceStatus.APPROVED) {
-        // return "Must be in status of 'approved'";
-        // }
+        if (getStatus() != InvoiceStatus.APPROVED) {
+            return "Must be in status of 'approved'";
+        }
         if (getLease() == null) {
             return "No lease related to invoice";
         }
@@ -478,8 +478,12 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         }
         final Numerator numerator = invoices.findCollectionNumberNumerator();
         setCollectionNumber(numerator.increment());
-        this.setStatus(InvoiceStatus.COLLECTED);
         return this;
+    }
+
+    @Programmatic
+    public void createPaymentTerms() {
+
     }
 
     // //////////////////////////////////////
@@ -516,8 +520,8 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         // TODO: offload valid next states to the InvoiceStatus enum? Eg
         // getStatus.isPossible(InvoiceStatus.APPROVED)
         //
-        if (getStatus() != InvoiceStatus.COLLECTED && getStatus() != InvoiceStatus.APPROVED) {
-            return "Must be in status of 'collected'";
+        if (getStatus() != InvoiceStatus.APPROVED) {
+            return "Must be in status of 'Invoiced'";
         }
         return null;
     }
@@ -608,16 +612,9 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     }
 
     public String disableSubmitToCoda() {
-        if (getPaymentMethod().isDirectDebit()) {
-            return getStatus() == InvoiceStatus.COLLECTED ||
-                    getStatus() == InvoiceStatus.INVOICED
-                    ? null
-                    : "Must be collected or invoiced";
-        } else {
-            return getStatus() == InvoiceStatus.INVOICED
-                    ? null
-                    : "Must be invoiced";
-        }
+        return getStatus() == InvoiceStatus.INVOICED || getStatus() == InvoiceStatus.APPROVED
+                ? null
+                : "Must be approved or invoiced";
     }
 
     // //////////////////////////////////////

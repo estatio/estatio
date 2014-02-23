@@ -22,10 +22,10 @@ import org.estatio.dom.utils.StringUtils;
 
 public enum InvoiceStatus {
 
-    NEW, 
-    APPROVED, 
-    COLLECTED, 
-    INVOICED;
+    NEW,
+    APPROVED,
+    INVOICED,
+    HISTORIC;
 
     public String title() {
         return StringUtils.enumTitle(this.name());

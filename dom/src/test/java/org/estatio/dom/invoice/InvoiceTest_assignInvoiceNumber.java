@@ -96,7 +96,7 @@ public class InvoiceTest_assignInvoiceNumber {
     @Test
     public void happyCase_whenNoInvoiceNumberPreviouslyAssigned() {
         allowingMockInvoicesRepoToReturn(numerator);
-        invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
+        invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
         assertThat(invoice.disableInvoice(null, true), is(nullValue()));
         invoice.doInvoice(mockClockService.now());
@@ -108,7 +108,7 @@ public class InvoiceTest_assignInvoiceNumber {
     @Test
     public void whenInvoiceNumberAlreadyAssigned() {
         allowingMockInvoicesRepoToReturn(numerator);
-        invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
+        invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
         invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
         assertThat(invoice.disableInvoice(null, true), is("Invoice number already assigned"));
@@ -121,7 +121,7 @@ public class InvoiceTest_assignInvoiceNumber {
     public void whenNoProperty() {
 
         allowingMockInvoicesRepoToReturn(null);
-        invoice = createInvoice(invoiceProperty, InvoiceStatus.COLLECTED);
+        invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
         assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
 
