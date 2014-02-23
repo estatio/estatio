@@ -653,7 +653,7 @@ public class Api extends AbstractFactoryAndRepository {
                 endDate,
                 sequence,
                 statusStr);
-        Index index = indices.findIndex(indexReference);
+        Index index = indices.findOrCreateIndex(indexReference, indexReference);
         LeaseTermFrequency indexationFreq = LeaseTermFrequency.valueOf(indexationFrequency);
         term.setIndex(index);
         term.setFrequency(indexationFreq);

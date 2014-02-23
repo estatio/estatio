@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -55,9 +55,18 @@ public class Indices extends EstatioDomainService<Index> {
     }
     // //////////////////////////////////////
 
-    @Hidden
+    @Programmatic
     public Index findIndex(final @Named("Reference") String reference) {
         return firstMatch("findByReference", "reference", reference);
+    }
+
+    @Programmatic
+    public Index findOrCreateIndex(final String reference, final String name) {
+        Index index = findIndex(reference);
+        if (index == null) {
+            index  = newIndex(reference, name);
+        }
+        return index;
     }
 
 }

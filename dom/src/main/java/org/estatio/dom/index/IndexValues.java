@@ -53,11 +53,14 @@ public class IndexValues
             final @Named("Index Base") IndexBase indexBase,
             final @Named("Start Date") LocalDate startDate,
             final @Named("Value") BigDecimal value) {
-        IndexValue indexValue = newTransientInstance();
-        indexValue.setStartDate(startDate);
+        IndexValue indexValue = findIndexValueByIndexAndStartDate(indexBase.getIndex(), startDate);
+        if (indexValue == null) {
+            indexValue = newTransientInstance();
+            indexValue.setStartDate(startDate);
+            indexValue.setIndexBase(indexBase);
+            persistIfNotAlready(indexValue);
+        }
         indexValue.setValue(value);
-        persist(indexValue);
-        indexBase.addToValues(indexValue);
         return indexValue;
     }
 
@@ -92,7 +95,7 @@ public class IndexValues
                                 "index", index,
                                 "startDate", startDate);
                     }
-                }, 
+                },
                 IndexValues.class, "findIndexValueByIndexAndStartDate", index, startDate);
     }
 
