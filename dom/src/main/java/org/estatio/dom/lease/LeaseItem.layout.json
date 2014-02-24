@@ -20,11 +20,6 @@
     {
       "span": 3,
       "memberGroups": {
-        "Current Value": {
-          "members": {
-            "value": {}
-          }
-        },
         "Dates": {
           "members": {
             "startDate": {},
@@ -34,6 +29,11 @@
               }
             },
             "nextDueDate": {}
+          }
+        },
+        "Current Value": {
+          "members": {
+            "value": {}
           }
         }
       }

@@ -25,6 +25,7 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,6 +52,11 @@ public class LeaseTermTest_changeDates extends AbstractWithIntervalMutableContra
             public BigDecimal getEffectiveValue() {
                 return null;
             }
+
+            @Override
+            public BigDecimal valueForDate(LocalDate dueDate) {
+                return null;
+            }
         };
     }
 
@@ -61,6 +67,11 @@ public class LeaseTermTest_changeDates extends AbstractWithIntervalMutableContra
         leaseTerm = new LeaseTerm() {
             @Override
             public BigDecimal getEffectiveValue() {
+                return null;
+            }
+
+            @Override
+            public BigDecimal valueForDate(LocalDate dueDate) {
                 return null;
             }
         };

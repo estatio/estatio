@@ -25,8 +25,6 @@ public class LeaseTermForTurnoverRentTest_doAlign {
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
-    private LeaseTermForTurnoverRent term;
-
     @Mock
     private LeaseItem rentItem;
 
@@ -38,10 +36,6 @@ public class LeaseTermForTurnoverRentTest_doAlign {
     @Before
     public void setup() {
         torItem = new LeaseItem();
-        term = new LeaseTermForTurnoverRent();
-        term.setLeaseItem(torItem);
-        term.setStartDate(new LocalDate(2013, 1, 1));
-        torItem.setLease(mockLease);
 
         context.checking(new Expectations() {
             {
@@ -73,11 +67,47 @@ public class LeaseTermForTurnoverRentTest_doAlign {
     }
 
     @Test
-    public void test() {
-        term.setBudgetedTurnoverRent(new BigDecimal("23456.00"));
-        term.doAlign();
-        assertThat(term.getContractualRent(), is(new BigDecimal("100000.00")));
-        assertThat(term.getEffectiveValue(), is(new BigDecimal("23456.00")));
+    public void testNothing() {
+        tester(null, null, null, "0");
     }
 
+    @Test
+    public void testRule() {
+        tester("7", null, "1500000.00", "5000.00");
+    }
+
+    @Test
+    public void testBudget() {
+        tester(null, "120000.00", null, "20000.00");
+    }
+
+    @Test
+    public void testBudgetAndRule() {
+        tester("7", "120000.00", "1500000.00", "5000.00");
+    }
+
+    
+    private void tester(
+            final String turnoverRentRule,
+            final String totalBudgetedRentStr,
+            final String auditedTurnoverStr,
+            final String expectedValueStr
+            ) {
+        LeaseTermForTurnoverRent term = new LeaseTermForTurnoverRent();
+        term.setLeaseItem(torItem);
+        term.setStartDate(new LocalDate(2013, 1, 1));
+        torItem.setLease(mockLease);
+        term.setTurnoverRentRule(turnoverRentRule);
+        term.setTotalBudgetedRent(parseBigDecimal(totalBudgetedRentStr));
+        term.setAuditedTurnover(parseBigDecimal(auditedTurnoverStr));
+        term.doAlign();
+        assertThat(term.getEffectiveValue(), is(parseBigDecimal(expectedValueStr)));
+    }
+
+    private BigDecimal parseBigDecimal(final String input) {
+        if (input == null) {
+            return null;
+        }
+        return new BigDecimal(input);
+    }
 }

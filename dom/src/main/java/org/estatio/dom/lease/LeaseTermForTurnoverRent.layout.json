@@ -1,7 +1,7 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 6,
       "memberGroups": {
         "General": {
           "members": {
@@ -11,47 +11,46 @@
             "sequence": {},
             "status": {}
           }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Turnover Rent": {
-          "members": {
-            "turnoverRentRule": {},
-            "budgetedTurnover": {},
-            "budgetedTurnoverRent": {},
-            "auditedTurnover": {},
-            "auditedTurnoverRent": {},
-            "contractualRent": {}
-          }
-        },
-        "Values": {
-          "members": {
-            "effectiveValue": {}
-          }
-        }
-      }
-    },
-    {
-      "span": 4,
-      "memberGroups": {
-        "Dates": {
-          "members": {
-            "startDate": {},
-            "endDate": {
-              "actions": {
-                "changeDates": {}
-              }
-            },
-            "current": {}
-          }
         },
         "Related": {
           "members": {
             "previous": {},
             "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
+        "Turnover Rent": {
+          "members": {
+            "turnoverRentRule": {},
+            "totalBudgetedRent": {},
+            "auditedTurnover": {},
+            "contractualRent": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 3,
+      "memberGroups": {
+      	"Dates": {
+      	  "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
+          }      		
+      	}, 
+      	"Values": {
+          "members": {
+            "budgetedTurnoverRent": {},
+            "auditedTurnoverRent": {},
+            "effectiveValue": {}
           }
         }
       }

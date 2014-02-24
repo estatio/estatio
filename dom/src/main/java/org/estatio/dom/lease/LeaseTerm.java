@@ -46,8 +46,8 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableObject;
@@ -60,7 +60,6 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -96,7 +95,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE leaseItem.type == :leaseItemType "
                         + "   && startDate == :startDate "
                         + "   && leaseItem.lease.occupancies.contains(lu) "
-                        + "   && (lu.unit.property == :property) " 
+                        + "   && (lu.unit.property == :property) "
                         + "VARIABLES org.estatio.dom.lease.Occupancy lu"),
         @javax.jdo.annotations.Query(
                 name = "findByPropertyAndType", language = "JDOQL",
@@ -104,7 +103,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE leaseItem.type == :leaseItemType "
                         + "   && leaseItem.lease.occupancies.contains(lu) "
-                        + "   && (lu.unit.property == :property) " 
+                        + "   && (lu.unit.property == :property) "
                         + "VARIABLES org.estatio.dom.lease.Occupancy lu"),
         @javax.jdo.annotations.Query(
                 name = "findStartDatesByPropertyAndType", language = "JDOQL",
@@ -112,7 +111,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE leaseItem.type == :leaseItemType "
                         + "   && leaseItem.lease.occupancies.contains(lu) "
-                        + "   && (lu.unit.property == :property) " 
+                        + "   && (lu.unit.property == :property) "
                         + "VARIABLES org.estatio.dom.lease.Occupancy lu "
                         + "ORDER BY startDate"),
         @javax.jdo.annotations.Query(
@@ -134,13 +133,22 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+    public String title() {
+        TitleBuffer buffer = new TitleBuffer()
+                .append(":", getLeaseItem())
+                .append(":", getStartDate().toString("dd-MM-yyyy").concat("/"))
+                .append(getEndDate().toString("dd-MM-yyyy"));
+        return buffer.toString();
+    }
+
+    // //////////////////////////////////////
+
     private LeaseItem leaseItem;
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(name = "leaseItemId", allowsNull = "false")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
-    @Title(sequence = "1", append = ":")
     public LeaseItem getLeaseItem() {
         return leaseItem;
     }
@@ -168,7 +176,6 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Title(sequence = "2", append = "-")
     @Optional
     @Disabled
     @Override
@@ -206,7 +213,6 @@ public abstract class LeaseTerm
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Title(sequence = "3")
     @Disabled
     @Optional
     public LocalDate getEndDate() {
@@ -274,7 +280,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Programmatic
+    @Hidden
     @Override
     public LocalDateInterval getInterval() {
         return LocalDateInterval.including(getStartDate(), getEndDate());
@@ -523,6 +529,10 @@ public abstract class LeaseTerm
         return nextTerm;
     }
 
+    public String disableCreateNext() {
+        return getNext() == null ? null : "Already a next term available";
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -592,9 +602,7 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Programmatic
-    public BigDecimal valueForDate(final LocalDate dueDate) {
-        return getEffectiveValue();
-    }
+    public abstract BigDecimal valueForDate(final LocalDate dueDate);
 
     @Programmatic
     public List<CalculationResult> calculationResults(
@@ -613,12 +621,6 @@ public abstract class LeaseTerm
     }
 
     // //////////////////////////////////////
-
-    private InvoiceItemsForLease invoiceItemsForLease;
-
-    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
-        this.invoiceItemsForLease = invoiceItemsForLease;
-    }
 
     private InvoiceCalculationService invoiceCalculationService;
 

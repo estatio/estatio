@@ -127,7 +127,6 @@ public class InvoiceCalculationServiceTest_withEpochDate {
         lease.getItems().add(leaseItem);
 
         leaseTerm = new LeaseTermForTesting();
-        leaseTerm.injectInvoiceItemsForLease(mockInvoiceItemsForLease);
         leaseTerm.setLeaseItem(leaseItem);
 
         leaseItem.getTerms().add(leaseTerm);

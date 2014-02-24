@@ -154,9 +154,15 @@ public class LeaseTermForTax extends LeaseTerm {
 
     @Override
     public BigDecimal getEffectiveValue() {
+        return valueForDate(null);
+    }
+
+    @Override
+    public BigDecimal valueForDate(LocalDate dueDate) {
         return getTaxValue();
     }
 
+    
     @Override
     public LeaseTermValueType valueType() {
         return LeaseTermValueType.FIXED;
@@ -188,4 +194,5 @@ public class LeaseTermForTax extends LeaseTerm {
         // setTaxValue(taxValue);
         // }
     }
+
 }
