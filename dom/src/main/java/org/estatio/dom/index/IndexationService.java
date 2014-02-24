@@ -101,10 +101,11 @@ public class IndexationService {
             indexable.setBaseIndexValue(baseIndexValue);
             indexable.setIndexationPercentage(indexationPercentage);
             indexable.setNextIndexValue(nextIndexValue);
+            indexable.setIndexedValue(indexedValue);
             indexable.setIndexedValue(
                     // Don't apply when negative indexation.
                     // Probably configurable in the future
-                    ObjectUtils.compare(indexationPercentage, BigDecimal.ZERO) < 0 ?
+                    indexationPercentage != null && indexationPercentage.compareTo(BigDecimal.ZERO) < 0 ?
                             indexable.getBaseValue() :
                             indexedValue);
         }

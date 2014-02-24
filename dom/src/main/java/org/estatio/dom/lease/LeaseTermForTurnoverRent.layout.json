@@ -28,7 +28,10 @@
             "turnoverRentRule": {},
             "totalBudgetedRent": {},
             "auditedTurnover": {},
-            "contractualRent": {}
+            "contractualRent": {
+              "actions": {
+                "changeParameters": {}
+            }
           }
         }
       }
