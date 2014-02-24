@@ -529,7 +529,8 @@ public abstract class LeaseTerm
         return nextTerm;
     }
 
-    public String disableCreateNext() {
+    public String disableCreateNext(
+            final LocalDate nextStartDate) {
         return getNext() == null ? null : "Already a next term available";
     }
 
