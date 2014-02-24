@@ -99,4 +99,20 @@ public class IndexationServiceTest_indexate {
         assertThat(indexable.getIndexedValue(), is(BigDecimal.valueOf(258437.50).setScale(2)));
     }
 
+    @Test
+    public void notNegativeIndexation() {
+        final LeaseTermForIndexableRent indexable = (LeaseTermForIndexableRent) getIndexableWith(
+                new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1), 250000.00, 115.0, 110.0, 1.000, 75);
+
+        context.checking(new Expectations() {
+            {
+                oneOf(mockIndex).initialize(with(equal(indexable)));
+            }
+        });
+
+        indexer.indexate(indexable);
+
+        assertThat(indexable.getIndexationPercentage(), is(BigDecimal.valueOf(-4.3)));
+        assertThat(indexable.getIndexedValue(), is(new BigDecimal("250000.0")));
+    }
 }
