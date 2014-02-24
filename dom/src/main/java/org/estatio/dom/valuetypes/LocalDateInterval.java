@@ -84,15 +84,20 @@ public class LocalDateInterval extends AbstractInterval<LocalDateInterval>{
 
     @Override
     public String toString() {
-        return toString("yyyy-MM-dd");
+        StringBuilder builder =
+                new StringBuilder(
+                        dateToString(startDate()))
+                        .append("/")
+                        .append(dateToString(endDateExcluding()));
+        return builder.toString();
     }
     
     public String toString(String format) {
         StringBuilder builder =
                 new StringBuilder(
-                        dateToString(startDate, format))
+                        dateToString(startDate(), format))
                         .append("/")
-                        .append(dateToString(endDateExcluding(), format));
+                        .append(dateToString(endDate(), format));
         return builder.toString();
     }
 

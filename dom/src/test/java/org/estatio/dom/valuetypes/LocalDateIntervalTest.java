@@ -181,6 +181,11 @@ public class LocalDateIntervalTest {
     }
 
     @Test
+    public void testStringWithFormat() {
+        assertThat(LocalDateInterval.parseString("2010-07-01/2010-10-01").toString("dd-MM-yyy"), is("01-07-2010/30-09-2010"));
+    }
+
+    @Test
     public void testEquals() {
         assertTrue(new LocalDateInterval().equals(new LocalDateInterval()));
         assertTrue(new LocalDateInterval(null, null, IntervalEnding.EXCLUDING_END_DATE).equals(new LocalDateInterval(null, null, IntervalEnding.INCLUDING_END_DATE)));
