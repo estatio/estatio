@@ -135,9 +135,8 @@ public abstract class LeaseTerm
 
     public String title() {
         TitleBuffer buffer = new TitleBuffer()
-                .append(":", getLeaseItem())
-                .append(":", getStartDate().toString("dd-MM-yyyy").concat("/"))
-                .append(getEndDate().toString("dd-MM-yyyy"));
+                .append(":", getContainer().titleOf(getLeaseItem()))
+                .append(":", getInterval().toString("dd-MM-yyyy"));
         return buffer.toString();
     }
 
@@ -298,12 +297,12 @@ public abstract class LeaseTerm
     }
 
     @Programmatic
-    public boolean isActiveOn(final LocalDate localDate) {
+    public boolean isActiveOn(final LocalDate date) {
         LocalDateInterval effectiveInterval = getEffectiveInterval();
-        if (effectiveInterval == null) {
+        if (date == null || effectiveInterval == null || !effectiveInterval.isValid()) {
             return false;
         }
-        return effectiveInterval.contains(localDate);
+        return effectiveInterval.contains(date);
     }
 
     // //////////////////////////////////////

@@ -81,14 +81,18 @@ public class LocalDateInterval extends AbstractInterval<LocalDateInterval>{
     public int hashCode() {
         return new HashCodeBuilder().append(startDate).append(endDate).hashCode();
     }
-    
+
     @Override
     public String toString() {
+        return toString("yyyy-MM-dd");
+    }
+    
+    public String toString(String format) {
         StringBuilder builder =
                 new StringBuilder(
-                        yyyyMMdd(startDate))
+                        dateToString(startDate, format))
                         .append("/")
-                        .append(yyyyMMdd(endDateExcluding()));
+                        .append(dateToString(endDateExcluding(), format));
         return builder.toString();
     }
 

@@ -98,6 +98,9 @@ public abstract class AbstractInterval<T extends AbstractInterval<T>> {
      * @return
      */
     public boolean contains(final LocalDate date) {
+        if (date == null){
+            return false;
+        }
         if (endDate() == null) {
             if (startDate() == null) {
                 return true;
@@ -160,10 +163,17 @@ public abstract class AbstractInterval<T extends AbstractInterval<T>> {
     /**
      * For benefit of subclass toString implementations.
      */
-    protected String yyyyMMdd(LocalDate localDate) {
-        return localDate == null ? "----------" : localDate.toString("yyyy-MM-dd");
+    protected String dateToString(LocalDate localDate) {
+        return dateToString(localDate, "yyyy-MM-dd");
     }
 
+    /**
+     * For benefit of subclass toString implementations.
+     */
+    protected String dateToString(LocalDate localDate, String format) {
+        return localDate == null ? "----------" : localDate.toString(format);
+    }
+    
     /**
      * Gets the overlap between this interval and another interval.
      * 

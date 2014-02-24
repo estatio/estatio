@@ -76,13 +76,17 @@ public class InvoicingInterval extends AbstractInterval<InvoicingInterval> {
 
     @Override
     public String toString() {
+        return toString("yyyy-MM-dd");
+    }
+
+    public String toString(String format) {
         StringBuilder builder =
                 new StringBuilder(
-                        yyyyMMdd(startDate))
+                        dateToString(startDate))
                         .append("/")
-                        .append(yyyyMMdd(endDateExcluding()))
+                        .append(dateToString(endDateExcluding(), format))
                         .append(":")
-                        .append(yyyyMMdd(dueDate));
+                        .append(dateToString(dueDate, format));
         ;
         return builder.toString();
     }
