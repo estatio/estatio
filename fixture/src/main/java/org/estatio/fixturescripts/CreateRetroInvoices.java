@@ -114,6 +114,7 @@ public class CreateRetroInvoices implements Callable<Object> {
         invoiceCalculationService.calculateAndInvoice(parameters);
         for (Invoice invoice : invoices.findInvoices(InvoiceStatus.NEW)) {
             invoice.setStatus(InvoiceStatus.HISTORIC);
+            invoice.setRunId(null);
         }
     }
 

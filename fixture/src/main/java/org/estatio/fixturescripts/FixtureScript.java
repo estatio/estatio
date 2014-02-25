@@ -30,6 +30,7 @@ import org.estatio.dom.utils.StringUtils;
 public enum FixtureScript {
 
     GENERATE_TOPMODEL_INVOICE(GenerateTopModelInvoice.class),
+    CREATE_INVOICE_NUMERATRORS(CreateInvoiceNumerators.class),
     CREATE_BREAK_OPTIONS(CreateBreakOptions.class),
     CREATE_RETRO_INVOICES(CreateRetroInvoices.class),
     FIX_LEASE_TERMS(FixLeaseTerms.class),
