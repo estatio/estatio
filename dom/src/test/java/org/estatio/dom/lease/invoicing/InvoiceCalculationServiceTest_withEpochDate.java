@@ -46,6 +46,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForTesting;
+import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
@@ -204,9 +205,11 @@ public class InvoiceCalculationServiceTest_withEpochDate {
             ) {
         List<CalculationResult> results = ic.calculateDueDateRange(
                 leaseTerm,
-                startDueDate,
-                nextDueDate == null ? startDueDate.plusDays(1) : nextDueDate,
-                invoicingFrequency);
+                new InvoiceCalculationParameters(
+                        InvoiceRunType.NORMAL_RUN, 
+                        startDueDate,
+                        startDueDate, 
+                        nextDueDate == null ? startDueDate.plusDays(1) : nextDueDate));
         for (int i = 0; i < results.size(); i++) {
             assertThat(results.toString(), results.get(i).value().subtract(results.get(i).mockValue()),
                     is(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP)));

@@ -327,6 +327,7 @@ public abstract class LeaseTerm
 
     private LeaseTermFrequency frequency;
 
+    @Disabled
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.LEASE_TERM_FREQUENCY_ENUM)
     public LeaseTermFrequency getFrequency() {
         return frequency;
@@ -610,7 +611,13 @@ public abstract class LeaseTerm
             final LocalDate startDueDate,
             final LocalDate nextDueDate
             ) {
-        return invoiceCalculationService.calculateDueDateRange(this, startDueDate, nextDueDate, invoicingFrequency);
+        return invoiceCalculationService.calculateDueDateRange(
+                this,
+                new InvoiceCalculationParameters(
+                        InvoiceRunType.NORMAL_RUN,
+                        startDueDate,
+                        startDueDate,
+                        nextDueDate));
     }
 
     // //////////////////////////////////////
