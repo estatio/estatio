@@ -628,7 +628,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     }
 
     public String disableRemove() {
-        return getStatus().equals(InvoiceStatus.INVOICED) ? "Cannot remove, already invoiced." : null;
+        return getStatus().equals(InvoiceStatus.NEW) ? null : "Only invoices with status New can be removed.";
     }
 
     @Programmatic

@@ -25,6 +25,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -43,6 +45,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(name = "indexId", allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public Index getIndex() {
         return index;
@@ -64,6 +67,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public LocalDate getBaseIndexStartDate() {
         return baseIndexStartDate;
@@ -80,6 +84,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getBaseIndexValue() {
         return baseIndexValue;
@@ -97,6 +102,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public LocalDate getNextIndexStartDate() {
         return nextIndexStartDate;
@@ -113,6 +119,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.INDEX_VALUE, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getNextIndexValue() {
         return nextIndexValue;
@@ -129,6 +136,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = JdoColumnScale.IndexValue.REBASE_FACTOR, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getRebaseFactor() {
         return rebaseFactor;
@@ -140,12 +148,51 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     }
 
+    // //////////////////////////////////////
+
+    public LeaseTermForIndexableRent changeParameters(
+            final Index index,
+            final @Named("Base index date") LocalDate baseIndexDate,
+            final @Named("Next index date") LocalDate nextIndexDate,
+            final @Named("Levelling percentage") @Optional BigDecimal levellingPercentage,
+            final @Named("Effective date") @Optional LocalDate effectiveDate
+            ) {
+        setIndex(index);
+        setBaseIndexStartDate(baseIndexDate);
+        setNextIndexStartDate(nextIndexDate);
+        setLevellingPercentage(levellingPercentage);
+        setEffectiveDate(effectiveDate);
+        setIndexedValue(null);
+        return this;
+    }
+
+    public Index default0ChangeParameters() {
+        return getIndex();
+    }
+
+    public LocalDate default1ChangeParameters() {
+        return getBaseIndexStartDate();
+    }
+
+    public LocalDate default2ChangeParameters() {
+        return getNextIndexStartDate();
+    }
+
+    public BigDecimal default3ChangeParameters() {
+        return getLevellingPercentage();
+    }
+
+    public LocalDate default4ChangeParameters() {
+        return getEffectiveDate();
+    }
+
     // ///////////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
     private LocalDate effectiveDate;
 
     @Optional
+    @Disabled
     public LocalDate getEffectiveDate() {
         return effectiveDate;
     }
@@ -160,6 +207,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 1, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getIndexationPercentage() {
         return indexationPercentage;
@@ -176,6 +224,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 1, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getLevellingPercentage() {
         return levellingPercentage;
@@ -191,6 +240,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getBaseValue() {
         return baseValue;
@@ -206,6 +256,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Disabled
     @Override
     public BigDecimal getIndexedValue() {
         return indexedValue;
@@ -221,6 +272,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     private BigDecimal settledValue;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @Disabled
     @Optional
     public BigDecimal getSettledValue() {
         return settledValue;
@@ -228,6 +280,26 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     public void setSettledValue(final BigDecimal settledValue) {
         this.settledValue = settledValue;
+    }
+
+    // //////////////////////////////////////
+
+    public LeaseTermForIndexableRent changeValues(
+            final @Named("Base value") BigDecimal baseValue,
+            final @Named("Settled value") @Optional BigDecimal settledValue) {
+        setBaseValue(baseValue);
+        setSettledValue(settledValue);
+        setIndexedValue(null);
+        doAlign();
+        return this;
+    }
+
+    public BigDecimal default0ChangeValues() {
+        return getBaseValue();
+    }
+
+    public BigDecimal default1ChangeValues() {
+        return getSettledValue();
     }
 
     // //////////////////////////////////////
@@ -259,9 +331,9 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // //////////////////////////////////////
 
+    @Programmatic
     public boolean isIndexable() {
-        return getSettledValue() == null
-                && getIndexedValue() == null
+        return getIndexedValue() == null
                 && (getBaseIndexStartDate() != null && getNextIndexStartDate() != null)
                 && (getBaseIndexStartDate().compareTo(getNextIndexStartDate()) < 0);
     }

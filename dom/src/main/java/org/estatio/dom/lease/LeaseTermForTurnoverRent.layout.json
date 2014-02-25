@@ -30,7 +30,8 @@
             "auditedTurnover": {},
             "contractualRent": {
               "actions": {
-                "changeParameters": {}
+                "changeValues": {}
+              }
             }
           }
         }
@@ -53,7 +54,11 @@
           "members": {
             "budgetedTurnoverRent": {},
             "auditedTurnoverRent": {},
-            "effectiveValue": {}
+            "effectiveValue": {
+              "actions": {
+                "changeValues": {}
+              }
+            }
           }
         }
       }

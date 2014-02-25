@@ -38,9 +38,11 @@
             "rebaseFactor": {},
             "effectiveDate": {},
             "indexationPercentage": {},
-            "levellingPercentage": {},
-            "levellingValue": {},
-            "indexable": {}
+            "levellingPercentage": {
+        	  "actions": {
+                "changeParameters": {}
+              }
+            }
           }
         }
       }
@@ -50,10 +52,14 @@
       "memberGroups": {
         "Values": {
           "members": {
-            "effectiveValue": {},
             "baseValue": {},
             "indexedValue": {},
-            "settledValue": {}
+            "settledValue": {
+              "actions": {
+                "changeValues": {}
+              },
+            "effectiveValue": {}
+            }
           }
         },
         "Related": {
