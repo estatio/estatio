@@ -54,11 +54,6 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class Leases extends EstatioDomainService<Lease> {
 
-    public enum InvoiceRunType {
-        NORMAL_RUN,
-        RETRO_RUN;
-    }
-
     public Leases() {
         super(Leases.class, Lease.class);
     }

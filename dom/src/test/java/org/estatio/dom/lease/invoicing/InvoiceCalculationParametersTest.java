@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
 
 public class InvoiceCalculationParametersTest {
 

@@ -27,7 +27,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
 
 public class GenerateTopModelInvoice implements Callable<Object> {
 

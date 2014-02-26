@@ -15,7 +15,6 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.services.clock.ClockService;
 
 public class InvoiceService {

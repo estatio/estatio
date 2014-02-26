@@ -51,7 +51,6 @@ import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;

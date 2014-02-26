@@ -48,7 +48,6 @@ import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermValueType;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Leases.InvoiceRunType;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.estatio.services.settings.EstatioSettingsService;
