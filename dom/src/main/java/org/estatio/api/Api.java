@@ -218,16 +218,16 @@ public class Api extends AbstractFactoryAndRepository {
     public void putTax(
             @Named("reference") String reference,
             @Named("name") String name,
+            @Named("description") String description,
             @Named("externalReference") @Optional String externalReference,
             @Named("ratePercentage") BigDecimal percentage,
             @Named("rateStartDate") LocalDate startDate,
-            @Named("rateExternalReference") @Optional String rateExternalReference,
-            @Named("rateDescription") @Optional String rateDescription) {
+            @Named("rateExternalReference") @Optional String rateExternalReference) {
         Tax tax = taxes.findOrCreate(reference, name);
         tax.setExternalReference(externalReference);
+        tax.setDescription(description);
         TaxRate rate = tax.newRate(startDate, percentage);
         rate.setExternalReference(rateExternalReference);
-        rate.setDescription(rateDescription);
     }
 
     // //////////////////////////////////////

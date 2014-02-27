@@ -121,21 +121,6 @@ public class TaxRate
 
     // //////////////////////////////////////
 
-    private String description;
-
-    @Optional
-    @MultiLine(numberOfLines = 3)
-    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    // //////////////////////////////////////
-
     private String externalReference;
 
     @Optional

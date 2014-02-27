@@ -30,6 +30,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -113,6 +114,21 @@ public class Tax
 
     public void setExternalReference(final String externalReference) {
         this.externalReference = externalReference;
+    }
+
+    // //////////////////////////////////////
+
+    private String description;
+
+    @Optional
+    @MultiLine(numberOfLines = 3)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
     // //////////////////////////////////////
