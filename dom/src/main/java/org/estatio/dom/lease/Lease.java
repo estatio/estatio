@@ -541,22 +541,24 @@ public class Lease
 
     public Lease newMandate(
             final BankAccount bankAccount,
+            final @Named("Reference") String reference,
             final @Named("Start Date") LocalDate startDate,
-            final @Named("End Date") LocalDate endDate) {
+            final @Named("End Date") @Optional LocalDate endDate) {
 
-        final String reference = bankAccount.getReference() + "-" + startDate.toString("yyyyMMdd");
-        final String name = null;
         final Party creditor = getPrimaryParty();
         final Party debtor = getSecondaryParty();
 
         final BankMandate bankMandate =
-                bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
-
+                bankMandates.newBankMandate(reference, reference, startDate, endDate, debtor, creditor, bankAccount);
         paidBy(bankMandate);
         return this;
     }
 
-    public String disableNewMandate(final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
+    public String disableNewMandate(
+            final BankAccount bankAccount, 
+            final String reference,
+            final LocalDate startDate, 
+            final LocalDate endDate) {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
         if (tenantRole == null || !tenantRole.isCurrent()) {
             return "Could not determine the tenant (secondary party) of this lease";
@@ -577,19 +579,25 @@ public class Lease
         return !choices.isEmpty() ? choices.get(0) : null;
     }
 
-    public LocalDate default1NewMandate() {
+    public LocalDate default2NewMandate() {
         return getClockService().now();
     }
 
-    public LocalDate default2NewMandate() {
+    public LocalDate default3NewMandate() {
         return getClockService().now().plusYears(1);
     }
 
     public String validateNewMandate(
-            final BankAccount bankAccount, final LocalDate startDate, final LocalDate endDate) {
+            final BankAccount bankAccount, 
+            final String reference,
+            final LocalDate startDate, 
+            final LocalDate endDate) {
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
         if (!validBankAccounts.contains(bankAccount)) {
             return "Bank account is not owned by this lease's tenant";
+        }
+        if (agreements.findAgreementByReference(reference) != null) {
+            return "Reference allready exists";
         }
         return null;
     }

@@ -849,6 +849,10 @@ public class Api extends AbstractFactoryAndRepository {
             Party creditor = fetchParty(creditorReference);
             bankMandate = bankMandates.newBankMandate(reference, name, startDate, endDate, debtor, creditor, bankAccount);
         }
+        bankMandate.setBankAccount(bankAccount);
+        bankMandate.setName(name);
+        bankMandate.setStartDate(startDate);
+        bankMandate.setEndDate(endDate);
         lease.paidBy(bankMandate);
     }
 
