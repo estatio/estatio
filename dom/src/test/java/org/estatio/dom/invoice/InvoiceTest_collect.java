@@ -37,6 +37,7 @@ import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
@@ -61,7 +62,7 @@ public class InvoiceTest_collect {
     Lease lease;
 
     private Invoice invoice;
-    
+
     private Numerator numerator;
 
     @Before
@@ -75,9 +76,6 @@ public class InvoiceTest_collect {
 
     private Invoice createInvoice(final Property property, final PaymentMethod paymentMethod, final InvoiceStatus status) {
         final Invoice invoice = new Invoice() {
-            public Property getProperty() {
-                return property;
-            }
 
             @Override
             public PaymentMethod getPaymentMethod() {
@@ -100,13 +98,21 @@ public class InvoiceTest_collect {
         context.checking(new Expectations() {
             {
                 allowing(lease).getPaidBy();
-                will(returnValue(new BankMandate()));
+                will(returnValue(new BankMandate() {
+                    public org.estatio.dom.financial.FinancialAccount getBankAccount() {
+                        return new BankAccount() {
+                            public boolean isValidIban() {
+                                return true;
+                            };
+                        };
+                    };
+                }));
             }
         });
-        
+
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
         invoice.setLease(lease);
-        
+
         assertThat(invoice.hideCollect(), is(false));
         assertNull(invoice.disableCollect(true));
         invoice.doCollect();
@@ -117,16 +123,16 @@ public class InvoiceTest_collect {
     @Test
     public void whenNoMandateAssigned() {
         allowingMockInvoicesRepoToReturn(numerator);
-        
+
         invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
         invoice.setLease(new Lease());
-        
+
         assertThat(invoice.hideCollect(), is(false));
         assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
         invoice.doCollect();
         assertNull(invoice.getCollectionNumber());
     }
-    
+
     @Test
     public void whenInvoiceNumberAlreadyAssigned() {
         allowingMockInvoicesRepoToReturn(numerator);

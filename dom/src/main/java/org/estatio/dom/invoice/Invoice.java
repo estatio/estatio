@@ -53,6 +53,7 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
+import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.lease.Lease;
@@ -447,7 +448,6 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (getCollectionNumber() != null) {
             return "Collection number already assigned";
         }
-
         final Numerator numerator = invoices.findCollectionNumberNumerator();
         if (numerator == null) {
             return "No 'collection number' numerator found for invoice's property";
@@ -460,6 +460,10 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         }
         if (getLease().getPaidBy() == null) {
             return String.format("No mandate assigned to invoice's lease");
+        }
+        final BankAccount bankAccount = (BankAccount) getLease().getPaidBy().getBankAccount();
+        if (!bankAccount.isValidIban()) {
+            return "The Iban code is invalid";
         }
         return null;
     }
