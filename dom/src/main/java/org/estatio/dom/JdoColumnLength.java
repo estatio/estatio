@@ -53,6 +53,14 @@ public final class JdoColumnLength {
         public final static int TYPE = 20;
     }
 
+    public static final class Link {
+        private Link() {
+        }
+
+        public static final int URL_TEMPLATE = 254;
+    }
+
+
     public static final class Event {
         private Event() {
         }

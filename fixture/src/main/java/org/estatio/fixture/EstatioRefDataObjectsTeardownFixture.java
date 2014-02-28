@@ -36,6 +36,7 @@ import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
+import org.estatio.services.links.Link;
 
 
 public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
@@ -58,7 +59,8 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
             AgreementType.class,
             IndexValue.class,
             IndexBase.class,
-            Index.class
+            Index.class,
+            Link.class
         );
 
     }
@@ -86,6 +88,8 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexValue\"");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexBase\"");
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Index\"");
+        
+        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Link\"");
     }
 
     private IsisJdoSupport isisJdoSupport;

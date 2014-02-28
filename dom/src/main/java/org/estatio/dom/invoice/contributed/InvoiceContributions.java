@@ -28,42 +28,43 @@ import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.utils.StringUtils;
 
+//EST-316: to delete once happy that the new Links stuff is working ok
 @Hidden
 public class InvoiceContributions {
 
-    @NotInServiceMenu
-    public URL reports(
-            final @Named("Invoice") Invoice invoice,
-            final @Named("Report") InvoiceReportType reportType
-            ) {
-        try {
-            return new URL(reportType.parse(invoice));
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public enum InvoiceReportType {
-
-        INVOICE("http://ams-s-sql08/reportserver?/Estatio/Invoice&id={invoiceId}&rs:Command=Render"),
-        PRELIMINARY_LETTER("http://ams-s-sql08/reportserver?/Estatio/Preliminary+Letter&id={invoiceId}&rs:Command=Render");
-
-        private String url;
-
-        InvoiceReportType(final String url) {
-            this.url = url;
-        }
-
-        public String parse(final Invoice invoice) {
-            return url.replace("{invoiceId}", invoice.getId().toString());
-        }
-
-        public String title() {
-            return StringUtils.enumTitle(this.name());
-        }
-
-    }
+//    @NotInServiceMenu
+//    public URL reports(
+//            final @Named("Invoice") Invoice invoice,
+//            final @Named("Report") InvoiceReportType reportType
+//            ) {
+//        try {
+//            return new URL(reportType.parse(invoice));
+//        } catch (MalformedURLException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    public enum InvoiceReportType {
+//
+//        INVOICE("http://ams-s-sql08/reportserver?/Estatio/Invoice&id={invoiceId}&rs:Command=Render"),
+//        PRELIMINARY_LETTER("http://ams-s-sql08/reportserver?/Estatio/Preliminary+Letter&id={invoiceId}&rs:Command=Render");
+//
+//        private String url;
+//
+//        InvoiceReportType(final String url) {
+//            this.url = url;
+//        }
+//
+//        public String parse(final Invoice invoice) {
+//            return url.replace("{invoiceId}", invoice.getId().toString());
+//        }
+//
+//        public String title() {
+//            return StringUtils.enumTitle(this.name());
+//        }
+//
+//    }
 
 }

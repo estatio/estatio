@@ -96,6 +96,7 @@ language governing permissions and limitations under the License.
         <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
         <danhaywood-isis-domainservice-excel.version>1.4.0-SNAPSHOT</danhaywood-isis-domainservice-excel.version>
+        <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0-SNAPSHOT</danhaywood-isis-domainservice-stringinterpolator.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
@@ -672,7 +673,7 @@ language governing permissions and limitations under the License.
 
             <!-- viewer extensions -->
 
-            <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
+            <!-- GMAP3: https://github.com/danhaywood/isis-wicket-gmap3 -->
             <dependency>
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-gmap3</artifactId>
@@ -681,7 +682,7 @@ language governing permissions and limitations under the License.
                 <scope>import</scope>
             </dependency>
 
-            <!-- FULLCALENDAR2: uncomment to use https://github.com/danhaywood/isis-wicket-fullcalendar2 -->
+            <!-- FULLCALENDAR2: use https://github.com/danhaywood/isis-wicket-fullcalendar2 -->
             <dependency>
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-fullcalendar2</artifactId>
@@ -691,7 +692,7 @@ language governing permissions and limitations under the License.
             </dependency>
 
 
-            <!-- WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts -->
+            <!-- WICKEDCHARTS: https://github.com/danhaywood/isis-wicket-wickedcharts -->
             <!--
             Requires Highchart license to use in commercial products.
              
@@ -704,20 +705,30 @@ language governing permissions and limitations under the License.
             </dependency>
             -->
 
-            <!-- EXCEL: uncomment to use https://github.com/danhaywood/isis-wicket-excel -->
+            <!-- EXCEL: https://github.com/danhaywood/isis-wicket-excel -->
             <dependency>
                 <groupId>com.danhaywood.isis.wicket</groupId>
                 <artifactId>danhaywood-isis-wicket-excel</artifactId>
                 <version>${danhaywood-isis-wicket-excel.version}</version>
             </dependency>
 
-            <!-- EXCEL DOMAIN SERVICE: uncomment to use https://github.com/danhaywood/isis-domainservice-excel -->
+
+            <!-- domain services -->
+
+            <!-- EXCEL DOMAIN SERVICE: https://github.com/danhaywood/isis-domainservice-excel -->
             <dependency>
                 <groupId>com.danhaywood.isis.domainservice</groupId>
                 <artifactId>danhaywood-isis-domainservice-excel</artifactId>
                 <version>${danhaywood-isis-domainservice-excel.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- STRINGINTERPOLATOR DOMAIN SERVICE: https://github.com/danhaywood/isis-domainservice-stringinterpolator -->
+            <dependency>
+                <groupId>com.danhaywood.isis.domainservice</groupId>
+                <artifactId>danhaywood-isis-domainservice-stringinterpolator</artifactId>
+                <version>${danhaywood-isis-domainservice-stringinterpolator.version}</version>
             </dependency>
 
         </dependencies>

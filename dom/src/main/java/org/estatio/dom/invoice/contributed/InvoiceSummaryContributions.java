@@ -29,66 +29,67 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.dom.utils.StringUtils;
 
+// EST-316: to delete once happy that the new Links stuff is working ok
 @Hidden
 public class InvoiceSummaryContributions {
 
-    @NotInServiceMenu
-    public URL reports(
-            final @Named("Invoice Summary") InvoiceSummaryForPropertyDueDate invoiceSummary,
-            final @Named("Report") InvoiceSummaryReportType reportType
-            ) {
-        try {
-            return new URL(reportType.parse(invoiceSummary));
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @NotInServiceMenu
-    public URL reports(
-            final @Named("Invoice Summary") InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
-            final @Named("Report") InvoiceSummaryReportType reportType
-            ) {
-        try {
-            return new URL(reportType.parse(invoiceSummary));
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public enum InvoiceSummaryReportType {
-
-        INVOICES_OVERVIEW("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoices&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render"),
-        PRELIMINARY_LETTER("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Preliminary+Letter&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render"),
-        INVOICE("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoice&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render");
-
-        private String url;
-
-        InvoiceSummaryReportType(final String url) {
-            this.url = url;
-        }
-
-        public String parse(final InvoiceSummaryForPropertyDueDate invoiceSummary) {
-            return url
-                    .replace("{dueDate}", invoiceSummary.getDueDate().toString())
-                    .replace("{propertyId}", invoiceSummary.getProperty().getId());
-        }
-
-        public String parse(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
-            return url
-                    .replace("{dueDate}", invoiceSummary.getDueDate().toString())
-                    .replace("{invoiceStatus}", invoiceSummary.getStatus())
-                    .replace("{propertyId}", invoiceSummary.getProperty().getId());
-        }
-
-        public String title() {
-            return StringUtils.enumTitle(this.name());
-        }
-
-    }
+//    @NotInServiceMenu
+//    public URL reports(
+//            final @Named("Invoice Summary") InvoiceSummaryForPropertyDueDate invoiceSummary,
+//            final @Named("Report") InvoiceSummaryReportType reportType
+//            ) {
+//        try {
+//            return new URL(reportType.parse(invoiceSummary));
+//        } catch (MalformedURLException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    @NotInServiceMenu
+//    public URL reports(
+//            final @Named("Invoice Summary") InvoiceSummaryForPropertyDueDateStatus invoiceSummary,
+//            final @Named("Report") InvoiceSummaryReportType reportType
+//            ) {
+//        try {
+//            return new URL(reportType.parse(invoiceSummary));
+//        } catch (MalformedURLException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+//
+//    public enum InvoiceSummaryReportType {
+//
+//        INVOICES_OVERVIEW("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoices&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render"),
+//        PRELIMINARY_LETTER("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Preliminary+Letter&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render"),
+//        INVOICE("http://ams-s-sql08/ReportServer/Pages/ReportViewer.aspx?/Estatio/Invoice&dueDate={dueDate}&propertyId={propertyId}&rs:Command=Render");
+//
+//        private String url;
+//
+//        InvoiceSummaryReportType(final String url) {
+//            this.url = url;
+//        }
+//
+//        public String parse(final InvoiceSummaryForPropertyDueDate invoiceSummary) {
+//            return url
+//                    .replace("{dueDate}", invoiceSummary.getDueDate().toString())
+//                    .replace("{propertyId}", invoiceSummary.getProperty().getId());
+//        }
+//
+//        public String parse(final InvoiceSummaryForPropertyDueDateStatus invoiceSummary) {
+//            return url
+//                    .replace("{dueDate}", invoiceSummary.getDueDate().toString())
+//                    .replace("{invoiceStatus}", invoiceSummary.getStatus())
+//                    .replace("{propertyId}", invoiceSummary.getProperty().getId());
+//        }
+//
+//        public String title() {
+//            return StringUtils.enumTitle(this.name());
+//        }
+//
+//    }
 
 }

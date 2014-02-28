@@ -47,20 +47,23 @@ public class EstatioSettingsService {
      */
     public final static String EPOCH_DATE_KEY = ApplicationSettingKey.epochDate.name();
 
-    private LocalDate cachedEpochDate;
+    /**
+     * @see ApplicationSettingKey#reportServerBaseUrl
+     */
+    public final static String REPORT_SERVER_BASE_URL_KEY = ApplicationSettingKey.reportServerBaseUrl.name();
 
-    private Currency cachedCurrency;
+    // //////////////////////////////////////
 
     @Hidden
     public Currency systemCurrency() {
+        //TODO: Make system default currency configurable
         return currencies.findCurrency("EUR");
-//        if (cachedCurrency == null) {
-//            //TODO: Make system default currency configurable
-//            cachedCurrency = currencies.findCurrency("EUR");
-//        }
-//        return cachedCurrency;
     }
 
+    // //////////////////////////////////////
+
+    private LocalDate cachedEpochDate;
+    
     /**
      * @see ApplicationSettingKey#epochDate
      */
@@ -97,6 +100,29 @@ public class EstatioSettingsService {
         }
         cachedEpochDate = null;
     }
+
+    // //////////////////////////////////////
+
+    private String cachedReportServerBaseUrl;
+    
+    /**
+     * @see ApplicationSettingKey#reportServerBaseUrl
+     */
+    @Hidden
+    public String fetchReportServerBaseUrl() {
+        if (cachedReportServerBaseUrl == null) {
+            final ApplicationSetting reportServerBaseUrl = applicationSettingsService.find(REPORT_SERVER_BASE_URL_KEY);
+            if (reportServerBaseUrl != null) {
+                cachedReportServerBaseUrl = reportServerBaseUrl.valueAsString();
+            } else {
+                return (String) ApplicationSettingKey.reportServerBaseUrl.getDefaultValue();
+            }
+        }
+        return cachedReportServerBaseUrl;
+    }
+
+
+    // //////////////////////////////////////
 
     @Hidden
     public List<ApplicationSetting> listAll() {

@@ -18,6 +18,7 @@ package org.estatio.integration;
 
 import org.apache.log4j.Level;
 
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
@@ -84,6 +85,8 @@ import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioRefDataObjectsFixture;
 import org.estatio.services.bookmarks.BookmarkServiceForEstatio;
 import org.estatio.services.clock.ClockService;
+import org.estatio.services.links.LinkContributions;
+import org.estatio.services.links.Links;
 import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
@@ -174,7 +177,10 @@ public class EstatioSystemInitializer {
                     new EstatioSettingsService(),
                     new FinancialAccountContributions(),
                     new FixedAssetRegistrationContributions(),
-                    new EventBusServiceJdo());
+                    new EventBusServiceJdo(),
+                    new Links(),
+                    new LinkContributions(),
+                    new QueryResultsCache());
         }
 
         private IsisConfiguration testConfiguration() {
