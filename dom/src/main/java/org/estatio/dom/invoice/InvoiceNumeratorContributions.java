@@ -18,12 +18,9 @@
  */
 package org.estatio.dom.invoice;
 
-import java.math.BigInteger;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
@@ -41,7 +38,6 @@ public class InvoiceNumeratorContributions extends EstatioDomainService<Invoice>
 
     // //////////////////////////////////////
 
-
     @ActionSemantics(Of.IDEMPOTENT)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
@@ -52,25 +48,8 @@ public class InvoiceNumeratorContributions extends EstatioDomainService<Invoice>
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
-    @NotInServiceMenu
-    public Numerator createNumerator(
-            final Property property,
-            final @Named("Format") String format,
-            final @Named("Last value") BigInteger lastIncrement) {
-        return invoices.createInvoiceNumberNumerator(property, format, lastIncrement);
-    }
-    public String default1CreateNumerator() {
-        return invoices.default1CreateInvoiceNumberNumerator();
-    }
-    public BigInteger default2CreateNumerator() {
-        return invoices.default2CreateInvoiceNumberNumerator();
-    }
-
-    // //////////////////////////////////////
-
     private Invoices invoices;
-    
+
     public void injectInvoices(final Invoices invoices) {
         this.invoices = invoices;
     }
