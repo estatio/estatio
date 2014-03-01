@@ -29,6 +29,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
@@ -211,7 +212,8 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @Named("Invoices for lease")
+    @NotInServiceMenu
+    @Named("Invoices")
     public List<Invoice> findInvoices(final Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
@@ -286,6 +288,16 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
+    @Programmatic
+    public void removeRuns(InvoiceCalculationParameters parameters) {
+        List<Invoice> invoices = findInvoices(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
+        for (Invoice invoice : invoices) {
+            invoice.remove();
+        }
+    }
+
+    // //////////////////////////////////////
+
     private Numerators numerators;
 
     public void injectNumerators(final Numerators numerators) {
@@ -296,13 +308,6 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     public void injectSettings(final EstatioSettingsService settings) {
         this.settings = settings;
-    }
-
-    public void removeRuns(InvoiceCalculationParameters parameters) {
-        List<Invoice> invoices = findInvoices(parameters.property(), parameters.invoiceDueDate(), InvoiceStatus.NEW);
-        for (Invoice invoice : invoices) {
-            invoice.remove();
-        }
     }
 
 }

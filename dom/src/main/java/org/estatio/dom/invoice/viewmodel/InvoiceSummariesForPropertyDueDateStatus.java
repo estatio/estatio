@@ -23,12 +23,16 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.invoice.InvoiceStatus;
 
 @Immutable
-public class InvoiceSummariesForPropertyDueDateStatus 
-    extends EstatioDomainService<InvoiceSummaryForPropertyDueDateStatus> {
+public class InvoiceSummariesForPropertyDueDateStatus
+        extends EstatioDomainService<InvoiceSummaryForPropertyDueDateStatus> {
 
     public InvoiceSummariesForPropertyDueDateStatus() {
         super(InvoiceSummariesForPropertyDueDateStatus.class, InvoiceSummaryForPropertyDueDateStatus.class);
@@ -37,9 +41,30 @@ public class InvoiceSummariesForPropertyDueDateStatus
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name = "Invoices", sequence = "80")
+    @MemberOrder(name = "Invoices", sequence = "11")
+    public List<InvoiceSummaryForPropertyDueDateStatus> invoicesForStatusNew() {
+        return findByStatus(InvoiceStatus.NEW);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Invoices", sequence = "12")
+    public List<InvoiceSummaryForPropertyDueDateStatus> invoicesForStatusApproved() {
+        return findByStatus(InvoiceStatus.APPROVED);
+    }
+
+    @Prototype
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Invoices", sequence = "90")
     public List<InvoiceSummaryForPropertyDueDateStatus> invoicesForPropertyDueDateStatus() {
         return allInstances();
     }
+    
+    // //////////////////////////////////////
 
+    @Programmatic
+    public List<InvoiceSummaryForPropertyDueDateStatus> findByStatus(
+            final @Optional InvoiceStatus status) {
+        return allMatches("findByStatus",
+                "status", status.name());
+    }
 }

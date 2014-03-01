@@ -26,7 +26,7 @@ public class InvoiceService {
      * parameters.
      */
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Invoices", sequence = "6")
+    @MemberOrder(name = "Invoices", sequence = "40")
     public Object calculateInvoicesForProperty(
             final @Named("Property") Property property,
             final @Named("Run Type") InvoiceRunType invoiceRunType,
@@ -73,7 +73,7 @@ public class InvoiceService {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Invoices", sequence = "99")
+    @MemberOrder(name = "Invoices", sequence = "40")
     @Prototype
     public Object calculateInvoicesForLeases(
             final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName,

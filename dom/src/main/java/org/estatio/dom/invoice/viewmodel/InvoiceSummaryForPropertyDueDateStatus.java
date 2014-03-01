@@ -84,11 +84,23 @@ import org.estatio.dom.invoice.InvoiceStatus;
                                 "  \"Invoice\".\"dueDate\", " +
                                 "  \"Invoice\".\"status\"")
         })
+@javax.jdo.annotations.Queries({
+    @javax.jdo.annotations.Query(
+            name = "findByStatus", language = "JDOQL",
+            value = "SELECT " +
+                    "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
+                    "WHERE " +
+                    "status == :status ")
+})
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
 public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstract {
 
+    public String iconName(){
+        return "InvoiceSummary";
+    }
+    
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */

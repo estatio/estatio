@@ -80,6 +80,10 @@ import org.estatio.dom.invoice.Invoice;
 @Immutable
 public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
+    public String iconName(){
+        return "InvoiceSummary";
+    }
+    
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */
