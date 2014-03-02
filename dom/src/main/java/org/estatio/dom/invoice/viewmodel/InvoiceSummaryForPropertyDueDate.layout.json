@@ -16,7 +16,8 @@
       "memberGroups": {
         "Stats": {
           "members": {
-            "total": {}
+            "total": {
+            }
           }
         }
       }
@@ -26,8 +27,12 @@
       "memberGroups": {
       	"Totals": {
           "members": {
-            "netAmount": {},
-            "grossAmount": {}
+            "netAmount": {
+              "typicalLength": { "value": 15 }
+            },
+            "grossAmount": {
+              "typicalLength": { "value": 15 }
+            }
           }
       	}
       }
