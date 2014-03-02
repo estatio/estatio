@@ -63,6 +63,7 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.InvoiceItems;
 import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
 import org.estatio.dom.lease.LeaseItems;
 import org.estatio.dom.lease.LeaseTerms;
@@ -173,6 +174,7 @@ public class EstatioSystemInitializer {
                     new Api(),
                     new IsisJdoSupportImpl(),
                     new InvoiceCalculationService(),
+                    new InvoiceSummariesForInvoiceRun(),
                     new ApplicationSettingsServiceForEstatio(),
                     new EstatioSettingsService(),
                     new FinancialAccountContributions(),

@@ -39,7 +39,6 @@ import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.InvoicingInterval;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -331,12 +330,6 @@ public class InvoiceCalculationService {
 
     public final void injectLeases(final Leases leases) {
         this.leases = leases;
-    }
-
-    private InvoiceSummariesForInvoiceRun invoiceSummaries;
-
-    public void injectInvoiceSummaries(final InvoiceSummariesForInvoiceRun invoiceSummaries) {
-        this.invoiceSummaries = invoiceSummaries;
     }
 
 }

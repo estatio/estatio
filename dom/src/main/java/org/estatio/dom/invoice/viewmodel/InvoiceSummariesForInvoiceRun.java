@@ -23,6 +23,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 
@@ -39,6 +40,15 @@ public class InvoiceSummariesForInvoiceRun extends EstatioDomainService<InvoiceS
     @MemberOrder(name = "Invoices", sequence = "10")
     public List<InvoiceSummaryForInvoiceRun> invoicesForInvoiceRun() {
         return allInstances();
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public InvoiceSummaryForInvoiceRun findByRunId(
+            final String runId) {
+        return firstMatch("findByRunId",
+                "runId", runId);
     }
 
 }

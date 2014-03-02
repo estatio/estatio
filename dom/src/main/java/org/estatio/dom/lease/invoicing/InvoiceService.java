@@ -34,7 +34,7 @@ public class InvoiceService {
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-        invoiceCalculationService.calculateAndInvoice(
+        final String runId = invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
                         property,
                         calculationSelection.selectedTypes(),
@@ -42,7 +42,7 @@ public class InvoiceService {
                         invoiceDueDate,
                         startDueDate,
                         nextDueDate));
-        return invoiceSummariesForInvoiceRun.invoicesForInvoiceRun();
+        return invoiceSummaries.findByRunId(runId);
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
@@ -82,10 +82,10 @@ public class InvoiceService {
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-
+        String runId = null;
         final List<Lease> results = leases.findLeases(referenceOrName);
         if (results != null && results.size() > 0) {
-            invoiceCalculationService.calculateAndInvoice(
+            runId = invoiceCalculationService.calculateAndInvoice(
                     new InvoiceCalculationParameters(
                             results,
                             selection.selectedTypes(),
@@ -94,7 +94,7 @@ public class InvoiceService {
                             startDueDate,
                             nextDueDate));
         }
-        return invoiceSummariesForInvoiceRun.invoicesForInvoiceRun();
+        return invoiceSummaries.findByRunId(runId);
     }
 
     public String validateCalculateInvoicesForLeases(
@@ -142,10 +142,10 @@ public class InvoiceService {
         this.clockService = clockService;
     }
 
-    private InvoiceSummariesForInvoiceRun invoiceSummariesForInvoiceRun;
+    private InvoiceSummariesForInvoiceRun invoiceSummaries;
 
-    public final void injectInvoiceSummariesForInvoiceRun(final InvoiceSummariesForInvoiceRun invoiceSummariesForInvoiceRun) {
-        this.invoiceSummariesForInvoiceRun = invoiceSummariesForInvoiceRun;
+    public void injectInvoiceSummaries(final InvoiceSummariesForInvoiceRun invoiceSummaries) {
+        this.invoiceSummaries = invoiceSummaries;
     }
 
 }

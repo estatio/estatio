@@ -39,6 +39,7 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
@@ -71,6 +72,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
     private Indices indices;
     private IndexValues indexValues;
     private InvoiceItemsForLease invoiceItemsForLease;
+    private InvoiceSummariesForInvoiceRun invoiceSummariesForInvoiceRun;
 
     @Before
     public void setup() {
@@ -78,7 +80,9 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         indices = service(Indices.class);
         invoices = service(Invoices.class);
         invoiceItemsForLease = service(InvoiceItemsForLease.class);
+        invoiceSummariesForInvoiceRun = service(InvoiceSummariesForInvoiceRun.class);
         lease = leases.findLeaseByReference("OXF-MIRACL-005");
+        lease.injectInvoiceSummaries(invoiceSummariesForInvoiceRun);
         rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
         sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
         tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);

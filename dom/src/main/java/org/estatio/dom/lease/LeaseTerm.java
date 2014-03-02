@@ -57,9 +57,9 @@ import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -467,20 +467,6 @@ public abstract class LeaseTerm
             getContainer().remove(this);
         }
         return success;
-    }
-
-    // //////////////////////////////////////
-
-    public LeaseTerm calculate(
-            final @Named("Run Type") InvoiceRunType runType,
-            final @Named("Invoice Due Date") LocalDate invoiceDueDate,
-            final @Named("Start Due Date") LocalDate startDueDate,
-            final @Named("Next Due Date") LocalDate nextDueDate) {
-        if (!getLeaseItem().getStatus().equals(LeaseItemStatus.SUSPENDED)) {
-            invoiceCalculationService.calculateAndInvoice(
-                    new InvoiceCalculationParameters(this, runType, invoiceDueDate, startDueDate, nextDueDate));
-        }
-        return this;
     }
 
     // //////////////////////////////////////

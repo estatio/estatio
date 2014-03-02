@@ -75,15 +75,27 @@ import org.estatio.dom.invoice.Invoice;
                                 "GROUP BY " +
                                 "   \"Invoice\".\"runId\"")
         })
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByRunId", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForInvoiceRun " +
+                        "WHERE " +
+                        "runId == :runId ")
+})
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
 public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
-    public String iconName(){
+    public String iconName() {
         return "InvoiceSummary";
     }
-    
+
+    public String title() {
+        return "Invoice run ".concat(getRunId().substring(0, 21));
+    }
+
     /**
      * {@link org.apache.isis.applib.ViewModel} implementation.
      */

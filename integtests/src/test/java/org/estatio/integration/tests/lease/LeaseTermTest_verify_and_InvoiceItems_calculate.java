@@ -51,7 +51,9 @@ import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermStatus;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
@@ -77,6 +79,8 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
     private LeaseItem leaseTopModelRentItem;
     private LeaseItem leaseTopModelServiceChargeItem;
 
+    private InvoiceCalculationService invoiceCalculationService;
+
     protected IsisJdoSupport isisJdoSupport;
 
     @Before
@@ -86,6 +90,7 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         leases = service(Leases.class);
         leaseTerms = service(LeaseTerms.class);
         invoiceItemsForLease = service(InvoiceItemsForLease.class);
+        invoiceCalculationService = service(InvoiceCalculationService.class);
         estatioSettingsService = service(EstatioSettingsService.class);
 
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
@@ -280,7 +285,13 @@ public class LeaseTermTest_verify_and_InvoiceItems_calculate extends EstatioInte
         final LocalDate nextDueDate = LocalDate.parse(nextDueDateStr);
         final BigDecimal expected = value == null ? null : new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
         final LocalDateInterval interval = LocalDateInterval.parseString(intervalStr);
-        leaseTerm.calculate(InvoiceRunType.NORMAL_RUN, startDueDate, startDueDate, nextDueDate);
+
+        invoiceCalculationService.calculateAndInvoice(new InvoiceCalculationParameters(
+                leaseTerm,
+                InvoiceRunType.NORMAL_RUN,
+                startDueDate,
+                startDueDate,
+                nextDueDate));
         InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, interval);
         BigDecimal netAmount = invoiceItem == null ? new BigDecimal("0.00") : invoiceItem.getNetAmount();
         Boolean adjustment = invoiceItem == null ? false : invoiceItem.isAdjustment();

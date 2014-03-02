@@ -65,6 +65,7 @@ import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakOption;
 import org.estatio.dom.lease.breaks.BreakType;
@@ -555,9 +556,9 @@ public class Lease
     }
 
     public String disableNewMandate(
-            final BankAccount bankAccount, 
+            final BankAccount bankAccount,
             final String reference,
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
         final AgreementRole tenantRole = getSecondaryAgreementRole();
         if (tenantRole == null || !tenantRole.isCurrent()) {
@@ -588,9 +589,9 @@ public class Lease
     }
 
     public String validateNewMandate(
-            final BankAccount bankAccount, 
+            final BankAccount bankAccount,
             final String reference,
-            final LocalDate startDate, 
+            final LocalDate startDate,
             final LocalDate endDate) {
         final List<BankAccount> validBankAccounts = existingBankAccountsForTenant();
         if (!validBankAccounts.contains(bankAccount)) {
@@ -650,13 +651,13 @@ public class Lease
     // //////////////////////////////////////
 
     @Bulk
-    public Lease calculate(
+    public Object calculate(
             final @Named("Run type") InvoiceRunType runType,
             final @Named("Selection") InvoiceCalculationSelection calculationSelection,
             final @Named("Invoice due date") LocalDate invoiceDueDate,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
-        invoiceCalculationService.calculateAndInvoice(
+        String runId = invoiceCalculationService.calculateAndInvoice(
                 new InvoiceCalculationParameters(
                         this,
                         calculationSelection.selectedTypes(),
@@ -664,6 +665,10 @@ public class Lease
                         invoiceDueDate,
                         startDueDate,
                         nextDueDate));
+        if (runId != null) {
+            return invoiceSummaries.findByRunId(runId);
+        }
+        getContainer().informUser("No invoices created");
         return this;
     }
 
@@ -924,6 +929,12 @@ public class Lease
 
     public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
         this.invoiceCalculationService = invoiceCalculationService;
+    }
+
+    private InvoiceSummariesForInvoiceRun invoiceSummaries;
+
+    public final void injectInvoiceSummaries(final InvoiceSummariesForInvoiceRun invoiceSummaries) {
+        this.invoiceSummaries = invoiceSummaries;
     }
 
 }

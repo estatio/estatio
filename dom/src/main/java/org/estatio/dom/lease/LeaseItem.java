@@ -548,29 +548,6 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    public LeaseItem calculate(
-            final @Named("Run type") InvoiceRunType runType,
-            final @Named("Invoice due date") LocalDate invoiceDueDate,
-            final @Named("Start due date") LocalDate startDueDate,
-            final @Named("Next due date") LocalDate nextDueDate) {
-        invoiceCalculationService.calculateAndInvoice(
-                new InvoiceCalculationParameters(this, runType, invoiceDueDate, startDueDate, nextDueDate));
-        return this;
-    }
-
-    public String validateCalculate(
-            final InvoiceRunType runType,
-            final LocalDate dueDate,
-            final LocalDate startDate,
-            final LocalDate endDate) {
-        if (endDate != null && endDate.isBefore(startDate)) {
-            return "End date cannot be before start date";
-        }
-        return null;
-    }
-
-    // //////////////////////////////////////
-
     @Programmatic
     public void copyTerms(final LocalDate startDate, final LeaseItem newItem) {
         LeaseTerm lastTerm = null;
