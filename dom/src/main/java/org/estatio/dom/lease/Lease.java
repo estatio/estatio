@@ -193,6 +193,7 @@ public class Lease
 
     @Override
     @NotPersisted
+    @Hidden(where = Where.PARENTED_TABLES)
     public Party getPrimaryParty() {
         final AgreementRole ar = getPrimaryAgreementRole();
         return partyOf(ar);
@@ -226,6 +227,7 @@ public class Lease
      * {@link Property properties}, and so it is sufficient to obtain the
      * {@link Property} of the first such {@link Occupancy occupancy}.
      */
+    @Hidden(where = Where.PARENTED_TABLES)
     public Property getFixedAsset() {
         if (getOccupancies().isEmpty()) {
             return null;

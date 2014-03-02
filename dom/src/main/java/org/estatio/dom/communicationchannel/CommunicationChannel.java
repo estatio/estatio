@@ -104,16 +104,12 @@ public abstract class CommunicationChannel
                         value = "per-implementation"),
                     @Extension(vendorName = "datanucleus",
                         key = "implementation-classes",
-                        value = "org.estatio.dom.party.Organisation"
-                                + ",org.estatio.dom.party.Person"
-                                + ",org.estatio.dom.asset.Property"
-                                + ",org.estatio.dom.asset.Unit")
+                        value = "org.estatio.dom.party.Party"
+                                + ",org.estatio.dom.asset.FixedAsset")
             })
     @javax.jdo.annotations.Columns({
-        @javax.jdo.annotations.Column(name="ownerOrganisationId"),
-        @javax.jdo.annotations.Column(name="ownerPersonId"),
-        @javax.jdo.annotations.Column(name="ownerPropertyId"),
-        @javax.jdo.annotations.Column(name="ownerUnitId")
+        @javax.jdo.annotations.Column(name="ownerPartyId"),
+        @javax.jdo.annotations.Column(name="ownerFixedAssetId")
     })
     @Optional 
     @Hidden(where = Where.PARENTED_TABLES)
