@@ -80,7 +80,7 @@ public abstract class FinancialAccount
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FinacialAccount.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FinancialAccount.REFERENCE)
     @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;

@@ -48,6 +48,7 @@ public class EstatioTransactionalObjectsTeardownFixture extends AbstractFixture 
         deleteFrom("Agreement");
         
         deleteFrom("BankAccount");
+        deleteFrom("FixedAssetFinancialAccount");
         deleteFrom("FinancialAccount");
         
         deleteFrom("CommunicationChannel");

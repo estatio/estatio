@@ -23,18 +23,16 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Optional;
 
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @Bookmarkable
 public class BankAccount extends FinancialAccount {
 
@@ -53,7 +51,7 @@ public class BankAccount extends FinancialAccount {
 
     private BankAccountType bankAccountType;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Disabled
     public BankAccountType getBankAccountType() {
         return bankAccountType;
@@ -80,7 +78,7 @@ public class BankAccount extends FinancialAccount {
 
     private String iban;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.BankAccount.IBAN)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
     public String getIban() {
         return iban;
     }
@@ -110,7 +108,7 @@ public class BankAccount extends FinancialAccount {
 
     private String nationalCheckCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_CHECK_CODE)
     public String getNationalCheckCode() {
         return nationalCheckCode;
     }
@@ -123,7 +121,7 @@ public class BankAccount extends FinancialAccount {
 
     private String nationalBankCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.NATIONAL_BANK_CODE)
     public String getNationalBankCode() {
         return nationalBankCode;
     }
@@ -136,7 +134,7 @@ public class BankAccount extends FinancialAccount {
 
     private String branchCode;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.BankAccount.BRANCH_CODE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.BRANCH_CODE)
     public String getBranchCode() {
         return branchCode;
     }
@@ -149,7 +147,7 @@ public class BankAccount extends FinancialAccount {
 
     private String accountNumber;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.ACCOUNT_NUMBER)
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -158,18 +156,4 @@ public class BankAccount extends FinancialAccount {
         this.accountNumber = accountNumber;
     }
 
-    // //////////////////////////////////////
-    
-    private Property property;
-    
-    @javax.jdo.annotations.Column(name="fixedAssetId", allowsNull="true")
-    @Optional
-    public Property getProperty() {
-        return property;
-    }
-    
-    public void setProperty(final Property property) {
-        this.property = property;
-    }
-    
 }

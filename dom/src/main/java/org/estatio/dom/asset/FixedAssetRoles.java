@@ -42,62 +42,57 @@ public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
     @NotContributed
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(
-            final FixedAsset asset, final Party party, final FixedAssetRoleType type) {
-        return firstMatch("findByAssetAndPartyAndType", 
-                "asset", asset, 
-                "party", party, 
-                "type", type);
+            final FixedAsset asset) {
+        return firstMatch("findByAsset",
+                "asset", asset);
     }
 
-    // TODO: the start/end dates are not used, but this method is used by Property#addRoleIfDoesNotExist
-    // which seems to expect that they *are* used.
     @NotContributed
     @ActionSemantics(Of.SAFE)
     public FixedAssetRole findRole(
-            final FixedAsset asset, 
-            final Party party, 
-            final FixedAssetRoleType type, 
-            final LocalDate startDate, 
-            final LocalDate endDate) {
-        return firstMatch("findByAssetAndPartyAndType", 
-                "asset", asset, 
-                "party", party, 
+            final FixedAsset asset,
+            final FixedAssetRoleType type) {
+        return firstMatch("findByAssetAndType",
+                "asset", asset,
                 "type", type);
     }
     
+    // //////////////////////////////////////
+
     @ActionSemantics(Of.SAFE)
     @NotContributed
-    public FixedAssetRole findByAssetAndPartyAndTypeAndStartDate(
-            final FixedAsset asset, 
-            final Party party, 
-            final FixedAssetRoleType type, 
-            final LocalDate startDate) {
-        return firstMatch("findByAssetAndPartyAndTypeAndStartDate", 
-                "asset", asset, 
-                "party", party, 
-                "type", type, 
-                "startDate", startDate);
-    }
-    
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public FixedAssetRole findByAssetAndPartyAndTypeAndEndDate(
-            final FixedAsset asset, 
-            final Party party, 
-            final FixedAssetRoleType type, 
-            final LocalDate endDate) {
-        return firstMatch("findByAssetAndPartyAndTypeAndEndDate", 
-                "asset", asset, 
-                "party", party, 
-                "type", type, 
-                "endDate", endDate);
-    }
-    
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public Collection<FixedAssetRole> findByParty(
+    public Collection<FixedAssetRole> findRole(
             final Party party) {
-        return allMatches("findByParty", "party", party);
+        return allMatches("findByParty",
+                "party", party);
+    }
+
+    // //////////////////////////////////////
+
+    @NotContributed
+    @ActionSemantics(Of.SAFE)
+    public FixedAssetRole findRole(
+            final FixedAsset asset,
+            final Party party,
+            final FixedAssetRoleType type) {
+        return firstMatch("findByAssetAndPartyAndType",
+                "asset", asset,
+                "party", party,
+                "type", type);
+    }
+
+    @NotContributed
+    @ActionSemantics(Of.SAFE)
+    public FixedAssetRole findRole(
+            final FixedAsset asset,
+            final Party party,
+            final FixedAssetRoleType type,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        return firstMatch("findByAssetAndPartyAndType",
+                "asset", asset,
+                "party", party,
+                "type", type);
     }
 
 }

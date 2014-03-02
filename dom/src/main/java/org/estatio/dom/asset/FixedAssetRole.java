@@ -62,6 +62,17 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
+                name = "findByAsset", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE asset == :asset "),
+        @javax.jdo.annotations.Query(
+                name = "findByAssetAndType", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.asset.FixedAssetRole "
+                        + "WHERE asset == :asset "
+                        + "&& type == :type"),
+        @javax.jdo.annotations.Query(
                 name = "findByAssetAndPartyAndType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.asset.FixedAssetRole "
@@ -140,7 +151,7 @@ public class FixedAssetRole
 
     private FixedAssetRoleType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Disabled
     @Title(sequence = "1")
     public FixedAssetRoleType getType() {
@@ -343,11 +354,13 @@ public class FixedAssetRole
     // //////////////////////////////////////
 
     public final static class Functions {
-        
-        private Functions(){}
+
+        private Functions() {
+        }
 
         /**
-         * A {@link Function} that obtains the role's {@link FixedAssetRole#getParty() party} attribute.
+         * A {@link Function} that obtains the role's
+         * {@link FixedAssetRole#getParty() party} attribute.
          */
         public static <T extends Party> Function<FixedAssetRole, T> partyOf() {
             return new Function<FixedAssetRole, T>() {
@@ -357,9 +370,10 @@ public class FixedAssetRole
                 }
             };
         }
-        
+
         /**
-         * A {@link Function} that obtains the role's {@link FixedAssetRole#getAsset() asset} attribute.
+         * A {@link Function} that obtains the role's
+         * {@link FixedAssetRole#getAsset() asset} attribute.
          */
         public static <T extends FixedAsset> Function<FixedAssetRole, T> assetOf() {
             return new Function<FixedAssetRole, T>() {
@@ -370,5 +384,5 @@ public class FixedAssetRole
             };
         }
     }
-    
+
 }

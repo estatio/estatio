@@ -40,6 +40,7 @@ import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.asset.registration.contributed.FixedAssetRegistrationContributions;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
@@ -128,6 +129,7 @@ public class EstatioSystemInitializer {
                     new IndexBases(),
                     new IndexValues(),
                     new FixedAssets(),
+                    new FixedAssetFinancialAccounts(),
                     new Properties(),
                     new FixedAssetRoles(),
                     new UnitsForLease(),

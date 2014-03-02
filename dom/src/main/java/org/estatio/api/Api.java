@@ -43,6 +43,7 @@ import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.asset.Units;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
@@ -56,10 +57,10 @@ import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
 import org.estatio.dom.communicationchannel.PostalAddress;
 import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.BankAccountType;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -810,23 +811,24 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("accountNumber") @Optional String accountNumber,
             @Named("externalReference") @Optional String externalReference
             ) {
-        BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
-        Party owner = parties.findPartyByReference(ownerReference);
-        if (owner == null)
-            return;
-        if (bankAccount == null) {
-            bankAccount = financialAccounts.newBankAccount(owner, reference, name == null ? reference : name);
+        if (IBANValidator.valid(iban)) {
+            BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(reference);
+            Party owner = parties.findPartyByReference(ownerReference);
+            if (owner == null)
+                return;
+            if (bankAccount == null) {
+                bankAccount = financialAccounts.newBankAccount(owner, reference, name == null ? reference : name);
+            }
+            bankAccount.setIban(iban);
+            bankAccount.verifyIban();
+            if (propertyReference != null){
+                Property property = properties.findPropertyByReference(propertyReference);
+                if(property == null){
+                    throw new IllegalArgumentException(propertyReference.concat(" not found"));
+                }
+                fixedAssetFinancialAccounts.findOrCreate(property, bankAccount);
+            }
         }
-        bankAccount.setProperty(fetchProperty(propertyReference, false));
-        bankAccount.setExternalReference(externalReference);
-        bankAccount.setAccountNumber(accountNumber);
-        bankAccount.setBranchCode(branchCode);
-        bankAccount.setCountry(fetchCountry(countryCode, false));
-        bankAccount.setNationalBankCode(nationalBankCode);
-        bankAccount.setNationalCheckCode(nationalCheckCode);
-        bankAccount.setBankAccountType(BankAccountType.valueOf(bankAccountType));
-        bankAccount.setIban(iban);
-        bankAccount.verifyIban();
     }
 
     @ActionSemantics(Of.IDEMPOTENT)
@@ -1036,6 +1038,12 @@ public class Api extends AbstractFactoryAndRepository {
 
     public void injectLeaseTypes(LeaseTypes leaseTypes) {
         this.leaseTypes = leaseTypes;
+    }
+    
+    private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+    
+    public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccounts fixedAssetFinancialAccounts) {
+        this.fixedAssetFinancialAccounts = fixedAssetFinancialAccounts;
     }
 
 }

@@ -145,8 +145,8 @@ public final class JdoColumnLength {
         public static final int INITIALS = 3;
     }
 
-    public final static class FinacialAccount {
-        private FinacialAccount() {
+    public final static class FinancialAccount {
+        private FinancialAccount() {
         }
         /**
          * To store the IBAN code as reference we need to increase this

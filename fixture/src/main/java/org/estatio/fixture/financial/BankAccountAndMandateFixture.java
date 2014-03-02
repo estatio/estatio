@@ -29,6 +29,8 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -58,7 +60,8 @@ public class BankAccountAndMandateFixture extends AbstractFixture {
 
         BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountStr, bankAccountStr);
         if (propertyStr != null) {
-            bankAccount.setProperty(properties.findPropertyByReference(propertyStr));
+            final Property property = properties.findPropertyByReference(propertyStr);
+            fixedAssetFinancialAccounts.newFixedAssetFiancialAccount(property, bankAccount);
         }
 
         if (sequence != null) {
@@ -74,6 +77,7 @@ public class BankAccountAndMandateFixture extends AbstractFixture {
                     bankAccount
                     );
         }
+
     }
 
     // //////////////////////////////////////
@@ -112,6 +116,12 @@ public class BankAccountAndMandateFixture extends AbstractFixture {
 
     public void injectProperties(final Properties properties) {
         this.properties = properties;
+    }
+
+    private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
+
+    public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccounts fixedAssetFinancialAccounts) {
+        this.fixedAssetFinancialAccounts = fixedAssetFinancialAccounts;
     }
 
 }
