@@ -60,7 +60,6 @@ public final class JdoColumnLength {
         public static final int URL_TEMPLATE = 254;
     }
 
-
     public static final class Event {
         private Event() {
         }
@@ -148,6 +147,7 @@ public final class JdoColumnLength {
     public final static class FinancialAccount {
         private FinancialAccount() {
         }
+
         /**
          * To store the IBAN code as reference we need to increase this
          * 
@@ -181,6 +181,14 @@ public final class JdoColumnLength {
          * TODO: review
          */
         public final static int NATIONAL_CHECK_CODE = 20;
+    }
+
+    public final static class BankMandate {
+        private BankMandate() {
+        }
+
+        public final static int SEPA_MANDATE_IDENTIFIER = 35;
+
     }
 
     public final static class State {

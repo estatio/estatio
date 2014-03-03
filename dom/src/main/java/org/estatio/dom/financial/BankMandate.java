@@ -20,30 +20,31 @@ package org.estatio.dom.financial;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Optional;
+
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
+// identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findBankMandatesFor", language = "JDOQL",
-            value = "SELECT "
-                    + "FROM org.estatio.dom.financial.BankMandate "
-                    + "WHERE bankAccount == :bankAccount")
+        @javax.jdo.annotations.Query(
+                name = "findBankMandatesFor", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.financial.BankMandate "
+                        + "WHERE bankAccount == :bankAccount")
 })
-
-
 public class BankMandate extends Agreement {
-    
 
     // //////////////////////////////////////
 
     private FinancialAccount bankAccount;
 
-    @javax.jdo.annotations.Column(name="bankAccountId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "bankAccountId", allowsNull = "false")
     public FinancialAccount getBankAccount() {
         return bankAccount;
     }
@@ -51,7 +52,21 @@ public class BankMandate extends Agreement {
     public void setBankAccount(final FinancialAccount bankAccount) {
         this.bankAccount = bankAccount;
     }
-    
+
+    // //////////////////////////////////////
+
+    private String sepaMandateIdentifier;
+
+    @Optional
+    @javax.jdo.annotations.Column(length = JdoColumnLength.BankMandate.SEPA_MANDATE_IDENTIFIER)
+    public String getSepaMandateIdentifier() {
+        return sepaMandateIdentifier;
+    }
+
+    public void setSepaMandateIdentifier(final String sepaMandateIdentifier) {
+        this.sepaMandateIdentifier = sepaMandateIdentifier;
+    }
+
     // //////////////////////////////////////
 
     public Party getPrimaryParty() {
@@ -61,6 +76,5 @@ public class BankMandate extends Agreement {
     public Party getSecondaryParty() {
         return findCurrentOrMostRecentParty(FinancialConstants.ART_DEBTOR);
     }
-
 
 }

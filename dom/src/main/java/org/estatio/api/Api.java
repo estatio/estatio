@@ -821,9 +821,9 @@ public class Api extends AbstractFactoryAndRepository {
             }
             bankAccount.setIban(iban);
             bankAccount.verifyIban();
-            if (propertyReference != null){
+            if (propertyReference != null) {
                 Property property = properties.findPropertyByReference(propertyReference);
-                if(property == null){
+                if (property == null) {
                     throw new IllegalArgumentException(propertyReference.concat(" not found"));
                 }
                 fixedAssetFinancialAccounts.findOrCreate(property, bankAccount);
@@ -834,6 +834,7 @@ public class Api extends AbstractFactoryAndRepository {
     @ActionSemantics(Of.IDEMPOTENT)
     public void putBankMandate(
             @Named("reference") String reference,
+            @Named("sepaMandateIdentifier") @Optional String sepaMandateIdentifier,
             @Named("name") @Optional String name,
             @Named("leaseReference") String leaseReference,
             @Named("debtorReference") String debtorReference,
@@ -855,6 +856,7 @@ public class Api extends AbstractFactoryAndRepository {
         bankMandate.setName(name);
         bankMandate.setStartDate(startDate);
         bankMandate.setEndDate(endDate);
+        bankMandate.setSepaMandateIdentifier(sepaMandateIdentifier);
         lease.paidBy(bankMandate);
     }
 
@@ -1039,9 +1041,9 @@ public class Api extends AbstractFactoryAndRepository {
     public void injectLeaseTypes(LeaseTypes leaseTypes) {
         this.leaseTypes = leaseTypes;
     }
-    
+
     private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
-    
+
     public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccounts fixedAssetFinancialAccounts) {
         this.fixedAssetFinancialAccounts = fixedAssetFinancialAccounts;
     }
