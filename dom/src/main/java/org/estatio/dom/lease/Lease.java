@@ -162,7 +162,7 @@ public class Lease
     }
 
     @Programmatic
-    public void updateStatusFromEffectiveStatus(final String reason) {
+    public void resovleStatus(final String reason) {
         final LeaseStatus effectiveStatus = getEffectiveStatus();
         if (effectiveStatus != null && !effectiveStatus.equals(getStatus())) {
             setStatus(effectiveStatus);
@@ -729,6 +729,7 @@ public class Lease
         for (LeaseItem item : getItems()) {
             item.suspend(reason);
         }
+        setStatus(LeaseStatus.SUSPENDED);
         return this;
     }
 
@@ -742,6 +743,7 @@ public class Lease
         for (LeaseItem item : getItems()) {
             item.activate();
         }
+        setStatus(LeaseStatus.ACTIVE);
         return this;
     }
 

@@ -158,7 +158,7 @@ public class LeaseItem
     public void modifyStatus(final LeaseItemStatus newStatus, final String reason) {
         if (!getStatus().equals(newStatus)) {
             setStatus(newStatus);
-            getLease().updateStatusFromEffectiveStatus(reason);
+            getLease().resovleStatus(reason);
         }
     }
 
