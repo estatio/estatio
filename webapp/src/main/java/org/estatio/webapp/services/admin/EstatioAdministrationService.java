@@ -41,6 +41,7 @@ import org.estatio.fixture.EstatioFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.currency.CurrenciesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
+import org.estatio.fixture.link.LinksFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.fixturescripts.FixtureScript;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
@@ -96,6 +97,15 @@ public class EstatioAdministrationService {
     // //////////////////////////////////////
 
     @Prototype
+    @MemberOrder(sequence = "4")
+    public String installLinksFixture() {
+        installFixtures(container.newTransientInstance(LinksFixture.class));
+        return "Links fixture successfully installed";
+    }
+
+    // //////////////////////////////////////
+
+    @Prototype
     @MemberOrder(sequence = "9")
     public String installConstants() {
         AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture fixture = container.newTransientInstance(AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture.class);
@@ -109,7 +119,7 @@ public class EstatioAdministrationService {
     }
 
     // //////////////////////////////////////
-    
+
     @Prototype
     @MemberOrder(sequence = "9")
     public String installCurrencies() {
@@ -117,6 +127,7 @@ public class EstatioAdministrationService {
         currenciesFixture.install();
         return "Constants successfully installed";
     }
+
     // //////////////////////////////////////
 
     @MemberOrder(sequence = "9")
