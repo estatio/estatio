@@ -77,6 +77,7 @@ import org.estatio.dom.lease.LeaseItemStatus;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForFixed;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTax;
@@ -755,6 +756,53 @@ public class Api extends AbstractFactoryAndRepository {
         term.setDescription(description);
     }
 
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putLeaseTermForFixed(
+            // start generic fields
+            @Named("leaseReference") String leaseReference,
+            @Named("tenantReference") String tenantReference,
+            @Named("unitReference") @Optional String unitReference,
+            @Named("itemSequence") BigInteger itemSequence,
+            @Named("itemType") String itemType,
+            @Named("itemStatus") String itemStatus,
+            @Named("itemStartDate") @Optional LocalDate itemStartDate,
+            @Named("itemEndDate") @Optional LocalDate itemEndDate,
+            @Named("chargeReference") @Optional String chargeReference,
+            @Named("invoicingFrequency") @Optional String invoicingFrequency,
+            @Named("sequence") BigInteger sequence,
+            @Named("startDate") @Optional LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("status") @Optional String status,
+            // end generic fields
+            @Named("value") @Optional BigDecimal value) {
+
+        putLeaseItem(
+                leaseReference, 
+                tenantReference, 
+                unitReference, 
+                itemType, 
+                BigInteger.ONE, 
+                itemStartDate, 
+                itemEndDate,
+                chargeReference, 
+                null, 
+                invoicingFrequency, 
+                "DIRECT_DEBIT", 
+                itemStatus);
+        LeaseTermForFixed term = (LeaseTermForFixed) putLeaseTerm(
+                leaseReference, 
+                unitReference, 
+                itemSequence, 
+                itemType, 
+                itemStartDate, 
+                startDate, 
+                endDate, 
+                sequence, 
+                status);
+        term.setValue(value);
+    }
+
+    
     private LeaseTerm putLeaseTerm(
             final String leaseReference,
             final String unitReference,
@@ -792,6 +840,7 @@ public class Api extends AbstractFactoryAndRepository {
             term.setSequence(sequence);
         }
         term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(statusStr));
+        term.setEndDate(endDate);
         return term;
     }
 

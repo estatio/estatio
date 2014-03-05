@@ -9,20 +9,26 @@ import org.estatio.dom.utils.StringUtils;
 public enum InvoiceCalculationSelection {
     RENT_AND_SERVICE_CHARGE(
             LeaseItemType.RENT,
-            LeaseItemType.SERVICE_CHARGE),
+            LeaseItemType.SERVICE_CHARGE,
+            LeaseItemType.SERVICE_CHARGE_INDEXABLE),
+    RENT(
+            LeaseItemType.RENT),
+    SERVICE_CHARGE(
+            LeaseItemType.SERVICE_CHARGE,
+            LeaseItemType.SERVICE_CHARGE_INDEXABLE),
     TURNOVER_RENT(
             LeaseItemType.TURNOVER_RENT),
     TAX(
             LeaseItemType.TAX),
-    RENT(
-            LeaseItemType.RENT),
-    SERVICE_CHARGE(
-            LeaseItemType.SERVICE_CHARGE),
+    DISCOUNT(
+            LeaseItemType.DISCOUNT),
     ALL(
             LeaseItemType.RENT,
             LeaseItemType.SERVICE_CHARGE,
+            LeaseItemType.SERVICE_CHARGE_INDEXABLE,
             LeaseItemType.TURNOVER_RENT,
-            LeaseItemType.TAX);
+            LeaseItemType.TAX,
+            LeaseItemType.DISCOUNT);
 
     private LeaseItemType[] selectedTypes;
 

@@ -1,0 +1,73 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "leaseItem": {},
+            "frequency": {},
+            "sequence": {},
+            "status": {}
+          }
+        },
+         "Dates": {
+          "members": {
+            "startDate": {},
+            "endDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "current": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Parameters": {
+          "members": {
+            "value": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 4,
+      "memberGroups": {
+        "Values": {
+          "members": {
+            "effectiveValue": {},
+            "baseValue": {},
+            "indexedValue": {},
+            "settledValue": {}
+          }
+        },
+        "Related": {
+          "members": {
+            "previous": {},
+            "next": {}
+          }
+        }
+      }
+    },
+    {
+      "span": 12,
+      "collections": {
+        "invoiceItems": {
+          "actions": {
+            "calculate": {}
+          }
+        }
+      }
+    }
+  ],
+  "actions": {
+    "createNext": {},
+    "lock": {},
+    "unlock": {},
+    "verify": {}
+  }
+}
