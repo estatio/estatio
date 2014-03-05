@@ -1,6 +1,7 @@
 package org.estatio.dom.lease;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
@@ -162,7 +163,6 @@ public class LeaseTermForTax extends LeaseTerm {
         return getTaxValue();
     }
 
-    
     @Override
     public LeaseTermValueType valueType() {
         return LeaseTermValueType.FIXED;
@@ -185,14 +185,16 @@ public class LeaseTermForTax extends LeaseTerm {
         }
         // TODO: Disabled the calculation of tax. To be discussed with the users
 
-        // if (getTaxableValue() != null && getTaxValue() == null) {
-        // BigDecimal taxFactor = getTaxPercentage().divide(HUNDRED);
-        // BigDecimal recoverableFactor =
-        // getRecoverablePercentage().divide(HUNDRED);
-        // BigDecimal taxValue =
-        // getTaxableValue().multiply(taxFactor).multiply(recoverableFactor);
-        // setTaxValue(taxValue);
-        // }
+        if (getTaxableValue() != null  && getTaxPercentage() !=null
+                //&& getTaxValue() == null //TODO: we must safeguard existing values
+                ) {
+            BigDecimal taxFactor = getTaxPercentage().divide(HUNDRED);
+            BigDecimal recoverableFactor =
+                    getRecoverablePercentage().divide(HUNDRED);
+            BigDecimal taxValue =
+                    getTaxableValue().multiply(taxFactor).multiply(recoverableFactor).setScale(0, RoundingMode.HALF_UP);
+            setTaxValue(taxValue);
+        }
     }
 
 }
