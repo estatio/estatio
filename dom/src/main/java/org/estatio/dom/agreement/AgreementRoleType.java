@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Unique;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -35,10 +36,11 @@ import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithTitleComparable;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
+@Unique(name = "AgreemenRoleType_title_UNQ", members = { "title" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByTitle", language = "JDOQL",
@@ -53,7 +55,7 @@ import org.estatio.dom.WithTitleComparable;
 })
 @Immutable
 @Bounded
-public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType> 
+public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType>
         implements WithTitleComparable<AgreementRoleType> {
 
     public AgreementRoleType() {
@@ -64,7 +66,7 @@ public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType>
 
     private String title;
 
-    @javax.jdo.annotations.Column(allowsNull="false", length=JdoColumnLength.TITLE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TITLE)
     @Title
     public String getTitle() {
         return title;
@@ -78,7 +80,7 @@ public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType>
 
     private AgreementType appliesTo;
 
-    @javax.jdo.annotations.Column(name="appliesToAgreementTypeId", allowsNull="false")
+    @javax.jdo.annotations.Column(name = "appliesToAgreementTypeId", allowsNull = "false")
     public AgreementType getAppliesTo() {
         return appliesTo;
     }
@@ -88,7 +90,7 @@ public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType>
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public Predicate<? super AgreementRole> matchingRole() {
         return new Predicate<AgreementRole>() {
@@ -104,7 +106,5 @@ public class AgreementRoleType extends EstatioImmutableObject<AgreementRoleType>
     public static List<AgreementRoleType> applicableTo(final AgreementType at) {
         return at.getRoleTypesApplicableTo();
     }
-
-
 
 }
