@@ -27,12 +27,13 @@ import com.google.common.collect.Lists;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-@Hidden
 public class Brands extends EstatioDomainService<Brand> {
 
     public Brands() {
@@ -40,6 +41,23 @@ public class Brands extends EstatioDomainService<Brand> {
     }
 
     // //////////////////////////////////////
+
+    @MemberOrder(name = "Other", sequence = "brands.1.2")
+    public Brand newBrand(final @Named("Brand name") String name) {
+        Brand brand;
+        brand = newTransientInstance(Brand.class);
+        brand.setName(name);
+        persist(brand);
+        return brand;
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Other", sequence = "brands.1.1")
+    public List<Brand> allBrands() {
+        return allInstances();
+    }
 
     @SuppressWarnings({ "unchecked" })
     @ActionSemantics(Of.SAFE)
@@ -66,8 +84,7 @@ public class Brands extends EstatioDomainService<Brand> {
         }
         Brand brand = findByName(name);
         if (brand == null) {
-            brand = newTransientInstance(Brand.class);
-            brand.setName(name);
+            brand = newBrand(name);
         }
         return brand;
     }
