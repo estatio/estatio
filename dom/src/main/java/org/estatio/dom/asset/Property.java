@@ -71,6 +71,19 @@ import org.estatio.dom.party.Party;
 @Bookmarkable
 public class Property extends FixedAsset implements Locatable {
 
+    private String fullName;
+    
+    @Optional
+    public String getFullName() {
+        return fullName;
+    }
+    
+    public void setFullName(final String fullName) {
+        this.fullName = fullName;
+    }
+
+    // //////////////////////////////////////
+    
     private PropertyType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
