@@ -31,4 +31,8 @@ public enum InvoiceStatus {
         return StringUtils.enumTitle(this.name());
     }
 
+    public boolean invoiceIsChangable() {
+        return this.equals(InvoiceStatus.APPROVED) || this.equals(InvoiceStatus.NEW);
+    }
+
 }

@@ -292,6 +292,24 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         this.dueDate = dueDate;
     }
 
+    public void changeDueDate(
+            final @Named("Due date") LocalDate dueDate) {
+        setDueDate(dueDate);
+    }
+
+    public LocalDate default0ChangeDueDate(
+            final LocalDate dueDate) {
+        return getDueDate();
+    }
+
+    public String disableChangeDueDate(
+            final LocalDate dueDate) {
+        if (!getStatus().invoiceIsChangable()) {
+            return "Due date can't be changed";
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     private InvoiceStatus status;
@@ -632,7 +650,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     }
 
     public String disableRemove() {
-        return getStatus().equals(InvoiceStatus.NEW) ? null : "Only invoices with status New can be removed.";
+        return getStatus().invoiceIsChangable() ? null : "Only invoices with status New can be removed.";
     }
 
     @Programmatic

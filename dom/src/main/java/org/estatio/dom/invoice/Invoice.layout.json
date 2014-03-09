@@ -34,7 +34,11 @@
         "Dates": {
           "members": {
             "invoiceDate": {},
-            "dueDate": {}
+            "dueDate": {
+              "actions": {
+                "changeDueDate":{}
+              }
+            }
           }
         }
       }
