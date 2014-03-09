@@ -22,13 +22,16 @@ public enum InvoiceCalculationSelection {
             LeaseItemType.TAX),
     DISCOUNT(
             LeaseItemType.DISCOUNT),
+    ENTRY_FEE(
+            LeaseItemType.ENTRY_FEE),
     ALL(
             LeaseItemType.RENT,
             LeaseItemType.SERVICE_CHARGE,
             LeaseItemType.SERVICE_CHARGE_INDEXABLE,
             LeaseItemType.TURNOVER_RENT,
             LeaseItemType.TAX,
-            LeaseItemType.DISCOUNT);
+            LeaseItemType.DISCOUNT,
+            LeaseItemType.ENTRY_FEE);
 
     private LeaseItemType[] selectedTypes;
 
