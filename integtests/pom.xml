@@ -100,10 +100,6 @@ language governing permissions and limitations under the License.
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.isis.security</groupId>
-            <artifactId>isis-security-file</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>

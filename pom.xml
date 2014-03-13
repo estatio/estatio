@@ -85,7 +85,6 @@ language governing permissions and limitations under the License.
         <isis.version>1.4.0-SNAPSHOT</isis.version>
         <isis-objectstore-jdo.version>1.4.0-SNAPSHOT</isis-objectstore-jdo.version>
         <isis-viewer-wicket.version>1.4.0-SNAPSHOT</isis-viewer-wicket.version>
-        <isis-security-file.version>1.0.2-SNAPSHOT</isis-security-file.version>
         <isis-viewer-restfulobjects.version>2.2.0-SNAPSHOT</isis-viewer-restfulobjects.version>
         <isis-security-shiro.version>1.4.0-SNAPSHOT</isis-security-shiro.version>
 
@@ -526,15 +525,6 @@ language governing permissions and limitations under the License.
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <dependency>
-                <groupId>org.apache.isis.security</groupId>
-                <artifactId>isis-security-file</artifactId>
-                <version>${isis-security-file.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
 
             <!-- this project's own modules -->
             <dependency>
