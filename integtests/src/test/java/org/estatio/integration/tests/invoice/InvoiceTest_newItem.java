@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.currency.Currencies;
@@ -38,6 +39,7 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
@@ -83,10 +85,14 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
     @Test
     public void happyCase() throws Exception {
         Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, currency, new LocalDate(2013, 1, 1), lease, null);
-        invoice.newItem(charge, new BigDecimal(1), new BigDecimal("10000.123"));
+        invoice.newItem(charge, new BigDecimal(1), new BigDecimal("10000.123"), null, null);
         Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, new LocalDate(2013, 1, 1), null);
         assertThat(foundInvoice.getNetAmount(), is(new BigDecimal("10000.123")));
-        assertThat(foundInvoice.getItems().first().getNetAmount(), is(new BigDecimal("10000.123")));
+        final InvoiceItemForLease invoiceItem = (InvoiceItemForLease) foundInvoice.getItems().first();
+        assertThat(invoiceItem.getNetAmount(), is(new BigDecimal("10000.123")));
+        assertThat(invoiceItem.getLease(), is(lease));
+        assertThat(invoiceItem.getFixedAsset(), is((FixedAsset) lease.getOccupancies().first().getUnit()));
+
         // TODO: EST-290: netAmount has scale set to two but the example above
         // proves that it's possible to store with a higher precision
     }

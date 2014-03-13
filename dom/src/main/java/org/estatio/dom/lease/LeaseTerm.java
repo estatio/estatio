@@ -430,23 +430,6 @@ public abstract class LeaseTerm
         this.invoiceItems = invoiceItems;
     }
 
-    public void addToInvoiceItems(final InvoiceItemForLease invoiceItem) {
-        if (invoiceItem == null || getInvoiceItems().contains(invoiceItem)) {
-            return;
-        }
-        invoiceItem.clearLeaseTerm();
-        invoiceItem.setLeaseTerm(this);
-        getInvoiceItems().add(invoiceItem);
-    }
-
-    public void removeFromInvoiceItems(final InvoiceItemForLease invoiceItem) {
-        if (invoiceItem == null || !getInvoiceItems().contains(invoiceItem)) {
-            return;
-        }
-        invoiceItem.setLeaseTerm(null);
-        getInvoiceItems().remove(invoiceItem);
-    }
-
     // //////////////////////////////////////
 
     @Prototype

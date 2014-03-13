@@ -37,6 +37,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Render;
@@ -126,12 +127,7 @@ public class InvoiceItem
 
     private Invoice invoice;
 
-    // REVIEW: this is optional because of the #remove() method,
-    // also because the ordering of flushes in #attachToInvoice()
-    //
-    // suspect this should be mandatory, however (ie get rid of #remove(),
-    // and refactor #attachToInvoice())
-    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "true")
+    @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
     @Render(Type.EAGERLY)
     @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
@@ -329,6 +325,22 @@ public class InvoiceItem
         this.effectiveEndDate = effectiveEndDate;
     }
 
+    public InvoiceItem changeEffectiveDates(
+            final @Named("Effective start date") LocalDate effectiveStartDate,
+            final @Named("Effective end date") LocalDate effectiveEndDate) {
+        setEffectiveStartDate(effectiveStartDate);
+        setEffectiveEndDate(effectiveEndDate);
+        return this;
+    }
+
+    public LocalDate default0ChangeEffectiveDates() {
+        return getEffectiveStartDate();
+    }
+
+    public LocalDate default1ChangeEffectiveDates() {
+        return getEffectiveEndDate();
+    }
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -355,16 +367,6 @@ public class InvoiceItem
 
     // //////////////////////////////////////
 
-    /**
-     * Attaches this item to an invoice with similar attributes. Creates a new
-     * invoice when no matching found.
-     */
-    public void attachToInvoice() {
-        // TODO: refactor into InvoiceItemsForLease repository?
-    }
-
-    // //////////////////////////////////////
-
     @Bulk
     public InvoiceItem verify() {
         calculateTax();
@@ -376,8 +378,8 @@ public class InvoiceItem
     @Bulk
     public void remove() {
         if (getInvoice().getStatus().equals(InvoiceStatus.NEW)) {
-            setInvoice(null);
             getContainer().remove(this);
+            getContainer().flush();
         }
     }
 

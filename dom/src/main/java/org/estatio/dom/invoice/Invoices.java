@@ -25,7 +25,6 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
@@ -49,6 +48,20 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     public Invoices() {
         super(Invoices.class, Invoice.class);
+    }
+
+    // //////////////////////////////////////
+
+    @NotInServiceMenu
+    @Named("Invoices")
+    public List<Invoice> findInvoices(final Lease lease) {
+        return allMatches("findByLease", "lease", lease);
+    }
+
+    @NotInServiceMenu
+    @Named("Invoices")
+    public List<Invoice> findInvoices(final Party party) {
+        return allMatches("findByBuyer", "buyer", party);
     }
 
     // //////////////////////////////////////
@@ -111,7 +124,14 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final PaymentMethod paymentMethod,
             final Currency currency
             ) {
-        return newInvoice(lease.getPrimaryParty(), lease.getSecondaryParty(), paymentMethod, currency, dueDate, lease, null);
+        return newInvoice(
+                lease.getPrimaryParty(), 
+                lease.getSecondaryParty(), 
+                paymentMethod, 
+                currency, 
+                dueDate, 
+                lease, 
+                null);
     }
 
     // //////////////////////////////////////
@@ -192,7 +212,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
         return invoices.get(0);
     }
 
-    @Hidden
+    @Programmatic
     public List<Invoice> findMatchingInvoices(
             final Party seller,
             final Party buyer,
@@ -208,14 +228,6 @@ public class Invoices extends EstatioDomainService<Invoice> {
                 "lease", lease,
                 "status", invoiceStatus,
                 "dueDate", dueDate);
-    }
-
-    // //////////////////////////////////////
-
-    @NotInServiceMenu
-    @Named("Invoices")
-    public List<Invoice> findInvoices(final Lease lease) {
-        return allMatches("findByLease", "lease", lease);
     }
 
     // //////////////////////////////////////

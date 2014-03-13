@@ -132,7 +132,7 @@ public class LeaseTermTest {
         invoice.getItems().add(item1);
         item1.setInvoice(invoice);
         
-        item1.modifyLeaseTerm(term);
+        item1.setLeaseTerm(term);
         item1.setStartDate(interval.startDate());
         item1.setNetAmount(BigDecimal.valueOf(1234.45));
         
@@ -141,7 +141,7 @@ public class LeaseTermTest {
         item2.setInvoice(invoice);
         
         item2.setNetAmount(BigDecimal.valueOf(1234.45));
-        item2.modifyLeaseTerm(term);
+        item2.setLeaseTerm(term);
         item2.setStartDate(interval.startDate());
 
     }

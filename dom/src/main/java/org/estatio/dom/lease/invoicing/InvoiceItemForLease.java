@@ -131,25 +131,6 @@ public class InvoiceItemForLease extends InvoiceItem {
         this.leaseTerm = leaseTerm;
     }
 
-    public void modifyLeaseTerm(final LeaseTerm leaseTerm) {
-        LeaseTerm currentLeaseTerm = getLeaseTerm();
-        if (leaseTerm == null || leaseTerm.equals(currentLeaseTerm)) {
-            return;
-        }
-        if (currentLeaseTerm != null) {
-            currentLeaseTerm.removeFromInvoiceItems(this);
-        }
-        leaseTerm.addToInvoiceItems(this);
-    }
-
-    public void clearLeaseTerm() {
-        LeaseTerm currentLeaseTerm = getLeaseTerm();
-        if (currentLeaseTerm == null) {
-            return;
-        }
-        currentLeaseTerm.removeFromInvoiceItems(this);
-    }
-
     // //////////////////////////////////////
 
     private FixedAsset fixedAsset;
@@ -193,7 +174,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Hidden
     public void remove() {
         // no safeguard, assuming being called with precaution
-        clearLeaseTerm();
+        setLeaseTerm(null);
         super.remove();
     }
 

@@ -1,15 +1,14 @@
 {
   "columns": [
     {
-      "span": 4,
+      "span": 6,
       "memberGroups": {
         "General": {
           "members": {
             "invoice": {},
-            "leaseTerm": {},
-            "sequence": {},
-            "status": {},
-            "current": {}
+            "lease": {},
+            "fixedAsset": {},
+            "source": {}
           }
         },
         "Details": {
@@ -22,7 +21,7 @@
       }
     },
     {
-      "span": 4,
+      "span": 3,
       "memberGroups": {
         "Dates": {
           "members": {
@@ -30,14 +29,18 @@
             "startDate": {},
             "endDate": {},
             "effectiveStartDate": {},
-            "effectiveEndDate": {},
+            "effectiveEndDate": {
+              "actions":{
+                "changeEffectiveDates":{}
+              }
+            },
             "adjustment": {}
           }
         }
       }
     },
     {
-      "span": 4,
+      "span": 3,
       "memberGroups": {
         "Amounts": {
           "members": {

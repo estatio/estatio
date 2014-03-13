@@ -57,6 +57,7 @@ import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
 
@@ -107,6 +108,12 @@ import org.estatio.dom.party.Party;
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
                         "WHERE status == :status " +
+                        "ORDER BY invoiceNumber"),
+        @javax.jdo.annotations.Query(
+                name = "findByBuyer", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE buyer == :buyer " +
                         "ORDER BY invoiceNumber"),
         @javax.jdo.annotations.Query(
                 name = "findByLease", language = "JDOQL",
@@ -553,19 +560,45 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     public InvoiceItem newItem(
             final Charge charge,
             final @Named("Quantity") BigDecimal quantity,
-            final @Named("Net amount") BigDecimal netAmount) {
+            final @Named("Net amount") BigDecimal netAmount,
+            final @Named("Start date") @Optional LocalDate startDate,
+            final @Named("End date") @Optional LocalDate endDate) {
         InvoiceItem invoiceItem = invoiceItems.newInvoiceItem(this, getDueDate());
         invoiceItem.setQuantity(quantity);
         invoiceItem.setCharge(charge);
         invoiceItem.setDescription(charge.getDescription());
         invoiceItem.setTax(charge.getTax());
         invoiceItem.setNetAmount(netAmount);
+        invoiceItem.setStartDate(startDate);
+        invoiceItem.setEndDate(endDate);
         invoiceItem.verify();
-        return invoiceItem;
+        // TODO: we need to create a new subclass InvoiceForLease but that
+        // requires a database change so this is quick fix
+        InvoiceItemForLease invoiceItemForLease = (InvoiceItemForLease) invoiceItem;
+        invoiceItemForLease.setLease(getLease());
+        if (getLease() != null && getLease().getOccupancies() != null && getLease().getOccupancies().first() != null) {
+            invoiceItemForLease.setFixedAsset(getLease().getOccupancies().first().getUnit());
+        }
+        return invoiceItemForLease;
     }
 
     public BigDecimal default1NewItem() {
         return BigDecimal.ONE;
+    }
+
+    public String validateNewItem(
+            final Charge charge,
+            final BigDecimal quantity,
+            final BigDecimal netAmount,
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (startDate != null && endDate == null) {
+            return "Also enter an end date when using a start date";
+        }
+        if (ObjectUtils.compare(startDate, endDate) > 0) {
+            return "Start date must be before end date";
+        }
+        return null;
     }
 
     // //////////////////////////////////////

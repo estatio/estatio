@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 
 public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
@@ -44,7 +45,7 @@ public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
     public InvoiceItem newInvoiceItem(
             final Invoice invoice,
             final @Named("Due date") LocalDate dueDate) {
-        InvoiceItem invoiceItem = newTransientInstance();
+        InvoiceItem invoiceItem = newTransientInstance(InvoiceItemForLease.class);
         invoiceItem.setInvoice(invoice);
         invoiceItem.setDueDate(dueDate);
         invoiceItem.setUuid(java.util.UUID.randomUUID().toString());

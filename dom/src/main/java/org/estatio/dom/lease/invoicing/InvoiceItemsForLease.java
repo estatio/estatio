@@ -68,7 +68,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
         invoiceItem.setStartDate(interval.startDate());
         invoiceItem.setEndDate(interval.endDate());
         invoiceItem.setDueDate(dueDate);
-        invoiceItem.modifyLeaseTerm(leaseTerm);
+        invoiceItem.setLeaseTerm(leaseTerm);
 
         // redundantly persist, these are immutable
         // assumes only one occupancy per lease...
