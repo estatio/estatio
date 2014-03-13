@@ -10,6 +10,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -54,6 +55,25 @@ public class LeaseTermForTax extends LeaseTerm {
 
     public void setTaxValue(final BigDecimal taxValue) {
         this.taxValue = taxValue;
+    }
+
+    private boolean overrideTaxValue;
+
+    @Optional
+    @Disabled
+    public boolean isOverrideTaxValue() {
+        return overrideTaxValue;
+    }
+
+    public void setOverrideTaxValue(final boolean overrideTaxValue) {
+        this.overrideTaxValue = overrideTaxValue;
+    }
+
+    public LeaseTermForTax overrideTaxValue(
+            final @Named("Override tax value") BigDecimal overrideTaxValue) {
+        setTaxValue(overrideTaxValue);
+        setOverrideTaxValue(true);
+        return this;
     }
 
     private BigDecimal taxPercentage;
@@ -185,9 +205,9 @@ public class LeaseTermForTax extends LeaseTerm {
         }
         // TODO: Disabled the calculation of tax. To be discussed with the users
 
-        if (getTaxableValue() != null  && getTaxPercentage() !=null
-                //&& getTaxValue() == null //TODO: we must safeguard existing values
-                ) {
+        if (!isOverrideTaxValue() && getTaxableValue() != null && getTaxPercentage() != null
+        // && getTaxValue() == null //TODO: we must safeguard existing values
+        ) {
             BigDecimal taxFactor = getTaxPercentage().divide(HUNDRED);
             BigDecimal recoverableFactor =
                     getRecoverablePercentage().divide(HUNDRED);

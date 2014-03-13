@@ -33,7 +33,12 @@
             "taxPercentage": {},
             "recoverablePercentage": {},
             "taxableValue": {},
-            "taxValue": {},
+            "overrideTaxValue": {},
+            "taxValue": {
+              "actions": {
+                "overrideTaxValue":{}
+              }
+            },
             "paymentDate":{}
           }
         },
