@@ -78,7 +78,8 @@ public abstract class CommunicationChannel
         // TODO: description is annotated as optional,
         // so it doesn't really make sense for it to be part of the natural sort
         // order
-        super("type, description");
+        super("id, type, description");
+        //super("type, description");
     }
 
     // //////////////////////////////////////

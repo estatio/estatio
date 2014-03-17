@@ -18,6 +18,8 @@
  */
 package org.estatio.dom;
 
+import java.util.UUID;
+
 import javax.jdo.JDOHelper;
 
 import org.apache.isis.applib.annotation.Hidden;
@@ -58,7 +60,12 @@ public abstract class EstatioMutableObject<T extends EstatioDomainObject<T>>
 
     @Hidden
     public String getId() {
-        final String id = JDOHelper.getObjectId(this).toString().split("\\[OID\\]")[0];
+        Object objectId = JDOHelper.getObjectId(this);
+        if(objectId == null) {
+            return "";
+        }
+        String objectIdStr = objectId.toString();
+        final String id = objectIdStr.split("\\[OID\\]")[0];
         return id;
     }
     
