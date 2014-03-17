@@ -82,20 +82,20 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.4.0-SNAPSHOT</isis.version>
-        <isis-objectstore-jdo.version>1.4.0-SNAPSHOT</isis-objectstore-jdo.version>
-        <isis-viewer-wicket.version>1.4.0-SNAPSHOT</isis-viewer-wicket.version>
-        <isis-viewer-restfulobjects.version>2.2.0-SNAPSHOT</isis-viewer-restfulobjects.version>
-        <isis-security-shiro.version>1.4.0-SNAPSHOT</isis-security-shiro.version>
+        <isis.version>1.4.2-SNAPSHOT</isis.version>
+        <isis-objectstore-jdo.version>1.4.2-SNAPSHOT</isis-objectstore-jdo.version>
+        <isis-viewer-wicket.version>1.4.2-SNAPSHOT</isis-viewer-wicket.version>
+        <isis-viewer-restfulobjects.version>2.2.0</isis-viewer-restfulobjects.version>
+        <isis-security-shiro.version>1.4.2-SNAPSHOT</isis-security-shiro.version>
 
 		<quartz-scheduler.version>2.2.1</quartz-scheduler.version>
         
-        <danhaywood-isis-wicket-excel.version>1.3.0</danhaywood-isis-wicket-excel.version>
-        <danhaywood-isis-wicket-fullcalendar2.version>1.3.0</danhaywood-isis-wicket-fullcalendar2.version>
-        <danhaywood-isis-wicket-gmap3.version>1.2.1</danhaywood-isis-wicket-gmap3.version>
-        <danhaywood-isis-wicket-wickedcharts.version>1.2.0</danhaywood-isis-wicket-wickedcharts.version>
-        <danhaywood-isis-domainservice-excel.version>1.4.0-SNAPSHOT</danhaywood-isis-domainservice-excel.version>
-        <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0-SNAPSHOT</danhaywood-isis-domainservice-stringinterpolator.version>
+        <danhaywood-isis-wicket-excel.version>1.4.0</danhaywood-isis-wicket-excel.version>
+        <danhaywood-isis-wicket-fullcalendar2.version>1.4.0</danhaywood-isis-wicket-fullcalendar2.version>
+        <danhaywood-isis-wicket-gmap3.version>1.4.0</danhaywood-isis-wicket-gmap3.version>
+        <danhaywood-isis-wicket-wickedcharts.version>1.4.0</danhaywood-isis-wicket-wickedcharts.version>
+        <danhaywood-isis-domainservice-excel.version>1.4.0</danhaywood-isis-domainservice-excel.version>
+        <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0</danhaywood-isis-domainservice-stringinterpolator.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
