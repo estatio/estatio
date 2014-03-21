@@ -28,8 +28,10 @@ import org.apache.isis.core.runtime.services.xmlsnapshot.XmlSnapshotServiceDefau
 import org.apache.isis.core.wrapper.WrapperFactoryDefault;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
+import org.apache.isis.objectstore.jdo.service.RegisterEntities;
 
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -187,12 +189,9 @@ public class EstatioSystemInitializer {
                     new QueryResultsCache());
         }
 
-        private IsisConfiguration testConfiguration() {
-            final IsisConfigurationDefault testConfiguration = new IsisConfigurationDefault();
-
-            testConfiguration.add("isis.persistor.datanucleus.RegisterEntities.packagePrefix", "org.estatio");
-
-            testConfiguration.add(DataNucleusObjectStore.INSTALL_FIXTURES_KEY, "true");
+        private static IsisConfiguration testConfiguration() {
+            final IsisConfigurationForJdoIntegTests testConfiguration = new IsisConfigurationForJdoIntegTests();
+            testConfiguration.addRegisterEntitiesPackagePrefix("org.estatio");
 
             // uncomment to use log4jdbc instead
             // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
@@ -207,22 +206,12 @@ public class EstatioSystemInitializer {
             // testConfiguration.add("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
             // "estatio");
 
-            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.defaultInheritanceStrategy", "TABLE_PER_CLASS");
-
-            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.cache.level2.type", "none");
             // TODO: this is a (temporary?) work-around for
             // NumeratorIntegrationTest failing if do a find prior to create and
             // then a find;
             // believe that the second find fails to work due to original find
             // caching an incorrect query compilation plan
             testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.query.compilation.cached", "false");
-
-            testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.identifier.case", "PreserveCase");
-
-            // adding this is meant to be all that is required for
-            // across-the-board multi-tenancy support
-            // however, it causes DN to throw a NullPointerException...
-            // testConfiguration.add("isis.persistor.datanucleus.impl.datanucleus.tenantId","DEV1");
 
             return testConfiguration;
         }
