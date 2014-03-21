@@ -75,11 +75,7 @@ public abstract class CommunicationChannel
         implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
-        // TODO: description is annotated as optional,
-        // so it doesn't really make sense for it to be part of the natural sort
-        // order
-        super("id, type, description");
-        //super("type, description");
+        super("id, type");
     }
 
     // //////////////////////////////////////

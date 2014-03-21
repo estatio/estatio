@@ -24,10 +24,14 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.TypicalLength;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
 @Named("Accounts")
@@ -39,6 +43,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 
     // //////////////////////////////////////
 
+    @Programmatic
     public BankAccount newBankAccount(
             final @Named("Owner") Party owner,
             final @Named("Reference") String reference,
@@ -49,6 +54,28 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
         persistIfNotAlready(bankAccount);
         bankAccount.setOwner(owner);
         return bankAccount;
+    }
+
+    @NotContributed
+    public BankAccount newBankAccount(
+            final @Named("Owner") Party owner,
+            final @Named("IBAN") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban) {
+        final BankAccount bankAccount = newTransientInstance(BankAccount.class);
+        bankAccount.setReference(iban);
+        bankAccount.setName(iban);
+        bankAccount.setIban(iban);
+        persistIfNotAlready(bankAccount);
+        bankAccount.setOwner(owner);
+        return bankAccount;
+    }
+
+    public String validateNewBankAccount(
+            final Party owner,
+            final String iban) {
+        if (!IBANValidator.valid(iban)) {
+            return "Not a valid IBAN number";
+        }
+        return null;
     }
 
     // //////////////////////////////////////

@@ -357,8 +357,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
 
     // //////////////////////////////////////
 
-    @Named("Create Initial")
-    public AgreementRole newCommunicationChannel(
+    public AgreementRole addCommunicationChannel(
             final @Named("Type") AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel,
             final @Named("Start date") @Optional LocalDate startDate,
@@ -367,21 +366,21 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
         return this;
     }
 
-    public List<AgreementRoleCommunicationChannelType> choices0NewCommunicationChannel() {
+    public List<AgreementRoleCommunicationChannelType> choices0AddCommunicationChannel() {
         return getAgreement().getType().getRoleChannelTypesApplicableTo();
     }
 
-    public List<CommunicationChannel> choices1NewCommunicationChannel() {
+    public List<CommunicationChannel> choices1AddCommunicationChannel() {
         return Lists.newArrayList(communicationChannelContributions.communicationChannels(getParty()));
     }
 
-    public CommunicationChannel default1NewCommunicationChannel() {
+    public CommunicationChannel default1AddCommunicationChannel() {
         final SortedSet<CommunicationChannel> partyChannels = 
                 communicationChannelContributions.communicationChannels(getParty());
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
 
-    public String validateNewCommunicationChannel(
+    public String validateAddCommunicationChannel(
             final AgreementRoleCommunicationChannelType type,
             final CommunicationChannel communicationChannel,
             final LocalDate startDate,
@@ -411,11 +410,8 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
         arcc.setStartDate(startDate);
         arcc.setEndDate(endDate);
         arcc.setCommunicationChannel(cc);
-
-        // JDO will take care of bidir relationship
         arcc.setRole(this);
         persistIfNotAlready(arcc);
-
         return arcc;
     }
 

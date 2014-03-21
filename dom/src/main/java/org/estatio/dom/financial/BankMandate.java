@@ -18,6 +18,8 @@
  */
 package org.estatio.dom.financial;
 
+import java.util.List;
+
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Optional;
@@ -53,6 +55,17 @@ public class BankMandate extends Agreement {
         this.bankAccount = bankAccount;
     }
 
+    public BankMandate changeBankAccount(
+            final BankAccount bankAccount
+            ) {
+        setBankAccount(bankAccount);
+        return this;
+    }
+
+    public List<BankAccount> choices0ChangeBankAccount() {
+        return financialAccounts.findBankAccountsByOwner(getSecondaryParty());
+    }
+
     // //////////////////////////////////////
 
     private String sepaMandateIdentifier;
@@ -75,6 +88,14 @@ public class BankMandate extends Agreement {
 
     public Party getSecondaryParty() {
         return findCurrentOrMostRecentParty(FinancialConstants.ART_DEBTOR);
+    }
+
+    // //////////////////////////////////////
+
+    private FinancialAccounts financialAccounts;
+
+    public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
+        this.financialAccounts = financialAccounts;
     }
 
 }

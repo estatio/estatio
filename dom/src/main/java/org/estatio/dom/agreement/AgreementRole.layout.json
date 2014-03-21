@@ -47,7 +47,7 @@
       "collections": {
         "communicationChannels": {
           "actions": {
-            "createInitialCommunicationChannel": {}
+            "addCommunicationChannel": {}
           }
         },
         "timeline": {}

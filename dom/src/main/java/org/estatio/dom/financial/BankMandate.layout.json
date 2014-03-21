@@ -7,7 +7,11 @@
           "members": {
             "reference": {},
             "name": {},
-            "bankAccount": {},
+            "bankAccount": {
+              "actions": {
+              	"changeBankAccount": {}
+              }  
+           	},
             "sepaMandateIdentifier": {}, 
             "type": {}
           }

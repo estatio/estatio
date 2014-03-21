@@ -24,6 +24,7 @@ import java.util.SortedSet;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.collect.Lists;
@@ -50,13 +51,13 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -82,9 +83,11 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& (startDate == null || startDate <= :date) "
                         + "&& (endDate == null || endDate > :date) ")
 })
+@Unique(name = "AgreementRoleCommunicationChannel_role_startDate_type_communicationChannel_UNQ",
+        members = { "role", "startDate", "type", "communicationChannel" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRoleCommunicationChannel 
-        extends EstatioMutableObject<AgreementRoleCommunicationChannel> 
+public class AgreementRoleCommunicationChannel
+        extends EstatioMutableObject<AgreementRoleCommunicationChannel>
         implements WithIntervalContiguous<AgreementRoleCommunicationChannel> {
 
     private WithIntervalContiguous.Helper<AgreementRoleCommunicationChannel> helper =
@@ -95,7 +98,6 @@ public class AgreementRoleCommunicationChannel
     public AgreementRoleCommunicationChannel() {
         super("role, startDate desc nullsLast, type, communicationChannel");
     }
-
 
     // //////////////////////////////////////
 
@@ -133,8 +135,8 @@ public class AgreementRoleCommunicationChannel
 
     private AgreementRoleCommunicationChannelType type;
 
-    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
-    @javax.jdo.annotations.Column(name="typeId", allowsNull = "false")
+    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
+    @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Disabled
     public AgreementRoleCommunicationChannelType getType() {
@@ -149,7 +151,7 @@ public class AgreementRoleCommunicationChannel
 
     private CommunicationChannel communicationChannel;
 
-    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
+    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "communicationChannelId", allowsNull = "false")
     @Title(sequence = "3", prepend = ",")
     @Disabled
@@ -240,6 +242,7 @@ public class AgreementRoleCommunicationChannel
     public LocalDateInterval getEffectiveInterval() {
         return getInterval().overlap(getRole().getEffectiveInterval());
     }
+
     // //////////////////////////////////////
 
     public boolean isCurrent() {

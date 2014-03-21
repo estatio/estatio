@@ -137,7 +137,6 @@ public class PostalAddress extends CommunicationChannel {
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
     @javax.jdo.annotations.Column(name = "stateId", allowsNull="true")
-    @Mandatory
     @Disabled(reason="Update using action") 
     public State getState() {
         return state;
