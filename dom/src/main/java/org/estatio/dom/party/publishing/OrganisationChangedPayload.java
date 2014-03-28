@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.party;
+package org.estatio.dom.party.publishing;
 
 import java.util.Set;
 
@@ -26,6 +26,7 @@ import org.apache.isis.applib.services.publish.EventPayloadForObjectChanged;
 
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.party.Organisation;
 
 /**
  * Describes the payload for publishing a change to an {@link Organisation} using Isis'. 

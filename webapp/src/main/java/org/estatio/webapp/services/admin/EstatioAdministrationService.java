@@ -24,6 +24,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.CssClass;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -162,13 +163,16 @@ public class EstatioAdministrationService {
     }
 
     @MemberOrder(sequence = "9")
-    @Prototype
+    @CssClass("danger") // application.css
     public void createRetroInvoicesForLease(
             final Lease lease,
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
         CreateRetroInvoices creator = container.newTransientInstance(CreateRetroInvoices.class);
         creator.createLease(lease, startDueDate, nextDueDate);
+    }
+    public boolean hideCreateRetroInvoicesForLease() {
+        return !container.getUser().hasRole("superuser_role");
     }
 
     // //////////////////////////////////////

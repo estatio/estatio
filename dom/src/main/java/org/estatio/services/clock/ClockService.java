@@ -24,13 +24,10 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.clock.Clock;
 
 @Hidden
-public class ClockService {
+public class ClockService extends org.apache.isis.applib.services.clock.ClockService {
 
     private static final int MONTHS_IN_QUARTER = 3;
 
-    public LocalDate now() {
-        return Clock.getTimeAsLocalDate();
-    }
 
     public long timestamp() {
         return Clock.getTime();

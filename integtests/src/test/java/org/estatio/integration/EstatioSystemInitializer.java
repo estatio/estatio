@@ -22,6 +22,7 @@ import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.commons.config.IsisConfigurationDefault;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.metamodel.services.bookmarks.BookmarkServiceDefault;
 import org.apache.isis.core.runtime.services.memento.MementoServiceDefault;
 import org.apache.isis.core.runtime.services.xmlsnapshot.XmlSnapshotServiceDefault;
 import org.apache.isis.core.wrapper.WrapperFactoryDefault;
@@ -85,7 +86,6 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioRefDataObjectsFixture;
-import org.estatio.services.bookmarks.BookmarkServiceForEstatio;
 import org.estatio.services.clock.ClockService;
 import org.estatio.services.links.LinkContributions;
 import org.estatio.services.links.Links;
@@ -165,7 +165,7 @@ public class EstatioSystemInitializer {
                     new Sectors(),
                     new Activities(),
                     new Brands(),
-                    new BookmarkServiceForEstatio(),
+                    new BookmarkServiceDefault(),
                     new XmlSnapshotServiceDefault(),
                     new MementoServiceDefault(),
                     new Charges(),

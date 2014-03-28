@@ -43,7 +43,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
@@ -55,13 +54,13 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.currency.Currency;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
-import org.estatio.dom.invoice.publishing.InvoiceEagerlyRenderedPayloadFactory;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.party.Party;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(
+        identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
@@ -658,7 +657,6 @@ public class Invoice extends EstatioMutableObject<Invoice> {
 
     // //////////////////////////////////////
 
-    @PublishedAction(InvoiceEagerlyRenderedPayloadFactory.class)
     @Bulk
     @ActionSemantics(Of.IDEMPOTENT)
     public Invoice submitToCoda() {

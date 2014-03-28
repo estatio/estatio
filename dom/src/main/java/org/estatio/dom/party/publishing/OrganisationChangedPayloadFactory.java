@@ -16,12 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.party;
+package org.estatio.dom.party.publishing;
 
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PublishedObject.ChangeKind;
 import org.apache.isis.applib.annotation.PublishedObject.PayloadFactory;
 import org.apache.isis.applib.services.publish.EventPayload;
+
+import org.estatio.dom.party.Organisation;
 
 public class OrganisationChangedPayloadFactory implements PayloadFactory {
 

@@ -61,33 +61,49 @@ import org.apache.isis.security.shiro.permrolemapper.PermissionToRoleMapperFromS
  * Sample config for <tt>shiro.ini</tt>:
  * 
  * <pre>
+ * ldapRealm = org.estatio.webapp.shiro.EstatioLdapRealm
+ * 
  * contextFactory = org.estatio.security.shiro.EstatioLdapContextFactory
  * contextFactory.url = ldap://localhost:10389
  * contextFactory.authenticationMechanism = simple
- * 
+ *  
  * contextFactory.systemUsername = ### some trusted account with read-only access ###
  * contextFactory.systemPassword = ### some trusted account with read-only access ###
  * 
- * ldapRealm = org.estatio.security.shiro.EstatioLdapRealm
  * ldapRealm.contextFactory = $contextFactory
  * 
+ * # (&(objectCategory=Person)(sAMAccountName=jvanderwal))
  * ldapRealm.searchBase = DC=ECP,DC=LOC
  * 
- * ldapRealm.resourcePath=classpath:webapp/myroles.ini
+ * # search using eg: (&(objectClass=group)(cn=ECP-Estatio-IT-Users))
+ * ldapRealm.roleListByGroup = \
+ *   ECP-Estatio-IT-Users : user_role,\
+ *   ECP-Estatio-Administrators: user_role|admin_role
  * 
- * securityManager.realms = $ldapRealm
- * 
+ * # the user_role and admin_role are mapped to their permissions through the ini file, eg: 
+ * ldapRealm.resourcePath=\
+ *     classpath:org/estatio/webapp/webinf/local_users_and_shared_role_perms.ini
  * </pre>
+ * 
  * <p>
- * where <tt>myroles.ini</tt> is in <tt>src/main/resources/webapp</tt>, and takes the form:
- * 
+ * Can also configured an ini-based realm, sharing the same role/perms:
  * <pre>
- * [roles]
- * user_role = *:ToDoItemsJdo:*:*,\
- *             *:ToDoItem:*:*
- * self-install_role = *:ToDoItemsFixturesService:install:*
- * admin_role = *
+ * # the .ini file lives in src/main/resources
+ * localRealm = org.apache.shiro.realm.text.IniRealm
+ * localRealm.resourcePath=\
+ *   classpath:org/estatio/webapp/webinf/local_users_and_shared_role_perms.ini
  * </pre>
+ * 
+ * <p>
+ * and finally configure Shiro to use both realms:
+ * <pre>
+ * # $localRealm configured
+ * securityManager.realms = $localRealm,$ldapRealm
+ * </pre>
+ * 
+ * <p>
+ * where <tt>local_users_and_shared_role_perms.in</tt> is on the classpath, and maps
+ * roles to permissions.
  * 
  * <p>
  * This 'ini' file can then be referenced by other realms (if multiple realm are configured
@@ -135,7 +151,14 @@ public class EstatioLdapRealm extends JndiLdapRealm {
 
     private Set<String> rolesFor(final String userName, final LdapContext ldapCtx) throws NamingException {
         final Set<String> roleNames = Sets.newLinkedHashSet();
-        String userNamePart = userName.substring(0, userName.indexOf("@"));
+        final int atSymbolIndex = userName.indexOf("@");
+        if(atSymbolIndex == -1) {
+            // Isis *won't* call this method for any users defined by the local realm (eg root, api) etc.
+            // however, we've left in this check just in case, in the future, there *are* users in LDAP that
+            // don't follow the naming convention foo@ecp.loc
+            return roleNames;
+        }
+        String userNamePart = userName.substring(0, atSymbolIndex);
         final NamingEnumeration<SearchResult> searchResultEnum = ldapCtx.search(searchBase, "(&(objectCategory=Person)(sAMAccountName="+userNamePart+"))", SUBTREE_SCOPE);
         if (searchResultEnum.hasMore()) {
             final SearchResult userEntry = searchResultEnum.next();

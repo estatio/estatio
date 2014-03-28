@@ -220,7 +220,6 @@ public class Property extends FixedAsset implements Locatable {
 
     // //////////////////////////////////////
 
-    @PublishedAction
     public Unit newUnit(
             @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true) final String reference,
             @Named("Name") final String name,
