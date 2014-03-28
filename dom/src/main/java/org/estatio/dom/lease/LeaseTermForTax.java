@@ -192,8 +192,15 @@ public class LeaseTermForTax extends LeaseTerm {
     protected void doInitialize() {
         final LeaseTermForTax previous = (LeaseTermForTax) this.getPrevious();
         if (previous != null) {
+            setTaxable(previous.getTaxable());
             setTaxPercentage(previous.getTaxPercentage());
             setRecoverablePercentage(previous.getRecoverablePercentage());
+            //static data
+            setOfficeCode(previous.getOfficeCode());
+            setOfficeName(previous.getOfficeName());
+            setRegistrationDate(previous.getRegistrationDate());
+            setRegistrationNumber(previous.getRegistrationNumber());
+            setDescription(previous.getDescription());
         }
     }
 
