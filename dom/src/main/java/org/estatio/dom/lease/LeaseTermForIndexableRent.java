@@ -162,7 +162,13 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
         setNextIndexStartDate(nextIndexDate);
         setLevellingPercentage(levellingPercentage);
         setEffectiveDate(effectiveDate);
+        //wipe current values
         setIndexedValue(null);
+        setBaseIndexValue(null);
+        setNextIndexValue(null);
+        setIndexationPercentage(null);
+        //align
+        doAlign();
         return this;
     }
 
