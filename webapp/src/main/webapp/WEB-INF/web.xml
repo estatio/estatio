@@ -143,16 +143,17 @@ language governing permissions and limitations under the License.
 			<param-name>applicationClassName</param-name>
 			<param-value>org.estatio.webapp.isis.wicket.EstatioApplication</param-value>
 		</init-param>
-		
-	    <!-- for more information, see  org.apache.wicket.Application#getConfigurationType() -->
-	     <init-param>
-             <param-name>configuration</param-name>
-             <param-value>development</param-value>
-             <!-- 
-             <param-value>deployment</param-value>
-              -->
-	     </init-param>
-	</filter>
+</filter>
+
+    <!-- for more information, see  org.apache.wicket.Application#getConfigurationType() -->
+     <context-param>
+         <param-name>configuration</param-name>
+         <param-value>development</param-value>
+         <!-- 
+         <param-value>deployment</param-value>
+          -->
+     </context-param>
+
 
 	<filter-mapping>
 		<filter-name>wicket.estatio</filter-name>
