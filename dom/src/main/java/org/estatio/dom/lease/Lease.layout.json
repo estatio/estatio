@@ -29,7 +29,11 @@
         "Related": {
           "members": {
             "previous": {},
-            "next": {}
+            "next": {
+              "actions": {
+                "changePrevious":{} 
+              } 
+            }
           }
         }
       }

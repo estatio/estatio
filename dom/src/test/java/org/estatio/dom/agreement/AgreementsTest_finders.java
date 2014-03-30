@@ -101,5 +101,17 @@ public class AgreementsTest_finders {
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
     }
 
+    @Test
+    public void findByTypeAndReferenceOrName() {
+        agreements.findByTypeAndReferenceOrName(agreementType, "");
+        
+        // then
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Agreement.class));
+        assertThat(finderInteraction.getQueryName(), is("findByTypeAndReferenceOrName"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("agreementType"), is((Object)agreementType));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("regex"), is((Object)""));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+    }
 
 }

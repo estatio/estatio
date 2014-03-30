@@ -59,6 +59,7 @@ import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.utils.ValueUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
@@ -90,6 +91,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.agreement.Agreement "
                         + "WHERE reference == :reference"),
         @javax.jdo.annotations.Query(
+                name = "findByTypeAndReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.Agreement "
+                        + "WHERE type == :agreementType "
+                        + "&& (reference.matches(:regex) || reference.matches(:regex))"),
+        @javax.jdo.annotations.Query(
                 name = "findByAgreementTypeAndRoleTypeAndParty", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.Agreement "
@@ -115,10 +122,10 @@ public abstract class Agreement
 
     private String reference;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.REFERENCE)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @DescribedAs("Unique reference code for this agreement")
     @Title
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive=true)
+    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
     public String getReference() {
         return reference;
     }
@@ -131,7 +138,7 @@ public abstract class Agreement
 
     private String name;
 
-    @javax.jdo.annotations.Column(length=JdoColumnLength.NAME)
+    @javax.jdo.annotations.Column(length = JdoColumnLength.NAME)
     @DescribedAs("Optional name for this agreement")
     @Hidden(where = Where.ALL_TABLES)
     @Optional
@@ -173,7 +180,7 @@ public abstract class Agreement
 
         // try to find the one that is current...
         Iterable<AgreementRole> roles =
-                Iterables.filter(rolesOfType, WithInterval.Predicates.<AgreementRole>whetherCurrentIs(true));
+                Iterables.filter(rolesOfType, WithInterval.Predicates.<AgreementRole> whetherCurrentIs(true));
 
         // ... else the most recently ended one
         if (Iterables.isEmpty(roles)) {
@@ -320,28 +327,14 @@ public abstract class Agreement
         this.previous = previous;
     }
 
-    public void modifyPrevious(final Agreement previous) {
-        Agreement currentPrevious = getPrevious();
-        // check for no-op
-        if (previous == null || previous.equals(currentPrevious)) {
-            return;
-        }
-        // dissociate existing
-        clearPrevious();
-        // associate new
-        previous.setNext(this);
-        setPrevious(previous);
+    public Agreement changePrevious(
+            final Agreement previousAgreement) {
+        setPrevious(previousAgreement);
+        return this;
     }
 
-    public void clearPrevious() {
-        Agreement currentPreviousAgreement = getPrevious();
-        // check for no-op
-        if (currentPreviousAgreement == null) {
-            return;
-        }
-        // dissociate existing
-        currentPreviousAgreement.setNext(null);
-        setPrevious(null);
+    public List<Agreement> autoComplete0ChangePrevious(final String searchPhrase) {
+        return agreements.findByTypeAndReferenceOrName(getType(), StringUtils.wildcardToCaseInsensitiveRegex("*".concat(searchPhrase).concat("*")));
     }
 
     // //////////////////////////////////////
@@ -362,34 +355,11 @@ public abstract class Agreement
         this.next = next;
     }
 
-    public void modifyNext(final Agreement next) {
-        Agreement currentNext = getNext();
-        // check for no-op
-        if (next == null || next.equals(currentNext)) {
-            return;
-        }
-        // delegate to parent(s) to (re-)associate
-        if (currentNext != null) {
-            currentNext.clearPrevious();
-        }
-        next.modifyPrevious(this);
-    }
-
-    public void clearNext() {
-        Agreement currentNext = getNext();
-        // check for no-op
-        if (currentNext == null) {
-            return;
-        }
-        // delegate to parent to dissociate
-        currentNext.clearPrevious();
-    }
-
     // //////////////////////////////////////
 
     private SortedSet<AgreementRole> roles = new TreeSet<AgreementRole>();
 
-    @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup="true")
+    @javax.jdo.annotations.Persistent(mappedBy = "agreement", defaultFetchGroup = "true")
     @Disabled
     @Render(Type.EAGERLY)
     public SortedSet<AgreementRole> getRoles() {

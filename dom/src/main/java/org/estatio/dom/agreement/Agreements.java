@@ -39,17 +39,41 @@ public class Agreements extends EstatioDomainService<Agreement> {
 
     @ActionSemantics(Of.SAFE)
     public Agreement findAgreementByReference(final String reference) {
-        return firstMatch("findByReference", 
+        return firstMatch("findByReference",
                 "reference", reference);
     }
 
     @ActionSemantics(Of.SAFE)
     @NotContributed
+    public List<Agreement> findByTypeAndReferenceOrName(
+            final AgreementType agreementType,
+            final String regex) {
+        return allMatches("findByTypeAndReferenceOrName",
+                "agreementType", agreementType,
+                "regex", regex);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
     public List<Agreement> findByAgreementTypeAndRoleTypeAndParty(
-            final AgreementType agreementType, final AgreementRoleType agreementRoleType, final Party party) {
-        return allMatches("findByAgreementTypeAndRoleTypeAndParty", 
-                "agreementType", agreementType, 
-                "roleType", agreementRoleType, 
+            final AgreementType agreementType,
+            final AgreementRoleType agreementRoleType,
+            final Party party) {
+        return allMatches("findByAgreementTypeAndRoleTypeAndParty",
+                "agreementType", agreementType,
+                "roleType", agreementRoleType,
+                "party", party);
+    }
+
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public List<Agreement> findByAgreementTypeAndReferenceOrName(
+            final AgreementType agreementType,
+            final AgreementRoleType agreementRoleType,
+            final Party party) {
+        return allMatches("findByAgreementTypeAndRoleTypeAndParty",
+                "agreementType", agreementType,
+                "roleType", agreementRoleType,
                 "party", party);
     }
 
