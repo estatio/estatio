@@ -71,8 +71,8 @@ public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends Abst
                         state, 
                         values[2], 
                         values[3], 
-                        values[4], 
-                        values[5]);
+                        null, 
+                        values[4], values[5]);
             }
             getContainer().flush();
         }

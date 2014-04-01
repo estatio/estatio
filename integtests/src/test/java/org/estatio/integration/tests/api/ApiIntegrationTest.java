@@ -215,7 +215,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t05b_putLeasePostalAddress() throws Exception {
-        api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
+        api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", null, "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
         final Lease l = leases.findLeaseByReference("APILEASE");
         final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
         final AgreementRole ar = l.findRoleWithType(artTenant, clockService.now());
@@ -224,7 +224,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
 
     @Test
     public void t05b_putLeasePostalAddress_idempotent() throws Exception {
-        api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
+        api.putLeasePostalAddress("APITENANT", LeaseConstants.ART_TENANT, "APILEASE", "Address1", "Address2", null, "PostalCode", "City", "NH", "NLD", BigInteger.valueOf(1));
         final Lease l = leases.findLeaseByReference("APILEASE");
         final AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
         final AgreementRole ar = l.findRoleWithType(artTenant, clockService.now());

@@ -34,13 +34,12 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 
-@javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
+@javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Indices({
-    @javax.jdo.annotations.Index(
-            name="PostalAddress_main_idx", 
-            members={"owner", "address1","postalCode","city","country"})
+        @javax.jdo.annotations.Index(
+                name = "PostalAddress_main_idx",
+                members = { "owner", "address1", "postalCode", "city", "country" })
 })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -57,10 +56,10 @@ public class PostalAddress extends CommunicationChannel {
 
     private String address1;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PostalAddress.ADDRESS_LINE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
     @Mandatory
     @Title(sequence = "1", append = ", ")
-    @Named("Address Line 1")
+    @Named("Address line 1")
     public String getAddress1() {
         return address1;
     }
@@ -73,10 +72,10 @@ public class PostalAddress extends CommunicationChannel {
 
     private String address2;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PostalAddress.ADDRESS_LINE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
     @Title(sequence = "2", append = ", ")
     @Optional
-    @Named("Address Line 2")
+    @Named("Address line 2")
     public String getAddress2() {
         return address2;
     }
@@ -87,9 +86,25 @@ public class PostalAddress extends CommunicationChannel {
 
     // //////////////////////////////////////
 
+    private String address3;
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
+    @Title(sequence = "3", append = ", ")
+    @Optional
+    @Named("Address line 3")
+    public String getAddress3() {
+        return address3;
+    }
+
+    public void setAddress3(final String address3) {
+        this.address3 = address3;
+    }
+
+    // //////////////////////////////////////
+
     private String postalCode;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PostalAddress.POSTAL_CODE)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.POSTAL_CODE)
     @Mandatory
     @Title(sequence = "3", append = ", ")
     public String getPostalCode() {
@@ -104,7 +119,7 @@ public class PostalAddress extends CommunicationChannel {
 
     private String city;
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PROPER_NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
     @Mandatory
     @Title(sequence = "4")
     public String getCity() {
@@ -120,9 +135,9 @@ public class PostalAddress extends CommunicationChannel {
     private Country country;
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
-    @javax.jdo.annotations.Column(name = "countryId", allowsNull="true")
+    @javax.jdo.annotations.Column(name = "countryId", allowsNull = "true")
     @Mandatory
-    @Disabled(reason="Update using action") 
+    @Disabled(reason = "Update using action")
     public Country getCountry() {
         return country;
     }
@@ -136,8 +151,8 @@ public class PostalAddress extends CommunicationChannel {
     private State state;
 
     // optional only because of superclass inheritance strategy=SUPERCLASS_TABLE
-    @javax.jdo.annotations.Column(name = "stateId", allowsNull="true")
-    @Disabled(reason="Update using action") 
+    @javax.jdo.annotations.Column(name = "stateId", allowsNull = "true")
+    @Disabled(reason = "Update using action")
     public State getState() {
         return state;
     }
@@ -155,14 +170,15 @@ public class PostalAddress extends CommunicationChannel {
     @Named("Update")
     @MemberOrder(sequence = "1")
     public PostalAddress updateCountryAndState(
-            final Country country, 
+            final Country country,
             final State state) {
         setCountry(country);
         setState(state);
         return this;
     }
+
     public String disableUpdateCountryAndState(
-            final Country country, 
+            final Country country,
             final State state) {
         return null;
     }
@@ -170,9 +186,11 @@ public class PostalAddress extends CommunicationChannel {
     public Country default0UpdateCountryAndState() {
         return getCountry();
     }
+
     public State default1UpdateCountryAndState() {
         return getState();
     }
+
     public List<State> choices1UpdateCountryAndState(
             final Country country) {
         return states.findStatesByCountry(country);

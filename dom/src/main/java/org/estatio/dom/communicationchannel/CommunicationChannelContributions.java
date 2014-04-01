@@ -41,7 +41,7 @@ import org.estatio.dom.geography.States;
 /**
  * Domain service that contributes actions to create a new 
  * {@link #newPostal(CommunicationChannelOwner, CommunicationChannelType, Country, State, String, String, String, 
- * String) postal address}, {@link #newEmail(CommunicationChannelOwner, CommunicationChannelType, String) email} or
+ * String, String) postal address}, {@link #newEmail(CommunicationChannelOwner, CommunicationChannelType, String) email} or
  * {@link #newPhoneOrFax(CommunicationChannelOwner, CommunicationChannelType, String) phone/fax}, and contributes
  * a collection to list the {@link #communicationChannels(CommunicationChannelOwner) communication channels} of a
  * particular {@link CommunicationChannelOwner}. 
@@ -64,12 +64,12 @@ public class CommunicationChannelContributions extends EstatioDomainService<Comm
             final @Named("Type") CommunicationChannelType type,
             final Country country, 
             final @Optional State state, 
-            final @Named("Address Line 1") String address1, 
-            final @Named("Address Line 2") @Optional String address2, 
-            final @Named("Postal Code") String postalCode, 
-            final @Named("City") String city
+            final @Named("Address line 1") String address1, 
+            final @Named("Address line 2") @Optional String address2, 
+            final @Named("Address line 3") @Optional String address3, 
+            final @Named("Postal Code") String postalCode, final @Named("City") String city
             ) {
-        communicationChannels.newPostal(owner, type, address1, address2, postalCode, city, state, country);
+        communicationChannels.newPostal(owner, type, address1, address2, null, postalCode, city, state, country);
         return owner;
     }
     // CHECKSTYLE.ON: ParameterNumber

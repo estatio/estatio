@@ -50,7 +50,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         Country country = countries.findCountry("GBR");
         Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1, manager, 51.74579, -1.24334);
 
-        communicationChannelContributedActions.newPostal(prop1, CommunicationChannelType.POSTAL_ADDRESS, country, state, "1 Market Street", null, "OX1 3HL", "Oxford");
+        communicationChannelContributedActions.newPostal(prop1, CommunicationChannelType.POSTAL_ADDRESS, country, state, "1 Market Street", null, null, "OX1 3HL", "Oxford");
         communicationChannelContributedActions.newPhoneOrFax(prop1, CommunicationChannelType.PHONE_NUMBER, "+44 123 456789");
         communicationChannelContributedActions.newPhoneOrFax(prop1, CommunicationChannelType.FAX_NUMBER, "+44 987 654321");
         communicationChannelContributedActions.newEmail(prop1, CommunicationChannelType.EMAIL_ADDRESS, "info@oxford.example.com");
@@ -59,7 +59,7 @@ public class PropertiesAndUnitsFixture extends AbstractFixture {
         Country c2 = countries.findCountry("NLD");
         State s2 = states.findState("NL-NH");
 
-        communicationChannelContributedActions.newPostal(prop2, CommunicationChannelType.POSTAL_ADDRESS, c2, s2, "Kalverstraat 12", null, "1017 AA", "Amsterdam");
+        communicationChannelContributedActions.newPostal(prop2, CommunicationChannelType.POSTAL_ADDRESS, c2, s2, "Kalverstraat 12", null, null, "1017 AA", "Amsterdam");
         communicationChannelContributedActions.newPhoneOrFax(prop2, CommunicationChannelType.PHONE_NUMBER, "+31 123 456789");
         communicationChannelContributedActions.newPhoneOrFax(prop2, CommunicationChannelType.FAX_NUMBER, "+31 987 654321");
         communicationChannelContributedActions.newEmail(prop2, CommunicationChannelType.EMAIL_ADDRESS, "info@kalvertoren.example.com");

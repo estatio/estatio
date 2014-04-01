@@ -44,11 +44,13 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @Hidden
     public PostalAddress newPostal(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support aggregate value types
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
+            // aggregate value types
             final CommunicationChannelOwner owner,
             final CommunicationChannelType type,
             final String address1,
             final String address2,
+            final String address3,
             final String postalCode,
             final String city,
             final State state,
@@ -59,6 +61,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
         pa.setType(type);
         pa.setAddress1(address1);
         pa.setAddress2(address2);
+        pa.setAddress3(address3);
         pa.setCity(city);
         pa.setPostalCode(postalCode);
         pa.setState(state);

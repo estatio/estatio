@@ -351,7 +351,7 @@ public class Api extends AbstractFactoryAndRepository {
         unit.setDehorsArea(dehorsArea);
         CommunicationChannel cc = communicationChannelContributions.findCommunicationChannelForType(unit, CommunicationChannelType.POSTAL_ADDRESS);
         if (cc == null) {
-            communicationChannelContributions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, null, postalCode, city);
+            communicationChannelContributions.newPostal(unit, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, null, null, postalCode, city);
         }
     }
 
@@ -383,7 +383,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         final CommunicationChannel comm = communicationChannelContributions.findCommunicationChannelForType(property, null);
         if (comm == null) {
-            communicationChannelContributions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, address2, postalCode, city);
+            communicationChannelContributions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, countries.findCountry(countryCode), states.findState(stateCode), address1, address2, null, postalCode, city);
         }
     }
 
@@ -414,7 +414,7 @@ public class Api extends AbstractFactoryAndRepository {
             Country country = fetchCountry(countryCode);
             PostalAddress comm = (PostalAddress) postalAddresses.findByAddress(party, address1, postalCode, city, country);
             if (comm == null) {
-                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, states.findState(stateCode), countries.findCountry(countryCode));
+                comm = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, null, postalCode, city, states.findState(stateCode), countries.findCountry(countryCode));
                 comm.setReference(reference);
             }
             if (legal) {
@@ -587,11 +587,11 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("leaseReference") @Optional String leaseReference,
             @Named("address1") @Optional String address1,
             @Named("address2") @Optional String address2,
+            @Named("address3") @Optional String address3,
             @Named("postalCode") @Optional String postalCode,
             @Named("city") @Optional String city,
             @Named("stateCode") @Optional String stateCode,
-            @Named("countryCode") @Optional String countryCode,
-            @Named("isInvoiceAddress") @Optional BigInteger isInvoiceAddress
+            @Named("countryCode") @Optional String countryCode, @Named("isInvoiceAddress") @Optional BigInteger isInvoiceAddress
             ) {
         if (address1 != null && partyReference != null && leaseReference != null) {
             Lease lease = fetchLease(leaseReference);
@@ -601,7 +601,7 @@ public class Api extends AbstractFactoryAndRepository {
                 throw new ApplicationException(String.format("AgreementRoleCommunicationChannelType not found."));
             PostalAddress address = (PostalAddress) postalAddresses.findByAddress(party, address1, postalCode, city, fetchCountry(countryCode));
             if (address == null) {
-                address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, postalCode, city, fetchState(stateCode, false), fetchCountry(countryCode, false));
+                address = communicationChannels.newPostal(party, CommunicationChannelType.POSTAL_ADDRESS, address1, address2, null, postalCode, city, fetchState(stateCode, false), fetchCountry(countryCode, false));
             }
             AgreementRoleType art = agreementRoleTypes.findByTitle(StringUtils.capitalize(agreementRoleType.toLowerCase()));
             if (art == null)
