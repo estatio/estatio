@@ -119,7 +119,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE leaseItem == :leaseItem "
-                        + "   && startDate == :startDate")
+                        + "   && startDate == :startDate"),
+        @javax.jdo.annotations.Query(
+                name = "findByStatusAndActiveDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE status == :status "
+                        + "&& startDate <= :date "
+                        + "&& (endDate == null || endDate > :date )")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public abstract class LeaseTerm
