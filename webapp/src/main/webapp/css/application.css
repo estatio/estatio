@@ -1,3 +1,4 @@
+
 /*
  *  Copyright 2012-2013 Eurocommercial Properties NV
  *
@@ -16,7 +17,6 @@
  *  under the License.
  */
 
-
 .entityActions .cssMenuPanel .menuh li.lock a {
     background-color: #CC1633;
     float: right;
@@ -26,32 +26,42 @@
     float: right;
 }
 
-
-
-
 #header {
 	width: 73%;
 	float: left;
 	height: 60px;
 	background: transparent url("../images/logo.png") left center no-repeat;
+}
 
 #header h1 {
 	display: none;
 }
 
-.headerContainer .links>span:first-child {
-	background: url("../images/icon_appuser.png") no-repeat scroll left center transparent;
-	line-height: 30px;
-	padding: 5px 0 5px 20px;
-	margin-left: 10px;
+.entityActions .cssMenuPanel .menuh li.x-caution a,li.x-caution a {
+	background-color: #C94316;
 }
 
-.headerContainer .links {
-	font-size: 0.9em;
+.entityActions .cssMenuPanel .menuh li.x-caution a:hover {
+	background-color: #20B5C2;
 }
 
-.headerContainer .links a {
-	margin-left: 10px;
+/*.entityActions .cssMenuPanel .menuh a:hover*/
+.entityActions .cssMenuPanel .menuh li.x-highlight a,li.x-highlight a {
+	background-color: #51A95C;
 }
 
+div.x-key span.scalarName {
+	color: red;
+}
 
+/*
+Overrides for the default overlay
+*/
+#applicationActions .cssMenuPanel .menuh a:link, 
+#applicationActions .cssMenuPanel .menuh a:visited, 
+#applicationActions .cssMenuPanel .menuh a:active, 
+#applicationActions .cssMenuPanel .menuh p {
+    text-transform: uppercase;
+    font-size: 0.9em;
+    font-weight: normal;
+}
