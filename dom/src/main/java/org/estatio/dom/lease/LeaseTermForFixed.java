@@ -24,6 +24,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -37,12 +39,30 @@ public class LeaseTermForFixed extends LeaseTerm {
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
+    @Disabled
     public BigDecimal getValue() {
         return value;
     }
 
     public void setValue(final BigDecimal value) {
         this.value = value;
+    }
+
+    public LeaseTerm changeValue(
+            final @Named("Value") BigDecimal value) {
+        setValue(value);
+        return this;
+    }
+
+    public String validateChangeValue(final BigDecimal value) {
+        if (LeaseItemType.DISCOUNT.equals(getLeaseItem().getType()) && isPositive(value)) {
+            return "Discount should be negative or zero";
+        }
+        return null;
+    }
+
+    private static boolean isPositive(final BigDecimal value) {
+        return value != null && value.compareTo(BigDecimal.ZERO) > 0;
     }
 
     // //////////////////////////////////////
@@ -59,12 +79,12 @@ public class LeaseTermForFixed extends LeaseTerm {
     public BigDecimal valueForDate(final LocalDate dueDate) {
         return getValue();
     }
-    
+
     // //////////////////////////////////////
 
     @Override
     public LeaseTermValueType valueType() {
         return LeaseTermValueType.FIXED;
     }
-    
+
 }

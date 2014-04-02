@@ -29,7 +29,11 @@
       "memberGroups": {
         "Parameters": {
           "members": {
-            "value": {}
+            "value": {
+              "actions": {
+                "changeValue": {}
+              }
+            }
           }
         }
       }
