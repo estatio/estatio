@@ -46,7 +46,6 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
@@ -59,9 +58,7 @@ import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -182,23 +179,25 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @Prototype
-    public void remove(@Named("Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
+    public Object remove(@Named("Are you sure?") Boolean confirm) {
+        Lease tmpLease = getLease();
+        if (confirm && doRemove()) {
+            return tmpLease;
         }
+        return this;
     }
 
     @Programmatic
     public boolean doRemove() {
-        boolean success = true;
-        for (LeaseTerm term : getTerms()) {
-            success = !term.doRemove() ? false : success;
+        boolean canDelete = true;
+        if (!getTerms().isEmpty()) {
+            canDelete =  getTerms().first().doRemove();
         }
-        if (success) {
+        if (canDelete) {
             getContainer().remove(this);
+            getContainer().flush();
         }
-        return success;
+        return canDelete;
     }
 
     // //////////////////////////////////////

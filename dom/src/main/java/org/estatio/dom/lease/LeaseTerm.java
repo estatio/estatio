@@ -43,7 +43,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
@@ -204,16 +203,6 @@ public abstract class LeaseTerm
         }
     }
 
-    public void clearStartDate() {
-        LocalDate currentStartDate = getStartDate();
-        if (currentStartDate == null) {
-            return;
-        }
-        setStartDate(null);
-        // TODO: shouldn't there be some logic reciprocal to that in
-        // modifyStartDate ?
-    }
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
@@ -258,7 +247,11 @@ public abstract class LeaseTerm
     public LeaseTerm changeDates(
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
-        return getChangeDates().changeDates(startDate, endDate);
+        getChangeDates().changeDates(startDate, endDate);
+        
+        // TODO: need to align the predecessor and successor
+        // nb: only if contiguous semantics, eg for Rent, but not for Discount
+        return this;
     }
 
     public String disableChangeDates(
@@ -281,7 +274,18 @@ public abstract class LeaseTerm
     public String validateChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        return getChangeDates().validateChangeDates(startDate, endDate);
+        String changeDatesReasonIfAny = getChangeDates().validateChangeDates(startDate, endDate);
+        if (changeDatesReasonIfAny != null) {
+            return changeDatesReasonIfAny;
+        } 
+        
+        // TODO: now check that the start date is not before the predecessor's start date
+        // ...
+        
+        // TODO: now check that the end date is not after the successor's end date
+        // ...
+        
+        return null;
     }
 
     // //////////////////////////////////////
@@ -439,11 +443,12 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
-    @Prototype
-    public void remove(@Named("Are you sure?") Boolean confirm) {
-        if (confirm) {
-            doRemove();
+    public Object remove(@Named("Are you sure?") Boolean confirm) {
+        LeaseItem item = getLeaseItem();
+        if (confirm && doRemove()) {
+            return item;
         }
+        return this;
     }
 
     @Programmatic
@@ -452,9 +457,11 @@ public abstract class LeaseTerm
         if (getNext() != null) {
             success = getNext().doRemove();
         }
+        success = getInvoiceItems().size() == 0;
         if (success) {
             this.modifyPrevious(null);
             getContainer().remove(this);
+            getContainer().flush();
         }
         return success;
     }
@@ -508,6 +515,11 @@ public abstract class LeaseTerm
     public String disableCreateNext(
             final LocalDate nextStartDate) {
         return getNext() == null ? null : "Already a next term available";
+    }
+
+    public String validateCreateNext(
+            final LocalDate nextStartDate) {
+        return nextStartDate.isBefore(getStartDate()) ? "Cannot start before this start date" : null;
     }
 
     // //////////////////////////////////////
@@ -594,6 +606,17 @@ public abstract class LeaseTerm
                         startDueDate,
                         startDueDate,
                         nextDueDate));
+    }
+
+    // //////////////////////////////////////
+
+    public String validate() {
+        String validatedChangeDatesReason = getChangeDates().validateChangeDates(getStartDate(), getEndDate());
+        if (validatedChangeDatesReason != null) {
+            return validatedChangeDatesReason;
+        }
+        // other checks, if any...
+        return null;
     }
 
     // //////////////////////////////////////
