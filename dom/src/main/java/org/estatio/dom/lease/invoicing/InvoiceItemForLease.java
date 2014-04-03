@@ -24,8 +24,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.collect.Ordering;
 
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -93,6 +93,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                 members = { "leaseTerm", "startDate", "endDate" }),
 
 })
+@Immutable
 public class InvoiceItemForLease extends InvoiceItem {
 
     @Override
@@ -120,9 +121,7 @@ public class InvoiceItemForLease extends InvoiceItem {
     private LeaseTerm leaseTerm;
 
     @javax.jdo.annotations.Column(name = "leaseTermId", allowsNull = "true")
-    @Disabled
     @Hidden
-    //@Hidden(where = Where.REFERENCES_PARENT)
     public LeaseTerm getLeaseTerm() {
         return leaseTerm;
     }
@@ -139,7 +138,6 @@ public class InvoiceItemForLease extends InvoiceItem {
     @Hidden(where = Where.PARENTED_TABLES)
     @Named("Unit")
     // for the moment, might be generalized (to the user) in the future
-    @Disabled
     public FixedAsset getFixedAsset() {
         return fixedAsset;
     }

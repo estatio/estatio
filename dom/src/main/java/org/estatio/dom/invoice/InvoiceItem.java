@@ -36,6 +36,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -77,6 +78,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@Immutable
 public class InvoiceItem
         extends EstatioMutableObject<InvoiceItem>
         implements WithInterval<InvoiceItem>, WithDescriptionGetter {
@@ -129,7 +131,6 @@ public class InvoiceItem
 
     @javax.jdo.annotations.Column(name = "invoiceId", allowsNull = "flase")
     @Render(Type.EAGERLY)
-    @Disabled
     @Hidden(where = Where.REFERENCES_PARENT)
     @Title(sequence = "1", append = ":")
     public Invoice getInvoice() {
@@ -146,7 +147,6 @@ public class InvoiceItem
 
     @javax.jdo.annotations.Column(name = "chargeId", allowsNull = "true")
     @Title(sequence = "2")
-    @Disabled
     public Charge getCharge() {
         return charge;
     }
@@ -164,7 +164,6 @@ public class InvoiceItem
     private BigDecimal quantity;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Disabled
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -178,7 +177,6 @@ public class InvoiceItem
     private BigDecimal netAmount;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Disabled
     public BigDecimal getNetAmount() {
         return netAmount;
     }
@@ -197,7 +195,6 @@ public class InvoiceItem
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Hidden(where = Where.ALL_TABLES)
-    @Disabled
     public BigDecimal getVatAmount() {
         return vatAmount;
     }
@@ -211,7 +208,6 @@ public class InvoiceItem
     private BigDecimal grossAmount;
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @Disabled
     public BigDecimal getGrossAmount() {
         return grossAmount;
     }
@@ -226,7 +222,6 @@ public class InvoiceItem
 
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
     @Hidden(where = Where.PARENTED_TABLES)
-    @Disabled
     public Tax getTax() {
         return tax;
     }
@@ -250,6 +245,19 @@ public class InvoiceItem
         this.description = description;
     }
 
+    public InvoiceItem changeDescription(
+            final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
+        return this;
+    }
+
+    public String disableChangeDescription(
+            final String description) {
+        if (!getInvoice().getStatus().invoiceIsChangable()) {
+            return "Invoice can't be changed";
+        }
+        return null;
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
@@ -270,7 +278,6 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Disabled
     @Optional
     @Hidden(where = Where.PARENTED_TABLES)
     @Override
@@ -286,7 +293,6 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate endDate;
 
-    @Disabled
     @Optional
     @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getEndDate() {
@@ -302,7 +308,6 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate effectiveStartDate;
 
-    @Disabled
     @Optional
     public LocalDate getEffectiveStartDate() {
         return this.effectiveStartDate;
@@ -315,7 +320,6 @@ public class InvoiceItem
     @javax.jdo.annotations.Persistent
     private LocalDate effectiveEndDate;
 
-    @Disabled
     @Optional
     public LocalDate getEffectiveEndDate() {
         return effectiveEndDate;
