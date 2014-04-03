@@ -123,7 +123,12 @@ import org.estatio.dom.party.Party;
                 name = "findByRunId", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE runId == :runId ")
+                        "WHERE runId == :runId "),
+        @javax.jdo.annotations.Query(
+                name = "findByInvoiceNumber", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.Invoice " +
+                        "WHERE invoiceNumber.matches(:invoiceNumber) ")
 })
 @Indices({
         @Index(name = "Invoice_runId_IDX",

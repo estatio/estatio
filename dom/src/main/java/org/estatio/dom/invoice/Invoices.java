@@ -42,6 +42,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.settings.EstatioSettingsService;
 
 public class Invoices extends EstatioDomainService<Invoice> {
@@ -55,13 +56,21 @@ public class Invoices extends EstatioDomainService<Invoice> {
     @NotInServiceMenu
     @Named("Invoices")
     public List<Invoice> findInvoices(final Lease lease) {
-        return allMatches("findByLease", "lease", lease);
+        return allMatches("findByLease",
+                "lease", lease);
     }
 
     @NotInServiceMenu
     @Named("Invoices")
     public List<Invoice> findInvoices(final Party party) {
-        return allMatches("findByBuyer", "buyer", party);
+        return allMatches("findByBuyer",
+                "buyer", party);
+    }
+
+    public List<Invoice> findInvoicesByInvoiceNumber(
+            final @Named("Invoice number") String invoiceNumber) {
+        return allMatches("findByInvoiceNumber",
+                "invoiceNumber", StringUtils.wildcardToCaseInsensitiveRegex(invoiceNumber));
     }
 
     // //////////////////////////////////////
@@ -109,7 +118,9 @@ public class Invoices extends EstatioDomainService<Invoice> {
             return findInvoices(fixedAsset, status);
         } else {
             return allMatches("findByFixedAssetAndDueDateAndStatus",
-                    "fixedAsset", fixedAsset, "dueDate", dueDate, "status", status);
+                    "fixedAsset", fixedAsset,
+                    "dueDate", dueDate,
+                    "status", status);
         }
     }
 
@@ -125,12 +136,12 @@ public class Invoices extends EstatioDomainService<Invoice> {
             final Currency currency
             ) {
         return newInvoice(
-                lease.getPrimaryParty(), 
-                lease.getSecondaryParty(), 
-                paymentMethod, 
-                currency, 
-                dueDate, 
-                lease, 
+                lease.getPrimaryParty(),
+                lease.getSecondaryParty(),
+                paymentMethod,
+                currency,
+                dueDate,
+                lease,
                 null);
     }
 
