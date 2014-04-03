@@ -46,7 +46,7 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
     private String phoneNumber;
 
     @javax.jdo.annotations.Column(allowsNull="true", length=JdoColumnLength.PHONE_NUMBER)
-    @Title(prepend="Phone")
+    @Title()
     @Mandatory
     public String getPhoneNumber() {
         return phoneNumber;

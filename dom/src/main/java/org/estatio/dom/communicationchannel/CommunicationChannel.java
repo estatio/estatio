@@ -77,7 +77,11 @@ public abstract class CommunicationChannel
     public CommunicationChannel() {
         super("id, type");
     }
-
+    
+    public String iconName() {
+        return getType().title().replace(" ", "");
+    }
+    
     // //////////////////////////////////////
     
     @MemberOrder(sequence="2")
