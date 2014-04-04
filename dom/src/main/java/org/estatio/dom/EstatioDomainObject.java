@@ -30,11 +30,12 @@ public abstract class EstatioDomainObject<T extends EstatioDomainObject<T>>
 
     private static ObjectContracts ESTATIO_OBJECT_CONTRACTS = 
             new ObjectContracts()
+    .with(WithReferenceGetter.ToString.evaluator())
                 .with(WithCodeGetter.ToString.evaluator())
-                .with(WithDescriptionGetter.ToString.evaluator())
                 .with(WithNameGetter.ToString.evaluator())
-                .with(WithReferenceGetter.ToString.evaluator())
-                .with(WithTitleGetter.ToString.evaluator());
+                .with(WithTitleGetter.ToString.evaluator())
+                .with(WithDescriptionGetter.ToString.evaluator())
+                ;
 
     private final String keyProperties;
 
