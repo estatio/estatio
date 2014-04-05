@@ -721,6 +721,13 @@ language governing permissions and limitations under the License.
                 <version>${danhaywood-isis-domainservice-stringinterpolator.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.chemistry.opencmis</groupId>
+                <artifactId>chemistry-opencmis-client-impl</artifactId>
+                <version>0.10.0</version>
+            </dependency>
+            
+
         </dependencies>
     </dependencyManagement>
     
