@@ -15,7 +15,11 @@
           "members": {
             "charge": {},
             "quantity": {},
-            "description": {}
+            "description": {
+              "actions": {
+                "changeDescription": {}
+              }
+            }
           }
         }
       }

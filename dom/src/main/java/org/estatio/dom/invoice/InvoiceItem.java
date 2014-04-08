@@ -247,7 +247,12 @@ public class InvoiceItem
 
     public InvoiceItem changeDescription(
             final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
+        setDescription(description);
         return this;
+    }
+
+    public String default0ChangeDescription() {
+        return getDescription();
     }
 
     public String disableChangeDescription(
