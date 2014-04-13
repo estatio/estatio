@@ -24,6 +24,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 
@@ -31,6 +33,7 @@ import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@Immutable
 public class LeaseTermForServiceCharge extends LeaseTerm {
 
     private BigDecimal budgetedValue;
@@ -61,6 +64,24 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    public LeaseTermForServiceCharge changeValues(
+            final @Named("Budgeted value") @Optional BigDecimal budgetedValue,
+            final @Named("Audited value") @Optional BigDecimal auditedValue) {
+        setBudgetedValue(budgetedValue);
+        setAuditedValue(auditedValue);
+        return this;
+    }
+
+    public BigDecimal default0ChangeValues() {
+        return getBudgetedValue();
+    }
+
+    public BigDecimal default1ChangeValues() {
+        return getAuditedValue();
+    }
+
+    // //////////////////////////////////////
+
     @Override
     public BigDecimal getEffectiveValue() {
         return MathUtils.firstNonZero(getAuditedValue(), getBudgetedValue());
@@ -85,8 +106,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
-    @Programmatic
-    public void doInitialize() {
+    protected void doInitialize() {
         LeaseTermForServiceCharge previousTerm = (LeaseTermForServiceCharge) getPrevious();
         if (previousTerm != null) {
             this.setBudgetedValue(
@@ -96,8 +116,10 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
         }
     }
 
+    // //////////////////////////////////////
+
     @Override
-    public void doAlign() {
+    protected void doAlign() {
         if (getPrevious() != null && MathUtils.isZeroOrNull(getBudgetedValue())) {
             if (MathUtils.isNotZeroOrNull(getPrevious().getEffectiveValue())) {
                 setBudgetedValue(getPrevious().getEffectiveValue());
@@ -108,6 +130,7 @@ public class LeaseTermForServiceCharge extends LeaseTerm {
     // //////////////////////////////////////
 
     @Override
+    @Programmatic
     public void copyValuesTo(final LeaseTerm target) {
         LeaseTermForServiceCharge t = (LeaseTermForServiceCharge) target;
         super.copyValuesTo(t);
