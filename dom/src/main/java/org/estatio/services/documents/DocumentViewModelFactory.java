@@ -7,9 +7,12 @@ import org.apache.chemistry.opencmis.client.api.QueryResult;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 
 import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.applib.annotation.Programmatic;
+
 
 public class DocumentViewModelFactory {
 
+    @Programmatic
     public DocumentViewModel newViewModelFor(QueryResult result) {
         String cmisId = result.getPropertyValueById(PropertyIds.OBJECT_ID);
 

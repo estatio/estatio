@@ -12,19 +12,22 @@ import org.apache.chemistry.opencmis.commons.PropertyIds;
 
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
 
 import org.estatio.dom.asset.Property;
 
 public class DocumentContributions {
 
-    @NotContributed(As.ASSOCIATION) // ie contributed as action
+    @NotContributed(As.ASSOCIATION)
+    // ie contributed as action
+    @NotInServiceMenu
     public List<DocumentViewModel> relevantDocuments(Property property) {
         return Lists.newArrayList(
                 Iterables.filter(
-                    Iterables.transform(
-                        cmisRepository.query(queryFor(property)), 
-                        newViewModel()), 
-                    Predicates.notNull()));
+                        Iterables.transform(
+                                cmisRepository.query(queryFor(property)),
+                                newViewModel()),
+                        Predicates.notNull()));
     }
 
     private Function<QueryResult, DocumentViewModel> newViewModel() {
@@ -40,8 +43,8 @@ public class DocumentContributions {
         final String city = property.getCity();
         return String.format(
                 "SELECT %s, %s, %s "
-                + "FROM cmis:document "
-                + "WHERE CONTAINS('%s')", 
+                        + "FROM cmis:document "
+                        + "WHERE CONTAINS('%s')",
                 PropertyIds.OBJECT_ID, PropertyIds.NAME, PropertyIds.VERSION_LABEL,
                 city);
     }
@@ -49,5 +52,6 @@ public class DocumentContributions {
     @javax.inject.Inject
     DocumentViewModelFactory documentViewModelFactory;
 
-    @javax.inject.Inject CmisRepository cmisRepository;
+    @javax.inject.Inject
+    CmisRepository cmisRepository;
 }
