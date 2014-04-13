@@ -206,7 +206,7 @@ public class LeaseTermForIndexableRentTest {
     @Test
     public void initialize_ok() throws Exception {
         LeaseTermForIndexableRent nextTerm = new LeaseTermForIndexableRent();
-        term.modifyNext(nextTerm);
+        term.setNext(nextTerm);
         
         nextTerm.doInitialize();
         

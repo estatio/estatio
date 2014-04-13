@@ -96,8 +96,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE);
 
         final Index index = indices.findIndex(indexReference);
-        LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm(startDate);
-        leaseTerm.setEndDate(endDate);
+        LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setBaseValue(baseValue);
         leaseTerm.setBaseIndexStartDate(baseIndexStartDate);
         leaseTerm.setNextIndexStartDate(nextIndexStartDate);
@@ -115,8 +114,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
             final LocalDate endDate,
             final BigDecimal budgetedValue) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "SERVICE_CHARGE", LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE);
-        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(startDate);
-        leaseTerm.modifyEndDate(endDate);
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setBudgetedValue(budgetedValue);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         return leaseTerm;
@@ -130,9 +128,7 @@ public class LeaseItemsAndLeaseTermsFixture extends AbstractFixture {
             final LocalDate endDate,
             final String turnoverRentRule) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "TURNOVER_RENT", LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS);
-        LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseTerms.newLeaseTerm(leaseItem, null, startDate);
-        leaseTerm.doInitialize();
-        leaseTerm.setEndDate(endDate);
+        LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setTurnoverRentRule(turnoverRentRule);
         return leaseTerm;

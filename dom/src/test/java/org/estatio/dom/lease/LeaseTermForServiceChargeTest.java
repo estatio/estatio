@@ -84,7 +84,7 @@ public class LeaseTermForServiceChargeTest {
         item.getTerms().add(nextTerm);
         nextTerm.setLeaseItem(item);
         
-        nextTerm.modifyPrevious(term);
+        nextTerm.setPrevious(term);
         nextTerm.doInitialize();
         nextTerm.align();
         assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));

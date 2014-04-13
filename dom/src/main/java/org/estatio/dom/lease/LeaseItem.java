@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -33,6 +32,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -191,7 +191,7 @@ public class LeaseItem
     public boolean doRemove() {
         boolean canDelete = true;
         if (!getTerms().isEmpty()) {
-            canDelete =  getTerms().first().doRemove();
+            canDelete = getTerms().first().doRemove();
         }
         if (canDelete) {
             getContainer().remove(this);
@@ -512,29 +512,46 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public LeaseTerm newTerm(
-            final @Named("Start date") LocalDate startDate) {
-        LeaseTerm lastTerm = getTerms().size() > 0 ? getTerms().last() : null;
-        LeaseTerm term = leaseTerms.newLeaseTerm(this, lastTerm, startDate);
+            final @Named("Start date") LocalDate startDate,
+            final @Named("End date") @Optional LocalDate endDate) {
+        LeaseTerm term;
+        if (getType().autoCreateTerms() && !getTerms().isEmpty()) {
+            LeaseTerm lastTerm = getTerms().last();
+            term = lastTerm.createNext(startDate, endDate);
+            lastTerm.align();
+        }
+        else {
+
+            term = leaseTerms.newLeaseTerm(this, null, startDate, endDate);
+        }
+        term.initialize();
+        term.align();
         return term;
     }
 
-    public LocalDate default0NewTerm() {
-        LeaseTerm last = null;
-        try {
-            last = getTerms().last();
-        } catch (NoSuchElementException e) {
+    public LocalDate default0NewTerm(
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (getTerms().size() == 0) {
             return getStartDate();
         }
-        if (last.getEndDate() != null) {
-            return last.getInterval().endDateExcluding();
+        LeaseTerm last = getTerms().last();
+        return last.default0CreateNext(null, null);
+    }
+
+    public LocalDate default1NewTerm(
+            final LocalDate startDate,
+            final LocalDate endDate) {
+        if (getTerms().size() == 0) {
+            return null;
         }
-        return last.getStartDate().plusYears(1).withMonthOfYear(1).withDayOfMonth(1);
+        return getTerms().last().default1CreateNext(null, null);
     }
 
     // //////////////////////////////////////
 
     public LeaseItem verify() {
-        verifyUntil(getClockService().now());
+        verifyUntil(ObjectUtils.min(getEffectiveInterval().endDateExcluding(), getClockService().now()));
         return this;
     }
 
@@ -554,9 +571,9 @@ public class LeaseItem
             if (term.getInterval().contains(startDate)) {
                 LeaseTerm newTerm;
                 if (lastTerm == null) {
-                    newTerm = newItem.newTerm(term.getStartDate());
+                    newTerm = newItem.newTerm(term.getStartDate(), null);
                 } else {
-                    newTerm = lastTerm.createNext(term.getStartDate());
+                    newTerm = lastTerm.createNext(term.getStartDate(), term.getEndDate());
                 }
                 term.copyValuesTo(newTerm);
                 lastTerm = newTerm;

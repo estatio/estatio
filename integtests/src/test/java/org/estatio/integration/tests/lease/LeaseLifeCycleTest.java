@@ -19,11 +19,11 @@
 package org.estatio.integration.tests.lease;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -43,7 +43,6 @@ import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
@@ -95,11 +94,12 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
         lease.verifyUntil(new LocalDate(2015, 1, 1));
         // then
         assertThat(rItem.getTerms().size(), is(2));
-        assertThat(sItem.getTerms().size(), is(3));
+        assertThat(sItem.getTerms().size(), is(2));
         assertThat(tItem.getTerms().size(), is(2));
 
         LeaseTermForIndexableRent last = (LeaseTermForIndexableRent) rItem.getTerms().last();
         LeaseTermForIndexableRent first = (LeaseTermForIndexableRent) rItem.getTerms().first();
+        assertNotNull(last.getPrevious());
         assertThat(last.getBaseValue(), is(new BigDecimal(150000).setScale(2)));
         assertThat(first.getStartDate(), is(new LocalDate(2013, 11, 7)));
         assertThat(last.getStartDate(), is(new LocalDate(2015, 1, 1)));
@@ -164,8 +164,6 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
     @Test
     public void step7_teminate() throws Exception {
         lease.terminate(new LocalDate(2014, 6, 30), true);
-        lease.verify();
-
     }
 
     // //////////////////////////////////////
@@ -183,7 +181,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
     }
 
     private void approveInvoices() {
-        for (Invoice invoice : invoices.findInvoices(lease)){
+        for (Invoice invoice : invoices.findInvoices(lease)) {
             invoice.approve();
         }
     }

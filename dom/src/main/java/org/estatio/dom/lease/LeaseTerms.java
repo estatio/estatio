@@ -43,19 +43,21 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     public LeaseTerm newLeaseTerm(
             final LeaseItem leaseItem,
             final LeaseTerm previous,
-            final LocalDate startDate) {
+            final LocalDate startDate,
+            final LocalDate endDate) {
         LeaseTerm leaseTerm = leaseItem.getType().create(getContainer());
         leaseTerm.setLeaseItem(leaseItem);
-        leaseTerm.modifyPrevious(previous);
         leaseTerm.modifyStartDate(startDate);
+        leaseTerm.modifyEndDate(endDate);
         persistIfNotAlready(leaseTerm);
-
+        if (previous != null) {
+            previous.setNext(leaseTerm);
+        }
         // TOFIX: without this flush and refresh, the collection of terms on the
         // item is not updated. Removing code below will fail integration tests
         // too.
         getContainer().flush();
         isisJdoSupport.refresh(leaseItem);
-        leaseTerm.initialize();
         return leaseTerm;
     }
 
@@ -90,30 +92,37 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<LeaseTerm> findByPropertyAndTypeAndStartDate(
-            final Property property, final LeaseItemType leaseItemType, final LocalDate startDate) {
-        return allMatches("findByPropertyAndTypeAndStartDate", 
-                "property", property, "leaseItemType", leaseItemType, "startDate", startDate);
+            final Property property,
+            final LeaseItemType leaseItemType,
+            final LocalDate startDate) {
+        return allMatches("findByPropertyAndTypeAndStartDate",
+                "property", property,
+                "leaseItemType", leaseItemType,
+                "startDate", startDate);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<LeaseTermForServiceCharge> findServiceChargeByPropertyAndStartDate(
-            final Property property, final LocalDate startDate) {
+            final Property property,
+            final LocalDate startDate) {
         final List leaseTerms = findByPropertyAndTypeAndStartDate(property, LeaseItemType.SERVICE_CHARGE, startDate);
         return leaseTerms;
     }
 
     // //////////////////////////////////////
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @ActionSemantics(Of.SAFE)
     @Hidden
     public List<LocalDate> findStartDatesByPropertyAndType(
-            final Property property, final LeaseItemType leaseItemType) {
+            final Property property,
+            final LeaseItemType leaseItemType) {
         List startDates = allMatches(
-                "findStartDatesByPropertyAndType", 
-                "property", property, "leaseItemType", leaseItemType);
+                "findStartDatesByPropertyAndType",
+                "property", property,
+                "leaseItemType", leaseItemType);
         return startDates;
     }
 

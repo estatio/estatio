@@ -24,6 +24,8 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 
 import org.joda.time.LocalDate;
@@ -78,10 +80,13 @@ public class LeaseWithServiceChargeTest_verify_extra2 extends EstatioIntegration
 
         // and then
         SortedSet<LeaseTerm> terms = leasePoisonRentItem.getTerms();
+        List<LeaseTerm> temp = new ArrayList<LeaseTerm>(terms);
+        temp.toString();
+        
         assertThat(
                 leasePoisonServiceChargeItem.getEffectiveInterval().toString()
                 .concat(terms.toString()), 
-                terms.size(), is(4));
+                terms.size(), is(3));
         assertNotNull(leasePoisonRentItem.findTerm(new LocalDate(2011, 1, 1)));
         
     }

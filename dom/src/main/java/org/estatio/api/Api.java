@@ -832,15 +832,14 @@ public class Api extends AbstractFactoryAndRepository {
         LeaseTerm term = item.findTermWithSequence(sequence);
         if (term == null) {
             if (sequence.equals(BigInteger.ONE)) {
-                term = item.newTerm(startDate);
+                term = item.newTerm(startDate, endDate);
             } else {
                 LeaseTerm previousTerm = item.findTermWithSequence(sequence.subtract(BigInteger.ONE));
-                term = previousTerm.createNext(startDate);
+                term = previousTerm.createNext(startDate, endDate);
             }
             term.setSequence(sequence);
         }
         term.setStatus(org.estatio.dom.lease.LeaseTermStatus.valueOf(statusStr));
-        term.setEndDate(endDate);
         return term;
     }
 

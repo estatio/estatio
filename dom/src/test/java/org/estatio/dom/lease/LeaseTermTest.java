@@ -70,7 +70,11 @@ public class LeaseTermTest {
             {
                 allowing(mockClockService).now();
                 will(returnValue(now));
-                allowing(mockLeaseTerms).newLeaseTerm(with(any(LeaseItem.class)), with(any(LeaseTerm.class)), with(any(LocalDate.class)));
+                allowing(mockLeaseTerms).newLeaseTerm(
+                        with(any(LeaseItem.class)),
+                        with(any(LeaseTerm.class)),
+                        with(any(LocalDate.class)),
+                        with(aNull(LocalDate.class)));
                 will(returnLeaseTerm());
             }
         });
@@ -82,15 +86,15 @@ public class LeaseTermTest {
         item.setEndDate(new LocalDate(2013, 6, 30));
         lease.getItems().add(item);
         item.setLease(lease);
-        
+
         item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
 
         term = new LeaseTermForTesting();
-        
+
         item.getTerms().add(term);
         term.setLeaseItem(item);
-        
+
         term.setStartDate(new LocalDate(2012, 1, 1));
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.injectClockService(mockClockService);
@@ -103,8 +107,8 @@ public class LeaseTermTest {
         final LeaseTermForTesting anotherTerm = new LeaseTermForTesting();
         item.getTerms().add(anotherTerm);
         anotherTerm.setLeaseItem(item);
-        
-        LeaseTermForTesting next = (LeaseTermForTesting) term.createNext(new LocalDate(2013, 1, 1));
+
+        LeaseTermForTesting next = (LeaseTermForTesting) term.createNext(new LocalDate(2013, 1, 1), null);
         Assert.assertThat(this.term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
         Assert.assertThat(next.getStartDate(), Is.is(new LocalDate(2013, 1, 1)));
         Assert.assertNull(next.getEndDate());
@@ -113,33 +117,34 @@ public class LeaseTermTest {
     @Test
     public void update_ok() {
         LeaseTermForTesting nextTerm = new LeaseTermForTesting();
-        nextTerm.modifyPrevious(term);
+        nextTerm.setPrevious(term);
+        term.setNext(nextTerm);
         nextTerm.modifyStartDate(new LocalDate(2013, 1, 1));
         // term.update();
         assertThat(term.getEndDate(), Is.is(new LocalDate(2012, 12, 31)));
     }
 
-    // TODO: We moved the retrieval to the repository so this is broken. 
+    // TODO: We moved the retrieval to the repository so this is broken.
     @Ignore
     @Test
     public void invoicedValueFor_ok() throws Exception {
-        LocalDateInterval interval = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012,4,1), IntervalEnding.EXCLUDING_END_DATE);
+        LocalDateInterval interval = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), IntervalEnding.EXCLUDING_END_DATE);
         LeaseTermForTesting term = new LeaseTermForTesting();
         Invoice invoice = new Invoice();
         invoice.setStatus(InvoiceStatus.APPROVED);
         InvoiceItemForLease item1 = new InvoiceItemForLease();
-        
+
         invoice.getItems().add(item1);
         item1.setInvoice(invoice);
-        
+
         item1.setLeaseTerm(term);
         item1.setStartDate(interval.startDate());
         item1.setNetAmount(BigDecimal.valueOf(1234.45));
-        
+
         InvoiceItemForLease item2 = new InvoiceItemForLease();
         invoice.getItems().add(item2);
         item2.setInvoice(invoice);
-        
+
         item2.setNetAmount(BigDecimal.valueOf(1234.45));
         item2.setLeaseTerm(term);
         item2.setStartDate(interval.startDate());
@@ -156,12 +161,19 @@ public class LeaseTermTest {
 
     @Test
     public void testEI() throws Exception {
-        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString(), is("2011-02-01/2012-01-01") );
-        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString(), is("2012-01-01/2012-07-01") );
-        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", null).toString(), is("2011-02-01/----------") );
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", "2011-12-31").toString(), is("2011-02-01/2012-01-01"));
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2012-06-30", "2011-02-01", null, "2012-01-01", "2012-12-31").toString(), is("2012-01-01/2012-07-01"));
+        assertThat(effectiveIntervalWith("2011-01-01", "2012-12-31", null, null, "2011-02-01", null, "2011-01-01", null).toString(), is("2011-02-01/----------"));
         assertNull(effectiveIntervalWith("2011-01-01", "2012-12-31", null, "2013-12-31", "2011-02-01", null, "2014-01-01", null));
-           }
-    
+    }
+
+    @Test
+    public void nextStartDate() throws Exception {
+        assertThat(term.nextStartDate(), is(new LocalDate(2013, 1, 1)));
+    }
+
+    // //////////////////////////////////////
+
     private LocalDateInterval effectiveIntervalWith(
             String leaseStartDate,
             String leaseEndDate,
@@ -170,7 +182,7 @@ public class LeaseTermTest {
             String itemStartDate,
             String itemEndDate,
             String termStartDate, String termEndDate
-            ){        
+            ) {
 
         Lease lease = new Lease();
         lease.setStartDate(parseDate(leaseStartDate));
@@ -182,34 +194,32 @@ public class LeaseTermTest {
         item.setEndDate(parseDate(itemEndDate));
         lease.getItems().add(item);
         item.setLease(lease);
-        
+
         item.injectLeaseTerms(mockLeaseTerms);
         item.injectClockService(mockClockService);
 
         LeaseTerm term = new LeaseTermForTesting();
-        
+
         item.getTerms().add(term);
         term.setLeaseItem(item);
-        
+
         term.setStartDate(parseDate(termStartDate));
         term.setEndDate(parseDate(termEndDate));
         term.setFrequency(LeaseTermFrequency.YEARLY);
         term.injectClockService(mockClockService);
         term.initialize();
-        
+
         return term.getEffectiveInterval();
-        
+
     }
-    
+
     private LocalDate parseDate(String input) {
         if (input == null)
             return null;
         return LocalDate.parse(input);
-        
+
     }
-    
-    
-    
+
     // //////////////////////////////////////
 
     public static Action returnLeaseTerm() {
@@ -218,11 +228,17 @@ public class LeaseTermTest {
             public Object invoke(Invocation invocation) throws Throwable {
                 LeaseItem leaseItem = (LeaseItem) invocation.getParameter(0);
                 LeaseTerm leaseTerm = (LeaseTerm) invocation.getParameter(1);
+                LocalDate startDate = (LocalDate) invocation.getParameter(2);
+                LocalDate endDate = (LocalDate) invocation.getParameter(3);
                 LeaseTermForTesting ltt = new LeaseTermForTesting();
-                leaseItem.getTerms().add(ltt);
+                //relationships
                 ltt.setLeaseItem(leaseItem);
-                ltt.modifyPrevious(leaseTerm);
-                ltt.initialize();
+                leaseItem.getTerms().add(ltt);
+                ltt.setPrevious(leaseTerm);
+                leaseTerm.setNext(ltt);
+                //set values
+                ltt.modifyStartDate(startDate);
+                ltt.modifyEndDate(endDate);
                 ltt.injectClockService(mockClockService);
                 return ltt;
             }

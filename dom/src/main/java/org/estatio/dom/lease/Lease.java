@@ -31,6 +31,7 @@ import javax.jdo.annotations.InheritanceStrategy;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -639,14 +640,15 @@ public class Lease
 
     @Bulk
     public Lease verify() {
-        verifyUntil(getClockService().now());
+        verifyUntil(ObjectUtils.min(getEffectiveInterval().endDateExcluding(), getClockService().now()));
         return this;
     }
 
     @Prototype
     public void verifyUntil(final LocalDate date) {
         for (LeaseItem item : getItems()) {
-            item.verifyUntil(date);
+            LocalDateInterval effectiveInterval = item.getEffectiveInterval();
+            item.verifyUntil(ObjectUtils.min(effectiveInterval == null ? null : effectiveInterval.endDateExcluding(), date));
         }
     }
 

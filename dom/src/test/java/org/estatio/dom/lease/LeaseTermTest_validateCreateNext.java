@@ -41,28 +41,28 @@ public class LeaseTermTest_validateCreateNext {
 
     @Test
     public void happy() throws Exception {
-        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,7,1)), is(nullValue()));
+        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,7,1), null), is(nullValue()));
     }
 
     @Test
     public void canStartOnStartDateAsThis() throws Exception {
-        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,6,1)), is(nullValue()));
+        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,6,1), null), is(nullValue()));
     }
     
     @Test
     public void canEndOnEndDateAsThis() throws Exception {
-        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,8,31)), is(nullValue()));
+        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,8,31), null), is(nullValue()));
     }
     
     @Test
     public void tooEarly() throws Exception {
-        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,5,31)), is("Cannot start before this start date"));
+        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,5,31), null), is("Cannot start before this start date"));
     }
     
     @Test
     public void canStartAfterThisEnds() throws Exception {
         // because the action itself will auto-align
-        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,9,1)), is(nullValue()));
+        assertThat(leaseTerm.validateCreateNext(new LocalDate(2014,9,1), null), is(nullValue()));
     }
     
 

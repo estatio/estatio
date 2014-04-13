@@ -31,6 +31,8 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -43,6 +45,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
@@ -194,12 +197,11 @@ public abstract class LeaseTerm
     }
 
     public void modifyStartDate(final LocalDate startDate) {
-        LocalDate currentStartDate = getStartDate();
-        if (startDate != null && !startDate.equals(currentStartDate)) {
+        if (ObjectUtils.notEqual(getStartDate(), startDate)) {
             setStartDate(startDate);
-        }
-        if (getPrevious() != null) {
-            getPrevious().modifyEndDate(getInterval().endDateFromStartDate());
+            if (getPrevious() != null) {
+                getPrevious().align();
+            }
         }
     }
 
@@ -219,19 +221,9 @@ public abstract class LeaseTerm
     }
 
     public void modifyEndDate(final LocalDate endDate) {
-        LocalDate currentEndDate = getEndDate();
-        if (endDate == null && currentEndDate == null || endDate.equals(currentEndDate)) {
-            return;
+        if (ObjectUtils.notEqual(getEndDate(), endDate)) {
+            setEndDate(endDate);
         }
-        setEndDate(endDate);
-    }
-
-    public void clearEndDate() {
-        LocalDate currentEndDate = getEndDate();
-        if (currentEndDate == null) {
-            return;
-        }
-        setEndDate(null);
     }
 
     // //////////////////////////////////////
@@ -248,7 +240,7 @@ public abstract class LeaseTerm
             final @Named("Start Date") @Optional LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
         getChangeDates().changeDates(startDate, endDate);
-        
+
         // TODO: need to align the predecessor and successor
         // nb: only if contiguous semantics, eg for Rent, but not for Discount
         return this;
@@ -277,14 +269,16 @@ public abstract class LeaseTerm
         String changeDatesReasonIfAny = getChangeDates().validateChangeDates(startDate, endDate);
         if (changeDatesReasonIfAny != null) {
             return changeDatesReasonIfAny;
-        } 
-        
-        // TODO: now check that the start date is not before the predecessor's start date
+        }
+
+        // TODO: now check that the start date is not before the predecessor's
+        // start date
         // ...
-        
-        // TODO: now check that the end date is not after the successor's end date
+
+        // TODO: now check that the end date is not after the successor's end
+        // date
         // ...
-        
+
         return null;
     }
 
@@ -372,25 +366,6 @@ public abstract class LeaseTerm
         this.previous = previous;
     }
 
-    public void modifyPrevious(final LeaseTerm previous) {
-        LeaseTerm currentPrevious = getPrevious();
-        if (previous == null || previous.equals(currentPrevious)) {
-            return;
-        }
-        clearPrevious();
-        previous.setNext(this);
-        setPrevious(previous);
-    }
-
-    public void clearPrevious() {
-        LeaseTerm currentPrevious = getPrevious();
-        if (currentPrevious == null) {
-            return;
-        }
-        currentPrevious.setNext(null);
-        setPrevious(null);
-    }
-
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Column(name = "nextLeaseTermId")
@@ -406,25 +381,6 @@ public abstract class LeaseTerm
 
     public void setNext(final LeaseTerm next) {
         this.next = next;
-    }
-
-    public void modifyNext(final LeaseTerm next) {
-        LeaseTerm currentNext = getNext();
-        if (next == null || next.equals(currentNext)) {
-            return;
-        }
-        if (currentNext != null) {
-            currentNext.clearPrevious();
-        }
-        next.modifyPrevious(this);
-    }
-
-    public void clearNext() {
-        LeaseTerm currentNext = getNext();
-        if (currentNext == null) {
-            return;
-        }
-        currentNext.clearPrevious();
     }
 
     // //////////////////////////////////////
@@ -459,7 +415,10 @@ public abstract class LeaseTerm
         }
         success = getInvoiceItems().size() == 0;
         if (success) {
-            this.modifyPrevious(null);
+            if (getPrevious() != null){
+                getPrevious().setNext(null);
+            }
+            this.setPrevious(null);
             getContainer().remove(this);
             getContainer().flush();
         }
@@ -470,26 +429,42 @@ public abstract class LeaseTerm
 
     @Bulk
     public LeaseTerm verify() {
-        verifyUntil(getClockService().now());
+        LocalDateInterval effectiveInterval = getLeaseItem().getEffectiveInterval();
+        verifyUntil(ObjectUtils.min(effectiveInterval == null ? null : effectiveInterval.endDateExcluding(), getClockService().now()));
         return this;
     }
 
     @Programmatic
     public void verifyUntil(final LocalDate date) {
-        align();
-        // convenience code to automatically create terms but not for terms who
-        // have a start date after today
         LeaseTerm nextTerm = getNext();
-        LocalDate nextStartDate = getNextStartDate();
-        if (nextTerm == null && nextStartDate.compareTo(date) <= 0) {
-            nextTerm = createNext(getNextStartDate());
+        boolean autoCreateTerms = getLeaseItem().getType().autoCreateTerms();
+        if (autoCreateTerms) {
+            // Remove items after the period
+            LocalDateInterval effectiveInterval = getLeaseItem().getEffectiveInterval();
+            LocalDate endDateExcluding = effectiveInterval != null ? effectiveInterval.endDateExcluding() : date;
+            if (getNext() != null && endDateExcluding != null && getNext().getStartDate().compareTo(endDateExcluding) >= 0) {
+                getNext().doRemove();
+            }
+        }
+        align();
+        if (autoCreateTerms) {
+            // convenience code to automatically create terms but not for terms
+            // who have a start date after today
+            LocalDateInterval effectiveInterval = getLeaseItem().getEffectiveInterval();
+            LocalDate minDate = ObjectUtils.min(effectiveInterval == null ? null : effectiveInterval.endDateExcluding(), date);
+            LocalDate nextStartDate = nextStartDate();
+            if (nextTerm == null && nextStartDate.compareTo(minDate) < 0) {
+                LocalDate nextstartDate = default0CreateNext(null, null);
+                LocalDate nextEndDate = default1CreateNext(null, null);
+                nextTerm = createNext(nextstartDate, nextEndDate);
+            }
         }
         if (nextTerm != null) {
             nextTerm.verifyUntil(date);
         }
     }
 
-    private LocalDate getNextStartDate() {
+    protected LocalDate nextStartDate() {
         LocalDate nextStartDate = getInterval().endDateExcluding();
         if (nextStartDate == null) {
             return getFrequency().nextDate(getStartDate());
@@ -500,26 +475,48 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     public LeaseTerm createNext(
-            final @Named("Start date") LocalDate nextStartDate) {
+            final @Named("Start date") LocalDate nextStartDate,
+            final @Named("End date") @Optional LocalDate nextEndDate) {
         LeaseTerm nextTerm = getNext();
         if (nextTerm != null) {
             return nextTerm;
         }
-        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate);
+        nextTerm = terms.newLeaseTerm(getLeaseItem(), this, nextStartDate, nextEndDate);
         nextTerm.initialize();
-        nextTerm.modifyStartDate(nextStartDate);
+        align();
         nextTerm.align();
         return nextTerm;
     }
 
+    public boolean hideCreateNext(
+            final LocalDate nextStartDate,
+            final LocalDate nextEndDate) {
+        return !valueType().equals(LeaseTermValueType.FIXED);
+    }
+
     public String disableCreateNext(
-            final LocalDate nextStartDate) {
+            final LocalDate nextStartDate,
+            final LocalDate nextEndDate) {
         return getNext() == null ? null : "Already a next term available";
     }
 
     public String validateCreateNext(
-            final LocalDate nextStartDate) {
+            final LocalDate nextStartDate,
+            final LocalDate nextEndDate) {
         return nextStartDate.isBefore(getStartDate()) ? "Cannot start before this start date" : null;
+    }
+
+    public LocalDate default0CreateNext(
+            final LocalDate nextStartDate,
+            final LocalDate nextEndDate) {
+        return nextStartDate();
+    }
+
+    public LocalDate default1CreateNext(
+            final LocalDate nextStartDate,
+            final LocalDate nextEndDate) {
+        LocalDate endDate = nextStartDate() != null ? getFrequency().nextDate(nextStartDate()) : null;
+        return new LocalDateInterval(endDate, null).endDateFromStartDate();
     }
 
     // //////////////////////////////////////
@@ -544,8 +541,11 @@ public abstract class LeaseTerm
     @Programmatic
     protected final void align() {
         // Get the end date from the next start date
-        if (getEndDate() == null && getNext() != null) {
-            modifyEndDate(getNext().getInterval().endDateFromStartDate());
+        if (getNext() != null) {
+            LocalDate endDate = getNext().getInterval().endDateFromStartDate();
+            if (ObjectUtils.notEqual(getEndDate(), endDate)) {
+                modifyEndDate(endDate);
+            }
         }
         doAlign();
     }
@@ -592,6 +592,19 @@ public abstract class LeaseTerm
 
     @Programmatic
     public abstract BigDecimal valueForDate(final LocalDate dueDate);
+
+    // //////////////////////////////////////
+
+    @Prototype
+    public String showCalculationResults() {
+        return StringUtils.join(calculationResults(
+                getLeaseItem().getInvoicingFrequency(),
+                getStartDate(),
+                getStartDate().plusYears(2)),
+                "\t");
+    }
+
+    // //////////////////////////////////////
 
     @Programmatic
     public List<CalculationResult> calculationResults(

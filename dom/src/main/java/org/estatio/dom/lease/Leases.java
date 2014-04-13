@@ -153,7 +153,7 @@ public class Leases extends EstatioDomainService<Lease> {
         }
         return null;
     }
-
+    
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
@@ -200,7 +200,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @Prototype
     public String verifyAllLeases() {
         DateTime dt = DateTime.now();
         List<Lease> leases = allLeases();

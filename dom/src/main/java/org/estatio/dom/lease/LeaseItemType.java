@@ -24,30 +24,37 @@ import org.apache.isis.applib.FatalException;
 import org.estatio.dom.PowerType;
 import org.estatio.dom.utils.StringUtils;
 
+public enum LeaseItemType implements PowerType<LeaseTerm> {
 
-public enum LeaseItemType implements PowerType<LeaseTerm>{
-
-    RENT(LeaseTermForIndexableRent.class), 
-    TURNOVER_RENT(LeaseTermForTurnoverRent.class),
-    SERVICE_CHARGE(LeaseTermForServiceCharge.class),
-    SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexableRent.class), 
-    DISCOUNT(LeaseTermForFixed.class),
-    ENTRY_FEE(LeaseTermForFixed.class),
-    TAX(LeaseTermForTax.class);
+    RENT(LeaseTermForIndexableRent.class, true),
+    TURNOVER_RENT(LeaseTermForTurnoverRent.class, true),
+    SERVICE_CHARGE(LeaseTermForServiceCharge.class, true),
+    SERVICE_CHARGE_INDEXABLE(LeaseTermForIndexableRent.class, true),
+    DISCOUNT(LeaseTermForFixed.class, false),
+    ENTRY_FEE(LeaseTermForFixed.class, false),
+    TAX(LeaseTermForTax.class, false);
 
     private final Class<? extends LeaseTerm> clss;
+    private final boolean autoCreateTerms;
 
-    private LeaseItemType(final Class<? extends LeaseTerm> clss) {
+    // //////////////////////////////////////
+
+    private LeaseItemType(
+            final Class<? extends LeaseTerm> clss,
+            final boolean autoCreateTerms) {
         this.clss = clss;
+        this.autoCreateTerms = autoCreateTerms;
     }
+
+    // //////////////////////////////////////
 
     public String title() {
         return StringUtils.enumTitle(this.name());
     }
 
     // //////////////////////////////////////
-    
-    public LeaseTerm create(final DomainObjectContainer container){ 
+
+    public LeaseTerm create(final DomainObjectContainer container) {
         try {
             LeaseTerm term = container.newTransientInstance(clss);
             return term;
@@ -55,4 +62,11 @@ public enum LeaseItemType implements PowerType<LeaseTerm>{
             throw new FatalException(ex);
         }
     }
+
+    // //////////////////////////////////////
+
+    public boolean autoCreateTerms() {
+        return autoCreateTerms;
+    }
+
 }
