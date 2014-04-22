@@ -37,17 +37,29 @@ public class FixedAssetRegistrations extends EstatioDomainService<FixedAssetRegi
 
     // //////////////////////////////////////
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Programmatic
-    public List<FixedAssetRegistration> findBySubject(final FixedAsset asset) {
-        return (List) allMatches("findBySubject", "subject", asset);
+    public List<FixedAssetRegistration> findBySubject(
+            final FixedAsset asset) {
+        return allMatches("findBySubject",
+                "subject", asset);
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public List<FixedAssetRegistration> findBySubjectAndType(
+            final FixedAsset asset,
+            final FixedAssetRegistrationType type) {
+        return allMatches("findBySubject",
+                "subject", asset,
+                "type", type);
     }
 
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
     @Prototype
-    @MemberOrder(name="Fixed Assets", sequence = "99")
+    @MemberOrder(name = "Fixed Assets", sequence = "99")
     public List<FixedAssetRegistration> allRegistrations() {
         return allInstances();
     }

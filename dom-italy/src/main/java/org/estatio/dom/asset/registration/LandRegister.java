@@ -1,16 +1,22 @@
 package org.estatio.dom.asset.registration;
 
+import java.math.BigDecimal;
+
+import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.google.common.base.Strings;
 
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-//no @DataStoreIdentity nor @Version, since inherited from supertype
+@javax.jdo.annotations.Discriminator(
+        strategy = DiscriminatorStrategy.CLASS_NAME,
+        column = "discriminator")
 public class LandRegister extends FixedAssetRegistration {
 
     public String title() {
@@ -21,11 +27,11 @@ public class LandRegister extends FixedAssetRegistration {
                 .append(",", getRendita())
                 .append(",", getSubalterno());
         final String title = tb.toString();
-        if(Strings.isNullOrEmpty(title)) {
+        if (Strings.isNullOrEmpty(title)) {
             // the @Title annotations of supertype
-            return  getContainer().titleOf(getType())
-                    +": "
-                    +getContainer().titleOf(getSubject());
+            return getContainer().titleOf(getType())
+                    + ": "
+                    + getContainer().titleOf(getSubject());
         }
         return title;
     }
@@ -35,6 +41,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String comuneAmministrativo;
 
     @Optional
+    @MemberOrder(sequence="1")
     public String getComuneAmministrativo() {
         return comuneAmministrativo;
     }
@@ -48,6 +55,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String comuneCatastale;
 
     @Optional
+    @MemberOrder(sequence="2")
     public String getComuneCatastale() {
         return comuneCatastale;
     }
@@ -61,6 +69,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String codiceComuneCatastale;
 
     @Optional
+    @MemberOrder(sequence="3")
     public String getCodiceComuneCatastale() {
         return codiceComuneCatastale;
     }
@@ -71,14 +80,16 @@ public class LandRegister extends FixedAssetRegistration {
 
     // //////////////////////////////////////
 
-    private String rendita;
+    private BigDecimal rendita;
 
     @Optional
-    public String getRendita() {
+    @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
+    @MemberOrder(sequence="4")
+    public BigDecimal getRendita() {
         return rendita;
     }
 
-    public void setRendita(final String rendita) {
+    public void setRendita(final BigDecimal rendita) {
         this.rendita = rendita;
     }
 
@@ -87,6 +98,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String foglio;
 
     @Optional
+    @MemberOrder(sequence="5")
     public String getFoglio() {
         return foglio;
     }
@@ -100,6 +112,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String particella;
 
     @Optional
+    @MemberOrder(sequence="6")
     public String getParticella() {
         return particella;
     }
@@ -113,6 +126,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String subalterno;
 
     @Optional
+    @MemberOrder(sequence="7")
     public String getSubalterno() {
         return subalterno;
     }
@@ -126,6 +140,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String categoria;
 
     @Optional
+    @MemberOrder(sequence="8")
     public String getCategoria() {
         return categoria;
     }
@@ -139,6 +154,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String classe;
 
     @Optional
+    @MemberOrder(sequence="9")
     public String getClasse() {
         return classe;
     }
@@ -152,6 +168,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String consistenza;
 
     @Optional
+    @MemberOrder(sequence="10")
     public String getConsistenza() {
         return consistenza;
     }
