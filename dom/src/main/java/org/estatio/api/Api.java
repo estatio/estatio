@@ -491,7 +491,7 @@ public class Api extends AbstractFactoryAndRepository {
 
     private Lease fetchLease(String leaseReference) {
         Lease lease;
-        lease = leases.findLeaseByReference(leaseReference);
+        lease = leases.findLeaseByReference(leaseReference.trim().replaceAll("~", "+"));
         if (lease == null) {
             throw new ApplicationException(String.format("Lease with reference %s not found.", leaseReference));
         }
@@ -813,10 +813,7 @@ public class Api extends AbstractFactoryAndRepository {
             final LocalDate endDate,
             final BigInteger sequence,
             final String statusStr) {
-        Lease lease = leases.findLeaseByReference(leaseReference);
-        if (lease == null) {
-            throw new ApplicationException(String.format("Leaseitem with reference %1$s not found.", leaseReference));
-        }
+        Lease lease = fetchLease(leaseReference);
         Unit unit;
         if (unitReference != null) {
             unit = units.findUnitByReference(unitReference);
