@@ -201,7 +201,12 @@ public class InvoiceCalculationService {
                         new LocalDateInterval(leaseTerm.getLeaseItem().getLease().getStartDate(), parameters.dueDateRange().endDateExcluding(), IntervalEnding.EXCLUDING_END_DATE) :
                         parameters.dueDateRange();
         final InvoicingFrequency invoicingFrequency = leaseTerm.getLeaseItem().getInvoicingFrequency();
-        if (termInterval != null && termInterval.isValid() && rangeInterval.isValid()) {
+        // TODO: As a result of EST-413 the check for 'termInterval != null &&
+        // termInterval.isValid()' is removed because this is blocking the
+        // calculation of periods outside the interval of the leases. As a
+        // result the invoice calculation will be more eager so improving
+        // performance, EST-315, should get some attention.
+        if (rangeInterval.isValid()) {
             final List<InvoicingInterval> intervals = invoicingFrequency.intervalsInDueDateRange(
                     rangeInterval, termInterval);
             for (final InvoicingInterval invoicingInterval : intervals) {

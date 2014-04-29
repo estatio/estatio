@@ -239,9 +239,8 @@ public class InvoiceCalculationServiceTest {
         leaseTerm.setStartDate(new LocalDate(2012, 2, 1));
         leaseTerm.setEndDate(new LocalDate(2013, 1, 1));
         leaseTerm.setValue(BigDecimal.valueOf(20000));
-        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2012, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS,
+        tester(leaseTerm, new LocalDate(2012, 1, 1), new LocalDate(2013, 1, 1), InvoicingFrequency.YEARLY_IN_ARREARS,
                 3296.70, 5000.00, 5000.00, 5000.00);
-
     }
 
     @Test
@@ -254,7 +253,17 @@ public class InvoiceCalculationServiceTest {
         // TODO: Since 2012 is a leap year, the sum of the invoices is greater
         // than the value of the term.....
     }
-    
+
+    @Test
+    public void testCalculateAfterEndDate() {
+        leaseTerm.setStartDate(new LocalDate(2014, 1, 1));
+        leaseTerm.setEndDate(new LocalDate(2014, 12, 31));
+        leaseTerm.setValue(BigDecimal.valueOf(20000));
+        lease.setTenancyEndDate(new LocalDate(2013, 12, 31));
+        tester(leaseTerm, new LocalDate(2014, 1, 1), new LocalDate(2014, 7, 1),
+                0.00, 0.00);
+    }
+
     // //////////////////////////////////////
 
     private void tester(
@@ -276,11 +285,12 @@ public class InvoiceCalculationServiceTest {
         List<CalculationResult> results = ic.calculateDueDateRange(
                 leaseTerm,
                 new InvoiceCalculationParameters(
-                        leaseTerm, 
-                        InvoiceRunType.NORMAL_RUN, 
-                        startDueDate, 
-                        startDueDate, 
+                        leaseTerm,
+                        InvoiceRunType.NORMAL_RUN,
+                        startDueDate,
+                        startDueDate,
                         nextDueDate == null ? startDueDate.plusDays(1) : nextDueDate));
+        assertThat(results.size(), is(values.length));
         for (int i = 0; i < results.size(); i++) {
             assertThat(results.toString(), results.get(i).value().subtract(results.get(i).mockValue()),
                     is(new BigDecimal(values[i]).setScale(2, RoundingMode.HALF_UP)));
