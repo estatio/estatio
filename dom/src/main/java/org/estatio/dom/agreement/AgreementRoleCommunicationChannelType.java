@@ -19,20 +19,16 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
-
+import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
-
-import org.estatio.dom.EstatioImmutableObject;
-import org.estatio.dom.JdoColumnLength;
 
 @javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -93,7 +89,7 @@ public class AgreementRoleCommunicationChannelType
         return new Predicate<AgreementRoleCommunicationChannel>() {
             @Override
             public boolean apply(final AgreementRoleCommunicationChannel arcc) {
-                return arcc != null && Objects.equal(arcc.getType(), this) ? true : false;
+                return arcc != null && Objects.equal(arcc.getType(), AgreementRoleCommunicationChannelType.this) ? true : false;
             }
         };
     }

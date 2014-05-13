@@ -2,14 +2,13 @@ package org.estatio.services.documents;
 
 import java.util.List;
 import java.util.Map;
-
 import com.google.common.collect.Maps;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.client.api.QueryResult;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.PropertyData;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +18,8 @@ public class DocumentContributionsTest_relevantDocuments {
     private DocumentViewModelFactory documentViewModelFactory;
     private CmisRepository cmisRepository;
 
+    private boolean pingSucceeded;
+
     @Before
     public void setUp() throws Exception {
         cmisRepository = new CmisRepository();
@@ -27,7 +28,14 @@ public class DocumentContributionsTest_relevantDocuments {
         documentViewModelFactory = new DocumentViewModelFactory();
         documentContributions = new DocumentContributions();
         documentContributions.cmisRepository = cmisRepository;
-        cmisRepository.init(properties);
+
+        try {
+            cmisRepository.init(properties);
+            pingSucceeded = true;
+        } catch (Exception e) {
+            pingSucceeded = false;
+        }
+        Assume.assumeTrue("Ping to CMIS repository", pingSucceeded);
     }
     
     @Test
