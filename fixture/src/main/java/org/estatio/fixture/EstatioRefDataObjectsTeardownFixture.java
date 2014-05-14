@@ -18,9 +18,7 @@
  */
 package org.estatio.fixture;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
-
+import javax.inject.Inject;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
@@ -37,13 +35,16 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.services.links.Link;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 
-public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
+public class EstatioRefDataObjectsTeardownFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
-        
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+
         isisJdoSupport.deleteAll(
             State.class,
             Country.class,
@@ -62,11 +63,10 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
             Index.class,
             Link.class
         );
-
     }
 
     /**
-     * unused, but equivalent to {@link #truncateTables(IsisJdoSupport)}, above
+     * unused, but equivalent to the above
      */
     @SuppressWarnings("unused")
     private void truncateTablesSQL(IsisJdoSupport isisJdoSupport) {
@@ -92,9 +92,7 @@ public class EstatioRefDataObjectsTeardownFixture extends AbstractFixture {
         isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Link\"");
     }
 
+    @Inject
     private IsisJdoSupport isisJdoSupport;
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
-    }
 
 }

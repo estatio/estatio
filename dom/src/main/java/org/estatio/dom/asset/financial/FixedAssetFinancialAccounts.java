@@ -33,7 +33,7 @@ public class FixedAssetFinancialAccounts extends EstatioDomainService<FixedAsset
     }
 
     @Programmatic
-    public FixedAssetFinancialAccount newFixedAssetFiancialAccount(
+    public FixedAssetFinancialAccount newFixedAssetFinancialAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
         FixedAssetFinancialAccount instance = newTransientInstance(FixedAssetFinancialAccount.class);
@@ -78,7 +78,7 @@ public class FixedAssetFinancialAccounts extends EstatioDomainService<FixedAsset
             final FinancialAccount financialAccount) {
         final FixedAssetFinancialAccount instance = find(fixedAsset, financialAccount);
         if (instance == null) {
-            return newFixedAssetFiancialAccount(fixedAsset, financialAccount);
+            return newFixedAssetFinancialAccount(fixedAsset, financialAccount);
         }
         return instance;
     }

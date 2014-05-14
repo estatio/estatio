@@ -18,36 +18,30 @@
  */
 package org.estatio.fixture.lease;
 
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.fixtures.AbstractFixture;
-
+import javax.inject.Inject;
+import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.Occupancies;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.UnitForLease;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
-
-    private Party manager;
+public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
 
-        manager = parties.findPartyByReference("JDOE");
-        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "Topmodel", "FASHION", "WOMEN", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true);
-        createLease("OXF-MEDIAX-002", "Mediax Lease", "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true);
-        createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
-        createLease("OXF-PRET-004", "Pret lease", "OXF-004", "Pret", "FASHION", "ALL", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false);
-        createLease("OXF-MIRACL-005", "Miracle lease", "OXF-005", "Miracle", "FASHION", "ALL", "ACME", "MIRACLE", new LocalDate(2013, 11, 7), new LocalDate(2023, 11, 6), false, true);
-        createLease("KAL-POISON-001", "Poison Amsterdam", "KAL-001", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true);
+        Party manager = parties.findPartyByReference("JDOE");
+        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "Topmodel", "FASHION", "WOMEN", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true, manager, fixtureResults);
+        createLease("OXF-MEDIAX-002", "Mediax Lease", "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true, manager, fixtureResults);
+        createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true, manager, fixtureResults);
+        createLease("OXF-PRET-004", "Pret lease", "OXF-004", "Pret", "FASHION", "ALL", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false, manager, fixtureResults);
+        createLease("OXF-MIRACL-005", "Miracle lease", "OXF-005", "Miracle", "FASHION", "ALL", "ACME", "MIRACLE", new LocalDate(2013, 11, 7), new LocalDate(2023, 11, 6), false, true, manager, fixtureResults);
+        createLease("KAL-POISON-001", "Poison Amsterdam", "KAL-001", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true, manager, fixtureResults);
 
     }
 
@@ -57,25 +51,31 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
             String brand,
             String sector,
             String activity,
-            String landlordReference, 
+            String landlordReference,
             String tenantReference,
-            LocalDate startDate, 
+            LocalDate startDate,
             LocalDate endDate,
-            boolean createManagerRole, 
-            boolean createLeaseUnitAndTags) {
+            boolean createManagerRole,
+            boolean createLeaseUnitAndTags,
+            Party manager, FixtureResultList fixtureResults) {
+
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
+
         Lease lease = leases.newLease(reference, name, null, startDate, null, endDate, landlord, tenant);
+        fixtureResults.add(this, lease.getReference(), lease);
 
         if (createManagerRole) {
-            lease.newRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
+            final AgreementRole role = lease.createRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
+            fixtureResults.add(this, role);
         }
         if (createLeaseUnitAndTags) {
             Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
+            fixtureResults.add(this, occupancy);
         }
 
         if (leases.findLeaseByReference(reference) == null) {
@@ -88,34 +88,20 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends AbstractFixture {
         return partyReference != null ? parties.findPartyByReference(partyReference) : null;
     }
 
+    // //////////////////////////////////////
+
+    @Inject
     private Units<Unit> units;
 
-    public void injectUnits(final Units<Unit> units) {
-        this.units = units;
-    }
-
+    @Inject
     private Leases leases;
 
-    public void injectLeases(final Leases leases) {
-        this.leases = leases;
-    }
-
+    @Inject
     private Occupancies occupancies;
 
-    public void injectLeaseUnits(final Occupancies leaseUnits) {
-        this.occupancies = leaseUnits;
-    }
-
+    @Inject
     private Parties parties;
 
-    public void injectParties(final Parties parties) {
-        this.parties = parties;
-    }
-
+    @Inject
     private AgreementRoleTypes agreementRoleTypes;
-
-    public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
-    }
-
 }

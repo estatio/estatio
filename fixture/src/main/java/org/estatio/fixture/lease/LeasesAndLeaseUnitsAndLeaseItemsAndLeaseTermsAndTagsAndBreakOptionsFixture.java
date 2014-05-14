@@ -18,14 +18,15 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends AbstractFixture {
+public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends CompositeFixtureScript {
 
-    public LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture() {
-        addFixture(new LeasesAndRolesAndLeaseUnitsAndTagsFixture());
-        addFixture(new LeaseItemsAndLeaseTermsFixture());
-        addFixture(new LeaseBreakOptionssFixture());
+    @Override
+    protected void addChildren() {
+        add("leases-and-occupancies", new LeasesAndRolesAndLeaseUnitsAndTagsFixture());
+        add("lease-items-and-terms", new LeaseItemsAndLeaseTermsFixture());
+        add("break-options", new LeaseBreakOptionsFixture());
     }
 
 }

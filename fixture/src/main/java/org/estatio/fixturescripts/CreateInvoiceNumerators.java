@@ -19,21 +19,28 @@
 package org.estatio.fixturescripts;
 
 import java.math.BigInteger;
-import java.util.concurrent.Callable;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.numerator.Numerator;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class CreateInvoiceNumerators implements Callable<Object> {
+public class CreateInvoiceNumerators extends SimpleFixtureScript {
+
+    public CreateInvoiceNumerators() {
+        setDiscoverability(Discoverability.DISCOVERABLE);
+    }
 
     @Override
-    public Object call() throws Exception {
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
         for (Property property : properties.allProperties()) {
-            invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), BigInteger.ZERO);
+            final Numerator numerator = invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), BigInteger.ZERO);
+            fixtureResults.add(this, property.getReference(), numerator);
         }
-        return "Finished";
     }
+
+    // //////////////////////////////////////
 
     private Invoices invoices;
 

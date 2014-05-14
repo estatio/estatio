@@ -109,15 +109,16 @@ public class Links extends EstatioDomainService<Link> {
     // //////////////////////////////////////
 
     @Programmatic
-    public void newLink(Class<?> cls, String name, String urlTemplate) {
-        newLink(cls.getName(), name, urlTemplate);
+    public Link newLink(Class<?> cls, String name, String urlTemplate) {
+        return newLink(cls.getName(), name, urlTemplate);
     }
-    private void newLink(String className, String name, String urlTemplate) {
+    private Link newLink(String className, String name, String urlTemplate) {
         Link link = newTransientInstance();
         link.setName(name);
         link.setUrlTemplate(urlTemplate);
         link.setClassName(className);
         persist(link);
+        return link;
     }
 
     

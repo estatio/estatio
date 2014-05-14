@@ -18,38 +18,30 @@
  */
 package org.estatio.fixture;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
-
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.financial.BankAccountAndMandateFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 
-public class EstatioTransactionalObjectsFixture extends AbstractFixture {
+public class EstatioTransactionalObjectsFixture extends CompositeFixtureScript {
+
+    public EstatioTransactionalObjectsFixture() {
+        super(null, "transactional-objects");
+    }
 
     @Override
-    public void install() {
-        
-        final List<AbstractFixture> fixtures = Arrays.asList(
-            new EstatioTransactionalObjectsTeardownFixture(),
-            new PersonsAndOrganisationsAndCommunicationChannelsFixture(),
-            new PropertiesAndUnitsFixture(),
-            new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(),
-            new InvoiceAndInvoiceItemFixture(),
-            new BankAccountAndMandateFixture()
-        );
+    protected void addChildren() {
 
-        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
-        for (AbstractFixture fixture : fixtures) {
-            installer.addFixture(fixture);
-        }
-        installer.installFixtures(); 
-        getContainer().flush();
+        add(new EstatioTransactionalObjectsTeardownFixture());
+        add("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture());
+        add("properties", new PropertiesAndUnitsFixture());
+        add("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture());
+        add("invoices", new InvoiceAndInvoiceItemFixture());
+        add("bank-accounts", new BankAccountAndMandateFixture());
+
     }
+
 }

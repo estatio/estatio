@@ -18,12 +18,6 @@
  */
 package org.estatio.fixture;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.core.runtime.fixtures.FixturesInstallerDelegate;
-
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.asset.registration.FixedAssetRegistrationTypeForItalyFixture;
 import org.estatio.fixture.charge.ChargeAndChargeGroupFixture;
@@ -33,32 +27,27 @@ import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
 import org.estatio.fixture.lease.LeaseTypeForItalyFixture;
 import org.estatio.fixture.link.LinksFixture;
 import org.estatio.fixture.tax.TaxesAndTaxRatesFixture;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class EstatioRefDataObjectsFixture extends AbstractFixture {
+public class EstatioRefDataObjectsFixture extends CompositeFixtureScript {
+
+    public EstatioRefDataObjectsFixture() {
+        super(null, "ref-data");
+    }
 
     @Override
-    public void install() {
-
-        final List<AbstractFixture> fixtures = Arrays.asList(
-                new EstatioTransactionalObjectsTeardownFixture(),
-                new EstatioRefDataObjectsTeardownFixture(),
-                new CurrenciesFixture(),
-                new CountriesAndStatesFixture(),
-                new FixedAssetRegistrationTypeForItalyFixture(),
-                new LeaseTypeForItalyFixture(),
-                new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(),
-                new TaxesAndTaxRatesFixture(),
-                new LinksFixture(),
-                new ChargeAndChargeGroupFixture(),
-                new IndexAndIndexBaseAndIndexValueFixture()
-                );
-
-        final FixturesInstallerDelegate installer = new FixturesInstallerDelegate().withOverride();
-        for (AbstractFixture fixture : fixtures) {
-            installer.addFixture(fixture);
-        }
-        installer.installFixtures();
-        getContainer().flush();
+    protected void addChildren() {
+        add(new EstatioTransactionalObjectsTeardownFixture());
+        add(new EstatioRefDataObjectsTeardownFixture());
+        add("currencies", new CurrenciesFixture());
+        add("countries", new CountriesAndStatesFixture());
+        add(new FixedAssetRegistrationTypeForItalyFixture());
+        add(new LeaseTypeForItalyFixture());
+        add(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture());
+        add(new TaxesAndTaxRatesFixture());
+        add(new LinksFixture());
+        add(new ChargeAndChargeGroupFixture());
+        add(new IndexAndIndexBaseAndIndexValueFixture());
     }
 
 }

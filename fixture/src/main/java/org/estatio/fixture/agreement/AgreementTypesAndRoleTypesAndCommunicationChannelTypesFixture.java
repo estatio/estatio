@@ -19,61 +19,58 @@
 package org.estatio.fixture.agreement;
 
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.fixtures.AbstractFixture;
-
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture extends AbstractFixture {
+public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
-        create(FinancialConstants.AT_MANDATE, 
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+        create(FinancialConstants.AT_MANDATE,
                 new String[]{FinancialConstants.ART_CREDITOR, FinancialConstants.ART_DEBTOR, FinancialConstants.ART_OWNER},
-                new String[]{FinancialConstants.ARCCT_BAR_ADDRESS, FinancialConstants.ARCCT_FOO_ADDRESS});
+                new String[]{FinancialConstants.ARCCT_BAR_ADDRESS, FinancialConstants.ARCCT_FOO_ADDRESS}, fixtureResults);
         create(LeaseConstants.AT_LEASE, 
                 new String[]{LeaseConstants.ART_LANDLORD, LeaseConstants.ART_MANAGER, LeaseConstants.ART_TENANT},
-                new String[]{LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, LeaseConstants.ARCCT_INVOICE_ADDRESS});
-        
+                new String[]{LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, LeaseConstants.ARCCT_INVOICE_ADDRESS}, fixtureResults);
     }
 
-    void create(final String atTitle, final String[] artTitles, final String[] arcctTitles) {
-        AgreementType at = createAgreementType(atTitle, getContainer());
+    void create(final String atTitle, final String[] artTitles, final String[] arcctTitles, FixtureResultList fixtureResults) {
+        AgreementType at = createAgreementType(atTitle, fixtureResults);
         for(String artTitle: artTitles) {
-            createAgreementRoleType(artTitle, at, getContainer());
+            createAgreementRoleType(artTitle, at, fixtureResults);
         }
         for(String arcctTitle: arcctTitles) {
-            createAgreementRoleCommunicationChannelType(arcctTitle, at, getContainer());
+            createAgreementRoleCommunicationChannelType(arcctTitle, at, fixtureResults);
         }
     }
 
-    private static AgreementType createAgreementType(final String title, final DomainObjectContainer container) {
-        final AgreementType agreementType = container.newTransientInstance(AgreementType.class);
+    private AgreementType createAgreementType(final String title, FixtureResultList fixtureResults) {
+        final AgreementType agreementType = getContainer().newTransientInstance(AgreementType.class);
         agreementType.setTitle(title);
-        container.persist(agreementType);
-        return agreementType;
+        getContainer().persist(agreementType);
+        return fixtureResults.add(this, agreementType.getTitle(), agreementType);
     }
     
-    private static AgreementRoleType createAgreementRoleType(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
-        final AgreementRoleType agreementRoleType = container.newTransientInstance(AgreementRoleType.class);
+    private AgreementRoleType createAgreementRoleType(final String title, final AgreementType appliesTo, FixtureResultList fixtureResults) {
+        final AgreementRoleType agreementRoleType = getContainer().newTransientInstance(AgreementRoleType.class);
         agreementRoleType.setTitle(title);
         agreementRoleType.setAppliesTo(appliesTo);
-        container.persist(agreementRoleType);
-        return agreementRoleType;
+        getContainer().persist(agreementRoleType);
+        return fixtureResults.add(this, agreementRoleType.getTitle(), agreementRoleType);
     }
 
-    private static AgreementRoleCommunicationChannelType createAgreementRoleCommunicationChannelType(final String title, final AgreementType appliesTo, final DomainObjectContainer container) {
-        final AgreementRoleCommunicationChannelType arcct = container.newTransientInstance(AgreementRoleCommunicationChannelType.class);
+    private AgreementRoleCommunicationChannelType createAgreementRoleCommunicationChannelType(final String title, final AgreementType appliesTo, FixtureResultList fixtureResults) {
+        final AgreementRoleCommunicationChannelType arcct = getContainer().newTransientInstance(AgreementRoleCommunicationChannelType.class);
         arcct.setTitle(title);
         arcct.setAppliesTo(appliesTo);
-        container.persist(arcct);
-        return arcct;
+        getContainer().persist(arcct);
+        return fixtureResults.add(this, arcct.getTitle(), arcct);
     }
-    
 
 
 }

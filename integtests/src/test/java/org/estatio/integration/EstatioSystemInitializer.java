@@ -17,29 +17,8 @@
 package org.estatio.integration;
 
 import org.apache.log4j.Level;
-
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
-import org.apache.isis.core.commons.config.IsisConfiguration;
-import org.apache.isis.core.commons.config.IsisConfigurationDefault;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.metamodel.services.bookmarks.BookmarkServiceDefault;
-import org.apache.isis.core.runtime.services.memento.MementoServiceDefault;
-import org.apache.isis.core.runtime.services.xmlsnapshot.XmlSnapshotServiceDefault;
-import org.apache.isis.core.wrapper.WrapperFactoryDefault;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusObjectStore;
-import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
-import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
-import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
-import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
-import org.apache.isis.objectstore.jdo.service.RegisterEntities;
-
 import org.estatio.api.Api;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannels;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementRoles;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.agreement.*;
 import org.estatio.dom.asset.FixedAssetRoles;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Properties;
@@ -47,11 +26,7 @@ import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.asset.registration.contributed.FixedAssetRegistrationContributions;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.communicationchannel.EmailAddresses;
-import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
-import org.estatio.dom.communicationchannel.PostalAddresses;
+import org.estatio.dom.communicationchannel.*;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.event.Events;
 import org.estatio.dom.financial.BankMandates;
@@ -69,12 +44,7 @@ import org.estatio.dom.invoice.InvoiceNumeratorContributions;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
-import org.estatio.dom.lease.LeaseItems;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.LeaseTypes;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Occupancies;
-import org.estatio.dom.lease.UnitsForLease;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.tags.Activities;
@@ -88,11 +58,24 @@ import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.TaxRates;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioRefDataObjectsFixture;
+import org.estatio.fixturescripts.EstatioFixtureScripts;
 import org.estatio.services.clock.ClockService;
 import org.estatio.services.links.LinkContributions;
 import org.estatio.services.links.Links;
 import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
+import org.apache.isis.applib.services.classdiscovery.ClassDiscoveryServiceUsingReflections;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.core.commons.config.IsisConfiguration;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.metamodel.services.bookmarks.BookmarkServiceDefault;
+import org.apache.isis.core.runtime.services.memento.MementoServiceDefault;
+import org.apache.isis.core.runtime.services.xmlsnapshot.XmlSnapshotServiceDefault;
+import org.apache.isis.core.wrapper.WrapperFactoryDefault;
+import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
+import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
+import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
+import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 
 /**
  * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on
@@ -181,6 +164,8 @@ public class EstatioSystemInitializer {
                     new InvoiceSummariesForInvoiceRun(),
                     new ApplicationSettingsServiceForEstatio(),
                     new EstatioSettingsService(),
+                    new EstatioFixtureScripts(),
+                    new ClassDiscoveryServiceUsingReflections(),
                     new FinancialAccountContributions(),
                     new FixedAssetRegistrationContributions(),
                     new EventBusServiceJdo(),

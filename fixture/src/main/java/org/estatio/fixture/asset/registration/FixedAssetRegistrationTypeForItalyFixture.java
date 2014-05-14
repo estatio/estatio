@@ -19,29 +19,27 @@
 package org.estatio.fixture.asset.registration;
 
 
-import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.fixtures.AbstractFixture;
-
-import org.estatio.dom.asset.registration.LandRegister;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
+import org.estatio.dom.asset.registration.LandRegister;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class FixedAssetRegistrationTypeForItalyFixture extends AbstractFixture {
+public class FixedAssetRegistrationTypeForItalyFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
-        createFixedAssetRegistrationType("LandRegister", LandRegister.class, getContainer());
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+
+        createFixedAssetRegistrationType("LandRegister", fixtureResults);
     }
 
-    private static FixedAssetRegistrationType createFixedAssetRegistrationType(
-            final String title, 
-            final Class<? extends FixedAssetRegistration> cls, 
-            final DomainObjectContainer container) {
-        final FixedAssetRegistrationType farType = container.newTransientInstance(FixedAssetRegistrationType.class);
+    private void createFixedAssetRegistrationType(String title, FixtureResultList fixtureResults) {
+
+        final FixedAssetRegistrationType farType = getContainer().newTransientInstance(FixedAssetRegistrationType.class);
         farType.setTitle(title);
-        farType.setFullyQualifiedClassName(cls.getName());
-        container.persist(farType);
-        return farType;
+        farType.setFullyQualifiedClassName(LandRegister.class.getName());
+        getContainer().persist(farType);
+
+        fixtureResults.add(this, farType.getTitle(), farType);
     }
 
 }

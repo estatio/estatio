@@ -44,7 +44,7 @@ public class FixedAssetFinancialAccountContributions extends AbstractContainedOb
     public FixedAssetFinancialAccount newAccount(
             final FixedAsset fixedAsset,
             final FinancialAccount financialAccount) {
-        return fixedAssetFinancialAccounts.newFixedAssetFiancialAccount(fixedAsset, financialAccount);
+        return fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(fixedAsset, financialAccount);
     }
 
     public List<FinancialAccount> choices1NewAccount(

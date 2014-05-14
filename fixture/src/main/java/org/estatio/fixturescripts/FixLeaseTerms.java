@@ -19,21 +19,24 @@
 package org.estatio.fixturescripts;
 
 import java.math.BigDecimal;
-import java.util.concurrent.Callable;
-
+import javax.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.core.commons.exceptions.IsisApplicationException;
-
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTerms;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
-public class FixLeaseTerms implements Callable<Object> {
+public class FixLeaseTerms extends SimpleFixtureScript {
+
+    public FixLeaseTerms() {
+        setDiscoverability(Discoverability.DISCOVERABLE);
+    }
 
     @Override
-    public Object call() throws Exception {
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
         int countEffectiveDate = 0;
         int countBaseStartDate = 0;
         int countLevelling = 0;
@@ -50,10 +53,11 @@ public class FixLeaseTerms implements Callable<Object> {
                 }
             }
         }
-        return String.format("%d effective dates fixed, %d base index dates fixed, %d levelling percentages fixed", countEffectiveDate, countBaseStartDate, countLevelling);
+        // will this work?
+        // fixtureResults.add(this, "message", String.format("%d effective dates fixed, %d base index dates fixed, %d levelling percentages fixed", countEffectiveDate, countBaseStartDate, countLevelling));
     }
 
-    private boolean fixBaseIndexStartDate(LeaseTermForIndexableRent term) {
+    private boolean fixBaseIndexStartDate(final LeaseTermForIndexableRent term) {
         try {
             if (term.getNext() == null) {
                 LeaseTermForIndexableRent previous = (LeaseTermForIndexableRent) term.getPrevious();
@@ -107,10 +111,9 @@ public class FixLeaseTerms implements Callable<Object> {
         return false;
     }
 
-    private LeaseTerms leaseTerms;
+    // //////////////////////////////////////
 
-    public void injectLeaseTerms(LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
-    }
+    @Inject
+    private LeaseTerms leaseTerms;
 
 }

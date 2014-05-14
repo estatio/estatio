@@ -19,15 +19,9 @@
 package org.estatio.dom.currency;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 public class Currencies extends EstatioDomainService<Currency> {
 
@@ -53,8 +47,9 @@ public class Currencies extends EstatioDomainService<Currency> {
     }
 
     // //////////////////////////////////////
-    
-    private Currency createCurrency(final String reference, final String name) {
+
+    @Programmatic
+    public Currency createCurrency(final String reference, final String name) {
         final Currency currency = newTransientInstance();
         currency.setReference(reference);
         currency.setName(name);

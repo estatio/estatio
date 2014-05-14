@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -313,28 +314,16 @@ public class InvoiceCalculationService {
 
     // //////////////////////////////////////
 
-    private EstatioSettingsService estatioSettingsService;
+    @Inject
+    EstatioSettingsService estatioSettingsService;
 
-    public final void injectEstatioSettings(final EstatioSettingsService estatioSettings) {
-        this.estatioSettingsService = estatioSettings;
-    }
-
+    @Inject
     private Invoices invoices;
 
-    public final void setInvoices(final Invoices invoices) {
-        this.invoices = invoices;
-    }
-
+    @Inject
     private InvoiceItemsForLease invoiceItemsForLease;
 
-    public final void injectInvoiceItemsForLease(final InvoiceItemsForLease invoiceItemsForLease) {
-        this.invoiceItemsForLease = invoiceItemsForLease;
-    }
-
+    @Inject
     private Leases leases;
-
-    public final void injectLeases(final Leases leases) {
-        this.leases = leases;
-    }
 
 }

@@ -18,32 +18,42 @@
  */
 package org.estatio.fixturescripts;
 
-import java.util.concurrent.Callable;
-
-import org.joda.time.LocalDate;
-
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class GenerateTopModelInvoice implements Callable<Object> {
+public class GenerateTopModelInvoice extends SimpleFixtureScript {
+
+    private final String propertyRef;
+
+    public GenerateTopModelInvoice() {
+        this("OXF-TOPMODEL-001");
+    }
+
+    public GenerateTopModelInvoice(String propertyRef) {
+        this.propertyRef = propertyRef;
+        setDiscoverability(Discoverability.DISCOVERABLE);
+    }
 
     @Override
-    public Object call() throws Exception {
-        final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+        final Lease lease = leases.findLeaseByReference(coalesce(parameters, propertyRef));
         lease.verifyUntil(new LocalDate(2014, 1, 1));
 
-        InvoiceCalculationParameters parameters = new InvoiceCalculationParameters(
+        InvoiceCalculationParameters calculationParameters = new InvoiceCalculationParameters(
                 lease,
                 InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.selectedTypes(),
                 InvoiceRunType.NORMAL_RUN,
                 new LocalDate(2013, 4, 1),
                 new LocalDate(2013, 4, 1),
                 new LocalDate(2013, 4, 2));
-        return calculationService.calculateAndInvoice(parameters);
+        calculationService.calculateAndInvoice(calculationParameters);
     }
 
     // //////////////////////////////////////

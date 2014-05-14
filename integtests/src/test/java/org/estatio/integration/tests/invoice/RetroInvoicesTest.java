@@ -18,34 +18,29 @@
  */
 package org.estatio.integration.tests.invoice;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.SortedSet;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermForTurnoverRent;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.fixture.EstatioTransactionalObjectsFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RetroInvoicesTest extends EstatioIntegrationTest {
@@ -59,7 +54,8 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
     private Properties properties;
     private Leases leases;
     private CreateRetroInvoices creator;
-    private InvoiceCalculationService calculationService;
+    private InvoiceCalculationService invoiceCalculationService;
+
     Lease lease;
 
     @Before
@@ -67,12 +63,13 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
         invoices = service(Invoices.class);
         properties = service(Properties.class);
         leases = service(Leases.class);
-        calculationService = service(InvoiceCalculationService.class);
+        invoiceCalculationService = service(InvoiceCalculationService.class);
+
         creator = new CreateRetroInvoices();
-        creator.injectLeases(leases);
-        creator.injectInvoices(invoices);
-        creator.injectProperties(properties);
-        creator.injectCalculationService(calculationService);
+        creator.leases = leases;
+        creator.invoices = invoices;
+        creator.properties = properties;
+        creator.invoiceCalculationService = invoiceCalculationService;
 
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
     }
@@ -85,7 +82,7 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
 
     @Test
     public void step1_retroRun() {
-        creator.createLease(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1));
+        creator.createLease(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), FixtureResultList.NOOP);
         assertThat(invoices.findInvoices(lease).size(), is(8));
     }
 

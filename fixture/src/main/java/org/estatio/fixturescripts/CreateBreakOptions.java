@@ -18,26 +18,35 @@
  */
 package org.estatio.fixturescripts;
 
-import java.util.concurrent.Callable;
-
-import org.joda.time.LocalDate;
-
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.services.clock.ClockService;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.fixturescripts.*;
 
-public class CreateBreakOptions implements Callable<Object> {
+public class CreateBreakOptions extends SimpleFixtureScript {
+
+    private String reference;
+
+    public CreateBreakOptions() {
+        this("OXF-TOPMODEL-001");
+    }
+
+    public CreateBreakOptions(String reference) {
+        this.reference = reference;
+        setDiscoverability(Discoverability.DISCOVERABLE);
+    }
 
     @Override
-    public Object call() throws Exception {
-        final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+        final Lease lease = leases.findLeaseByReference(reference);
         lease.newBreakOption(new LocalDate(clockService.now().plusMonths(6)), "3m", BreakExerciseType.LANDLORD, BreakType.FIXED, null);
         lease.newBreakOption(new LocalDate(clockService.now().plusMonths(12)), "3m", BreakExerciseType.MUTUAL, BreakType.FIXED, null);
         lease.newBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT, BreakType.FIXED, null);
         lease.newBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT, BreakType.ROLLING, null);
-        return lease;
+        fixtureResults.add(this, "lease", lease);
     }
 
     // //////////////////////////////////////
@@ -53,4 +62,5 @@ public class CreateBreakOptions implements Callable<Object> {
     public final void injectClockService(ClockService clockService) {
         this.clockService = clockService;
     }
+
 }

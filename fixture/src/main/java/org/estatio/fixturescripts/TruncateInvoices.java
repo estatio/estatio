@@ -18,29 +18,28 @@
  */
 package org.estatio.fixturescripts;
 
-import java.util.concurrent.Callable;
-
+import javax.inject.Inject;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-public class TruncateInvoices implements Callable<Object> {
+public class TruncateInvoices extends SimpleFixtureScript {
+
+    public TruncateInvoices() {
+        setDiscoverability(Discoverability.DISCOVERABLE);
+    }
 
     @Override
-    public Object call() throws Exception {
-
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
         deleteFrom("InvoiceItem");
         deleteFrom("Invoice");
-
-        return null;
     }
 
     private void deleteFrom(final String table) {
         isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
     }
 
+    @Inject
     private IsisJdoSupport isisJdoSupport;
-
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
-    }
 
 }

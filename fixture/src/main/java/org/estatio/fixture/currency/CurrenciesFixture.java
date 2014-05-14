@@ -18,26 +18,29 @@
  */
 package org.estatio.fixture.currency;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-
+import javax.inject.Inject;
 import org.estatio.dom.currency.Currencies;
+import org.estatio.dom.currency.Currency;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 
-public class CurrenciesFixture extends AbstractFixture {
+public class CurrenciesFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
-        currencies.newCurrency("EUR", "Euro");
-        currencies.newCurrency("SEK", "Swedish krona");
-        currencies.newCurrency("GBP", "Pound sterling");
-        currencies.newCurrency("USD", "US dollar");
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+        createCurrency(fixtureResults, "EUR", "Euro");
+        createCurrency(fixtureResults, "SEK", "Swedish krona");
+        createCurrency(fixtureResults, "GBP", "Pound sterling");
+        createCurrency(fixtureResults, "USD", "US dollar");
     }
 
-    Currencies currencies;
-    
-    public void injectCurrencies(final Currencies currencies) {
-        this.currencies = currencies;
+    private void createCurrency(FixtureResultList fixtureResults, String reference, String name) {
+        final Currency currency = currencies.createCurrency(reference, name);
+        fixtureResults.add(this, currency.getReference(), currency);
     }
-    
-    
+
+    @Inject
+    Currencies currencies;
+
 }

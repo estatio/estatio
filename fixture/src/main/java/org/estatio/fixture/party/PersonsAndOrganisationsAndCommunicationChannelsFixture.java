@@ -18,13 +18,7 @@
  */
 package org.estatio.fixture.party;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-
-import org.apache.isis.applib.fixtures.AbstractFixture;
-import org.apache.isis.core.commons.ensure.Ensure;
-
+import javax.inject.Inject;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
@@ -34,32 +28,41 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.core.commons.ensure.Ensure;
 
-public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends AbstractFixture {
+import static org.hamcrest.CoreMatchers.*;
+
+public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
-        createOrganisation("ACME;ACME Properties International;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com");
-        createOrganisation("HELLOWORLD;Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com");
-        createOrganisation("TOPMODEL;Topmodel Fashion;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com");
-        createOrganisation("MEDIAX;Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com");
-        createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com");
-        createOrganisation("PRET;Pret-a-Manger;;;;;;;;;");
-        createOrganisation("MIRACLE;Miracle Shoes;;;;;;;;;");
-        createPerson("JDOE", "J", "John", "Doe");
-        createPerson("LTORVALDS", "L", "Linus", "Torvalds");
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+
+        createOrganisation("ACME;ACME Properties International;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com", fixtureResults);
+        createOrganisation("HELLOWORLD;Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com", fixtureResults);
+        createOrganisation("TOPMODEL;Topmodel Fashion;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com", fixtureResults);
+        createOrganisation("MEDIAX;Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com", fixtureResults);
+        createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", fixtureResults);
+        createOrganisation("PRET;Pret-a-Manger;;;;;;;;;", fixtureResults);
+        createOrganisation("MIRACLE;Miracle Shoes;;;;;;;;;", fixtureResults);
+
+        createPerson("JDOE", "J", "John", "Doe", fixtureResults);
+        createPerson("LTORVALDS", "L", "Linus", "Torvalds", fixtureResults);
     }
 
-    private Party createPerson(String reference, String initials, String firstName, String lastName) {
-        Party p = persons.newPerson(reference, initials, firstName, lastName);
-        return p;
+    private Party createPerson(String reference, String initials, String firstName, String lastName, FixtureResultList fixtureResults) {
+        Party party = persons.newPerson(reference, initials, firstName, lastName);
+        return fixtureResults.add(this, party.getReference(), party);
     }
 
-    private Party createOrganisation(String input) {
+    private Party createOrganisation(String input, FixtureResultList fixtureResults) {
         String[] values = input.split(";");
         Party party = organisations.newOrganisation(values[0], values[1]);
+
         Ensure.ensureThatArg(party, is(not(nullValue())), "could not find party '" + values[0] + "', '" + values[1] + "'");
         getContainer().flush();
+
         if(defined(values, 2)) {
             final Country country = countries.findCountry(values[7]);
             final State state = states.findState(values[6]);
@@ -97,7 +100,8 @@ public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends Abst
                     values[10]);
             getContainer().flush();
         }
-        return party;
+
+        return fixtureResults.add(this, party.getReference(), party);
     }
 
     protected boolean defined(String[] values, int i) {
@@ -106,34 +110,19 @@ public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends Abst
 
     // //////////////////////////////////////
 
+    @Inject
     private Countries countries;
 
-    public void injectCountries(Countries countries) {
-        this.countries = countries;
-    }
-
+    @Inject
     private States states;
 
-    public void injectStates(States states) {
-        this.states = states;
-    }
-
+    @Inject
     private Organisations organisations;
 
-    public void setOrganisations(final Organisations organisations) {
-        this.organisations = organisations;
-    }
-
+    @Inject
     private Persons persons;
 
-    public void setOrganisations(final Persons persons) {
-        this.persons = persons;
-    }
-
+    @Inject
     private CommunicationChannelContributions communicationChannelContributedActions;
-
-    public void injectCommunicationChannels(CommunicationChannelContributions communicationChannelContributedActions) {
-        this.communicationChannelContributedActions = communicationChannelContributedActions;
-    }
 
 }

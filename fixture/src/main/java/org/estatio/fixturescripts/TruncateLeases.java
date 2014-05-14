@@ -18,28 +18,27 @@
  */
 package org.estatio.fixturescripts;
 
-import java.util.concurrent.Callable;
-
+import javax.inject.Inject;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-public class TruncateLeases implements Callable<Object> {
+public class TruncateLeases extends SimpleFixtureScript {
+
+    public TruncateLeases() {
+        setDiscoverability(Discoverability.DISCOVERABLE);
+    }
 
     @Override
-    public Object call() throws Exception {
-
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
         deleteFrom("Lease");
-
-        return null;
     }
 
     private void deleteFrom(final String table) {
         isisJdoSupport.executeUpdate("TRUNCATE " + "\"" + table + "\" CASCADE");
     }
 
+    @Inject
     private IsisJdoSupport isisJdoSupport;
-
-    public void injectIsisJdoSupport(IsisJdoSupport isisJdoSupport) {
-        this.isisJdoSupport = isisJdoSupport;
-    }
 
 }

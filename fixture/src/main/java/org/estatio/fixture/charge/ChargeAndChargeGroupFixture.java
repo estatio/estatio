@@ -18,62 +18,56 @@
  */
 package org.estatio.fixture.charge;
 
+import javax.inject.Inject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
-
-public class ChargeAndChargeGroupFixture extends AbstractFixture {
+public class ChargeAndChargeGroupFixture extends SimpleFixtureScript {
 
     @Override
-    public void install() {
-        createCharges();
+    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+        createCharges(fixtureResults);
     }
 
-    private void createCharges() {
-        createChargeAndChargeGroup("RENT", "Rent", "IT-VATSTD");
-        createChargeAndChargeGroup("SERVICE_CHARGE", "Service Charge", "IT-VATSTD");
-        createChargeAndChargeGroup("TURNOVER_RENT", "Turnover Rent", "IT-VATSTD");
+    private void createCharges(FixtureResultList fixtureResults) {
+        createChargeAndChargeGroup("RENT", "Rent", "IT-VATSTD", fixtureResults);
+        createChargeAndChargeGroup("SERVICE_CHARGE", "Service Charge", "IT-VATSTD", fixtureResults);
+        createChargeAndChargeGroup("TURNOVER_RENT", "Turnover Rent", "IT-VATSTD", fixtureResults);
     }
 
-    private void createChargeAndChargeGroup(String reference, String description, String taxReference) {
-        ChargeGroup chargeGroup = createChargeGroup(reference, description);
+    private void createChargeAndChargeGroup(String reference, String description, String taxReference, FixtureResultList fixtureResults) {
+        ChargeGroup chargeGroup = createChargeGroup(reference, description, fixtureResults);
         String code = reference; // TODO: for want of anything better...
-        createCharge(reference, code, description, taxReference, chargeGroup);
+        createCharge(reference, code, description, taxReference, chargeGroup, fixtureResults);
     }
 
-    private ChargeGroup createChargeGroup(String reference, String description) {
-        return chargeGroups.createChargeGroup(reference, description);
+    private ChargeGroup createChargeGroup(String reference, String description, FixtureResultList fixtureResults) {
+        final ChargeGroup chargeGroup = chargeGroups.createChargeGroup(reference, description);
+        return fixtureResults.add(this, chargeGroup.getReference(), chargeGroup);
     }
 
-    private void createCharge(String reference, String code, String description, String taxReference, ChargeGroup chargeGroup) {
+    private Charge createCharge(String reference, String code, String description, String taxReference, ChargeGroup chargeGroup, FixtureResultList fixtureResults) {
         final Tax tax = taxRepository.findTaxByReference(taxReference);
-        Charge c = charges.newCharge(reference, description, code, tax, chargeGroup);
-        c.setGroup(chargeGroup);
+        Charge charge = charges.newCharge(reference, description, code, tax, chargeGroup);
+        charge.setGroup(chargeGroup);
+        return fixtureResults.add(this, charge.getReference(), charge);
     }
 
     // //////////////////////////////////////
 
+    @Inject
     private ChargeGroups chargeGroups;
-    
-    public final void injectChargeGroups(ChargeGroups chargeGroups) {
-        this.chargeGroups = chargeGroups;
-    }
-    
+
+    @Inject
     private Charges charges;
 
-    public final void injectChargeRepository(Charges chargeRepository) {
-        this.charges = chargeRepository;
-    }
-
+    @Inject
     private Taxes taxRepository;
-
-    public final void injectTaxRepository(Taxes taxes) {
-        this.taxRepository = taxes;
-    }
 
 }

@@ -18,14 +18,19 @@
  */
 package org.estatio.fixture;
 
-import org.apache.isis.applib.fixtures.AbstractFixture;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 
-public class EstatioFixture extends AbstractFixture {
+public class EstatioFixture extends CompositeFixtureScript {
 
     public EstatioFixture() {
-        addFixture(new EstatioRefDataObjectsFixture());
-        addFixture(new EstatioTransactionalObjectsFixture());
+        super(null, "demo");
+    }
+
+    @Override
+    protected void addChildren() {
+        add(new EstatioRefDataObjectsFixture());
+        add(new EstatioTransactionalObjectsFixture());
     }
 
 }
