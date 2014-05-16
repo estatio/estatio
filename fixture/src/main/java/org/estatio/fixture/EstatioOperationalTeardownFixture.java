@@ -33,8 +33,6 @@ public class EstatioOperationalTeardownFixture extends SimpleFixtureScript {
     private void deleteAllDirect() {
         
         deleteFrom("Numerator");
-//        isisJdoSupport.deleteAll(Numerator.class);
-//        getContainer().flush();
 
         deleteFrom("InvoiceItem");
         deleteFrom("Invoice");

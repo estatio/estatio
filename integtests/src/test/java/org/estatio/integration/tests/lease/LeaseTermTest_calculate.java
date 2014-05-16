@@ -27,13 +27,17 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.*;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 
@@ -44,9 +48,17 @@ import static org.junit.Assert.assertThat;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LeaseTermTest_calculate extends EstatioIntegrationTest {
 
-    @Before
-    public void setupData() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
+    @BeforeClass
+    public static void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+            }
+        });
     }
 
     private Leases leases;
@@ -93,7 +105,7 @@ public class LeaseTermTest_calculate extends EstatioIntegrationTest {
         Assert.assertNotNull(leaseTopModelRentTerm);
 
         List<LeaseTerm> allLeaseTerms = leaseTerms.allLeaseTerms();
-        LeaseTerm term = (LeaseTerm) allLeaseTerms.get(0);
+        LeaseTerm term = allLeaseTerms.get(0);
 
         assertThat(leaseTopModelRentTerm, is(term));
         assertThat(leaseTopModelRentTerm, is(term0));

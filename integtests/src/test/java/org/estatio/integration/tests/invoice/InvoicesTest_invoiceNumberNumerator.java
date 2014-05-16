@@ -26,10 +26,7 @@ import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
@@ -42,8 +39,8 @@ import static org.junit.Assert.assertThat;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoicesTest_invoiceNumberNumerator extends EstatioIntegrationTest {
 
-    @Before
-    public void setupData() {
+    @BeforeClass
+    public static void setupDataForClass() {
         scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 

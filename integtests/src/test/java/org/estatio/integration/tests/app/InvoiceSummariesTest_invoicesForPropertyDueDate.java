@@ -37,8 +37,6 @@ import static org.junit.Assert.assertThat;
 
 public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioIntegrationTest {
 
-    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
-
     @Before
     public void setupData() {
         scenarioExecution().install(new CompositeFixtureScript() {
@@ -52,6 +50,8 @@ public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioInte
             }
         });
     }
+
+    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
 
     @Before
     public void setUp() throws Exception {
