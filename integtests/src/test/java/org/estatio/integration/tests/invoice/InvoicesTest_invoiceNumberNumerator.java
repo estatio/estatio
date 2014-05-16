@@ -18,32 +18,34 @@
  */
 package org.estatio.integration.tests.invoice;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigInteger;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
-import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvoicesTest_invoiceNumberNumerator extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
+    }
 
     private Invoices invoices;
     private Properties properties;
@@ -54,11 +56,6 @@ public class InvoicesTest_invoiceNumberNumerator extends EstatioIntegrationTest 
     
     private Bookmark property1Bookmark;
     private Bookmark property2Bookmark;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
 
     @Before
     public void setUp() throws Exception {

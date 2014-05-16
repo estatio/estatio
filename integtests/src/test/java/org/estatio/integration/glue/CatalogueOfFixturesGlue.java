@@ -20,8 +20,8 @@ import cucumber.api.java.Before;
 
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.fixture.EstatioTransactionalObjectsTeardownFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndRolesAndLeaseUnitsAndTagsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
@@ -34,13 +34,13 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
 
     @Before({"@integration", "@EstatioTransactionalObjectsFixture"})
     public void beforeScenarioEstatioTransactionalObjectsFixture() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
     
     @Before({"@integration", "@LeasesOnlyFixture"})
     public void beforeScenarioLeasesOnlyFixture() {
         scenarioExecution().install(
-                new EstatioTransactionalObjectsTeardownFixture(),
+                new EstatioOperationalTeardownFixture(),
                 new PersonsAndOrganisationsAndCommunicationChannelsFixture(),
                 new PropertiesAndUnitsFixture(),
                 new LeasesAndRolesAndLeaseUnitsAndTagsFixture()

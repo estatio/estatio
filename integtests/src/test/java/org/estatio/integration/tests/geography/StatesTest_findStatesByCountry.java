@@ -18,22 +18,26 @@
  */
 package org.estatio.integration.tests.geography;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
 
-public class StatesTest_finders extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class StatesTest_findStatesByCountry extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioBaseLineFixture());
+    }
 
     private Countries countries;
     private States states;
@@ -45,9 +49,12 @@ public class StatesTest_finders extends EstatioIntegrationTest {
     }
     
     @Test
-    public void stateCanBeFound() throws Exception {
+    public void whenCountryWithStates() throws Exception {
+        // given
         final Country country = countries.findCountry("NLD");
+        // when
         final List<State> statesInCountry = states.findStatesByCountry(country);
+        // then
         assertThat(statesInCountry.size(), Matchers.greaterThanOrEqualTo(1));
         for (State state : statesInCountry) {
             assertThat(state.getCountry(), is(country));

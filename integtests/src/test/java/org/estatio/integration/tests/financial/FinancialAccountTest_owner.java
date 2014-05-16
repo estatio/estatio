@@ -18,53 +18,64 @@
  */
 package org.estatio.integration.tests.financial;
 
-import static org.hamcrest.CoreMatchers.is;
-
 import java.util.List;
-
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+
+import static org.hamcrest.CoreMatchers.is;
 
 public class FinancialAccountTest_owner extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute(new EstatioOperationalResetFixture(), executionContext);
+            }
+        });
+    }
 
     private Parties parties;
     private FinancialAccounts financialAccounts;
     private Party party;
 
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
-
     @Before
     public void setUp() throws Exception {
         parties = service(Parties.class);
-        party = parties.findPartyByReference("HELLOWORLD");
-        
         financialAccounts = service(FinancialAccounts.class);
+
+        party = parties.findPartyByReference("HELLOWORLD");
     }
-    
+
+    // this test really just makes an assertion about the fixture.
     @Test
-    public void accounts() throws Exception {
+    public void atLeastOneAccountIsOwnedByParty() throws Exception {
+
+        // given
         List<FinancialAccount> allAccounts = financialAccounts.allAccounts();
+
+        // when
         List<FinancialAccount> partyAccounts = Lists.newArrayList(Iterables.filter(allAccounts, new Predicate<FinancialAccount>() {
             public boolean apply(FinancialAccount fa) {
                 return fa.getOwner() == party;
             }
         }));
+
+        // then
         Assert.assertThat(partyAccounts.size(), is(1));
     }
 

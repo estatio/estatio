@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
 public class PersonTest_setName extends EstatioIntegrationTest {
@@ -35,7 +35,7 @@ public class PersonTest_setName extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     @Before

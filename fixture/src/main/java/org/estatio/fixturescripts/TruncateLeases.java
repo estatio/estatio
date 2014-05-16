@@ -19,7 +19,6 @@
 package org.estatio.fixturescripts;
 
 import javax.inject.Inject;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
@@ -30,7 +29,7 @@ public class TruncateLeases extends SimpleFixtureScript {
     }
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         deleteFrom("Lease");
     }
 

@@ -26,7 +26,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
-import org.estatio.fixture.EstatioFixture;
+import org.estatio.fixture.EstatioDemoFixture;
 import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
 import org.estatio.fixture.currency.CurrenciesFixture;
 import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
@@ -59,9 +59,9 @@ public class EstatioFixtureScripts extends FixtureScripts{
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") @Optional LocalDate nextDueDate) {
         CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
-        final FixtureResultList resultList = newFixtureResultList();
-        creator.createAllProperties(startDueDate, nextDueDate, resultList);
-        return resultList.getResults();
+        final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
+        creator.createAllProperties(startDueDate, nextDueDate, executionContext);
+        return executionContext.getResults();
     }
 
     @MemberOrder(name="Administration", sequence = "9.2")
@@ -71,7 +71,9 @@ public class EstatioFixtureScripts extends FixtureScripts{
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") @Optional LocalDate nextDueDate) {
         final CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
-        return creator.createProperty(property, startDueDate, nextDueDate, newFixtureResultList()).getResults();
+        final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
+        creator.createProperty(property, startDueDate, nextDueDate, executionContext);
+        return executionContext.getResults();
     }
 
     @MemberOrder(name="Administration", sequence = "9.3")
@@ -81,7 +83,9 @@ public class EstatioFixtureScripts extends FixtureScripts{
             final @Named("Start due date") LocalDate startDueDate,
             final @Named("Next due date") LocalDate nextDueDate) {
         final CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
-        return creator.createLease(lease, startDueDate, nextDueDate, newFixtureResultList()).getResults();
+        final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
+        creator.createLease(lease, startDueDate, nextDueDate, executionContext);
+        return executionContext.getResults();
     }
     public boolean hideCreateRetroInvoicesForLease() {
         return !getContainer().getUser().hasRole("superuser_role");
@@ -93,7 +97,7 @@ public class EstatioFixtureScripts extends FixtureScripts{
     @Prototype
     @MemberOrder(name="Administration", sequence = "3")
     public List<FixtureResult> installDemoFixtures() {
-        return runFixtureScript(new EstatioFixture(), null);
+        return runFixtureScript(new EstatioDemoFixture(), null);
         //return "Demo fixtures successfully installed";
     }
 
@@ -130,15 +134,15 @@ public class EstatioFixtureScripts extends FixtureScripts{
     public List<FixtureResult> installConstants() {
         return runFixtureScript(new CompositeFixtureScript() {
             @Override
-            protected void addChildren() {
-                add(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture());
-                add(new CurrenciesFixture());
-                add(new SimpleFixtureScript() {
+            protected void execute(ExecutionContext executionContext) {
+                execute(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(), executionContext);
+                execute(new CurrenciesFixture(), executionContext);
+                execute(new SimpleFixtureScript() {
                     @Override
-                    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+                    protected void execute(ExecutionContext executionContext) {
                         invoices.createCollectionNumberNumerator("%08d", BigInteger.ZERO);
                     }
-                });
+                }, executionContext);
             }
         }, null);
         //return "Constants successfully installed";

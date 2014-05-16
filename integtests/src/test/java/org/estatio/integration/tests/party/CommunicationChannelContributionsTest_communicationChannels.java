@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
 public class CommunicationChannelContributionsTest_communicationChannels extends EstatioIntegrationTest {
@@ -39,7 +39,7 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     @Before

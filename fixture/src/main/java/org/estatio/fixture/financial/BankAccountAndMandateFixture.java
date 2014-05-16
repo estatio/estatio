@@ -36,21 +36,20 @@ import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class BankAccountAndMandateFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext executionContext) {
 
-        createAccount("ACME", "NL31ABNA0580744433", null, "KAL", fixtureResults);
-        createAccount("HELLOWORLD", "NL31ABNA0580744434", null, "OXF", fixtureResults);
-        createAccount("TOPMODEL", "NL31ABNA0580744435", 1, null, fixtureResults);
-        createAccount("POISON", "NL31ABNA0580744437", 2, null, fixtureResults);
-        createAccount("MIRACLE", "NL31ABNA0580744439", null, null, fixtureResults);
-        createAccount("MEDIAX", "NL31ABNA0580744436", null, null, fixtureResults);
-        createAccount("PRET", "NL31ABNA0580744438", null, null, fixtureResults);
+        createAccount("ACME", "NL31ABNA0580744433", null, "KAL", executionContext);
+        createAccount("HELLOWORLD", "NL31ABNA0580744434", null, "OXF", executionContext);
+        createAccount("TOPMODEL", "NL31ABNA0580744435", 1, null, executionContext);
+        createAccount("POISON", "NL31ABNA0580744437", 2, null, executionContext);
+        createAccount("MIRACLE", "NL31ABNA0580744439", null, null, executionContext);
+        createAccount("MEDIAX", "NL31ABNA0580744436", null, null, executionContext);
+        createAccount("PRET", "NL31ABNA0580744438", null, null, executionContext);
 
     }
 
@@ -59,13 +58,13 @@ public class BankAccountAndMandateFixture extends SimpleFixtureScript {
             final String bankAccountStr,
             final Integer sequence,
             final String propertyStr,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext executionContext) {
 
         Party party = parties.findPartyByReference(partyStr);
         AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
         BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountStr, bankAccountStr);
-        fixtureResults.add(this, bankAccount.getReference(), bankAccount);
+        executionContext.add(this, bankAccount.getReference(), bankAccount);
         if (propertyStr != null) {
             final Property property = properties.findPropertyByReference(propertyStr);
             fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);
@@ -83,7 +82,7 @@ public class BankAccountAndMandateFixture extends SimpleFixtureScript {
                     lease.getPrimaryParty(),
                     bankAccount
             );
-            fixtureResults.add(this, bankMandate.getReference(), bankMandate);
+            executionContext.add(this, bankMandate.getReference(), bankMandate);
         }
 
     }

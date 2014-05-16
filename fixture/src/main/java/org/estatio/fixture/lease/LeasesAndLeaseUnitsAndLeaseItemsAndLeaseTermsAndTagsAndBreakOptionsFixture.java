@@ -23,10 +23,10 @@ import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends CompositeFixtureScript {
 
     @Override
-    protected void addChildren() {
-        add("leases-and-occupancies", new LeasesAndRolesAndLeaseUnitsAndTagsFixture());
-        add("lease-items-and-terms", new LeaseItemsAndLeaseTermsFixture());
-        add("break-options", new LeaseBreakOptionsFixture());
+    protected void execute(ExecutionContext executionContext) {
+        execute("leases-and-occupancies", new LeasesAndRolesAndLeaseUnitsAndTagsFixture(), executionContext);
+        execute("lease-items-and-terms", new LeaseItemsAndLeaseTermsFixture(), executionContext);
+        execute("break-options", new LeaseBreakOptionsFixture(), executionContext);
     }
 
 }

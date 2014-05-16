@@ -28,7 +28,7 @@ import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.joda.time.LocalDate;
@@ -37,7 +37,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -46,8 +46,8 @@ import static org.junit.Assert.assertThat;
 public class RetroInvoicesTest extends EstatioIntegrationTest {
 
     @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+    public static void setupDataForClass() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     private Invoices invoices;
@@ -82,7 +82,7 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
 
     @Test
     public void step1_retroRun() {
-        creator.createLease(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), FixtureResultList.NOOP);
+        creator.createLease(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
         assertThat(invoices.findInvoices(lease).size(), is(8));
     }
 

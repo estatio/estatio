@@ -49,7 +49,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -59,7 +59,7 @@ public class LeaseLifeCycleTest extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     private Leases leases;

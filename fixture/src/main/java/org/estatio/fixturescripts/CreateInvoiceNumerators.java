@@ -23,7 +23,6 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class CreateInvoiceNumerators extends SimpleFixtureScript {
@@ -33,7 +32,7 @@ public class CreateInvoiceNumerators extends SimpleFixtureScript {
     }
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         for (Property property : properties.allProperties()) {
             final Numerator numerator = invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), BigInteger.ZERO);
             fixtureResults.add(this, property.getReference(), numerator);

@@ -21,21 +21,20 @@ package org.estatio.fixture.currency;
 import javax.inject.Inject;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 
 public class CurrenciesFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         createCurrency(fixtureResults, "EUR", "Euro");
         createCurrency(fixtureResults, "SEK", "Swedish krona");
         createCurrency(fixtureResults, "GBP", "Pound sterling");
         createCurrency(fixtureResults, "USD", "US dollar");
     }
 
-    private void createCurrency(FixtureResultList fixtureResults, String reference, String name) {
+    private void createCurrency(ExecutionContext fixtureResults, String reference, String name) {
         final Currency currency = currencies.createCurrency(reference, name);
         fixtureResults.add(this, currency.getReference(), currency);
     }

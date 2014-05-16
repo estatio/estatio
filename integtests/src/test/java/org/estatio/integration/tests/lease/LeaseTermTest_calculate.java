@@ -18,56 +18,35 @@
  */
 package org.estatio.integration.tests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.SortedSet;
-
+import org.estatio.dom.invoice.InvoiceStatus;
+import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.invoicing.*;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.estatio.services.settings.EstatioSettingsService;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
-
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 
-import org.estatio.dom.invoice.InvoiceStatus;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.LeaseTerms;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.tests.EstatioIntegrationTest;
-import org.estatio.services.settings.EstatioSettingsService;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LeaseTermTest_calclulate extends EstatioIntegrationTest {
+public class LeaseTermTest_calculate extends EstatioIntegrationTest {
 
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     private Leases leases;

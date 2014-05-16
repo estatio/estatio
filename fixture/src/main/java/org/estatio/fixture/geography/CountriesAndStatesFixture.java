@@ -23,13 +23,12 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class CountriesAndStatesFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
 
         Country countryGBR = createCountry("GBR", "GB", "United Kingdom", fixtureResults);
         Country countryNED = createCountry("NLD", "NL", "Netherlands", fixtureResults);
@@ -78,14 +77,14 @@ public class CountriesAndStatesFixture extends SimpleFixtureScript {
         createState("GB-WOR", "Worcerstershire", countryGBR, fixtureResults);
     }
 
-    private Country createCountry(final String reference, String alpha2Code, String name, FixtureResultList fixtureResultList) {
+    private Country createCountry(final String reference, String alpha2Code, String name, ExecutionContext executionContext) {
         final Country country = countries.createCountry(reference, alpha2Code, name);
-        return fixtureResultList.add(this, country.getAlpha2Code(), country);
+        return executionContext.add(this, country.getAlpha2Code(), country);
     }
 
-    private State createState(final String reference, String name, Country country, FixtureResultList fixtureResults) {
+    private State createState(final String reference, String name, Country country, ExecutionContext executionContext) {
         final State state = states.newState(reference, name, country);
-        return fixtureResults.add(this, state.getReference(), state);
+        return executionContext.add(this, state.getReference(), state);
     }
 
     // //////////////////////////////////////

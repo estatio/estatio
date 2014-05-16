@@ -18,26 +18,24 @@
  */
 package org.estatio.integration.tests.party;
 
-import static org.hamcrest.CoreMatchers.is;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PartiesTest_findPartyByReferenceOrName extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+
+public class PartiesTest_findPartyByReference extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
+    }
 
     private Parties parties;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -46,12 +44,14 @@ public class PartiesTest_findPartyByReferenceOrName extends EstatioIntegrationTe
     
     @Test
     public void happyCase() throws Exception {
-        Assert.assertNotNull(parties.matchPartyByReferenceOrName("HELLOWORLD"));
+        Party party = parties.findPartyByReference("TOPMODEL");
+        assertThat(party, is(notNullValue()));
     }
 
     @Test
     public void canNotBeFound() throws Exception {
-        Assert.assertNull(parties.matchPartyByReferenceOrName("HELLO"));
+        final Party party = parties.matchPartyByReferenceOrName("HELLO");
+        assertThat(party, is(nullValue()));
     }
 
 }

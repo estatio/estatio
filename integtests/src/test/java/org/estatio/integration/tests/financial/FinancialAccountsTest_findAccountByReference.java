@@ -18,48 +18,46 @@
  */
 package org.estatio.integration.tests.financial;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import org.estatio.dom.financial.BankMandate;
-import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class BankMandatesTest_finder extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+public class FinancialAccountsTest_findAccountByReference extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute(new EstatioOperationalResetFixture(), executionContext);
+            }
+        });
+    }
 
     private FinancialAccounts financialAccounts;
-    
-    private BankMandates bankMandates;
-    
-    
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
 
     @Before
     public void setUp() throws Exception {
-        bankMandates = service(BankMandates.class);
         financialAccounts = service(FinancialAccounts.class);
     }
     
     
     @Test
-    public void testFindMandatesFor() {
+    public void forAccount() {
+        // when
         FinancialAccount account = financialAccounts.findAccountByReference("NL31ABNA0580744435"); // Associated with TOPMODEL
-        List<BankMandate> mandates = bankMandates.findBankMandatesFor((org.estatio.dom.financial.BankAccount) account);
-        assertThat(mandates.size(), is(1));
-        
+        // then
+        assertThat(account, is(notNullValue()));
     }
-    
 
 }

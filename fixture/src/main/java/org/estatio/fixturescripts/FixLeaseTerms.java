@@ -25,7 +25,6 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
@@ -36,7 +35,7 @@ public class FixLeaseTerms extends SimpleFixtureScript {
     }
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         int countEffectiveDate = 0;
         int countBaseStartDate = 0;
         int countLevelling = 0;

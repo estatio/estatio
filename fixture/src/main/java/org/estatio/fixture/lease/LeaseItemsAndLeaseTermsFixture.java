@@ -28,13 +28,12 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.*;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
 
         Lease leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
         createLeaseTermForRent(
@@ -80,7 +79,7 @@ public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
             final LocalDate nextIndexStartDate,
             final LocalDate effectiveDate,
             final String indexReference,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext fixtureResults) {
 
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, fixtureResults);
 
@@ -102,7 +101,7 @@ public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext fixtureResults) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "SERVICE_CHARGE", LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, fixtureResults);
         LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setBudgetedValue(budgetedValue);
@@ -117,7 +116,7 @@ public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
             final LocalDate startDate,
             final LocalDate endDate,
             final String turnoverRentRule,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext fixtureResults) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "TURNOVER_RENT", LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS, fixtureResults);
         LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
@@ -132,7 +131,7 @@ public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
             final String chargeReference,
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
-            FixtureResultList fixtureResults) {
+            ExecutionContext fixtureResults) {
         final Charge charge = charges.findCharge(chargeReference);
         return findOrCreateLeaseItem(lease, charge, leaseItemType, invoicingFrequency, fixtureResults);
     }
@@ -142,7 +141,7 @@ public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
             final Charge charge,
             final LeaseItemType leaseItemType,
             final InvoicingFrequency invoicingFrequency,
-            FixtureResultList fixtureResults) {
+            ExecutionContext fixtureResults) {
         LeaseItem li = lease.findItem(leaseItemType, lease.getStartDate(), BigInteger.ONE);
         if (li == null) {
             li = lease.newItem(leaseItemType, charge, invoicingFrequency, PaymentMethod.DIRECT_DEBIT, lease.getStartDate());
@@ -168,5 +167,4 @@ public class LeaseItemsAndLeaseTermsFixture extends SimpleFixtureScript {
 
     @Inject
     private Charges charges;
-
 }

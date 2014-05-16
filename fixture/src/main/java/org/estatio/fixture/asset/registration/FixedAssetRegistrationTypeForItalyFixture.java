@@ -21,18 +21,16 @@ package org.estatio.fixture.asset.registration;
 
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.asset.registration.LandRegister;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class FixedAssetRegistrationTypeForItalyFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
-
+    protected void execute(ExecutionContext fixtureResults) {
         createFixedAssetRegistrationType("LandRegister", fixtureResults);
     }
 
-    private void createFixedAssetRegistrationType(String title, FixtureResultList fixtureResults) {
+    private void createFixedAssetRegistrationType(String title, ExecutionContext fixtureResults) {
 
         final FixedAssetRegistrationType farType = getContainer().newTransientInstance(FixedAssetRegistrationType.class);
         farType.setTitle(title);

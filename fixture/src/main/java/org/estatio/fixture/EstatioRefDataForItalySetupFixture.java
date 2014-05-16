@@ -18,19 +18,19 @@
  */
 package org.estatio.fixture;
 
+import org.estatio.fixture.asset.registration.FixedAssetRegistrationTypeForItalyFixture;
+import org.estatio.fixture.lease.LeaseTypeForItalyFixture;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
+public class EstatioRefDataForItalySetupFixture extends CompositeFixtureScript {
 
-public class EstatioFixture extends CompositeFixtureScript {
-
-    public EstatioFixture() {
-        super(null, "demo");
+    public EstatioRefDataForItalySetupFixture() {
+        super(null, "ref-data");
     }
 
     @Override
-    protected void addChildren() {
-        add(new EstatioRefDataObjectsFixture());
-        add(new EstatioTransactionalObjectsFixture());
+    protected void execute(ExecutionContext executionContext) {
+        execute("fixed-asset-refdata-italy", new FixedAssetRegistrationTypeForItalyFixture(), executionContext);
+        execute("lease-refdata-italy", new LeaseTypeForItalyFixture(), executionContext);
     }
-
 }

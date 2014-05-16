@@ -21,7 +21,6 @@ package org.estatio.fixture.lease;
 import javax.inject.Inject;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypes;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class LeaseTypeForItalyFixture extends SimpleFixtureScript {
@@ -55,13 +54,13 @@ public class LeaseTypeForItalyFixture extends SimpleFixtureScript {
     }
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         for (LeaseTypeData ltd : LeaseTypeData.values()) {
             createLeaseType(fixtureResults, ltd);
         }
     }
 
-    private void createLeaseType(FixtureResultList fixtureResults, LeaseTypeData ltd) {
+    private void createLeaseType(ExecutionContext fixtureResults, LeaseTypeData ltd) {
         final LeaseType leaseType = leaseTypes.findOrCreate(ltd.name(), ltd.title());
         fixtureResults.add(this, leaseType.getReference(), leaseType);
     }

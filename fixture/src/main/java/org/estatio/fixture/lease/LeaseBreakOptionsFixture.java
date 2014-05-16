@@ -23,25 +23,24 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class LeaseBreakOptionsFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext executionContext) {
 
         Lease leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        fixtureResults.add(this, leaseTopModel.newBreakOption(leaseTopModel.getStartDate().plusYears(5), "6m", BreakExerciseType.MUTUAL, BreakType.FIXED, null));
-        fixtureResults.add(this, leaseTopModel.newBreakOption(leaseTopModel.getInterval().endDateExcluding(), "6m", BreakExerciseType.MUTUAL, BreakType.ROLLING, null));
+        executionContext.add(this, leaseTopModel.newBreakOption(leaseTopModel.getStartDate().plusYears(5), "6m", BreakExerciseType.MUTUAL, BreakType.FIXED, null));
+        executionContext.add(this, leaseTopModel.newBreakOption(leaseTopModel.getInterval().endDateExcluding(), "6m", BreakExerciseType.MUTUAL, BreakType.ROLLING, null));
 
         Lease leaseMediaX = leases.findLeaseByReference("OXF-MEDIAX-002");
-        fixtureResults.add(this, leaseMediaX.newBreakOption(leaseTopModel.getStartDate().plusYears(5), "6m", BreakExerciseType.MUTUAL, BreakType.FIXED, null));
-        fixtureResults.add(this, leaseMediaX.newBreakOption(leaseTopModel.getInterval().endDateExcluding(), "6m", BreakExerciseType.MUTUAL, BreakType.ROLLING, null));
+        executionContext.add(this, leaseMediaX.newBreakOption(leaseTopModel.getStartDate().plusYears(5), "6m", BreakExerciseType.MUTUAL, BreakType.FIXED, null));
+        executionContext.add(this, leaseMediaX.newBreakOption(leaseTopModel.getInterval().endDateExcluding(), "6m", BreakExerciseType.MUTUAL, BreakType.ROLLING, null));
 
         Lease leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        fixtureResults.add(this, leasePoison.newBreakOption(leaseTopModel.getStartDate().plusYears(5), "6m", BreakExerciseType.MUTUAL, BreakType.FIXED, null));
-        fixtureResults.add(this, leasePoison.newBreakOption(leaseTopModel.getInterval().endDateExcluding(), "6m", BreakExerciseType.MUTUAL, BreakType.ROLLING, null));
+        executionContext.add(this, leasePoison.newBreakOption(leaseTopModel.getStartDate().plusYears(5), "6m", BreakExerciseType.MUTUAL, BreakType.FIXED, null));
+        executionContext.add(this, leasePoison.newBreakOption(leaseTopModel.getInterval().endDateExcluding(), "6m", BreakExerciseType.MUTUAL, BreakType.ROLLING, null));
 
         @SuppressWarnings("unused")
         Lease leasePret = leases.findLeaseByReference("OXF-PRET-004");

@@ -18,27 +18,32 @@
  */
 package org.estatio.integration.tests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.List;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class LeasesTest_finders extends EstatioIntegrationTest {
+public class LeasesTest_findLeaseByReference extends EstatioIntegrationTest {
 
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+            }
+        });
     }
 
     private Leases leases;
@@ -52,27 +57,10 @@ public class LeasesTest_finders extends EstatioIntegrationTest {
     }
 
     @Test
-    public void findLeaseByReference() {
+    public void whenValidReference() {
         final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
         Assert.assertEquals("OXF-TOPMODEL-001", lease.getReference());
     }
 
-    @Test
-    public void findLeasesByReference_whenWildcard() {
-        final List<Lease> matchingLeases = leases.findLeases("OXF*");
-        assertThat(matchingLeases.size(), is(5));
-    }
-
-    @Test
-    public void findLeaseByProperty() {
-        final List<Lease> matchingLeases = leases.findLeasesByProperty(properties.findPropertyByReference("OXF"));
-        assertThat(matchingLeases.size(), is(4));
-    }
-
-    @Test
-    public void findLeasesExpireInDateRange() {
-        final List<Lease> matchingLeases = leases.findExpireInDateRange(new LocalDate(2020, 1, 1), new LocalDate(2030, 1, 1));
-        assertThat(matchingLeases.size(), is(4));
-    }
 
 }

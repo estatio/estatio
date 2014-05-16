@@ -36,7 +36,6 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class InvoiceAndInvoiceItemFixture extends SimpleFixtureScript {
@@ -49,11 +48,11 @@ public class InvoiceAndInvoiceItemFixture extends SimpleFixtureScript {
     public static final String BUYER_PARTY = "POISON";
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         createInvoices(fixtureResults);
     }
 
-    private void createInvoices(FixtureResultList fixtureResults) {
+    private void createInvoices(ExecutionContext fixtureResults) {
         createInvoice(SELLER_PARTY, BUYER_PARTY, LEASE, "EUR", fixtureResults);
         createInvoice("ACME", "POISON", "KAL-POISON-001", "EUR", fixtureResults);
     }
@@ -63,7 +62,7 @@ public class InvoiceAndInvoiceItemFixture extends SimpleFixtureScript {
             final String buyerStr,
             final String leaseStr,
             final String currencyStr,
-            FixtureResultList fixtureResults) {
+            ExecutionContext fixtureResults) {
 
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);

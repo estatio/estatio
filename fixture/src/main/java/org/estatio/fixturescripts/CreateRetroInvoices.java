@@ -39,7 +39,6 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 /**
@@ -67,62 +66,62 @@ public class CreateRetroInvoices extends SimpleFixtureScript {
     }
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext executionContext) {
         createProperties(
                 properties.allProperties(),
                 ObjectUtils.firstNonNull(startDate, EPOCH_START_DATE),
                 endDate,
-                fixtureResults);
+                executionContext);
     }
 
     @Programmatic
     public void createAllProperties(
             final LocalDate startDueDate,
             final LocalDate endDueDate,
-            final FixtureResultList fixtureResultList) {
+            final ExecutionContext executionContext) {
         createProperties(
                 properties.allProperties(),
                 startDueDate,
                 endDueDate,
-                fixtureResultList);
+                executionContext);
     }
 
     @Programmatic
-    public FixtureResultList createProperty(
+    public ExecutionContext createProperty(
             final Property property,
             final LocalDate startDueDate,
             final LocalDate nextDueDate,
-            final FixtureResultList fixtureResultList) {
+            final ExecutionContext executionContext) {
         List<Property> properties = Lists.newArrayList();
         properties.add(property);
-        createProperties(properties, startDueDate, nextDueDate, fixtureResultList);
-        return fixtureResultList;
+        createProperties(properties, startDueDate, nextDueDate, executionContext);
+        return executionContext;
     }
 
     @Programmatic
-    public FixtureResultList createProperties(
+    public ExecutionContext createProperties(
             final List<Property> properties,
             final LocalDate startDueDate,
             final LocalDate nextDueDate,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext executionContext) {
 
         for (Property property : properties) {
-            fixtureResults.add(this, property.getReference(), property);
+            executionContext.add(this, property.getReference(), property);
 
             for (Lease lease : leases.findLeasesByProperty(property)) {
-                fixtureResults.add(this, lease.getReference(), lease);
-                createLease(lease, startDueDate, nextDueDate, fixtureResults);
+                executionContext.add(this, lease.getReference(), lease);
+                createLease(lease, startDueDate, nextDueDate, executionContext);
             }
         }
-        return fixtureResults;
+        return executionContext;
     }
 
     @Programmatic
-    public FixtureResultList createLease(
+    public ExecutionContext createLease(
             final Lease lease,
             final LocalDate startDueDate,
             final LocalDate nextDueDate,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext fixtureResults) {
         for (LocalDate dueDate : findDueDatesForLease(startDueDate, nextDueDate, lease)) {
             InvoiceCalculationParameters parameters =
                     new InvoiceCalculationParameters(
@@ -139,17 +138,17 @@ public class CreateRetroInvoices extends SimpleFixtureScript {
 
     // //////////////////////////////////////
 
-    private FixtureResultList createAndApprove(
+    private ExecutionContext createAndApprove(
             final InvoiceCalculationParameters parameters,
-            final FixtureResultList fixtureResults) {
+            final ExecutionContext executionContext) {
         invoiceCalculationService.calculateAndInvoice(parameters);
 
         for (Invoice invoice : invoices.findInvoices(InvoiceStatus.NEW)) {
             invoice.setStatus(InvoiceStatus.HISTORIC);
             invoice.setRunId(null);
-            fixtureResults.add(this, invoice.getInvoiceNumber(), invoice);
+            executionContext.add(this, invoice.getInvoiceNumber(), invoice);
         }
-        return fixtureResults;
+        return executionContext;
     }
 
     // //////////////////////////////////////

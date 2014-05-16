@@ -22,13 +22,12 @@ import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
 import org.estatio.services.links.Link;
 import org.estatio.services.links.Links;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class LinksFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         newLink(Invoice.class, "Preliminary letter",
                 "${reportServerBaseUrl}/reportserver?/Estatio/"
                         + "Preliminary+Letter&id=${this.id}&rs:Command=Render",
@@ -52,7 +51,7 @@ public class LinksFixture extends SimpleFixtureScript {
                 fixtureResults);
     }
 
-    private Link newLink(Class<?> clsClass, String name, String urlTemplate, FixtureResultList fixtureResults) {
+    private Link newLink(Class<?> clsClass, String name, String urlTemplate, ExecutionContext fixtureResults) {
         final Link link = links.newLink(clsClass, name, urlTemplate);
         return fixtureResults.add(this, link.getName(), link);
     }

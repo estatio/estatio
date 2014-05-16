@@ -22,6 +22,14 @@ package org.estatio.integtest;
  * Required for jacoco-site. 
  *
  */
-class Dummy {
+
+import org.junit.Test;
+
+public class Dummy {
+
+    @Test
+    public void dummy() throws Exception {
+
+    }
 
 }

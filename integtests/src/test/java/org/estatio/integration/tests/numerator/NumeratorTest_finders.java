@@ -18,22 +18,16 @@
  */
 package org.estatio.integration.tests.numerator;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigInteger;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
-import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class NumeratorTest_finders extends EstatioIntegrationTest {
 
@@ -44,7 +38,7 @@ public class NumeratorTest_finders extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     @Before

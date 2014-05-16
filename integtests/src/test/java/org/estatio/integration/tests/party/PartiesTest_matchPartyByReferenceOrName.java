@@ -16,29 +16,37 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.tests.geography;
+package org.estatio.integration.tests.party;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
+import org.estatio.dom.party.Parties;
+import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.geography.Countries;
-import org.estatio.integration.tests.EstatioIntegrationTest;
+public class PartiesTest_matchPartyByReferenceOrName extends EstatioIntegrationTest {
 
-public class CountriesTest_finders extends EstatioIntegrationTest {
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
+    }
 
-    private Countries countries;
+    private Parties parties;
 
     @Before
     public void setUp() throws Exception {
-        countries = service(Countries.class);
+        parties = service(Parties.class);
     }
     
     @Test
-    public void findCountryByReference() throws Exception {
-        assertThat(countries.findCountry("NLD").getReference(), is("NLD"));
+    public void happyCase() throws Exception {
+        Assert.assertNotNull(parties.matchPartyByReferenceOrName("HELLOWORLD"));
+    }
+
+    @Test
+    public void canNotBeFound() throws Exception {
+        Assert.assertNull(parties.matchPartyByReferenceOrName("HELLO"));
     }
 
 }

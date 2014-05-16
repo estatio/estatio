@@ -19,13 +19,6 @@
 package org.estatio.integration.tests.invoice;
 
 import java.util.List;
-
-import org.hamcrest.core.Is;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -34,9 +27,13 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class InvoiceTest_remove extends EstatioIntegrationTest {
 
@@ -48,9 +45,9 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     private Party buyer;
     private Lease lease;
 
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     @Before

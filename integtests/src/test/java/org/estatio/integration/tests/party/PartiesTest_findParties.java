@@ -18,16 +18,15 @@
  */
 package org.estatio.integration.tests.party;
 
-import static org.hamcrest.CoreMatchers.is;
-
+import org.estatio.dom.party.Parties;
+import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.estatio.dom.party.Parties;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.tests.EstatioIntegrationTest;
+import static org.hamcrest.CoreMatchers.is;
 
 public class PartiesTest_findParties extends EstatioIntegrationTest {
 
@@ -35,7 +34,7 @@ public class PartiesTest_findParties extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     @Before
@@ -62,6 +61,5 @@ public class PartiesTest_findParties extends EstatioIntegrationTest {
     public void caseInsensitive() {
         Assert.assertThat(parties.findParties("*OE, jO*").size(), is(1));
     }
-
 
 }

@@ -24,19 +24,18 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 
 public class TaxesAndTaxRatesFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext executionContext) {
         Tax tax = taxes.newTax("IT-VATSTD", "Value Added Tax (Standard)");
-        fixtureResults.add(this, tax.getReference(), tax);
+        executionContext.add(this, tax.getReference(), tax);
 
         final TaxRate taxRate = tax.newRate(new LocalDate(1980, 1, 1), BigDecimal.valueOf(19)).newRate(new LocalDate(2011, 9, 17), BigDecimal.valueOf(21));
-        fixtureResults.add(this, taxRate.getExternalReference(), taxRate);
+        executionContext.add(this, taxRate.getExternalReference(), taxRate);
     }
 
     // //////////////////////////////////////

@@ -26,22 +26,22 @@ import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannels
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 
-public class EstatioTransactionalObjectsFixture extends CompositeFixtureScript {
+/**
+ * Non-reference data.
+ */
+public class EstatioOperationalSetupFixture extends CompositeFixtureScript {
 
-    public EstatioTransactionalObjectsFixture() {
-        super(null, "transactional-objects");
+    public EstatioOperationalSetupFixture() {
+        super(null, "operational-setup");
     }
 
     @Override
-    protected void addChildren() {
-
-        add(new EstatioTransactionalObjectsTeardownFixture());
-        add("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture());
-        add("properties", new PropertiesAndUnitsFixture());
-        add("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture());
-        add("invoices", new InvoiceAndInvoiceItemFixture());
-        add("bank-accounts", new BankAccountAndMandateFixture());
-
+    protected void execute(ExecutionContext executionContext) {
+        execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+        execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+        execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+        execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
+        execute("bank-accounts", new BankAccountAndMandateFixture(), executionContext);
     }
 
 }

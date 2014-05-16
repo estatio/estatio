@@ -35,16 +35,24 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.services.links.Link;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 
-public class EstatioRefDataObjectsTeardownFixture extends SimpleFixtureScript {
+/**
+ * No longer used, see algorithm in {@link EstatioBaseLineFixture}.
+ */
+public class EstatioRefDataTeardownFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
+        //tearDownJdo();
+        tearDownSQL();
+    }
 
+    private void tearDownJdo() {
+        // TODO: not sure that this actually does anything :-(
+        // using tearDownSQL() instead
         isisJdoSupport.deleteAll(
             State.class,
             Country.class,
@@ -65,31 +73,27 @@ public class EstatioRefDataObjectsTeardownFixture extends SimpleFixtureScript {
         );
     }
 
-    /**
-     * unused, but equivalent to the above
-     */
-    @SuppressWarnings("unused")
-    private void truncateTablesSQL(IsisJdoSupport isisJdoSupport) {
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"State\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Country\"");
+    private void tearDownSQL() {
+        isisJdoSupport.executeUpdate("DELETE FROM \"State\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"Country\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Currency\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Charge\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"ChargeGroup\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"Currency\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"Charge\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"ChargeGroup\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"TaxRate\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Tax\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"TaxRate\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"Tax\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"FixedAssetRegistrationType\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"AgreementRoleType\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"AgreementRoleCommunicationChannelType\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"AgreementType\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"FixedAssetRegistrationType\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"AgreementRoleType\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"AgreementRoleCommunicationChannelType\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"AgreementType\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexValue\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"IndexBase\"");
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Index\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"IndexValue\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"IndexBase\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"Index\"");
         
-        isisJdoSupport.executeUpdate("TRUNCATE TABLE \"Link\"");
+        isisJdoSupport.executeUpdate("DELETE FROM \"Link\"");
     }
 
     @Inject

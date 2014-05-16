@@ -27,13 +27,12 @@ import org.estatio.dom.lease.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
 
         Party manager = parties.findPartyByReference("JDOE");
         createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "Topmodel", "FASHION", "WOMEN", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true, manager, fixtureResults);
@@ -57,7 +56,7 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends SimpleFixtureScri
             LocalDate endDate,
             boolean createManagerRole,
             boolean createLeaseUnitAndTags,
-            Party manager, FixtureResultList fixtureResults) {
+            Party manager, ExecutionContext fixtureResults) {
 
         UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);

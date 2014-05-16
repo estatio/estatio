@@ -18,16 +18,7 @@
  */
 package org.estatio.integration.tests.invoice;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
-
-import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -42,11 +33,22 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class InvoiceTest_newItem extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioOperationalResetFixture());
+    }
 
     private Invoices invoices;
     private Parties parties;
@@ -59,11 +61,6 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
     private Lease lease;
     private Currency currency;
     private Charge charge;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
 
     @Before
     public void setUp() throws Exception {

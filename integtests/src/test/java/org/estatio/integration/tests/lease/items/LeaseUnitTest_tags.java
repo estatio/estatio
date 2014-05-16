@@ -18,25 +18,24 @@
  */
 package org.estatio.integration.tests.lease.items;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancy;
+import org.estatio.dom.lease.tags.Brand;
+import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Occupancy;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.tags.Brand;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.tests.EstatioIntegrationTest;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 public class LeaseUnitTest_tags extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+        scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
     private Leases leases;

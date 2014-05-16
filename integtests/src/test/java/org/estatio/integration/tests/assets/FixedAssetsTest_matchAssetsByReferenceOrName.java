@@ -18,40 +18,41 @@
  */
 package org.estatio.integration.tests.assets;
 
+import org.estatio.dom.asset.FixedAssets;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-import org.estatio.dom.asset.FixedAssets;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.tests.EstatioIntegrationTest;
+public class FixedAssetsTest_matchAssetsByReferenceOrName extends EstatioIntegrationTest {
 
-public class FixedAssetsTest_finders extends EstatioIntegrationTest {
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+            }
+        });
+    }
 
     private FixedAssets fixedAssets;
 
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
-    
     @Before
     public void setUp() throws Exception {
         fixedAssets = service(FixedAssets.class);
     }
     
     @Test
-    public void findAssetsByReferenceOrName() throws Exception {
+    public void whenPresent() throws Exception {
         Assert.assertThat(fixedAssets.matchAssetsByReferenceOrName("*mall*").size(), Is.is(1));
     }
-
-    @Test
-    public void autoComplete() throws Exception {
-        Assert.assertThat(fixedAssets.autoComplete("mall").size(), Is.is(1));
-    }
-
-
 
 }

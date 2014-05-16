@@ -19,31 +19,41 @@
 package org.estatio.integration.tests.invoice;
 
 import java.util.List;
-
-import org.hamcrest.core.Is;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class InvoiceItemsForLeaseTest_finders extends EstatioIntegrationTest {
+public class InvoiceItemsForLeaseTest_findByLeaseAndInvoiceStatus extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
+            }
+        });
+    }
 
     private InvoiceItemsForLease invoiceItemsForLease;
     private Leases leases;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -52,9 +62,12 @@ public class InvoiceItemsForLeaseTest_finders extends EstatioIntegrationTest {
     }
 
     @Test
-    public void findInvoiceItemsByLease() throws Exception {
+    public void givenValidLeaseWithNewInvoiceItems() throws Exception {
+        // given
         Lease lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
+        // when
         List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseAndInvoiceStatus(lease, InvoiceStatus.NEW);
+        // then
         Assert.assertThat(invoiceItems.size(), Is.is(2));
     }
 

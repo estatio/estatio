@@ -19,17 +19,23 @@
 package org.estatio.fixture;
 
 import javax.inject.Inject;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-public class EstatioTransactionalObjectsTeardownFixture extends SimpleFixtureScript {
+public class EstatioOperationalTeardownFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
 
-        deleteFrom("Numerator");
+        deleteAllDirect();
+    }
+
+    private void deleteAllDirect() {
         
+        deleteFrom("Numerator");
+//        isisJdoSupport.deleteAll(Numerator.class);
+//        getContainer().flush();
+
         deleteFrom("InvoiceItem");
         deleteFrom("Invoice");
         
@@ -64,7 +70,7 @@ public class EstatioTransactionalObjectsTeardownFixture extends SimpleFixtureScr
         deleteFrom("Person");
         deleteFrom("Party");
     }
-
+ 
     private void deleteFrom(final String table) {
         isisJdoSupport.executeUpdate("DELETE FROM " + "\"" + table + "\"");
     }

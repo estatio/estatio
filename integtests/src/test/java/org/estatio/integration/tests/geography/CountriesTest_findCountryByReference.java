@@ -16,30 +16,36 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.tests.invoice;
+package org.estatio.integration.tests.geography;
 
-import org.junit.Assert;
+import org.estatio.dom.geography.Countries;
+import org.estatio.dom.geography.Country;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.integration.tests.EstatioIntegrationTest;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-public class ChargesTest_finders extends EstatioIntegrationTest {
+public class CountriesTest_findCountryByReference extends EstatioIntegrationTest {
 
-    private Charges charges;
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioBaseLineFixture());
+    }
+
+    private Countries countries;
 
     @Before
     public void setUp() throws Exception {
-        charges = service(Charges.class);
+        countries = service(Countries.class);
     }
     
     @Test
-    public void findChargeByReference() throws Exception {
-        Charge charge = charges.findCharge("RENT");
-        Assert.assertEquals(charge.getReference(), "RENT");
+    public void whenExists() throws Exception {
+        final Country country = countries.findCountry("NLD");
+        assertThat(country.getReference(), is("NLD"));
     }
-
 
 }

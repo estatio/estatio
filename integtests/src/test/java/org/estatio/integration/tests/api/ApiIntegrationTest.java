@@ -18,21 +18,8 @@
  */
 package org.estatio.integration.tests.api;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
-import org.hamcrest.core.Is;
-import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -44,35 +31,61 @@ import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
-import org.estatio.dom.communicationchannel.CommunicationChannels;
-import org.estatio.dom.communicationchannel.EmailAddresses;
-import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
-import org.estatio.dom.communicationchannel.PostalAddresses;
+import org.estatio.dom.communicationchannel.*;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.InvoicingFrequency;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseConstants;
-import org.estatio.dom.lease.LeaseItemStatus;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTermFrequency;
-import org.estatio.dom.lease.LeaseTermStatus;
-import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioOperationalTeardownFixture;
+import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
+import org.hamcrest.core.Is;
+import org.joda.time.LocalDate;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiIntegrationTest extends EstatioIntegrationTest {
+
+    @BeforeClass
+    public static void setupDataForClass() {
+        scenarioExecution().install(
+                new CompositeFixtureScript() {
+                    @Override
+                    protected void execute(ExecutionContext executionContext) {
+                        execute(new EstatioBaseLineFixture(), executionContext);
+                        execute(new EstatioOperationalResetFixture(), executionContext);
+                    }
+                }
+        );
+    }
+
+    // installs a non-standard set of reference data, so clean up for other tests.
+    @AfterClass
+    public static void tearDownDataForClass() {
+        scenarioExecution().install(
+                new CompositeFixtureScript() {
+                    @Override
+                    protected void execute(ExecutionContext executionContext) {
+                        execute(new EstatioOperationalTeardownFixture(), executionContext);
+                        execute(new EstatioRefDataTeardownFixture(), executionContext);
+                    }
+                }
+        );
+    }
 
     private static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
     private Api api;
@@ -92,11 +105,6 @@ public class ApiIntegrationTest extends EstatioIntegrationTest {
     private Taxes taxes;
     private ChargeGroups chargeGroups;
     private Charges charges;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
-    }
 
     @Before
     public void setUp() throws Exception {

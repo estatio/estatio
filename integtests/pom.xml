@@ -179,6 +179,13 @@ language governing permissions and limitations under the License.
             <artifactId>maven-cucumber-reporting</artifactId>
             <version>0.0.4</version>
         </dependency>  
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <version>4.0</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>  

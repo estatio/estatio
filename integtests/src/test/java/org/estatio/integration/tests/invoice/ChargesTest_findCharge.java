@@ -16,33 +16,35 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integration.tests.assets;
+package org.estatio.integration.tests.invoice;
 
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.integration.tests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.estatio.dom.asset.Units;
-import org.estatio.fixture.EstatioTransactionalObjectsFixture;
-import org.estatio.integration.tests.EstatioIntegrationTest;
+public class ChargesTest_findCharge extends EstatioIntegrationTest {
 
-public class UnitsTest_finders extends EstatioIntegrationTest {
-
-    private Units<?> units;
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioTransactionalObjectsFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new EstatioBaseLineFixture());
     }
+
+    private Charges charges;
 
     @Before
     public void setUp() throws Exception {
-        units = (Units<?>) service(Units.class);
+        charges = service(Charges.class);
     }
     
     @Test
-    public void findUnitByReference() throws Exception {
-        Assert.assertEquals("OXF-001", units.findUnitByReference("OXF-001").getReference());
+    public void whenExists() throws Exception {
+        Charge charge = charges.findCharge("RENT");
+        Assert.assertEquals(charge.getReference(), "RENT");
     }
+
 
 }

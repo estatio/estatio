@@ -25,34 +25,33 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
-import org.apache.isis.applib.fixturescripts.FixtureResultList;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class ChargeAndChargeGroupFixture extends SimpleFixtureScript {
 
     @Override
-    protected void doRun(String parameters, FixtureResultList fixtureResults) {
+    protected void execute(ExecutionContext fixtureResults) {
         createCharges(fixtureResults);
     }
 
-    private void createCharges(FixtureResultList fixtureResults) {
+    private void createCharges(ExecutionContext fixtureResults) {
         createChargeAndChargeGroup("RENT", "Rent", "IT-VATSTD", fixtureResults);
         createChargeAndChargeGroup("SERVICE_CHARGE", "Service Charge", "IT-VATSTD", fixtureResults);
         createChargeAndChargeGroup("TURNOVER_RENT", "Turnover Rent", "IT-VATSTD", fixtureResults);
     }
 
-    private void createChargeAndChargeGroup(String reference, String description, String taxReference, FixtureResultList fixtureResults) {
+    private void createChargeAndChargeGroup(String reference, String description, String taxReference, ExecutionContext fixtureResults) {
         ChargeGroup chargeGroup = createChargeGroup(reference, description, fixtureResults);
         String code = reference; // TODO: for want of anything better...
         createCharge(reference, code, description, taxReference, chargeGroup, fixtureResults);
     }
 
-    private ChargeGroup createChargeGroup(String reference, String description, FixtureResultList fixtureResults) {
+    private ChargeGroup createChargeGroup(String reference, String description, ExecutionContext fixtureResults) {
         final ChargeGroup chargeGroup = chargeGroups.createChargeGroup(reference, description);
         return fixtureResults.add(this, chargeGroup.getReference(), chargeGroup);
     }
 
-    private Charge createCharge(String reference, String code, String description, String taxReference, ChargeGroup chargeGroup, FixtureResultList fixtureResults) {
+    private Charge createCharge(String reference, String code, String description, String taxReference, ChargeGroup chargeGroup, ExecutionContext fixtureResults) {
         final Tax tax = taxRepository.findTaxByReference(taxReference);
         Charge charge = charges.newCharge(reference, description, code, tax, chargeGroup);
         charge.setGroup(chargeGroup);
