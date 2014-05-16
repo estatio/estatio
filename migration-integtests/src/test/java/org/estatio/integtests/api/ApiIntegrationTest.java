@@ -46,7 +46,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
-import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.EstatioIntegrationTestForMigration;
 import org.estatio.services.clock.ClockService;
 import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
@@ -58,7 +58,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ApiIntegrationTest extends EstatioIntegrationTest {
+public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @BeforeClass
     public static void setupDataForClass() {

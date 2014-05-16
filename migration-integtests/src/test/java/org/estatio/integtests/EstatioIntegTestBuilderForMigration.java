@@ -1,5 +1,7 @@
 /*
+ *
  *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
  *
  *  Licensed under the Apache License, Version 2.0 (the
  *  "License"); you may not use this file except in compliance
@@ -16,24 +18,13 @@
  */
 package org.estatio.integtests;
 
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.estatio.api.Api;
 
 /**
- * Holds an instance of an {@link IsisSystemForTest} as a {@link ThreadLocal} on
- * the current thread, initialized with Estatio's domain services and with
- * {@link org.estatio.fixture.EstatioBaseLineFixture reference data fixture}.
- */
-public class EstatioSystemInitializer {
-
-    private EstatioSystemInitializer() {
-    }
-
-    public static IsisSystemForTest initIsft() {
-        IsisSystemForTest isft = IsisSystemForTest.getElseNull();
-        if (isft == null) {
-            isft = new EstatioIntegTestBuilder().build().setUpSystem();
-            IsisSystemForTest.set(isft);
-        }
-        return isft;
+* Created by Dan on 16/05/2014.
+*/
+class EstatioIntegTestBuilderForMigration extends EstatioIntegTestBuilder {
+    EstatioIntegTestBuilderForMigration() {
+        withServices(new Api());
     }
 }

@@ -83,6 +83,13 @@ language governing permissions and limitations under the License.
             <artifactId>estatio-fixture</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-integtests</artifactId>
+            <!-- TODO: not sure why need this, the parent pom has a dependencyManagement entry -->
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- isis -->
         <dependency>
             <groupId>org.apache.isis.core</groupId>

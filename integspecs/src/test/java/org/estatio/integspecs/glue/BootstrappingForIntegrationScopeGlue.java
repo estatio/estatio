@@ -20,7 +20,7 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.estatio.integspecs.EstatioSystemInitializer;
+import org.estatio.integtests.EstatioSystemInitializer;
 import org.apache.isis.core.specsupport.scenarios.ScenarioExecutionScope;
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
