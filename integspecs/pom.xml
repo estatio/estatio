@@ -108,20 +108,17 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-unittestsupport</artifactId>
-            <scope>test</scope>
             <type>test-jar</type>
         </dependency>
         
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-specsupport</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-integtestsupport</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.objectstore</groupId>

@@ -131,6 +131,10 @@ language governing permissions and limitations under the License.
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-migration</artifactId>
+        </dependency>
 
         <!-- other isis components -->
         <dependency>

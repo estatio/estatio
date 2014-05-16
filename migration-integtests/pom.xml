@@ -23,12 +23,12 @@ language governing permissions and limitations under the License.
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>estatio-integtests</artifactId>
+    <artifactId>estatio-migration-integtests</artifactId>
     <packaging>jar</packaging>
     
-    <name>Estatio Integration Tests</name>
+    <name>Estatio Migration "API" Integration Tests</name>
     <description>
-        Integration tests for Estatio.
+        Integration tests for the Migration "API" service
     </description>
 
     <properties>
@@ -80,6 +80,18 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-integtests</artifactId>
+            <!-- TODO: not sure why need this, the parent pom has a dependencyManagement entry -->
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>estatio-migration</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>estatio-fixture</artifactId>
         </dependency>
 
@@ -115,20 +127,35 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-specsupport</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-integtestsupport</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.isis.objectstore</groupId>
             <artifactId>isis-objectstore-jdo-datanucleus</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-wrapper</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -154,6 +181,23 @@ language governing permissions and limitations under the License.
             <version>991</version>  
         </dependency>
 
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>cucumber-reporting</artifactId>
+            <version>0.0.21</version>
+        </dependency>
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>maven-cucumber-reporting</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.estatio</groupId>
+            <artifactId>estatio-integtests</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <repositories>  
@@ -162,5 +206,35 @@ language governing permissions and limitations under the License.
             <url>http://repo.bodar.com</url>  
         </repository>  
     </repositories>
+    
+    <profiles>
+        <profile>
+            <id>cucumber-reporting</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.masterthought</groupId>
+                        <artifactId>maven-cucumber-reporting</artifactId>
+                        <version>0.0.3</version>
+                        <executions>
+                            <execution>
+                                <id>execution</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                                <configuration>
+                                    <projectname>cucumber-jvm-example</projectname>
+                                    <outputdirectory>${project.build.directory}/cucumber-reports</outputdirectory>
+                                    <cucumberoutput>${project.build.directory}/cucumber.json</cucumberoutput>
+                                    <enableflashcharts>false</enableflashcharts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>  
+                </plugins>
+            </build>
+        </profile>
+    </profiles>  
 
 </project>
