@@ -19,17 +19,26 @@
 package org.estatio.integtests.party;
 
 import org.estatio.dom.party.Parties;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 public class PartiesTest_matchPartyByReferenceOrName extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+            }
+        });
     }
 
     private Parties parties;

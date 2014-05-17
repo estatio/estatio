@@ -24,24 +24,37 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.junit.*;
-import org.junit.runners.MethodSorters;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class InvoicesTest_invoiceNumberNumerator extends EstatioIntegrationTest {
+public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegrationTest {
 
-    @BeforeClass
-    public static void setupDataForClass() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+            }
+        });
     }
 
     private Invoices invoices;
@@ -70,17 +83,17 @@ public class InvoicesTest_invoiceNumberNumerator extends EstatioIntegrationTest 
     }
     
     @Test
-    public void t01_findWhenNone() throws Exception {
+    public void whenNoneForProperty() throws Exception {
+
+        // given
         Numerator numerator = invoices.findInvoiceNumberNumerator(property1);
         Assert.assertNull(numerator);
-    }
 
-    @Test
-    public void t02_createThenFind() throws Exception {
-        Numerator numerator = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
+        // when
+        numerator = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
+
+        //then
         Assert.assertNotNull(numerator);
-        
-        
         assertThat(numerator.getName(), is(Constants.INVOICE_NUMBER_NUMERATOR_NAME));
         assertThat(numerator.getObjectType(), is(property1Bookmark.getObjectType()));
         assertThat(numerator.getObjectIdentifier(), is(property1Bookmark.getIdentifier()));
@@ -88,20 +101,41 @@ public class InvoicesTest_invoiceNumberNumerator extends EstatioIntegrationTest 
     }
 
     @Test
-    public void t03_scoped() throws Exception {
-        // from previous test
-        Numerator numerator1 = invoices.findInvoiceNumberNumerator(property1);
+    public void canCreateOnePerProperty() throws Exception {
+
+        // given
+        Numerator numerator1 = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
         Assert.assertNotNull(numerator1);
         
-        // new in this test
+        // when
         Numerator numerator2 = invoices.createInvoiceNumberNumerator(property2, "KAL-%05d", BigInteger.ZERO);
+
+        // then
         Assert.assertNotNull(numerator2);
-        
         assertThat(numerator1, is(not(numerator2)));
         
         assertThat(numerator1.increment(), is("OXF-00011"));
         assertThat(numerator2.increment(), is("KAL-00001"));
         assertThat(numerator2.increment(), is("KAL-00002"));
+        assertThat(numerator1.increment(), is("OXF-00012"));
+    }
+
+    @Test
+    public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
+
+        // given
+        Numerator numerator1 = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
+        Assert.assertNotNull(numerator1);
+
+        assertThat(numerator1.increment(), is("OXF-00011"));
+
+        // when
+        Numerator numerator2 = invoices.createInvoiceNumberNumerator(property1, "KAL-%05d", BigInteger.ZERO);
+
+        // then
+        Assert.assertNotNull(numerator2);
+        assertThat(numerator1, is(sameInstance(numerator2)));
+
         assertThat(numerator1.increment(), is("OXF-00012"));
     }
 

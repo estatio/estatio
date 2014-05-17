@@ -16,19 +16,23 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.party;
+package org.estatio.integtests.lease.roles;
 
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Person;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class PersonTest_setName extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class LeaseTest_getRoles extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -37,24 +41,27 @@ public class PersonTest_setName extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
             }
         });
     }
 
-    private Parties parties;
-    private Person personJoeDoe;
+    private Lease leaseTopModel;
+    
+    private Leases leases;
 
     @Before
-    public void setUp() throws Exception {
-        parties = service(Parties.class);
-        personJoeDoe = (Person)parties.findParties("Doe, Jo*").get(0);
+    public void setup() {
+        leases = service(Leases.class);
+        
+        leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
     }
 
-    @Ignore // have raised EST-200
     @Test
-    public void cannotModifyName() throws Exception {
-        expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");
-        wrap(personJoeDoe).setName("Cannot change name directly");
+    public void whenNonEmpty() throws Exception {
+        // TODO: this seems to be merely asserting on the contents of the fixture
+        assertThat(leaseTopModel.getRoles().size(), is(3));
     }
 
 }

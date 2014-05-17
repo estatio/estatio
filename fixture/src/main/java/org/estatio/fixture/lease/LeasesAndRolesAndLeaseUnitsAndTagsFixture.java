@@ -41,7 +41,6 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends SimpleFixtureScri
         createLease("OXF-PRET-004", "Pret lease", "OXF-004", "Pret", "FASHION", "ALL", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false, manager, fixtureResults);
         createLease("OXF-MIRACL-005", "Miracle lease", "OXF-005", "Miracle", "FASHION", "ALL", "ACME", "MIRACLE", new LocalDate(2013, 11, 7), new LocalDate(2023, 11, 6), false, true, manager, fixtureResults);
         createLease("KAL-POISON-001", "Poison Amsterdam", "KAL-001", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true, manager, fixtureResults);
-
     }
 
     public Lease createLease(

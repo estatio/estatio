@@ -51,9 +51,9 @@ public class IndexBasesTest_findByIndexAndDate extends EstatioIntegrationTest {
         // given
         Index index = indices.findIndex("ISTAT-FOI");
         // when
-        final IndexBase indexBase = indexBases.findByIndexAndDate(index, new LocalDate(2013, 1, 1));
+        final IndexBase indexBase = indexBases.findByIndexAndDate(index, dt(2013, 1, 1));
         // then
-        assertThat(indexBase.getStartDate(), is(new LocalDate(2011, 1, 1)));
+        assertThat(indexBase.getStartDate(), is(dt(2011, 1, 1)));
     }
 
 }

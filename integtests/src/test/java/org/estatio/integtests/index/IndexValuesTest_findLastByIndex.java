@@ -23,8 +23,8 @@ import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +35,12 @@ public class IndexValuesTest_findLastByIndex extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new EstatioBaseLineFixture());
+        scenarioExecution().install(
+                // tearing down because of a failure which suggests that one of the other tests is creating new index values...
+                // (not sure which one though :-( )
+                new EstatioRefDataTeardownFixture(),
+                new EstatioBaseLineFixture()
+        );
     }
 
     private Indices indices;
@@ -51,7 +56,7 @@ public class IndexValuesTest_findLastByIndex extends EstatioIntegrationTest {
     public void findLastByIndex() throws Exception {
         Index index = indices.findIndex("ISTAT-FOI");
         final IndexValue indexValue = indexValues.findLastByIndex(index);
-        assertThat(indexValue.getStartDate(), is(new LocalDate(2013, 12, 01)));
+        assertThat(indexValue.getStartDate(), is(dt(2013, 12, 01)));
     }
 
 }

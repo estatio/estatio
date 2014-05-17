@@ -52,8 +52,8 @@ public class IndexValuesTest_findIndexValueByIndexAndStartDate extends EstatioIn
         // given
         Index index = indices.findIndex("ISTAT-FOI");
         // when, then
-        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, new LocalDate(2013, 1, 1)).getValue(), is(new BigDecimal("106.7000")));
-        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, new LocalDate(2013, 10, 1)).getValue(), is(new BigDecimal("107.1000")));
+        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, dt(2013, 1, 1)).getValue(), is(bd("106.7000")));
+        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, dt(2013, 10, 1)).getValue(), is(bd("107.1000")));
     }
 
 }

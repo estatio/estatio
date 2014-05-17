@@ -18,36 +18,44 @@
  */
 package org.estatio.integtests.invoice;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.SortedSet;
 import org.estatio.dom.asset.Properties;
-import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RetroInvoicesTest extends EstatioIntegrationTest {
+public class CreateRetroInvoicesTest_findDueDatesForLease extends EstatioIntegrationTest {
 
-    @BeforeClass
-    public static void setupDataForClass() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
+            }
+        });
     }
 
     private Invoices invoices;
@@ -75,38 +83,10 @@ public class RetroInvoicesTest extends EstatioIntegrationTest {
     }
 
     @Test
-    public void step0_dueDates() {
-        SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), lease);
+    public void happyCase() {
+        SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(dt(2012, 1, 1), dt(2014, 1, 1), lease);
         assertThat(dueDates.size(), is(10));
     }
 
-    @Test
-    public void step1_retroRun() {
-        creator.createLease(lease, new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
-        assertThat(invoices.findInvoices(lease).size(), is(8));
-    }
-
-    @Test
-    public void step2_caluclate() {
-        lease.terminate(new LocalDate(2013, 10, 1), true);
-        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, new LocalDate(2014, 2, 1), new LocalDate(2012, 1, 1), new LocalDate(2014, 1, 1));
-        List<Invoice> invoicesList = invoices.findInvoices(lease);
-        assertThat(invoicesList.size(), is(9));
-        Invoice invoice = invoicesList.get(8);
-        assertThat(invoice.getDueDate(), is(new LocalDate(2014, 2, 1)));
-        assertThat(invoice.getGrossAmount(), is(new BigDecimal("-8170.01")));
-    }
-
-    @Test
-    public void step3_checkContractualRent() throws Exception {
-        LeaseItem leaseItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
-        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) leaseItem.findTerm(new LocalDate(2012, 1, 1));
-        assertThat(term.getContractualRent(), is(new BigDecimal("21058.27")));
-    }
-
-    @Test
-    public void step4_indexation() throws Exception {
-
-    }
 
 }

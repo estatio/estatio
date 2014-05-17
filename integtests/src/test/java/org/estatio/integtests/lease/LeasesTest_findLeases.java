@@ -19,7 +19,6 @@
 package org.estatio.integtests.lease;
 
 import java.util.List;
-import org.estatio.dom.asset.Properties;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -51,12 +50,9 @@ public class LeasesTest_findLeases extends EstatioIntegrationTest {
 
     private Leases leases;
 
-    private Properties properties;
-
     @Before
     public void setup() {
         leases = service(Leases.class);
-        properties = service(Properties.class);
     }
 
     @Test

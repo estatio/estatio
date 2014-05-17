@@ -916,6 +916,16 @@ language governing permissions and limitations under the License.
                 <module>dom</module>
                 <module>dom-italy</module>
                 <module>fixture</module>
+                <module>integtests</module>
+                <module>webapp</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>extended</id>
+            <modules>
+                <module>dom</module>
+                <module>dom-italy</module>
+                <module>fixture</module>
                 <module>integspecs</module>
                 <module>integtests</module>
                 <module>migration</module>

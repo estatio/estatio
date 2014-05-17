@@ -18,7 +18,10 @@
  */
 package org.estatio.integtests;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import org.apache.log4j.PropertyConfigurator;
+import org.joda.time.LocalDate;
 import org.junit.BeforeClass;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
@@ -36,6 +39,40 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
         // instantiating will install onto ThreadLocal
         new ScenarioExecutionForIntegration();
     }
+
+
+    public static BigInteger bi(int i) {
+        return BigInteger.valueOf(i);
+    }
+
+    public static LocalDate dt(int yyyy, int mm, int dd) {
+        return new LocalDate(yyyy,mm,dd);
+    }
+
+    public static BigDecimal bd(int val, int newScale) {
+        return BigDecimal.valueOf(val).setScale(newScale);
+    }
+
+    public static BigDecimal bd(int val) {
+        return BigDecimal.valueOf(val);
+    }
+
+    public static BigDecimal bd(String str) {
+        return new BigDecimal(str);
+    }
+
+    public static BigDecimal bd(double d) {
+        return new BigDecimal(d);
+    }
+
+    public static BigDecimal bd2(int val) {
+        return bd(val, 2);
+    }
+
+    public static BigDecimal bd4(int val) {
+        return bd(val, 4);
+    }
+
 
 }
 

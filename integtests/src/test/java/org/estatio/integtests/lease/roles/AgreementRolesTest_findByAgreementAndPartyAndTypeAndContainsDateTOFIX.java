@@ -16,25 +16,29 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.integtests.lease.roles;
 
-import java.util.List;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
+public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOFIX extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -50,21 +54,36 @@ public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
     }
 
     private Leases leases;
+    private Parties parties;
+    private AgreementRoleTypes agreementRoleTypes;
+
+    private AgreementRoles agreementRoles;
 
     @Before
     public void setup() {
         leases = service(Leases.class);
+        parties = service(Parties.class);
+        agreementRoleTypes = service(AgreementRoleTypes.class);
+
+        agreementRoles = service(AgreementRoles.class);
     }
 
+
     @Test
-    public void whenLeasesExpiringInRange() {
-        // given
-        final LocalDate startDate = dt(2020, 1, 1);
-        final LocalDate endDate   = dt(2030, 1, 1);
+    public void findByAgreementAndPartyAndTypeAndContainsDate() throws Exception {
+        // given lease has tenant role
+        AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        Lease leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        Party party = parties.findPartyByReference("TOPMODEL");
+
+        // TODO: need to fix this date
+        final LocalDate date = LocalDate.now();
+
         // when
-        final List<Lease> matchingLeases = leases.findExpireInDateRange(startDate, endDate);
+        AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseTopModel, party, artTenant, date);
+
         // then
-        assertThat(matchingLeases.size(), is(4));
+        Assert.assertNotNull(role);
     }
 
 }

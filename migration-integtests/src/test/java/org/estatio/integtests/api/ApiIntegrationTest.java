@@ -87,7 +87,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
         );
     }
 
-    private static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
+    private static final LocalDate START_DATE = dt(2012, 1, 1);
     private Api api;
     private Leases leases;
     private Properties properties;
@@ -148,8 +148,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
         assertThat(state.getName(), is("North Holland"));
         assertThat(state.getCountry(), is(netherlands));
 
-        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21.0), new LocalDate(1980, 1, 1), "APITAXEXTRATEREF");
-        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21), new LocalDate(1980, 1, 1), "APITAXEXTRATEREF");
+        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21.0), dt(1980, 1, 1), "APITAXEXTRATEREF");
+        api.putTax("APITAXREF", "APITAX Name", "APITAXEXTREF", "APITAX Desc", BigDecimal.valueOf(21), dt(1980, 1, 1), "APITAXEXTRATEREF");
 
         final Tax tax = taxes.findTaxByReference("APITAXREF");
         Assert.assertNotNull(tax);
@@ -176,7 +176,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
     @Test
     public void t01_putAsset() throws Exception {
         api.putProperty("APIPROP", "Apiland", "NLD", "ApiCity", "SHOPPING_CENTER", null, null, null, "HELLOWORLD", "APIFORMAT", "APIEXTREF");
-        api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", new LocalDate(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
+        api.putUnit("APIUNIT", "APIPROP", "APIONWER", "Name", "BOUTIQUE", dt(1999, 6, 1), null, null, null, null, null, null, null, null, null, null, null);
         Assert.assertThat(properties.findProperties("APIPROP").size(), Is.is(1));
     }
 
@@ -206,7 +206,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t04_putLeaseWorks() throws Exception {
-        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", "ACTIVE", START_DATE, new LocalDate(2021, 12, 31), null, null, "APIPROP");
+        api.putLease("APILEASE", "Lease", "APITENANT", "APILANDLORD", "APILEASETYPE", "ACTIVE", START_DATE, dt(2021, 12, 31), null, null, "APIPROP");
         Lease lease = leases.findLeaseByReference("APILEASE");
         Assert.assertNotNull(lease);
         Assert.assertThat(lease.getRoles().size(), Is.is(2));
@@ -256,7 +256,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 START_DATE,
                 BigInteger.valueOf(1),
                 START_DATE,
-                new LocalDate(2012, 12, 31),
+                dt(2012, 12, 31),
                 LeaseTermStatus.NEW.name(),
                 null,
                 null,
@@ -283,8 +283,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 LeaseItemType.RENT.name(),
                 START_DATE,
                 BigInteger.valueOf(2),
-                new LocalDate(2013, 1, 1),
-                new LocalDate(2013, 12, 31),
+                dt(2013, 1, 1),
+                dt(2013, 12, 31),
                 LeaseTermStatus.NEW.name(),
                 null,
                 null,
@@ -310,8 +310,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
     @Test
     public void t08_putBreakOptionWorks() throws Exception {
-        api.putBreakOption("APILEASE", "FIXED", "TENANT", new LocalDate(2015, 1, 1), new LocalDate(2014, 7, 1), null, "Test");
-        api.putBreakOption("APILEASE", "ROLLING", "MUTUAL", new LocalDate(2019, 1, 1), null, "6m", "Test");
+        api.putBreakOption("APILEASE", "FIXED", "TENANT", dt(2015, 1, 1), dt(2014, 7, 1), null, "Test");
+        api.putBreakOption("APILEASE", "ROLLING", "MUTUAL", dt(2019, 1, 1), null, "6m", "Test");
         Assert.assertThat(leases.findLeaseByReference("APILEASE").getBreakOptions().size(), Is.is(2));
     }
 

@@ -70,12 +70,10 @@ public class InvoicesTest_createCollectionNumberNumerator extends EstatioIntegra
         assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
     }
 
-    //@Ignore
     @Test
     public void whenNone() throws Exception {
         Numerator numerator = invoices.findCollectionNumberNumerator();
         assertThat(numerator, is(nullValue()));
     }
-
 
 }

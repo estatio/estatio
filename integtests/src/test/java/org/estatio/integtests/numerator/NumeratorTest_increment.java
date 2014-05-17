@@ -24,26 +24,41 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class NumeratorTest_increment extends EstatioIntegrationTest {
 
+
+    private Numerator scopedNumerator;
+    private Numerator scopedNumerator2;
+    private Numerator globalNumerator;
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+            }
+        });
+    }
+
     private Numerators numerators;
     private Properties properties;
     private Property property;
     private Property property2;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -51,34 +66,38 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
         properties = service(Properties.class);
         property = properties.allProperties().get(0);
         property2 = properties.allProperties().get(1);
-        numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("10"));
-        numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property2, "DEF-%05d", new BigInteger("100"));
-        numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+
+        scopedNumerator = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("10"));
+        scopedNumerator2 = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property2, "DEF-%05d", new BigInteger("100"));
+        globalNumerator = numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
     }
 
     @Test
-    public void numerator_increment() throws Exception {
-        Numerator in = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
-        assertThat(in.getLastIncrement(), is(new BigInteger("10")));
-        assertThat(in.increment(), is("ABC-00011"));
-        assertThat(in.getLastIncrement(), is(new BigInteger("11")));
+    public void forScopedNumerator() throws Exception {
+
+        // given
+        //Numerator scopedNumerator = numerators.findScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property);
+        assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("10")));
+
+        // when
+        assertThat(scopedNumerator.increment(), is("ABC-00011"));
+
+        // then
+        assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("11")));
     }
-    
+
     @Test
-    public void testIncrementGlobalNumerator() throws Exception {
-        Numerator in = numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
-        assertThat(in.getLastIncrement(), is(new BigInteger("1000")));
-        assertThat(in.increment(), is("ABC-01001"));
-        assertThat(in.getLastIncrement(), is(new BigInteger("1001")));
-        
+    public void forGlobalNumerator() throws Exception {
+
+        // givem
+        //globalNumerator = numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
+        assertThat(globalNumerator.getLastIncrement(), is(new BigInteger("1000")));
+
+        // when
+        assertThat(globalNumerator.increment(), is("ABC-01001"));
+
+        // then
+        assertThat(globalNumerator.getLastIncrement(), is(new BigInteger("1001")));
     }
-    
-    @Test
-    public void test() throws Exception {
-        assertThat(numerators.allNumerators().size(), is(3));
-        
-    }
-    
-    
 
 }

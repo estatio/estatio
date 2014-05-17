@@ -16,45 +16,52 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.party;
+package org.estatio.integscenarios.lease;
 
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Person;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class PersonTest_setName extends EstatioIntegrationTest {
+public class LeaseTest_assign extends EstatioIntegrationTest {
 
-    @Before
-    public void setupData() {
+    @BeforeClass
+    public static void setupData() {
         scenarioExecution().install(new CompositeFixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
             }
         });
     }
-
-    private Parties parties;
-    private Person personJoeDoe;
-
+    
+    private Leases leases;
+ 
+    private Lease leasePoison;
+    private Lease leaseMediax;
+    
     @Before
-    public void setUp() throws Exception {
-        parties = service(Parties.class);
-        personJoeDoe = (Person)parties.findParties("Doe, Jo*").get(0);
+    public void setup() {
+        leases = service(Leases.class);
+        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
+        leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
     }
-
-    @Ignore // have raised EST-200
+    
     @Test
-    public void cannotModifyName() throws Exception {
-        expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");
-        wrap(personJoeDoe).setName("Cannot change name directly");
+    public void happyCase() throws Exception {
+        Lease newLease = leasePoison.assign("OXF-MEDIAX-003" , "Reassigned", leaseMediax.getSecondaryParty() , dt(2014,1,1), dt(2014,1,1), true);
+    
     }
 
 }

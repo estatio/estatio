@@ -16,17 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.integtests.numerator;
 
-import java.util.List;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import java.math.BigInteger;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Constants;
+import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
@@ -34,7 +35,8 @@ import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
+public class NumeratorTest_allNumerators extends EstatioIntegrationTest {
+
 
     @Before
     public void setupData() {
@@ -44,27 +46,31 @@ public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
-                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
             }
         });
     }
 
-    private Leases leases;
+    private Numerators numerators;
+    private Properties properties;
+    private Property property;
+    private Property property2;
 
     @Before
-    public void setup() {
-        leases = service(Leases.class);
+    public void setUp() throws Exception {
+        numerators = service(Numerators.class);
+        properties = service(Properties.class);
+        property = properties.allProperties().get(0);
+        property2 = properties.allProperties().get(1);
     }
 
     @Test
-    public void whenLeasesExpiringInRange() {
-        // given
-        final LocalDate startDate = dt(2020, 1, 1);
-        final LocalDate endDate   = dt(2030, 1, 1);
-        // when
-        final List<Lease> matchingLeases = leases.findExpireInDateRange(startDate, endDate);
-        // then
-        assertThat(matchingLeases.size(), is(4));
+    public void whenExist() throws Exception {
+
+        numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("10"));
+        numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property2, "DEF-%05d", new BigInteger("100"));
+        numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
+
+        assertThat(numerators.allNumerators().size(), is(3));
     }
 
 }

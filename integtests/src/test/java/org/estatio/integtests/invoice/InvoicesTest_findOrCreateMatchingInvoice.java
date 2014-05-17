@@ -18,19 +18,12 @@
  */
 package org.estatio.integtests.invoice;
 
-import java.math.BigDecimal;
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
-import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -39,15 +32,21 @@ import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.core.runtime.system.context.IsisContext;
+import org.apache.isis.core.runtime.system.transaction.IsisTransaction;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.sameInstance;
 
-public class InvoiceTest_newItem extends EstatioIntegrationTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -66,51 +65,46 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
     private Invoices invoices;
     private Parties parties;
     private Leases leases;
-    private Currencies currencies;
-    private Charges charges;
-
     private Party seller;
     private Party buyer;
     private Lease lease;
-    private Currency currency;
-    private Charge charge;
 
     @Before
     public void setUp() throws Exception {
         invoices = service(Invoices.class);
         parties = service(Parties.class);
         leases = service(Leases.class);
-        currencies = service(Currencies.class);
-        charges = service(Charges.class);
 
         seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
 
-        charge = charges.allCharges().get(0);
-        currency = currencies.allCurrencies().get(0);
+        final IsisTransaction transaction = IsisContext.getTransactionManager().getTransaction();
+        final IsisTransaction.State state = transaction.getState();
+
+        IsisSystemForTest.get();
+
     }
 
     @Test
-    public void happyCase() throws Exception {
+    public void whenDoesNotExist() {
         // given
-        Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, currency, dt(2013, 1, 1), lease, null);
-
+        Assert.assertThat(invoices.allInvoices().isEmpty(), is(true));
         // when
-        invoice.newItem(charge, bd(1), bd("10000.123"), null, null);
-
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
         // then
-        Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, dt(2013, 1, 1), null);
-        assertThat(foundInvoice.getNetAmount(), is(bd("10000.123")));
+        Assert.assertNotNull(invoice);
+        Assert.assertThat(invoices.allInvoices().isEmpty(), is(false));
+    }
 
-        // and also
-        final InvoiceItemForLease invoiceItem = (InvoiceItemForLease) foundInvoice.getItems().first();
-        assertThat(invoiceItem.getNetAmount(), is(bd("10000.123")));
-        assertThat(invoiceItem.getLease(), is(lease));
-        assertThat(invoiceItem.getFixedAsset(), is((FixedAsset) lease.getOccupancies().first().getUnit()));
-
-        // TODO: EST-290: netAmount has scale set to two but the example above
-        // proves that it's possible to store with a higher precision
+    @Test
+    public void whenExist() {
+        // given
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        // when
+        Invoice invoice2 = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        // then
+        Assert.assertThat(invoice2, is(sameInstance(invoice)));
     }
 
 }

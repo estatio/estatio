@@ -27,15 +27,33 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 public class InvoiceTest_remove extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
+            }
+        });
+    }
 
     private Invoices invoices;
     private Parties parties;
@@ -44,11 +62,6 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     private Party seller;
     private Party buyer;
     private Lease lease;
-
-    @Before
-    public void setupData() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -64,12 +77,14 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     @Test
     public void happyCase() throws Exception {
         // given
-        Assert.assertThat(findMatchingInvoices(seller, buyer, lease).size(), Is.is(1));
-        Invoice invoice = findMatchingInvoices(seller, buyer, lease).get(0);
+        List<Invoice> matchingInvoices = findMatchingInvoices(seller, buyer, lease);
+        Assert.assertThat(matchingInvoices.size(), Is.is(1));
+        Invoice invoice = matchingInvoices.get(0);
         // when
         invoice.remove();
         // then
-        Assert.assertThat(findMatchingInvoices(seller, buyer, lease).size(), Is.is(0));
+        matchingInvoices = findMatchingInvoices(seller, buyer, lease);
+        Assert.assertThat(matchingInvoices.size(), Is.is(0));
     }
 
     private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {

@@ -16,25 +16,27 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.lease;
+package org.estatio.integtests.invoice;
 
-import java.util.List;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Invoices;
+import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
-public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
+public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -49,22 +51,38 @@ public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
         });
     }
 
-    private Leases leases;
+    private Invoices invoices;
+    private Properties properties;
+    private BookmarkService bookmarkService;
+    
+    private Property property1;
+    private Property property2;
+    
+    private Bookmark property1Bookmark;
+    private Bookmark property2Bookmark;
 
     @Before
-    public void setup() {
-        leases = service(Leases.class);
+    public void setUp() throws Exception {
+        invoices = service(Invoices.class);
+        properties = service(Properties.class);
+        bookmarkService = service(BookmarkService.class);
+        
+        property1 = properties.findPropertyByReference("OXF");
+        property2 = properties.findPropertyByReference("KAL");
+        assertNotNull(property1);
+        assertNotNull(property2);
+        
+        property1Bookmark = bookmarkService.bookmarkFor(property1);
+        property2Bookmark = bookmarkService.bookmarkFor(property2);
+    }
+    
+    @Test
+    public void whenNone() throws Exception {
+        // when
+        Numerator numerator = invoices.findInvoiceNumberNumerator(property1);
+        // then
+        Assert.assertNull(numerator);
     }
 
-    @Test
-    public void whenLeasesExpiringInRange() {
-        // given
-        final LocalDate startDate = dt(2020, 1, 1);
-        final LocalDate endDate   = dt(2030, 1, 1);
-        // when
-        final List<Lease> matchingLeases = leases.findExpireInDateRange(startDate, endDate);
-        // then
-        assertThat(matchingLeases.size(), is(4));
-    }
 
 }

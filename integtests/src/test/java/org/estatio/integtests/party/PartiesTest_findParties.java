@@ -19,23 +19,30 @@
 package org.estatio.integtests.party;
 
 import org.estatio.dom.party.Parties;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 
 public class PartiesTest_findParties extends EstatioIntegrationTest {
 
-    private Parties parties;
-
-    @BeforeClass
-    public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
+    @Before
+    public void setupData() {
+        scenarioExecution().install(new CompositeFixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+            }
+        });
     }
+
+    private Parties parties;
 
     @Before
     public void setUp() throws Exception {
