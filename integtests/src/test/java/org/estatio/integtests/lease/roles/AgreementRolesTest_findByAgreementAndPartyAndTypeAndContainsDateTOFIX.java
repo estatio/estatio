@@ -33,6 +33,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
@@ -62,6 +63,8 @@ public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOF
     private AgreementRoleTypes agreementRoleTypes;
     @Inject
     private AgreementRoles agreementRoles;
+    @Inject
+    private ClockService clockService;
 
     @Test
     public void findByAgreementAndPartyAndTypeAndContainsDate() throws Exception {
@@ -71,7 +74,7 @@ public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOF
         Party party = parties.findPartyByReference("TOPMODEL");
 
         // TODO: need to fix this date
-        final LocalDate date = LocalDate.now();
+        final LocalDate date = clockService.now();
 
         // when
         AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseTopModel, party, artTenant, date);

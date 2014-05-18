@@ -20,6 +20,7 @@ package org.estatio.integtests.api;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import javax.inject.Inject;
 import org.estatio.api.Api;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -88,45 +89,41 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
     }
 
     private static final LocalDate START_DATE = dt(2012, 1, 1);
+
+    @Inject
     private Api api;
+    @Inject
     private Leases leases;
+    @Inject
     private Properties properties;
+    @Inject
     private Parties parties;
+    @Inject
     private CommunicationChannels communicationChannels;
+    @Inject
     private Units<?> units;
+    @Inject
     private Occupancies leaseUnits;
+    @Inject
     private AgreementRoleTypes agreementRoleTypes;
+    @Inject
     private ClockService clockService;
+    @Inject
     private PostalAddresses postalAddresses;
+    @Inject
     private PhoneOrFaxNumbers phoneOrFaxNumbers;
+    @Inject
     private EmailAddresses emailAddresses;
+    @Inject
     private Countries countries;
+    @Inject
     private States states;
+    @Inject
     private Taxes taxes;
+    @Inject
     private ChargeGroups chargeGroups;
+    @Inject
     private Charges charges;
-
-    @Before
-    public void setUp() throws Exception {
-        api = service(Api.class);
-        leases = service(Leases.class);
-        properties = service(Properties.class);
-        states = service(States.class);
-        chargeGroups = service(ChargeGroups.class);
-        charges = service(Charges.class);
-        parties = service(Parties.class);
-        communicationChannels = service(CommunicationChannels.class);
-        units = (Units<?>) service(Units.class);
-        leaseUnits = service(Occupancies.class);
-        agreementRoleTypes = service(AgreementRoleTypes.class);
-        clockService = service(ClockService.class);
-        phoneOrFaxNumbers = service(PhoneOrFaxNumbers.class);
-        emailAddresses = service(EmailAddresses.class);
-        postalAddresses = service(PostalAddresses.class);
-        countries = service(Countries.class);
-        taxes = service(Taxes.class);
-
-    }
 
     @Test
     public void t00_refData() throws Exception {
@@ -155,7 +152,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
         Assert.assertNotNull(tax);
         assertThat(tax.getReference(), is("APITAXREF"));
         assertThat(tax.getName(), is("APITAX Name"));
-        Assert.assertNotNull(tax.percentageFor(LocalDate.now()));
+        Assert.assertNotNull(tax.percentageFor(clockService.now()));
 
         api.putCharge("APICHARGEREF", "APICHARGENAME", "API CHARGE", "APITAXREF", "APISORTORDER", "APICHARGEGROUP", "APICHARGEGROUPNAME", "APICHARGEEXTREF");
 

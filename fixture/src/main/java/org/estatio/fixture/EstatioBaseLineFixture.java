@@ -41,7 +41,7 @@ public class EstatioBaseLineFixture extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new ClockFixture(), executionContext);
+        execute(ClockFixture.setTo("2014-05-18"), executionContext);
         execute(new EstatioOperationalTeardownFixture(), executionContext);
         if(isRefDataPresent()) {
             return;

@@ -67,8 +67,8 @@ public class ClockFixture extends SimpleFixtureScript {
                 DateTimeFormat.fullDateTime(),
                 DateTimeFormat.mediumDateTime(),
                 DateTimeFormat.shortDateTime(),
-                DateTimeFormat.forPattern("yyyy-MM-ddThh:mm:ss"),
-                DateTimeFormat.forPattern("yyyy-MM-ddThh:mm")
+                DateTimeFormat.forPattern("yyyy-MM-dd"),
+                DateTimeFormat.forPattern("yyyyMMdd"),
         }) {
             try {
                 return formatter.parseLocalDate(dateStr);
@@ -79,20 +79,13 @@ public class ClockFixture extends SimpleFixtureScript {
         return null;
     }
 
-    private static DateTimeFormatter[] dateFormatters = {
-            DateTimeFormat.fullDate(),
-            DateTimeFormat.mediumDate(),
-            DateTimeFormat.shortDate(),
-            DateTimeFormat.forPattern("yyyy-MM-dd")
-    };
-
     private static LocalDateTime parseAsLocalDateTime(String dateStr) {
         for (DateTimeFormatter formatter : new DateTimeFormatter[]{
                 DateTimeFormat.fullDateTime(),
                 DateTimeFormat.mediumDateTime(),
                 DateTimeFormat.shortDateTime(),
-                DateTimeFormat.forPattern("yyyy-MM-ddThh:mm:ss"),
-                DateTimeFormat.forPattern("yyyy-MM-ddThh:mm")
+                DateTimeFormat.forPattern("yyyyMMddhhmmss"),
+                DateTimeFormat.forPattern("yyyyMMddhhmm")
         }) {
             try {
                 return formatter.parseLocalDateTime(dateStr);
@@ -115,7 +108,7 @@ public class ClockFixture extends SimpleFixtureScript {
             return;
         }
         if(localDate != null) {
-            fixtureClock.setDate(localDateTime.getYear(), localDateTime.getMonthOfYear(), localDateTime.getDayOfMonth());
+            fixtureClock.setDate(localDate.getYear(), localDate.getMonthOfYear(), localDate.getDayOfMonth());
             return;
         }
     }
