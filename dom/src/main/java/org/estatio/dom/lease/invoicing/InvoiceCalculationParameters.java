@@ -2,14 +2,8 @@ package org.estatio.dom.lease.invoicing;
 
 import java.util.Arrays;
 import java.util.List;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.util.TitleBuffer;
-
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
@@ -17,6 +11,8 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.util.TitleBuffer;
 
 public class InvoiceCalculationParameters {
 
@@ -136,11 +132,11 @@ public class InvoiceCalculationParameters {
 
     public InvoiceCalculationParameters(
             final LeaseTerm leaseTerm,
-            final InvoiceRunType invoicRunType,
+            final InvoiceRunType invoiceRunType,
             final LocalDate invoiceDueDate,
             final LocalDate startDueDate,
             final LocalDate nextDueDate) {
-        this(leaseTerm.getLeaseItem(), invoicRunType, invoiceDueDate, startDueDate, nextDueDate);
+        this(leaseTerm.getLeaseItem(), invoiceRunType, invoiceDueDate, startDueDate, nextDueDate);
         this.leaseTerm = leaseTerm;
     }
 

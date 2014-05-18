@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.party;
 
+import javax.inject.Inject;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalResetFixture;
@@ -41,13 +42,9 @@ public class PartiesTest_matchPartyByReferenceOrName extends EstatioIntegrationT
         });
     }
 
+    @Inject
     private Parties parties;
 
-    @Before
-    public void setUp() throws Exception {
-        parties = service(Parties.class);
-    }
-    
     @Test
     public void happyCase() throws Exception {
         Assert.assertNotNull(parties.matchPartyByReferenceOrName("HELLOWORLD"));

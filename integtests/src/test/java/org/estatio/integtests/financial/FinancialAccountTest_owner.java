@@ -19,6 +19,7 @@
 package org.estatio.integtests.financial;
 
 import java.util.List;
+import javax.inject.Inject;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -57,15 +58,15 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Parties parties;
+    @Inject
     private FinancialAccounts financialAccounts;
+
     private Party party;
 
     @Before
     public void setUp() throws Exception {
-        parties = service(Parties.class);
-        financialAccounts = service(FinancialAccounts.class);
-
         party = parties.findPartyByReference("HELLOWORLD");
     }
 

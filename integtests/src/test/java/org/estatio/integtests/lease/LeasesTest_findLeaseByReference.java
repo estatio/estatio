@@ -18,7 +18,7 @@
  */
 package org.estatio.integtests.lease;
 
-import org.estatio.dom.asset.Properties;
+import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -46,15 +46,8 @@ public class LeasesTest_findLeaseByReference extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Leases leases;
-
-    private Properties properties;
-
-    @Before
-    public void setup() {
-        leases = service(Leases.class);
-        properties = service(Properties.class);
-    }
 
     @Test
     public void whenValidReference() {

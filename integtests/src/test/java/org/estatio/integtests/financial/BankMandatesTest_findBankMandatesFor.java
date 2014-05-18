@@ -19,6 +19,7 @@
 package org.estatio.integtests.financial;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccount;
@@ -46,16 +47,11 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
         });
     }
 
+    @Inject
     private FinancialAccounts financialAccounts;
+    @Inject
     private BankMandates bankMandates;
 
-    @Before
-    public void setUp() throws Exception {
-        bankMandates = service(BankMandates.class);
-        financialAccounts = service(FinancialAccounts.class);
-    }
-    
-    
     @Test
     public void forAccountWithMandate() {
         // given

@@ -18,10 +18,11 @@
  */
 package org.estatio.integtests.lease;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-import org.estatio.dom.lease.*;
+import javax.inject.Inject;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
@@ -30,16 +31,11 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNull;
 
 public class LeaseTest_verifyUntil extends EstatioIntegrationTest {
-
-    private LeaseItem leaseMediaXServiceChargeItem;
-    private LeaseTerm leaseMediaXServiceChargeTerm;
 
     @Before
     public void setupData() {
@@ -54,88 +50,43 @@ public class LeaseTest_verifyUntil extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Leases leases;
 
-    private Lease leasePoison;
-    private LeaseItem leasePoisonRentItem;
-    private LeaseItem leasePoisonServiceChargeItem;
-
-    private Lease leaseMediax;
+    private Lease leaseTopModel;
+    private LeaseItem leaseTopModelRentItem;
+    private LeaseItem leaseTopModelServiceChargeItem;
 
     @Before
-    public void setup() {
-        leases = service(Leases.class);
+    public void setUp() throws Exception {
+        leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
 
-        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, dt(2011, 1, 1), bi(1));
-        leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, dt(2011, 1, 1), bi(1));
-        assertNotNull(leasePoisonServiceChargeItem);
+        leaseTopModelRentItem = leaseTopModel.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        assertNotNull(leaseTopModelRentItem);
 
-        leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
-        leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, dt(2008, 1, 1), bi(1));
-        leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(dt(2008, 1, 1));
-        assertNotNull(leaseMediaXServiceChargeTerm);
+        leaseTopModelServiceChargeItem = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        assertNotNull(leaseTopModelServiceChargeItem);
     }
 
+    /**
+     * Compare to tests that verify at the {@link org.estatio.dom.lease.LeaseTerm} level.
+     *
+     * @see LeaseTermTest_verifyUntil#givenLeaseTermForIndexableRent()
+     * @see LeaseTermTest_verifyUntil#givenLeaseTermForServiceCharge()
+     */
     @Test
-    public void happyCase1() throws Exception {
-        // REVIEW: what is the variation being tested here ?
+    public void createsTermsForLeaseTermItems() throws Exception {
+
+        // given
+        assertNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
+        assertNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
 
         // when
-        leaseMediax.verifyUntil(dt(2014, 1, 1));
-
-        // commit to get the BigDecimals to be stored to the correct precision by DN.
-        IsisSystemForTest.get().commitTran();
-        IsisSystemForTest.get().beginTran();
-
-        // and reload
-        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, dt(2011, 1, 1), bi(1));
-        leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, dt(2011, 1, 1), bi(1));
+        leaseTopModel.verifyUntil(dt(2014, 1, 1));
 
         // then
-        leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(dt(2008, 1, 1));
-        assertNotNull(leaseMediaXServiceChargeTerm);
-
-        final LeaseTerm leaseMediaXServiceChargeTermN = leaseMediaXServiceChargeItem.getTerms().last();
-        assertThat(leaseMediaXServiceChargeTermN.getEffectiveValue(), is(bd(6000, 2)));
-    }
-
-    @Test
-    public void happyCase2() throws Exception {
-        // REVIEW: what is the variation being tested here ?
-
-        // when
-        leasePoison.verifyUntil(dt(2014, 1, 1));
-
-        // commit to get the BigDecimals to be stored to the correct precision by DN.
-        IsisSystemForTest.get().commitTran();
-        IsisSystemForTest.get().beginTran();
-
-        // and reload
-        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, dt(2011, 1, 1), bi(1));
-        leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, dt(2011, 1, 1), bi(1));
-
-        // then
-
-        final LeaseTerm leaseTerm1 = leasePoisonServiceChargeItem.findTerm(dt(2011, 1, 1));
-        assertNotNull(leaseTerm1);
-
-        final LeaseTerm leaseTerm2 = leasePoisonServiceChargeItem.getTerms().last();
-        assertThat(leaseTerm2.getEffectiveValue(), is(bd2(12400)));
-
-        // and then
-        SortedSet<LeaseTerm> terms = leasePoisonRentItem.getTerms();
-        List<LeaseTerm> temp = new ArrayList<LeaseTerm>(terms);
-        temp.toString();
-        
-        assertThat(
-                leasePoisonServiceChargeItem.getEffectiveInterval().toString()
-                .concat(terms.toString()), 
-                terms.size(), is(3));
-        assertNotNull(leasePoisonRentItem.findTerm(dt(2011, 1, 1)));
-        
+        assertNotNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
+        assertNotNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
     }
 
 }

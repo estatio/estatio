@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.party;
 
+import javax.inject.Inject;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -43,13 +44,9 @@ public class PartiesTest_findPartyByReference extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Parties parties;
 
-    @Before
-    public void setUp() throws Exception {
-        parties = service(Parties.class);
-    }
-    
     @Test
     public void happyCase() throws Exception {
         Party party = parties.findPartyByReference("TOPMODEL");

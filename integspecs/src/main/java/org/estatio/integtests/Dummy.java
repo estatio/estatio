@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtest;
+package org.estatio.integtests;
 
 /**
  * Required for jacoco-site. 

@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.party;
 
+import javax.inject.Inject;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
@@ -42,31 +43,32 @@ public class PartiesTest_findParties extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Parties parties;
 
-    @Before
-    public void setUp() throws Exception {
-        parties = service(Parties.class);
-    }
-    
     @Test
     public void partialReference_wildcardsBothEnds() {
-        Assert.assertThat(parties.findParties("*LLOWOR*").size(), is(1));
+        assertThatFindPartiesSizeIs("*LLOWOR*", 1);
     }
 
     @Test
     public void partialName_wildcardsBothEnds() {
-        Assert.assertThat(parties.findParties("*ello Wor*").size(), is(1));
+        assertThatFindPartiesSizeIs("*ello Wor*", 1);
     }
 
     @Test
     public void partialName_wildcardsAtOneEndOnly() {
-        Assert.assertThat(parties.findParties("Doe, Jo*").size(), is(1));
+        assertThatFindPartiesSizeIs("Doe, Jo*", 1);
     }
 
     @Test
     public void caseInsensitive() {
-        Assert.assertThat(parties.findParties("*OE, jO*").size(), is(1));
+        assertThatFindPartiesSizeIs("*OE, jO*", 1);
     }
+
+    private void assertThatFindPartiesSizeIs(String referenceOrName, int value) {
+        Assert.assertThat(parties.findParties(referenceOrName).size(), is(value));
+    }
+
 
 }

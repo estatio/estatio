@@ -18,10 +18,10 @@
  */
 package org.estatio.integtests.index;
 
+import javax.inject.Inject;
 import org.estatio.dom.index.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,16 +35,10 @@ public class IndexBasesTest_findByIndexAndDate extends EstatioIntegrationTest {
         scenarioExecution().install(new EstatioBaseLineFixture());
     }
 
+    @Inject
     private Indices indices;
-    private IndexValues indexValues;
+    @Inject
     private IndexBases indexBases;
-
-    @Before
-    public void setup() {
-        indices = service(Indices.class);
-        indexBases = service(IndexBases.class);
-        indexValues = service(IndexValues.class);
-    }
 
     @Test
     public void forValidIndexAndDate() throws Exception {

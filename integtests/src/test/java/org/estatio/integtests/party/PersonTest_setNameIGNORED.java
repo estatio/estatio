@@ -16,26 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.assets;
+package org.estatio.integtests.party;
 
-import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-public class PropertiesTest_allProperties extends EstatioIntegrationTest {
+public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -44,25 +38,25 @@ public class PropertiesTest_allProperties extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
-                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
             }
         });
     }
 
     @Inject
-    private Properties properties;
+    private Parties parties;
 
+    private Person personJoeDoe;
+
+    @Before
+    public void setUp() throws Exception {
+        personJoeDoe = (Person)parties.findParties("Doe, Jo*").get(0);
+    }
+
+    @Ignore // have raised EST-200
     @Test
-    public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
-        // when
-        List<Property> allProperties = properties.allProperties();
-        // then
-        Property property = allProperties.get(0);
-
-        // and when
-        Set<Unit> units = property.getUnits();
-        // not sure why this is there; this is as much a test of the fixture as of the code
-        assertThat(units.size(), is(25));
+    public void cannotModifyName() throws Exception {
+        expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");
+        wrap(personJoeDoe).setName("Cannot change name directly");
     }
 
 }

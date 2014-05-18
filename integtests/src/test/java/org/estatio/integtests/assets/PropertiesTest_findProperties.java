@@ -19,10 +19,9 @@
 package org.estatio.integtests.assets;
 
 import java.util.List;
-import org.estatio.dom.asset.FixedAssetRoles;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
@@ -49,17 +48,9 @@ public class PropertiesTest_findProperties extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Properties properties;
-    private Parties parties;
-    private FixedAssetRoles fixedAssetRoles;
 
-    @Before
-    public void setUp() throws Exception {
-        properties = service(Properties.class);
-        parties = service(Parties.class);
-        fixedAssetRoles = service(FixedAssetRoles.class);
-    }
-    
     @Test
     public void withReference() throws Exception {
         final List<Property> props = properties.findProperties("OXF");

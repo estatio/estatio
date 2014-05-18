@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.party;
 
+import javax.inject.Inject;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -44,14 +45,15 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
         });
     }
 
+    @Inject
     private Parties parties;
+    @Inject
     private CommunicationChannelContributions communicationChannelContributions;
+
     private Party partyHelloWorld;
 
     @Before
     public void setUp() throws Exception {
-        parties = service(Parties.class);
-        communicationChannelContributions = service(CommunicationChannelContributions.class);
         partyHelloWorld = parties.findPartyByReference("HELLOWORLD");
     }
     

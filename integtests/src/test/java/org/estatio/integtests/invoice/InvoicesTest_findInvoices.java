@@ -19,6 +19,7 @@
 package org.estatio.integtests.invoice;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoice;
@@ -35,7 +36,6 @@ import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,64 +64,45 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
     private static String runId = "2014-02-16T02:30:03.156 - OXF - [OXF-TOPMODEL-001] - [RENT, SERVICE_CHARGE, TURNOVER_RENT, TAX] - 2012-01-01 - 2012-01-01/2012-01-02";
 
+    @Inject
     private Invoices invoices;
+    @Inject
     private Parties parties;
+    @Inject
     private Leases leases;
+    @Inject
     private Properties properties;
-
-    private Party seller;
-    private Party buyer;
-    private Lease lease;
-
-    private Invoice invoice;
 
     @Before
     public void setUp() throws Exception {
-        invoices = service(Invoices.class);
-        parties = service(Parties.class);
-        leases = service(Leases.class);
-        properties = service(Properties.class);
-
-        seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
-        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
-        lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
+        Party seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
+        Party buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
+        Lease lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
 
         kalProperty = properties.findPropertyByReference("KAL");
 
-        invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
         invoice.setRunId(runId);
         Assert.assertNotNull(invoice);
     }
 
     @Test
     public void byStatus() {
-        List<Invoice> result = invoices.findInvoices(InvoiceStatus.NEW);
-        assertThat(result.size(), is(2));
+        List<Invoice> invoiceList = invoices.findInvoices(InvoiceStatus.NEW);
+        assertThat(invoiceList.size(), is(2));
     }
 
     @Test
     public void byPropertyDueDate() {
-        List<Invoice> invoice = invoices.findInvoices(kalProperty, dt(2012, 1, 1));
-        assertThat(invoice.size(), is(1));
+        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, dt(2012, 1, 1));
+        assertThat(invoiceList.size(), is(1));
     }
 
     @Test
-    public void findInvoicesByPropertyDueDateStatus() {
+    public void byPropertyDueDateStatus() {
 
-        List<Invoice> invoice = invoices.findInvoices(kalProperty, dt(2012, 1, 1));
-        assertThat(invoice.size(), is(1));
-
-        invoice = invoices.findInvoices(kalProperty, dt(2012, 1, 1), InvoiceStatus.NEW);
-        assertThat(invoice.size(), is(1));
-    }
-    
-    @Test
-    public void findByRunId() {
-        final Invoice invoice1 = invoices.findInvoices(InvoiceStatus.NEW).get(0);
-        invoice1.setRunId(runId);
-
-        List<Invoice> result = invoices.findInvoicesByRunId(runId);
-        assertThat(result.size(), is(1));
+        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, dt(2012, 1, 1), InvoiceStatus.NEW);
+        assertThat(invoiceList.size(), is(1));
     }
 
 }

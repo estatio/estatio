@@ -19,6 +19,7 @@
 package org.estatio.integtests.invoice;
 
 import java.util.SortedSet;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
@@ -58,21 +59,21 @@ public class CreateRetroInvoicesTest_findDueDatesForLease extends EstatioIntegra
         });
     }
 
+    @Inject
     private Invoices invoices;
+    @Inject
     private Properties properties;
+    @Inject
     private Leases leases;
-    private CreateRetroInvoices creator;
+    @Inject
     private InvoiceCalculationService invoiceCalculationService;
+
+    private CreateRetroInvoices creator;
 
     Lease lease;
 
     @Before
     public void setup() {
-        invoices = service(Invoices.class);
-        properties = service(Properties.class);
-        leases = service(Leases.class);
-        invoiceCalculationService = service(InvoiceCalculationService.class);
-
         creator = new CreateRetroInvoices();
         creator.leases = leases;
         creator.invoices = invoices;
@@ -87,6 +88,5 @@ public class CreateRetroInvoicesTest_findDueDatesForLease extends EstatioIntegra
         SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(dt(2012, 1, 1), dt(2014, 1, 1), lease);
         assertThat(dueDates.size(), is(10));
     }
-
 
 }

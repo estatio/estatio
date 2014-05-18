@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.invoice;
 
+import javax.inject.Inject;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -57,33 +58,26 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
                 execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
-                //execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
             }
         });
     }
 
+    @Inject
     private Invoices invoices;
+    @Inject
     private Parties parties;
+    @Inject
     private Leases leases;
+
     private Party seller;
     private Party buyer;
     private Lease lease;
 
     @Before
     public void setUp() throws Exception {
-        invoices = service(Invoices.class);
-        parties = service(Parties.class);
-        leases = service(Leases.class);
-
         seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
-
-        final IsisTransaction transaction = IsisContext.getTransactionManager().getTransaction();
-        final IsisTransaction.State state = transaction.getState();
-
-        IsisSystemForTest.get();
-
     }
 
     @Test

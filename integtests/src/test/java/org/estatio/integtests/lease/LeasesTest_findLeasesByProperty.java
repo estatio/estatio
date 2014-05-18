@@ -19,6 +19,7 @@
 package org.estatio.integtests.lease;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.Lease;
@@ -50,15 +51,11 @@ public class LeasesTest_findLeasesByProperty extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Leases leases;
 
+    @Inject
     private Properties properties;
-
-    @Before
-    public void setup() {
-        leases = service(Leases.class);
-        properties = service(Properties.class);
-    }
 
     @Test
     public void whenValidProperty() {

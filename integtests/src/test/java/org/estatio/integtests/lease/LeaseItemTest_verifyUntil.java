@@ -16,26 +16,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.invoice;
+package org.estatio.integtests.lease;
 
 import javax.inject.Inject;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationTest {
+public class LeaseItemTest_verifyUntil extends EstatioIntegrationTest {
+
+
 
     @Before
     public void setupData() {
@@ -51,23 +53,52 @@ public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationT
     }
 
     @Inject
-    private Invoices invoices;
-    @Inject
-    private Properties properties;
+    private Leases leases;
 
-    private Property property1;
+    private Lease leaseTopModel;
 
-    @Test
-    public void whenNone() throws Exception {
-        // given
-        property1 = properties.findPropertyByReference("OXF");
-        assertNotNull(property1);
+    private LeaseItem leaseTopModelServiceChargeItem;
+    private LeaseItem leaseTopModelRentItem;
 
-        // when
-        Numerator numerator = invoices.findInvoiceNumberNumerator(property1);
-        // then
-        Assert.assertNull(numerator);
+    @Before
+    public void setUp() throws Exception {
+        leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
+
+        leaseTopModelServiceChargeItem = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        assertNotNull(leaseTopModelServiceChargeItem);
+
+        leaseTopModelRentItem = leaseTopModel.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        assertNotNull(leaseTopModelRentItem);
     }
 
+    @Test
+    public void givenServiceChargeItem_thenCreatesTermsForThatItemOnly() throws Exception {
+
+        // given
+        assertNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
+        assertNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+
+        // when
+        leaseTopModelServiceChargeItem.verify();
+
+        // then
+        assertNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
+        assertNotNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+    }
+
+    @Test
+    public void givenIndexableRentItem_thenCreatesTermsForThatItemOnly() throws Exception {
+
+        // given
+        assertNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
+        assertNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+
+        // when
+        leaseTopModelRentItem.verify();
+
+        // then
+        assertNotNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
+        assertNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+    }
 
 }

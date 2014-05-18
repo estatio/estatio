@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.geography;
 
+import javax.inject.Inject;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -35,13 +36,9 @@ public class CountriesTest_findCountryByReference extends EstatioIntegrationTest
         scenarioExecution().install(new EstatioBaseLineFixture());
     }
 
+    @Inject
     private Countries countries;
 
-    @Before
-    public void setUp() throws Exception {
-        countries = service(Countries.class);
-    }
-    
     @Test
     public void whenExists() throws Exception {
         final Country country = countries.findCountry("NLD");

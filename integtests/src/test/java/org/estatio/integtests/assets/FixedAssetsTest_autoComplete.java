@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.assets;
 
+import javax.inject.Inject;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
@@ -43,13 +44,9 @@ public class FixedAssetsTest_autoComplete extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private FixedAssets fixedAssets;
 
-    @Before
-    public void setUp() throws Exception {
-        fixedAssets = service(FixedAssets.class);
-    }
-    
     @Test
     public void whenPresent() throws Exception {
         Assert.assertThat(fixedAssets.autoComplete("mall").size(), Is.is(1));

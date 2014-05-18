@@ -18,23 +18,26 @@
  */
 package org.estatio.integtests.lease;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.SortedSet;
 import javax.inject.Inject;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.hamcrest.core.Is;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
-public class LeasesTest_findLeases extends EstatioIntegrationTest {
+public class LeaseItemTest_getTerms extends EstatioIntegrationTest {
+
+    private Lease lease;
 
     @Before
     public void setupData() {
@@ -52,10 +55,46 @@ public class LeasesTest_findLeases extends EstatioIntegrationTest {
     @Inject
     private Leases leases;
 
+    @Before
+    public void setUp() throws Exception {
+        lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+    }
+
     @Test
-    public void whenWildcard() {
-        final List<Lease> matchingLeases = leases.findLeases("OXF*");
-        assertThat(matchingLeases.size(), is(5));
+    public void whenExists_andFirstIsIndexableRent() throws Exception {
+        // this is just really asserting on the fixture
+
+        // given
+        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+
+        // when
+        final SortedSet<LeaseTerm> terms = leaseTopModelRentItem.getTerms();
+
+        // then
+        Assert.assertThat(terms.size(), is(1));
+        final LeaseTerm term0 = terms.first();
+
+        LeaseTermForIndexableRent indexableRent = assertType(term0, LeaseTermForIndexableRent.class);
+
+        Assert.assertNotNull(indexableRent.getFrequency());
+        Assert.assertNotNull(indexableRent.getFrequency().nextDate(dt(2012, 1, 1)));
+
+        BigDecimal baseValue = indexableRent.getBaseValue();
+        Assert.assertEquals(bd("20000.00"), baseValue);
+    }
+
+    @Test
+    public void whenExists_andFirstIsLeaseTermForServiceChargeBudgetAuditLineItem() throws Exception {
+        // this is just really asserting on the fixture
+
+        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+
+        final SortedSet<LeaseTerm> terms = leaseTopModelServiceChargeItem.getTerms();
+        Assert.assertThat(terms.size(), Is.is(1));
+        final LeaseTerm term0 = terms.first();
+
+        LeaseTermForServiceCharge leaseTopModelServiceChargeTerm = assertType(term0, LeaseTermForServiceCharge.class);
+        Assert.assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue(), Is.is(bd("6000.00")));
     }
 
 }

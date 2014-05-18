@@ -19,6 +19,7 @@
 package org.estatio.integtests.numerator;
 
 import java.math.BigInteger;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
@@ -26,7 +27,6 @@ import org.estatio.dom.numerator.Numerator;
 import org.estatio.dom.numerator.Numerators;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -55,15 +55,16 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Numerators numerators;
+    @Inject
     private Properties properties;
+
     private Property property;
     private Property property2;
 
     @Before
     public void setUp() throws Exception {
-        numerators = service(Numerators.class);
-        properties = service(Properties.class);
         property = properties.allProperties().get(0);
         property2 = properties.allProperties().get(1);
 

@@ -19,6 +19,7 @@
 package org.estatio.integtests.invoice;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
@@ -52,14 +53,10 @@ public class InvoiceItemsForLeaseTest_findByLeaseAndInvoiceStatus extends Estati
         });
     }
 
-    private InvoiceItemsForLease invoiceItemsForLease;
+    @Inject
     private Leases leases;
-
-    @Before
-    public void setUp() throws Exception {
-        invoiceItemsForLease = service(InvoiceItemsForLease.class);
-        leases = service(Leases.class);
-    }
+    @Inject
+    private InvoiceItemsForLease invoiceItemsForLease;
 
     @Test
     public void givenValidLeaseWithNewInvoiceItems() throws Exception {

@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.lease.roles;
 
+import javax.inject.Inject;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -53,21 +54,14 @@ public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOF
         });
     }
 
+    @Inject
     private Leases leases;
+    @Inject
     private Parties parties;
+    @Inject
     private AgreementRoleTypes agreementRoleTypes;
-
+    @Inject
     private AgreementRoles agreementRoles;
-
-    @Before
-    public void setup() {
-        leases = service(Leases.class);
-        parties = service(Parties.class);
-        agreementRoleTypes = service(AgreementRoleTypes.class);
-
-        agreementRoles = service(AgreementRoles.class);
-    }
-
 
     @Test
     public void findByAgreementAndPartyAndTypeAndContainsDate() throws Exception {

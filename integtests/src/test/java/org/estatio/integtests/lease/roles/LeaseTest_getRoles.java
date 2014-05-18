@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.lease.roles;
 
+import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -48,13 +49,12 @@ public class LeaseTest_getRoles extends EstatioIntegrationTest {
     }
 
     private Lease leaseTopModel;
-    
+
+    @Inject
     private Leases leases;
 
     @Before
     public void setup() {
-        leases = service(Leases.class);
-        
         leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
     }
 

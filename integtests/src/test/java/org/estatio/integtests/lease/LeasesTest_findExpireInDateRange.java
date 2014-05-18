@@ -19,6 +19,7 @@
 package org.estatio.integtests.lease;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -49,12 +50,8 @@ public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Leases leases;
-
-    @Before
-    public void setup() {
-        leases = service(Leases.class);
-    }
 
     @Test
     public void whenLeasesExpiringInRange() {

@@ -18,13 +18,12 @@
  */
 package org.estatio.integtests.index;
 
-import java.math.BigDecimal;
+import javax.inject.Inject;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,14 +37,10 @@ public class IndexValuesTest_findIndexValueByIndexAndStartDate extends EstatioIn
         scenarioExecution().install(new EstatioBaseLineFixture());
     }
 
+    @Inject
     private Indices indices;
+    @Inject
     private IndexValues indexValues;
-
-    @Before
-    public void setup() {
-        indices = service(Indices.class);
-        indexValues = service(IndexValues.class);
-    }
 
     @Test
     public void forValidIndexAndStartDate() throws Exception {

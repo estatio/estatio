@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.lease.items;
 
+import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancy;
@@ -50,6 +51,7 @@ public class LeaseUnitTest_getBrand extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Leases leases;
     
     private Lease leaseTopModel;
@@ -57,8 +59,6 @@ public class LeaseUnitTest_getBrand extends EstatioIntegrationTest {
 
     @Before
     public void setup() {
-        leases = service(Leases.class);
-        
         leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
         leaseUnit = leaseTopModel.getOccupancies().first();
     }

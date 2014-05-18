@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.assets;
 
+import javax.inject.Inject;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -43,13 +44,9 @@ public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Units<?> units;
 
-    @Before
-    public void setUp() throws Exception {
-        units = (Units<?>) service(Units.class);
-    }
-    
     @Test
     public void whenMatches() throws Exception {
         final Unit unit = units.findUnitByReference("OXF-001");

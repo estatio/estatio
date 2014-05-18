@@ -19,6 +19,7 @@
 package org.estatio.integtests.agreement;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
@@ -53,18 +54,14 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
         });
     }
 
+    @Inject
     private Agreements agreements;
-    private AgreementTypes types;
-
-    @Before
-    public void setup() {
-        agreements = service(Agreements.class);
-        types = service(AgreementTypes.class);
-    }
+    @Inject
+    private AgreementTypes agreementTypes;
 
     @Test
     public void whenPresent() {
-        final AgreementType type = types.find("Lease");
+        final AgreementType type = agreementTypes.find("Lease");
         assertNotNull(type);
         final List<Agreement> results = agreements.findByTypeAndReferenceOrName(type, ".*OXF.*");
         assertThat(results.size(), is(5));

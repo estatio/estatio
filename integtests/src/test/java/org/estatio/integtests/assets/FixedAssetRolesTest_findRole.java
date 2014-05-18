@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.assets;
 
+import javax.inject.Inject;
 import org.estatio.dom.asset.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
@@ -44,16 +45,12 @@ public class FixedAssetRolesTest_findRole extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Properties properties;
+    @Inject
     private Parties parties;
+    @Inject
     private FixedAssetRoles fixedAssetRoles;
-
-    @Before
-    public void setUp() throws Exception {
-        properties = service(Properties.class);
-        parties = service(Parties.class);
-        fixedAssetRoles = service(FixedAssetRoles.class);
-    }
 
     @Test
     public void withExistingPropertyPartyAndRole() throws Exception {

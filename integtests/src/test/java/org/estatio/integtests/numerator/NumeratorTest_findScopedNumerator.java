@@ -19,6 +19,7 @@
 package org.estatio.integtests.numerator;
 
 import java.math.BigInteger;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
@@ -50,15 +51,16 @@ public class NumeratorTest_findScopedNumerator extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Numerators numerators;
+    @Inject
     private Properties properties;
+
     private Property property;
     private Property property2;
 
     @Before
     public void setUp() throws Exception {
-        numerators = service(Numerators.class);
-        properties = service(Properties.class);
         property = properties.allProperties().get(0);
         property2 = properties.allProperties().get(1);
     }

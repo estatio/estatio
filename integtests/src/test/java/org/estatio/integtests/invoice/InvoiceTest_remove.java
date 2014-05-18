@@ -19,6 +19,7 @@
 package org.estatio.integtests.invoice;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
@@ -55,8 +56,11 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Invoices invoices;
+    @Inject
     private Parties parties;
+    @Inject
     private Leases leases;
     
     private Party seller;
@@ -65,10 +69,6 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        invoices = service(Invoices.class);
-        parties = service(Parties.class);
-        leases = service(Leases.class);
-        
         seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);

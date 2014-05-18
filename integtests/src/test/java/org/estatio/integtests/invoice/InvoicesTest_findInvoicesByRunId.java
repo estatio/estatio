@@ -18,13 +18,20 @@
  */
 package org.estatio.integtests.invoice;
 
+import java.util.List;
 import javax.inject.Inject;
-import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.numerator.Numerator;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -33,9 +40,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationTest {
+public class InvoicesTest_findInvoicesByRunId extends EstatioIntegrationTest {
+
+    private Property kalProperty;
 
     @Before
     public void setupData() {
@@ -46,28 +56,43 @@ public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationT
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
                 execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
             }
         });
     }
 
+    private static String runId = "2014-02-16T02:30:03.156 - OXF - [OXF-TOPMODEL-001] - [RENT, SERVICE_CHARGE, TURNOVER_RENT, TAX] - 2012-01-01 - 2012-01-01/2012-01-02";
+
     @Inject
     private Invoices invoices;
     @Inject
-    private Properties properties;
+    private Parties parties;
+    @Inject
+    private Leases leases;
 
-    private Property property1;
 
-    @Test
-    public void whenNone() throws Exception {
-        // given
-        property1 = properties.findPropertyByReference("OXF");
-        assertNotNull(property1);
+    @Before
+    public void setUp() throws Exception {
+        Party seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
+        Party buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
+        Lease lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
 
-        // when
-        Numerator numerator = invoices.findInvoiceNumberNumerator(property1);
-        // then
-        Assert.assertNull(numerator);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        invoice.setRunId(runId);
+        Assert.assertNotNull(invoice);
     }
 
+    @Test
+    public void byRunId() {
+        // given
+        final Invoice invoice1 = invoices.findInvoices(InvoiceStatus.NEW).get(0);
+        invoice1.setRunId(runId);
+
+        // when
+        List<Invoice> result = invoices.findInvoicesByRunId(runId);
+
+        // then
+        assertThat(result.size(), is(1));
+    }
 
 }

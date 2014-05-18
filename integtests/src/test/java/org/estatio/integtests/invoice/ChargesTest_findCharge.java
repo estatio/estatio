@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.invoice;
 
+import javax.inject.Inject;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -33,13 +34,9 @@ public class ChargesTest_findCharge extends EstatioIntegrationTest {
         scenarioExecution().install(new EstatioBaseLineFixture());
     }
 
+    @Inject
     private Charges charges;
 
-    @Before
-    public void setUp() throws Exception {
-        charges = service(Charges.class);
-    }
-    
     @Test
     public void whenExists() throws Exception {
         Charge charge = charges.findCharge("RENT");

@@ -18,9 +18,8 @@
  */
 package org.estatio.integtests.index;
 
+import javax.inject.Inject;
 import org.estatio.dom.index.Index;
-import org.estatio.dom.index.IndexBases;
-import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -37,16 +36,8 @@ public class IndicesTest_findIndex extends EstatioIntegrationTest {
         scenarioExecution().install(new EstatioBaseLineFixture());
     }
 
+    @Inject
     private Indices indices;
-    private IndexValues indexValues;
-    private IndexBases indexBases;
-
-    @Before
-    public void setup() {
-        indices = service(Indices.class);
-        indexBases = service(IndexBases.class);
-        indexValues = service(IndexValues.class);
-    }
 
     @Test
     public void whenExists() throws Exception {

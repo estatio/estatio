@@ -16,25 +16,33 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integscenarios.lease;
+package org.estatio.integtests.lease;
 
+import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class LeaseTest_assign extends EstatioIntegrationTest {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    @BeforeClass
-    public static void setupData() {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class LeaseTest_findItem extends EstatioIntegrationTest {
+
+    @Before
+    public void setupData() {
         scenarioExecution().install(new CompositeFixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
@@ -45,23 +53,24 @@ public class LeaseTest_assign extends EstatioIntegrationTest {
             }
         });
     }
-    
+
+    @Inject
     private Leases leases;
- 
-    private Lease leasePoison;
-    private Lease leaseMediax;
-    
-    @Before
-    public void setup() {
-        leases = service(Leases.class);
-        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
-    }
-    
+
     @Test
-    public void happyCase() throws Exception {
-        Lease newLease = leasePoison.assign("OXF-MEDIAX-003" , "Reassigned", leaseMediax.getSecondaryParty() , dt(2014,1,1), dt(2014,1,1), true);
-    
+    public void whenExists() throws Exception {
+
+        // given
+        Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        assertThat(lease.getItems().size(), is(3));
+
+        // when
+        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+
+        // then
+        Assert.assertNotNull(leaseTopModelRentItem);
+        Assert.assertNotNull(leaseTopModelServiceChargeItem);
     }
 
 }

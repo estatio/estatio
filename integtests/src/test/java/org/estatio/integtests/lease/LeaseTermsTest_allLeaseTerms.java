@@ -16,26 +16,30 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.assets;
+package org.estatio.integtests.lease;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
-public class PropertiesTest_allProperties extends EstatioIntegrationTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class LeaseTermsTest_allLeaseTerms extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -45,24 +49,31 @@ public class PropertiesTest_allProperties extends EstatioIntegrationTest {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
             }
         });
     }
 
     @Inject
-    private Properties properties;
+    private LeaseTerms leaseTerms;
 
     @Test
-    public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
-        // when
-        List<Property> allProperties = properties.allProperties();
-        // then
-        Property property = allProperties.get(0);
+    public void whenExists() throws Exception {
 
-        // and when
-        Set<Unit> units = property.getUnits();
-        // not sure why this is there; this is as much a test of the fixture as of the code
-        assertThat(units.size(), is(25));
+        // when
+        List<LeaseTerm> allLeaseTerms = leaseTerms.allLeaseTerms();
+        
+        // then
+        Assert.assertThat(allLeaseTerms.isEmpty(), is(false));
+        LeaseTerm term = allLeaseTerms.get(0);
+
+        // and then
+        Assert.assertNotNull(term.getFrequency());
+        Assert.assertNotNull(term.getFrequency().nextDate(dt(2012, 1, 1)));
+
+        final LeaseTermForIndexableRent indexableRent = assertType(term, LeaseTermForIndexableRent.class);
+        BigDecimal baseValue = indexableRent.getBaseValue();
+        Assert.assertEquals(bd("20000.00"), baseValue);
     }
 
 }

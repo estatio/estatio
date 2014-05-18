@@ -19,6 +19,7 @@
 package org.estatio.integtests.invoice;
 
 import java.math.BigInteger;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Constants;
@@ -57,29 +58,26 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
         });
     }
 
+    @Inject
     private Invoices invoices;
+    @Inject
     private Properties properties;
+    @Inject
     private BookmarkService bookmarkService;
     
     private Property property1;
     private Property property2;
     
     private Bookmark property1Bookmark;
-    private Bookmark property2Bookmark;
 
     @Before
     public void setUp() throws Exception {
-        invoices = service(Invoices.class);
-        properties = service(Properties.class);
-        bookmarkService = service(BookmarkService.class);
-        
         property1 = properties.findPropertyByReference("OXF");
         property2 = properties.findPropertyByReference("KAL");
         assertNotNull(property1);
         assertNotNull(property2);
         
         property1Bookmark = bookmarkService.bookmarkFor(property1);
-        property2Bookmark = bookmarkService.bookmarkFor(property2);
     }
     
     @Test

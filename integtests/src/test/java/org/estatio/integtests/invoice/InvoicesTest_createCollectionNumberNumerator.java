@@ -19,6 +19,7 @@
 package org.estatio.integtests.invoice;
 
 import java.math.BigInteger;
+import javax.inject.Inject;
 import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
@@ -51,12 +52,8 @@ public class InvoicesTest_createCollectionNumberNumerator extends EstatioIntegra
         });
     }
 
+    @Inject
     private Invoices invoices;
-
-    @Before
-    public void setUp() throws Exception {
-        invoices = service(Invoices.class);
-    }
 
     @Test
     public void createThenFind() throws Exception {

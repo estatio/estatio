@@ -18,7 +18,7 @@
  */
 package org.estatio.integtests.invoice;
 
-import java.math.BigDecimal;
+import javax.inject.Inject;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
@@ -39,7 +39,6 @@ import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
@@ -63,10 +62,15 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
         });
     }
 
+    @Inject
     private Invoices invoices;
+    @Inject
     private Parties parties;
+    @Inject
     private Leases leases;
+    @Inject
     private Currencies currencies;
+    @Inject
     private Charges charges;
 
     private Party seller;
@@ -77,12 +81,6 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        invoices = service(Invoices.class);
-        parties = service(Parties.class);
-        leases = service(Leases.class);
-        currencies = service(Currencies.class);
-        charges = service(Charges.class);
-
         seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);

@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.index;
 
+import javax.inject.Inject;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;
@@ -43,14 +44,10 @@ public class IndexValuesTest_findLastByIndex extends EstatioIntegrationTest {
         );
     }
 
+    @Inject
     private Indices indices;
+    @Inject
     private IndexValues indexValues;
-
-    @Before
-    public void setup() {
-        indices = service(Indices.class);
-        indexValues = service(IndexValues.class);
-    }
 
     @Test
     public void findLastByIndex() throws Exception {

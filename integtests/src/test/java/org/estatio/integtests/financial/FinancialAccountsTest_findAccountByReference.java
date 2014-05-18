@@ -18,6 +18,7 @@
  */
 package org.estatio.integtests.financial;
 
+import javax.inject.Inject;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -44,14 +45,9 @@ public class FinancialAccountsTest_findAccountByReference extends EstatioIntegra
         });
     }
 
+    @Inject
     private FinancialAccounts financialAccounts;
 
-    @Before
-    public void setUp() throws Exception {
-        financialAccounts = service(FinancialAccounts.class);
-    }
-    
-    
     @Test
     public void forAccount() {
         // when

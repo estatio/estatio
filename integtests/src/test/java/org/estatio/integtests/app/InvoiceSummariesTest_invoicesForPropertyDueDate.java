@@ -19,6 +19,7 @@
 package org.estatio.integtests.app;
 
 import java.util.List;
+import javax.inject.Inject;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
@@ -51,12 +52,8 @@ public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioInte
         });
     }
 
+    @Inject
     private InvoiceSummariesForPropertyDueDate invoiceSummaries;
-
-    @Before
-    public void setUp() throws Exception {
-        invoiceSummaries = service(InvoiceSummariesForPropertyDueDate.class);
-    }
 
     @Test
     public void whenPresent() throws Exception {
