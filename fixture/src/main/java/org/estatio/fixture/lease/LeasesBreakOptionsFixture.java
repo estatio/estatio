@@ -24,7 +24,6 @@ public class LeasesBreakOptionsFixture extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
         execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
         execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);

@@ -18,17 +18,26 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.estatio.dom.lease.Lease;
 
-public class LeaseItemsAndLeaseTermsFixture extends CompositeFixtureScript {
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseItemAndLeaseTermsForOxfMediax002 extends LeaseItemAndLeaseTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new LeaseItemAndLeaseTermsForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfMediax002(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfPoison003(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForKalPoison001(), executionContext);
+        Lease lease = leases.findLeaseByReference("OXF-MEDIAX-002");
+
+        createLeaseTermForRent(
+                lease, lease.getStartDate(), null, bd(20000), ld(2008, 1, 1), ld(2009, 1, 1), ld(2009, 4, 1), "ISTAT-FOI",
+                executionContext);
+        createLeaseTermForServiceCharge(
+                lease, lease.getStartDate(), null, bd(6000),
+                executionContext);
+        createLeaseTermForTurnoverRent(
+                lease, lease.getStartDate(), null, "7",
+                executionContext);
     }
 
 }
