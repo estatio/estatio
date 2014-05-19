@@ -25,7 +25,12 @@ public class BankAccountAndMandateForPoison extends BankAccountAndMandateFixture
     }
 
     public BankAccountAndMandateForPoison(String friendlyName, String localName) {
-        super(friendlyName, localName, "POISON", "NL31ABNA0580744437", 2, null);
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createBankAccountAndMandate("POISON", "NL31ABNA0580744437", 2, null, executionContext);
     }
 
 }

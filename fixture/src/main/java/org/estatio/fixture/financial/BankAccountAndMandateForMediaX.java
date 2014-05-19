@@ -25,7 +25,12 @@ public class BankAccountAndMandateForMediaX extends BankAccountAndMandateFixture
     }
 
     public BankAccountAndMandateForMediaX(String friendlyName, String localName) {
-        super(friendlyName, localName, "MEDIAX", "NL31ABNA0580744436", null, null);
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createBankAccountAndMandate("MEDIAX", "NL31ABNA0580744436", null, null, executionContext);
     }
 
 }

@@ -18,15 +18,20 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakType;
 
-public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends CompositeFixtureScript {
+public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute("leases-and-occupancies", new LeasesAndRolesAndLeaseUnitsAndTagsFixture(), executionContext);
-        execute("lease-items-and-terms", new LeaseItemsAndLeaseTermsFixture(), executionContext);
-        execute("break-options", new LeasesBreakOptionsFixture(), executionContext);
+        final Lease leaseTopModel001 = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        newBreakOptionPlusYears(leaseTopModel001, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
+        newBreakOptionAtEndDate(leaseTopModel001, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
     }
+
+    // //////////////////////////////////////
+
 
 }

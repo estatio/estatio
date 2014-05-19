@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
 import static org.estatio.integtests.VT.ld;
 import static org.estatio.integtests.VT.ldix;
 
-public class InvoiceAndInvoiceItemForOxfPoison003 extends InvoiceAndInvoiceItemFixture {
+public class InvoiceAndInvoiceItemForOxfPoison003 extends InvoiceAndInvoiceItemAbstract {
 
     public static final String SELLER_PARTY = "ACME";
     public static final String BUYER_PARTY = "POISON";
@@ -38,7 +38,12 @@ public class InvoiceAndInvoiceItemForOxfPoison003 extends InvoiceAndInvoiceItemF
     }
 
     public InvoiceAndInvoiceItemForOxfPoison003(String friendlyName, String localName) {
-        super(friendlyName, localName, SELLER_PARTY, BUYER_PARTY, LEASE, "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)));
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createInvoiceAndInvoiceItems(SELLER_PARTY, BUYER_PARTY, LEASE, "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)), executionContext);
     }
 
 }

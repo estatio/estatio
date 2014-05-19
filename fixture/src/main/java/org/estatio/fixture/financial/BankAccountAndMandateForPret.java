@@ -25,7 +25,12 @@ public class BankAccountAndMandateForPret extends BankAccountAndMandateFixture {
     }
 
     public BankAccountAndMandateForPret(String friendlyName, String localName) {
-        super(friendlyName, localName, "PRET", "NL31ABNA0580744438", null, null);
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createBankAccountAndMandate("PRET", "NL31ABNA0580744438", null, null, executionContext);
     }
 
 }

@@ -25,7 +25,12 @@ public class BankAccountAndMandateForMiracle extends BankAccountAndMandateFixtur
     }
 
     public BankAccountAndMandateForMiracle(String friendlyName, String localName) {
-        super(friendlyName, localName, "MIRACLE", "NL31ABNA0580744439", null, null);
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createBankAccountAndMandate("MIRACLE", "NL31ABNA0580744439", null, null, executionContext);
     }
 
 }

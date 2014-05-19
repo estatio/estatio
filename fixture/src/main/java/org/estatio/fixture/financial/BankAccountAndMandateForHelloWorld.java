@@ -25,7 +25,12 @@ public class BankAccountAndMandateForHelloWorld extends BankAccountAndMandateFix
     }
 
     public BankAccountAndMandateForHelloWorld(String friendlyName, String localName) {
-        super(friendlyName, localName, "HELLOWORLD", "NL31ABNA0580744434", null, "OXF");
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createBankAccountAndMandate("HELLOWORLD", "NL31ABNA0580744434", null, "OXF", executionContext);
     }
 
 }

@@ -38,23 +38,13 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class BankAccountAndMandateFixture extends SimpleFixtureScript {
+public abstract class BankAccountAndMandateFixture extends SimpleFixtureScript {
 
-    private final String partyStr;
-    private final String bankAccountStr;
-    private final Integer sequence;
-    private final String propertyStr;
-
-    protected BankAccountAndMandateFixture(String friendlyName, String localName, String partyStr, String bankAccountStr, Integer sequence, String propertyStr) {
+    protected BankAccountAndMandateFixture(String friendlyName, String localName) {
         super(friendlyName, localName);
-        this.partyStr = partyStr;
-        this.bankAccountStr = bankAccountStr;
-        this.sequence = sequence;
-        this.propertyStr = propertyStr;
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void createBankAccountAndMandate(String partyStr, String bankAccountStr, Integer sequence, String propertyStr, ExecutionContext executionContext) {
 
         Party party = parties.findPartyByReference(partyStr);
         AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);

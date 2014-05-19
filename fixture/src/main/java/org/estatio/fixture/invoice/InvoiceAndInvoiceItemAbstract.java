@@ -37,27 +37,13 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class InvoiceAndInvoiceItemFixture extends SimpleFixtureScript {
+public abstract class InvoiceAndInvoiceItemAbstract extends SimpleFixtureScript {
 
-    private final String sellerStr;
-    private final String buyerStr;
-    private final String leaseStr;
-    private final String currencyStr;
-    private final LocalDate startDate;
-    private final LocalDateInterval interval;
-
-    public InvoiceAndInvoiceItemFixture(String friendlyName, String localName, String sellerStr, String buyerStr, String leaseStr, String currencyStr, LocalDate startDate, LocalDateInterval interval) {
+    protected InvoiceAndInvoiceItemAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);
-        this.sellerStr = sellerStr;
-        this.buyerStr = buyerStr;
-        this.leaseStr = leaseStr;
-        this.currencyStr = currencyStr;
-        this.startDate = startDate;
-        this.interval = interval;
     }
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void createInvoiceAndInvoiceItems(String sellerStr, String buyerStr, String leaseStr, String currencyStr, LocalDate startDate, LocalDateInterval interval, ExecutionContext executionContext) {
 
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);

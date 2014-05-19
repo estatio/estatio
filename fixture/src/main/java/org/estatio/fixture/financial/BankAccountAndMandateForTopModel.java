@@ -25,7 +25,12 @@ public class BankAccountAndMandateForTopModel extends BankAccountAndMandateFixtu
     }
 
     public BankAccountAndMandateForTopModel(String friendlyName, String localName) {
-        super(friendlyName, localName, "TOPMODEL", "NL31ABNA0580744435", 1, null);
+        super(friendlyName, localName);
+    }
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        createBankAccountAndMandate("TOPMODEL", "NL31ABNA0580744435", 1, null, executionContext);
     }
 
 }
