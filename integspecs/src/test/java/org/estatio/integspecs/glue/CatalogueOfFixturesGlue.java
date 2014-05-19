@@ -19,13 +19,12 @@ package org.estatio.integspecs.glue;
 import cucumber.api.java.Before;
 
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
 import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
 import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
 import org.estatio.fixture.lease.LeaseAndRolesAndOccupanciesAndTagsForAll;
 import org.estatio.fixture.lease.LeasesEtcForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
+import org.estatio.fixture.party.*;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
@@ -43,7 +42,17 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioBaseLineFixture(), executionContext);
 
-                        execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                        // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                        execute(new PersonForJohnDoe(), executionContext);
+                        execute(new PersonForLinusTorvalds(), executionContext);
+
                         execute("properties", new PropertiesAndUnitsForAll(), executionContext);
                         execute("leases", new LeasesEtcForAll(), executionContext);
                         execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
@@ -56,14 +65,30 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
     @Before({"@integration", "@LeasesOnlyFixture"})
     public void beforeScenarioLeasesOnlyFixture() {
         scenarioExecution().install(
-                new EstatioOperationalTeardownFixture(),
-                new EstatioBaseLineFixture(),
-                new PersonsAndOrganisationsAndCommunicationChannelsForAll(),
-                new PropertiesAndUnitsForAll(),
-                new LeaseAndRolesAndOccupanciesAndTagsForAll()
-                // no lease items or terms
-                // no invoices or invoice items
-            );
+                new CompositeFixtureScript() {
+                    @Override
+                    protected void execute(ExecutionContext executionContext) {
+                        execute(new EstatioBaseLineFixture(), executionContext);
+
+                        // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                        execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                        execute(new PersonForJohnDoe(), executionContext);
+                        execute(new PersonForLinusTorvalds(), executionContext);
+
+                        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        execute("leases", new LeaseAndRolesAndOccupanciesAndTagsForAll(), executionContext);
+                        // no lease items or terms
+                        // no invoices or invoice items
+                    }
+                }
+        );
+
     }
 
 }

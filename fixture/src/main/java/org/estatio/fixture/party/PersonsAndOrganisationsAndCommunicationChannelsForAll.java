@@ -20,7 +20,8 @@ package org.estatio.fixture.party;
 
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class PersonsAndOrganisationsAndCommunicationChannelsForAll extends CompositeFixtureScript {
+// unused, has been inlined into all integ tests.
+class PersonsAndOrganisationsAndCommunicationChannelsForAll extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
