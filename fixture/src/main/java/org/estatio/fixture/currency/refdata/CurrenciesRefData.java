@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.currency;
+package org.estatio.fixture.currency.refdata;
 
 import javax.inject.Inject;
 import org.estatio.dom.currency.Currencies;
@@ -24,7 +24,7 @@ import org.estatio.dom.currency.Currency;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 
-public class CurrenciesFixture extends SimpleFixtureScript {
+public class CurrenciesRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

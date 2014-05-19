@@ -18,13 +18,13 @@
  */
 package org.estatio.fixture;
 
-import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
-import org.estatio.fixture.charge.ChargeAndChargeGroupFixture;
-import org.estatio.fixture.currency.CurrenciesFixture;
-import org.estatio.fixture.geography.CountriesAndStatesFixture;
-import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
-import org.estatio.fixture.link.LinksFixture;
-import org.estatio.fixture.tax.TaxesAndTaxRatesFixture;
+import org.estatio.fixture.agreement.refdata.AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData;
+import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
+import org.estatio.fixture.currency.refdata.CurrenciesRefData;
+import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
+import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
+import org.estatio.fixture.link.refdata.LinksRefData;
+import org.estatio.fixture.tax.refdata.TaxesAndTaxRatesRefData;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 public class EstatioRefDataSetupFixture extends CompositeFixtureScript {
@@ -35,13 +35,13 @@ public class EstatioRefDataSetupFixture extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute("currencies", new CurrenciesFixture(), executionContext);
-        execute("countries", new CountriesAndStatesFixture(), executionContext);
+        execute("currencies", new CurrenciesRefData(), executionContext);
+        execute("countries", new CountriesAndStatesRefData(), executionContext);
         execute("italy-refdata", new EstatioRefDataForItalySetupFixture(), executionContext);
-        execute("agreement-refdata", new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(), executionContext);
-        execute("tax-refdata", new TaxesAndTaxRatesFixture(), executionContext);
-        execute("charge-refdata", new ChargeAndChargeGroupFixture(), executionContext);
-        execute("index-refdata", new IndexAndIndexBaseAndIndexValueFixture(), executionContext);
-        execute("links", new LinksFixture(), executionContext);
+        execute("agreement-refdata", new AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData(), executionContext);
+        execute("tax-refdata", new TaxesAndTaxRatesRefData(), executionContext);
+        execute("charge-refdata", new ChargeAndChargeGroupRefData(), executionContext);
+        execute("index-refdata", new IndexAndIndexBaseAndIndexValueRefData(), executionContext);
+        execute("links", new LinksRefData(), executionContext);
     }
 }

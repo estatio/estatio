@@ -27,10 +27,10 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.EstatioDemoFixture;
-import org.estatio.fixture.agreement.AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture;
-import org.estatio.fixture.currency.CurrenciesFixture;
-import org.estatio.fixture.index.IndexAndIndexBaseAndIndexValueFixture;
-import org.estatio.fixture.link.LinksFixture;
+import org.estatio.fixture.agreement.refdata.AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData;
+import org.estatio.fixture.currency.refdata.CurrenciesRefData;
+import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
+import org.estatio.fixture.link.refdata.LinksRefData;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
@@ -110,7 +110,7 @@ public class EstatioFixtureScripts extends FixtureScripts{
     @Prototype
     @MemberOrder(name="Administration", sequence = "4")
     public List<FixtureResult> installIndexFixture() {
-        return runFixtureScript(new IndexAndIndexBaseAndIndexValueFixture(), null);
+        return runFixtureScript(new IndexAndIndexBaseAndIndexValueRefData(), null);
         //return "Index fixture successfully installed";
     }
 
@@ -123,7 +123,7 @@ public class EstatioFixtureScripts extends FixtureScripts{
     @Prototype
     @MemberOrder(name="Administration", sequence = "4")
     public List<FixtureResult> installLinksFixture() {
-        return runFixtureScript(new LinksFixture(), null);
+        return runFixtureScript(new LinksRefData(), null);
         //return "Links fixture successfully installed";
     }
 
@@ -135,8 +135,8 @@ public class EstatioFixtureScripts extends FixtureScripts{
         return runFixtureScript(new CompositeFixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture(), executionContext);
-                execute(new CurrenciesFixture(), executionContext);
+                execute(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData(), executionContext);
+                execute(new CurrenciesRefData(), executionContext);
                 execute(new SimpleFixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
@@ -153,7 +153,7 @@ public class EstatioFixtureScripts extends FixtureScripts{
     @Prototype
     @MemberOrder(name="Administration", sequence = "9")
     public List<FixtureResult> installCurrencies() {
-        return runFixtureScript(new CurrenciesFixture(), null);
+        return runFixtureScript(new CurrenciesRefData(), null);
         //return "Constants successfully installed";
     }
 

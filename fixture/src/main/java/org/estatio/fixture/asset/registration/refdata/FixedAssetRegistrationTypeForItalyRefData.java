@@ -16,14 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.asset.registration;
+package org.estatio.fixture.asset.registration.refdata;
 
 
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.asset.registration.LandRegister;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class FixedAssetRegistrationTypeForItalyFixture extends SimpleFixtureScript {
+public class FixedAssetRegistrationTypeForItalyRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

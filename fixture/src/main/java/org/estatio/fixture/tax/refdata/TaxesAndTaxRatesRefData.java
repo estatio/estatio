@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.tax;
+package org.estatio.fixture.tax.refdata;
 
 import java.math.BigDecimal;
 import javax.inject.Inject;
@@ -28,7 +28,7 @@ import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 import static org.estatio.integtests.VT.ld;
 
 
-public class TaxesAndTaxRatesFixture extends SimpleFixtureScript {
+public class TaxesAndTaxRatesRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

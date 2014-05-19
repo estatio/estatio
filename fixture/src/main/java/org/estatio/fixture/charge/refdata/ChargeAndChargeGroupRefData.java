@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.charge;
+package org.estatio.fixture.charge.refdata;
 
 import javax.inject.Inject;
 import org.estatio.dom.charge.Charge;
@@ -27,7 +27,7 @@ import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class ChargeAndChargeGroupFixture extends SimpleFixtureScript {
+public class ChargeAndChargeGroupRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.link;
+package org.estatio.fixture.link.refdata;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
@@ -24,7 +24,7 @@ import org.estatio.services.links.Link;
 import org.estatio.services.links.Links;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class LinksFixture extends SimpleFixtureScript {
+public class LinksRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

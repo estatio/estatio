@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.index;
+package org.estatio.fixture.index.refdata;
 
 import java.math.BigDecimal;
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public class IndexAndIndexBaseAndIndexValueFixture extends SimpleFixtureScript {
+public class IndexAndIndexBaseAndIndexValueRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

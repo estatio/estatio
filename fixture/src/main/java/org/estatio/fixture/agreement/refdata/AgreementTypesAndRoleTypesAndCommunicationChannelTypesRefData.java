@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.agreement;
+package org.estatio.fixture.agreement.refdata;
 
 
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
@@ -26,7 +26,7 @@ import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesFixture extends SimpleFixtureScript {
+public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

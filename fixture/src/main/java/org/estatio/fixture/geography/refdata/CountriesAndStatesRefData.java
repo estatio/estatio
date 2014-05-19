@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.geography;
+package org.estatio.fixture.geography.refdata;
 
 import javax.inject.Inject;
 import org.estatio.dom.geography.Countries;
@@ -25,7 +25,7 @@ import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class CountriesAndStatesFixture extends SimpleFixtureScript {
+public class CountriesAndStatesRefData extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
