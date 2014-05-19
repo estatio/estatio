@@ -24,7 +24,7 @@ import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.*;
+import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class CreateBreakOptions extends SimpleFixtureScript {
 

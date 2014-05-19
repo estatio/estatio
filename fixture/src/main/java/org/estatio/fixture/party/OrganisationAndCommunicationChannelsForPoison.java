@@ -16,17 +16,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.invoice;
+package org.estatio.fixture.party;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-public class InvoicesAndInvoiceItemsFixture extends CompositeFixtureScript {
+public class OrganisationAndCommunicationChannelsForPoison extends OrganisationAndCommunicationChannelsAbstract {
 
     @Override
-    protected void execute(FixtureScript.ExecutionContext executionContext) {
-        execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
-        execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
+    protected void execute(ExecutionContext executionContext) {
+        createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", executionContext);
     }
 
 

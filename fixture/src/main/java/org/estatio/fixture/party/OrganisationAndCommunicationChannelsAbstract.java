@@ -33,7 +33,7 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.hamcrest.CoreMatchers.*;
 
-public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends SimpleFixtureScript {
+public abstract class OrganisationAndCommunicationChannelsAbstract extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
@@ -44,17 +44,9 @@ public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends Simp
         createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", executionContext);
         createOrganisation("PRET;Pret-a-Manger;;;;;;;;;", executionContext);
         createOrganisation("MIRACLE;Miracle Shoes;;;;;;;;;", executionContext);
-
-        createPerson("JDOE", "J", "John", "Doe", executionContext);
-        createPerson("LTORVALDS", "L", "Linus", "Torvalds", executionContext);
     }
 
-    private Party createPerson(String reference, String initials, String firstName, String lastName, ExecutionContext executionContext) {
-        Party party = persons.newPerson(reference, initials, firstName, lastName);
-        return executionContext.add(this, party.getReference(), party);
-    }
-
-    private Party createOrganisation(String input, ExecutionContext fixtureResults) {
+    protected Party createOrganisation(String input, ExecutionContext fixtureResults) {
         String[] values = input.split(";");
         Party party = organisations.newOrganisation(values[0], values[1]);
 
@@ -109,18 +101,18 @@ public class PersonsAndOrganisationsAndCommunicationChannelsFixture extends Simp
     // //////////////////////////////////////
 
     @Inject
-    private Countries countries;
+    protected Countries countries;
 
     @Inject
-    private States states;
+    protected States states;
 
     @Inject
-    private Organisations organisations;
+    protected Organisations organisations;
 
     @Inject
-    private Persons persons;
+    protected Persons persons;
 
     @Inject
-    private CommunicationChannelContributions communicationChannelContributedActions;
+    protected CommunicationChannelContributions communicationChannelContributedActions;
 
 }

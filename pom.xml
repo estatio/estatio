@@ -934,6 +934,18 @@ language governing permissions and limitations under the License.
             </modules>
         </profile>
         <profile>
+            <id>nobdd</id>
+            <modules>
+                <module>dom</module>
+                <module>dom-italy</module>
+                <module>fixture</module>
+                <module>integtests</module>
+                <module>migration</module>
+                <module>migration-integtests</module>
+                <module>webapp</module>
+            </modules>
+        </profile>
+        <profile>
             <id>analysis</id>
             <properties>
                 <maven.test.skip>true</maven.test.skip>

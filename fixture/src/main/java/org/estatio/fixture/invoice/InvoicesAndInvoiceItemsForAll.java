@@ -16,21 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.fixture.invoice;
 
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeasesEtcForAll extends CompositeFixtureScript {
+public class InvoicesAndInvoiceItemsForAll extends CompositeFixtureScript {
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
-
-        execute(new LeasesEtcForOxfTopModel001(), executionContext);
-        execute(new LeasesEtcForOxfMediax002(), executionContext);
-        execute(new LeasesEtcForOxfPoison003(), executionContext);
-        execute(new LeasesEtcForOxfPret004(), executionContext);
-        execute(new LeasesEtcForOxfMiracl005(), executionContext);
-        execute(new LeasesEtcForKalPoison001(), executionContext);
+    protected void execute(FixtureScript.ExecutionContext executionContext) {
+        execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
+        execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
     }
+
 
 }

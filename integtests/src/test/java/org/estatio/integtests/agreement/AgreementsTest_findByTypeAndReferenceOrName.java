@@ -26,9 +26,9 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
 import org.estatio.fixture.lease.LeasesEtcForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,8 +47,8 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute(new EstatioOperationalTeardownFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
-                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
                 execute("leases", new LeasesEtcForAll(), executionContext);
             }
         });

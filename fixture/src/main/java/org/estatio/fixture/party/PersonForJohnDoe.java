@@ -16,21 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.fixture.party;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
-
-public class LeasesEtcForAll extends CompositeFixtureScript {
+public class PersonForJohnDoe extends PersonAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        execute(new LeasesEtcForOxfTopModel001(), executionContext);
-        execute(new LeasesEtcForOxfMediax002(), executionContext);
-        execute(new LeasesEtcForOxfPoison003(), executionContext);
-        execute(new LeasesEtcForOxfPret004(), executionContext);
-        execute(new LeasesEtcForOxfMiracl005(), executionContext);
-        execute(new LeasesEtcForKalPoison001(), executionContext);
+        createPerson("JDOE", "J", "John", "Doe", executionContext);
     }
-
 }

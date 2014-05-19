@@ -16,21 +16,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.financial;
+package org.estatio.fixture.party;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
-
-public class BankAccountsAndMandatesFixture extends CompositeFixtureScript {
+public class OrganisationAndCommunicationChannelsForPret extends OrganisationAndCommunicationChannelsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new BankAccountAndMandateForAcme(), executionContext);
-        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
-        execute(new BankAccountAndMandateForMediaX(), executionContext);
-        execute(new BankAccountAndMandateForMiracle(), executionContext);
-        execute(new BankAccountAndMandateForPoison(), executionContext);
-        execute(new BankAccountAndMandateForPret(), executionContext);
-        execute(new BankAccountAndMandateForTopModel(), executionContext);
+        createOrganisation("PRET;Pret-a-Manger;;;;;;;;;", executionContext);
     }
+
 
 }

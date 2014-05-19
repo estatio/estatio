@@ -18,11 +18,11 @@
  */
 package org.estatio.fixture;
 
-import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.financial.BankAccountsAndMandatesFixture;
-import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
 import org.estatio.fixture.lease.LeasesEtcForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 
@@ -37,11 +37,11 @@ public class EstatioOperationalSetupFixture extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
-        execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+        execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
         execute("leases", new LeasesEtcForAll(), executionContext);
-        execute("invoices", new InvoicesAndInvoiceItemsFixture(), executionContext);
-        execute("bank-accounts", new BankAccountsAndMandatesFixture(), executionContext);
+        execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+        execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
     }
 
 }

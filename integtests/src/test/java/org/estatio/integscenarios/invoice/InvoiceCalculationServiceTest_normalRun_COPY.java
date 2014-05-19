@@ -25,9 +25,9 @@ import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
 import org.estatio.fixture.lease.LeasesEtcForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.estatio.services.settings.EstatioSettingsService;
@@ -52,8 +52,8 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
-                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
                 execute("leases", new LeasesEtcForAll(), executionContext);
             }
         });

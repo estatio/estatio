@@ -26,11 +26,11 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
-import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsFixture;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
 import org.estatio.fixture.lease.LeasesEtcForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -46,10 +46,10 @@ public class InvoiceItemsForLeaseTest_findByLeaseAndInvoiceStatus extends Estati
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
-                execute("properties", new PropertiesAndUnitsFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
                 execute("leases", new LeasesEtcForAll(), executionContext);
-                execute("invoices", new InvoicesAndInvoiceItemsFixture(), executionContext);
+                execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
             }
         });
     }

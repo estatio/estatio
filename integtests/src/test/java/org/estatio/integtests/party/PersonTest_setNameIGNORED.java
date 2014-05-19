@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -37,7 +37,7 @@ public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
             }
         });
     }

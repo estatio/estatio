@@ -21,9 +21,9 @@ import cucumber.api.java.Before;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalSetupFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
 import org.estatio.fixture.lease.LeaseAndRolesAndOccupanciesAndTagsForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
 /**
@@ -46,8 +46,8 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
         scenarioExecution().install(
                 new EstatioOperationalTeardownFixture(),
                 new EstatioBaseLineFixture(),
-                new PersonsAndOrganisationsAndCommunicationChannelsFixture(),
-                new PropertiesAndUnitsFixture(),
+                new PersonsAndOrganisationsAndCommunicationChannelsForAll(),
+                new PropertiesAndUnitsForAll(),
                 new LeaseAndRolesAndOccupanciesAndTagsForAll()
                 // no lease items or terms
                 // no invoices or invoice items

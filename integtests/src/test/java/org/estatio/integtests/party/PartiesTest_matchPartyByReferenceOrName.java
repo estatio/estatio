@@ -21,8 +21,7 @@ package org.estatio.integtests.party;
 import javax.inject.Inject;
 import org.estatio.dom.party.Parties;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioOperationalResetFixture;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,7 +36,7 @@ public class PartiesTest_matchPartyByReferenceOrName extends EstatioIntegrationT
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
             }
         });
     }
