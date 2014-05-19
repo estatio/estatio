@@ -21,7 +21,7 @@ package org.estatio.fixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.financial.BankAccountsAndMandatesFixture;
 import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.lease.LeasesEtcForAll;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
@@ -39,7 +39,7 @@ public class EstatioOperationalSetupFixture extends CompositeFixtureScript {
     protected void execute(ExecutionContext executionContext) {
         execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
         execute("properties", new PropertiesAndUnitsFixture(), executionContext);
-        execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+        execute("leases", new LeasesEtcForAll(), executionContext);
         execute("invoices", new InvoicesAndInvoiceItemsFixture(), executionContext);
         execute("bank-accounts", new BankAccountsAndMandatesFixture(), executionContext);
     }

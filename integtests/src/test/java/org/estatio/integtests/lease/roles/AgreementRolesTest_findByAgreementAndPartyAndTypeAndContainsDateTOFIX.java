@@ -30,7 +30,7 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.lease.LeasesEtcForAll;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
@@ -50,7 +50,7 @@ public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOF
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
-                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("leases", new LeasesEtcForAll(), executionContext);
             }
         });
     }

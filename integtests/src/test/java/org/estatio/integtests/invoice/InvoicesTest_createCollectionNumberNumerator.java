@@ -26,7 +26,7 @@ import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.lease.LeasesEtcForAll;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class InvoicesTest_createCollectionNumberNumerator extends EstatioIntegra
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
-                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("leases", new LeasesEtcForAll(), executionContext);
                 execute("invoices", new InvoicesAndInvoiceItemsFixture(), executionContext);
             }
         });

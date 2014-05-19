@@ -22,15 +22,15 @@ import org.estatio.dom.party.Party;
 
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseAndRolesAndLeaseUnitsAndTagsForOxfPret004 extends LeaseAndRolesAndLeaseUnitsAndTagsAbstract {
+public class LeaseAndRolesAndOccupanciesAndTagsForOxfMediaX002 extends LeaseAndRolesAndOccupanciesAndTagsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         Party manager = parties.findPartyByReference("JDOE");
         createLease(
-                "OXF-PRET-004", "Pret lease",
-                "OXF-004", "Pret", "FASHION", "ALL", null, null,
-                ld(2011, 7, 1), ld(2015, 6, 30), false, false, manager,
+                "OXF-MEDIAX-002", "Mediax Lease",
+                "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX",
+                ld(2008, 1, 1), ld(2017, 12, 31), true, true, manager,
                 executionContext);
     }
 

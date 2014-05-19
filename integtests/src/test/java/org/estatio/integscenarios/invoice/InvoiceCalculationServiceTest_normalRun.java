@@ -26,7 +26,7 @@ import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.lease.LeasesEtcForAll;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
@@ -55,7 +55,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
-                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("leases", new LeasesEtcForAll(), executionContext);
             }
         });
     }

@@ -18,20 +18,14 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.party.Party;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-import static org.estatio.integtests.VT.ld;
-
-public class LeaseAndRolesAndLeaseUnitsAndTagsForKalPoison001 extends LeaseAndRolesAndLeaseUnitsAndTagsAbstract {
+public class LeasesEtcForKalPoison001 extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
-        createLease(
-                "KAL-POISON-001", "Poison Amsterdam",
-                "KAL-001", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON",
-                ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
-                executionContext);
+        execute(new LeaseAndRolesAndOccupanciesAndTagsForKalPoison001(), executionContext);
+        execute(new LeaseItemAndLeaseTermsForKalPoison001(), executionContext);
     }
 
 }

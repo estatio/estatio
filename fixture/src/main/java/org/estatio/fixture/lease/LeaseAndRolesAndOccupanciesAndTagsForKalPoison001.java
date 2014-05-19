@@ -22,14 +22,14 @@ import org.estatio.dom.party.Party;
 
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseAndRolesAndLeaseUnitsAndTagsForOxfPoison003 extends LeaseAndRolesAndLeaseUnitsAndTagsAbstract {
+public class LeaseAndRolesAndOccupanciesAndTagsForKalPoison001 extends LeaseAndRolesAndOccupanciesAndTagsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
         Party manager = parties.findPartyByReference("JDOE");
         createLease(
-                "OXF-POISON-003", "Poison Lease",
-                "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON",
+                "KAL-POISON-001", "Poison Amsterdam",
+                "KAL-001", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON",
                 ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
                 executionContext);
     }

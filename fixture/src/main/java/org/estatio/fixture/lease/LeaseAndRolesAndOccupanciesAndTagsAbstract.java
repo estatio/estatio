@@ -29,7 +29,7 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public abstract class LeaseAndRolesAndLeaseUnitsAndTagsAbstract extends SimpleFixtureScript {
+public abstract class LeaseAndRolesAndOccupanciesAndTagsAbstract extends SimpleFixtureScript {
 
     protected Lease createLease(
             String reference, String name,

@@ -22,7 +22,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalSetupFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.lease.LeaseAndRolesAndLeaseUnitsAndTagsForAll;
+import org.estatio.fixture.lease.LeaseAndRolesAndOccupanciesAndTagsForAll;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
@@ -48,7 +48,7 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                 new EstatioBaseLineFixture(),
                 new PersonsAndOrganisationsAndCommunicationChannelsFixture(),
                 new PropertiesAndUnitsFixture(),
-                new LeaseAndRolesAndLeaseUnitsAndTagsForAll()
+                new LeaseAndRolesAndOccupanciesAndTagsForAll()
                 // no lease items or terms
                 // no invoices or invoice items
             );

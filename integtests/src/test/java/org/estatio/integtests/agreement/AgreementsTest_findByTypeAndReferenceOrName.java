@@ -27,7 +27,7 @@ import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
+import org.estatio.fixture.lease.LeasesEtcForAll;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
                 execute(new EstatioOperationalTeardownFixture(), executionContext);
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
-                execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
+                execute("leases", new LeasesEtcForAll(), executionContext);
             }
         });
     }
