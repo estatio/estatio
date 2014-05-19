@@ -25,7 +25,11 @@ import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
+import org.estatio.fixture.lease.LeasesEtcForAll;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,15 +46,15 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-                execute(new EstatioOperationalResetFixture(), executionContext);
+
+                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute("leases", new LeasesEtcForAll(), executionContext);
+                execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+                execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
             }
         });
     }
-
-    @Inject
-    private FinancialAccounts financialAccounts;
-    @Inject
-    private BankMandates bankMandates;
 
     @Test
     public void forAccountWithMandate() {
@@ -61,6 +65,11 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
         // then
         assertThat(mandates.size(), is(1));
     }
-    
+
+
+    @Inject
+    private FinancialAccounts financialAccounts;
+    @Inject
+    private BankMandates bankMandates;
 
 }

@@ -26,7 +26,6 @@ public class EstatioOperationalTeardownFixture extends SimpleFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-
         deleteAllDirect();
     }
 

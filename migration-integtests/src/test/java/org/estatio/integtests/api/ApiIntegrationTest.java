@@ -44,9 +44,13 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
+import org.estatio.fixture.lease.LeasesEtcForAll;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTestForMigration;
 import org.estatio.services.clock.ClockService;
 import org.hamcrest.core.Is;
@@ -68,7 +72,12 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioBaseLineFixture(), executionContext);
-                        execute(new EstatioOperationalResetFixture(), executionContext);
+
+                        execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        execute("leases", new LeasesEtcForAll(), executionContext);
+                        execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+                        execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
                     }
                 }
         );

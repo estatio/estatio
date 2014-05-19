@@ -23,7 +23,7 @@ import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
+import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +38,18 @@ public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+
+                // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new PersonForJohnDoe(), executionContext);
+                execute(new PersonForLinusTorvalds(), executionContext);
+
                 execute("properties", new PropertiesAndUnitsForAll(), executionContext);
             }
         });

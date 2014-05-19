@@ -31,7 +31,6 @@ public class PersonsAndOrganisationsAndCommunicationChannelsForAll extends Compo
         execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
         execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
         execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
-
         execute(new PersonForJohnDoe(), executionContext);
         execute(new PersonForLinusTorvalds(), executionContext);
     }

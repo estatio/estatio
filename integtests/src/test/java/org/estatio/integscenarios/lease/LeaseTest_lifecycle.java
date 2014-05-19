@@ -34,7 +34,12 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.fixture.EstatioOperationalResetFixture;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
+import org.estatio.fixture.lease.LeasesEtcForAll;
+import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
@@ -43,6 +48,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -53,7 +59,20 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(new EstatioOperationalResetFixture());
+        scenarioExecution().install(
+                new CompositeFixtureScript() {
+                    @Override
+                    protected void execute(ExecutionContext executionContext) {
+                        execute(new EstatioBaseLineFixture(), executionContext);
+
+                        execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        execute("leases", new LeasesEtcForAll(), executionContext);
+                        execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+                        execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
+                    }
+                }
+        );
     }
 
     private static final LocalDate START_DATE = VT.ld(2013, 11, 7);

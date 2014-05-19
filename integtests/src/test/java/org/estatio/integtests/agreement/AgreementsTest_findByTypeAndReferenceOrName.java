@@ -26,9 +26,10 @@ import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioOperationalTeardownFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
-import org.estatio.fixture.lease.LeasesEtcForAll;
-import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
+import org.estatio.fixture.lease.*;
+import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,9 +48,30 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
                 execute(new EstatioOperationalTeardownFixture(), executionContext);
-                execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
-                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
-                execute("leases", new LeasesEtcForAll(), executionContext);
+
+                // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+
+                execute(new PersonForJohnDoe(), executionContext);
+                execute(new PersonForLinusTorvalds(), executionContext);
+
+                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new PropertiesAndUnitsForKal(), executionContext);
+
+                // execute("leases", new LeasesEtcForAll(), executionContext);
+                execute(new LeasesEtcForOxfTopModel001(), executionContext);
+                execute(new LeasesEtcForOxfMediax002(), executionContext);
+                execute(new LeasesEtcForOxfPoison003(), executionContext);
+                execute(new LeasesEtcForOxfPret004(), executionContext);
+                execute(new LeasesEtcForOxfMiracl005(), executionContext);
+                execute(new LeasesEtcForKalPoison001(), executionContext);
             }
         });
     }

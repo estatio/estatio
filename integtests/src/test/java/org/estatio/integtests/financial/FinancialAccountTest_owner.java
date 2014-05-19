@@ -48,11 +48,10 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
                 execute("properties", new PropertiesAndUnitsForAll(), executionContext);
                 execute("leases", new LeasesEtcForAll(), executionContext);
-                // not required...
-                //execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
                 execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
             }
         });
