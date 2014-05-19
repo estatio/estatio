@@ -50,6 +50,10 @@ public class LeaseItemAndLeaseTermsForOxfMiracl005 extends LeaseItemAndLeaseTerm
         createLeaseTermForTurnoverRent(
                 lease, lease.getStartDate(), null, "7",
                 executionContext);
+
+//        createLeaseTermForDiscount(
+//                lease, lease.getStartDate(), null, bd(-20000),
+//                executionContext);
     }
 
 }

@@ -19,6 +19,8 @@ public class LeaseTermForTax extends LeaseTerm {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
+    // //////////////////////////////////////
+
     private Boolean taxable;
 
     public Boolean getTaxable() {
@@ -44,6 +46,8 @@ public class LeaseTermForTax extends LeaseTerm {
         this.taxableValue = taxableValue;
     }
 
+    // //////////////////////////////////////
+
     private BigDecimal taxValue;
 
     @Optional
@@ -56,6 +60,8 @@ public class LeaseTermForTax extends LeaseTerm {
     public void setTaxValue(final BigDecimal taxValue) {
         this.taxValue = taxValue;
     }
+
+    // //////////////////////////////////////
 
     private boolean overrideTaxValue;
 
@@ -76,6 +82,8 @@ public class LeaseTermForTax extends LeaseTerm {
         return this;
     }
 
+    // //////////////////////////////////////
+
     private BigDecimal taxPercentage;
 
     @javax.jdo.annotations.Column(scale = 1)
@@ -86,6 +94,8 @@ public class LeaseTermForTax extends LeaseTerm {
     public void setTaxPercentage(final BigDecimal taxPercentage) {
         this.taxPercentage = taxPercentage;
     }
+
+    // //////////////////////////////////////
 
     private BigDecimal recoverablePercentage;
 
@@ -125,6 +135,8 @@ public class LeaseTermForTax extends LeaseTerm {
         this.officeName = officeName;
     }
 
+    // //////////////////////////////////////
+
     private String officeCode;
 
     @Optional
@@ -135,6 +147,8 @@ public class LeaseTermForTax extends LeaseTerm {
     public void setOfficeCode(final String officeCode) {
         this.officeCode = officeCode;
     }
+
+    // //////////////////////////////////////
 
     @Persistent
     private LocalDate registrationDate;
@@ -148,6 +162,8 @@ public class LeaseTermForTax extends LeaseTerm {
         this.registrationDate = registrationDate;
     }
 
+    // //////////////////////////////////////
+
     private String registrationNumber;
 
     @Optional
@@ -158,6 +174,8 @@ public class LeaseTermForTax extends LeaseTerm {
     public void setRegistrationNumber(final String registrationNumber) {
         this.registrationNumber = registrationNumber;
     }
+
+    // //////////////////////////////////////
 
     private String description;
 

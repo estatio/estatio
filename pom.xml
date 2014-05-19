@@ -917,7 +917,18 @@ language governing permissions and limitations under the License.
                 <module>dom-italy</module>
                 <module>fixture</module>
                 <module>integtests</module>
+                <module>migration</module>
+                <module>migration-integtests</module>
                 <module>webapp</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>quicktest</id>
+            <modules>
+                <module>dom</module>
+                <module>dom-italy</module>
+                <module>fixture</module>
+                <module>integtests</module>
             </modules>
         </profile>
         <profile>
@@ -927,18 +938,6 @@ language governing permissions and limitations under the License.
                 <module>dom-italy</module>
                 <module>fixture</module>
                 <module>integspecs</module>
-                <module>integtests</module>
-                <module>migration</module>
-                <module>migration-integtests</module>
-                <module>webapp</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>nobdd</id>
-            <modules>
-                <module>dom</module>
-                <module>dom-italy</module>
-                <module>fixture</module>
                 <module>integtests</module>
                 <module>migration</module>
                 <module>migration-integtests</module>
