@@ -41,16 +41,18 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
+import static org.estatio.integtests.VT.ld;
+
 /**
  * Replays the invoice creation process
  * 
  */
 public class CreateRetroInvoices extends SimpleFixtureScript {
 
-    private static LocalDate EPOCH_START_DATE = new LocalDate(2013, 1, 1);
+    private static LocalDate EPOCH_START_DATE = ld(2013, 1, 1);
 
-    private static LocalDate DEFAULT_START_DATE = new LocalDate(2013, 1, 1);
-    private static LocalDate DEFAULT_END_DATE = new LocalDate(2014, 4, 1);
+    private static LocalDate DEFAULT_START_DATE = ld(2013, 1, 1);
+    private static LocalDate DEFAULT_END_DATE = ld(2014, 4, 1);
 
     private final LocalDate startDate;
     private final LocalDate endDate;

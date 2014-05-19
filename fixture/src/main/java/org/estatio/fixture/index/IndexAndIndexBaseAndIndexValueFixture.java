@@ -21,8 +21,9 @@ package org.estatio.fixture.index;
 import java.math.BigDecimal;
 import javax.inject.Inject;
 import org.estatio.dom.index.*;
-import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+
+import static org.estatio.integtests.VT.ld;
 
 public class IndexAndIndexBaseAndIndexValueFixture extends SimpleFixtureScript {
 
@@ -74,14 +75,14 @@ public class IndexAndIndexBaseAndIndexValueFixture extends SimpleFixtureScript {
     }
 
     private IndexBase createIndexBase(Index index, IndexBase previousBase, int year, double factor, ExecutionContext fixtureResults) {
-        final IndexBase indexBase = indexBases.newIndexBase(index, previousBase, new LocalDate(year, 1, 1), BigDecimal.valueOf(factor));
+        final IndexBase indexBase = indexBases.newIndexBase(index, previousBase, ld(year, 1, 1), BigDecimal.valueOf(factor));
         return fixtureResults.add(this, indexBase);
     }
 
     private void createIndexValues(IndexBase indexBase, int year, double[] values, double average, ExecutionContext fixtureResults) {
         int i = 0;
         for (double value : values) {
-            final IndexValue indexValue = indexValues.newIndexValue(indexBase, new LocalDate(year, i + 1, 1), BigDecimal.valueOf(value));
+            final IndexValue indexValue = indexValues.newIndexValue(indexBase, ld(year, i + 1, 1), BigDecimal.valueOf(value));
             fixtureResults.add(this, indexValue);
             i++;
         }

@@ -29,21 +29,9 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
-public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends SimpleFixtureScript {
+public abstract class LeaseAndRolesAndLeaseUnitsAndTagsAbstract extends SimpleFixtureScript {
 
-    @Override
-    protected void execute(ExecutionContext fixtureResults) {
-
-        Party manager = parties.findPartyByReference("JDOE");
-        createLease("OXF-TOPMODEL-001", "Topmodel Lease", "OXF-001", "Topmodel", "FASHION", "WOMEN", "ACME", "TOPMODEL", new LocalDate(2010, 7, 15), new LocalDate(2022, 7, 14), true, true, manager, fixtureResults);
-        createLease("OXF-MEDIAX-002", "Mediax Lease", "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX", new LocalDate(2008, 1, 1), new LocalDate(2017, 12, 31), true, true, manager, fixtureResults);
-        createLease("OXF-POISON-003", "Poison Lease", "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true, manager, fixtureResults);
-        createLease("OXF-PRET-004", "Pret lease", "OXF-004", "Pret", "FASHION", "ALL", null, null, new LocalDate(2011, 7, 1), new LocalDate(2015, 6, 30), false, false, manager, fixtureResults);
-        createLease("OXF-MIRACL-005", "Miracle lease", "OXF-005", "Miracle", "FASHION", "ALL", "ACME", "MIRACLE", new LocalDate(2013, 11, 7), new LocalDate(2023, 11, 6), false, true, manager, fixtureResults);
-        createLease("KAL-POISON-001", "Poison Amsterdam", "KAL-001", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON", new LocalDate(2011, 1, 1), new LocalDate(2020, 12, 31), true, true, manager, fixtureResults);
-    }
-
-    public Lease createLease(
+    protected Lease createLease(
             String reference, String name,
             String unitReference,
             String brand,
@@ -82,24 +70,24 @@ public class LeasesAndRolesAndLeaseUnitsAndTagsFixture extends SimpleFixtureScri
         return lease;
     }
 
-    private Party findPartyByReferenceOrNameElseNull(String partyReference) {
+    protected Party findPartyByReferenceOrNameElseNull(String partyReference) {
         return partyReference != null ? parties.findPartyByReference(partyReference) : null;
     }
 
     // //////////////////////////////////////
 
     @Inject
-    private Units<Unit> units;
+    protected Units<Unit> units;
 
     @Inject
-    private Leases leases;
+    protected Leases leases;
 
     @Inject
-    private Occupancies occupancies;
+    protected Occupancies occupancies;
 
     @Inject
-    private Parties parties;
+    protected Parties parties;
 
     @Inject
-    private AgreementRoleTypes agreementRoleTypes;
+    protected AgreementRoleTypes agreementRoleTypes;
 }

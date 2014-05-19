@@ -24,8 +24,9 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+
+import static org.estatio.integtests.VT.ld;
 
 public class GenerateTopModelInvoice extends SimpleFixtureScript {
 
@@ -43,15 +44,15 @@ public class GenerateTopModelInvoice extends SimpleFixtureScript {
     @Override
     protected void execute(ExecutionContext fixtureResults) {
         final Lease lease = leases.findLeaseByReference(coalesce(fixtureResults.getParameters(), propertyRef));
-        lease.verifyUntil(new LocalDate(2014, 1, 1));
+        lease.verifyUntil(ld(2014, 1, 1));
 
         InvoiceCalculationParameters calculationParameters = new InvoiceCalculationParameters(
                 lease,
                 InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.selectedTypes(),
                 InvoiceRunType.NORMAL_RUN,
-                new LocalDate(2013, 4, 1),
-                new LocalDate(2013, 4, 1),
-                new LocalDate(2013, 4, 2));
+                ld(2013, 4, 1),
+                ld(2013, 4, 1),
+                ld(2013, 4, 2));
         calculationService.calculateAndInvoice(calculationParameters);
     }
 

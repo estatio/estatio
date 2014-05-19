@@ -32,6 +32,8 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
+import static org.estatio.integtests.VT.ld;
+
 public class PropertiesAndUnitsFixture extends SimpleFixtureScript {
 
     @Override
@@ -44,7 +46,7 @@ public class PropertiesAndUnitsFixture extends SimpleFixtureScript {
         State state = states.findState("GB-OXF");
         Country country = countries.findCountry("GBR");
 
-        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25, new LocalDate(1999, 1, 1), new LocalDate(2008, 6, 1), owner1, manager, 51.74579, -1.24334, executionContext);
+        Property prop1 = createPropertyAndUnits("OXF", "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25, ld(1999, 1, 1), ld(2008, 6, 1), owner1, manager, 51.74579, -1.24334, executionContext);
 
         communicationChannelContributedActions.newPostal(prop1, CommunicationChannelType.POSTAL_ADDRESS, country, state, "1 Market Street", null, null, "OX1 3HL", "Oxford");
         communicationChannelContributedActions.newPhoneOrFax(prop1, CommunicationChannelType.PHONE_NUMBER, "+44 123 456789");
@@ -52,7 +54,7 @@ public class PropertiesAndUnitsFixture extends SimpleFixtureScript {
         communicationChannelContributedActions.newEmail(prop1, CommunicationChannelType.EMAIL_ADDRESS, "info@oxford.example.com");
 
 
-        Property prop2 = createPropertyAndUnits("KAL", "Kalvertoren", "Amsterdam", country, PropertyType.SHOPPING_CENTER, 40, new LocalDate(2003, 12, 1), new LocalDate(2003, 12, 1), owner2, manager, 52.37597, 4.90814, executionContext);
+        Property prop2 = createPropertyAndUnits("KAL", "Kalvertoren", "Amsterdam", country, PropertyType.SHOPPING_CENTER, 40, ld(2003, 12, 1), ld(2003, 12, 1), owner2, manager, 52.37597, 4.90814, executionContext);
         Country c2 = countries.findCountry("NLD");
         State s2 = states.findState("NL-NH");
 
@@ -65,7 +67,7 @@ public class PropertiesAndUnitsFixture extends SimpleFixtureScript {
     private Property createPropertyAndUnits(final String reference, String name, String city, Country country, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager, double lat, double lng, ExecutionContext fixtureResults) {
         Property property = properties.newProperty(reference, name, type, city, country, acquireDate);
         property.setOpeningDate(openingDate);
-        property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, new LocalDate(1999, 1, 1), new LocalDate(2000, 1, 1));
+        property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
         property.addRoleIfDoesNotExist(manager, FixedAssetRoleType.ASSET_MANAGER, null, null);
         for (int i = 0; i < numberOfUnits; i++) {
             int unitNumber = i + 1;

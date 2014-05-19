@@ -23,8 +23,9 @@ import javax.inject.Inject;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
-import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+
+import static org.estatio.integtests.VT.ld;
 
 
 public class TaxesAndTaxRatesFixture extends SimpleFixtureScript {
@@ -34,7 +35,7 @@ public class TaxesAndTaxRatesFixture extends SimpleFixtureScript {
         Tax tax = taxes.newTax("IT-VATSTD", "Value Added Tax (Standard)");
         executionContext.add(this, tax.getReference(), tax);
 
-        final TaxRate taxRate = tax.newRate(new LocalDate(1980, 1, 1), BigDecimal.valueOf(19)).newRate(new LocalDate(2011, 9, 17), BigDecimal.valueOf(21));
+        final TaxRate taxRate = tax.newRate(ld(1980, 1, 1), BigDecimal.valueOf(19)).newRate(ld(2011, 9, 17), BigDecimal.valueOf(21));
         executionContext.add(this, taxRate.getExternalReference(), taxRate);
     }
 

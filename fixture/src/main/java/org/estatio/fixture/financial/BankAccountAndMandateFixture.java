@@ -35,8 +35,9 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+
+import static org.estatio.integtests.VT.ld;
 
 public abstract class BankAccountAndMandateFixture extends SimpleFixtureScript {
 
@@ -57,7 +58,7 @@ public abstract class BankAccountAndMandateFixture extends SimpleFixtureScript {
         }
 
         if (sequence != null) {
-            List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(party, agreementRoleType, new LocalDate(2013, 10, 1));
+            List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(party, agreementRoleType, ld(2013, 10, 1));
             Lease lease = (Lease) roles.get(0).getAgreement();
             final BankMandate bankMandate = bankMandates.newBankMandate(
                     partyStr + sequence.toString(),

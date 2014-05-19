@@ -18,15 +18,20 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.estatio.dom.party.Party;
 
-public class LeasesBreakOptionsFixture extends CompositeFixtureScript {
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseAndRolesAndLeaseUnitsAndTagsForOxfPret004 extends LeaseAndRolesAndLeaseUnitsAndTagsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-        execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-        execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+        Party manager = parties.findPartyByReference("JDOE");
+        createLease(
+                "OXF-PRET-004", "Pret lease",
+                "OXF-004", "Pret", "FASHION", "ALL", null, null,
+                ld(2011, 7, 1), ld(2015, 6, 30), false, false, manager,
+                executionContext);
     }
 
 }

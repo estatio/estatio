@@ -42,10 +42,11 @@ public class CreateBreakOptions extends SimpleFixtureScript {
     @Override
     protected void execute(ExecutionContext fixtureResults) {
         final Lease lease = leases.findLeaseByReference(reference);
-        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(6)), "3m", BreakExerciseType.LANDLORD, BreakType.FIXED, null);
-        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(12)), "3m", BreakExerciseType.MUTUAL, BreakType.FIXED, null);
-        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT, BreakType.FIXED, null);
-        lease.newBreakOption(new LocalDate(clockService.now().plusMonths(24)), "3m", BreakExerciseType.TENANT, BreakType.ROLLING, null);
+        final LocalDate now = clockService.now();
+        lease.newBreakOption(now.plusMonths(6), "3m", BreakExerciseType.LANDLORD, BreakType.FIXED, null);
+        lease.newBreakOption(now.plusMonths(12), "3m", BreakExerciseType.MUTUAL, BreakType.FIXED, null);
+        lease.newBreakOption(now.plusMonths(24), "3m", BreakExerciseType.TENANT, BreakType.FIXED, null);
+        lease.newBreakOption(now.plusMonths(24), "3m", BreakExerciseType.TENANT, BreakType.ROLLING, null);
         fixtureResults.add(this, "lease", lease);
     }
 

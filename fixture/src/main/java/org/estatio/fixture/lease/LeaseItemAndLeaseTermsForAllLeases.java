@@ -20,13 +20,15 @@ package org.estatio.fixture.lease;
 
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends CompositeFixtureScript {
+public class LeaseItemAndLeaseTermsForAllLeases extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute("leases-and-occupancies", new LeaseAndRolesAndLeaseUnitsAndTagsForAll(), executionContext);
-        execute("lease-items-and-terms", new LeaseItemAndLeaseTermsForAllLeases(), executionContext);
-        execute("break-options", new LeaseBreakOptionsForAllLeases(), executionContext);
+        execute(new LeaseItemAndLeaseTermsForOxfTopModel001(), executionContext);
+        execute(new LeaseItemAndLeaseTermsForOxfMediax002(), executionContext);
+        execute(new LeaseItemAndLeaseTermsForOxfPoison003(), executionContext);
+        execute(new LeaseItemAndLeaseTermsForOxfMiracl005(), executionContext);
+        execute(new LeaseItemAndLeaseTermsForKalPoison001(), executionContext);
     }
 
 }

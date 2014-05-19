@@ -18,15 +18,20 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.estatio.dom.party.Party;
 
-public class LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture extends CompositeFixtureScript {
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseAndRolesAndLeaseUnitsAndTagsForOxfPoison003 extends LeaseAndRolesAndLeaseUnitsAndTagsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute("leases-and-occupancies", new LeaseAndRolesAndLeaseUnitsAndTagsForAll(), executionContext);
-        execute("lease-items-and-terms", new LeaseItemAndLeaseTermsForAllLeases(), executionContext);
-        execute("break-options", new LeaseBreakOptionsForAllLeases(), executionContext);
+        Party manager = parties.findPartyByReference("JDOE");
+        createLease(
+                "OXF-POISON-003", "Poison Lease",
+                "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON",
+                ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
+                executionContext);
     }
 
 }
