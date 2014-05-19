@@ -20,7 +20,8 @@ package org.estatio.fixture.financial;
 
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class BankAccountsAndMandatesForAll extends CompositeFixtureScript {
+// unused
+class BankAccountsAndMandatesForAll extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

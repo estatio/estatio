@@ -25,7 +25,6 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
 import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.lease.*;
@@ -46,40 +45,38 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
         scenarioExecution().install(new CompositeFixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-                execute(new EstatioOperationalTeardownFixture(), executionContext);
 
-                // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new EstatioBaseLineFixture(), executionContext);
 
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
                 execute(new PropertiesAndUnitsForOxf(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
                 execute(new PropertiesAndUnitsForKal(), executionContext);
 
-                // execute("leases", new LeasesEtcForAll(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
                 execute(new LeasesEtcForOxfTopModel001(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
                 execute(new LeasesEtcForOxfMediax002(), executionContext);
-                execute(new LeasesEtcForOxfPoison003(), executionContext);
-                execute(new LeasesEtcForOxfPret004(), executionContext);
-                execute(new LeasesEtcForOxfMiracl005(), executionContext);
                 execute(new LeasesEtcForKalPoison001(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                execute(new LeasesEtcForOxfPoison003(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                execute(new LeasesEtcForOxfPret004(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new LeasesEtcForOxfMiracl005(), executionContext);
+
             }
         });
     }
-
-    @Inject
-    private Agreements agreements;
-    @Inject
-    private AgreementTypes agreementTypes;
 
     @Test
     public void whenPresent() {
@@ -88,5 +85,11 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
         final List<Agreement> results = agreements.findByTypeAndReferenceOrName(type, ".*OXF.*");
         assertThat(results.size(), is(5));
     }
+
+    @Inject
+    private Agreements agreements;
+    @Inject
+    private AgreementTypes agreementTypes;
+
 
 }

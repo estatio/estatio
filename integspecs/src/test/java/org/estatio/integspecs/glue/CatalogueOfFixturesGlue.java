@@ -21,7 +21,7 @@ import cucumber.api.java.Before;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
 import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
-import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
+import org.estatio.fixture.financial.*;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.*;
@@ -70,7 +70,14 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
                         execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
 
-                        execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
+                        //execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
+                        execute(new BankAccountAndMandateForAcme(), executionContext);
+                        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
+                        execute(new BankAccountAndMandateForMediaX(), executionContext);
+                        execute(new BankAccountAndMandateForMiracle(), executionContext);
+                        execute(new BankAccountAndMandateForPoison(), executionContext);
+                        execute(new BankAccountAndMandateForPret(), executionContext);
+                        execute(new BankAccountAndMandateForTopModel(), executionContext);
                     }
                 }
         );

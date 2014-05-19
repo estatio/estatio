@@ -40,20 +40,20 @@ public class FixedAssetsTest_autoComplete extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                execute(new PersonForJohnDoe(), executionContext);
+                execute(new PersonForLinusTorvalds(), executionContext);
+
                 execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
+                execute(new PropertiesAndUnitsForOxf(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                execute(new PropertiesAndUnitsForKal(), executionContext);
+
                 execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
-                execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
-                execute(new PropertiesAndUnitsForOxf(), executionContext);
-                execute(new PropertiesAndUnitsForKal(), executionContext);
             }
         });
     }

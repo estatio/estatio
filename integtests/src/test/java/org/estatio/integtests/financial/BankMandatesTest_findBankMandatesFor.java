@@ -27,7 +27,7 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
 import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
-import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
+import org.estatio.fixture.financial.*;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.*;
@@ -49,34 +49,42 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
                 execute(new PropertiesAndUnitsForOxf(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
                 execute(new PropertiesAndUnitsForKal(), executionContext);
 
-                // execute("leases", new LeasesEtcForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
                 execute(new LeasesEtcForOxfTopModel001(), executionContext);
-                execute(new LeasesEtcForOxfMediax002(), executionContext);
-                execute(new LeasesEtcForOxfPoison003(), executionContext);
-                execute(new LeasesEtcForOxfPret004(), executionContext);
-                execute(new LeasesEtcForOxfMiracl005(), executionContext);
-                execute(new LeasesEtcForKalPoison001(), executionContext);
 
-                //execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                execute(new LeasesEtcForOxfMediax002(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                execute(new LeasesEtcForOxfPoison003(), executionContext);
                 execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
+                execute(new LeasesEtcForKalPoison001(), executionContext);
                 execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
 
-                execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                execute(new LeasesEtcForOxfPret004(), executionContext);
+
+                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new LeasesEtcForOxfMiracl005(), executionContext);
+
+                //execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
+                execute(new BankAccountAndMandateForAcme(), executionContext);
+                execute(new BankAccountAndMandateForHelloWorld(), executionContext);
+                execute(new BankAccountAndMandateForMediaX(), executionContext);
+                execute(new BankAccountAndMandateForMiracle(), executionContext);
+                execute(new BankAccountAndMandateForPoison(), executionContext);
+                execute(new BankAccountAndMandateForPret(), executionContext);
+                execute(new BankAccountAndMandateForTopModel(), executionContext);
+
             }
         });
     }
