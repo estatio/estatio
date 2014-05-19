@@ -20,7 +20,8 @@ package org.estatio.fixture.asset;
 
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class PropertiesAndUnitsForAll extends CompositeFixtureScript {
+// unused directly
+class PropertiesAndUnitsForAll extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

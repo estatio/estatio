@@ -25,7 +25,8 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -55,7 +56,9 @@ public class PropertiesTest_allProperties extends EstatioIntegrationTest {
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new PropertiesAndUnitsForKal(), executionContext);
             }
         });
     }

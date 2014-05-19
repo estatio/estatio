@@ -21,7 +21,8 @@ package org.estatio.integtests.assets;
 import javax.inject.Inject;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
@@ -50,7 +51,9 @@ public class FixedAssetsTest_matchAssetsByReferenceOrName extends EstatioIntegra
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new PropertiesAndUnitsForKal(), executionContext);
             }
         });
     }

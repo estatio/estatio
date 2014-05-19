@@ -35,7 +35,8 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
 import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
 import org.estatio.fixture.lease.LeasesEtcForAll;
@@ -76,7 +77,10 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
                         execute(new PersonForJohnDoe(), executionContext);
                         execute(new PersonForLinusTorvalds(), executionContext);
 
-                        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        execute(new PropertiesAndUnitsForOxf(), executionContext);
+                        execute(new PropertiesAndUnitsForKal(), executionContext);
+
                         execute("leases", new LeasesEtcForAll(), executionContext);
                         execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
                         execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);

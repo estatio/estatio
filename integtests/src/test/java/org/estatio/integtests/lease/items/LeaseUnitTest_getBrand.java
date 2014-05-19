@@ -24,7 +24,8 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.lease.LeasesEtcForAll;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -55,7 +56,10 @@ public class LeaseUnitTest_getBrand extends EstatioIntegrationTest {
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new PropertiesAndUnitsForKal(), executionContext);
+
                 execute("leases", new LeasesEtcForAll(), executionContext);
             }
         });

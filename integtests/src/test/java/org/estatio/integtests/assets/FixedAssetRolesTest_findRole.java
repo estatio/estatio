@@ -23,7 +23,8 @@ import org.estatio.dom.asset.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
@@ -51,7 +52,9 @@ public class FixedAssetRolesTest_findRole extends EstatioIntegrationTest {
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new PropertiesAndUnitsForKal(), executionContext);
             }
         });
     }

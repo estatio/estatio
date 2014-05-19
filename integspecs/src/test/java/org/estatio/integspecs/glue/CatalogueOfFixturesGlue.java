@@ -19,7 +19,8 @@ package org.estatio.integspecs.glue;
 import cucumber.api.java.Before;
 
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForAll;
+import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
+import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.financial.BankAccountsAndMandatesForAll;
 import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
 import org.estatio.fixture.lease.LeaseAndRolesAndOccupanciesAndTagsForAll;
@@ -53,7 +54,10 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new PersonForJohnDoe(), executionContext);
                         execute(new PersonForLinusTorvalds(), executionContext);
 
-                        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        execute(new PropertiesAndUnitsForOxf(), executionContext);
+                        execute(new PropertiesAndUnitsForKal(), executionContext);
+
                         execute("leases", new LeasesEtcForAll(), executionContext);
                         execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
                         execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
@@ -81,7 +85,10 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new PersonForJohnDoe(), executionContext);
                         execute(new PersonForLinusTorvalds(), executionContext);
 
-                        execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
+                        execute(new PropertiesAndUnitsForOxf(), executionContext);
+                        execute(new PropertiesAndUnitsForKal(), executionContext);
+
                         execute("leases", new LeaseAndRolesAndOccupanciesAndTagsForAll(), executionContext);
                         // no lease items or terms
                         // no invoices or invoice items
