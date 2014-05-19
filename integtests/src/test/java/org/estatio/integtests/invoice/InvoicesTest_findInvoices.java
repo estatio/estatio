@@ -34,7 +34,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
 import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
-import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsForAll;
+import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -81,7 +81,9 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
                 execute(new LeasesEtcForOxfMiracl005(), executionContext);
                 execute(new LeasesEtcForKalPoison001(), executionContext);
 
-                execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+                //execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
+                execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
+                execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
             }
         });
     }

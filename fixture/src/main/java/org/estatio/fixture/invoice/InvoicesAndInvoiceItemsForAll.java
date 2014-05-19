@@ -21,7 +21,7 @@ package org.estatio.fixture.invoice;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class InvoicesAndInvoiceItemsForAll extends CompositeFixtureScript {
+class InvoicesAndInvoiceItemsForAll extends CompositeFixtureScript {
 
     @Override
     protected void execute(FixtureScript.ExecutionContext executionContext) {
