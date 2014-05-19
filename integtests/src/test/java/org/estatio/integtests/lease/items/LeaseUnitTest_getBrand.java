@@ -26,7 +26,7 @@ import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
 import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
-import org.estatio.fixture.lease.LeasesEtcForAll;
+import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -60,7 +60,13 @@ public class LeaseUnitTest_getBrand extends EstatioIntegrationTest {
                 execute(new PropertiesAndUnitsForOxf(), executionContext);
                 execute(new PropertiesAndUnitsForKal(), executionContext);
 
-                execute("leases", new LeasesEtcForAll(), executionContext);
+                // execute("leases", new LeasesEtcForAll(), executionContext);
+                execute(new LeasesEtcForOxfTopModel001(), executionContext);
+                execute(new LeasesEtcForOxfMediax002(), executionContext);
+                execute(new LeasesEtcForOxfPoison003(), executionContext);
+                execute(new LeasesEtcForOxfPret004(), executionContext);
+                execute(new LeasesEtcForOxfMiracl005(), executionContext);
+                execute(new LeasesEtcForKalPoison001(), executionContext);
             }
         });
     }

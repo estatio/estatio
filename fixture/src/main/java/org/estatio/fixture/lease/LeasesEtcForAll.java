@@ -20,7 +20,8 @@ package org.estatio.fixture.lease;
 
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 
-public class LeasesEtcForAll extends CompositeFixtureScript {
+// unused
+class LeasesEtcForAll extends CompositeFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
