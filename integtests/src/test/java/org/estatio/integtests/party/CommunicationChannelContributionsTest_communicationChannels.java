@@ -41,16 +41,17 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+                execute(new PersonForJohnDoe(), executionContext);
+                execute(new PersonForLinusTorvalds(), executionContext);
+
                 execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
+                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
+
                 execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
                 execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
-                execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
 
             }
         });

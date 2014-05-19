@@ -31,10 +31,6 @@ public class PropertiesAndUnitsForOxf extends PropertiesAndUnitsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOxf(executionContext);
-    }
-
-    private void createOxf(ExecutionContext executionContext) {
         Party owner = parties.findPartyByReference("HELLOWORLD");
         Party manager = parties.findPartyByReference("JDOE");
 

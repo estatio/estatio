@@ -65,8 +65,8 @@ public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioInte
 
                 execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
                 execute(new LeasesEtcForOxfPoison003(), executionContext);
-                execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
                 execute(new LeasesEtcForKalPoison001(), executionContext);
+                execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
                 execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
 
                 execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
