@@ -27,6 +27,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,7 +66,7 @@ public class LeaseItemTest_getTerms extends EstatioIntegrationTest {
         // this is just really asserting on the fixture
 
         // given
-        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
 
         // when
         final SortedSet<LeaseTerm> terms = leaseTopModelRentItem.getTerms();
@@ -77,24 +78,24 @@ public class LeaseItemTest_getTerms extends EstatioIntegrationTest {
         LeaseTermForIndexableRent indexableRent = assertType(term0, LeaseTermForIndexableRent.class);
 
         Assert.assertNotNull(indexableRent.getFrequency());
-        Assert.assertNotNull(indexableRent.getFrequency().nextDate(dt(2012, 1, 1)));
+        Assert.assertNotNull(indexableRent.getFrequency().nextDate(VT.ld(2012, 1, 1)));
 
         BigDecimal baseValue = indexableRent.getBaseValue();
-        Assert.assertEquals(bd("20000.00"), baseValue);
+        Assert.assertEquals(VT.bd("20000.00"), baseValue);
     }
 
     @Test
     public void whenExists_andFirstIsLeaseTermForServiceChargeBudgetAuditLineItem() throws Exception {
         // this is just really asserting on the fixture
 
-        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
 
         final SortedSet<LeaseTerm> terms = leaseTopModelServiceChargeItem.getTerms();
         Assert.assertThat(terms.size(), Is.is(1));
         final LeaseTerm term0 = terms.first();
 
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm = assertType(term0, LeaseTermForServiceCharge.class);
-        Assert.assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue(), Is.is(bd("6000.00")));
+        Assert.assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue(), Is.is(VT.bd("6000.00")));
     }
 
 }

@@ -30,11 +30,12 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.fixturescripts.CreateRetroInvoices;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class CreateRetroInvoicesTest_terminate_and_calculate extends EstatioInte
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
                 execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
-                execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
+                execute("invoices", new InvoicesAndInvoiceItemsFixture(), executionContext);
             }
         });
     }
@@ -86,32 +87,32 @@ public class CreateRetroInvoicesTest_terminate_and_calculate extends EstatioInte
     @Test
     public void step1_retroRun() {
         // given
-        SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(dt(2012, 1, 1), dt(2014, 1, 1), lease);
+        SortedSet<LocalDate> dueDates = creator.findDueDatesForLease(VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), lease);
         assertThat(dueDates.size(), is(10));
 
         // when
-        creator.createLease(lease, dt(2012, 1, 1), dt(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
+        creator.createLease(lease, VT.ld(2012, 1, 1), VT.ld(2014, 1, 1), FixtureScript.ExecutionContext.NOOP);
 
         // then
         assertThat(invoices.findInvoices(lease).size(), is(8));
 
         // and given
-        lease.terminate(dt(2013, 10, 1), true);
+        lease.terminate(VT.ld(2013, 10, 1), true);
 
         // when
-        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, dt(2014, 2, 1), dt(2012, 1, 1), dt(2014, 1, 1));
+        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2014, 2, 1), VT.ld(2012, 1, 1), VT.ld(2014, 1, 1));
 
         // then
         List<Invoice> invoicesList = invoices.findInvoices(lease);
         assertThat(invoicesList.size(), is(9));
         Invoice invoice = invoicesList.get(8);
-        assertThat(invoice.getDueDate(), is(dt(2014, 2, 1)));
-        assertThat(invoice.getGrossAmount(), is(bd("-8170.01")));
+        assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
+        assertThat(invoice.getGrossAmount(), is(VT.bd("-8170.01")));
 
         // and also
         LeaseItem leaseItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
-        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) leaseItem.findTerm(dt(2012, 1, 1));
-        assertThat(term.getContractualRent(), is(bd("21058.27")));
+        LeaseTermForTurnoverRent term = (LeaseTermForTurnoverRent) leaseItem.findTerm(VT.ld(2012, 1, 1));
+        assertThat(term.getContractualRent(), is(VT.bd("21058.27")));
     }
 
 

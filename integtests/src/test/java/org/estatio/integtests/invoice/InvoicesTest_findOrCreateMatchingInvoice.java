@@ -29,7 +29,7 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -39,9 +39,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
-import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.runtime.system.context.IsisContext;
-import org.apache.isis.core.runtime.system.transaction.IsisTransaction;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -75,9 +72,9 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
 
     @Before
     public void setUp() throws Exception {
-        seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
-        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
-        lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
+        seller = parties.findPartyByReference(InvoiceAndInvoiceItemForOxfPoison003.SELLER_PARTY);
+        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemForOxfPoison003.BUYER_PARTY);
+        lease = leases.findLeaseByReference(InvoiceAndInvoiceItemForOxfPoison003.LEASE);
     }
 
     @Test
@@ -85,7 +82,7 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
         // given
         Assert.assertThat(invoices.allInvoices().isEmpty(), is(true));
         // when
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemForOxfPoison003.START_DATE, null);
         // then
         Assert.assertNotNull(invoice);
         Assert.assertThat(invoices.allInvoices().isEmpty(), is(false));
@@ -94,9 +91,9 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
     @Test
     public void whenExist() {
         // given
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemForOxfPoison003.START_DATE, null);
         // when
-        Invoice invoice2 = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        Invoice invoice2 = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemForOxfPoison003.START_DATE, null);
         // then
         Assert.assertThat(invoice2, is(sameInstance(invoice)));
     }

@@ -32,10 +32,12 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
+import org.estatio.fixture.invoice.InvoicesAndInvoiceItemsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +59,7 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
                 execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
-                execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
+                execute("invoices", new InvoicesAndInvoiceItemsFixture(), executionContext);
             }
         });
     }
@@ -75,13 +77,13 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        Party seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
-        Party buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
-        Lease lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
+        Party seller = parties.findPartyByReference(InvoiceAndInvoiceItemForKalPoison001.SELLER_PARTY);
+        Party buyer = parties.findPartyByReference(InvoiceAndInvoiceItemForKalPoison001.BUYER_PARTY);
+        Lease lease = leases.findLeaseByReference(InvoiceAndInvoiceItemForKalPoison001.LEASE);
 
         kalProperty = properties.findPropertyByReference("KAL");
 
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemFixture.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemForKalPoison001.START_DATE, null);
         invoice.setRunId(runId);
         Assert.assertNotNull(invoice);
     }
@@ -94,14 +96,14 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
     @Test
     public void byPropertyDueDate() {
-        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, dt(2012, 1, 1));
+        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, VT.ld(2012, 1, 1));
         assertThat(invoiceList.size(), is(1));
     }
 
     @Test
     public void byPropertyDueDateStatus() {
 
-        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, dt(2012, 1, 1), InvoiceStatus.NEW);
+        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
         assertThat(invoiceList.size(), is(1));
     }
 

@@ -26,6 +26,7 @@ import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class IndexValuesTest_findLastByIndex extends EstatioIntegrationTest {
     public void findLastByIndex() throws Exception {
         Index index = indices.findIndex("ISTAT-FOI");
         final IndexValue indexValue = indexValues.findLastByIndex(index);
-        assertThat(indexValue.getStartDate(), is(dt(2013, 12, 01)));
+        assertThat(indexValue.getStartDate(), is(VT.ld(2013, 12, 01)));
     }
 
 }

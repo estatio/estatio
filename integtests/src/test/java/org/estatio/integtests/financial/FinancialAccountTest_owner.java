@@ -29,7 +29,7 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.financial.BankAccountAndMandateFixture;
+import org.estatio.fixture.financial.BankAccountsAndMandatesFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -53,7 +53,7 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
                 execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
                 // not required...
                 //execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
-                execute("bank-accounts", new BankAccountAndMandateFixture(), executionContext);
+                execute("bank-accounts", new BankAccountsAndMandatesFixture(), executionContext);
             }
         });
     }

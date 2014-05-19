@@ -29,6 +29,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -69,11 +70,11 @@ public class LeaseTermsTest_allLeaseTerms extends EstatioIntegrationTest {
 
         // and then
         Assert.assertNotNull(term.getFrequency());
-        Assert.assertNotNull(term.getFrequency().nextDate(dt(2012, 1, 1)));
+        Assert.assertNotNull(term.getFrequency().nextDate(VT.ld(2012, 1, 1)));
 
         final LeaseTermForIndexableRent indexableRent = assertType(term, LeaseTermForIndexableRent.class);
         BigDecimal baseValue = indexableRent.getBaseValue();
-        Assert.assertEquals(bd("20000.00"), baseValue);
+        Assert.assertEquals(VT.bd("20000.00"), baseValue);
     }
 
 }

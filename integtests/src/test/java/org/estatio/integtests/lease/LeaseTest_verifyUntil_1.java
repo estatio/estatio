@@ -26,6 +26,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
@@ -58,26 +59,26 @@ public class LeaseTest_verifyUntil_1 extends EstatioIntegrationTest {
         // given
         Lease leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
 
-        LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, dt(2008, 1, 1), bi(1));
-        LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(dt(2008, 1, 1));
+        LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2008, 1, 1), VT.bi(1));
+        LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));
         assertNotNull(leaseMediaXServiceChargeTerm);
 
         // when
-        leaseMediax.verifyUntil(dt(2014, 1, 1));
+        leaseMediax.verifyUntil(VT.ld(2014, 1, 1));
 
         // commit to get the BigDecimals to be stored to the correct precision by DN.
         nextTransaction();
 
         // and reload
         leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
-        leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, dt(2008, 1, 1), bi(1));
+        leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2008, 1, 1), VT.bi(1));
 
         // then
-        leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(dt(2008, 1, 1));
+        leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));
         assertNotNull(leaseMediaXServiceChargeTerm);
 
         final LeaseTerm leaseMediaXServiceChargeTermN = leaseMediaXServiceChargeItem.getTerms().last();
-        assertThat(leaseMediaXServiceChargeTermN.getEffectiveValue(), is(bd("6000.00")));
+        assertThat(leaseMediaXServiceChargeTermN.getEffectiveValue(), is(VT.bd("6000.00")));
     }
 
     @Test
@@ -87,25 +88,25 @@ public class LeaseTest_verifyUntil_1 extends EstatioIntegrationTest {
         // given
         Lease leasePoison = leases.findLeaseByReference("OXF-POISON-003");
 
-        LeaseItem leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, dt(2011, 1, 1), bi(1));
-        LeaseItem leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, dt(2011, 1, 1), bi(1));
+        LeaseItem leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, VT.ld(2011, 1, 1), VT.bi(1));
+        LeaseItem leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2011, 1, 1), VT.bi(1));
         assertNotNull(leasePoisonServiceChargeItem);
 
         // when
-        leasePoison.verifyUntil(dt(2014, 1, 1));
+        leasePoison.verifyUntil(VT.ld(2014, 1, 1));
 
         // commit to get the BigDecimals to be stored to the correct precision by DN; reload
         nextTransaction();
         leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, dt(2011, 1, 1), bi(1));
-        leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, dt(2011, 1, 1), bi(1));
+        leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, VT.ld(2011, 1, 1), VT.bi(1));
+        leasePoisonServiceChargeItem = leasePoison.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2011, 1, 1), VT.bi(1));
 
         // then
-        final LeaseTerm leaseTerm1 = leasePoisonServiceChargeItem.findTerm(dt(2011, 1, 1));
+        final LeaseTerm leaseTerm1 = leasePoisonServiceChargeItem.findTerm(VT.ld(2011, 1, 1));
         assertNotNull(leaseTerm1);
 
         final LeaseTerm leaseTerm2 = leasePoisonServiceChargeItem.getTerms().last();
-        assertThat(leaseTerm2.getEffectiveValue(), is(bd("12400.00")));
+        assertThat(leaseTerm2.getEffectiveValue(), is(VT.bd("12400.00")));
 
         // and then
         SortedSet<LeaseTerm> terms = leasePoisonRentItem.getTerms();
@@ -114,7 +115,7 @@ public class LeaseTest_verifyUntil_1 extends EstatioIntegrationTest {
                 leasePoisonServiceChargeItem.getEffectiveInterval().toString()
                 .concat(terms.toString()), 
                 terms.size(), is(3));
-        assertNotNull(leasePoisonRentItem.findTerm(dt(2011, 1, 1)));
+        assertNotNull(leasePoisonRentItem.findTerm(VT.ld(2011, 1, 1)));
     }
 
 }

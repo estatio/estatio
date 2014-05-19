@@ -28,6 +28,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
@@ -61,10 +62,10 @@ public class LeaseTest_verifyUntil extends EstatioIntegrationTest {
     public void setUp() throws Exception {
         leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
 
-        leaseTopModelRentItem = leaseTopModel.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        leaseTopModelRentItem = leaseTopModel.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         assertNotNull(leaseTopModelRentItem);
 
-        leaseTopModelServiceChargeItem = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        leaseTopModelServiceChargeItem = leaseTopModel.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
         assertNotNull(leaseTopModelServiceChargeItem);
     }
 
@@ -78,15 +79,15 @@ public class LeaseTest_verifyUntil extends EstatioIntegrationTest {
     public void createsTermsForLeaseTermItems() throws Exception {
 
         // given
-        assertNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
-        assertNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+        assertNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
+        assertNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
 
         // when
-        leaseTopModel.verifyUntil(dt(2014, 1, 1));
+        leaseTopModel.verifyUntil(VT.ld(2014, 1, 1));
 
         // then
-        assertNotNull(leaseTopModelRentItem.findTerm(dt(2012, 7, 15)));
-        assertNotNull(leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+        assertNotNull(leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15)));
+        assertNotNull(leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
     }
 
 }

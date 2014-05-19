@@ -36,6 +36,7 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.fixture.EstatioOperationalResetFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,7 +56,7 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
         scenarioExecution().install(new EstatioOperationalResetFixture());
     }
 
-    private static final LocalDate START_DATE = dt(2013, 11, 7);
+    private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
 
     @Inject
     private Leases leases;
@@ -87,7 +88,7 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
     @Test
     public void step1_verify() throws Exception {
         // when
-        lease.verifyUntil(dt(2015, 1, 1));
+        lease.verifyUntil(VT.ld(2015, 1, 1));
         // then
         assertThat(rItem.getTerms().size(), is(2));
         assertThat(sItem.getTerms().size(), is(2));
@@ -96,9 +97,9 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
         LeaseTermForIndexableRent last = (LeaseTermForIndexableRent) rItem.getTerms().last();
         LeaseTermForIndexableRent first = (LeaseTermForIndexableRent) rItem.getTerms().first();
         assertNotNull(last.getPrevious());
-        assertThat(last.getBaseValue(), is(bd(150000).setScale(2)));
-        assertThat(first.getStartDate(), is(dt(2013, 11, 7)));
-        assertThat(last.getStartDate(), is(dt(2015, 1, 1)));
+        assertThat(last.getBaseValue(), is(VT.bd(150000).setScale(2)));
+        assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
+        assertThat(last.getStartDate(), is(VT.ld(2015, 1, 1)));
         assertThat(invoices.findInvoices(lease).size(), is(0));
     }
 
@@ -109,11 +110,11 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
                 InvoiceRunType.NORMAL_RUN,
                 InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE,
                 START_DATE,
-                dt(2013, 10, 1),
-                dt(2015, 4, 1));
+                VT.ld(2013, 10, 1),
+                VT.ld(2015, 4, 1));
         approveInvoicesFor(lease);
-        assertThat(totalApprovedOrInvoicedForItem(rItem), is(bd("209918.48")));
-        assertThat(totalApprovedOrInvoicedForItem(sItem), is(bd("18103.26")));
+        assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
+        assertThat(totalApprovedOrInvoicedForItem(sItem), is(VT.bd("18103.26")));
         assertThat(invoices.findInvoices(lease).size(), is(1));
     }
 
@@ -123,7 +124,7 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
         List<Invoice> allInvoices = invoices.allInvoices();
         Invoice invoice = allInvoices.get(allInvoices.size() - 1);
         invoice.approve();
-        invoice.doInvoice(dt(2013, 11, 7));
+        invoice.doInvoice(VT.ld(2013, 11, 7));
         assertThat(invoice.getInvoiceNumber(), is("OXF-000001"));
         assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
     }
@@ -131,34 +132,34 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
     @Test
     public void step4_indexation() throws Exception {
         Index index = indices.findIndex("ISTAT-FOI");
-        indexValues.newIndexValue(index, dt(2013, 11, 1), bd(110));
-        indexValues.newIndexValue(index, dt(2014, 12, 1), bd(115));
-        lease.verifyUntil(dt(2015, 3, 31));
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) rItem.findTerm(dt(2015, 1, 1));
-        assertThat(term.getIndexationPercentage(), is(bd(4.5)));
-        assertThat(term.getIndexedValue(), is(bd("156750.00")));
-        assertThat(totalApprovedOrInvoicedForItem(rItem), is(bd("209918.48")));
+        indexValues.newIndexValue(index, VT.ld(2013, 11, 1), VT.bd(110));
+        indexValues.newIndexValue(index, VT.ld(2014, 12, 1), VT.bd(115));
+        lease.verifyUntil(VT.ld(2015, 3, 31));
+        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) rItem.findTerm(VT.ld(2015, 1, 1));
+        assertThat(term.getIndexationPercentage(), is(VT.bd(4.5)));
+        assertThat(term.getIndexedValue(), is(VT.bd("156750.00")));
+        assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
     }
 
     @Test
     public void step5_normalInvoice() throws Exception {
-        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, dt(2015, 4, 1), dt(2015, 4, 1), dt(2015, 4, 1));
+        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
         approveInvoicesFor(lease);
-        assertThat(totalApprovedOrInvoicedForItem(rItem), is(bd("209918.48")));
+        assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));
     }
 
     @Test
     public void step6_retroInvoice() throws Exception {
-        lease.calculate(InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, dt(2015, 4, 1), dt(2015, 4, 1), dt(2015, 4, 1));
+        lease.calculate(InvoiceRunType.RETRO_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2015, 4, 1), VT.ld(2015, 4, 1), VT.ld(2015, 4, 1));
         // (156750 - 150000) / = 1687.5 added
         approveInvoicesFor(lease);
         assertThat(invoices.findInvoices(lease).size(), is(2));
-        assertThat(totalApprovedOrInvoicedForItem(rItem), is(bd("209918.48").add(bd("1687.50"))));
+        assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48").add(VT.bd("1687.50"))));
     }
 
     @Test
     public void step7_terminate() throws Exception {
-        lease.terminate(dt(2014, 6, 30), true);
+        lease.terminate(VT.ld(2014, 6, 30), true);
     }
 
     // //////////////////////////////////////

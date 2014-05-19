@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import org.estatio.dom.index.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,9 +46,9 @@ public class IndexBasesTest_findByIndexAndDate extends EstatioIntegrationTest {
         // given
         Index index = indices.findIndex("ISTAT-FOI");
         // when
-        final IndexBase indexBase = indexBases.findByIndexAndDate(index, dt(2013, 1, 1));
+        final IndexBase indexBase = indexBases.findByIndexAndDate(index, VT.ld(2013, 1, 1));
         // then
-        assertThat(indexBase.getStartDate(), is(dt(2011, 1, 1)));
+        assertThat(indexBase.getStartDate(), is(VT.ld(2011, 1, 1)));
     }
 
 }

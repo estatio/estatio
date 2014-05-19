@@ -27,6 +27,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,8 +57,8 @@ public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
     @Test
     public void whenLeasesExpiringInRange() {
         // given
-        final LocalDate startDate = dt(2020, 1, 1);
-        final LocalDate endDate   = dt(2030, 1, 1);
+        final LocalDate startDate = VT.ld(2020, 1, 1);
+        final LocalDate endDate   = VT.ld(2030, 1, 1);
         // when
         final List<Lease> matchingLeases = leases.findExpireInDateRange(startDate, endDate);
         // then

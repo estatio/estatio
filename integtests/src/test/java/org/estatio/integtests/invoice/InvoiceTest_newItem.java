@@ -35,10 +35,11 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemFixture;
+import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
@@ -57,7 +58,6 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
                 execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsFixture(), executionContext);
                 execute("properties", new PropertiesAndUnitsFixture(), executionContext);
                 execute("leases", new LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture(), executionContext);
-                //execute("invoices", new InvoiceAndInvoiceItemFixture(), executionContext);
             }
         });
     }
@@ -81,9 +81,9 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        seller = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.SELLER_PARTY);
-        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemFixture.BUYER_PARTY);
-        lease = leases.findLeaseByReference(InvoiceAndInvoiceItemFixture.LEASE);
+        seller = parties.findPartyByReference(InvoiceAndInvoiceItemForOxfPoison003.SELLER_PARTY);
+        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemForOxfPoison003.BUYER_PARTY);
+        lease = leases.findLeaseByReference(InvoiceAndInvoiceItemForOxfPoison003.LEASE);
 
         charge = charges.allCharges().get(0);
         currency = currencies.allCurrencies().get(0);
@@ -92,18 +92,18 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
     @Test
     public void happyCase() throws Exception {
         // given
-        Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, currency, dt(2013, 1, 1), lease, null);
+        Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, currency, VT.ld(2013, 1, 1), lease, null);
 
         // when
-        invoice.newItem(charge, bd(1), bd("10000.123"), null, null);
+        invoice.newItem(charge, VT.bd(1), VT.bd("10000.123"), null, null);
 
         // then
-        Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, dt(2013, 1, 1), null);
-        assertThat(foundInvoice.getNetAmount(), is(bd("10000.123")));
+        Invoice foundInvoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.BANK_TRANSFER, lease, InvoiceStatus.NEW, VT.ld(2013, 1, 1), null);
+        assertThat(foundInvoice.getNetAmount(), is(VT.bd("10000.123")));
 
         // and also
         final InvoiceItemForLease invoiceItem = (InvoiceItemForLease) foundInvoice.getItems().first();
-        assertThat(invoiceItem.getNetAmount(), is(bd("10000.123")));
+        assertThat(invoiceItem.getNetAmount(), is(VT.bd("10000.123")));
         assertThat(invoiceItem.getLease(), is(lease));
         assertThat(invoiceItem.getFixedAsset(), is((FixedAsset) lease.getOccupancies().first().getUnit()));
 

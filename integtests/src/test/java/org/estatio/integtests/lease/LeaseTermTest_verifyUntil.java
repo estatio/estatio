@@ -27,6 +27,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,41 +69,41 @@ public class LeaseTermTest_verifyUntil extends EstatioIntegrationTest {
     public void givenLeaseTermForIndexableRent() throws Exception {
 
         // given
-        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         Assert.assertNotNull(leaseTopModelRentItem);
 
         assertThat(leaseTopModelRentItem.getTerms().size(), is(1));
         LeaseTermForIndexableRent leaseTopModelRentTerm1 = (LeaseTermForIndexableRent) leaseTopModelRentItem.getTerms().first();
-        LeaseTermForIndexableRent leaseTopModelRentTerm = (LeaseTermForIndexableRent) leaseTopModelRentItem.findTerm(dt(2010, 7, 15));
+        LeaseTermForIndexableRent leaseTopModelRentTerm = (LeaseTermForIndexableRent) leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
         Assert.assertThat(leaseTopModelRentTerm, is(sameInstance(leaseTopModelRentTerm1)));
 
         // when
-        leaseTopModelRentTerm1.verifyUntil(dt(2014, 1, 1));
+        leaseTopModelRentTerm1.verifyUntil(VT.ld(2014, 1, 1));
 
         // then
         assertThat(leaseTopModelRentTerm1.getBaseIndexValue(), is(BigDecimal.valueOf(137.6).setScale(4)));
-        assertThat(leaseTopModelRentTerm1.getNextIndexValue(), is(bd4(101.2)));
-        assertThat(leaseTopModelRentTerm1.getIndexationPercentage(), is(bd1(1)));
-        assertThat(leaseTopModelRentTerm1.getIndexedValue(), is(bd2(20200)));
+        assertThat(leaseTopModelRentTerm1.getNextIndexValue(), is(VT.bd4(101.2)));
+        assertThat(leaseTopModelRentTerm1.getIndexationPercentage(), is(VT.bd1(1)));
+        assertThat(leaseTopModelRentTerm1.getIndexedValue(), is(VT.bd2(20200)));
     }
 
     @Test
     public void givenLeaseTermForServiceCharge() throws Exception {
         // given
-        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
         Assert.assertNotNull(leaseTopModelServiceChargeItem);
 
         assertThat(leaseTopModelServiceChargeItem.getTerms().size(), is(1));
         final LeaseTerm leaseTopModelServiceChargeTerm1 = leaseTopModelServiceChargeItem.getTerms().first();
-        LeaseTerm leaseTopModelServiceChargeTerm = leaseTopModelServiceChargeItem.findTerm(dt(2010, 7, 15));
+        LeaseTerm leaseTopModelServiceChargeTerm = leaseTopModelServiceChargeItem.findTerm(VT.ld(2010, 7, 15));
         Assert.assertThat(leaseTopModelServiceChargeTerm1, is(sameInstance(leaseTopModelServiceChargeTerm)));
 
         // when
-        leaseTopModelServiceChargeTerm1.verifyUntil(dt(2014, 1, 1));
+        leaseTopModelServiceChargeTerm1.verifyUntil(VT.ld(2014, 1, 1));
 
         // then
         SortedSet<LeaseTerm> terms = leaseTopModelServiceChargeItem.getTerms();
-        assertNotNull(terms.toString(), leaseTopModelServiceChargeItem.findTerm(dt(2012, 7, 15)));
+        assertNotNull(terms.toString(), leaseTopModelServiceChargeItem.findTerm(VT.ld(2012, 7, 15)));
     }
 
 

@@ -25,6 +25,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
@@ -57,7 +58,7 @@ public class LeaseTermTest_approve extends EstatioIntegrationTest {
     @Before
     public void setup() {
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         assertNotNull(leaseTopModelRentItem);
     }
 
@@ -65,10 +66,10 @@ public class LeaseTermTest_approve extends EstatioIntegrationTest {
     public void happyCase() throws Exception {
 
         // given
-        lease.verifyUntil(dt(2014, 1, 1));
+        lease.verifyUntil(VT.ld(2014, 1, 1));
 
-        LeaseTerm term0 = leaseTopModelRentItem.findTerm(dt(2010, 7, 15));
-        LeaseTerm term2 = leaseTopModelRentItem.findTerm(dt(2012, 7, 15));
+        LeaseTerm term0 = leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
+        LeaseTerm term2 = leaseTopModelRentItem.findTerm(VT.ld(2012, 7, 15));
         assertThat(term2, is(not(sameInstance(term0))));
 
         assertThat(term0.getStatus(), is(LeaseTermStatus.NEW));

@@ -40,25 +40,21 @@ import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class BankAccountAndMandateFixture extends SimpleFixtureScript {
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
+    private final String partyStr;
+    private final String bankAccountStr;
+    private final Integer sequence;
+    private final String propertyStr;
 
-        createAccount("ACME", "NL31ABNA0580744433", null, "KAL", executionContext);
-        createAccount("HELLOWORLD", "NL31ABNA0580744434", null, "OXF", executionContext);
-        createAccount("TOPMODEL", "NL31ABNA0580744435", 1, null, executionContext);
-        createAccount("POISON", "NL31ABNA0580744437", 2, null, executionContext);
-        createAccount("MIRACLE", "NL31ABNA0580744439", null, null, executionContext);
-        createAccount("MEDIAX", "NL31ABNA0580744436", null, null, executionContext);
-        createAccount("PRET", "NL31ABNA0580744438", null, null, executionContext);
-
+    protected BankAccountAndMandateFixture(String friendlyName, String localName, String partyStr, String bankAccountStr, Integer sequence, String propertyStr) {
+        super(friendlyName, localName);
+        this.partyStr = partyStr;
+        this.bankAccountStr = bankAccountStr;
+        this.sequence = sequence;
+        this.propertyStr = propertyStr;
     }
 
-    private void createAccount(
-            final String partyStr,
-            final String bankAccountStr,
-            final Integer sequence,
-            final String propertyStr,
-            final ExecutionContext executionContext) {
+    @Override
+    protected void execute(ExecutionContext executionContext) {
 
         Party party = parties.findPartyByReference(partyStr);
         AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);

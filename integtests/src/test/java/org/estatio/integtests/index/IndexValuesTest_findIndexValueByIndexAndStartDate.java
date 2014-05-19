@@ -24,6 +24,7 @@ import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,8 +48,8 @@ public class IndexValuesTest_findIndexValueByIndexAndStartDate extends EstatioIn
         // given
         Index index = indices.findIndex("ISTAT-FOI");
         // when, then
-        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, dt(2013, 1, 1)).getValue(), is(bd("106.7000")));
-        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, dt(2013, 10, 1)).getValue(), is(bd("107.1000")));
+        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, VT.ld(2013, 1, 1)).getValue(), is(VT.bd("106.7000")));
+        assertThat(indexValues.findIndexValueByIndexAndStartDate(index, VT.ld(2013, 10, 1)).getValue(), is(VT.bd("107.1000")));
     }
 
 }

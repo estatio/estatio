@@ -29,6 +29,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
@@ -82,8 +83,8 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
         assertThat(lease.getItems().size(), is(3));
 
-        leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
-        leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
+        leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
 
         assertNotNull(leaseTopModelRentItem);
         assertNotNull(leaseTopModelServiceChargeItem);
@@ -93,13 +94,13 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     public void whenLeaseTermApproved() throws Exception {
 
         // given
-        lease.verifyUntil(dt(2014, 1, 1));
+        lease.verifyUntil(VT.ld(2014, 1, 1));
 
-        LeaseTerm leaseTopModelRentTerm = leaseTopModelRentItem.findTerm(dt(2010, 7, 15));
+        LeaseTerm leaseTopModelRentTerm = leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
         leaseTopModelRentTerm.approve();
 
         assertThat(leaseTopModelRentTerm.getStatus(), is(LeaseTermStatus.APPROVED));
-        assertThat(leaseTopModelRentTerm.getEffectiveValue(), is(bd2(20200)));
+        assertThat(leaseTopModelRentTerm.getEffectiveValue(), is(VT.bd2(20200)));
 
         // when, then
         calculateNormalRunAndAssert(leaseTopModelRentTerm, "2010-07-01", "2010-10-01", "2010-07-01/2010-10-01", 4239.13, false);
@@ -118,7 +119,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         // invoice after effective date
         calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2011-04-02", "2010-10-01/2011-01-01", 5050.00, false);
         // invoice after effective date with mock
-        estatioSettingsService.updateEpochDate(dt(2011, 1, 1));
+        estatioSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
 
         calculateNormalRunAndAssert(leaseTopModelRentTerm0, "2010-10-01", "2011-04-2", "2010-10-01/2011-01-01", 50.00, true);
 
@@ -135,7 +136,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     @Test
     public void t15_invoiceItemsForServiceChargeCreated() throws Exception {
 
-        estatioSettingsService.updateEpochDate(dt(1980, 1, 1));
+        estatioSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
 
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         leaseTopModelServiceChargeTerm0.approve();
@@ -151,25 +152,25 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
     @Ignore // TODO: to un-ignore
     @Test
     public void t15_invoiceItemsForServiceChargeCreatedWithEpochDate() throws Exception {
-        estatioSettingsService.updateEpochDate(dt(2011, 1, 1));
+        estatioSettingsService.updateEpochDate(VT.ld(2011, 1, 1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
 
         calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2011-01-01", "2010-10-01/2011-01-01", 0.00, false);
-        leaseTopModelServiceChargeTerm0.setAuditedValue(bd(6600.00));
+        leaseTopModelServiceChargeTerm0.setAuditedValue(VT.bd(6600.00));
         leaseTopModelServiceChargeTerm0.verify();
 
         calculateNormalRunAndAssert(leaseTopModelServiceChargeTerm0, "2010-10-01", "2012-01-01", "2010-10-01/2011-01-01", 150.00, true);
         // reconcile without mock
-        estatioSettingsService.updateEpochDate(dt(1980, 1, 1));
+        estatioSettingsService.updateEpochDate(VT.ld(1980, 1, 1));
     }
 
     @Ignore // TODO: to un-ignore
     @Test
     public void t16_bulkLeaseCalculate() throws Exception {
-        leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
         LeaseTermForServiceCharge leaseTopModelServiceChargeTerm0 = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.getTerms().first();
         // call calculate on leaseTopModel
-        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, dt(2010, 10, 1), dt(2010, 10, 1), null);
+        lease.calculate(InvoiceRunType.NORMAL_RUN, InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE, VT.ld(2010, 10, 1), VT.ld(2010, 10, 1), null);
         assertThat(leaseTopModelServiceChargeTerm0.getInvoiceItems().size(), is(2));
     }
 
@@ -181,7 +182,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
             final Double expected,
             final boolean expectedAdjustment) {
 
-        invoiceItemsForLease.removeUnapprovedInvoiceItems(leaseTerm, ival(interval));
+        invoiceItemsForLease.removeUnapprovedInvoiceItems(leaseTerm, VT.ldi(interval));
 
         nextTransaction();
         isisJdoSupport.refresh(leaseTerm);
@@ -189,17 +190,17 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
         InvoiceCalculationParameters parameters = new InvoiceCalculationParameters(
                 leaseTerm,
                 InvoiceRunType.NORMAL_RUN,
-                dt(startDueDate),
-                dt(startDueDate),
-                dt(nextDueDate));
+                VT.ld(startDueDate),
+                VT.ld(startDueDate),
+                VT.ld(nextDueDate));
         invoiceCalculationService.calculateAndInvoice(parameters);
 
-        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, ival(interval));
+        InvoiceItemForLease invoiceItem = invoiceItemsForLease.findUnapprovedInvoiceItem(leaseTerm, VT.ldi(interval));
         isisJdoSupport.refresh(leaseTerm);
 
-        BigDecimal netAmount = invoiceItem == null ? bd2(0) : invoiceItem.getNetAmount();
+        BigDecimal netAmount = invoiceItem == null ? VT.bd2(0) : invoiceItem.getNetAmount();
         final String reason = "size " + invoiceItemsForLease.findByLeaseTermAndInvoiceStatus(leaseTerm, InvoiceStatus.NEW).size();
-        assertThat(reason, netAmount, is(bd2hup(expected)));
+        assertThat(reason, netAmount, is(VT.bd2hup(expected)));
 
         Boolean adjustment = invoiceItem == null ? false : invoiceItem.isAdjustment();
         assertThat(adjustment, is(expectedAdjustment));

@@ -27,6 +27,7 @@ import org.estatio.fixture.asset.PropertiesAndUnitsFixture;
 import org.estatio.fixture.lease.LeasesAndLeaseUnitsAndLeaseItemsAndLeaseTermsAndTagsAndBreakOptionsFixture;
 import org.estatio.fixture.party.PersonsAndOrganisationsAndCommunicationChannelsFixture;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.estatio.integtests.VT;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -67,7 +68,7 @@ public class LeaseItemTest_findTerm extends EstatioIntegrationTest {
         // this is mostly just asserting on the baseline fixture
 
         // given
-        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
 
         // and given
         final SortedSet<LeaseTerm> terms = leaseTopModelRentItem.getTerms();
@@ -75,7 +76,7 @@ public class LeaseItemTest_findTerm extends EstatioIntegrationTest {
         final LeaseTerm term0 = terms.first();
 
         // when
-        final LeaseTerm term = leaseTopModelRentItem.findTerm(dt(2010, 7, 15));
+        final LeaseTerm term = leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
         LeaseTermForIndexableRent leaseTopModelRentTerm = assertType(term, LeaseTermForIndexableRent.class);
 
         // then
@@ -84,23 +85,23 @@ public class LeaseItemTest_findTerm extends EstatioIntegrationTest {
 
         // and then
         Assert.assertNotNull(leaseTopModelRentTerm.getFrequency());
-        Assert.assertNotNull(leaseTopModelRentTerm.getFrequency().nextDate(dt(2012, 1, 1)));
+        Assert.assertNotNull(leaseTopModelRentTerm.getFrequency().nextDate(VT.ld(2012, 1, 1)));
 
         BigDecimal baseValue = leaseTopModelRentTerm.getBaseValue();
-        Assert.assertEquals(bd("20000.00"), baseValue);
+        Assert.assertEquals(VT.bd("20000.00"), baseValue);
     }
 
     @Test
     public void whenExists_forServiceCharge() throws Exception {
 
         // given
-        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, dt(2010, 7, 15), bi(1));
+        LeaseItem leaseTopModelServiceChargeItem = lease.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2010, 7, 15), VT.bi(1));
 
         // when
-        LeaseTermForServiceCharge leaseTopModelServiceChargeTerm = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.findTerm(dt(2010, 7, 15));
+        LeaseTermForServiceCharge leaseTopModelServiceChargeTerm = (LeaseTermForServiceCharge) leaseTopModelServiceChargeItem.findTerm(VT.ld(2010, 7, 15));
 
         // then
-        assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue(), Is.is(bd("6000.00")));
+        assertThat(leaseTopModelServiceChargeTerm.getBudgetedValue(), Is.is(VT.bd("6000.00")));
     }
 
 

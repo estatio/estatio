@@ -33,54 +33,49 @@ import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.AbstractInterval.IntervalEnding;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
 
 public class InvoiceAndInvoiceItemFixture extends SimpleFixtureScript {
 
-    public static final LocalDate START_DATE = new LocalDate(2012, 1, 1);
-    public static final LocalDateInterval INTERVAL = new LocalDateInterval(new LocalDate(2012, 1, 1), new LocalDate(2012, 4, 1), IntervalEnding.EXCLUDING_END_DATE);
+    private final String sellerStr;
+    private final String buyerStr;
+    private final String leaseStr;
+    private final String currencyStr;
+    private final LocalDate startDate;
+    private final LocalDateInterval interval;
 
-    public static final String LEASE = "OXF-POISON-003";
-    public static final String SELLER_PARTY = "ACME";
-    public static final String BUYER_PARTY = "POISON";
+    public InvoiceAndInvoiceItemFixture(String friendlyName, String localName, String sellerStr, String buyerStr, String leaseStr, String currencyStr, LocalDate startDate, LocalDateInterval interval) {
+        super(friendlyName, localName);
+        this.sellerStr = sellerStr;
+        this.buyerStr = buyerStr;
+        this.leaseStr = leaseStr;
+        this.currencyStr = currencyStr;
+        this.startDate = startDate;
+        this.interval = interval;
+    }
 
     @Override
-    protected void execute(ExecutionContext fixtureResults) {
-        createInvoices(fixtureResults);
-    }
-
-    private void createInvoices(ExecutionContext fixtureResults) {
-        createInvoice(SELLER_PARTY, BUYER_PARTY, LEASE, "EUR", fixtureResults);
-        createInvoice("ACME", "POISON", "KAL-POISON-001", "EUR", fixtureResults);
-    }
-
-    private void createInvoice(
-            final String sellerStr,
-            final String buyerStr,
-            final String leaseStr,
-            final String currencyStr,
-            ExecutionContext fixtureResults) {
+    protected void execute(ExecutionContext executionContext) {
 
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);
         final Lease lease = leases.findLeaseByReference(leaseStr);
         final Currency currency = currencies.findCurrency(currencyStr);
 
-        final Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, currency, START_DATE, lease, null);
-        invoice.setInvoiceDate(START_DATE);
+        final Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, currency, startDate, lease, null);
+        invoice.setInvoiceDate(startDate);
 
-        fixtureResults.add(this, invoice);
+        executionContext.add(this, invoice);
 
         final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
         for (final LeaseTerm term : terms) {
-            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, INTERVAL, START_DATE, null);
+            InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, interval, startDate, null);
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
 
-            fixtureResults.add(this, item);
+            executionContext.add(this, item);
         }
     }
 
