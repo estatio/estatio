@@ -69,6 +69,7 @@ public class FixLeaseTerms extends SimpleFixtureScript {
                 }
             }
         } catch (Exception e) {
+            // TODO: should probably be using ApplicationException here
             throw new IsisApplicationException();
         }
         return false;

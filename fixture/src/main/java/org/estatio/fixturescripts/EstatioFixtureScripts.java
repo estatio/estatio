@@ -42,7 +42,6 @@ public class EstatioFixtureScripts extends FixtureScripts{
         super("org.estatio");
     }
 
-    @Paged(50)
     @MemberOrder(name="Administration", sequence = "9")
     @Override
     public List<FixtureResult> runFixtureScript(
@@ -51,7 +50,12 @@ public class EstatioFixtureScripts extends FixtureScripts{
         return super.runFixtureScript(fixtureScript, parameters);
     }
 
-    // //////////////////////////////////////
+    @Override
+    public List<FixtureScript> choices0RunFixtureScript() {
+        return super.choices0RunFixtureScript();
+    }
+
+// //////////////////////////////////////
 
     @MemberOrder(name="Administration", sequence = "9.1")
     @Prototype

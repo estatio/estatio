@@ -19,40 +19,12 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
+import java.util.*;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.AutoComplete;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotPersisted;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.core.commons.exceptions.IsisApplicationException;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
@@ -60,11 +32,7 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.BankMandate;
-import org.estatio.dom.financial.BankMandates;
-import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.financial.FinancialConstants;
+import org.estatio.dom.financial.*;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
@@ -77,6 +45,12 @@ import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -765,9 +739,10 @@ public class Lease
             ) {
         String validateAssign = validateAssign(reference, name, tenant, startDate, endDate, confirm);
         if (validateAssign != null) {
-            // REVIEW: don't know if this is the right way but when calling this
+            // TODO: don't know if this is the right way but when calling this
             // method using the Api or integration tests I want to reuse the
             // validation code
+            // TODO: Dan says: probably shouldn't be using IsisApplicationException, instead just ApplicationException (from the applib)
             throw new IsisApplicationException("Validation error: ".concat(validateAssign));
         }
 
