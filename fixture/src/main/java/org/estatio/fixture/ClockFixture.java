@@ -24,10 +24,10 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.apache.isis.applib.clock.Clock;
 import org.apache.isis.applib.fixtures.FixtureClock;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.commons.ensure.Assert;
 
-public class ClockFixture extends SimpleFixtureScript {
+public class ClockFixture extends FixtureScript {
 
     //region > factory methods, constructors
     public static ClockFixture setTo(final String date) {

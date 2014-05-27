@@ -21,10 +21,10 @@ package org.estatio.fixture.currency.refdata;
 import javax.inject.Inject;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 
-public class CurrenciesRefData extends SimpleFixtureScript {
+public class CurrenciesRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

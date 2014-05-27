@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.financial;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-// unused
-class BankAccountsAndMandatesForAll extends CompositeFixtureScript {
+// unused - can probably remove
+@Deprecated
+class BankAccountsAndMandatesForAll extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

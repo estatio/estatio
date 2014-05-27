@@ -25,9 +25,9 @@ import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-public class EstatioDemoFixture extends CompositeFixtureScript {
+public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     public EstatioDemoFixture() {
         super(null, "demo");

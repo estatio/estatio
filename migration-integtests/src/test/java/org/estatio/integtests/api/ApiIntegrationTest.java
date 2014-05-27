@@ -59,7 +59,7 @@ import org.hamcrest.core.Is;
 import org.joda.time.LocalDate;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -70,7 +70,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
     @BeforeClass
     public static void setupDataForClass() {
         scenarioExecution().install(
-                new CompositeFixtureScript() {
+                new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioBaseLineFixture(), executionContext);
@@ -119,7 +119,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
     @AfterClass
     public static void tearDownDataForClass() {
         scenarioExecution().install(
-                new CompositeFixtureScript() {
+                new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioOperationalTeardownFixture(), executionContext);

@@ -23,12 +23,12 @@ import javax.inject.Inject;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
 
-public class TaxesAndTaxRatesRefData extends SimpleFixtureScript {
+public class TaxesAndTaxRatesRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

@@ -19,10 +19,10 @@
 package org.estatio.fixture;
 
 import javax.inject.Inject;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
-public class EstatioOperationalTeardownFixture extends SimpleFixtureScript {
+public class EstatioOperationalTeardownFixture extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

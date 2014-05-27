@@ -49,7 +49,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -61,7 +61,7 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
     @BeforeClass
     public static void setupTransactionalData() {
         scenarioExecution().install(
-                new CompositeFixtureScript() {
+                new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioBaseLineFixture(), executionContext);

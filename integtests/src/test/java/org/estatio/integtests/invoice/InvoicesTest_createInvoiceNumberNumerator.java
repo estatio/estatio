@@ -28,15 +28,13 @@ import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
 import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
@@ -48,7 +46,7 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new CompositeFixtureScript() {
+        scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

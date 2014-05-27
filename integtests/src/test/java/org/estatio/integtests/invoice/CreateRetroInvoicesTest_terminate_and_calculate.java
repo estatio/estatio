@@ -41,7 +41,6 @@ import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,7 +50,7 @@ public class CreateRetroInvoicesTest_terminate_and_calculate extends EstatioInte
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new CompositeFixtureScript() {
+        scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

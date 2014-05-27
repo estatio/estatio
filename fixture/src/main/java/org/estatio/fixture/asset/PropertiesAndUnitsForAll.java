@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.asset;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-// unused directly
-class PropertiesAndUnitsForAll extends CompositeFixtureScript {
+// unused - can probably remove
+@Deprecated
+class PropertiesAndUnitsForAll extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

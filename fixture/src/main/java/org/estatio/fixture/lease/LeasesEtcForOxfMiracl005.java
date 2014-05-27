@@ -18,9 +18,9 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeasesEtcForOxfMiracl005 extends CompositeFixtureScript {
+public class LeasesEtcForOxfMiracl005 extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

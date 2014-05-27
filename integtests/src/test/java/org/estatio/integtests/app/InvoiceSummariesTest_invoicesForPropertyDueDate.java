@@ -33,7 +33,7 @@ import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -42,7 +42,7 @@ public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioInte
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new CompositeFixtureScript() {
+        scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
 

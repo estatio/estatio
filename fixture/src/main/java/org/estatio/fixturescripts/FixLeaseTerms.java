@@ -25,14 +25,10 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForIndexableRent;
 import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.apache.isis.core.commons.exceptions.IsisApplicationException;
 
-public class FixLeaseTerms extends SimpleFixtureScript {
-
-    public FixLeaseTerms() {
-        setDiscoverability(Discoverability.DISCOVERABLE);
-    }
+public class FixLeaseTerms extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

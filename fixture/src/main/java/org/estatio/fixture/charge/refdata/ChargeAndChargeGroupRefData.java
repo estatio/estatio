@@ -25,9 +25,9 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class ChargeAndChargeGroupRefData extends SimpleFixtureScript {
+public class ChargeAndChargeGroupRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

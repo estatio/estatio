@@ -136,7 +136,7 @@ public class EstatioFixtureScripts extends FixtureScripts{
     @Prototype
     @MemberOrder(name="Administration", sequence = "9")
     public List<FixtureResult> installConstants() {
-        return runFixtureScript(new CompositeFixtureScript() {
+        return runFixtureScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData(), executionContext);

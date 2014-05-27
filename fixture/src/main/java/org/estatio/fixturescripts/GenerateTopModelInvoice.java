@@ -24,11 +24,11 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public class GenerateTopModelInvoice extends SimpleFixtureScript {
+public class GenerateTopModelInvoice extends DiscoverableFixtureScript {
 
     private final String propertyRef;
 
@@ -38,7 +38,6 @@ public class GenerateTopModelInvoice extends SimpleFixtureScript {
 
     public GenerateTopModelInvoice(String propertyRef) {
         this.propertyRef = propertyRef;
-        setDiscoverability(Discoverability.DISCOVERABLE);
     }
 
     @Override

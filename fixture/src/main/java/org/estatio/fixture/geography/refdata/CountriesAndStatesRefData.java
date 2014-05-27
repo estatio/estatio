@@ -23,9 +23,9 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class CountriesAndStatesRefData extends SimpleFixtureScript {
+public class CountriesAndStatesRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

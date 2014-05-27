@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-// unused
-class LeasesEtcForAll extends CompositeFixtureScript {
+// unused - can probably remove
+@Deprecated
+class LeasesEtcForAll extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

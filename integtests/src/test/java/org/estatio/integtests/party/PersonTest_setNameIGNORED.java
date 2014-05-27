@@ -27,13 +27,13 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new CompositeFixtureScript() {
+        scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

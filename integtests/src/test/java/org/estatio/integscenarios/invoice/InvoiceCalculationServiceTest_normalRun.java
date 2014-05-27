@@ -34,7 +34,7 @@ import org.estatio.integtests.VT;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -50,7 +50,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
 
     @BeforeClass
     public static void setupData() {
-        scenarioExecution().install(new CompositeFixtureScript() {
+        scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

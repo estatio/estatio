@@ -39,7 +39,7 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -47,7 +47,7 @@ import static org.estatio.integtests.VT.ld;
  * Replays the invoice creation process
  * 
  */
-public class CreateRetroInvoices extends SimpleFixtureScript {
+public class CreateRetroInvoices extends DiscoverableFixtureScript {
 
     private static LocalDate EPOCH_START_DATE = ld(2013, 1, 1);
 
@@ -64,7 +64,6 @@ public class CreateRetroInvoices extends SimpleFixtureScript {
     public CreateRetroInvoices(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
-        setDiscoverability(Discoverability.DISCOVERABLE);
     }
 
     @Override

@@ -35,9 +35,9 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class InvoiceAndInvoiceItemAbstract extends SimpleFixtureScript {
+public abstract class InvoiceAndInvoiceItemAbstract extends FixtureScript {
 
     protected InvoiceAndInvoiceItemAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);

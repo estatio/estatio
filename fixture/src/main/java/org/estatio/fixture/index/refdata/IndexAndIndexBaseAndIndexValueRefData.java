@@ -21,11 +21,11 @@ package org.estatio.fixture.index.refdata;
 import java.math.BigDecimal;
 import javax.inject.Inject;
 import org.estatio.dom.index.*;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public class IndexAndIndexBaseAndIndexValueRefData extends SimpleFixtureScript {
+public class IndexAndIndexBaseAndIndexValueRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

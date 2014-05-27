@@ -21,9 +21,9 @@ package org.estatio.fixture.lease.refdata;
 import javax.inject.Inject;
 import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.lease.LeaseTypes;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeaseTypeForItalyRefData extends SimpleFixtureScript {
+public class LeaseTypeForItalyRefData extends FixtureScript {
 
     private enum LeaseTypeData {
 

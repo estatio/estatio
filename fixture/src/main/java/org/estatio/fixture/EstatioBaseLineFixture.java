@@ -22,7 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 /**
  * Will reset to a fixed baseline of the {@link org.estatio.fixture.EstatioRefDataSetupFixture reference data}
@@ -33,7 +33,7 @@ import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
  * it the first time (an idempotent operation).
  * </p>
  */
-public class EstatioBaseLineFixture extends CompositeFixtureScript {
+public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
 
     public EstatioBaseLineFixture() {
         super(null, "baseline");

@@ -25,9 +25,9 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class PersonAbstract extends SimpleFixtureScript {
+public abstract class PersonAbstract extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

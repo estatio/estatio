@@ -18,9 +18,11 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeaseItemAndLeaseTermsForAllLeases extends CompositeFixtureScript {
+// unused - can probably remove
+@Deprecated
+class LeaseItemAndLeaseTermsForAllLeases extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

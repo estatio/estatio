@@ -18,9 +18,10 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeaseAndRolesAndOccupanciesAndTagsForAll extends CompositeFixtureScript {
+// TODO: aim to remove
+public class LeaseAndRolesAndOccupanciesAndTagsForAll extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

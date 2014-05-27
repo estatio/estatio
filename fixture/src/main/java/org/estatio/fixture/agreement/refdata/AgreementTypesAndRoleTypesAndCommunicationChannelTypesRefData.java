@@ -24,9 +24,9 @@ import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.lease.LeaseConstants;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData extends SimpleFixtureScript {
+public class AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

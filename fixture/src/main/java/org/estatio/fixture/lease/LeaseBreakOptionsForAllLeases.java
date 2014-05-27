@@ -18,9 +18,11 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeaseBreakOptionsForAllLeases extends CompositeFixtureScript {
+// unused - can probably remove
+@Deprecated
+class LeaseBreakOptionsForAllLeases extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

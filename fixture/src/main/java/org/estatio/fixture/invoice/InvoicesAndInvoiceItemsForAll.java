@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.invoice;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-class InvoicesAndInvoiceItemsForAll extends CompositeFixtureScript {
+// unused - can probably remove
+@Deprecated
+class InvoicesAndInvoiceItemsForAll extends FixtureScript {
 
     @Override
     protected void execute(FixtureScript.ExecutionContext executionContext) {

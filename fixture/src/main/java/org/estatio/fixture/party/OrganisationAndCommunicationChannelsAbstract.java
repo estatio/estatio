@@ -28,12 +28,12 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.hamcrest.CoreMatchers.*;
 
-public abstract class OrganisationAndCommunicationChannelsAbstract extends SimpleFixtureScript {
+public abstract class OrganisationAndCommunicationChannelsAbstract extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

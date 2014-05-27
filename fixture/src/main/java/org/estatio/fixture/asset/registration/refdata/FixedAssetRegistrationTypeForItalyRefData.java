@@ -21,9 +21,9 @@ package org.estatio.fixture.asset.registration.refdata;
 
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.asset.registration.LandRegister;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class FixedAssetRegistrationTypeForItalyRefData extends SimpleFixtureScript {
+public class FixedAssetRegistrationTypeForItalyRefData extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

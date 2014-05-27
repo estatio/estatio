@@ -27,9 +27,9 @@ import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.*;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseItemAndLeaseTermsAbstract extends SimpleFixtureScript {
+public abstract class LeaseItemAndLeaseTermsAbstract extends FixtureScript {
 
     protected LeaseItem findOrCreateLeaseItem(
             final Lease lease,

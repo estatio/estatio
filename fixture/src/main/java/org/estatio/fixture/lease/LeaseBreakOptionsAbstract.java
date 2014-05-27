@@ -24,9 +24,9 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseBreakOptionsAbstract extends SimpleFixtureScript {
+public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

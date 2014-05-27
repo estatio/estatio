@@ -24,9 +24,9 @@ import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-public class CreateBreakOptions extends SimpleFixtureScript {
+public class CreateBreakOptions extends DiscoverableFixtureScript {
 
     private String reference;
 
@@ -36,7 +36,6 @@ public class CreateBreakOptions extends SimpleFixtureScript {
 
     public CreateBreakOptions(String reference) {
         this.reference = reference;
-        setDiscoverability(Discoverability.DISCOVERABLE);
     }
 
     @Override

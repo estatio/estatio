@@ -25,9 +25,9 @@ import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
 import org.estatio.fixture.link.refdata.LinksRefData;
 import org.estatio.fixture.tax.refdata.TaxesAndTaxRatesRefData;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-public class EstatioRefDataSetupFixture extends CompositeFixtureScript {
+public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
     public EstatioRefDataSetupFixture() {
         super(null, "ref-data");

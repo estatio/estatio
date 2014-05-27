@@ -26,7 +26,7 @@ import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
 /**
@@ -38,7 +38,7 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
     @Before({"@integration", "@EstatioTransactionalObjectsFixture"})
     public void beforeScenarioEstatioTransactionalObjectsFixture() {
         scenarioExecution().install(
-                new CompositeFixtureScript() {
+                new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioBaseLineFixture(), executionContext);
@@ -86,7 +86,7 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
     @Before({"@integration", "@LeasesOnlyFixture"})
     public void beforeScenarioLeasesOnlyFixture() {
         scenarioExecution().install(
-                new CompositeFixtureScript() {
+                new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
                         execute(new EstatioBaseLineFixture(), executionContext);

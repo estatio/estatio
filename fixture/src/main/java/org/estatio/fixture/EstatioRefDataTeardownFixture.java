@@ -35,14 +35,14 @@ import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.services.links.Link;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 
 /**
  * No longer used, see algorithm in {@link EstatioBaseLineFixture}.
  */
-public class EstatioRefDataTeardownFixture extends SimpleFixtureScript {
+public class EstatioRefDataTeardownFixture extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

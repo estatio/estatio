@@ -35,11 +35,11 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public abstract class BankAccountAndMandateFixture extends SimpleFixtureScript {
+public abstract class BankAccountAndMandateFixture extends FixtureScript {
 
     protected BankAccountAndMandateFixture(String friendlyName, String localName) {
         super(friendlyName, localName);

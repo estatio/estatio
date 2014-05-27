@@ -18,9 +18,9 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LeasesEtcForOxfMediax002 extends CompositeFixtureScript {
+public class LeasesEtcForOxfMediax002 extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

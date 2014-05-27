@@ -18,10 +18,11 @@
  */
 package org.estatio.fixture.party;
 
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-// unused, has been inlined into all integ tests.
-class PersonsAndOrganisationsAndCommunicationChannelsForAll extends CompositeFixtureScript {
+// unused, has been inlined into all integ tests - can probably remove
+@Deprecated
+class PersonsAndOrganisationsAndCommunicationChannelsForAll extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

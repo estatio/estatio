@@ -23,13 +23,9 @@ import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
-public class CreateInvoiceNumerators extends SimpleFixtureScript {
-
-    public CreateInvoiceNumerators() {
-        setDiscoverability(Discoverability.DISCOVERABLE);
-    }
+public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {

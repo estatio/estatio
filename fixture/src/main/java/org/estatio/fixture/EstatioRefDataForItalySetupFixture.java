@@ -20,9 +20,9 @@ package org.estatio.fixture;
 
 import org.estatio.fixture.asset.registration.refdata.FixedAssetRegistrationTypeForItalyRefData;
 import org.estatio.fixture.lease.refdata.LeaseTypeForItalyRefData;
-import org.apache.isis.applib.fixturescripts.CompositeFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class EstatioRefDataForItalySetupFixture extends CompositeFixtureScript {
+public class EstatioRefDataForItalySetupFixture extends FixtureScript {
 
     public EstatioRefDataForItalySetupFixture() {
         super(null, "ref-data");

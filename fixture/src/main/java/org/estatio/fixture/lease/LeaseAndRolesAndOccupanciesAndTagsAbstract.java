@@ -27,9 +27,9 @@ import org.estatio.dom.lease.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.SimpleFixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseAndRolesAndOccupanciesAndTagsAbstract extends SimpleFixtureScript {
+public abstract class LeaseAndRolesAndOccupanciesAndTagsAbstract extends FixtureScript {
 
     protected Lease createLease(
             String reference, String name,
