@@ -115,7 +115,7 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
     @Test
     public void byStatus() {
         List<Invoice> invoiceList = invoices.findInvoices(InvoiceStatus.NEW);
-        assertThat(invoiceList.size(), is(3));
+        assertThat(invoiceList.size(), is(2));
     }
 
     @Test

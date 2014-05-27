@@ -35,6 +35,7 @@ public class PropertyForKal extends PropertyAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
         Party owner = parties.findPartyByReference(OrganisationForAcme.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         Country country = countries.findCountry("NLD");

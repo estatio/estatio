@@ -19,7 +19,7 @@
 package org.estatio.fixture.invoice;
 
 import org.estatio.fixture.lease.LeaseForOxfPoison003;
-import org.estatio.fixture.party.OrganisationForAcme;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
@@ -29,9 +29,7 @@ import static org.estatio.integtests.VT.ldix;
 
 public class InvoiceForOxfPoison003 extends InvoiceAbstract {
 
-    // TODO: pretty sure this fixture data is wrong; should be HelloWorld since they are the owner of OXF
-    public static final String SELLER_PARTY = OrganisationForAcme.PARTY_REFERENCE;
-
+    public static final String SELLER_PARTY = OrganisationForHelloWorld.PARTY_REFERENCE;
     public static final String BUYER_PARTY = OrganisationForPoison.PARTY_REFERENCE;
     public static final String LEASE = LeaseForOxfPoison003.LEASE_REFERENCE;
 
