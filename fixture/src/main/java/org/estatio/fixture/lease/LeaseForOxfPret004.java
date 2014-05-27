@@ -19,20 +19,33 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.party.OrganisationForPoison;
+import org.estatio.fixture.party.PersonForJohnDoe;
 
 import static org.estatio.integtests.VT.ld;
 
 public class LeaseForOxfPret004 extends LeaseAbstract {
 
     public static final String LEASE_REFERENCE = "OXF-PRET-004";
-    public static final String UNIT_REFERENCE = "OXF-004";
+    public static final String UNIT_REFERENCE = PropertyForOxf.unitReference("004");
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
+
+        // prereqs
+        execute(new PersonForJohnDoe(), executionContext);
+        execute(new OrganisationForPoison(), executionContext);
+        execute(new PropertyForOxf(), executionContext);
+
+        // exec
+        Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         createLease(
                 LEASE_REFERENCE, "Pret lease",
-                UNIT_REFERENCE, "Pret", "FASHION", "ALL", null, null,
+                UNIT_REFERENCE,
+                "Pret", "FASHION", "ALL",
+                null,
+                null,
                 ld(2011, 7, 1), ld(2015, 6, 30), false, false, manager,
                 executionContext);
     }

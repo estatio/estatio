@@ -26,6 +26,11 @@ public class LeaseItemAndTermsForKalPoison001 extends LeaseItemAndTermsAbstract 
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new LeaseForKalPoison001(), executionContext);
+
+        // exec
         Lease lease = leases.findLeaseByReference(LeaseForKalPoison001.LEASE_REFERENCE);
         createLeaseTermForRent(
                 lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI",

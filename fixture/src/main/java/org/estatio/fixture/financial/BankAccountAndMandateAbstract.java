@@ -39,9 +39,9 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public abstract class BankAccountAndMandateFixture extends FixtureScript {
+public abstract class BankAccountAndMandateAbstract extends FixtureScript {
 
-    protected BankAccountAndMandateFixture(String friendlyName, String localName) {
+    protected BankAccountAndMandateAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 

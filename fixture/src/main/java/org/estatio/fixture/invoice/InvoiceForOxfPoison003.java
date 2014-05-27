@@ -19,6 +19,7 @@
 package org.estatio.fixture.invoice;
 
 import org.estatio.fixture.lease.LeaseForOxfPoison003;
+import org.estatio.fixture.lease.LeasesEtcForOxfPret004;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
@@ -45,6 +46,12 @@ public class InvoiceForOxfPoison003 extends InvoiceAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new OrganisationForHelloWorld(), executionContext);
+        execute(new LeasesEtcForOxfPret004(), executionContext);
+
+        // exec
         createInvoiceAndInvoiceItems(
                 SELLER_PARTY, BUYER_PARTY, LEASE,
                 "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)),

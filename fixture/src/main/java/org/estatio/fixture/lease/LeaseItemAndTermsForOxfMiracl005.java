@@ -31,6 +31,11 @@ public class LeaseItemAndTermsForOxfMiracl005 extends LeaseItemAndTermsAbstract 
     }
 
     private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new LeaseForOxfMiracl005(), executionContext);
+
+        // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
 
         createLeaseTermForRent(

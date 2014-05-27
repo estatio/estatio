@@ -26,6 +26,11 @@ public class LeaseBreakOptionsForOxfMediax002 extends LeaseBreakOptionsAbstract 
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new LeaseForOxfMediaX002(), executionContext);
+
+        // exec
         final Lease leaseMediax002 = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
         newBreakOptionPlusYears(leaseMediax002, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
         newBreakOptionAtEndDate(leaseMediax002, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);

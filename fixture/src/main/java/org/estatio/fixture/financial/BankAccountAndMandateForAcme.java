@@ -21,7 +21,7 @@ package org.estatio.fixture.financial;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.party.OrganisationForAcme;
 
-public class BankAccountAndMandateForAcme extends BankAccountAndMandateFixture {
+public class BankAccountAndMandateForAcme extends BankAccountAndMandateAbstract {
 
     public BankAccountAndMandateForAcme() {
         this(null, null);
@@ -33,6 +33,12 @@ public class BankAccountAndMandateForAcme extends BankAccountAndMandateFixture {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new OrganisationForAcme(), executionContext);
+        execute(new PropertyForKal(), executionContext);
+
+        // exec
         createBankAccountAndMandate(
                 OrganisationForAcme.PARTY_REFERENCE,
                 "NL31ABNA0580744433",

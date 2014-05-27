@@ -19,20 +19,36 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.party.OrganisationForMiracle;
+import org.estatio.fixture.party.PersonForJohnDoe;
 
 import static org.estatio.integtests.VT.ld;
 
 public class LeaseForOxfMiracl005 extends LeaseAbstract {
 
     public static final String LEASE_REFERENCE = "OXF-MIRACL-005";
-    public static final String UNIT_REFERENCE = "OXF-005";
+    public static final String UNIT_REFERENCE = PropertyForOxf.unitReference("005");
+    public static final String LANDLORD_REFERENCE = OrganisationForHelloWorld.PARTY_REFERENCE;
+    public static final String TENANT_REFERENCE = OrganisationForMiracle.PARTY_REFERENCE;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
+
+        // prereqs
+        execute(new PersonForJohnDoe(), executionContext);
+        execute(new OrganisationForHelloWorld(), executionContext);
+        execute(new OrganisationForMiracle(), executionContext);
+        execute(new PropertyForOxf(), executionContext);
+
+        // exec
+        Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         createLease(
                 LEASE_REFERENCE, "Miracle lease",
-                UNIT_REFERENCE, "Miracle", "FASHION", "ALL", "HELLOWORLD", "MIRACLE",
+                UNIT_REFERENCE, "Miracle", "FASHION", "ALL",
+                LANDLORD_REFERENCE,
+                TENANT_REFERENCE,
                 ld(2013, 11, 7), ld(2023, 11, 6), false, true, manager,
                 executionContext);
     }

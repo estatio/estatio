@@ -33,8 +33,18 @@ public class PropertyForOxf extends PropertyAbstract {
 
     public static final String PROPERTY_REFERENCE = "OXF";
 
+    public static String unitReference(String suffix) {
+        return PROPERTY_REFERENCE + "-" + suffix;
+    }
+
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new OrganisationForHelloWorld(), executionContext);
+        execute(new PersonForJohnDoe(), executionContext);
+
+        // exec
         Party owner = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
 

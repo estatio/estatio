@@ -33,9 +33,18 @@ public class PropertyForKal extends PropertyAbstract {
 
     public static final String PROPERTY_REFERENCE = "KAL";
 
+    public static String unitReference(String suffix) {
+        return PROPERTY_REFERENCE + "-" + suffix;
+    }
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
+        // prereqs
+        execute(new OrganisationForAcme(), executionContext);
+        execute(new PersonForJohnDoe(), executionContext);
+
+        // exec
         Party owner = parties.findPartyByReference(OrganisationForAcme.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         Country country = countries.findCountry("NLD");
@@ -51,5 +60,6 @@ public class PropertyForKal extends PropertyAbstract {
         communicationChannelContributedActions.newPhoneOrFax(property, CommunicationChannelType.FAX_NUMBER, "+31 987 654321");
         communicationChannelContributedActions.newEmail(property, CommunicationChannelType.EMAIL_ADDRESS, "info@kalvertoren.example.com");
     }
+
 
 }

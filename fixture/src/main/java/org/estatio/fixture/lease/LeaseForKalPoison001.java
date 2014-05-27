@@ -19,20 +19,38 @@
 package org.estatio.fixture.lease;
 
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.asset.PropertyForKal;
+import org.estatio.fixture.party.OrganisationForAcme;
+import org.estatio.fixture.party.OrganisationForPoison;
+import org.estatio.fixture.party.PersonForJohnDoe;
 
 import static org.estatio.integtests.VT.ld;
 
 public class LeaseForKalPoison001 extends LeaseAbstract {
 
     public static final String LEASE_REFERENCE = "KAL-POISON-001";
-    public static final String UNIT_REFERENCE = "KAL-001";
+
+    public static final String UNIT_REFERENCE = PropertyForKal.unitReference("001");
+    public static final String LANDLORD_REFERENCE = OrganisationForAcme.PARTY_REFERENCE;
+    public static final String TENANT_REFERENCE = OrganisationForPoison.PARTY_REFERENCE;
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
+
+        // prereqs
+        execute(new PersonForJohnDoe(), executionContext);
+        execute(new OrganisationForAcme(), executionContext);
+        execute(new OrganisationForPoison(), executionContext);
+        execute(new PropertyForKal(), executionContext);
+
+        // exec
+        Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         createLease(
                 LEASE_REFERENCE, "Poison Amsterdam",
-                UNIT_REFERENCE, "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON",
+                UNIT_REFERENCE,
+                "Poison", "HEALT&BEAUTY", "PERFUMERIE",
+                LANDLORD_REFERENCE,
+                TENANT_REFERENCE,
                 ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
                 executionContext);
     }

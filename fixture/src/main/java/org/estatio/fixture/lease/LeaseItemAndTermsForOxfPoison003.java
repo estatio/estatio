@@ -32,6 +32,10 @@ public class LeaseItemAndTermsForOxfPoison003 extends LeaseItemAndTermsAbstract 
 
     private void createLeaseTermsForOxfPoison003(ExecutionContext executionContext) {
 
+        // prereqs
+        execute(new LeaseForOxfPoison003(), executionContext);
+
+        // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
 
         createLeaseTermForRent(

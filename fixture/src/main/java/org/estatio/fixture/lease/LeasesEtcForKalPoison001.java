@@ -20,6 +20,7 @@ package org.estatio.fixture.lease;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+// TODO: get rid of
 public class LeasesEtcForKalPoison001 extends FixtureScript {
 
     @Override

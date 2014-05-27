@@ -21,7 +21,7 @@ package org.estatio.fixture.financial;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 
-public class BankAccountAndMandateForHelloWorld extends BankAccountAndMandateFixture {
+public class BankAccountAndMandateForHelloWorld extends BankAccountAndMandateAbstract {
 
     public BankAccountAndMandateForHelloWorld() {
         this(null, null);
@@ -33,6 +33,12 @@ public class BankAccountAndMandateForHelloWorld extends BankAccountAndMandateFix
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new OrganisationForHelloWorld(), executionContext);
+        execute(new PropertyForOxf(), executionContext);
+
+        // exec
         createBankAccountAndMandate(
                 OrganisationForHelloWorld.PARTY_REFERENCE,
                 "NL31ABNA0580744434",

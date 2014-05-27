@@ -20,7 +20,7 @@ package org.estatio.fixture.financial;
 
 import org.estatio.fixture.party.OrganisationForMediaX;
 
-public class BankAccountAndMandateForMediaX extends BankAccountAndMandateFixture {
+public class BankAccountAndMandateForMediaX extends BankAccountAndMandateAbstract {
 
     public BankAccountAndMandateForMediaX() {
         this(null, null);
@@ -32,6 +32,11 @@ public class BankAccountAndMandateForMediaX extends BankAccountAndMandateFixture
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
+        // prereqs
+        execute(new OrganisationForMediaX(), executionContext);
+
+        // exec
         createBankAccountAndMandate(
                 OrganisationForMediaX.PARTY_REFERENCE,
                 "NL31ABNA0580744436",
