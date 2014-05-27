@@ -19,19 +19,11 @@
 package org.estatio.dom.party;
 
 import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 public class Parties extends EstatioDomainService<Party> {
 
@@ -60,6 +52,12 @@ public class Parties extends EstatioDomainService<Party> {
     @Hidden
     @ActionSemantics(Of.SAFE)
     public Party findPartyByReference(final String reference) {
+        return mustMatch("findByReference", "reference", reference);
+    }
+
+    @Hidden
+    @ActionSemantics(Of.SAFE)
+    public Party findPartyByReferenceOrNull(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 

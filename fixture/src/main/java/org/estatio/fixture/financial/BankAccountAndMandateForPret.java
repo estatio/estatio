@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.financial;
 
+import org.estatio.fixture.party.OrganisationForPret;
+
 public class BankAccountAndMandateForPret extends BankAccountAndMandateFixture {
 
     public BankAccountAndMandateForPret() {
@@ -30,7 +32,10 @@ public class BankAccountAndMandateForPret extends BankAccountAndMandateFixture {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createBankAccountAndMandate("PRET", "NL31ABNA0580744438", null, null, executionContext);
+        createBankAccountAndMandate(
+                OrganisationForPret.PARTY_REFERENCE,
+                "NL31ABNA0580744438", null, null,
+                executionContext);
     }
 
 }

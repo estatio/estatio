@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.financial;
 
+import org.estatio.fixture.party.OrganisationForTopModel;
+
 public class BankAccountAndMandateForTopModel extends BankAccountAndMandateFixture {
 
     public BankAccountAndMandateForTopModel() {
@@ -30,7 +32,10 @@ public class BankAccountAndMandateForTopModel extends BankAccountAndMandateFixtu
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createBankAccountAndMandate("TOPMODEL", "NL31ABNA0580744435", 1, null, executionContext);
+        createBankAccountAndMandate(
+                OrganisationForTopModel.PARTY_REFERENCE,
+                "NL31ABNA0580744435", 1, null,
+                executionContext);
     }
 
 }

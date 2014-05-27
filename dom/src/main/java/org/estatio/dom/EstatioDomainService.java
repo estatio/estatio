@@ -19,12 +19,9 @@
 package org.estatio.dom;
 
 import java.util.List;
-
 import javax.jdo.Query;
-
-import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.RepositoryException;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
 
 public abstract class EstatioDomainService<T> extends EstatioService<T> {
@@ -76,7 +73,17 @@ public abstract class EstatioDomainService<T> extends EstatioService<T> {
         return allInstances(getEntityType());
     }
 
-    
+
+    // //////////////////////////////////////
+
+    protected T mustMatch(final String queryName, final String param, final String arg) {
+        final T obj = firstMatch(queryName, param, arg);
+        if(obj == null) {
+            throw new RepositoryException(getClassName() + " '"  + arg + "' does not exist");
+        }
+        return obj;
+    }
+
     // //////////////////////////////////////
     
     protected Query newQuery(final String jdoql) {

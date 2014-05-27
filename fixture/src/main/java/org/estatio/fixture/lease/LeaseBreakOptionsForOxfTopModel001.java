@@ -26,7 +26,7 @@ public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstrac
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        final Lease leaseTopModel001 = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        final Lease leaseTopModel001 = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         newBreakOptionPlusYears(leaseTopModel001, 5, "6m", BreakType.FIXED, BreakExerciseType.MUTUAL, null, executionContext);
         newBreakOptionAtEndDate(leaseTopModel001, "6m", BreakType.ROLLING, BreakExerciseType.MUTUAL, null, executionContext);
     }

@@ -33,18 +33,13 @@ import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.hamcrest.CoreMatchers.*;
 
-public abstract class OrganisationAndCommunicationChannelsAbstract extends FixtureScript {
+/**
+ * Sets up the {@link org.estatio.dom.party.Organisation} and also a number of {@link org.estatio.dom.communicationchannel.CommunicationChannel}s.
+ */
+public abstract class OrganisationAbstract extends FixtureScript {
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
-        createOrganisation("ACME;ACME Properties International;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com", executionContext);
-        createOrganisation("HELLOWORLD;Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com", executionContext);
-        createOrganisation("TOPMODEL;Topmodel Fashion;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com", executionContext);
-        createOrganisation("MEDIAX;Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com", executionContext);
-        createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", executionContext);
-        createOrganisation("PRET;Pret-a-Manger;;;;;;;;;", executionContext);
-        createOrganisation("MIRACLE;Miracle Shoes;;;;;;;;;", executionContext);
-    }
+    protected abstract void execute(ExecutionContext executionContext);
 
     protected Party createOrganisation(String input, ExecutionContext fixtureResults) {
         String[] values = input.split(";");

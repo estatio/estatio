@@ -16,14 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.party;
+package org.estatio.fixture.lease;
 
-public class OrganisationAndCommunicationChannelsForMiracle extends OrganisationAndCommunicationChannelsAbstract {
+import org.estatio.dom.lease.Lease;
+
+import static org.estatio.integtests.VT.bd;
+
+public class LeaseItemAndTermsForKalPoison001 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation("MIRACLE;Miracle Shoes;;;;;;;;;", executionContext);
+        Lease lease = leases.findLeaseByReference(LeaseForKalPoison001.LEASE_REFERENCE);
+        createLeaseTermForRent(
+                lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI",
+                executionContext);
     }
-
 
 }

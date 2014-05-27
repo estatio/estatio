@@ -24,8 +24,8 @@ public class LeasesEtcForKalPoison001 extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForKalPoison001(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForKalPoison001(), executionContext);
+        execute(new LeaseForKalPoison001(), executionContext);
+        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
     }
 
 }

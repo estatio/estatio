@@ -22,6 +22,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
@@ -31,7 +32,7 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
     private String reference;
 
     public CreateBreakOptions() {
-        this("OXF-TOPMODEL-001");
+        this(LeaseForOxfTopModel001.LEASE_REFERENCE);
     }
 
     public CreateBreakOptions(String reference) {

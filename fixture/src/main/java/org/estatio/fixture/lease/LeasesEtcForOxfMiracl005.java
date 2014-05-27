@@ -25,8 +25,8 @@ public class LeasesEtcForOxfMiracl005 extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfMiracl005(), executionContext);
+        execute(new LeaseForOxfMiracl005(), executionContext);
+        execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
     }
 
 }

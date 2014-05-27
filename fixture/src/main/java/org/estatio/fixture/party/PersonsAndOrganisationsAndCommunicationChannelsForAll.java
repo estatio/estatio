@@ -26,13 +26,13 @@ class PersonsAndOrganisationsAndCommunicationChannelsForAll extends FixtureScrip
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
-        execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
-        execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
-        execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
-        execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
-        execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
-        execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+        execute(new OrganisationForAcme(), executionContext);
+        execute(new OrganisationForHelloWorld(), executionContext);
+        execute(new OrganisationForTopModel(), executionContext);
+        execute(new OrganisationForMediaX(), executionContext);
+        execute(new OrganisationForPoison(), executionContext);
+        execute(new OrganisationForPret(), executionContext);
+        execute(new OrganisationForMiracle(), executionContext);
         execute(new PersonForJohnDoe(), executionContext);
         execute(new PersonForLinusTorvalds(), executionContext);
     }

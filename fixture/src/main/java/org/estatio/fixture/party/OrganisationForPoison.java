@@ -16,22 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.fixture.party;
 
-import org.estatio.dom.party.Party;
+public class OrganisationForPoison extends OrganisationAbstract {
 
-import static org.estatio.integtests.VT.ld;
-
-public class LeaseAndRolesAndOccupanciesAndTagsForOxfMediaX002 extends LeaseAndRolesAndOccupanciesAndTagsAbstract {
+    public static final String PARTY_REFERENCE = "POISON";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
-        createLease(
-                "OXF-MEDIAX-002", "Mediax Lease",
-                "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "HELLOWORLD", "MEDIAX",
-                ld(2008, 1, 1), ld(2017, 12, 31), true, true, manager,
-                executionContext);
+        createOrganisation(
+                PARTY_REFERENCE +
+                ";Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", executionContext);
     }
+
 
 }

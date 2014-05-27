@@ -18,19 +18,23 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.dom.party.Party;
 
-// TODO: aim to remove
-public class LeaseAndRolesAndOccupanciesAndTagsForAll extends FixtureScript {
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseForOxfMiracl005 extends LeaseAbstract {
+
+    public static final String LEASE_REFERENCE = "OXF-MIRACL-005";
+    public static final String UNIT_REFERENCE = "OXF-005";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfTopModel001(), executionContext);
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfMediaX002(), executionContext);
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfPoison003(), executionContext);
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfPret004(), executionContext);
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfMiracl005(), executionContext);
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForKalPoison001(), executionContext);
+        Party manager = parties.findPartyByReference("JDOE");
+        createLease(
+                LEASE_REFERENCE, "Miracle lease",
+                UNIT_REFERENCE, "Miracle", "FASHION", "ALL", "HELLOWORLD", "MIRACLE",
+                ld(2013, 11, 7), ld(2023, 11, 6), false, true, manager,
+                executionContext);
     }
 
 }

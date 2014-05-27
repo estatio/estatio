@@ -26,8 +26,8 @@ class PropertiesAndUnitsForAll extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new PropertiesAndUnitsForOxf(), executionContext);
-        execute(new PropertiesAndUnitsForKal(), executionContext);
+        execute(new PropertyForOxf(), executionContext);
+        execute(new PropertyForKal(), executionContext);
     }
 
 

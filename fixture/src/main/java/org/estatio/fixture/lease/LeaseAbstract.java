@@ -29,7 +29,10 @@ import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseAndRolesAndOccupanciesAndTagsAbstract extends FixtureScript {
+/**
+ * Sets up the lease, and the roles, and also the first occupancy.
+ */
+public abstract class LeaseAbstract extends FixtureScript {
 
     protected Lease createLease(
             String reference, String name,

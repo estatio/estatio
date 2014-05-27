@@ -20,8 +20,10 @@ package org.estatio.fixture.party;
 
 public class PersonForLinusTorvalds extends PersonAbstract {
 
+    public static final String PARTY_REFERENCE = "LTORVALDS";
+
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createPerson("LTORVALDS", "L", "Linus", "Torvalds", executionContext);
+        createPerson(PARTY_REFERENCE, "L", "Linus", "Torvalds", executionContext);
     }
 }

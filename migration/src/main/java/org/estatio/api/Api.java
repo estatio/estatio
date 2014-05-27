@@ -209,7 +209,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("name") String name,
             @Named("vatCode") @Optional String vatCode,
             @Named("fiscalCode") @Optional String fiscalCode) {
-        Organisation org = (Organisation) parties.findPartyByReference(reference);
+        Organisation org = (Organisation) parties.findPartyByReferenceOrNull(reference);
         if (org == null) {
             org = organisations.newOrganisation(reference, name);
         }
@@ -219,7 +219,7 @@ public class Api extends AbstractFactoryAndRepository {
     }
 
     private Party fetchParty(String partyReference) {
-        Party party = parties.findPartyByReference(partyReference);
+        Party party = parties.findPartyByReferenceOrNull(partyReference);
         if (party == null) {
             throw new ApplicationException(String.format("Party with reference %s not found.", partyReference));
         }
@@ -433,7 +433,7 @@ public class Api extends AbstractFactoryAndRepository {
             ) {
         Party tenant = fetchParty(tenantReference);
         Party landlord = fetchParty(landlordReference);
-        Lease lease = leases.findLeaseByReference(reference);
+        Lease lease = leases.findLeaseByReferenceElseNull(reference);
         LeaseType leaseType = leaseTypes.findOrCreate(type, null);
         LeaseStatus status = LeaseStatus.valueOf(statusStr);
         if (lease == null) {

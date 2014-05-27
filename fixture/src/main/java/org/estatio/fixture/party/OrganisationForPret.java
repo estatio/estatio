@@ -18,11 +18,15 @@
  */
 package org.estatio.fixture.party;
 
-public class OrganisationAndCommunicationChannelsForHelloWorld extends OrganisationAndCommunicationChannelsAbstract {
+public class OrganisationForPret extends OrganisationAbstract {
+
+    public static final String PARTY_REFERENCE = "PRET";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation("HELLOWORLD;Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com", executionContext);
+        createOrganisation(
+                PARTY_REFERENCE +
+                ";Pret-a-Manger;;;;;;;;;", executionContext);
     }
 
 

@@ -25,7 +25,7 @@ public class LeasesEtcForOxfPret004 extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfPret004(), executionContext);
+        execute(new LeaseForOxfPret004(), executionContext);
     }
 
 }

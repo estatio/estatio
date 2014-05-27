@@ -22,8 +22,8 @@ import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
-import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
+import org.estatio.fixture.asset.PropertyForKal;
+import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -44,29 +44,29 @@ public class LeaseTest_assign_INCOMPLETE extends EstatioIntegrationTest {
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
-                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new OrganisationForHelloWorld(), executionContext);
+                execute(new PropertyForOxf(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
-                execute(new PropertiesAndUnitsForKal(), executionContext);
+                execute(new OrganisationForAcme(), executionContext);
+                execute(new PropertyForKal(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
+                execute(new OrganisationForTopModel(), executionContext);
                 execute(new LeasesEtcForOxfTopModel001(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                execute(new OrganisationForMediaX(), executionContext);
                 execute(new LeasesEtcForOxfMediax002(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                execute(new OrganisationForPoison(), executionContext);
                 execute(new LeasesEtcForOxfPoison003(), executionContext);
                 execute(new LeasesEtcForKalPoison001(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                execute(new OrganisationForPret(), executionContext);
                 execute(new LeasesEtcForOxfPret004(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new OrganisationForMiracle(), executionContext);
                 execute(new LeasesEtcForOxfMiracl005(), executionContext);
             }
-        });
+        }.withTracing());
     }
 
     @Inject
@@ -77,13 +77,13 @@ public class LeaseTest_assign_INCOMPLETE extends EstatioIntegrationTest {
     
     @Before
     public void setup() {
-        leasePoison = leases.findLeaseByReference("OXF-POISON-003");
-        leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
+        leasePoison = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
+        leaseMediax = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
     }
     
     @Test
     public void happyCase() throws Exception {
-        Lease newLease = leasePoison.assign("OXF-MEDIAX-003" , "Reassigned", leaseMediax.getSecondaryParty() , VT.ld(2014, 1, 1), VT.ld(2014, 1, 1), true);
+        Lease newLease = leasePoison.assign("OXF-MEDIA-003", "Reassigned", leaseMediax.getSecondaryParty() , VT.ld(2014, 1, 1), VT.ld(2014, 1, 1), true);
     
     }
 }

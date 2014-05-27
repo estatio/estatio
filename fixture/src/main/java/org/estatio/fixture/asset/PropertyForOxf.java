@@ -24,19 +24,23 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.party.PersonForJohnDoe;
 
 import static org.estatio.integtests.VT.ld;
 
-public class PropertiesAndUnitsForOxf extends PropertiesAndUnitsAbstract {
+public class PropertyForOxf extends PropertyAbstract {
+
+    public static final String PROPERTY_REFERENCE = "OXF";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party owner = parties.findPartyByReference("HELLOWORLD");
-        Party manager = parties.findPartyByReference("JDOE");
+        Party owner = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
+        Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
 
         Country country = countries.findCountry("GBR");
         Property prop1 = createPropertyAndUnits(
-                "OXF", "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25,
+                PROPERTY_REFERENCE, "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25,
                 ld(1999, 1, 1), ld(2008, 6, 1), owner, manager, 51.74579, -1.24334,
                 executionContext);
 

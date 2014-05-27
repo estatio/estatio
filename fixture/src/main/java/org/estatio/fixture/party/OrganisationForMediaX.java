@@ -18,11 +18,15 @@
  */
 package org.estatio.fixture.party;
 
-public class OrganisationAndCommunicationChannelsForPoison extends OrganisationAndCommunicationChannelsAbstract {
+public class OrganisationForMediaX extends OrganisationAbstract {
+
+    public static final String PARTY_REFERENCE = "MEDIAX";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation("POISON;Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", executionContext);
+        createOrganisation(
+                PARTY_REFERENCE +
+                ";Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com", executionContext);
     }
 
 

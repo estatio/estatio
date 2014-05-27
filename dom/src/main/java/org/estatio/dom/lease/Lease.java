@@ -737,11 +737,14 @@ public class Lease
             @Named("End date") final LocalDate endDate,
             @Named("Are you sure?") final Boolean confirm
             ) {
+
         String validateAssign = validateAssign(reference, name, tenant, startDate, endDate, confirm);
         if (validateAssign != null) {
             // TODO: don't know if this is the right way but when calling this
             // method using the Api or integration tests I want to reuse the
             // validation code
+            // TODO: Dan says: could use WrapperFactory?
+
             // TODO: Dan says: probably shouldn't be using IsisApplicationException, instead just ApplicationException (from the applib)
             throw new IsisApplicationException("Validation error: ".concat(validateAssign));
         }
@@ -812,7 +815,7 @@ public class Lease
         if (endDate.isBefore(startDate)) {
             return "End date can not be start date";
         }
-        return leases.findLeaseByReference(reference) == null ? null : "Lease reference already exists,";
+        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
     }
 
     // //////////////////////////////////////

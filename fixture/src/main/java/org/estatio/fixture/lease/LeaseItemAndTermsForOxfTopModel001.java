@@ -23,7 +23,7 @@ import org.estatio.dom.lease.Lease;
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseItemAndLeaseTermsForOxfTopModel001 extends LeaseItemAndLeaseTermsAbstract {
+public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
@@ -31,7 +31,8 @@ public class LeaseItemAndLeaseTermsForOxfTopModel001 extends LeaseItemAndLeaseTe
     }
 
     private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
-        Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+
+        Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
 
         createLeaseTermForRent(
                 lease, lease.getStartDate(), null, bd(20000), ld(2010, 7, 1),ld(2011, 1, 1),ld(2011, 4, 1), "ISTAT-FOI",

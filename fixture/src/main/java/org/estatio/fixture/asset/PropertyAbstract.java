@@ -32,7 +32,11 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public abstract class PropertiesAndUnitsAbstract extends FixtureScript {
+/**
+ * Sets up the {@link org.estatio.dom.asset.Property} and also a number of
+ * {@link org.estatio.dom.asset.Unit}s.
+ */
+public abstract class PropertyAbstract extends FixtureScript {
 
     protected Property createPropertyAndUnits(final String reference, String name, String city, Country country, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager, double lat, double lng, ExecutionContext fixtureResults) {
         Property property = properties.newProperty(reference, name, type, city, country, acquireDate);

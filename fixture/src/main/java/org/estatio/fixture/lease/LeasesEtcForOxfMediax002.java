@@ -25,8 +25,8 @@ public class LeasesEtcForOxfMediax002 extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfMediaX002(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfMediax002(), executionContext);
+        execute(new LeaseForOxfMediaX002(), executionContext);
+        execute(new LeaseItemAndTermsForOxfMediax002(), executionContext);
         execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
     }
 

@@ -18,32 +18,39 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.estatio.fixture.lease.LeaseForOxfPoison003;
+import org.estatio.fixture.party.OrganisationForAcme;
+import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 
 import static org.estatio.integtests.VT.ld;
 import static org.estatio.integtests.VT.ldix;
 
-public class InvoiceAndInvoiceItemForOxfPoison003 extends InvoiceAndInvoiceItemAbstract {
+public class InvoiceForOxfPoison003 extends InvoiceAbstract {
 
-    public static final String SELLER_PARTY = "ACME";
-    public static final String BUYER_PARTY = "POISON";
+    // TODO: pretty sure this fixture data is wrong; should be HelloWorld since they are the owner of OXF
+    public static final String SELLER_PARTY = OrganisationForAcme.PARTY_REFERENCE;
 
-    public static final String LEASE = "OXF-POISON-003";
+    public static final String BUYER_PARTY = OrganisationForPoison.PARTY_REFERENCE;
+    public static final String LEASE = LeaseForOxfPoison003.LEASE_REFERENCE;
 
     public static final LocalDate START_DATE = VT.ld(2012, 1, 1);
 
-    public InvoiceAndInvoiceItemForOxfPoison003() {
+    public InvoiceForOxfPoison003() {
         this(null, null);
     }
 
-    public InvoiceAndInvoiceItemForOxfPoison003(String friendlyName, String localName) {
+    public InvoiceForOxfPoison003(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createInvoiceAndInvoiceItems(SELLER_PARTY, BUYER_PARTY, LEASE, "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)), executionContext);
+        createInvoiceAndInvoiceItems(
+                SELLER_PARTY, BUYER_PARTY, LEASE,
+                "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)),
+                executionContext);
     }
 
 }

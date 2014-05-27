@@ -23,31 +23,37 @@ import org.estatio.dom.lease.Lease;
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseItemAndLeaseTermsForOxfPoison003 extends LeaseItemAndLeaseTermsAbstract {
+public class LeaseItemAndTermsForOxfMiracl005 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfPoison003(fixtureResults);
+        createLeaseTermsForOxfMiracl005(fixtureResults);
     }
 
-    private void createLeaseTermsForOxfPoison003(ExecutionContext executionContext) {
-
-        Lease lease = leases.findLeaseByReference("OXF-POISON-003");
+    private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
 
         createLeaseTermForRent(
-                lease, lease.getStartDate(),              null, bd(87300), null,           null,           null,           "ISTAT-FOI",
+                lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI",
                 executionContext);
         createLeaseTermForRent(
-                lease, lease.getStartDate().plusYears(1), null, bd(87300), ld(2011, 1, 1), ld(2012, 1, 1), ld(2012, 4, 1), "ISTAT-FOI",
+                lease, ld(2015, 1, 1), null, null, ld(2013, 11, 1), ld(2014, 12, 1), null, "ISTAT-FOI",
                 executionContext);
 
         createLeaseTermForServiceCharge(
                 lease, lease.getStartDate(), null, bd(12400),
                 executionContext);
+        createLeaseTermForServiceCharge(
+                lease, ld(2014, 1, 1), null, bd(13000),
+                executionContext);
 
         createLeaseTermForTurnoverRent(
                 lease, lease.getStartDate(), null, "7",
                 executionContext);
+
+//        createLeaseTermForDiscount(
+//                lease, lease.getStartDate(), null, bd(-20000),
+//                executionContext);
     }
 
 }

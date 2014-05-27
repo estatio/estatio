@@ -58,9 +58,8 @@ public class Currencies extends EstatioDomainService<Currency> {
     }
 
     @Programmatic
-    public Currency findCurrency(
-            final String reference) {
-        return firstMatch("findByReference", "reference", reference);
+    public Currency findCurrency(final String reference) {
+        return mustMatch("findByReference", "reference", reference);
     }
 
 

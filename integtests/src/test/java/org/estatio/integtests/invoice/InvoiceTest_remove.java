@@ -29,10 +29,10 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
-import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceAndInvoiceItemForOxfPoison003;
+import org.estatio.fixture.asset.PropertyForKal;
+import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.invoice.InvoiceForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -54,28 +54,28 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
-                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new OrganisationForHelloWorld(), executionContext);
+                execute(new PropertyForOxf(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
-                execute(new PropertiesAndUnitsForKal(), executionContext);
+                execute(new OrganisationForAcme(), executionContext);
+                execute(new PropertyForKal(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
+                execute(new OrganisationForTopModel(), executionContext);
                 execute(new LeasesEtcForOxfTopModel001(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
+                execute(new OrganisationForMediaX(), executionContext);
                 execute(new LeasesEtcForOxfMediax002(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
+                execute(new OrganisationForPoison(), executionContext);
                 execute(new LeasesEtcForOxfPoison003(), executionContext);
                 execute(new LeasesEtcForKalPoison001(), executionContext);
-                execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
-                execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
+                execute(new InvoiceForOxfPoison003(), executionContext);
+                execute(new InvoiceForKalPoison001(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
+                execute(new OrganisationForPret(), executionContext);
                 execute(new LeasesEtcForOxfPret004(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new OrganisationForMiracle(), executionContext);
                 execute(new LeasesEtcForOxfMiracl005(), executionContext);
             }
         });
@@ -94,9 +94,9 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        seller = parties.findPartyByReference(InvoiceAndInvoiceItemForOxfPoison003.SELLER_PARTY);
-        buyer = parties.findPartyByReference(InvoiceAndInvoiceItemForOxfPoison003.BUYER_PARTY);
-        lease = leases.findLeaseByReference(InvoiceAndInvoiceItemForOxfPoison003.LEASE);
+        seller = parties.findPartyByReference(InvoiceForOxfPoison003.SELLER_PARTY);
+        buyer = parties.findPartyByReference(InvoiceForOxfPoison003.BUYER_PARTY);
+        lease = leases.findLeaseByReference(InvoiceForOxfPoison003.LEASE);
     }
     
     @Test
@@ -113,7 +113,7 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     }
 
     private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
-        return invoices.findMatchingInvoices(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceAndInvoiceItemForOxfPoison003.START_DATE);
+        return invoices.findMatchingInvoices(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForOxfPoison003.START_DATE);
     }
 
 }

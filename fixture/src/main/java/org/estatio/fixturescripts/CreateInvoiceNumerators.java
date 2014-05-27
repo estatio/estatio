@@ -18,19 +18,20 @@
  */
 package org.estatio.fixturescripts;
 
-import java.math.BigInteger;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import static org.estatio.integtests.VT.bi;
+
 public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
         for (Property property : properties.allProperties()) {
-            final Numerator numerator = invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), BigInteger.ZERO);
+            final Numerator numerator = invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0));
             fixtureResults.add(this, property.getReference(), numerator);
         }
     }

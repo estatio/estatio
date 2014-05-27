@@ -18,19 +18,23 @@
  */
 package org.estatio.fixture.lease;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.dom.party.Party;
 
-// unused - can probably remove
-@Deprecated
-class LeaseItemAndLeaseTermsForAllLeases extends FixtureScript {
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseForOxfPoison003 extends LeaseAbstract {
+
+    public static final String LEASE_REFERENCE = "OXF-POISON-003";
+    public static final String UNIT_REFERENCE = "OXF-003";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new LeaseItemAndLeaseTermsForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfMediax002(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfPoison003(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForKalPoison001(), executionContext);
+        Party manager = parties.findPartyByReference("JDOE");
+        createLease(
+                LEASE_REFERENCE, "Poison Lease",
+                UNIT_REFERENCE, "Poison", "HEALT&BEAUTY", "PERFUMERIE", "HELLOWORLD", "POISON",
+                ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
+                executionContext);
     }
 
 }

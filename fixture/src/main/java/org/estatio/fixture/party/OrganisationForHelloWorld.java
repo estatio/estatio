@@ -16,23 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.fixture.party;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+public class OrganisationForHelloWorld extends OrganisationAbstract {
 
-// unused - can probably remove
-@Deprecated
-class LeasesEtcForAll extends FixtureScript {
+    public static final String PARTY_REFERENCE = "HELLOWORLD";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-
-        execute(new LeasesEtcForOxfTopModel001(), executionContext);
-        execute(new LeasesEtcForOxfMediax002(), executionContext);
-        execute(new LeasesEtcForOxfPoison003(), executionContext);
-        execute(new LeasesEtcForOxfPret004(), executionContext);
-        execute(new LeasesEtcForOxfMiracl005(), executionContext);
-        execute(new LeasesEtcForKalPoison001(), executionContext);
+        createOrganisation(
+                PARTY_REFERENCE +
+                ";Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com", executionContext);
     }
+
 
 }

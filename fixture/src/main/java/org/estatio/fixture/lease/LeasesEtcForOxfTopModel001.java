@@ -25,8 +25,8 @@ public class LeasesEtcForOxfTopModel001 extends FixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        execute(new LeaseAndRolesAndOccupanciesAndTagsForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermsForOxfTopModel001(), executionContext);
+        execute(new LeaseForOxfTopModel001(), executionContext);
+        execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
         execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
     }
 

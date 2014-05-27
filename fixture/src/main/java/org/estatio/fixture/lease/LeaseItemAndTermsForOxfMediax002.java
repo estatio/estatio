@@ -18,19 +18,25 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.party.Party;
+import org.estatio.dom.lease.Lease;
 
+import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseAndRolesAndOccupanciesAndTagsForOxfMiracl005 extends LeaseAndRolesAndOccupanciesAndTagsAbstract {
+public class LeaseItemAndTermsForOxfMediax002 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
-        createLease(
-                "OXF-MIRACL-005", "Miracle lease",
-                "OXF-005", "Miracle", "FASHION", "ALL", "HELLOWORLD", "MIRACLE",
-                ld(2013, 11, 7), ld(2023, 11, 6), false, true, manager,
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
+
+        createLeaseTermForRent(
+                lease, lease.getStartDate(), null, bd(20000), ld(2008, 1, 1), ld(2009, 1, 1), ld(2009, 4, 1), "ISTAT-FOI",
+                executionContext);
+        createLeaseTermForServiceCharge(
+                lease, lease.getStartDate(), null, bd(6000),
+                executionContext);
+        createLeaseTermForTurnoverRent(
+                lease, lease.getStartDate(), null, "7",
                 executionContext);
     }
 

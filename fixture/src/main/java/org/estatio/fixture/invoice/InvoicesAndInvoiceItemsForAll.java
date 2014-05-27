@@ -26,8 +26,8 @@ class InvoicesAndInvoiceItemsForAll extends FixtureScript {
 
     @Override
     protected void execute(FixtureScript.ExecutionContext executionContext) {
-        execute(new InvoiceAndInvoiceItemForOxfPoison003(), executionContext);
-        execute(new InvoiceAndInvoiceItemForKalPoison001(), executionContext);
+        execute(new InvoiceForOxfPoison003(), executionContext);
+        execute(new InvoiceForKalPoison001(), executionContext);
     }
 
 

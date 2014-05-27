@@ -18,30 +18,36 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.estatio.fixture.lease.LeaseForKalPoison001;
+import org.estatio.fixture.party.OrganisationForAcme;
+import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 
 import static org.estatio.integtests.VT.ld;
 import static org.estatio.integtests.VT.ldix;
 
-public class InvoiceAndInvoiceItemForKalPoison001 extends InvoiceAndInvoiceItemAbstract {
+public class InvoiceForKalPoison001 extends InvoiceAbstract {
 
-    public static final String SELLER_PARTY = "ACME";
-    public static final String BUYER_PARTY = "POISON";
-    public static final String LEASE = "KAL-POISON-001";
+    public static final String SELLER_PARTY = OrganisationForAcme.PARTY_REFERENCE;
+    public static final String BUYER_PARTY = OrganisationForPoison.PARTY_REFERENCE;
+    public static final String LEASE = LeaseForKalPoison001.LEASE_REFERENCE;
 
     public static final LocalDate START_DATE = VT.ld(2012, 1, 1);
 
-    public InvoiceAndInvoiceItemForKalPoison001() {
+    public InvoiceForKalPoison001() {
         this(null, null);
     }
 
-    public InvoiceAndInvoiceItemForKalPoison001(String friendlyName, String localName) {
+    public InvoiceForKalPoison001(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createInvoiceAndInvoiceItems(SELLER_PARTY, BUYER_PARTY, LEASE, "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)), executionContext);
+        createInvoiceAndInvoiceItems(
+                SELLER_PARTY, BUYER_PARTY, LEASE,
+                "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)),
+                executionContext);
     }
 }

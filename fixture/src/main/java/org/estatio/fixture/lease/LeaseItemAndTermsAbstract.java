@@ -29,7 +29,7 @@ import org.estatio.dom.lease.*;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseItemAndLeaseTermsAbstract extends FixtureScript {
+public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     protected LeaseItem findOrCreateLeaseItem(
             final Lease lease,

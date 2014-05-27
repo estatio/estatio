@@ -23,8 +23,8 @@ import org.estatio.dom.asset.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertiesAndUnitsForKal;
-import org.estatio.fixture.asset.PropertiesAndUnitsForOxf;
+import org.estatio.fixture.asset.PropertyForKal;
+import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
@@ -44,17 +44,17 @@ public class FixedAssetRolesTest_findRole extends EstatioIntegrationTest {
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForHelloWorld(), executionContext);
-                execute(new PropertiesAndUnitsForOxf(), executionContext);
+                execute(new OrganisationForHelloWorld(), executionContext);
+                execute(new PropertyForOxf(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForAcme(), executionContext);
-                execute(new PropertiesAndUnitsForKal(), executionContext);
+                execute(new OrganisationForAcme(), executionContext);
+                execute(new PropertyForKal(), executionContext);
 
-                execute(new OrganisationAndCommunicationChannelsForTopModel(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForMediaX(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForPoison(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForPret(), executionContext);
-                execute(new OrganisationAndCommunicationChannelsForMiracle(), executionContext);
+                execute(new OrganisationForTopModel(), executionContext);
+                execute(new OrganisationForMediaX(), executionContext);
+                execute(new OrganisationForPoison(), executionContext);
+                execute(new OrganisationForPret(), executionContext);
+                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }

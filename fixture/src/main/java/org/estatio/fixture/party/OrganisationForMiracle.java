@@ -16,22 +16,18 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.fixture.party;
 
-import org.estatio.dom.party.Party;
+public class OrganisationForMiracle extends OrganisationAbstract {
 
-import static org.estatio.integtests.VT.ld;
-
-public class LeaseAndRolesAndOccupanciesAndTagsForOxfPret004 extends LeaseAndRolesAndOccupanciesAndTagsAbstract {
+    public static final String PARTY_REFERENCE = "MIRACLE";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Party manager = parties.findPartyByReference("JDOE");
-        createLease(
-                "OXF-PRET-004", "Pret lease",
-                "OXF-004", "Pret", "FASHION", "ALL", null, null,
-                ld(2011, 7, 1), ld(2015, 6, 30), false, false, manager,
-                executionContext);
+        createOrganisation(
+                PARTY_REFERENCE +
+                ";Miracle Shoes;;;;;;;;;", executionContext);
     }
+
 
 }

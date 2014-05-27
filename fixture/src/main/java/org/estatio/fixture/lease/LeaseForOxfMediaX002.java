@@ -16,14 +16,25 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.party;
+package org.estatio.fixture.lease;
 
-public class OrganisationAndCommunicationChannelsForMediaX extends OrganisationAndCommunicationChannelsAbstract {
+import org.estatio.dom.party.Party;
+
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseForOxfMediaX002 extends LeaseAbstract {
+
+    public static final String LEASE_REFERENCE = "OXF-MEDIAX-002";
+    public static final String UNIT_REFERENCE = "OXF-002";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation("MEDIAX;Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com", executionContext);
+        Party manager = parties.findPartyByReference("JDOE");
+        createLease(
+                LEASE_REFERENCE, "Mediax Lease",
+                UNIT_REFERENCE, "Mediax", "ELECTRIC", "ELECTRIC", "HELLOWORLD", "MEDIAX",
+                ld(2008, 1, 1), ld(2017, 12, 31), true, true, manager,
+                executionContext);
     }
-
 
 }
