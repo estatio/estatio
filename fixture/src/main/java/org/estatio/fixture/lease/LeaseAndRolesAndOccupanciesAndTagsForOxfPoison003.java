@@ -29,7 +29,7 @@ public class LeaseAndRolesAndOccupanciesAndTagsForOxfPoison003 extends LeaseAndR
         Party manager = parties.findPartyByReference("JDOE");
         createLease(
                 "OXF-POISON-003", "Poison Lease",
-                "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "ACME", "POISON",
+                "OXF-003", "Poison", "HEALT&BEAUTY", "PERFUMERIE", "HELLOWORLD", "POISON",
                 ld(2011, 1, 1), ld(2020, 12, 31), true, true, manager,
                 executionContext);
     }

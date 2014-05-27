@@ -29,7 +29,7 @@ public class LeaseAndRolesAndOccupanciesAndTagsForOxfMediaX002 extends LeaseAndR
         Party manager = parties.findPartyByReference("JDOE");
         createLease(
                 "OXF-MEDIAX-002", "Mediax Lease",
-                "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "ACME", "MEDIAX",
+                "OXF-002", "Mediax", "ELECTRIC", "ELECTRIC", "HELLOWORLD", "MEDIAX",
                 ld(2008, 1, 1), ld(2017, 12, 31), true, true, manager,
                 executionContext);
     }

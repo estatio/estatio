@@ -29,7 +29,7 @@ public class LeaseAndRolesAndOccupanciesAndTagsForOxfTopModel001 extends LeaseAn
         Party manager = parties.findPartyByReference("JDOE");
         createLease(
                 "OXF-TOPMODEL-001", "Topmodel Lease",
-                "OXF-001", "Topmodel", "FASHION", "WOMEN", "ACME", "TOPMODEL",
+                "OXF-001", "Topmodel", "FASHION", "WOMEN", "HELLOWORLD", "TOPMODEL",
                 ld(2010, 7, 15), ld(2022, 7, 14), true, true, manager,
                 executionContext);
     }

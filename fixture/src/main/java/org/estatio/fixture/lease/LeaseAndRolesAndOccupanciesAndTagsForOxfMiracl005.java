@@ -29,7 +29,7 @@ public class LeaseAndRolesAndOccupanciesAndTagsForOxfMiracl005 extends LeaseAndR
         Party manager = parties.findPartyByReference("JDOE");
         createLease(
                 "OXF-MIRACL-005", "Miracle lease",
-                "OXF-005", "Miracle", "FASHION", "ALL", "ACME", "MIRACLE",
+                "OXF-005", "Miracle", "FASHION", "ALL", "HELLOWORLD", "MIRACLE",
                 ld(2013, 11, 7), ld(2023, 11, 6), false, true, manager,
                 executionContext);
     }
