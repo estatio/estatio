@@ -10,6 +10,7 @@ import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.PropertyData;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DocumentContributionsTest_relevantDocuments {
@@ -37,7 +38,8 @@ public class DocumentContributionsTest_relevantDocuments {
         }
         Assume.assumeTrue("Ping to CMIS repository", pingSucceeded);
     }
-    
+
+    @Ignore("just a spike...")
     @Test
     public void testRelevantDocuments() {
 //        Property property = new Property();
@@ -51,7 +53,6 @@ public class DocumentContributionsTest_relevantDocuments {
             for (PropertyData<?> propertyData : properties) {
                 System.out.println("  " + propertyData.getId() + ": " + propertyData.getValues());
             }
-            ;
             String cmisId = qr.getPropertyValueById(PropertyIds.OBJECT_ID);
             CmisObject obj = cmisRepository.findById(cmisId);
             //String name = obj.getName();
