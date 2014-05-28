@@ -19,15 +19,12 @@
 package org.estatio.integtests.assets;
 
 import java.util.List;
-import java.util.Set;
 import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,16 +42,8 @@ public class PropertiesTest_allProperties extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }
@@ -66,13 +55,9 @@ public class PropertiesTest_allProperties extends EstatioIntegrationTest {
     public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
         // when
         List<Property> allProperties = properties.allProperties();
-        // then
-        Property property = allProperties.get(0);
 
-        // and when
-        Set<Unit> units = property.getUnits();
-        // not sure why this is there; this is as much a test of the fixture as of the code
-        assertThat(units.size(), is(25));
+        // then
+        assertThat(allProperties.size(), is(2));
     }
 
 }

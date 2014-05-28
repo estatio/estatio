@@ -16,51 +16,50 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.app;
+package org.estatio.integtests.assets;
 
-import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
+import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
+import org.estatio.dom.asset.Unit;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioIntegrationTest {
+public class PropertyTest_getUnits extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new InvoiceForOxfPoison003(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
+                execute(new PropertyForOxf(), executionContext);
             }
         });
     }
 
     @Inject
-    private InvoiceSummariesForPropertyDueDate invoiceSummaries;
+    private Properties properties;
 
     @Test
-    public void whenPresent() throws Exception {
-        final List<InvoiceSummaryForPropertyDueDate> summaries = 
-                invoiceSummaries.invoicesForPropertyDueDate();
-        assertThat(summaries.size(), is(2));
-        InvoiceSummaryForPropertyDueDate summary = summaries.get(0);
-        Property property = summary.getProperty();
-        assertThat(property, is(not(nullValue())));
+    public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
+        // given
+        Property property = properties.findPropertyByReference("OXF");
+
+        // when
+        Set<Unit> units = property.getUnits();
+
+        // then
+        assertThat(units.size(), is(25));
     }
 
 }

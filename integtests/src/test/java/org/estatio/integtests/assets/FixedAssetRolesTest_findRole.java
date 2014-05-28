@@ -23,9 +23,7 @@ import org.estatio.dom.asset.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,17 +39,7 @@ public class FixedAssetRolesTest_findRole extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
-
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }

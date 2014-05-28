@@ -25,10 +25,7 @@ import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,22 +45,13 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
 
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-
+                // 5 oxford leases, 1 kal
+                execute(new LeaseForOxfTopModel001(), executionContext);
+                execute(new LeaseForOxfMediaX002(), executionContext);
+                execute(new LeaseForOxfPoison003(), executionContext);
                 execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseForOxfMiracl005(), executionContext);
+                execute(new LeaseForKalPoison001(), executionContext);
             }
         });
     }

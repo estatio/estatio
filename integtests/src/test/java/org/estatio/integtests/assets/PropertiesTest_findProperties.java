@@ -44,16 +44,8 @@ public class PropertiesTest_findProperties extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }
@@ -88,6 +80,5 @@ public class PropertiesTest_findProperties extends EstatioIntegrationTest {
         assertNotNull(props);
         assertThat(props.size(), is(2));
     }
-    
 
 }

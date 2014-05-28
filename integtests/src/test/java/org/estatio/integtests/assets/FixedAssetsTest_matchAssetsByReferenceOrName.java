@@ -23,7 +23,6 @@ import org.estatio.dom.asset.FixedAssets;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -40,16 +39,8 @@ public class FixedAssetsTest_matchAssetsByReferenceOrName extends EstatioIntegra
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }
@@ -60,6 +51,11 @@ public class FixedAssetsTest_matchAssetsByReferenceOrName extends EstatioIntegra
     @Test
     public void whenPresent() throws Exception {
         Assert.assertThat(fixedAssets.matchAssetsByReferenceOrName("*mall*").size(), Is.is(1));
+    }
+
+    @Test
+    public void whenNotPresent() throws Exception {
+        Assert.assertThat(fixedAssets.matchAssetsByReferenceOrName("*nonExistent*").size(), Is.is(0));
     }
 
 }

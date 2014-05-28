@@ -40,16 +40,8 @@ public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }
@@ -59,7 +51,13 @@ public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
 
     @Test
     public void whenMatches() throws Exception {
-        final Unit unit = units.findUnitByReference("OXF-001");
+        // given
+        final String unitReference = PropertyForOxf.unitReference("001");
+
+        // when
+        final Unit unit = units.findUnitByReference(unitReference);
+
+        // then
         Assert.assertEquals("OXF-001", unit.getReference());
     }
 

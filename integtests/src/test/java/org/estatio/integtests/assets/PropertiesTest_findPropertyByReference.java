@@ -20,15 +20,17 @@ package org.estatio.integtests.assets;
 
 import javax.inject.Inject;
 import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import static org.hamcrest.CoreMatchers.is;
 
 public class PropertiesTest_findPropertyByReference extends EstatioIntegrationTest {
 
@@ -39,16 +41,8 @@ public class PropertiesTest_findPropertyByReference extends EstatioIntegrationTe
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }
@@ -58,7 +52,12 @@ public class PropertiesTest_findPropertyByReference extends EstatioIntegrationTe
 
     @Test
     public void withReference() throws Exception {
-        Assert.assertNotNull(properties.findPropertyByReference("OXF"));
+
+        // when
+        final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+
+        // then
+        Assert.assertThat(property.getReference(), is(PropertyForOxf.PROPERTY_REFERENCE));
     }
 
 }
