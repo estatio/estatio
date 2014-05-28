@@ -38,7 +38,7 @@ import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
 import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.party.PersonForLinusTorvalds;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.junit.Before;
@@ -57,29 +57,17 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute(new OrganisationForHelloWorld(), executionContext);
                 execute(new PropertyForOxf(), executionContext);
-
-                execute(new OrganisationForAcme(), executionContext);
                 execute(new PropertyForKal(), executionContext);
 
-                execute(new OrganisationForTopModel(), executionContext);
                 execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new OrganisationForMediaX(), executionContext);
                 execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new OrganisationForPoison(), executionContext);
                 execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
 
-                execute(new OrganisationForPret(), executionContext);
                 execute(new LeaseForOxfPret004(), executionContext);
 
-                execute(new OrganisationForMiracle(), executionContext);
                 execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
             }
         });

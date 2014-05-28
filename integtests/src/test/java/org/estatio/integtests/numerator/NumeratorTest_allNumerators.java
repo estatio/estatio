@@ -46,13 +46,9 @@ public class NumeratorTest_allNumerators extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute(new OrganisationForHelloWorld(), executionContext);
                 execute(new PropertyForOxf(), executionContext);
-
-                execute(new OrganisationForAcme(), executionContext);
                 execute(new PropertyForKal(), executionContext);
 
                 execute(new OrganisationForTopModel(), executionContext);

@@ -36,7 +36,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
-public class LeaseUnitTest_getBrand extends EstatioIntegrationTest {
+public class OccupancyTest_getBrand extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -77,19 +77,19 @@ public class LeaseUnitTest_getBrand extends EstatioIntegrationTest {
     private Leases leases;
     
     private Lease leaseTopModel;
-    private Occupancy leaseUnit;
+    private Occupancy occupancy;
 
     @Before
     public void setup() {
         leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        leaseUnit = leaseTopModel.getOccupancies().first();
+        occupancy = leaseTopModel.getOccupancies().first();
     }
 
     @Test
     public void whenNotNull() throws Exception {
 
         // TODO: this seems to be merely asserting on the contents of the fixture
-        final Brand brand = leaseUnit.getBrand();
+        final Brand brand = occupancy.getBrand();
         assertThat(brand, is(not(nullValue())));
         assertThat(brand.getName(), is("Topmodel"));
     }

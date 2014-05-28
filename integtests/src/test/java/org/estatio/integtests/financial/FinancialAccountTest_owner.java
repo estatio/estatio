@@ -52,38 +52,25 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
                 execute(new PersonForLinusTorvalds(), executionContext);
 
-                execute(new OrganisationForHelloWorld(), executionContext);
                 execute(new PropertyForOxf(), executionContext);
                 execute(new BankAccountAndMandateForHelloWorld(), executionContext);
 
-                execute(new OrganisationForAcme(), executionContext);
                 execute(new PropertyForKal(), executionContext);
                 execute(new BankAccountAndMandateForAcme(), executionContext);
 
-
-                execute(new OrganisationForTopModel(), executionContext);
                 execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
                 execute(new BankAccountAndMandateForTopModel(), executionContext);
 
-                execute(new OrganisationForMediaX(), executionContext);
                 execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
                 execute(new BankAccountAndMandateForMediaX(), executionContext);
 
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
                 execute(new BankAccountAndMandateForPoison(), executionContext);
-                execute(new InvoiceForOxfPoison003(), executionContext);
                 execute(new InvoiceForKalPoison001(), executionContext);
 
-                execute(new OrganisationForPret(), executionContext);
-                execute(new LeaseForOxfPret004(), executionContext);
                 execute(new BankAccountAndMandateForPret(), executionContext);
 
-                execute(new OrganisationForMiracle(), executionContext);
                 execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
                 execute(new BankAccountAndMandateForMiracle(), executionContext);
             }
