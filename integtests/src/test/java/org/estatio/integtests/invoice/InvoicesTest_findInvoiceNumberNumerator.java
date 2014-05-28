@@ -43,20 +43,7 @@ public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationT
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
             }
         });
     }
@@ -68,11 +55,14 @@ public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationT
 
     private Property propertyOxf;
 
+    @Before
+    public void setUp() throws Exception {
+        propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+    }
+
+
     @Test
     public void whenNone() throws Exception {
-        // given
-        propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
-
         // when
         Numerator numerator = invoices.findInvoiceNumberNumerator(propertyOxf);
         // then

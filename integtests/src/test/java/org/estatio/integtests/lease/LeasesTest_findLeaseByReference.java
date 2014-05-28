@@ -22,10 +22,7 @@ import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,21 +38,7 @@ public class LeasesTest_findLeaseByReference extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseForOxfTopModel001(), executionContext);
             }
         });
     }
@@ -65,8 +48,8 @@ public class LeasesTest_findLeaseByReference extends EstatioIntegrationTest {
 
     @Test
     public void whenValidReference() {
-        final Lease lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        Assert.assertEquals("OXF-TOPMODEL-001", lease.getReference());
+        final Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        Assert.assertEquals(LeaseForOxfTopModel001.LEASE_REFERENCE, lease.getReference());
     }
 
 

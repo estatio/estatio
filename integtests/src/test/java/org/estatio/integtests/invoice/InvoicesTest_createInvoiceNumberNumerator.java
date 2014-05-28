@@ -28,8 +28,6 @@ import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +37,6 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegrationTest {
@@ -51,18 +48,8 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
             }
         });
     }
@@ -77,14 +64,14 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
     private Property propertyOxf;
     private Property propertyKal;
     
-    private Bookmark property1Bookmark;
+    private Bookmark propertyOxfBookmark;
 
     @Before
     public void setUp() throws Exception {
         propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
         propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
 
-        property1Bookmark = bookmarkService.bookmarkFor(propertyOxf);
+        propertyOxfBookmark = bookmarkService.bookmarkFor(propertyOxf);
     }
     
     @Test
@@ -100,8 +87,8 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
         //then
         Assert.assertNotNull(numerator);
         assertThat(numerator.getName(), is(Constants.INVOICE_NUMBER_NUMERATOR_NAME));
-        assertThat(numerator.getObjectType(), is(property1Bookmark.getObjectType()));
-        assertThat(numerator.getObjectIdentifier(), is(property1Bookmark.getIdentifier()));
+        assertThat(numerator.getObjectType(), is(propertyOxfBookmark.getObjectType()));
+        assertThat(numerator.getObjectIdentifier(), is(propertyOxfBookmark.getIdentifier()));
         assertThat(numerator.getLastIncrement(), is(BigInteger.TEN));
     }
 

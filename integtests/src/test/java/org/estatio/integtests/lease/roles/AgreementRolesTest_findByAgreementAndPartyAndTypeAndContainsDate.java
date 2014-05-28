@@ -29,10 +29,8 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
@@ -41,7 +39,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOFIX extends EstatioIntegrationTest {
+public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDate extends EstatioIntegrationTest {
+
+    private AgreementRoleType artTenant;
+    private Lease leaseOxfTopModel;
+    private Party partyTopModel;
 
     @Before
     public void setupData() {
@@ -50,30 +52,7 @@ public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOF
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new OrganisationForHelloWorld(), executionContext);
-                execute(new PropertyForOxf(), executionContext);
-
-                execute(new OrganisationForAcme(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-                execute(new OrganisationForPret(), executionContext);
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new OrganisationForMiracle(), executionContext);
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseForOxfTopModel001(), executionContext);
             }
         });
     }
@@ -89,18 +68,21 @@ public class AgreementRolesTest_findByAgreementAndPartyAndTypeAndContainsDateTOF
     @Inject
     private ClockService clockService;
 
+    @Before
+    public void setUp() throws Exception {
+        artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        leaseOxfTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        partyTopModel = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+    }
+
     @Test
     public void findByAgreementAndPartyAndTypeAndContainsDate() throws Exception {
-        // given lease has tenant role
-        AgreementRoleType artTenant = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
-        Lease leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
-        Party party = parties.findPartyByReference("TOPMODEL");
 
-        // TODO: need to fix this date
+        // given
         final LocalDate date = clockService.now();
 
         // when
-        AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseTopModel, party, artTenant, date);
+        AgreementRole role = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(leaseOxfTopModel, partyTopModel, artTenant, date);
 
         // then
         Assert.assertNotNull(role);

@@ -28,11 +28,10 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
 import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -54,23 +53,11 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
             }
         });
     }
+
 
     @Inject
     private Invoices invoices;
@@ -85,9 +72,9 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
 
     @Before
     public void setUp() throws Exception {
-        seller = parties.findPartyByReference(InvoiceForOxfPoison003.SELLER_PARTY);
-        buyer = parties.findPartyByReference(InvoiceForOxfPoison003.BUYER_PARTY);
-        lease = leases.findLeaseByReference(InvoiceForOxfPoison003.LEASE);
+        seller = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
+        buyer = parties.findPartyByReference(OrganisationForPoison.PARTY_REFERENCE);
+        lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
     }
 
     @Test

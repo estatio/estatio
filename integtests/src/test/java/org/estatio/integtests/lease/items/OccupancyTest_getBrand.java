@@ -24,10 +24,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,30 +42,7 @@ public class OccupancyTest_getBrand extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new OrganisationForHelloWorld(), executionContext);
-                execute(new PropertyForOxf(), executionContext);
-
-                execute(new OrganisationForAcme(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-                execute(new OrganisationForPret(), executionContext);
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new OrganisationForMiracle(), executionContext);
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseForOxfTopModel001(), executionContext);
             }
         });
     }
@@ -81,7 +55,7 @@ public class OccupancyTest_getBrand extends EstatioIntegrationTest {
 
     @Before
     public void setup() {
-        leaseTopModel = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        leaseTopModel = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         occupancy = leaseTopModel.getOccupancies().first();
     }
 
