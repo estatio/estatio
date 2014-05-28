@@ -62,7 +62,6 @@ public class ApiItaly extends AbstractFactoryAndRepository {
             final @Named("categoria") @Optional String categoria,
             final @Named("classe") @Optional String classe,
             final @Named("consistenza") @Optional String consistenza) {
-        Property property = properties.findPropertyByReference(propertyReference);
         Unit unit = units.findUnitByReference(unitReference);
         LandRegister landRegister = null;
         List<FixedAssetRegistration> farts = fixedAssetRegistrations.findBySubject(unit);

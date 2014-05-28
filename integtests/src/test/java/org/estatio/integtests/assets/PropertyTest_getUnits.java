@@ -53,7 +53,7 @@ public class PropertyTest_getUnits extends EstatioIntegrationTest {
     @Test
     public void whenReturnsInstance_thenCanTraverseUnits() throws Exception {
         // given
-        Property property = properties.findPropertyByReference("OXF");
+        Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
 
         // when
         Set<Unit> units = property.getUnits();

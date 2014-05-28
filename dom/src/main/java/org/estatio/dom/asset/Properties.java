@@ -19,20 +19,12 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 public class Properties extends EstatioDomainService<Property> {
 
@@ -94,8 +86,12 @@ public class Properties extends EstatioDomainService<Property> {
 
     @Programmatic
     public Property findPropertyByReference(final String reference) {
-        return firstMatch("findByReference",
-                "reference", reference);
+        return mustMatch("findByReference","reference", reference);
+    }
+
+    @Programmatic
+    public Property findPropertyByReferenceElseNull(final String reference) {
+        return firstMatch("findByReference","reference", reference);
     }
 
     // //////////////////////////////////////

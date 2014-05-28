@@ -23,6 +23,8 @@ import org.estatio.fixture.party.OrganisationForTopModel;
 
 public class BankAccountAndMandateForTopModel extends BankAccountAndMandateAbstract {
 
+    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744435";
+
     public BankAccountAndMandateForTopModel() {
         this(null, null);
     }
@@ -40,7 +42,7 @@ public class BankAccountAndMandateForTopModel extends BankAccountAndMandateAbstr
         // exec
         createBankAccountAndMandate(
                 OrganisationForTopModel.PARTY_REFERENCE,
-                "NL31ABNA0580744435", 1, null,
+                BANK_ACCOUNT_REF, 1, null,
                 executionContext);
     }
 

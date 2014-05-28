@@ -28,13 +28,8 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.financial.*;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.financial.BankAccountAndMandateForHelloWorld;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,7 +38,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.hamcrest.CoreMatchers.is;
 
-public class FinancialAccountTest_owner extends EstatioIntegrationTest {
+public class FinancialAccountTest_getOwner extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -52,27 +47,7 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
                 execute(new BankAccountAndMandateForHelloWorld(), executionContext);
-
-                execute(new PropertyForKal(), executionContext);
-                execute(new BankAccountAndMandateForAcme(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-                execute(new BankAccountAndMandateForTopModel(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-                execute(new BankAccountAndMandateForMediaX(), executionContext);
-
-                execute(new BankAccountAndMandateForPoison(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
-
-                execute(new BankAccountAndMandateForPret(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-                execute(new BankAccountAndMandateForMiracle(), executionContext);
             }
         });
     }
@@ -86,7 +61,7 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        party = parties.findPartyByReference("HELLOWORLD");
+        party = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
     }
 
     // this test really just makes an assertion about the fixture.

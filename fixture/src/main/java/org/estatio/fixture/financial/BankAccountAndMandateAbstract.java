@@ -45,15 +45,15 @@ public abstract class BankAccountAndMandateAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected void createBankAccountAndMandate(String partyStr, String bankAccountStr, Integer sequence, String propertyStr, ExecutionContext executionContext) {
+    protected void createBankAccountAndMandate(String partyStr, String bankAccountRef, Integer sequence, String propertyRef, ExecutionContext executionContext) {
 
         Party party = parties.findPartyByReference(partyStr);
         AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
-        BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountStr, bankAccountStr);
+        BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
         executionContext.add(this, bankAccount.getReference(), bankAccount);
-        if (propertyStr != null) {
-            final Property property = properties.findPropertyByReference(propertyStr);
+        if (propertyRef != null) {
+            final Property property = properties.findPropertyByReference(propertyRef);
             fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);
         }
 

@@ -261,7 +261,7 @@ public class Api extends AbstractFactoryAndRepository {
         if (reference == null) {
             return null;
         }
-        Property property = properties.findPropertyByReference(reference);
+        Property property = properties.findPropertyByReferenceElseNull(reference);
         if (property == null) {
             if (!createIfNotFond)
                 throw new ApplicationException(String.format("Property with reference %s not found.", reference));
@@ -332,7 +332,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("postalCode") @Optional String postalCode,
             @Named("stateCode") @Optional String stateCode,
             @Named("countryCode") String countryCode) {
-        final Property property = properties.findPropertyByReference(propertyReference);
+        final Property property = properties.findPropertyByReferenceElseNull(propertyReference);
         if (property == null) {
             throw new ApplicationException(String.format("Property with reference %s not found.", propertyReference));
         }
@@ -822,7 +822,7 @@ public class Api extends AbstractFactoryAndRepository {
             bankAccount.setIban(iban);
             bankAccount.verifyIban();
             if (propertyReference != null) {
-                Property property = properties.findPropertyByReference(propertyReference);
+                Property property = properties.findPropertyByReferenceElseNull(propertyReference);
                 if (property == null) {
                     throw new IllegalArgumentException(propertyReference.concat(" not found"));
                 }

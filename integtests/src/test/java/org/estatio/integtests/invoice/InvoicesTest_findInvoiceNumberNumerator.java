@@ -34,8 +34,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import static org.junit.Assert.assertNotNull;
-
 public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationTest {
 
     @Before
@@ -68,16 +66,15 @@ public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationT
     @Inject
     private Properties properties;
 
-    private Property property1;
+    private Property propertyOxf;
 
     @Test
     public void whenNone() throws Exception {
         // given
-        property1 = properties.findPropertyByReference("OXF");
-        assertNotNull(property1);
+        propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
 
         // when
-        Numerator numerator = invoices.findInvoiceNumberNumerator(property1);
+        Numerator numerator = invoices.findInvoiceNumberNumerator(propertyOxf);
         // then
         Assert.assertNull(numerator);
     }

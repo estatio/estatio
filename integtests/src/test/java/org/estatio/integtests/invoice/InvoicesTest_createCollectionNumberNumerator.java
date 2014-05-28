@@ -24,12 +24,6 @@ import org.estatio.dom.invoice.Constants;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,23 +40,6 @@ public class InvoicesTest_createCollectionNumberNumerator extends EstatioIntegra
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new InvoiceForOxfPoison003(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
             }
         });
     }

@@ -74,7 +74,7 @@ public class LeasesTest_findLeasesByProperty extends EstatioIntegrationTest {
     @Test
     public void whenValidProperty() {
         // given
-        final Property property = properties.findPropertyByReference("OXF");
+        final Property property = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
         // when
         final List<Lease> matchingLeases = leases.findLeasesByProperty(property);
         // then

@@ -18,19 +18,16 @@
  */
 package org.estatio.dom.asset;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class PropertiesTest_finders {
 
@@ -45,7 +42,7 @@ public class PropertiesTest_finders {
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
+                return (T) new Property();
             }
             @Override
             protected List<Property> allInstances() {

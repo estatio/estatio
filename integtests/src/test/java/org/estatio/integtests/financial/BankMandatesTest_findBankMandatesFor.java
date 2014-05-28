@@ -20,18 +20,11 @@ package org.estatio.integtests.financial;
 
 import java.util.List;
 import javax.inject.Inject;
-import org.estatio.dom.financial.BankMandate;
-import org.estatio.dom.financial.BankMandates;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.financial.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.*;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -48,24 +41,7 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new BankAccountAndMandateForHelloWorld(), executionContext);
-                execute(new BankAccountAndMandateForAcme(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
                 execute(new BankAccountAndMandateForTopModel(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-                execute(new BankAccountAndMandateForMediaX(), executionContext);
-
-                execute(new BankAccountAndMandateForPoison(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
-
-                execute(new BankAccountAndMandateForPret(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-                execute(new BankAccountAndMandateForMiracle(), executionContext);
             }
         });
     }
@@ -73,9 +49,13 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
     @Test
     public void forAccountWithMandate() {
         // given
-        FinancialAccount account = financialAccounts.findAccountByReference("NL31ABNA0580744435"); // Associated with TOPMODEL
+        FinancialAccount account = financialAccounts.findAccountByReference(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF);
+        Assert.assertThat(account instanceof BankAccount, is(true));
+        final BankAccount bankAccount = (BankAccount) account;
+
         // when
-        List<BankMandate> mandates = bankMandates.findBankMandatesFor((org.estatio.dom.financial.BankAccount) account);
+        List<BankMandate> mandates = bankMandates.findBankMandatesFor(bankAccount);
+
         // then
         assertThat(mandates.size(), is(1));
     }

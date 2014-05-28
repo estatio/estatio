@@ -49,7 +49,7 @@ import static org.junit.Assert.assertThat;
 
 public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
-    private Property kalProperty;
+    private Property propertyKal;
 
     @Before
     public void setupData() {
@@ -95,7 +95,7 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
         Party buyer = parties.findPartyByReference(InvoiceForKalPoison001.BUYER_PARTY);
         Lease lease = leases.findLeaseByReference(InvoiceForKalPoison001.LEASE);
 
-        kalProperty = properties.findPropertyByReference("KAL");
+        propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
 
         Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForKalPoison001.START_DATE, null);
         invoice.setRunId(runId);
@@ -110,14 +110,14 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
     @Test
     public void byPropertyDueDate() {
-        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, VT.ld(2012, 1, 1));
+        List<Invoice> invoiceList = invoices.findInvoices(propertyKal, VT.ld(2012, 1, 1));
         assertThat(invoiceList.size(), is(1));
     }
 
     @Test
     public void byPropertyDueDateStatus() {
 
-        List<Invoice> invoiceList = invoices.findInvoices(kalProperty, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
+        List<Invoice> invoiceList = invoices.findInvoices(propertyKal, VT.ld(2012, 1, 1), InvoiceStatus.NEW);
         assertThat(invoiceList.size(), is(1));
     }
 

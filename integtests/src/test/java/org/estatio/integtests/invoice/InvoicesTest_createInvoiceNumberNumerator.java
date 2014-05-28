@@ -74,30 +74,28 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
     @Inject
     private BookmarkService bookmarkService;
     
-    private Property property1;
-    private Property property2;
+    private Property propertyOxf;
+    private Property propertyKal;
     
     private Bookmark property1Bookmark;
 
     @Before
     public void setUp() throws Exception {
-        property1 = properties.findPropertyByReference("OXF");
-        property2 = properties.findPropertyByReference("KAL");
-        assertNotNull(property1);
-        assertNotNull(property2);
-        
-        property1Bookmark = bookmarkService.bookmarkFor(property1);
+        propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+        propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
+
+        property1Bookmark = bookmarkService.bookmarkFor(propertyOxf);
     }
     
     @Test
     public void whenNoneForProperty() throws Exception {
 
         // given
-        Numerator numerator = invoices.findInvoiceNumberNumerator(property1);
+        Numerator numerator = invoices.findInvoiceNumberNumerator(propertyOxf);
         Assert.assertNull(numerator);
 
         // when
-        numerator = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
+        numerator = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
 
         //then
         Assert.assertNotNull(numerator);
@@ -111,11 +109,11 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
     public void canCreateOnePerProperty() throws Exception {
 
         // given
-        Numerator numerator1 = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
+        Numerator numerator1 = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
         Assert.assertNotNull(numerator1);
         
         // when
-        Numerator numerator2 = invoices.createInvoiceNumberNumerator(property2, "KAL-%05d", BigInteger.ZERO);
+        Numerator numerator2 = invoices.createInvoiceNumberNumerator(propertyKal, "KAL-%05d", BigInteger.ZERO);
 
         // then
         Assert.assertNotNull(numerator2);
@@ -131,13 +129,13 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
     public void canOnlyCreateOnePerProperty_andCannotReset() throws Exception {
 
         // given
-        Numerator numerator1 = invoices.createInvoiceNumberNumerator(property1, "OXF-%05d", BigInteger.TEN);
+        Numerator numerator1 = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
         Assert.assertNotNull(numerator1);
 
         assertThat(numerator1.increment(), is("OXF-00011"));
 
         // when
-        Numerator numerator2 = invoices.createInvoiceNumberNumerator(property1, "KAL-%05d", BigInteger.ZERO);
+        Numerator numerator2 = invoices.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO);
 
         // then
         Assert.assertNotNull(numerator2);
