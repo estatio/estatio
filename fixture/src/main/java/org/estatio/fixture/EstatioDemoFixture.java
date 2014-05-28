@@ -18,8 +18,6 @@
  */
 package org.estatio.fixture;
 
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.financial.*;
 import org.estatio.fixture.invoice.InvoiceForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
@@ -37,41 +35,28 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext executionContext) {
         execute(new EstatioBaseLineFixture(), executionContext);
 
-        // execute("parties", new PersonsAndOrganisationsAndCommunicationChannelsForAll(), executionContext);
-        execute(new OrganisationForAcme(), executionContext);
-        execute(new OrganisationForHelloWorld(), executionContext);
-        execute(new OrganisationForTopModel(), executionContext);
-        execute(new OrganisationForMediaX(), executionContext);
-        execute(new OrganisationForPoison(), executionContext);
-        execute(new OrganisationForPret(), executionContext);
-        execute(new OrganisationForMiracle(), executionContext);
-        execute(new PersonForJohnDoe(), executionContext);
         execute(new PersonForLinusTorvalds(), executionContext);
 
-        // execute("properties", new PropertiesAndUnitsForAll(), executionContext);
-        execute(new PropertyForOxf(), executionContext);
-        execute(new PropertyForKal(), executionContext);
-
-        // execute("leases", new LeasesEtcForAll(), executionContext);
-        execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-        execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-        execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-        execute(new LeaseForOxfPret004(), executionContext);
-        execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-        //execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
-        execute(new InvoiceForOxfPoison003(), executionContext);
-        execute(new InvoiceForKalPoison001(), executionContext);
-
-        //execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
         execute(new BankAccountAndMandateForAcme(), executionContext);
-        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
-        execute(new BankAccountAndMandateForMediaX(), executionContext);
-        execute(new BankAccountAndMandateForMiracle(), executionContext);
-        execute(new BankAccountAndMandateForPoison(), executionContext);
-        execute(new BankAccountAndMandateForPret(), executionContext);
-        execute(new BankAccountAndMandateForTopModel(), executionContext);
 
+        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
+
+        execute(new BankAccountAndMandateForTopModel(), executionContext);
+        execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+
+        execute(new BankAccountAndMandateForMediaX(), executionContext);
+        execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+
+        execute(new BankAccountAndMandateForPret(), executionContext);
+        execute(new LeaseForOxfPret004(), executionContext);
+
+        execute(new BankAccountAndMandateForMiracle(), executionContext);
+        execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+
+        execute(new BankAccountAndMandateForPoison(), executionContext);
+        execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+        execute(new InvoiceForOxfPoison003(), executionContext);
+        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
+        execute(new InvoiceForKalPoison001(), executionContext);
     }
 }

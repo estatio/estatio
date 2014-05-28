@@ -20,7 +20,7 @@ package org.estatio.fixture.lease;
 
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.OrganisationForPoison;
+import org.estatio.fixture.party.OrganisationForPret;
 import org.estatio.fixture.party.PersonForJohnDoe;
 
 import static org.estatio.integtests.VT.ld;
@@ -35,7 +35,7 @@ public class LeaseForOxfPret004 extends LeaseAbstract {
 
         // prereqs
         execute(new PersonForJohnDoe(), executionContext);
-        execute(new OrganisationForPoison(), executionContext);
+        execute(new OrganisationForPret(), executionContext);
         execute(new PropertyForOxf(), executionContext);
 
         // exec

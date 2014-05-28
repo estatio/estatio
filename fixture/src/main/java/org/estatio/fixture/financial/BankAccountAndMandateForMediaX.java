@@ -18,6 +18,7 @@
  */
 package org.estatio.fixture.financial;
 
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
 import org.estatio.fixture.party.OrganisationForMediaX;
 
 public class BankAccountAndMandateForMediaX extends BankAccountAndMandateAbstract {
@@ -34,7 +35,7 @@ public class BankAccountAndMandateForMediaX extends BankAccountAndMandateAbstrac
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForMediaX(), executionContext);
+        execute(new LeaseForOxfMediaX002(), executionContext);
 
         // exec
         createBankAccountAndMandate(
