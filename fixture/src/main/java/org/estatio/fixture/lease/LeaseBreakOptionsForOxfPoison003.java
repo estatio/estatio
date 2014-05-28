@@ -28,7 +28,7 @@ public class LeaseBreakOptionsForOxfPoison003 extends LeaseBreakOptionsAbstract 
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfPoison003(), executionContext);
+        execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
 
         // exec
         final Lease leasePoison003 = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);

@@ -59,12 +59,12 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new PropertyForKal(), executionContext);
 
                         // execute("leases", new LeasesEtcForAll(), executionContext);
-                        execute(new LeasesEtcForOxfTopModel001(), executionContext);
-                        execute(new LeasesEtcForOxfMediax002(), executionContext);
-                        execute(new LeasesEtcForOxfPoison003(), executionContext);
-                        execute(new LeasesEtcForOxfPret004(), executionContext);
-                        execute(new LeasesEtcForOxfMiracl005(), executionContext);
-                        execute(new LeasesEtcForKalPoison001(), executionContext);
+                        execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+                        execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+                        execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+                        execute(new LeaseForOxfPret004(), executionContext);
+                        execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
 
                         //execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
                         execute(new InvoiceForOxfPoison003(), executionContext);
@@ -106,7 +106,14 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new PropertyForOxf(), executionContext);
                         execute(new PropertyForKal(), executionContext);
 
-                        execute("leases", new LeaseForAll(), executionContext);
+                        //execute("leases", new LeaseForAll(), executionContext);
+                        execute(new LeaseForOxfTopModel001(), executionContext);
+                        execute(new LeaseForOxfMediaX002(), executionContext);
+                        execute(new LeaseForOxfPoison003(), executionContext);
+                        execute(new LeaseForOxfPret004(), executionContext);
+                        execute(new LeaseForOxfMiracl005(), executionContext);
+                        execute(new LeaseForKalPoison001(), executionContext);
+
                         // no lease items or terms
                         // no invoices or invoice items
                     }

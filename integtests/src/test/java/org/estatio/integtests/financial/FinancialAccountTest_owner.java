@@ -65,26 +65,26 @@ public class FinancialAccountTest_owner extends EstatioIntegrationTest {
 
 
                 execute(new OrganisationForTopModel(), executionContext);
-                execute(new LeasesEtcForOxfTopModel001(), executionContext);
+                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
                 execute(new BankAccountAndMandateForTopModel(), executionContext);
 
                 execute(new OrganisationForMediaX(), executionContext);
-                execute(new LeasesEtcForOxfMediax002(), executionContext);
+                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
                 execute(new BankAccountAndMandateForMediaX(), executionContext);
 
                 execute(new OrganisationForPoison(), executionContext);
-                execute(new LeasesEtcForOxfPoison003(), executionContext);
-                execute(new LeasesEtcForKalPoison001(), executionContext);
+                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
                 execute(new BankAccountAndMandateForPoison(), executionContext);
                 execute(new InvoiceForOxfPoison003(), executionContext);
                 execute(new InvoiceForKalPoison001(), executionContext);
 
                 execute(new OrganisationForPret(), executionContext);
-                execute(new LeasesEtcForOxfPret004(), executionContext);
+                execute(new LeaseForOxfPret004(), executionContext);
                 execute(new BankAccountAndMandateForPret(), executionContext);
 
                 execute(new OrganisationForMiracle(), executionContext);
-                execute(new LeasesEtcForOxfMiracl005(), executionContext);
+                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
                 execute(new BankAccountAndMandateForMiracle(), executionContext);
             }
         });

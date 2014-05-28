@@ -19,7 +19,7 @@
 package org.estatio.fixture.invoice;
 
 import org.estatio.fixture.lease.LeaseForOxfPoison003;
-import org.estatio.fixture.lease.LeasesEtcForOxfPret004;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
@@ -49,7 +49,7 @@ public class InvoiceForOxfPoison003 extends InvoiceAbstract {
 
         // prereqs
         execute(new OrganisationForHelloWorld(), executionContext);
-        execute(new LeasesEtcForOxfPret004(), executionContext);
+        execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
 
         // exec
         createInvoiceAndInvoiceItems(
