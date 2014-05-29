@@ -68,7 +68,7 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.financial.FinancialAccount "
                         + "WHERE owner == :owner")
 })
-public abstract class FinancialAccount
+public class FinancialAccount
         extends EstatioMutableObject<FinancialAccount>
         implements WithNameGetter, WithReferenceUnique {
 

@@ -35,7 +35,7 @@ public class CurrenciesRefData extends FixtureScript {
     }
 
     private void createCurrency(ExecutionContext fixtureResults, String reference, String name) {
-        final Currency currency = currencies.createCurrency(reference, name);
+        final Currency currency = currencies.findOrCreateCurrency(reference, name);
         fixtureResults.add(this, currency.getReference(), currency);
     }
 

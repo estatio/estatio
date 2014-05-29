@@ -20,10 +20,11 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import org.estatio.dom.EstatioDomainService;
+
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
-
-import org.estatio.dom.EstatioDomainService;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @Hidden
 public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> {
@@ -31,9 +32,8 @@ public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> 
     public AgreementRoleTypes() {
         super(AgreementRoleTypes.class, AgreementRoleType.class);
     }
-    
-    // //////////////////////////////////////
 
+    // //////////////////////////////////////
 
     @NotContributed
     public AgreementRoleType findByTitle(final String title) {
@@ -45,5 +45,21 @@ public class AgreementRoleTypes extends EstatioDomainService<AgreementRoleType> 
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 
+    @NotContributed
+    public AgreementRoleType findByAgreementTypeAndTitle(final AgreementType agreementType, final String title) {
+        return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+    }
+
+    @Programmatic
+    public AgreementRoleType findOrCreate(final String title, final AgreementType appliesTo) {
+        AgreementRoleType agreementRoleType = findByAgreementTypeAndTitle(appliesTo, title);
+        if (agreementRoleType == null) {
+            agreementRoleType = getContainer().newTransientInstance(AgreementRoleType.class);
+            agreementRoleType.setTitle(title);
+            agreementRoleType.setAppliesTo(appliesTo);
+            getContainer().persist(agreementRoleType);
+        }
+        return agreementRoleType;
+    }
 
 }

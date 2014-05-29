@@ -46,6 +46,11 @@ public class CurrenciesTest_finders {
                 return (T) new Currency();
             }
             @Override
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return (T) new Currency();
+            }
+            @Override
             protected List<Currency> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;

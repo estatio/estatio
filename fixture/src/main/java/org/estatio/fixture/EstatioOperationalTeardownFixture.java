@@ -43,17 +43,20 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom("LeaseTerm");
         deleteFrom("LeaseItem");
         deleteFrom("Occupancy");
-        
-        deleteFrom("BankMandate");
-        deleteFrom("Lease");
-        
+
         deleteFrom("AgreementRoleCommunicationChannel");
         deleteFrom("AgreementRole");
-        deleteFrom("Agreement");
-        
+
+        deleteFrom("Guarantee");
+        deleteFrom("BankMandate");
+        deleteFrom("Lease");
+
+        deleteFrom("FinancialAccountTransaction");
         deleteFrom("BankAccount");
         deleteFrom("FixedAssetFinancialAccount");
         deleteFrom("FinancialAccount");
+        
+        deleteFrom("Agreement");
         
         deleteFrom("CommunicationChannel");
         

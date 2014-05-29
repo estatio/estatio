@@ -16,17 +16,16 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.bankguarantee;
+package org.estatio.dom.guarantee;
 
-public final class BankGuaranteeConstants {
+public final class GuaranteeConstants {
 
-    private BankGuaranteeConstants() {
+    private GuaranteeConstants() {
     }
 
-    public final static String AT_BANK_GUARANTEE = "BankGuarantee";
+    public final static String AT_GUARANTEE = "BankGuarantee";
 
-    public final static String ART_CREDITOR = "Creditor";
-    public final static String ART_DEBTOR = "Debtor";
-    public final static String ART_MANAGER = "Manager";
+    public final static String ART_GUARANTOR = "Guarantor";
+    public final static String ART_GUARANTEE = "Gurantee";
 
 }

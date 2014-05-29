@@ -18,33 +18,83 @@ package org.estatio.api;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.agreement.*;
-import org.estatio.dom.asset.*;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyType;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.asset.UnitType;
+import org.estatio.dom.asset.Units;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.*;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.communicationchannel.EmailAddresses;
+import org.estatio.dom.communicationchannel.PhoneOrFaxNumbers;
+import org.estatio.dom.communicationchannel.PostalAddress;
+import org.estatio.dom.communicationchannel.PostalAddresses;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.financial.BankMandates;
+import org.estatio.dom.financial.FinancialAccountTransaction;
+import org.estatio.dom.financial.FinancialAccountTransactions;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
+import org.estatio.dom.guarantee.Guarantee;
+import org.estatio.dom.guarantee.GuaranteeType;
+import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.InvoicingFrequency;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemStatus;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseStatus;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForFixed;
+import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
+import org.estatio.dom.lease.LeaseTermForTax;
+import org.estatio.dom.lease.LeaseTermForTurnoverRent;
+import org.estatio.dom.lease.LeaseTermFrequency;
+import org.estatio.dom.lease.LeaseType;
+import org.estatio.dom.lease.LeaseTypes;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.lease.Occupancy.OccupancyReportingType;
+import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.dom.party.*;
+import org.estatio.dom.party.Organisation;
+import org.estatio.dom.party.Organisations;
+import org.estatio.dom.party.Parties;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.party.Person;
+import org.estatio.dom.party.Persons;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
@@ -53,6 +103,7 @@ import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -732,32 +783,31 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("value") @Optional BigDecimal value) {
 
         putLeaseItem(
-                leaseReference, 
-                tenantReference, 
-                unitReference, 
-                itemType, 
-                BigInteger.ONE, 
-                itemStartDate, 
+                leaseReference,
+                tenantReference,
+                unitReference,
+                itemType,
+                BigInteger.ONE,
+                itemStartDate,
                 itemEndDate,
-                chargeReference, 
-                null, 
-                invoicingFrequency, 
-                "DIRECT_DEBIT", 
+                chargeReference,
+                null,
+                invoicingFrequency,
+                "DIRECT_DEBIT",
                 itemStatus);
         LeaseTermForFixed term = (LeaseTermForFixed) putLeaseTerm(
-                leaseReference, 
-                unitReference, 
-                itemSequence, 
-                itemType, 
-                itemStartDate, 
-                startDate, 
-                endDate, 
-                sequence, 
+                leaseReference,
+                unitReference,
+                itemSequence,
+                itemType,
+                itemStartDate,
+                startDate,
+                endDate,
+                sequence,
                 status);
         term.setValue(value);
     }
 
-    
     private LeaseTerm putLeaseTerm(
             final String leaseReference,
             final String unitReference,
@@ -858,6 +908,43 @@ public class Api extends AbstractFactoryAndRepository {
         bankMandate.setEndDate(endDate);
         bankMandate.setSepaMandateIdentifier(sepaMandateIdentifier);
         lease.paidBy(bankMandate);
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putGuarantee(
+            // Guarantee
+            @Named("reference") String reference,
+            @Named("name") String name,
+            @Named("leaseReference") String leaseReference,
+            @Named("startDate") LocalDate startDate,
+            @Named("endDate") @Optional LocalDate endDate,
+            @Named("terminationDate") @Optional LocalDate terminationDate,
+            @Named("guaranteeType") GuaranteeType guaranteeType,
+            @Named("monthsRent") @Optional BigDecimal monthsRent,
+            @Named("monthsServiceCharge") @Optional BigDecimal monthsServiceCharge,
+            @Named("maximumAmount") @Optional BigDecimal maximumAmount,
+            // Transaction
+            @Named("transactionDate") @Optional LocalDate transactionDate,
+            @Named("description") @Optional String description,
+            @Named("amount") @Optional BigDecimal amount) {
+        Guarantee guarantee = guarantees.findByReference(reference);
+        if (guarantee == null) {
+            Lease lease = fetchLease(leaseReference);
+            guarantee = guarantees.newGuarantee(
+                    lease,
+                    reference,
+                    name,
+                    guaranteeType,
+                    startDate,
+                    endDate,
+                    description,
+                    maximumAmount);
+        }
+        guarantee.setTerminationDate(terminationDate);
+        FinancialAccountTransaction transaction = financialAccountTransactions.findTransaction(guarantee.getFinancialAccount(), transactionDate, BigInteger.ONE);
+        if (transaction == null) {
+            transaction = financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
+        }
     }
 
     // //////////////////////////////////////
@@ -1047,5 +1134,14 @@ public class Api extends AbstractFactoryAndRepository {
     public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccounts fixedAssetFinancialAccounts) {
         this.fixedAssetFinancialAccounts = fixedAssetFinancialAccounts;
     }
+
+    private Guarantees guarantees;
+
+    public void injectBankGuarantees(final Guarantees bankGuarantees) {
+        this.guarantees = bankGuarantees;
+    }
+
+    @Inject
+    private FinancialAccountTransactions financialAccountTransactions;
 
 }

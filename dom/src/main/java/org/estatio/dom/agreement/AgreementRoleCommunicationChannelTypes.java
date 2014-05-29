@@ -20,21 +20,21 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
-
 import org.estatio.dom.EstatioDomainService;
 
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
+
 @Hidden
-public class AgreementRoleCommunicationChannelTypes 
+public class AgreementRoleCommunicationChannelTypes
         extends EstatioDomainService<AgreementRoleCommunicationChannelType> {
 
     public AgreementRoleCommunicationChannelTypes() {
         super(AgreementRoleCommunicationChannelTypes.class, AgreementRoleCommunicationChannelType.class);
     }
-    
-    // //////////////////////////////////////
 
+    // //////////////////////////////////////
 
     @NotContributed
     public AgreementRoleCommunicationChannelType findByTitle(final String title) {
@@ -42,9 +42,24 @@ public class AgreementRoleCommunicationChannelTypes
     }
 
     @NotContributed
+    public AgreementRoleCommunicationChannelType findByAgreementTypeAndTitle(final AgreementType agreementType, final String title) {
+        return firstMatch("findByAgreementTypeAndTitle", "agreementType", agreementType, "title", title);
+    }
+
+    @NotContributed
     public List<AgreementRoleCommunicationChannelType> findApplicableTo(final AgreementType agreementType) {
         return allMatches("findByAgreementType", "agreementType", agreementType);
     }
 
-
+    @Programmatic
+    public AgreementRoleCommunicationChannelType findOrCreate(final String title, final AgreementType agreementType) {
+        AgreementRoleCommunicationChannelType arcct = findByAgreementTypeAndTitle(agreementType, title);
+        if (arcct == null) {
+            arcct = getContainer().newTransientInstance(AgreementRoleCommunicationChannelType.class);
+            arcct.setTitle(title);
+            arcct.setAppliesTo(agreementType);
+            getContainer().persist(arcct);
+        }
+        return arcct;
+    }
 }

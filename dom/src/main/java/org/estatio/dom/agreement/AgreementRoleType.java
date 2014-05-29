@@ -27,20 +27,20 @@ import javax.jdo.annotations.Unique;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
+import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithTitleComparable;
+
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
-import org.estatio.dom.EstatioImmutableObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithTitleComparable;
-
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
         strategy = IdGeneratorStrategy.NATIVE,
         column = "id")
-@Unique(name = "AgreemenRoleType_title_UNQ", members = { "title" })
+@Unique(name = "AgreemenRoleType_appliesTo_title_UNQ", members = { "appliesTo", "title" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByTitle", language = "JDOQL",
@@ -51,7 +51,12 @@ import org.estatio.dom.WithTitleComparable;
                 name = "findByAgreementType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.AgreementRoleType "
-                        + "WHERE appliesTo == :agreementType ")
+                        + "WHERE appliesTo == :agreementType "),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementTypeAndTitle", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleType "
+                        + "WHERE appliesTo == :agreementType && title == :title")
 })
 @Immutable
 @Bounded

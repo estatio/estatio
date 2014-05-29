@@ -1,0 +1,153 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "primaryParty": {
+              "hidden": {
+                "where": "PARENTED_TABLES"
+              },
+              "disabled": {}
+            },
+            "reference": {
+              "describedAs": {
+                "value": "Unique reference code for this agreement"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "guaranteeType": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 17
+              }
+            },
+            "description": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 75
+              },
+              "multiLine": {
+                "numberOfLines": 3
+              }
+            },
+            "startDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "endDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "terminationDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "financialAccount": {
+              "disabled": {}
+            },
+            "maximumAmount": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 10
+              }
+            },
+            "previous": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "disabled": {},
+              "named": {
+                "value": "Previous Agreement"
+              }
+            },
+            "next": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "disabled": {},
+              "named": {
+                "value": "Next Agreement"
+              }
+            },
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {
+        "roles": {
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
+          },
+          "disabled": {}
+        }
+      }
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "recentChanges": {
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
+    "changeDates": {
+      "named": {
+        "value": "Change Dates"
+      }
+    },
+    "changePrevious": {
+      "named": {
+        "value": "Change Previous"
+      }
+    },
+    "newRole": {
+      "named": {
+        "value": "New Role"
+      }
+    },
+    "openLink": {
+      "named": {
+        "value": "Reports"
+      }
+    },
+    "transactions": {
+      "named": {
+        "value": "Transactions"
+      }
+    }
+  }
+}

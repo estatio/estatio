@@ -19,9 +19,15 @@
 package org.estatio.dom.currency;
 
 import java.util.List;
+
 import org.estatio.dom.EstatioDomainService;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 public class Currencies extends EstatioDomainService<Currency> {
 
@@ -32,41 +38,42 @@ public class Currencies extends EstatioDomainService<Currency> {
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Other", sequence = "currencies.1")
+    @MemberOrder(name = "Other", sequence = "currencies.1")
     public List<Currency> allCurrencies() {
         return allInstances();
     }
-    
+
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name="Other", sequence = "currencies.2")
+    @MemberOrder(name = "Other", sequence = "currencies.2")
     public List<Currency> newCurrency(
-            final @Named("Reference") String reference, 
+            final @Named("Reference") String reference,
             final @Named("Name") @Optional String name) {
-        createCurrency(reference, name);
+        findOrCreateCurrency(reference, name);
         return allCurrencies();
     }
 
     // //////////////////////////////////////
 
     @Programmatic
-    public Currency createCurrency(final String reference, final String name) {
-        final Currency currency = newTransientInstance();
-        currency.setReference(reference);
-        currency.setName(name);
-        persist(currency);
+    public Currency findOrCreateCurrency(final String reference, final String name) {
+        Currency currency = findCurrency(reference);
+        if (currency == null) {
+            currency = newTransientInstance();
+            currency.setReference(reference);
+            currency.setName(name);
+            persist(currency);
+        }
         return currency;
     }
 
     @Programmatic
     public Currency findCurrency(final String reference) {
-        return mustMatch("findByReference", "reference", reference);
+        return uniqueMatch("findByReference", "reference", reference);
     }
-
 
     @Programmatic
     public List<Currency> autoComplete(final String searchArg) {
         return allMatches("matchByReferenceOrDescription", "searchArg", searchArg);
     }
-    
-    
+
 }

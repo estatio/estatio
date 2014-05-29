@@ -19,14 +19,13 @@
 package org.estatio.webapp.services.admin;
 
 import java.util.List;
+
 import javax.inject.Inject;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.invoice.Invoices;
+
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.DomainObjectContainer;
+
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -38,8 +37,7 @@ public class EstatioAdministrationService {
 
     @MemberOrder(name = "Administration", sequence = "aaa.1")
     public void updateEpochDate(
-            @Named("Epoch Date") @Optional
-            final LocalDate epochDate) {
+            @Named("Epoch Date") @Optional final LocalDate epochDate) {
         settingsService.updateEpochDate(epochDate);
     }
 
@@ -55,24 +53,9 @@ public class EstatioAdministrationService {
         return settingsService.listAll();
     }
 
-
     // //////////////////////////////////////
-
-    private DomainObjectContainer container;
-    public void setContainer(DomainObjectContainer container) {
-        this.container = container;
-    }
-
-    @Inject
-    private Indices indices;
-
-    @Inject
-    private Properties propertiesService;
 
     @Inject
     private EstatioSettingsService settingsService;
-
-    @Inject
-    private Invoices invoices;
 
 }

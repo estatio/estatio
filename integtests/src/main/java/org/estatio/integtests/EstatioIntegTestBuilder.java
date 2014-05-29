@@ -34,6 +34,7 @@ import org.estatio.dom.financial.contributed.FinancialAccountContributions;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.StateContributions;
 import org.estatio.dom.geography.States;
+import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.index.IndexBases;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.IndexationService;
@@ -62,6 +63,8 @@ import org.estatio.services.links.LinkContributions;
 import org.estatio.services.links.Links;
 import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
+import org.picocontainer.behaviors.Guarded;
+
 import org.apache.isis.applib.services.classdiscovery.ClassDiscoveryServiceUsingReflections;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.core.commons.config.IsisConfiguration;
@@ -108,6 +111,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
                 new AgreementRoleCommunicationChannelTypes(),
                 new AgreementRoleTypes(),
                 new BankMandates(),
+                new Guarantees(),
                 new Leases(),
                 new LeaseTerms(),
                 new LeaseItems(),

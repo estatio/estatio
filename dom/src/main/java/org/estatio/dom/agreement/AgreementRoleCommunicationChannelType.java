@@ -44,7 +44,12 @@ import org.apache.isis.applib.annotation.Title;
                 name = "findByAgreementType", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannelType "
-                        + "WHERE appliesTo == :agreementType ")
+                        + "WHERE appliesTo == :agreementType "),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementTypeAndTitle", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannelType "
+                        + "WHERE appliesTo == :agreementType && title == :title")
 })
 @Immutable
 @Bounded
