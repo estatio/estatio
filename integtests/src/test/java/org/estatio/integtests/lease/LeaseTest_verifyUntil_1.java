@@ -22,10 +22,9 @@ import java.util.SortedSet;
 import javax.inject.Inject;
 import org.estatio.dom.lease.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.junit.Before;
@@ -45,21 +44,8 @@ public class LeaseTest_verifyUntil_1 extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseItemAndTermsForOxfMediax002(), executionContext);
+                execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
             }
         });
     }
@@ -72,7 +58,7 @@ public class LeaseTest_verifyUntil_1 extends EstatioIntegrationTest {
         // TODO: what is the variation being tested here ?
 
         // given
-        Lease leaseMediax = leases.findLeaseByReference("OXF-MEDIAX-002");
+        Lease leaseMediax = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
 
         LeaseItem leaseMediaXServiceChargeItem = leaseMediax.findItem(LeaseItemType.SERVICE_CHARGE, VT.ld(2008, 1, 1), VT.bi(1));
         LeaseTerm leaseMediaXServiceChargeTerm = leaseMediaXServiceChargeItem.findTerm(VT.ld(2008, 1, 1));

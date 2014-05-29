@@ -22,10 +22,8 @@ import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
+import org.estatio.fixture.lease.LeaseForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.junit.Before;
@@ -41,21 +39,8 @@ public class LeaseTest_assign_INCOMPLETE extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseForOxfPoison003(), executionContext);
+                execute(new LeaseForOxfMediaX002(), executionContext);
             }
         });
     }
@@ -74,7 +59,11 @@ public class LeaseTest_assign_INCOMPLETE extends EstatioIntegrationTest {
     
     @Test
     public void happyCase() throws Exception {
-        Lease newLease = leasePoison.assign("OXF-MEDIA-003", "Reassigned", leaseMediax.getSecondaryParty() , VT.ld(2014, 1, 1), VT.ld(2014, 1, 1), true);
+        final String newReference = "OXF-MEDIA-003";
+        Lease newLease = leasePoison.assign(
+                newReference, "Reassigned",
+                leaseMediax.getSecondaryParty() ,
+                VT.ld(2014, 1, 1), VT.ld(2014, 1, 1), true);
     
     }
 }

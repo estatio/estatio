@@ -41,16 +41,8 @@ public class PartiesTest_findPartyByReference extends EstatioIntegrationTest {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
                 execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new OrganisationForHelloWorld(), executionContext);
-                execute(new OrganisationForAcme(), executionContext);
-
                 execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
 
             }
         });
@@ -61,7 +53,7 @@ public class PartiesTest_findPartyByReference extends EstatioIntegrationTest {
 
     @Test
     public void happyCase() throws Exception {
-        Party party = parties.findPartyByReference("TOPMODEL");
+        Party party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
         assertThat(party, is(notNullValue()));
     }
 

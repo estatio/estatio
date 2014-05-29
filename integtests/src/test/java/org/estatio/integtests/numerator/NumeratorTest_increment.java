@@ -55,12 +55,6 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
 
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
             }
         });
     }
@@ -70,16 +64,16 @@ public class NumeratorTest_increment extends EstatioIntegrationTest {
     @Inject
     private Properties properties;
 
-    private Property property;
-    private Property property2;
+    private Property propertyOxf;
+    private Property propertyKal;
 
     @Before
     public void setUp() throws Exception {
-        property = properties.allProperties().get(0);
-        property2 = properties.allProperties().get(1);
+        propertyOxf = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE);
+        propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
 
-        scopedNumerator = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property, "ABC-%05d", new BigInteger("10"));
-        scopedNumerator2 = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, property2, "DEF-%05d", new BigInteger("100"));
+        scopedNumerator = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyOxf, "ABC-%05d", new BigInteger("10"));
+        scopedNumerator2 = numerators.createScopedNumerator(Constants.INVOICE_NUMBER_NUMERATOR_NAME, propertyKal, "DEF-%05d", new BigInteger("100"));
         globalNumerator = numerators.createGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME, "ABC-%05d", new BigInteger("1000"));
     }
 

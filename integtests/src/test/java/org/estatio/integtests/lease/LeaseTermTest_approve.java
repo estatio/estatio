@@ -21,10 +21,8 @@ package org.estatio.integtests.lease;
 import javax.inject.Inject;
 import org.estatio.dom.lease.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.junit.Before;
@@ -44,21 +42,7 @@ public class LeaseTermTest_approve extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
-
-                execute(new LeaseForOxfPret004(), executionContext);
-
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
             }
         });
     }
@@ -71,7 +55,7 @@ public class LeaseTermTest_approve extends EstatioIntegrationTest {
 
     @Before
     public void setup() {
-        lease = leases.findLeaseByReference("OXF-TOPMODEL-001");
+        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         assertNotNull(leaseTopModelRentItem);
     }

@@ -40,17 +40,7 @@ public class PartiesTest_findParties extends EstatioIntegrationTest {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
                 execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new OrganisationForHelloWorld(), executionContext);
-                execute(new OrganisationForAcme(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
-
             }
         });
     }

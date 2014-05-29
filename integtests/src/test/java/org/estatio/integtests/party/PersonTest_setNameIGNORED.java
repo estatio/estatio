@@ -22,10 +22,9 @@ import javax.inject.Inject;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.party.*;
+import org.estatio.fixture.party.PersonForJohnDoe;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
@@ -39,16 +38,6 @@ public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
                 execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
-                execute(new OrganisationForHelloWorld(), executionContext);
-                execute(new OrganisationForAcme(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
 
             }
         });
@@ -64,7 +53,7 @@ public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
         personJoeDoe = (Person)parties.findParties("Doe, Jo*").get(0);
     }
 
-    @Ignore // have raised EST-200
+    //@Ignore // have raised EST-200
     @Test
     public void cannotModifyName() throws Exception {
         expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");

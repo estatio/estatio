@@ -41,17 +41,7 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
-
                 execute(new OrganisationForHelloWorld(), executionContext);
-                execute(new OrganisationForAcme(), executionContext);
-
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new OrganisationForMediaX(), executionContext);
-                execute(new OrganisationForPoison(), executionContext);
-                execute(new OrganisationForPret(), executionContext);
-                execute(new OrganisationForMiracle(), executionContext);
 
             }
         });
@@ -66,7 +56,7 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
 
     @Before
     public void setUp() throws Exception {
-        partyHelloWorld = parties.findPartyByReference("HELLOWORLD");
+        partyHelloWorld = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
     }
     
     @Test
