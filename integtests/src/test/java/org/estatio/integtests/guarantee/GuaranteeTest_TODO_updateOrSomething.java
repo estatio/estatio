@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class GuaranteeTest_foo extends EstatioIntegrationTest {
+public class GuaranteeTest_TODO_updateOrSomething extends EstatioIntegrationTest {
 
     private Lease lease;
     private Guarantee guarantee;

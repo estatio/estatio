@@ -103,6 +103,8 @@ import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
@@ -113,6 +115,8 @@ import org.apache.isis.applib.annotation.Optional;
 
 @Named("Migration")
 public class Api extends AbstractFactoryAndRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Api.class);
 
     @Override
     public String getId() {
@@ -920,12 +924,13 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("endDate") @Optional LocalDate endDate,
             @Named("terminationDate") @Optional LocalDate terminationDate,
             @Named("guaranteeType") GuaranteeType guaranteeType,
+            @Named("description") @Optional String description,
             @Named("monthsRent") @Optional BigDecimal monthsRent,
             @Named("monthsServiceCharge") @Optional BigDecimal monthsServiceCharge,
             @Named("maximumAmount") @Optional BigDecimal maximumAmount,
             // Transaction
             @Named("transactionDate") @Optional LocalDate transactionDate,
-            @Named("description") @Optional String description,
+            @Named("transactionDescription") @Optional String transactionDescription,
             @Named("amount") @Optional BigDecimal amount) {
         Guarantee guarantee = guarantees.findByReference(reference);
         if (guarantee == null) {
@@ -943,7 +948,7 @@ public class Api extends AbstractFactoryAndRepository {
         guarantee.setTerminationDate(terminationDate);
         FinancialAccountTransaction transaction = financialAccountTransactions.findTransaction(guarantee.getFinancialAccount(), transactionDate, BigInteger.ONE);
         if (transaction == null) {
-            transaction = financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, description, amount);
+            transaction = financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, transactionDescription, amount);
         }
     }
 

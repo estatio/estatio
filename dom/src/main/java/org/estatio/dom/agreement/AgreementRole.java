@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
 
 import com.google.common.base.Function;
@@ -32,6 +35,13 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import org.datanucleus.NucleusContext;
+import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -48,20 +58,13 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
-import org.estatio.dom.EstatioMutableObject;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
-
-@javax.jdo.annotations.PersistenceCapable(identityType=IdentityType.DATASTORE)
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
-        strategy=IdGeneratorStrategy.NATIVE, 
-        column="id")
+        strategy = IdGeneratorStrategy.NATIVE,
+        column = "id")
 @javax.jdo.annotations.Version(
-        strategy = VersionStrategy.VERSION_NUMBER, 
+        strategy = VersionStrategy.VERSION_NUMBER,
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
@@ -89,20 +92,23 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "&& type == :type "
                         + "&& (startDate == null || startDate < :date) "
                         + "&& (endDate == null || endDate > :date) ")
-        })
+})
+@Unique(
+        name = "AgreementRole_agreement_party_type_startDate_UNQ",
+        members = { "agreement", "party", "type", "startDate" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public class AgreementRole extends EstatioMutableObject<AgreementRole> 
+public class AgreementRole extends EstatioMutableObject<AgreementRole>
         implements WithIntervalContiguous<AgreementRole> {
 
-    private final WithIntervalContiguous.Helper<AgreementRole> helper = 
-                new WithIntervalContiguous.Helper<AgreementRole>(this);
+    
+    private final WithIntervalContiguous.Helper<AgreementRole> helper =
+            new WithIntervalContiguous.Helper<AgreementRole>(this);
 
     // //////////////////////////////////////
 
     public AgreementRole() {
         super("agreement, startDate desc nullsLast, type, party");
     }
-
 
     // //////////////////////////////////////
 
@@ -138,7 +144,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
 
     private AgreementRoleType type;
 
-    @javax.jdo.annotations.Persistent(defaultFetchGroup="true")
+    @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1")
     @Disabled
@@ -342,7 +348,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent(mappedBy = "role")
-    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels = 
+    private SortedSet<AgreementRoleCommunicationChannel> communicationChannels =
             new TreeSet<AgreementRoleCommunicationChannel>();
 
     @Disabled
@@ -375,7 +381,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
     }
 
     public CommunicationChannel default1AddCommunicationChannel() {
-        final SortedSet<CommunicationChannel> partyChannels = 
+        final SortedSet<CommunicationChannel> partyChannels =
                 communicationChannelContributions.communicationChannels(getParty());
         return !partyChannels.isEmpty() ? partyChannels.first() : null;
     }
@@ -391,7 +397,7 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
         if (!Sets.filter(getCommunicationChannels(), type.matchingCommunicationChannel()).isEmpty()) {
             return "Add a successor/predecessor from existing communication channel";
         }
-        final SortedSet<CommunicationChannel> partyChannels = 
+        final SortedSet<CommunicationChannel> partyChannels =
                 communicationChannelContributions.communicationChannels(getParty());
         if (!partyChannels.contains(communicationChannel)) {
             return "Communication channel must be one of those of this party";
@@ -418,45 +424,49 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
     // //////////////////////////////////////
 
     public final static class Predicates {
-        
-        private Predicates(){}
-        
+
+        private Predicates() {
+        }
+
         /**
-         * A {@link Predicate} that tests whether the role's {@link AgreementRole#getType() type}
-         * is the specified value.
+         * A {@link Predicate} that tests whether the role's
+         * {@link AgreementRole#getType() type} is the specified value.
          */
         public static Predicate<AgreementRole> whetherTypeIs(final AgreementRoleType art) {
-            return new Predicate<AgreementRole>(){
+            return new Predicate<AgreementRole>() {
 
                 @Override
                 public boolean apply(final AgreementRole input) {
                     return input != null && input.getType() == art;
-                }};
+                }
+            };
         }
 
-        
         /**
-         * A {@link Predicate} that tests whether the role's {@link AgreementRole#getAgreement() agreement}'s
+         * A {@link Predicate} that tests whether the role's
+         * {@link AgreementRole#getAgreement() agreement}'s
          * {@link Agreement#getType() type} is the specified value.
          */
         public static Predicate<AgreementRole> whetherAgreementTypeIs(final AgreementType at) {
-            return new Predicate<AgreementRole>(){
-                
+            return new Predicate<AgreementRole>() {
+
                 @Override
                 public boolean apply(final AgreementRole input) {
                     return input != null && input.getAgreement().getType() == at;
-                }};
+                }
+            };
         }
-        
+
     }
-    
 
     public final static class Functions {
-        
-        private Functions(){}
+
+        private Functions() {
+        }
 
         /**
-         * A {@link Function} that obtains the role's {@link AgreementRole#getParty() party} attribute.
+         * A {@link Function} that obtains the role's
+         * {@link AgreementRole#getParty() party} attribute.
          */
         public static <T extends Party> Function<AgreementRole, T> partyOf() {
             return new Function<AgreementRole, T>() {
@@ -468,32 +478,33 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
         }
 
         /**
-         * A {@link Function} that obtains the role's {@link AgreementRole#getAgreement() agreement} attribute.
+         * A {@link Function} that obtains the role's
+         * {@link AgreementRole#getAgreement() agreement} attribute.
          */
         public static <T extends Agreement> Function<AgreementRole, T> agreementOf() {
             return new Function<AgreementRole, T>() {
                 @SuppressWarnings("unchecked")
                 public T apply(final AgreementRole agreementRole) {
-                    return (T) (agreementRole != null ? agreementRole.getAgreement(): null);
+                    return (T) (agreementRole != null ? agreementRole.getAgreement() : null);
                 }
             };
         }
-        
+
         /**
-         * A {@link Function} that obtains the role's {@link AgreementRole#getEffectiveEndDate() effective end date} 
+         * A {@link Function} that obtains the role's
+         * {@link AgreementRole#getEffectiveEndDate() effective end date}
          * attribute.
          */
         public static Function<AgreementRole, LocalDate> effectiveEndDateOf() {
             return new Function<AgreementRole, LocalDate>() {
                 @Override
                 public LocalDate apply(final AgreementRole input) {
-                    return input != null? input.getEffectiveInterval().endDate(): null;
-                }};
+                    return input != null ? input.getEffectiveInterval().endDate() : null;
+                }
+            };
         }
 
     }
-
-    
 
     // //////////////////////////////////////
 

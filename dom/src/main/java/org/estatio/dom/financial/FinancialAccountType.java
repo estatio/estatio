@@ -29,7 +29,7 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
     BANK_ACCOUNT(BankAccount.class),
     BANK_GUARANTEE(FinancialAccount.class),
     GUARANTEE_DEPOSIT(FinancialAccount.class);
-
+    
     private final Class<? extends FinancialAccount> clss;
 
     private FinancialAccountType(final Class<? extends FinancialAccount> clss) {

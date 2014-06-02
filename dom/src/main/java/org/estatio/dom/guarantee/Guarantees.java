@@ -26,14 +26,17 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransaction;
 import org.estatio.dom.financial.FinancialAccountTransactions;
+import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 import org.joda.time.LocalDate;
 
@@ -77,6 +80,13 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
             final @Named("Description") String description,
             final @Named("Maximum amount") BigDecimal maximumAmount
             ) {
+        
+        AgreementRoleType artGuarantee = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE);
+        Party leaseSecondaryParty = lease.getSecondaryParty();
+        
+        AgreementRoleType artGuarantor = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTOR);
+        Party leasePrimaryParty = lease.getPrimaryParty();
+
         Guarantee guarantee = newTransientInstance(Guarantee.class);
         final AgreementType at = agreementTypes.find(GuaranteeConstants.AT_GUARANTEE);
         guarantee.setType(at);
@@ -87,20 +97,25 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
         guarantee.setGuaranteeType(guaranteeType);
         guarantee.setLease(lease);
         guarantee.setMaximumAmount(maximumAmount);
-        persistIfNotAlready(guarantee);
-        guarantee.newRole(
-                agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE),
-                lease.getSecondaryParty(), null, null);
-        guarantee.newRole(
-                agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTOR),
-                lease.getPrimaryParty(), null, null);
 
-        guarantee.setFinancialAccount(
-                financialAccounts.newFinancialAccount(
-                        guaranteeType.getFinancialAccountType(),
-                        reference,
-                        name,
-                        lease.getSecondaryParty()));
+        FinancialAccountType financialAccountType = guaranteeType.getFinancialAccountType();
+        if (financialAccountType != null){
+            FinancialAccount financialAccount = financialAccounts.newFinancialAccount(
+                    financialAccountType,
+                    reference,
+                    name,
+                    leaseSecondaryParty);
+            guarantee.setFinancialAccount(financialAccount);
+        }
+
+        guarantee.newRole(
+                artGuarantee,
+                leaseSecondaryParty, null, null);
+        guarantee.newRole(
+                artGuarantor,
+                leasePrimaryParty, null, null);
+
+        persistIfNotAlready(guarantee);
 
         return guarantee;
     }
