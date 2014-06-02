@@ -37,8 +37,6 @@ public class LeaseTest_assign_INCOMPLETE extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-
                 execute(new LeaseForOxfPoison003(), executionContext);
                 execute(new LeaseForOxfMediaX002(), executionContext);
             }

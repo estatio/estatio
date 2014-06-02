@@ -49,8 +49,6 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-
                 execute(new PersonForLinusTorvalds(), executionContext);
 
                 execute(new PropertyForOxf(), executionContext);

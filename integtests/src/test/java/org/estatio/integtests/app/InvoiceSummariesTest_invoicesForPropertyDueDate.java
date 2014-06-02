@@ -42,8 +42,6 @@ public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioInte
             @Override
             protected void execute(ExecutionContext executionContext) {
 
-                execute(new EstatioBaseLineFixture(), executionContext);
-
                 execute(new InvoiceForOxfPoison003(), executionContext);
                 execute(new InvoiceForKalPoison001(), executionContext);
             }

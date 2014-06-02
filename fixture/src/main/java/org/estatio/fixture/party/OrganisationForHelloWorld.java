@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.fixture.EstatioBaseLineFixture;
+
 public class OrganisationForHelloWorld extends OrganisationAbstract {
 
     public static final String PARTY_REFERENCE = "HELLOWORLD";

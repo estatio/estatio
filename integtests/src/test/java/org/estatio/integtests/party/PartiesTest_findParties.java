@@ -37,8 +37,6 @@ public class PartiesTest_findParties extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-
                 execute(new PersonForJohnDoe(), executionContext);
                 execute(new OrganisationForHelloWorld(), executionContext);
             }
