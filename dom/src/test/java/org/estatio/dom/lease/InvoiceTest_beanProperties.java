@@ -19,13 +19,12 @@
 package org.estatio.dom.lease;
 
 import org.junit.Test;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FixtureDatumFactory;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.currency.Currency;
-import org.estatio.dom.financial.BankMandate;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.party.Party;

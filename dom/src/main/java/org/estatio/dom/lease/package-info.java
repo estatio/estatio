@@ -40,9 +40,9 @@
  *  
  * <p>
  * As already noted, {@link org.estatio.dom.lease.Lease} is a particular (sub)type of 
- * {@link org.estatio.dom.agreement.Agreement}, the other one being {@link org.estatio.dom.financial.BankMandate}.  
+ * {@link org.estatio.dom.agreement.Agreement}, the other one being {@link org.estatio.dom.bankmandate.BankMandate}.  
  * Thus, two parties will often have two related but independent {@link org.estatio.dom.agreement.Agreement}s.  Each 
- * lease {@link org.estatio.dom.lease.Lease#getPaidBy() tracks} the {@link org.estatio.dom.financial.BankMandate} by 
+ * lease {@link org.estatio.dom.lease.Lease#getPaidBy() tracks} the {@link org.estatio.dom.bankmandate.BankMandate} by 
  * which its invoices are paid.
  */
 package org.estatio.dom.lease;

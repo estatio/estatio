@@ -16,12 +16,12 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial;
+package org.estatio.dom.bankmandate;
 
 
-public final class FinancialConstants {
+public final class BankMandateConstants {
 
-    private FinancialConstants() {}
+    private BankMandateConstants() {}
     
     public final static String AT_MANDATE = "Mandate";
     

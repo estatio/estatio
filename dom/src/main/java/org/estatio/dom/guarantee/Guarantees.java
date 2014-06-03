@@ -202,8 +202,8 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
     // //////////////////////////////////////
 
     @PostConstruct
-    @Hidden
-    public void init(Map<String,String> properties) {
+    @Programmatic
+    public void init(Map<String, String> properties) {
         AgreementType agreementType = agreementTypes.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
         agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
         agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);

@@ -25,8 +25,8 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.services.publish.EventPayloadForActionInvocation;
 
+import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.BankMandate;
 
 /**
  * Describes the payload for publishing an {@link BankAccount} using Isis'.

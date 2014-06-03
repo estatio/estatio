@@ -18,19 +18,25 @@
  */
 package org.estatio.integtests.financial;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
+
 import javax.inject.Inject;
-import org.estatio.dom.financial.*;
-import org.estatio.fixture.EstatioBaseLineFixture;
+
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.bankmandate.BankMandates;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest {
 
@@ -57,7 +63,6 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
         // then
         assertThat(mandates.size(), is(1));
     }
-
 
     @Inject
     private FinancialAccounts financialAccounts;

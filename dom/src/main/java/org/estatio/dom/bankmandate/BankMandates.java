@@ -16,10 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial;
+package org.estatio.dom.bankmandate;
 
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -27,12 +39,6 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
-
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.party.Party;
 
 public class BankMandates extends EstatioDomainService<BankMandate> {
 
@@ -59,7 +65,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
             // CHECKSTYLE:ON
             ) {
         BankMandate mandate = newTransientInstance();
-        mandate.setType(agreementTypes.find(FinancialConstants.AT_MANDATE));
+        mandate.setType(agreementTypes.find(BankMandateConstants.AT_MANDATE));
         mandate.setReference(reference);
         mandate.setName(name);
         mandate.setStartDate(startDate);
@@ -67,9 +73,9 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
         mandate.setBankAccount(bankAccount);
         persistIfNotAlready(mandate);
 
-        final AgreementRoleType artCreditor = agreementRoleTypes.findByTitle(FinancialConstants.ART_CREDITOR);
+        final AgreementRoleType artCreditor = agreementRoleTypes.findByTitle(BankMandateConstants.ART_CREDITOR);
         mandate.newRole(artCreditor, creditor, null, null);
-        final AgreementRoleType artDebtor = agreementRoleTypes.findByTitle(FinancialConstants.ART_DEBTOR);
+        final AgreementRoleType artDebtor = agreementRoleTypes.findByTitle(BankMandateConstants.ART_DEBTOR);
         mandate.newRole(artDebtor, debtor, null, null);
         return mandate;
     }
@@ -91,6 +97,17 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
 
     // //////////////////////////////////////
 
+    @PostConstruct
+    @Programmatic
+    public void init(Map<String, String> properties) {
+        AgreementType agreementType = agreementTypes.findOrCreate(BankMandateConstants.AT_MANDATE);
+        agreementRoleTypes.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
+        agreementRoleTypes.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);
+        agreementRoleTypes.findOrCreate(BankMandateConstants.ART_OWNER, agreementType);
+    }
+
+    // //////////////////////////////////////
+
     private AgreementTypes agreementTypes;
 
     public void injectAgreementTypes(final AgreementTypes agreementTypes) {
@@ -102,4 +119,8 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     public void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
         this.agreementRoleTypes = agreementRoleTypes;
     }
+
+    @Inject
+    AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+
 }

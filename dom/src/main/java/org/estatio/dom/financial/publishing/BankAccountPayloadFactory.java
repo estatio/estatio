@@ -25,9 +25,9 @@ import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.PublishedAction.PayloadFactory;
 import org.apache.isis.applib.services.publish.EventPayload;
 
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.BankMandate;
-import org.estatio.dom.financial.BankMandates;
 
 public class BankAccountPayloadFactory implements PayloadFactory {
 

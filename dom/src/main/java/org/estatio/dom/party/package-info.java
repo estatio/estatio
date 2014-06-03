@@ -4,7 +4,7 @@
  * 
  * <p>
  * Any party (though typically organisations) can have {@link org.estatio.dom.party.Party#getBankMandates() associated}
- * {@link org.estatio.dom.financial.BankMandate BankMandate}s. 
+ * {@link org.estatio.dom.bankmandate.BankMandate BankMandate}s. 
  * 
  * <p>
  * This module has few dependencies on other modules; rather other modules depend upon it.  Isis' contributed actions

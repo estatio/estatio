@@ -18,7 +18,6 @@
  */
 package org.estatio.fixture;
 
-import org.estatio.fixture.agreement.refdata.AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData;
 import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
 import org.estatio.fixture.currency.refdata.CurrenciesRefData;
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
@@ -38,7 +37,6 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
         execute("currencies", new CurrenciesRefData(), executionContext);
         execute("countries", new CountriesAndStatesRefData(), executionContext);
         execute("italy-refdata", new EstatioRefDataForItalySetupFixture(), executionContext);
-        execute("agreement-refdata", new AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData(), executionContext);
         execute("tax-refdata", new TaxesAndTaxRatesRefData(), executionContext);
         execute("charge-refdata", new ChargeAndChargeGroupRefData(), executionContext);
         execute("index-refdata", new IndexAndIndexBaseAndIndexValueRefData(), executionContext);

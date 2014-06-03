@@ -24,16 +24,16 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Title;
-
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
+
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)

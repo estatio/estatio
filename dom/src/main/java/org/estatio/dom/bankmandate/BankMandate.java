@@ -16,17 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.financial;
+package org.estatio.dom.bankmandate;
 
 import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.apache.isis.applib.annotation.Optional;
-
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Party;
+
+import org.apache.isis.applib.annotation.Optional;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -83,11 +86,11 @@ public class BankMandate extends Agreement {
     // //////////////////////////////////////
 
     public Party getPrimaryParty() {
-        return findCurrentOrMostRecentParty(FinancialConstants.ART_CREDITOR);
+        return findCurrentOrMostRecentParty(BankMandateConstants.ART_CREDITOR);
     }
 
     public Party getSecondaryParty() {
-        return findCurrentOrMostRecentParty(FinancialConstants.ART_DEBTOR);
+        return findCurrentOrMostRecentParty(BankMandateConstants.ART_DEBTOR);
     }
 
     // //////////////////////////////////////

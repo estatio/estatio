@@ -50,12 +50,12 @@ import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.bankmandate.BankMandates;
+import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.BankMandate;
-import org.estatio.dom.financial.BankMandates;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.financial.FinancialConstants;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
@@ -129,10 +129,10 @@ public class LeaseTest_newMandate {
         });
 
         debtorAgreementRoleType = new AgreementRoleType();
-        debtorAgreementRoleType.setTitle(FinancialConstants.ART_DEBTOR);
+        debtorAgreementRoleType.setTitle(BankMandateConstants.ART_DEBTOR);
         context.checking(new Expectations() {
             {
-                allowing(mockAgreementRoleTypes).findByTitle(FinancialConstants.ART_DEBTOR);
+                allowing(mockAgreementRoleTypes).findByTitle(BankMandateConstants.ART_DEBTOR);
                 will(returnValue(debtorAgreementRoleType));
             }
         });
@@ -144,19 +144,19 @@ public class LeaseTest_newMandate {
         });
 
         creditorAgreementRoleType = new AgreementRoleType();
-        creditorAgreementRoleType.setTitle(FinancialConstants.ART_CREDITOR);
+        creditorAgreementRoleType.setTitle(BankMandateConstants.ART_CREDITOR);
         context.checking(new Expectations() {
             {
-                allowing(mockAgreementRoleTypes).findByTitle(FinancialConstants.ART_CREDITOR);
+                allowing(mockAgreementRoleTypes).findByTitle(BankMandateConstants.ART_CREDITOR);
                 will(returnValue(creditorAgreementRoleType));
             }
         });
 
         bankMandateAgreementType = new AgreementType();
-        bankMandateAgreementType.setTitle(FinancialConstants.AT_MANDATE);
+        bankMandateAgreementType.setTitle(BankMandateConstants.AT_MANDATE);
         context.checking(new Expectations() {
             {
-                allowing(mockAgreementTypes).find(FinancialConstants.AT_MANDATE);
+                allowing(mockAgreementTypes).find(BankMandateConstants.AT_MANDATE);
                 will(returnValue(bankMandateAgreementType));
             }
         });

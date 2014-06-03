@@ -19,8 +19,15 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
@@ -35,8 +42,18 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 
 public class Leases extends EstatioDomainService<Lease> {
@@ -140,7 +157,7 @@ public class Leases extends EstatioDomainService<Lease> {
         }
         return null;
     }
-    
+
     // //////////////////////////////////////
 
     @ActionSemantics(Of.SAFE)
@@ -233,22 +250,29 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
+    @PostConstruct
+    @Programmatic
+    public void init(Map<String, String> properties) {
+        AgreementType agreementType = agreementTypes.findOrCreate(LeaseConstants.AT_LEASE);
+        agreementRoleTypes.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
+        agreementRoleTypes.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);
+        agreementRoleTypes.findOrCreate(LeaseConstants.ART_MANAGER, agreementType);
+        agreementRoleCommunicationChannelTypes.findOrCreate(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS, agreementType);
+        agreementRoleCommunicationChannelTypes.findOrCreate(LeaseConstants.ARCCT_INVOICE_ADDRESS, agreementType);
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
     private FixedAssets fixedAssets;
 
-    public final void injectFixedAssets(final FixedAssets fixedAssets) {
-        this.fixedAssets = fixedAssets;
-    }
-
+    @Inject
     private AgreementTypes agreementTypes;
 
-    public final void injectAgreementTypes(final AgreementTypes agreementTypes) {
-        this.agreementTypes = agreementTypes;
-    }
-
+    @Inject
     private AgreementRoleTypes agreementRoleTypes;
 
-    public final void injectAgreementRoleTypes(final AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
-    }
+    @Inject
+    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
 
 }

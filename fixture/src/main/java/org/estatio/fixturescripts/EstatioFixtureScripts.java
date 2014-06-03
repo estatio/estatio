@@ -18,31 +18,38 @@
  */
 package org.estatio.fixturescripts;
 
-import java.math.BigInteger;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.fixture.EstatioDemoFixture;
-import org.estatio.fixture.agreement.refdata.AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData;
 import org.estatio.fixture.currency.refdata.CurrenciesRefData;
 import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
 import org.estatio.fixture.link.refdata.LinksRefData;
 import org.estatio.services.settings.EstatioSettingsService;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.fixturescripts.*;
 
-public class EstatioFixtureScripts extends FixtureScripts{
+import org.apache.isis.applib.annotation.CssClass;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.fixturescripts.FixtureResult;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
+
+public class EstatioFixtureScripts extends FixtureScripts {
 
     public EstatioFixtureScripts() {
         super("org.estatio");
     }
 
-    @MemberOrder(name="Administration", sequence = "9")
+    @MemberOrder(name = "Administration", sequence = "9")
     @Override
     public List<FixtureResult> runFixtureScript(
             final FixtureScript fixtureScript,
@@ -55,9 +62,9 @@ public class EstatioFixtureScripts extends FixtureScripts{
         return super.choices0RunFixtureScript();
     }
 
-// //////////////////////////////////////
+    // //////////////////////////////////////
 
-    @MemberOrder(name="Administration", sequence = "9.1")
+    @MemberOrder(name = "Administration", sequence = "9.1")
     @Prototype
     public List<FixtureResult> createRetroInvoicesForAllProperties(
             final @Named("Start due date") LocalDate startDueDate,
@@ -68,7 +75,7 @@ public class EstatioFixtureScripts extends FixtureScripts{
         return executionContext.getResults();
     }
 
-    @MemberOrder(name="Administration", sequence = "9.2")
+    @MemberOrder(name = "Administration", sequence = "9.2")
     @Prototype
     public List<FixtureResult> createRetroInvoicesForProperty(
             final Property property,
@@ -80,8 +87,9 @@ public class EstatioFixtureScripts extends FixtureScripts{
         return executionContext.getResults();
     }
 
-    @MemberOrder(name="Administration", sequence = "9.3")
-    @CssClass("danger") // application.css
+    @MemberOrder(name = "Administration", sequence = "9.3")
+    @CssClass("danger")
+    // application.css
     public List<FixtureResult> createRetroInvoicesForLease(
             final Lease lease,
             final @Named("Start due date") LocalDate startDueDate,
@@ -91,18 +99,18 @@ public class EstatioFixtureScripts extends FixtureScripts{
         creator.createLease(lease, startDueDate, nextDueDate, executionContext);
         return executionContext.getResults();
     }
+
     public boolean hideCreateRetroInvoicesForLease() {
         return !getContainer().getUser().hasRole("superuser_role");
     }
 
-
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(name="Administration", sequence = "3")
+    @MemberOrder(name = "Administration", sequence = "3")
     public List<FixtureResult> installDemoFixtures() {
         return runFixtureScript(new EstatioDemoFixture(), null);
-        //return "Demo fixtures successfully installed";
+        // return "Demo fixtures successfully installed";
     }
 
     public String disableInstallDemoFixtures() {
@@ -112,10 +120,10 @@ public class EstatioFixtureScripts extends FixtureScripts{
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(name="Administration", sequence = "4")
+    @MemberOrder(name = "Administration", sequence = "4")
     public List<FixtureResult> installIndexFixture() {
         return runFixtureScript(new IndexAndIndexBaseAndIndexValueRefData(), null);
-        //return "Index fixture successfully installed";
+        // return "Index fixture successfully installed";
     }
 
     public String disableInstallIndexFixture() {
@@ -125,42 +133,20 @@ public class EstatioFixtureScripts extends FixtureScripts{
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(name="Administration", sequence = "4")
+    @MemberOrder(name = "Administration", sequence = "4")
     public List<FixtureResult> installLinksFixture() {
         return runFixtureScript(new LinksRefData(), null);
-        //return "Links fixture successfully installed";
+        // return "Links fixture successfully installed";
     }
 
     // //////////////////////////////////////
 
     @Prototype
-    @MemberOrder(name="Administration", sequence = "9")
-    public List<FixtureResult> installConstants() {
-        return runFixtureScript(new FixtureScript() {
-            @Override
-            protected void execute(ExecutionContext executionContext) {
-                execute(new AgreementTypesAndRoleTypesAndCommunicationChannelTypesRefData(), executionContext);
-                execute(new CurrenciesRefData(), executionContext);
-                execute(new SimpleFixtureScript() {
-                    @Override
-                    protected void execute(ExecutionContext executionContext) {
-                        invoices.createCollectionNumberNumerator("%08d", BigInteger.ZERO);
-                    }
-                }, executionContext);
-            }
-        }, null);
-        //return "Constants successfully installed";
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @MemberOrder(name="Administration", sequence = "9")
+    @MemberOrder(name = "Administration", sequence = "9")
     public List<FixtureResult> installCurrencies() {
         return runFixtureScript(new CurrenciesRefData(), null);
-        //return "Constants successfully installed";
+        // return "Constants successfully installed";
     }
-
 
     // //////////////////////////////////////
 
