@@ -41,6 +41,8 @@ public class LeasesTest_findExpireInDateRange extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new LeaseForOxfTopModel001(), executionContext);
                 execute(new LeaseForOxfMediaX002(), executionContext);
                 execute(new LeaseForOxfPoison003(), executionContext);

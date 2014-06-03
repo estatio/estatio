@@ -25,7 +25,6 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
-import org.estatio.fixture.EstatioBaseLineFixture;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public abstract class PersonAbstract extends FixtureScript {
@@ -34,8 +33,6 @@ public abstract class PersonAbstract extends FixtureScript {
     protected abstract void execute(ExecutionContext executionContext);
 
     protected Party createPerson(String reference, String initials, String firstName, String lastName, ExecutionContext executionContext) {
-
-        execute(new EstatioBaseLineFixture(), executionContext);
 
         Party party = persons.newPerson(reference, initials, firstName, lastName);
         return executionContext.add(this, party.getReference(), party);

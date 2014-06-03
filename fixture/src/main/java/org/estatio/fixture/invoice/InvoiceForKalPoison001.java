@@ -18,8 +18,9 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.fixture.lease.LeaseForKalPoison001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.party.OrganisationForAcme;
 import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
@@ -49,11 +50,11 @@ public class InvoiceForKalPoison001 extends InvoiceAbstract {
 
         // prereqs
         execute(new OrganisationForAcme(), executionContext);
-        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
+        execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
         // exec
         createInvoiceAndInvoiceItems(
-                SELLER_PARTY, BUYER_PARTY, LEASE,
+                LeaseItemType.RENT, SELLER_PARTY, BUYER_PARTY, LEASE,
                 "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)),
                 executionContext);
     }

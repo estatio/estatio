@@ -21,13 +21,15 @@ package org.estatio.fixture.financial;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.party.OrganisationForAcme;
 
-public class BankAccountAndMandateForAcme extends BankAccountAndMandateAbstract {
+public class BankAccountForAcme extends BankAccountAbstract {
 
-    public BankAccountAndMandateForAcme() {
+    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744433";
+
+    public BankAccountForAcme() {
         this(null, null);
     }
 
-    public BankAccountAndMandateForAcme(String friendlyName, String localName) {
+    public BankAccountForAcme(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -39,11 +41,6 @@ public class BankAccountAndMandateForAcme extends BankAccountAndMandateAbstract 
         execute(new PropertyForKal(), executionContext);
 
         // exec
-        createBankAccountAndMandate(
-                OrganisationForAcme.PARTY_REFERENCE,
-                "NL31ABNA0580744433",
-                null,
-                PropertyForKal.PROPERTY_REFERENCE,
-                executionContext);
+        createBankAccount(OrganisationForAcme.PARTY_REFERENCE, BANK_ACCOUNT_REF, PropertyForKal.PROPERTY_REFERENCE, executionContext);
     }
 }

@@ -18,25 +18,25 @@
  */
 package org.estatio.integtests.financial;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.financial.BankAccountAndMandateForPoison;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
+import org.estatio.fixture.financial.BankAccountForPoison;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest {
 
@@ -45,7 +45,10 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new BankAccountAndMandateForTopModel(), executionContext);
+                execute(new BankAccountAndMandateForPoison(), executionContext);
             }
         });
     }
@@ -53,7 +56,7 @@ public class BankMandatesTest_findBankMandatesFor extends EstatioIntegrationTest
     @Test
     public void forAccountWithMandate() {
         // given
-        FinancialAccount account = financialAccounts.findAccountByReference(BankAccountAndMandateForTopModel.BANK_ACCOUNT_REF);
+        FinancialAccount account = financialAccounts.findAccountByReference(BankAccountForPoison.BANK_ACCOUNT_REF);
         Assert.assertThat(account instanceof BankAccount, is(true));
         final BankAccount bankAccount = (BankAccount) account;
 

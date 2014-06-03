@@ -54,6 +54,8 @@ public class InvoiceTest_newItem extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
             }
         });

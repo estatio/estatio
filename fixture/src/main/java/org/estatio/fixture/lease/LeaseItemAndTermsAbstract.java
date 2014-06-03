@@ -62,17 +62,11 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     // //////////////////////////////////////
 
-    protected LeaseTerm createLeaseTermForRent(
-            final Lease lease,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            final BigDecimal baseValue,
-            final LocalDate baseIndexStartDate,
-            final LocalDate nextIndexStartDate,
-            final LocalDate effectiveDate,
-            final String indexReference,
-            final ExecutionContext executionContext) {
-
+    protected LeaseTerm createLeaseItemIfRequiredAndLeaseTermForRent(
+            Lease lease, LocalDate startDate, LocalDate endDate,
+            BigDecimal baseValue, LocalDate baseIndexStartDate,
+            LocalDate nextIndexStartDate, LocalDate effectiveDate, String indexReference,
+            ExecutionContext executionContext) {
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, executionContext);
 
         LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm(startDate, endDate);
@@ -89,18 +83,21 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     // //////////////////////////////////////
 
-    protected LeaseTerm createLeaseTermForServiceCharge(
+    protected LeaseTerm createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
             final Lease lease,
             final LocalDate startDate,
             final LocalDate endDate,
             final BigDecimal budgetedValue,
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "SERVICE_CHARGE", LeaseItemType.SERVICE_CHARGE, InvoicingFrequency.QUARTERLY_IN_ADVANCE, executionContext);
-        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItem.newTerm(startDate, endDate);
+        LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
+                lease, "SERVICE_CHARGE",
+                LeaseItemType.SERVICE_CHARGE,
+                InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                executionContext);
 
+        LeaseTermForServiceCharge leaseTerm = (LeaseTermForServiceCharge) leaseItemServiceCharge.newTerm(startDate, endDate);
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
-
         leaseTerm.setBudgetedValue(budgetedValue);
 
         return executionContext.add(this, leaseTerm);
@@ -108,7 +105,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     // //////////////////////////////////////
 
-    protected LeaseTerm createLeaseTermForTurnoverRent(
+    protected LeaseTerm createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
             final Lease lease,
             final LocalDate startDate,
             final LocalDate endDate,
@@ -126,7 +123,7 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
 
     // //////////////////////////////////////
 
-    protected LeaseTerm createLeaseTermForDiscount(
+    protected LeaseTerm createLeaseItemIfRequiredAndLeaseTermForDiscount(
             final Lease lease,
             final LocalDate startDate,
             final LocalDate endDate,

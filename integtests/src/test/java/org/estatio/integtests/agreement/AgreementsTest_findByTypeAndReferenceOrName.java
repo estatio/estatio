@@ -24,6 +24,7 @@ import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.agreement.Agreements;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
@@ -41,6 +42,7 @@ public class AgreementsTest_findByTypeAndReferenceOrName extends EstatioIntegrat
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
 
                 // 5 oxford leases, 1 kal
                 execute(new LeaseForOxfTopModel001(), executionContext);

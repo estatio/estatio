@@ -39,26 +39,26 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         execute(new PersonForLinusTorvalds(), executionContext);
 
-        execute(new BankAccountAndMandateForAcme(), executionContext);
+        execute(new BankAccountForAcme(), executionContext);
 
-        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
+        execute(new BankAccountForHelloWorld(), executionContext);
 
         execute(new BankAccountAndMandateForTopModel(), executionContext);
         execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
 
-        execute(new BankAccountAndMandateForMediaX(), executionContext);
+        execute(new BankAccountForMediaX(), executionContext);
         execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
-        execute(new BankAccountAndMandateForPret(), executionContext);
+        execute(new BankAccountForPret(), executionContext);
         execute(new LeaseForOxfPret004(), executionContext);
 
-        execute(new BankAccountAndMandateForMiracle(), executionContext);
+        execute(new BankAccountForMiracle(), executionContext);
         execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
 
         execute(new BankAccountAndMandateForPoison(), executionContext);
         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
         execute(new InvoiceForOxfPoison003(), executionContext);
-        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
+        execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
         execute(new InvoiceForKalPoison001(), executionContext);
         
         execute(new GuaranteeForOxfTopModel001(), executionContext);

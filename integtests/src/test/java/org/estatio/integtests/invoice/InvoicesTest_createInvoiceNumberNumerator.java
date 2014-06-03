@@ -46,6 +46,8 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
             }

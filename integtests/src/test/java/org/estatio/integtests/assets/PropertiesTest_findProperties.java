@@ -25,7 +25,6 @@ import org.estatio.dom.asset.Property;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +41,8 @@ public class PropertiesTest_findProperties extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
             }

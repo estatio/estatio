@@ -18,16 +18,18 @@
  */
 package org.estatio.fixture.financial;
 
-import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
+import org.estatio.fixture.party.OrganisationForMediaX;
 
-public class BankAccountAndMandateForHelloWorld extends BankAccountAndMandateAbstract {
+public class BankAccountForMediaX extends BankAccountAbstract {
 
-    public BankAccountAndMandateForHelloWorld() {
+    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744436";
+
+    public BankAccountForMediaX() {
         this(null, null);
     }
 
-    public BankAccountAndMandateForHelloWorld(String friendlyName, String localName) {
+    public BankAccountForMediaX(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -35,16 +37,10 @@ public class BankAccountAndMandateForHelloWorld extends BankAccountAndMandateAbs
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForHelloWorld(), executionContext);
-        execute(new PropertyForOxf(), executionContext);
+        execute(new LeaseForOxfMediaX002(), executionContext);
 
         // exec
-        createBankAccountAndMandate(
-                OrganisationForHelloWorld.PARTY_REFERENCE,
-                "NL31ABNA0580744434",
-                null,
-                PropertyForOxf.PROPERTY_REFERENCE,
-                executionContext);
+        createBankAccount(OrganisationForMediaX.PARTY_REFERENCE, BANK_ACCOUNT_REF, null, executionContext);
     }
 
 }

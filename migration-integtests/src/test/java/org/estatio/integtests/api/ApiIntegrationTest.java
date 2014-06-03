@@ -81,11 +81,11 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
                         execute(new OrganisationForHelloWorld(), executionContext);
                         execute(new PropertyForOxf(), executionContext);
-                        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
+                        execute(new BankAccountForHelloWorld(), executionContext);
 
                         execute(new OrganisationForAcme(), executionContext);
                         execute(new PropertyForKal(), executionContext);
-                        execute(new BankAccountAndMandateForAcme(), executionContext);
+                        execute(new BankAccountForAcme(), executionContext);
 
 
                         execute(new OrganisationForTopModel(), executionContext);
@@ -94,22 +94,22 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
 
                         execute(new OrganisationForMediaX(), executionContext);
                         execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-                        execute(new BankAccountAndMandateForMediaX(), executionContext);
+                        execute(new BankAccountForMediaX(), executionContext);
 
                         execute(new OrganisationForPoison(), executionContext);
                         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
+                        execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
                         execute(new BankAccountAndMandateForPoison(), executionContext);
                         execute(new InvoiceForOxfPoison003(), executionContext);
                         execute(new InvoiceForKalPoison001(), executionContext);
 
                         execute(new OrganisationForPret(), executionContext);
                         execute(new LeaseForOxfPret004(), executionContext);
-                        execute(new BankAccountAndMandateForPret(), executionContext);
+                        execute(new BankAccountForPret(), executionContext);
 
                         execute(new OrganisationForMiracle(), executionContext);
                         execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-                        execute(new BankAccountAndMandateForMiracle(), executionContext);
+                        execute(new BankAccountForMiracle(), executionContext);
                     }
                 }
         );

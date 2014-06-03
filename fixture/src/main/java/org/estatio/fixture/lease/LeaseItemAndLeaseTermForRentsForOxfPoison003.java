@@ -18,39 +18,39 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.Lease;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseItemAndTermsForOxfMediax002 extends LeaseItemAndTermsAbstract {
+public class LeaseItemAndLeaseTermForRentsForOxfPoison003 extends LeaseItemAndTermsAbstract {
 
     @Override
-    protected void execute(ExecutionContext executionContext) {
+    protected void execute(ExecutionContext fixtureResults) {
+        createLeaseTermsForOxfPoison003(fixtureResults);
+    }
+
+    private void createLeaseTermsForOxfPoison003(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfMediaX002(), executionContext);
+        execute(new LeaseForOxfPoison003(), executionContext);
 
         // exec
-        Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
-
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, executionContext);
+        Lease lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
 
         createLeaseItemIfRequiredAndLeaseTermForRent(
-                lease, lease.getStartDate(), null,
-                bd(20000),
-                ld(2008, 1, 1), ld(2009, 1, 1), ld(2009, 4, 1),
+                lease,
+                lease.getStartDate(), null,
+                bd(87300),
+                null, null, null,
                 "ISTAT-FOI",
                 executionContext);
-        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
+        createLeaseItemIfRequiredAndLeaseTermForRent(
                 lease,
-                lease.getStartDate(), null,
-                bd(6000),
-                executionContext);
-        createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
-                lease,
-                lease.getStartDate(), null,
-                "7",
+                lease.getStartDate().plusYears(1), null,
+                bd(87300),
+                ld(2011, 1, 1), ld(2012, 1, 1), ld(2012, 4, 1),
+                "ISTAT-FOI",
                 executionContext);
     }
 

@@ -37,6 +37,8 @@ public class FixedAssetsTest_matchAssetsByReferenceOrName extends EstatioIntegra
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
             }

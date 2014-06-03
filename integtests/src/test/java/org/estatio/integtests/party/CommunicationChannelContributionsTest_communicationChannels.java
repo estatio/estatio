@@ -39,6 +39,8 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new OrganisationForHelloWorld(), executionContext);
             }
         });

@@ -41,6 +41,8 @@ public class InvoiceItemsForLeaseTest_findByLeaseAndInvoiceStatus extends Estati
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new InvoiceForOxfPoison003(), executionContext);
             }
         });

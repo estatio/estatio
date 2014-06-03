@@ -40,7 +40,7 @@ import org.apache.isis.applib.annotation.Optional;
         @javax.jdo.annotations.Query(
                 name = "findBankMandatesFor", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.financial.BankMandate "
+                        + "FROM org.estatio.dom.bankmandate.BankMandate "
                         + "WHERE bankAccount == :bankAccount")
 })
 public class BankMandate extends Agreement {

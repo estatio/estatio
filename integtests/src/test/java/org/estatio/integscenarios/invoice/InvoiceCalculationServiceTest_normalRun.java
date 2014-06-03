@@ -66,7 +66,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
                 execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
                 execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
+                execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
                 execute(new LeaseForOxfPret004(), executionContext);
 

@@ -37,6 +37,8 @@ public class FixedAssetRolesTest_findRole extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new PropertyForOxf(), executionContext);
             }
         });

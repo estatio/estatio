@@ -16,25 +16,31 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.fixture.lease;
+package org.estatio.fixture.financial;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.party.OrganisationForPret;
 
-import static org.estatio.integtests.VT.bd;
+public class BankAccountForPret extends BankAccountAbstract {
 
-public class LeaseItemAndTermsForKalPoison001 extends LeaseItemAndTermsAbstract {
+    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744438";
+
+    public BankAccountForPret() {
+        this(null, null);
+    }
+
+    public BankAccountForPret(String friendlyName, String localName) {
+        super(friendlyName, localName);
+    }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForKalPoison001(), executionContext);
+        execute(new LeaseForOxfPret004(), executionContext);
 
         // exec
-        Lease lease = leases.findLeaseByReference(LeaseForKalPoison001.LEASE_REFERENCE);
-        createLeaseTermForRent(
-                lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI",
-                executionContext);
+        createBankAccount(OrganisationForPret.PARTY_REFERENCE, BANK_ACCOUNT_REF, null, executionContext);
     }
 
 }

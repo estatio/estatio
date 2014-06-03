@@ -28,7 +28,7 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.financial.BankAccountAndMandateForHelloWorld;
+import org.estatio.fixture.financial.BankAccountForHelloWorld;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
@@ -45,7 +45,9 @@ public class FinancialAccountTest_getOwner extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new BankAccountAndMandateForHelloWorld(), executionContext);
+                execute(new EstatioBaseLineFixture(), executionContext);
+
+                execute(new BankAccountForHelloWorld(), executionContext);
             }
         });
     }

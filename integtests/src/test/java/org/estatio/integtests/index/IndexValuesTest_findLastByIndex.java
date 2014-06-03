@@ -19,7 +19,6 @@
 package org.estatio.integtests.index;
 
 import javax.inject.Inject;
-
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValue;
 import org.estatio.dom.index.IndexValues;

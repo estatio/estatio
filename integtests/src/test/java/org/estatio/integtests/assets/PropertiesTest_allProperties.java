@@ -40,6 +40,8 @@ public class PropertiesTest_allProperties extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new PropertyForOxf(), executionContext);
                 execute(new PropertyForKal(), executionContext);
             }

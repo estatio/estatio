@@ -28,7 +28,6 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
-import org.estatio.fixture.EstatioBaseLineFixture;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.commons.ensure.Ensure;
 
@@ -43,8 +42,6 @@ public abstract class OrganisationAbstract extends FixtureScript {
     protected abstract void execute(ExecutionContext executionContext);
 
     protected Party createOrganisation(String input, ExecutionContext executionContext) {
-
-        execute(new EstatioBaseLineFixture(), executionContext);
 
         String[] values = input.split(";");
         Party party = organisations.newOrganisation(values[0], values[1]);

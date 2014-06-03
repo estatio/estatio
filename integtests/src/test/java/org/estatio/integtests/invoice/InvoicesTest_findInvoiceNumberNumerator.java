@@ -24,10 +24,7 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.PersonForLinusTorvalds;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,6 +38,8 @@ public class InvoicesTest_findInvoiceNumberNumerator extends EstatioIntegrationT
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new PropertyForOxf(), executionContext);
             }
         });

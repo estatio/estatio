@@ -40,6 +40,8 @@ public class LeaseTermTest_approve extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
             }
         });

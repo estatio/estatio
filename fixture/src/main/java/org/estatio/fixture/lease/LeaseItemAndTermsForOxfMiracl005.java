@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.*;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
@@ -38,21 +38,33 @@ public class LeaseItemAndTermsForOxfMiracl005 extends LeaseItemAndTermsAbstract 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
 
-        createLeaseTermForRent(
-                lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI",
+        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, executionContext);
+
+        createLeaseItemIfRequiredAndLeaseTermForRent(
+                lease, lease.getStartDate(), null,
+                bd(150000),
+                null, null, null,
+                "ISTAT-FOI",
                 executionContext);
-        createLeaseTermForRent(
-                lease, ld(2015, 1, 1), null, null, ld(2013, 11, 1), ld(2014, 12, 1), null, "ISTAT-FOI",
+        createLeaseItemIfRequiredAndLeaseTermForRent(
+                lease, ld(2015, 1, 1), null,
+                null,
+                ld(2013, 11, 1), ld(2014, 12, 1), null,
+                "ISTAT-FOI",
                 executionContext);
 
-        createLeaseTermForServiceCharge(
-                lease, lease.getStartDate(), null, bd(12400),
+        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
+                lease,
+                lease.getStartDate(), null,
+                bd(12400),
                 executionContext);
-        createLeaseTermForServiceCharge(
-                lease, ld(2014, 1, 1), null, bd(13000),
+        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
+                lease,
+                ld(2014, 1, 1), null,
+                bd(13000),
                 executionContext);
 
-        createLeaseTermForTurnoverRent(
+        createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
                 lease, lease.getStartDate(), null, "7",
                 executionContext);
 

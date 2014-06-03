@@ -19,15 +19,12 @@
 package org.estatio.fixture.financial;
 
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandates;
@@ -37,7 +34,6 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
@@ -48,39 +44,34 @@ public abstract class BankAccountAndMandateAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected void createBankAccountAndMandate(String partyStr, String bankAccountRef, Integer sequence, String propertyRef, ExecutionContext executionContext) {
+    protected void createBankMandate(String bankAccountRef, Integer sequence, ExecutionContext executionContext) {
 
-        Party party = parties.findPartyByReference(partyStr);
-        AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
+        final BankAccount bankAccount = (BankAccount) financialAccounts.findAccountByReference(bankAccountRef);
 
-        BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
-        executionContext.add(this, bankAccount.getReference(), bankAccount);
-        if (propertyRef != null) {
-            final Property property = properties.findPropertyByReference(propertyRef);
-            fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);
-        }
+        final AgreementRoleType agreementRoleType = agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT);
 
-        if (sequence != null) {
-            List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(party, agreementRoleType, ld(2013, 10, 1));
-            Lease lease = (Lease) roles.get(0).getAgreement();
-            final BankMandate bankMandate = bankMandates.newBankMandate(
-                    partyStr + sequence.toString(),
-                    partyStr,
-                    lease.getStartDate(),
-                    lease.getEndDate(),
-                    lease.getSecondaryParty(),
-                    lease.getPrimaryParty(),
-                    bankAccount
-            );
-            executionContext.add(this, bankMandate.getReference(), bankMandate);
-        }
+        final Party party = bankAccount.getOwner();
+        final String partyRef = party.getReference();
 
+        final List<AgreementRole> roles = agreementRoles.findByPartyAndTypeAndContainsDate(party, agreementRoleType, ld(2013, 10, 1));
+        final Lease lease = (Lease) roles.get(0).getAgreement();
+
+        final BankMandate bankMandate = bankMandates.newBankMandate(
+                partyRef + sequence.toString(),
+                partyRef,
+                lease.getStartDate(),
+                lease.getEndDate(),
+                lease.getSecondaryParty(),
+                lease.getPrimaryParty(),
+                bankAccount);
+        executionContext.add(this, bankMandate.getReference(), bankMandate);
     }
+
 
     // //////////////////////////////////////
 
     @Inject
-    private FinancialAccounts financialAccounts;
+    FinancialAccounts financialAccounts;
 
     @Inject
     private Parties parties;

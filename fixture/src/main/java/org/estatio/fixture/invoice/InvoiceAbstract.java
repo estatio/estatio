@@ -46,7 +46,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected void createInvoiceAndInvoiceItems(String sellerStr, String buyerStr, String leaseStr, String currencyStr, LocalDate startDate, LocalDateInterval interval, ExecutionContext executionContext) {
+    protected void createInvoiceAndInvoiceItems(LeaseItemType leaseItemType, String sellerStr, String buyerStr, String leaseStr, String currencyStr, LocalDate startDate, LocalDateInterval interval, ExecutionContext executionContext) {
 
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);
@@ -58,7 +58,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
 
         executionContext.add(this, invoice);
 
-        final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(LeaseItemType.RENT).getTerms();
+        final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(leaseItemType).getTerms();
         for (final LeaseTerm term : terms) {
             InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, interval, startDate, null);
             item.setInvoice(invoice);

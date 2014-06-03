@@ -42,6 +42,8 @@ public class LeaseTermFixedTest_changeDates extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+
                 execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
             }
         });
@@ -58,6 +60,8 @@ public class LeaseTermFixedTest_changeDates extends EstatioIntegrationTest {
         lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
         assertNotNull(leaseTopModelRentItem);
+        assertNotNull(leaseTopModelRentItem.getStartDate());
+        assertNotNull(leaseTopModelRentItem.getEndDate());
     }
 
     /**
@@ -76,7 +80,6 @@ public class LeaseTermFixedTest_changeDates extends EstatioIntegrationTest {
      *    this is disallowed
      *</pre>
      */
-    @Ignore("EST-371")
     @Test
     public void xxx() throws Exception {
 

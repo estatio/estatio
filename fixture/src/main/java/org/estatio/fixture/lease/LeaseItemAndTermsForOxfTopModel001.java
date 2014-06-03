@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.*;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
@@ -37,17 +37,21 @@ public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstrac
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-
-        createLeaseTermForRent(
-                lease, lease.getStartDate(), null, bd(20000), ld(2010, 7, 1),ld(2011, 1, 1),ld(2011, 4, 1), "ISTAT-FOI",
+        createLeaseItemIfRequiredAndLeaseTermForRent(
+                lease, lease.getStartDate(), null,
+                bd(20000),
+                ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
+                "ISTAT-FOI",
                 executionContext);
 
-        createLeaseTermForServiceCharge(
+        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
                 lease, lease.getStartDate(), null, bd(6000),
                 executionContext);
 
-        createLeaseTermForTurnoverRent(
-                lease, lease.getStartDate().withDayOfYear(1).plusYears(1), null, "7",
+        createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
+                lease,
+                lease.getStartDate().withDayOfYear(1).plusYears(1), null,
+                "7",
                 executionContext);
     }
 }

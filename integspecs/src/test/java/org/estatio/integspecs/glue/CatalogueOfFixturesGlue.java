@@ -64,19 +64,19 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
                         execute(new LeaseForOxfPret004(), executionContext);
                         execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-                        execute(new LeaseItemAndTermsForKalPoison001(), executionContext);
+                        execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
                         //execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
                         execute(new InvoiceForOxfPoison003(), executionContext);
                         execute(new InvoiceForKalPoison001(), executionContext);
 
                         //execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
-                        execute(new BankAccountAndMandateForAcme(), executionContext);
-                        execute(new BankAccountAndMandateForHelloWorld(), executionContext);
-                        execute(new BankAccountAndMandateForMediaX(), executionContext);
-                        execute(new BankAccountAndMandateForMiracle(), executionContext);
+                        execute(new BankAccountForAcme(), executionContext);
+                        execute(new BankAccountForHelloWorld(), executionContext);
+                        execute(new BankAccountForMediaX(), executionContext);
+                        execute(new BankAccountForMiracle(), executionContext);
                         execute(new BankAccountAndMandateForPoison(), executionContext);
-                        execute(new BankAccountAndMandateForPret(), executionContext);
+                        execute(new BankAccountForPret(), executionContext);
                         execute(new BankAccountAndMandateForTopModel(), executionContext);
                     }
                 }

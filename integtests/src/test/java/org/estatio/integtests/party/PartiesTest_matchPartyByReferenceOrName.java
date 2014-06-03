@@ -35,9 +35,9 @@ public class PartiesTest_matchPartyByReferenceOrName extends EstatioIntegrationT
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
 
                 execute(new OrganisationForHelloWorld(), executionContext);
-
             }
         });
     }

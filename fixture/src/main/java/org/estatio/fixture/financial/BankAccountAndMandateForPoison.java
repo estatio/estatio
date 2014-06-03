@@ -24,6 +24,8 @@ import org.estatio.fixture.party.OrganisationForPoison;
 
 public class BankAccountAndMandateForPoison extends BankAccountAndMandateAbstract {
 
+    public static final String BANK_ACCOUNT_REF = "NL31ABNA0580744437";
+
     public BankAccountAndMandateForPoison() {
         this(null, null);
     }
@@ -38,12 +40,10 @@ public class BankAccountAndMandateForPoison extends BankAccountAndMandateAbstrac
         // prereqs
         execute(new LeaseForKalPoison001(), executionContext);
         execute(new LeaseForOxfPoison003(), executionContext);
+        execute(new BankAccountForPoison(), executionContext);
 
         // exec
-        createBankAccountAndMandate(
-                OrganisationForPoison.PARTY_REFERENCE,
-                "NL31ABNA0580744437", 2, null,
-                executionContext);
+        createBankMandate(BANK_ACCOUNT_REF, 2, executionContext);
     }
 
 }

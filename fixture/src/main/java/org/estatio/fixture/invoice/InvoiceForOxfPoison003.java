@@ -18,6 +18,7 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.fixture.lease.LeaseForOxfPoison003;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
@@ -53,7 +54,7 @@ public class InvoiceForOxfPoison003 extends InvoiceAbstract {
 
         // exec
         createInvoiceAndInvoiceItems(
-                SELLER_PARTY, BUYER_PARTY, LEASE,
+                LeaseItemType.RENT, SELLER_PARTY, BUYER_PARTY, LEASE,
                 "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)),
                 executionContext);
     }
