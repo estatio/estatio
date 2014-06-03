@@ -36,7 +36,6 @@ public class FinancialAccountTransactionsTest_findByFinancialAccount extends Est
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-
             }
         });
     }

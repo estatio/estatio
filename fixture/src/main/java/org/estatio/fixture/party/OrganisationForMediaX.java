@@ -18,12 +18,16 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.fixture.EstatioBaseLineFixture;
+
 public class OrganisationForMediaX extends OrganisationAbstract {
 
     public static final String PARTY_REFERENCE = "MEDIAX";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+        execute(new EstatioBaseLineFixture(), executionContext);
+
         createOrganisation(
                 PARTY_REFERENCE +
                 ";Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com", executionContext);

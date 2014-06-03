@@ -35,19 +35,8 @@ public class PartiesTest_matchPartyByReferenceOrName extends EstatioIntegrationT
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-
-//                execute(new PersonForJohnDoe(), executionContext);
-//                execute(new PersonForLinusTorvalds(), executionContext);
 
                 execute(new OrganisationForHelloWorld(), executionContext);
-//                execute(new OrganisationForAcme(), executionContext);
-
-//                execute(new OrganisationForTopModel(), executionContext);
-//                execute(new OrganisationForMediaX(), executionContext);
-//                execute(new OrganisationForPoison(), executionContext);
-//                execute(new OrganisationForPret(), executionContext);
-//                execute(new OrganisationForMiracle(), executionContext);
 
             }
         });

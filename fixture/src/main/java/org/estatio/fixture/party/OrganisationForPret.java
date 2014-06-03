@@ -18,12 +18,15 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.fixture.EstatioBaseLineFixture;
+
 public class OrganisationForPret extends OrganisationAbstract {
 
     public static final String PARTY_REFERENCE = "PRET";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
+
         createOrganisation(
                 PARTY_REFERENCE +
                 ";Pret-a-Manger;;;;;;;;;", executionContext);

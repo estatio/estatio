@@ -42,10 +42,7 @@ public class LeaseTest_verifyUntil extends EstatioIntegrationTest {
         scenarioExecution().install(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-
                 execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
-
             }
         });
     }
