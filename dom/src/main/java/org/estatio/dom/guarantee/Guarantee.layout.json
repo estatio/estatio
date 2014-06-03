@@ -5,12 +5,6 @@
       "memberGroups": {
         "General": {
           "members": {
-            "primaryParty": {
-              "hidden": {
-                "where": "PARENTED_TABLES"
-              },
-              "disabled": {}
-            },
             "reference": {
               "describedAs": {
                 "value": "Unique reference code for this agreement"
@@ -18,6 +12,23 @@
               "typicalLength": {
                 "value": 25
               }
+            },
+            "name": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "describedAs": {
+                "value": "Optional name for this agreement"
+              },
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "type": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "disabled": {}
             },
             "guaranteeType": {
               "disabled": {},
@@ -34,6 +45,38 @@
                 "numberOfLines": 3
               }
             },
+            "maximumAmount": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 10
+              }
+            },
+            "lease": {
+              "hidden": {
+                "where": "REFERENCES_PARENT"
+              },
+              "disabled": {}
+            }
+          }
+        },
+        "Parties": {
+          "members": {
+            "primaryParty": {
+              "hidden": {
+                "where": "PARENTED_TABLES"
+              },
+              "disabled": {}
+            },
+            "secondaryParty": {
+              "hidden": {
+                "where": "PARENTED_TABLES"
+              },
+              "disabled": {}
+            }
+          }
+        },
+        "Dates": {
+          "members": {
             "startDate": {
               "disabled": {},
               "typicalLength": {
@@ -53,14 +96,13 @@
               }
             },
             "financialAccount": {
+              "hidden": {},
               "disabled": {}
-            },
-            "maximumAmount": {
-              "disabled": {},
-              "typicalLength": {
-                "value": 10
-              }
-            },
+            }
+          }
+        },
+        "Related": {
+          "members": {
             "previous": {
               "hidden": {
                 "where": "ALL_TABLES"
@@ -119,11 +161,6 @@
         "value": "Download Layout"
       }
     },
-    "recentChanges": {
-      "named": {
-        "value": "Recent Changes"
-      }
-    },
     "changeDates": {
       "named": {
         "value": "Change Dates"
@@ -139,14 +176,19 @@
         "value": "New Role"
       }
     },
+    "newTransaction": {
+      "named": {
+        "value": "New Transaction"
+      }
+    },
+    "recentChanges": {
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
     "openLink": {
       "named": {
         "value": "Reports"
-      }
-    },
-    "transactions": {
-      "named": {
-        "value": "Transactions"
       }
     }
   }

@@ -34,12 +34,17 @@ import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
+import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScript.ExecutionContext;
 
 public class GuaranteesTest_newGuarantee extends EstatioIntegrationTest {
 
@@ -56,7 +61,14 @@ public class GuaranteesTest_newGuarantee extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new LeaseForOxfTopModel001().withTracing());
+        scenarioExecution().install(new FixtureScript() {
+            @Override
+            protected void execute(ExecutionContext executionContext) {
+                execute(new EstatioBaseLineFixture(), executionContext);
+                execute(new LeaseForOxfTopModel001(), executionContext);
+            }
+        }.withTracing());
+
 
         lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
         
@@ -104,10 +116,10 @@ public class GuaranteesTest_newGuarantee extends EstatioIntegrationTest {
         
         // and then
         assertThat(financialAccount.getType(), is(FinancialAccountType.BANK_GUARANTEE));
-        assertThat(financialAccount.getOwner(), is(lease.getPrimaryParty()));
-        assertThat(financialAccount.getExternalReference(), is(reference));
+        assertThat(financialAccount.getOwner(), is(lease.getSecondaryParty()));
         assertThat(financialAccount.getName(), is(name));
         assertThat(financialAccount.getReference(), is(reference));
+        assertThat(financialAccount.getExternalReference(), is(nullValue()));
     }
 
     @Test

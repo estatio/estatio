@@ -20,6 +20,8 @@ package org.estatio.dom.agreement;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Hidden;

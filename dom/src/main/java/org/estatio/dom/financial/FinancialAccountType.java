@@ -45,6 +45,7 @@ public enum FinancialAccountType implements PowerType<FinancialAccount> {
     public FinancialAccount create(final DomainObjectContainer container) {
         try {
             FinancialAccount account = container.newTransientInstance(clss);
+            account.setType(this);
             return account;
         } catch (Exception ex) {
             throw new FatalException(ex);

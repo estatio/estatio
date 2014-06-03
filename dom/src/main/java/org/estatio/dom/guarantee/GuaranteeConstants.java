@@ -23,7 +23,7 @@ public final class GuaranteeConstants {
     private GuaranteeConstants() {
     }
 
-    public final static String AT_GUARANTEE = "BankGuarantee";
+    public final static String AT_GUARANTEE = "Guarantee";
 
     public final static String ART_GUARANTOR = "Guarantor";
     public final static String ART_GUARANTEE = "Gurantee";

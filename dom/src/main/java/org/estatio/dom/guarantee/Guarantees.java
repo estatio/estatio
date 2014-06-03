@@ -20,7 +20,9 @@ package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
@@ -61,13 +63,13 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
     public String iconName() {
         return "Guarantee";
     }
-    
+
     public Guarantees() {
         super(Guarantees.class, Guarantee.class);
     }
 
     // //////////////////////////////////////
-    
+
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
     public Guarantee newGuarantee(
@@ -80,10 +82,10 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
             final @Named("Description") String description,
             final @Named("Maximum amount") BigDecimal maximumAmount
             ) {
-        
+
         AgreementRoleType artGuarantee = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE);
         Party leaseSecondaryParty = lease.getSecondaryParty();
-        
+
         AgreementRoleType artGuarantor = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTOR);
         Party leasePrimaryParty = lease.getPrimaryParty();
 
@@ -91,6 +93,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
         final AgreementType at = agreementTypes.find(GuaranteeConstants.AT_GUARANTEE);
         guarantee.setType(at);
         guarantee.setReference(reference);
+        guarantee.setDescription(description);
         guarantee.setName(name);
         guarantee.setStartDate(startDate);
         guarantee.setEndDate(endDate);
@@ -99,7 +102,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
         guarantee.setMaximumAmount(maximumAmount);
 
         FinancialAccountType financialAccountType = guaranteeType.getFinancialAccountType();
-        if (financialAccountType != null){
+        if (financialAccountType != null) {
             FinancialAccount financialAccount = financialAccounts.newFinancialAccount(
                     financialAccountType,
                     reference,
@@ -131,21 +134,21 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
     }
 
     // //////////////////////////////////////
-    
+
     @Programmatic
     public Guarantee findByReference(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
-    
+
     // //////////////////////////////////////
-    
+
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
     public List<Guarantee> allGuarantees() {
         return allInstances();
     }
-    
+
     // //////////////////////////////////////
 
     @NotInServiceMenu
@@ -194,6 +197,16 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
         return searchPhrase.length() > 2
                 ? findGuarantees("*" + searchPhrase + "*")
                 : Lists.<Guarantee> newArrayList();
+    }
+
+    // //////////////////////////////////////
+
+    @PostConstruct
+    @Hidden
+    public void init(Map<String,String> properties) {
+        AgreementType agreementType = agreementTypes.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
+        agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
+        agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);
     }
 
     // //////////////////////////////////////
