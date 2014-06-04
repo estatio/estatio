@@ -18,10 +18,10 @@
  */
 package org.estatio.dom.asset.registration;
 
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
-
 import org.estatio.dom.EstatioDomainService;
+
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @Hidden
 public class FixedAssetRegistrationTypes extends EstatioDomainService<FixedAssetRegistrationType> {
@@ -32,9 +32,31 @@ public class FixedAssetRegistrationTypes extends EstatioDomainService<FixedAsset
 
     // //////////////////////////////////////
 
-    @NotContributed
+    @Programmatic
+    public FixedAssetRegistrationType create(String title, Class<? extends FixedAssetRegistration> cls) {
+        FixedAssetRegistrationType fixedAssetRegistrationType = newTransientInstance(FixedAssetRegistrationType.class);
+        fixedAssetRegistrationType.setTitle(title);
+        fixedAssetRegistrationType.setFullyQualifiedClassName(cls.getName());
+        persist(fixedAssetRegistrationType);
+        return fixedAssetRegistrationType;
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
     public FixedAssetRegistrationType findByTitle(final String title) {
         return firstMatch("findByTitle", "title", title);
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public FixedAssetRegistrationType findOrCreate(String title, Class<? extends FixedAssetRegistration> cls) {
+        final FixedAssetRegistrationType type = findByTitle(title);
+        if (type != null) {
+            return type;
+        }
+        return create(title, cls);
     }
 
 }

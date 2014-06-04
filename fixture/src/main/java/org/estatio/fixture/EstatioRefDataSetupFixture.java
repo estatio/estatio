@@ -36,7 +36,6 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext executionContext) {
         execute("currencies", new CurrenciesRefData(), executionContext);
         execute("countries", new CountriesAndStatesRefData(), executionContext);
-        execute("italy-refdata", new EstatioRefDataForItalySetupFixture(), executionContext);
         execute("tax-refdata", new TaxesAndTaxRatesRefData(), executionContext);
         execute("charge-refdata", new ChargeAndChargeGroupRefData(), executionContext);
         execute("index-refdata", new IndexAndIndexBaseAndIndexValueRefData(), executionContext);

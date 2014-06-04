@@ -84,11 +84,6 @@ public class EstatioRefDataTeardownFixture extends FixtureScript {
         isisJdoSupport.executeUpdate("DELETE FROM \"TaxRate\"");
         isisJdoSupport.executeUpdate("DELETE FROM \"Tax\"");
         
-        isisJdoSupport.executeUpdate("DELETE FROM \"FixedAssetRegistrationType\"");
-        isisJdoSupport.executeUpdate("DELETE FROM \"AgreementRoleType\"");
-        isisJdoSupport.executeUpdate("DELETE FROM \"AgreementRoleCommunicationChannelType\"");
-        isisJdoSupport.executeUpdate("DELETE FROM \"AgreementType\"");
-        
         isisJdoSupport.executeUpdate("DELETE FROM \"IndexValue\"");
         isisJdoSupport.executeUpdate("DELETE FROM \"IndexBase\"");
         isisJdoSupport.executeUpdate("DELETE FROM \"Index\"");
