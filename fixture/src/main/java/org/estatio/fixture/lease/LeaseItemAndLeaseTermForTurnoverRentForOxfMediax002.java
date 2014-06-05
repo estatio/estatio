@@ -18,14 +18,27 @@
  */
 package org.estatio.fixture.lease;
 
-public class LeaseItemAndTermsForOxfMediax002 extends LeaseItemAndTermsAbstract {
+import org.estatio.dom.lease.Lease;
+
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        execute(new LeaseItemAndLeaseTermForRentForOxfMediax002(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeForOxfMediax002(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002(), executionContext);
+        // prereqs
+        execute(new LeaseForOxfMediaX002(), executionContext);
+
+        // exec
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
+
+        createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
+                lease,
+                lease.getStartDate(), null,
+                "7",
+                executionContext);
     }
 
 }

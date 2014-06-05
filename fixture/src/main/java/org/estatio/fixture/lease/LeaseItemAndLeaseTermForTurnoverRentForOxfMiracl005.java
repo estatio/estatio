@@ -18,18 +18,30 @@
  */
 package org.estatio.fixture.lease;
 
-public class LeaseItemAndTermsForOxfPoison003 extends LeaseItemAndTermsAbstract {
+import org.estatio.dom.lease.Lease;
+
+public class LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfPoison003(fixtureResults);
+        createLeaseTermsForOxfMiracl005(fixtureResults);
     }
 
-    private void createLeaseTermsForOxfPoison003(ExecutionContext executionContext) {
+    private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
 
-        execute(new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003(), executionContext);
+        // prereqs
+        execute(new LeaseForOxfMiracl005(), executionContext);
+
+        // exec
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
+
+        createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
+                lease, lease.getStartDate(), null, "7",
+                executionContext);
+
+//        createLeaseTermForDiscount(
+//                lease, lease.getStartDate(), null, bd(-20000),
+//                executionContext);
     }
 
 }

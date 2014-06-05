@@ -18,7 +18,12 @@
  */
 package org.estatio.fixture.lease;
 
-public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstract {
+import org.estatio.dom.lease.Lease;
+
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseItemAndLeaseTermForRentForOxfTopModel001 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
@@ -27,8 +32,17 @@ public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstrac
 
     private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
 
-        execute(new LeaseItemAndLeaseTermForRentForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001(), executionContext);
+        // prereqs
+        execute(new LeaseForOxfTopModel001(), executionContext);
+
+        // exec
+        Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        createLeaseItemIfRequiredAndLeaseTermForRent(
+                lease,
+                lease.getStartDate(), null,
+                bd(20000),
+                ld(2010, 7, 1), ld(2011, 1, 1), ld(2011, 4, 1),
+                "ISTAT-FOI",
+                executionContext);
     }
 }

@@ -18,40 +18,42 @@
  */
 package org.estatio.fixture.lease;
 
+import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseItemAndLeaseTermForRentsForOxfPoison003 extends LeaseItemAndTermsAbstract {
+public class LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfPoison003(fixtureResults);
+        createLeaseTermsForOxfMiracl005(fixtureResults);
     }
 
-    private void createLeaseTermsForOxfPoison003(ExecutionContext executionContext) {
+    private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfPoison003(), executionContext);
+        execute(new LeaseForOxfMiracl005(), executionContext);
 
         // exec
-        Lease lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
 
         createLeaseItemIfRequiredAndLeaseTermForRent(
-                lease,
-                lease.getStartDate(), null,
-                bd(87300),
+                lease, lease.getStartDate(), null,
+                bd(150000),
                 null, null, null,
                 "ISTAT-FOI",
                 executionContext);
         createLeaseItemIfRequiredAndLeaseTermForRent(
-                lease,
-                lease.getStartDate().plusYears(1), null,
-                bd(87300),
-                ld(2011, 1, 1), ld(2012, 1, 1), ld(2012, 4, 1),
+                lease, ld(2015, 1, 1), null,
+                null,
+                ld(2013, 11, 1), ld(2014, 12, 1), null,
                 "ISTAT-FOI",
                 executionContext);
+
     }
 
 }

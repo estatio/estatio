@@ -18,7 +18,12 @@
  */
 package org.estatio.fixture.lease;
 
-public class LeaseItemAndTermsForOxfMiracl005 extends LeaseItemAndTermsAbstract {
+import org.estatio.dom.lease.Lease;
+
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
+public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
@@ -27,9 +32,23 @@ public class LeaseItemAndTermsForOxfMiracl005 extends LeaseItemAndTermsAbstract 
 
     private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
 
-        execute(new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005(), executionContext);
+        // prereqs
+        execute(new LeaseForOxfMiracl005(), executionContext);
+
+        // exec
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
+
+        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
+                lease,
+                lease.getStartDate(), null,
+                bd(12400),
+                executionContext);
+        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
+                lease,
+                ld(2014, 1, 1), null,
+                bd(13000),
+                executionContext);
+
     }
 
 }
