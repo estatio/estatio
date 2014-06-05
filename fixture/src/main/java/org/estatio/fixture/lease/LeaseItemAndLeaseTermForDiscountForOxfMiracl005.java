@@ -40,7 +40,7 @@ public class LeaseItemAndLeaseTermForDiscountForOxfMiracl005 extends LeaseItemAn
         Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
         createLeaseItemIfRequiredAndLeaseTermForDiscount(
                 lease,
-                lease.getStartDate(), null,
+                lease.getStartDate(), lease.getStartDate().plusYears(1),
                 bd(-20000),
                 executionContext);
     }

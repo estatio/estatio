@@ -145,10 +145,9 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
                 ChargeAndChargeGroupRefData.CHARGE_REFERENCE_DISCOUNT,
                 LeaseItemType.DISCOUNT, InvoicingFrequency.FIXED_IN_ADVANCE,
                 executionContext);
+
         LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
-
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
-
         leaseTerm.setValue(value);
 
         return executionContext.add(this, leaseTerm);

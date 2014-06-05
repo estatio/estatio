@@ -24,7 +24,7 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.fixture.currency.refdata.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForOxfMiracl005;
-import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005;
 import org.estatio.fixture.party.OrganisationForAcme;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForMiracle;
@@ -60,7 +60,7 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
         // prereqs
         if(isExecutePrereqs()) {
             execute(new OrganisationForAcme(), executionContext);
-            execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+            execute(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
         }
 
         // exec
