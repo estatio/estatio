@@ -18,25 +18,29 @@
  */
 package org.estatio.fixture.tax.refdata;
 
-import java.math.BigDecimal;
 import javax.inject.Inject;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
+import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
 
 public class TaxesAndTaxRatesRefData extends FixtureScript {
 
+    public static final String IT_VATSTD = "IT-VATSTD";
+
     @Override
     protected void execute(ExecutionContext executionContext) {
-        Tax tax = taxes.newTax("IT-VATSTD", "Value Added Tax (Standard)");
+        Tax tax = taxes.newTax(IT_VATSTD, "Value Added Tax (Standard)");
         executionContext.add(this, tax.getReference(), tax);
 
-        final TaxRate taxRate = tax.newRate(ld(1980, 1, 1), BigDecimal.valueOf(19)).newRate(ld(2011, 9, 17), BigDecimal.valueOf(21));
-        executionContext.add(this, taxRate.getExternalReference(), taxRate);
+        final TaxRate taxRate1 = tax.newRate(ld(1980, 1, 1), bd(19));
+        final TaxRate taxRate2 = taxRate1.newRate(ld(2011, 9, 17), bd(21));
+        executionContext.add(this, taxRate1);
+        executionContext.add(this, taxRate2);
     }
 
     // //////////////////////////////////////

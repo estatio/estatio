@@ -27,33 +27,33 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 public class LinksRefData extends FixtureScript {
 
     @Override
-    protected void execute(ExecutionContext fixtureResults) {
+    protected void execute(ExecutionContext executionContext) {
         newLink(Invoice.class, "Preliminary letter",
                 "${reportServerBaseUrl}/reportserver?/Estatio/"
                         + "Preliminary+Letter&id=${this.id}&rs:Command=Render",
-                fixtureResults);
+                executionContext);
         newLink(Invoice.class, "Invoice",
                 "${reportServerBaseUrl}/reportserver?/Estatio/"
                 + "Invoice&id=${this.id}&rs:Command=Render",
-                fixtureResults);
+                executionContext);
 
         newLink(InvoiceSummaryForPropertyDueDateStatus.class, "Invoices overview",
                 "${reportServerBaseUrl}/ReportServer/Pages/ReportViewer.aspx?/Estatio/"
                 + "Invoices&dueDate=${this.dueDate}&propertyId=${this.property.id}&rs:Command=Render",
-                fixtureResults);
+                executionContext);
         newLink(InvoiceSummaryForPropertyDueDateStatus.class, "Preliminary letter",
                 "${reportServerBaseUrl}/ReportServer/Pages/ReportViewer.aspx?/Estatio/"
                 + "Preliminary+Letter&dueDate=${this.dueDate}&propertyId=${this.property.id}&rs:Command=Render",
-                fixtureResults);
+                executionContext);
         newLink(InvoiceSummaryForPropertyDueDateStatus.class, "Invoice",
                 "${reportServerBaseUrl}/ReportServer/Pages/ReportViewer.aspx?/Estatio/"
                 + "Invoice&dueDate=${this.dueDate}&propertyId=${this.property.id}&rs:Command=Render",
-                fixtureResults);
+                executionContext);
     }
 
-    private Link newLink(Class<?> clsClass, String name, String urlTemplate, ExecutionContext fixtureResults) {
+    private Link newLink(Class<?> clsClass, String name, String urlTemplate, ExecutionContext executionContext) {
         final Link link = links.newLink(clsClass, name, urlTemplate);
-        return fixtureResults.add(this, link.getName(), link);
+        return executionContext.add(this, link.getName(), link);
     }
 
     @javax.inject.Inject

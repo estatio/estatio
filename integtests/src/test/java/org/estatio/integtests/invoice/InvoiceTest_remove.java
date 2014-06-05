@@ -31,8 +31,8 @@ import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -61,8 +61,8 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
                 execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
                 execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new InvoiceForOxfPoison003(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
                 execute(new LeaseForOxfPret004(), executionContext);
 
@@ -84,9 +84,9 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        seller = parties.findPartyByReference(InvoiceForOxfPoison003.SELLER_PARTY);
-        buyer = parties.findPartyByReference(InvoiceForOxfPoison003.BUYER_PARTY);
-        lease = leases.findLeaseByReference(InvoiceForOxfPoison003.LEASE);
+        seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.SELLER_PARTY);
+        buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.BUYER_PARTY);
+        lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
     }
     
     @Test
@@ -103,7 +103,7 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     }
 
     private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
-        return invoices.findMatchingInvoices(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForOxfPoison003.START_DATE);
+        return invoices.findMatchingInvoices(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE);
     }
 
 }

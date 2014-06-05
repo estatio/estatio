@@ -49,8 +49,8 @@ import org.estatio.fixture.EstatioRefDataTeardownFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.financial.*;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTestForMigration;
@@ -100,8 +100,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
                         execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
                         execute(new BankAccountAndMandateForPoison(), executionContext);
-                        execute(new InvoiceForOxfPoison003(), executionContext);
-                        execute(new InvoiceForKalPoison001(), executionContext);
+                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
                         execute(new OrganisationForPret(), executionContext);
                         execute(new LeaseForOxfPret004(), executionContext);

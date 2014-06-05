@@ -22,8 +22,8 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.financial.*;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
@@ -67,8 +67,8 @@ public class CatalogueOfFixturesGlue extends CukeGlueAbstract {
                         execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
                         //execute("invoices", new InvoicesAndInvoiceItemsForAll(), executionContext);
-                        execute(new InvoiceForOxfPoison003(), executionContext);
-                        execute(new InvoiceForKalPoison001(), executionContext);
+                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
                         //execute("bank-accounts", new BankAccountsAndMandatesForAll(), executionContext);
                         execute(new BankAccountForAcme(), executionContext);

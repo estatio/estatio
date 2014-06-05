@@ -26,6 +26,7 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.*;
+import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
@@ -67,7 +68,11 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             BigDecimal baseValue, LocalDate baseIndexStartDate,
             LocalDate nextIndexStartDate, LocalDate effectiveDate, String indexReference,
             ExecutionContext executionContext) {
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, executionContext);
+        LeaseItem leaseItem = findOrCreateLeaseItem(
+                lease,
+                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_RENT,
+                LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE,
+                executionContext);
 
         LeaseTermForIndexableRent leaseTerm = (LeaseTermForIndexableRent) leaseItem.newTerm(startDate, endDate);
         leaseTerm.setBaseValue(baseValue);
@@ -91,7 +96,8 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final ExecutionContext executionContext) {
 
         LeaseItem leaseItemServiceCharge = findOrCreateLeaseItem(
-                lease, "SERVICE_CHARGE",
+                lease,
+                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_SERVICE_CHARGE,
                 LeaseItemType.SERVICE_CHARGE,
                 InvoicingFrequency.QUARTERLY_IN_ADVANCE,
                 executionContext);
@@ -112,7 +118,11 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final String turnoverRentRule,
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "TURNOVER_RENT", LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS, executionContext);
+        LeaseItem leaseItem = findOrCreateLeaseItem(
+                lease,
+                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_TURNOVER_RENT,
+                LeaseItemType.TURNOVER_RENT, InvoicingFrequency.YEARLY_IN_ARREARS,
+                executionContext);
         LeaseTermForTurnoverRent leaseTerm = (LeaseTermForTurnoverRent) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
@@ -130,7 +140,11 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final BigDecimal value, // typical value bd(-20000), a negative
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "DISCOUNT", LeaseItemType.DISCOUNT, InvoicingFrequency.FIXED_IN_ADVANCE, executionContext);
+        LeaseItem leaseItem = findOrCreateLeaseItem(
+                lease,
+                ChargeAndChargeGroupRefData.CHARGE_REFERENCE_DISCOUNT,
+                LeaseItemType.DISCOUNT, InvoicingFrequency.FIXED_IN_ADVANCE,
+                executionContext);
         LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
@@ -149,7 +163,10 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final BigDecimal value, // typical value bd(20000)
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "ENTRY_FEE", LeaseItemType.ENTRY_FEE, InvoicingFrequency.FIXED_IN_ADVANCE, executionContext);
+        LeaseItem leaseItem = findOrCreateLeaseItem(
+                lease,
+                "ENTRY_FEE", LeaseItemType.ENTRY_FEE, InvoicingFrequency.FIXED_IN_ADVANCE,
+                executionContext);
         LeaseTermForFixed leaseTerm = (LeaseTermForFixed) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
@@ -170,7 +187,10 @@ public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
             final boolean taxable,
             final ExecutionContext executionContext) {
 
-        LeaseItem leaseItem = findOrCreateLeaseItem(lease, "TAX", LeaseItemType.TAX, InvoicingFrequency.FIXED_IN_ADVANCE, executionContext);
+        LeaseItem leaseItem = findOrCreateLeaseItem(
+                lease,
+                "TAX", LeaseItemType.TAX, InvoicingFrequency.FIXED_IN_ADVANCE,
+                executionContext);
         LeaseTermForTax leaseTerm = (LeaseTermForTax) leaseItem.newTerm(startDate, endDate);
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);

@@ -27,54 +27,57 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class CountriesAndStatesRefData extends FixtureScript {
 
-    @Override
-    protected void execute(ExecutionContext fixtureResults) {
+    public static final String GBR = "GBR";
+    public static final String NLD = "NLD";
 
-        Country countryGBR = createCountry("GBR", "GB", "United Kingdom", fixtureResults);
-        Country countryNED = createCountry("NLD", "NL", "Netherlands", fixtureResults);
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+
+        Country countryGBR = createCountry(GBR, "GB", "United Kingdom", executionContext);
+        Country countryNED = createCountry(NLD, "NL", "Netherlands", executionContext);
         
-        createState("NL-DRN", "Drenthe", countryNED, fixtureResults);
-        createState("NL-FLE", "Flevoland", countryNED, fixtureResults);
-        createState("NL-FRI", "Friesland", countryNED, fixtureResults);
-        createState("NL-GEL", "Gelderland", countryNED, fixtureResults);
-        createState("NL-GRO", "Groningen", countryNED, fixtureResults);
-        createState("NL-LIM", "Limburg", countryNED, fixtureResults);
-        createState("NL-NBT", "Noord-Brabant", countryNED, fixtureResults);
-        createState("NL-NOH", "Noord-Holland", countryNED, fixtureResults);
-        createState("NL-OIJ", "Overijssel", countryNED, fixtureResults);
-        createState("NL-UTR", "Utrecht", countryNED, fixtureResults);
-        createState("NL-ZEL", "Zeeland", countryNED, fixtureResults);
-        createState("NL-ZUH", "Zuid-Holland", countryNED, fixtureResults);
-        
-        createState("GB-BED", "Bedfordshire", countryGBR, fixtureResults);
-        createState("GB-BEK", "Berkshire", countryGBR, fixtureResults);
-        createState("GB-BUK", "Buckinghamshire", countryGBR, fixtureResults);
-        createState("GB-CMB", "Cambridgeshire", countryGBR, fixtureResults);
-        createState("GB-CHE", "Cheshire", countryGBR, fixtureResults);
-        createState("GB-COR", "Cornwall", countryGBR, fixtureResults);
-        createState("GB-DBY", "Derbyshire", countryGBR, fixtureResults);
-        createState("GB-DEV", "Devon", countryGBR, fixtureResults);
-        createState("GB-DOR", "Dorset", countryGBR, fixtureResults);
-        createState("GB-DUR", "Durham", countryGBR, fixtureResults);
-        createState("GB-ESX", "Essex", countryGBR, fixtureResults);
-        createState("GB-GLO", "Gloucestershire", countryGBR, fixtureResults);
-        createState("GB-HAN", "Hampshire", countryGBR, fixtureResults);
-        createState("GB-KNT", "Kent", countryGBR, fixtureResults);
-        createState("GB-LAN", "Lancashire", countryGBR, fixtureResults);
-        createState("GB-LEI", "Leicerstershire", countryGBR, fixtureResults);
-        createState("GB-LIN", "Lincolnshire", countryGBR, fixtureResults);
-        createState("GB-NFK", "Norfolk", countryGBR, fixtureResults);
-        createState("GB-NTP", "Northamptonshire", countryGBR, fixtureResults);
-        createState("GB-NTB", "Northumberland", countryGBR, fixtureResults);
-        createState("GB-OXF", "Oxfordshire", countryGBR, fixtureResults);
-        createState("GB-RUT", "Rutland", countryGBR, fixtureResults);
-        createState("GB-SHR", "Shropshire", countryGBR, fixtureResults);
-        createState("GB-SOM", "Somerset", countryGBR, fixtureResults);
-        createState("GB-STA", "Staffordshire", countryGBR, fixtureResults);
-        createState("GB-SUF", "Suffolk", countryGBR, fixtureResults);
-        createState("GB-WAR", "Warwickshire", countryGBR, fixtureResults);
-        createState("GB-WIL", "Wiltshire", countryGBR, fixtureResults);
-        createState("GB-WOR", "Worcerstershire", countryGBR, fixtureResults);
+        createState(countryNED, "-DRN", "Drenthe", executionContext);
+        createState(countryNED, "-FLE", "Flevoland", executionContext);
+        createState(countryNED, "-FRI", "Friesland", executionContext);
+        createState(countryNED, "-GEL", "Gelderland", executionContext);
+        createState(countryNED, "-GRO", "Groningen", executionContext);
+        createState(countryNED, "-LIM", "Limburg", executionContext);
+        createState(countryNED, "-NBT", "Noord-Brabant", executionContext);
+        createState(countryNED, "-NOH", "Noord-Holland", executionContext);
+        createState(countryNED, "-OIJ", "Overijssel", executionContext);
+        createState(countryNED, "-UTR", "Utrecht", executionContext);
+        createState(countryNED, "-ZEL", "Zeeland", executionContext);
+        createState(countryNED, "-ZUH", "Zuid-Holland", executionContext);
+
+        createState(countryGBR, "-BED", "Bedfordshire", executionContext);
+        createState(countryGBR, "-BEK", "Berkshire", executionContext);
+        createState(countryGBR, "-BUK", "Buckinghamshire", executionContext);
+        createState(countryGBR, "-CMB", "Cambridgeshire", executionContext);
+        createState(countryGBR, "-CHE", "Cheshire", executionContext);
+        createState(countryGBR, "-COR", "Cornwall", executionContext);
+        createState(countryGBR, "-DBY", "Derbyshire", executionContext);
+        createState(countryGBR, "-DEV", "Devon", executionContext);
+        createState(countryGBR, "-DOR", "Dorset", executionContext);
+        createState(countryGBR, "-DUR", "Durham", executionContext);
+        createState(countryGBR, "-ESX", "Essex", executionContext);
+        createState(countryGBR, "-GLO", "Gloucestershire", executionContext);
+        createState(countryGBR, "-HAN", "Hampshire", executionContext);
+        createState(countryGBR, "-KNT", "Kent", executionContext);
+        createState(countryGBR, "-LAN", "Lancashire", executionContext);
+        createState(countryGBR, "-LEI", "Leicerstershire", executionContext);
+        createState(countryGBR, "-LIN", "Lincolnshire", executionContext);
+        createState(countryGBR, "-NFK", "Norfolk", executionContext);
+        createState(countryGBR, "-NTP", "Northamptonshire", executionContext);
+        createState(countryGBR, "-NTB", "Northumberland", executionContext);
+        createState(countryGBR, "-OXF", "Oxfordshire", executionContext);
+        createState(countryGBR, "-RUT", "Rutland", executionContext);
+        createState(countryGBR, "-SHR", "Shropshire", executionContext);
+        createState(countryGBR, "-SOM", "Somerset", executionContext);
+        createState(countryGBR, "-STA", "Staffordshire", executionContext);
+        createState(countryGBR, "-SUF", "Suffolk", executionContext);
+        createState(countryGBR, "-WAR", "Warwickshire", executionContext);
+        createState(countryGBR, "-WIL", "Wiltshire", executionContext);
+        createState(countryGBR, "-WOR", "Worcerstershire", executionContext);
     }
 
     private Country createCountry(final String reference, String alpha2Code, String name, ExecutionContext executionContext) {
@@ -82,7 +85,8 @@ public class CountriesAndStatesRefData extends FixtureScript {
         return executionContext.add(this, country.getAlpha2Code(), country);
     }
 
-    private State createState(final String reference, String name, Country country, ExecutionContext executionContext) {
+    private State createState(Country country, final String referenceSuffix, String name, ExecutionContext executionContext) {
+        final String reference = country.getAlpha2Code() + referenceSuffix;
         final State state = states.newState(reference, name, country);
         return executionContext.add(this, state.getReference(), state);
     }

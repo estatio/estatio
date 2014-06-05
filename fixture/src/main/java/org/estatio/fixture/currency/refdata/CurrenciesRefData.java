@@ -26,17 +26,22 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class CurrenciesRefData extends FixtureScript {
 
+    public static final String EUR = "EUR";
+    public static final String SEK = "SEK";
+    public static final String GBP = "GBP";
+    public static final String USD = "USD";
+
     @Override
-    protected void execute(ExecutionContext fixtureResults) {
-        createCurrency(fixtureResults, "EUR", "Euro");
-        createCurrency(fixtureResults, "SEK", "Swedish krona");
-        createCurrency(fixtureResults, "GBP", "Pound sterling");
-        createCurrency(fixtureResults, "USD", "US dollar");
+    protected void execute(ExecutionContext executionContext) {
+        createCurrency(EUR, "Euro", executionContext);
+        createCurrency(SEK, "Swedish krona", executionContext);
+        createCurrency(GBP, "Pound sterling", executionContext);
+        createCurrency(USD, "US dollar", executionContext);
     }
 
-    private void createCurrency(ExecutionContext fixtureResults, String reference, String name) {
+    private void createCurrency(String reference, String name, ExecutionContext executionContext) {
         final Currency currency = currencies.findOrCreateCurrency(reference, name);
-        fixtureResults.add(this, currency.getReference(), currency);
+        executionContext.add(this, currency.getReference(), currency);
     }
 
     @Inject

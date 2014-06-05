@@ -28,7 +28,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForPoison;
@@ -82,7 +82,7 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
         // given
         Assert.assertThat(invoices.allInvoices().isEmpty(), is(true));
         // when
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForOxfPoison003.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE, null);
         // then
         Assert.assertNotNull(invoice);
         Assert.assertThat(invoices.allInvoices().isEmpty(), is(false));
@@ -91,9 +91,9 @@ public class InvoicesTest_findOrCreateMatchingInvoice extends EstatioIntegration
     @Test
     public void whenExist() {
         // given
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForOxfPoison003.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE, null);
         // when
-        Invoice invoice2 = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForOxfPoison003.START_DATE, null);
+        Invoice invoice2 = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE, null);
         // then
         Assert.assertThat(invoice2, is(sameInstance(invoice)));
     }

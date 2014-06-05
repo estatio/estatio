@@ -20,8 +20,8 @@ package org.estatio.fixture;
 
 import org.estatio.fixture.financial.*;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 
@@ -57,9 +57,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
         execute(new BankAccountAndMandateForPoison(), executionContext);
         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-        execute(new InvoiceForOxfPoison003(), executionContext);
+        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
         execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
-        execute(new InvoiceForKalPoison001(), executionContext);
+        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
         
         execute(new GuaranteeForOxfTopModel001(), executionContext);
     }

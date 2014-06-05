@@ -25,10 +25,7 @@ import org.estatio.dom.currency.Currency;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
@@ -46,19 +43,32 @@ public abstract class InvoiceAbstract extends FixtureScript {
         super(friendlyName, localName);
     }
 
-    protected void createInvoiceAndInvoiceItems(LeaseItemType leaseItemType, String sellerStr, String buyerStr, String leaseStr, String currencyStr, LocalDate startDate, LocalDateInterval interval, ExecutionContext executionContext) {
+    protected Invoice createInvoice(
+            final String leaseStr, final String sellerStr, final String buyerStr,
+            PaymentMethod paymentMethod, final String currencyStr, final LocalDate startDate,
+            final ExecutionContext executionContext) {
 
+        final Lease lease = leases.findLeaseByReference(leaseStr);
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);
-        final Lease lease = leases.findLeaseByReference(leaseStr);
         final Currency currency = currencies.findCurrency(currencyStr);
 
-        final Invoice invoice = invoices.newInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, currency, startDate, lease, null);
+        final String interactionId = null;
+
+        final Invoice invoice = invoices.newInvoice(seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
 
-        executionContext.add(this, invoice);
+        return executionContext.add(this, invoice);
+    }
 
-        final SortedSet<LeaseTerm> terms = lease.findFirstItemOfType(leaseItemType).getTerms();
+    protected void createInvoiceItemsForTermsOfFirstLeaseItemOfType(
+            final Invoice invoice, final LeaseItemType leaseItemType,
+            final LocalDate startDate, final LocalDateInterval interval,
+            final ExecutionContext executionContext) {
+
+        final Lease lease = invoice.getLease();
+        final LeaseItem firstLeaseItem = lease.findFirstItemOfType(leaseItemType);
+        final SortedSet<LeaseTerm> terms = firstLeaseItem.getTerms();
         for (final LeaseTerm term : terms) {
             InvoiceItemForLease item = invoiceItemsForLease.newInvoiceItem(term, interval, startDate, null);
             item.setInvoice(invoice);
@@ -67,6 +77,7 @@ public abstract class InvoiceAbstract extends FixtureScript {
             executionContext.add(this, item);
         }
     }
+
 
     // //////////////////////////////////////
 

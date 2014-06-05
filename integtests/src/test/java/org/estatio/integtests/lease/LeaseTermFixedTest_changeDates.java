@@ -21,13 +21,11 @@ package org.estatio.integtests.lease;
 import javax.inject.Inject;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.estatio.integtests.VT;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,7 +42,7 @@ public class LeaseTermFixedTest_changeDates extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                execute(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
             }
         });
     }
@@ -57,8 +55,8 @@ public class LeaseTermFixedTest_changeDates extends EstatioIntegrationTest {
 
     @Before
     public void setup() {
-        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));
+        lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
+        leaseTopModelRentItem = lease.getItems().first();
         assertNotNull(leaseTopModelRentItem);
         assertNotNull(leaseTopModelRentItem.getStartDate());
         assertNotNull(leaseTopModelRentItem.getEndDate());

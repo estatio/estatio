@@ -37,8 +37,8 @@ import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
@@ -77,8 +77,8 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
                         execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
                         execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                        execute(new InvoiceForOxfPoison003(), executionContext);
-                        execute(new InvoiceForKalPoison001(), executionContext);
+                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
                         execute(new LeaseForOxfPret004(), executionContext);
 

@@ -30,8 +30,8 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,8 +52,8 @@ public class InvoicesTest_findInvoicesByRunId extends EstatioIntegrationTest {
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new InvoiceForOxfPoison003(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
             }
         });
     }
@@ -70,11 +70,11 @@ public class InvoicesTest_findInvoicesByRunId extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        Party seller = parties.findPartyByReference(InvoiceForOxfPoison003.SELLER_PARTY);
-        Party buyer = parties.findPartyByReference(InvoiceForOxfPoison003.BUYER_PARTY);
-        Lease lease = leases.findLeaseByReference(InvoiceForOxfPoison003.LEASE);
+        Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.SELLER_PARTY);
+        Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.BUYER_PARTY);
+        Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
 
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForOxfPoison003.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE, null);
         invoice.setRunId(runId);
         Assert.assertNotNull(invoice);
     }

@@ -18,10 +18,7 @@
  */
 package org.estatio.fixture.lease;
 
-import org.estatio.dom.lease.InvoicingFrequency;
 import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;

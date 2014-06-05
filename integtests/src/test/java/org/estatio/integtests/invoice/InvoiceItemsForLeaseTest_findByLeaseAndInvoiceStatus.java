@@ -26,7 +26,7 @@ import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -43,7 +43,7 @@ public class InvoiceItemsForLeaseTest_findByLeaseAndInvoiceStatus extends Estati
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new InvoiceForOxfPoison003(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
             }
         });
     }
@@ -56,7 +56,7 @@ public class InvoiceItemsForLeaseTest_findByLeaseAndInvoiceStatus extends Estati
     @Test
     public void givenValidLeaseWithNewInvoiceItems() throws Exception {
         // given
-        Lease lease = leases.findLeaseByReference(InvoiceForOxfPoison003.LEASE);
+        Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
         // when
         List<InvoiceItemForLease> invoiceItems = invoiceItemsForLease.findByLeaseAndInvoiceStatus(lease, InvoiceStatus.NEW);
         // then

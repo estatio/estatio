@@ -18,7 +18,10 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.estatio.dom.invoice.Invoice;
+import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.fixture.currency.refdata.CurrenciesRefData;
 import org.estatio.fixture.lease.LeaseForKalPoison001;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.party.OrganisationForAcme;
@@ -26,22 +29,22 @@ import org.estatio.fixture.party.OrganisationForPoison;
 import org.estatio.integtests.VT;
 import org.joda.time.LocalDate;
 
-import static org.estatio.integtests.VT.ld;
 import static org.estatio.integtests.VT.ldix;
 
-public class InvoiceForKalPoison001 extends InvoiceAbstract {
+public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
 
     public static final String SELLER_PARTY = OrganisationForAcme.PARTY_REFERENCE;
     public static final String BUYER_PARTY = OrganisationForPoison.PARTY_REFERENCE;
     public static final String LEASE = LeaseForKalPoison001.LEASE_REFERENCE;
 
+    // happens to be +1 year from Lease's start date (is this significant? not sure)
     public static final LocalDate START_DATE = VT.ld(2012, 1, 1);
 
-    public InvoiceForKalPoison001() {
+    public InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001() {
         this(null, null);
     }
 
-    public InvoiceForKalPoison001(String friendlyName, String localName) {
+    public InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -53,9 +56,13 @@ public class InvoiceForKalPoison001 extends InvoiceAbstract {
         execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
         // exec
-        createInvoiceAndInvoiceItems(
-                LeaseItemType.RENT, SELLER_PARTY, BUYER_PARTY, LEASE,
-                "EUR", START_DATE, ldix(START_DATE, ld(2012, 4, 1)),
+        final Invoice invoice = createInvoice(
+                LEASE, SELLER_PARTY, BUYER_PARTY, PaymentMethod.DIRECT_DEBIT,
+                CurrenciesRefData.EUR, START_DATE,
+                executionContext);
+        createInvoiceItemsForTermsOfFirstLeaseItemOfType(
+                invoice, LeaseItemType.RENT,
+                START_DATE, ldix(START_DATE, START_DATE.plusMonths(3)),
                 executionContext);
     }
 }

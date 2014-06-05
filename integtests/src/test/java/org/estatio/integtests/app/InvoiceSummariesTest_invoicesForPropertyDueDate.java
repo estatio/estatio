@@ -24,8 +24,8 @@ import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.invoice.InvoiceForKalPoison001;
-import org.estatio.fixture.invoice.InvoiceForOxfPoison003;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
+import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,8 +43,8 @@ public class InvoiceSummariesTest_invoicesForPropertyDueDate extends EstatioInte
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new InvoiceForOxfPoison003(), executionContext);
-                execute(new InvoiceForKalPoison001(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
             }
         });
     }
