@@ -23,9 +23,9 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 
-public class CountriesAndStatesRefData extends FixtureScript {
+public class CountriesAndStatesRefData extends EstatioFixtureScript {
 
     public static final String GBR = "GBR";
     public static final String NLD = "NLD";

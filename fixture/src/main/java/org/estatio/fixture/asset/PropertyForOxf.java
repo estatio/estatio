@@ -41,8 +41,10 @@ public class PropertyForOxf extends PropertyAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForHelloWorld(), executionContext);
-        execute(new PersonForJohnDoe(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new OrganisationForHelloWorld(), executionContext);
+            execute(new PersonForJohnDoe(), executionContext);
+        }
 
         // exec
         Party owner = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);

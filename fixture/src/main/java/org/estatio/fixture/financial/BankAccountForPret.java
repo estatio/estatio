@@ -37,7 +37,9 @@ public class BankAccountForPret extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfPret004(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForOxfPret004(), executionContext);
+        }
 
         // exec
         createBankAccount(OrganisationForPret.PARTY_REFERENCE, BANK_ACCOUNT_REF, null, executionContext);

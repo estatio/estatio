@@ -33,7 +33,7 @@ public class CountriesTest_findCountryByReference extends EstatioIntegrationTest
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new EstatioBaseLineFixture());
+        runScript(new EstatioBaseLineFixture());
     }
 
     @Inject

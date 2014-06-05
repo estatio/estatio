@@ -60,7 +60,7 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
 
     @BeforeClass
     public static void setupTransactionalData() {
-        scenarioExecution().install(
+        runScript(
                 new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {

@@ -37,8 +37,10 @@ public class BankAccountForHelloWorld extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForHelloWorld(), executionContext);
-        execute(new PropertyForOxf(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new OrganisationForHelloWorld(), executionContext);
+            execute(new PropertyForOxf(), executionContext);
+        }
 
         // exec
         createBankAccount(OrganisationForHelloWorld.PARTY_REFERENCE, BANK_ACCOUNT_REF, PropertyForOxf.PROPERTY_REFERENCE, executionContext);

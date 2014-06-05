@@ -23,39 +23,10 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.VersionStrategy;
-
+import javax.jdo.annotations.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Bulk;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.TitleBuffer;
-
-import org.estatio.dom.Chained;
-import org.estatio.dom.EstatioMutableObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
+import org.estatio.dom.*;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
@@ -63,6 +34,11 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResu
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -249,6 +225,11 @@ public abstract class LeaseTerm
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
+        if(valueType() == LeaseTermValueType.FIXED) {
+            if(!getInvoiceItems().isEmpty()) {
+                return "Cannot change dates because this lease term has invoices and is fixed";
+            }
+        }
         return null;
     }
 

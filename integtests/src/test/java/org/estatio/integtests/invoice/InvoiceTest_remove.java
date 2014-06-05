@@ -37,6 +37,7 @@ import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.hamcrest.core.Is;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,9 +45,10 @@ import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class InvoiceTest_remove extends EstatioIntegrationTest {
 
+
     @Before
     public void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
@@ -81,12 +83,14 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     private Party seller;
     private Party buyer;
     private Lease lease;
+    private LocalDate invoiceStartDate;
 
     @Before
     public void setUp() throws Exception {
         seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.SELLER_PARTY);
         buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.BUYER_PARTY);
         lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+        invoiceStartDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
     }
     
     @Test
@@ -103,7 +107,10 @@ public class InvoiceTest_remove extends EstatioIntegrationTest {
     }
 
     private List<Invoice> findMatchingInvoices(final Party seller, final Party buyer, final Lease lease) {
-        return invoices.findMatchingInvoices(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE);
+        return invoices.findMatchingInvoices(
+                seller, buyer, PaymentMethod.DIRECT_DEBIT,
+                lease, InvoiceStatus.NEW,
+                invoiceStartDate);
     }
 
 }

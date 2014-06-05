@@ -21,20 +21,20 @@ package org.estatio.fixture.index.refdata;
 import java.math.BigDecimal;
 import javax.inject.Inject;
 import org.estatio.dom.index.*;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
-public class IndexAndIndexBaseAndIndexValueRefData extends FixtureScript {
+public class IndexAndIndexBaseAndIndexValueRefData extends EstatioFixtureScript {
 
-    public static final String INDEX_REFERENCE_ISTAT_FOI = "ISTAT-FOI";
+    public static final String ISTAT_FOI = "ISTAT-FOI";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // Source http://www.istat.it/it/archivio/30440
 
-        Index index = createIndex(INDEX_REFERENCE_ISTAT_FOI, "ISTAT FOI", executionContext);
+        Index index = createIndex(ISTAT_FOI, "ISTAT FOI", executionContext);
 
         IndexBase base1989 = createIndexBase(index, null, 1990, 1.242, executionContext);
 

@@ -20,16 +20,15 @@ package org.estatio.fixture.lease;
 
 import org.estatio.dom.lease.Lease;
 
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
-
 public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfMediaX002(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForOxfMediaX002(), executionContext);
+        }
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);

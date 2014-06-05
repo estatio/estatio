@@ -33,7 +33,9 @@ public class LeaseItemAndLeaseTermForRentForOxfTopModel001 extends LeaseItemAndT
     private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfTopModel001(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForOxfTopModel001(), executionContext);
+        }
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);

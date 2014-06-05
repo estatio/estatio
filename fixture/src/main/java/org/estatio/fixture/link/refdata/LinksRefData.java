@@ -20,11 +20,11 @@ package org.estatio.fixture.link.refdata;
 
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.services.links.Link;
 import org.estatio.services.links.Links;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class LinksRefData extends FixtureScript {
+public class LinksRefData extends EstatioFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {

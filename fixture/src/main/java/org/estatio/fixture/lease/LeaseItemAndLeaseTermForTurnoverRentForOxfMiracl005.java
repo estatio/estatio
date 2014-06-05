@@ -30,7 +30,9 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005 extends LeaseIt
     private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfMiracl005(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForOxfMiracl005(), executionContext);
+        }
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
@@ -38,10 +40,6 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005 extends LeaseIt
         createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
                 lease, lease.getStartDate(), null, "7",
                 executionContext);
-
-//        createLeaseTermForDiscount(
-//                lease, lease.getStartDate(), null, bd(-20000),
-//                executionContext);
     }
 
 }

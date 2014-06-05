@@ -20,6 +20,9 @@ package org.estatio.integtests;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
 
@@ -28,9 +31,14 @@ import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForInteg
  */
 public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EstatioIntegrationTest.class);
+
     @BeforeClass
     public static void initClass() {
         PropertyConfigurator.configure("logging.properties");
+
+        LOG.info("Starting tests");
+
         EstatioSystemInitializer.initIsft();
         
         // instantiating will install onto ThreadLocal
@@ -48,6 +56,12 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
                     String.format("Object %s (%s) is not an instance of %s", o.getClass().getName(), o.toString(), type));
         }
         return type.cast(o);
+    }
+
+    // //////////////////////////////////////
+
+    protected static void runScript(FixtureScript... fixtureScripts) {
+        scenarioExecution().install(fixtureScripts);
     }
 
 }

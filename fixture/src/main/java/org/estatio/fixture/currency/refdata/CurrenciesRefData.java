@@ -21,10 +21,10 @@ package org.estatio.fixture.currency.refdata;
 import javax.inject.Inject;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 
 
-public class CurrenciesRefData extends FixtureScript {
+public class CurrenciesRefData extends EstatioFixtureScript {
 
     public static final String EUR = "EUR";
     public static final String SEK = "SEK";

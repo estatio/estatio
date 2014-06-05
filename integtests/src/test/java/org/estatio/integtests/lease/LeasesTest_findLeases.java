@@ -36,7 +36,7 @@ public class LeasesTest_findLeases extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

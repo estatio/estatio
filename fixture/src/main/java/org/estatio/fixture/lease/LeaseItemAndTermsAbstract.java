@@ -26,11 +26,11 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.*;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseItemAndTermsAbstract extends FixtureScript {
+public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
     protected LeaseItem findOrCreateLeaseItem(
             final Lease lease,

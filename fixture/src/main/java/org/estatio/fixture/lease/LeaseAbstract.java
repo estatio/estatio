@@ -26,13 +26,13 @@ import org.estatio.dom.asset.Units;
 import org.estatio.dom.lease.*;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 /**
  * Sets up the lease, and the roles, and also the first occupancy.
  */
-public abstract class LeaseAbstract extends FixtureScript {
+public abstract class LeaseAbstract extends EstatioFixtureScript {
 
     protected Lease createLease(
             String reference, String name,

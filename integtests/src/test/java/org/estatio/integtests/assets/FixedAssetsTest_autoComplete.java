@@ -34,7 +34,7 @@ public class FixedAssetsTest_autoComplete extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

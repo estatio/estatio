@@ -31,24 +31,19 @@ import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 /**
  * Creates {@link org.estatio.dom.invoice.Invoice} and associated {@link org.estatio.dom.invoice.InvoiceItem}s.
  */
-public abstract class InvoiceAbstract extends FixtureScript {
+public abstract class InvoiceAbstract extends EstatioFixtureScript {
 
     protected InvoiceAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
-    protected Invoice createInvoice(
-            final String leaseStr, final String sellerStr, final String buyerStr,
-            PaymentMethod paymentMethod, final String currencyStr, final LocalDate startDate,
-            final ExecutionContext executionContext) {
-
-        final Lease lease = leases.findLeaseByReference(leaseStr);
+    protected Invoice createInvoice(Lease lease, String sellerStr, String buyerStr, PaymentMethod paymentMethod, String currencyStr, LocalDate startDate, ExecutionContext executionContext) {
         final Party buyer = parties.findPartyByReference(buyerStr);
         final Party seller = parties.findPartyByReference(sellerStr);
         final Currency currency = currencies.findCurrency(currencyStr);
@@ -94,6 +89,6 @@ public abstract class InvoiceAbstract extends FixtureScript {
     private InvoiceItemsForLease invoiceItemsForLease;
 
     @Inject
-    private Leases leases;
+    protected Leases leases;
 
 }

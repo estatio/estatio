@@ -23,10 +23,10 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
 import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public abstract class LeaseBreakOptionsAbstract extends FixtureScript {
+public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

@@ -38,8 +38,10 @@ public class BankAccountForPoison extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForKalPoison001(), executionContext);
-        execute(new LeaseForOxfPoison003(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForKalPoison001(), executionContext);
+            execute(new LeaseForOxfPoison003(), executionContext);
+        }
 
         // exec
         createBankAccount(OrganisationForPoison.PARTY_REFERENCE, BANK_ACCOUNT_REF, null, executionContext);

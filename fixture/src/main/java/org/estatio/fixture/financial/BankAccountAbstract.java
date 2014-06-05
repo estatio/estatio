@@ -26,9 +26,9 @@ import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 
-public abstract class BankAccountAbstract extends FixtureScript {
+public abstract class BankAccountAbstract extends EstatioFixtureScript {
 
     protected BankAccountAbstract(String friendlyName, String localName) {
         super(friendlyName, localName);

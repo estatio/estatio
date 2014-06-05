@@ -50,7 +50,7 @@ public class InvoiceCalculationServiceTest_normalRun extends EstatioIntegrationT
 
     @BeforeClass
     public static void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

@@ -22,13 +22,13 @@ import javax.inject.Inject;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
 
-public class TaxesAndTaxRatesRefData extends FixtureScript {
+public class TaxesAndTaxRatesRefData extends EstatioFixtureScript {
 
     public static final String IT_VATSTD = "IT-VATSTD";
 

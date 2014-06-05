@@ -28,7 +28,9 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfMediax002 extends LeaseI
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfMediaX002(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForOxfMediaX002(), executionContext);
+        }
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);

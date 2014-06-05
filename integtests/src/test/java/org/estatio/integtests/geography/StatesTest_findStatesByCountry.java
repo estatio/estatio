@@ -36,7 +36,7 @@ public class StatesTest_findStatesByCountry extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new EstatioBaseLineFixture());
+        runScript(new EstatioBaseLineFixture());
     }
 
     private Countries countries;

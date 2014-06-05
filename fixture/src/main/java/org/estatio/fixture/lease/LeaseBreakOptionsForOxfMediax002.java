@@ -28,7 +28,9 @@ public class LeaseBreakOptionsForOxfMediax002 extends LeaseBreakOptionsAbstract 
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseItemAndTermsForOxfMediax002(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseItemAndTermsForOxfMediax002(), executionContext);
+        }
 
         // exec
         final Lease leaseMediax002 = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);

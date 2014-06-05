@@ -27,8 +27,8 @@ import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -36,7 +36,7 @@ import static org.estatio.integtests.VT.ld;
  * Sets up the {@link org.estatio.dom.asset.Property} and also a number of
  * {@link org.estatio.dom.asset.Unit}s.
  */
-public abstract class PropertyAbstract extends FixtureScript {
+public abstract class PropertyAbstract extends EstatioFixtureScript {
 
     protected Property createPropertyAndUnits(final String reference, String name, String city, Country country, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager, double lat, double lng, ExecutionContext fixtureResults) {
         Property property = properties.newProperty(reference, name, type, city, country, acquireDate);

@@ -25,9 +25,9 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 
-public abstract class PersonAbstract extends FixtureScript {
+public abstract class PersonAbstract extends EstatioFixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
@@ -38,10 +38,6 @@ public abstract class PersonAbstract extends FixtureScript {
         return executionContext.add(this, party.getReference(), party);
     }
 
-
-    protected boolean defined(String[] values, int i) {
-        return values.length>i && !values[i].isEmpty();
-    }
 
     // //////////////////////////////////////
 

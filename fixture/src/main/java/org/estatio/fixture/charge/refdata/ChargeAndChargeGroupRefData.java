@@ -25,10 +25,10 @@ import org.estatio.dom.charge.ChargeGroups;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.Taxes;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.tax.refdata.TaxesAndTaxRatesRefData;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class ChargeAndChargeGroupRefData extends FixtureScript {
+public class ChargeAndChargeGroupRefData extends EstatioFixtureScript {
 
     public static final String CHARGE_GROUP_REFERENCE_RENT = "RENT";
     public static final String CHARGE_GROUP_REFERENCE_SERVICE_CHARGE = "SERVICE_CHARGE";

@@ -31,7 +31,9 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForKalPoison001(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForKalPoison001(), executionContext);
+        }
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForKalPoison001.LEASE_REFERENCE);

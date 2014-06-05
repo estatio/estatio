@@ -23,22 +23,22 @@ import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.fixture.currency.refdata.CurrenciesRefData;
-import org.estatio.fixture.lease.LeaseForKalPoison001;
+import org.estatio.fixture.lease.LeaseForOxfMiracl005;
 import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
 import org.estatio.fixture.party.OrganisationForAcme;
-import org.estatio.fixture.party.OrganisationForPoison;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
+import org.estatio.fixture.party.OrganisationForMiracle;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.estatio.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
 
-public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends InvoiceAbstract {
+public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends InvoiceAbstract {
 
-    public static final String SELLER_PARTY = OrganisationForAcme.PARTY_REFERENCE;
-    public static final String BUYER_PARTY = OrganisationForPoison.PARTY_REFERENCE;
-    public static final String LEASE = LeaseForKalPoison001.LEASE_REFERENCE;
+    public static final String SELLER_PARTY = OrganisationForHelloWorld.PARTY_REFERENCE;
+    public static final String BUYER_PARTY = OrganisationForMiracle.PARTY_REFERENCE;
+    public static final String LEASE = LeaseForOxfMiracl005.LEASE_REFERENCE;
 
     // simply within the lease's start/end date
     public static LocalDate startDateFor(Lease lease) {
@@ -46,11 +46,11 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
         return lease.getStartDate().plusYears(1);
     }
 
-    public InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001() {
+    public InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005() {
         this(null, null);
     }
 
-    public InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(String friendlyName, String localName) {
+    public InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(String friendlyName, String localName) {
         super(friendlyName, localName);
     }
 
@@ -58,26 +58,23 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForAcme(), executionContext);
-        execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new OrganisationForAcme(), executionContext);
+            execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+        }
 
         // exec
-
         final Lease lease = leases.findLeaseByReference(LEASE);
-
-        // simply within the lease's start/end date
-        final LocalDate startDate = startDateFor(lease);
+        final LocalDate invoiceStartDate = startDateFor(lease);
 
         final Invoice invoice = createInvoice(
                 lease, SELLER_PARTY, BUYER_PARTY,
                 PaymentMethod.DIRECT_DEBIT, CurrenciesRefData.EUR,
-                startDate,
-                executionContext);
+                invoiceStartDate, executionContext);
 
         createInvoiceItemsForTermsOfFirstLeaseItemOfType(
-                invoice, LeaseItemType.RENT,
-                startDate, ldix(startDate, startDate.plusMonths(3)),
+                invoice, LeaseItemType.DISCOUNT,
+                invoiceStartDate, ldix(invoiceStartDate, invoiceStartDate.plusMonths(3)),
                 executionContext);
     }
-
 }

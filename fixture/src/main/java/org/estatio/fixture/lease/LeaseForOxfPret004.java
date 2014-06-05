@@ -34,9 +34,11 @@ public class LeaseForOxfPret004 extends LeaseAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new PersonForJohnDoe(), executionContext);
-        execute(new OrganisationForPret(), executionContext);
-        execute(new PropertyForOxf(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new PersonForJohnDoe(), executionContext);
+            execute(new OrganisationForPret(), executionContext);
+            execute(new PropertyForOxf(), executionContext);
+        }
 
         // exec
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);

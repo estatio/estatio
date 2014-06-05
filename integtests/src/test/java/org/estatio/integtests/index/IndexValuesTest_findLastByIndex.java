@@ -38,7 +38,7 @@ public class IndexValuesTest_findLastByIndex extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(
+        runScript(
                 // tearing down because of a failure which suggests that one of the other tests is creating new index values...
                 // (not sure which one though :-( )
                 new EstatioOperationalTeardownFixture(),

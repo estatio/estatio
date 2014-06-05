@@ -19,7 +19,6 @@
 package org.estatio.fixture.financial;
 
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
-import org.estatio.fixture.party.OrganisationForTopModel;
 
 public class BankAccountAndMandateForTopModel extends BankAccountAndMandateAbstract {
 
@@ -37,8 +36,10 @@ public class BankAccountAndMandateForTopModel extends BankAccountAndMandateAbstr
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new LeaseForOxfTopModel001(), executionContext);
-        execute(new BankAccountForTopModel(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new LeaseForOxfTopModel001(), executionContext);
+            execute(new BankAccountForTopModel(), executionContext);
+        }
 
         // exec
         createBankMandate(BANK_ACCOUNT_REF, 1, executionContext);

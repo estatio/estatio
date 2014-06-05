@@ -19,26 +19,31 @@
 package org.estatio.fixture.guarantee;
 
 import java.math.BigDecimal;
-
 import javax.inject.Inject;
-
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeType;
 import org.estatio.dom.guarantee.Guarantees;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-
-public abstract class GuaranteeAbstract extends FixtureScript {
+public abstract class GuaranteeAbstract extends EstatioFixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
 
-    protected Guarantee newGuarantee(Lease lease, String reference, String name, GuaranteeType guaranteeType, LocalDate startDate, LocalDate endDate, String description, BigDecimal maximumAmount) {
+    protected Guarantee newGuarantee(
+            final Lease lease,
+            final String reference, final String name, final GuaranteeType guaranteeType,
+            final LocalDate startDate, final LocalDate endDate,
+            final String description,
+            final BigDecimal maximumAmount,
+            final ExecutionContext executionContext) {
 
-        return guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+        final Guarantee guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+
+        return executionContext.add(this, guarantee);
 
     }
 

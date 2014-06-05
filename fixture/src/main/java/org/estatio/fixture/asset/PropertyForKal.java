@@ -41,8 +41,10 @@ public class PropertyForKal extends PropertyAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForAcme(), executionContext);
-        execute(new PersonForJohnDoe(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new OrganisationForAcme(), executionContext);
+            execute(new PersonForJohnDoe(), executionContext);
+        }
 
         // exec
         Party owner = parties.findPartyByReference(OrganisationForAcme.PARTY_REFERENCE);

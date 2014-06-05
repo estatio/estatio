@@ -24,33 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
-
 import com.google.common.base.Function;
-
+import com.google.common.base.Predicate;
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Paged;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
@@ -62,6 +42,10 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Render.Type;
 
 /**
  * An item component of an {@link #getLease() owning} {@link Lease}. Each is of
@@ -594,6 +578,21 @@ public class LeaseItem
             results.addAll(term.calculationResults(invoicingFrequency, startDueDate, nextDueDate));
         }
         return results;
+    }
+
+    // //////////////////////////////////////
+
+    public static class Predicates {
+        private Predicates(){}
+
+        public static Predicate<LeaseItem> ofType(final LeaseItemType t) {
+            return new Predicate<LeaseItem>() {
+                @Override
+                public boolean apply(LeaseItem input) {
+                    return input.getType() == t;
+                }
+            };
+        }
     }
 
     // //////////////////////////////////////

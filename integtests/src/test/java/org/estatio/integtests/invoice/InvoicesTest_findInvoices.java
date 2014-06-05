@@ -50,7 +50,7 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
@@ -80,7 +80,11 @@ public class InvoicesTest_findInvoices extends EstatioIntegrationTest {
 
         propertyKal = properties.findPropertyByReference(PropertyForKal.PROPERTY_REFERENCE);
 
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(
+                seller, buyer, PaymentMethod.DIRECT_DEBIT,
+                lease, InvoiceStatus.NEW,
+                InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001.startDateFor(lease),
+                null);
         invoice.setRunId(runId);
         Assert.assertNotNull(invoice);
     }

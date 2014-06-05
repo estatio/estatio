@@ -28,7 +28,7 @@ import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -36,7 +36,7 @@ import static org.hamcrest.CoreMatchers.*;
 /**
  * Sets up the {@link org.estatio.dom.party.Organisation} and also a number of {@link org.estatio.dom.communicationchannel.CommunicationChannel}s.
  */
-public abstract class OrganisationAbstract extends FixtureScript {
+public abstract class OrganisationAbstract extends EstatioFixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);

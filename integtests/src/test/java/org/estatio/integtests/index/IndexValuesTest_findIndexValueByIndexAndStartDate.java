@@ -35,7 +35,7 @@ public class IndexValuesTest_findIndexValueByIndexAndStartDate extends EstatioIn
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new EstatioBaseLineFixture());
+        runScript(new EstatioBaseLineFixture());
     }
 
     @Inject

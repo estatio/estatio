@@ -43,7 +43,7 @@ public class InvoicesTest_createInvoiceNumberNumerator extends EstatioIntegratio
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);

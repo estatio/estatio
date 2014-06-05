@@ -33,6 +33,7 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.integtests.EstatioIntegrationTest;
+import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class InvoicesTest_findInvoicesByRunId extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
-        scenarioExecution().install(new FixtureScript() {
+        runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
@@ -70,11 +71,14 @@ public class InvoicesTest_findInvoicesByRunId extends EstatioIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.SELLER_PARTY);
-        Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.BUYER_PARTY);
-        Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+        final Party seller = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.SELLER_PARTY);
+        final Party buyer = parties.findPartyByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.BUYER_PARTY);
+        final Lease lease = leases.findLeaseByReference(InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.LEASE);
+        final LocalDate startDate = InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.startDateFor(lease);
 
-        Invoice invoice = invoices.findOrCreateMatchingInvoice(seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW, InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003.START_DATE, null);
+        Invoice invoice = invoices.findOrCreateMatchingInvoice(
+                seller, buyer, PaymentMethod.DIRECT_DEBIT, lease, InvoiceStatus.NEW,
+                startDate, null);
         invoice.setRunId(runId);
         Assert.assertNotNull(invoice);
     }

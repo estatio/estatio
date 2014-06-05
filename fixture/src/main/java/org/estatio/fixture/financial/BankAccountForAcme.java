@@ -37,8 +37,10 @@ public class BankAccountForAcme extends BankAccountAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        execute(new OrganisationForAcme(), executionContext);
-        execute(new PropertyForKal(), executionContext);
+        if(isExecutePrereqs()) {
+            execute(new OrganisationForAcme(), executionContext);
+            execute(new PropertyForKal(), executionContext);
+        }
 
         // exec
         createBankAccount(OrganisationForAcme.PARTY_REFERENCE, BANK_ACCOUNT_REF, PropertyForKal.PROPERTY_REFERENCE, executionContext);
