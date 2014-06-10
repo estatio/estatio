@@ -16,6 +16,9 @@
  */
 package org.estatio.webapp.services.settings;
 
+import org.apache.isis.applib.annotation.DomainService;
+
+@DomainService(menuOrder = "99")
 public class UserSettingsServiceForEstatio {
 
 }

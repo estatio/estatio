@@ -18,11 +18,12 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "70", repositoryFor = PhoneOrFaxNumber.class)
 @Hidden
 public class PhoneOrFaxNumbers extends EstatioDomainService<PhoneOrFaxNumber> {
 

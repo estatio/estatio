@@ -21,14 +21,18 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-
-import org.apache.commons.lang3.ObjectUtils;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.estatio.dom.EstatioService;
 
-public class IndexationService {
+@DomainService(menuOrder = "60")
+public class IndexationService extends EstatioService<IndexationService> {
 
     public static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+
+    public IndexationService() {
+        super(IndexationService.class);
+    }
 
     @Programmatic
     public void indexate(final Indexable input) {

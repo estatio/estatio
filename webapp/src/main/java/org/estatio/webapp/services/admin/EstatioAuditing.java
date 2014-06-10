@@ -18,17 +18,9 @@ package org.estatio.webapp.services.admin;
 
 import java.util.List;
 import java.util.UUID;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractService;
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.objectstore.jdo.applib.service.audit.AuditEntryJdo;
 import org.apache.isis.objectstore.jdo.applib.service.audit.AuditingServiceJdoRepository;
@@ -36,10 +28,15 @@ import org.apache.isis.objectstore.jdo.applib.service.command.CommandJdo;
 import org.apache.isis.objectstore.jdo.applib.service.command.CommandServiceJdoRepository;
 import org.apache.isis.objectstore.jdo.applib.service.publish.PublishedEventJdo;
 import org.apache.isis.objectstore.jdo.applib.service.publish.PublishingServiceJdoRepository;
+import org.estatio.dom.EstatioService;
 
+@DomainService(menuOrder = "95")
 @Named("Auditing")
-public class EstatioAuditing extends AbstractService {
+public class EstatioAuditing extends EstatioService<EstatioAuditing> {
 
+    public EstatioAuditing() {
+        super(EstatioAuditing.class);
+    }
     
     @ActionSemantics(Of.SAFE)
     @Bookmarkable

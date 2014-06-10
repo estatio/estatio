@@ -19,21 +19,21 @@
 package org.estatio.webapp.services.admin;
 
 import java.util.List;
-
 import javax.inject.Inject;
-
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.settings.ApplicationSetting;
+import org.estatio.dom.EstatioService;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
-import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.TypeOf;
-import org.apache.isis.applib.services.settings.ApplicationSetting;
-
+@DomainService(menuOrder = "92")
 @Named("Administration")
-public class EstatioAdministrationService {
+public class EstatioAdministrationService extends EstatioService<EstatioAdministrationService> {
+
+    public EstatioAdministrationService() {
+        super(EstatioAdministrationService.class);
+    }
 
     @MemberOrder(name = "Administration", sequence = "aaa.1")
     public void updateEpochDate(

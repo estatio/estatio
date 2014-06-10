@@ -18,13 +18,14 @@
  */
 package org.estatio.dom.agreement;
 
-import org.estatio.dom.EstatioDomainService;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "25", repositoryFor = AgreementType.class)
 @Hidden
 public class AgreementTypes extends EstatioDomainService<AgreementType> {
 

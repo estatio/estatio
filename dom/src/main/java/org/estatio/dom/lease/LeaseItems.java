@@ -20,22 +20,15 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.List;
-
 import com.google.common.collect.Iterables;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.PaymentMethod;
 
+@DomainService(menuOrder = "40", repositoryFor = LeaseItem.class)
 @Hidden
 public class LeaseItems extends EstatioDomainService<LeaseItem> {
 

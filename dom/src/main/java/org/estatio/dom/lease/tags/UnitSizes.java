@@ -19,16 +19,15 @@
 package org.estatio.dom.lease.tags;
 
 import java.util.List;
-
 import javax.jdo.Query;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "99", repositoryFor = UnitSize.class)
 @Hidden
 public class UnitSizes extends EstatioDomainService<UnitSize> {
 

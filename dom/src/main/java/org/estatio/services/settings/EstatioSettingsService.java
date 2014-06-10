@@ -19,13 +19,12 @@
 package org.estatio.services.settings;
 
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
-
 import org.estatio.dom.ApplicationSettingKey;
+import org.estatio.dom.EstatioService;
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
 
@@ -39,8 +38,13 @@ import org.estatio.dom.currency.Currency;
  * {@link ApplicationSettingKey defaults for keys} have been installed if
  * required.
  */
+@DomainService(menuOrder = "99")
 @Hidden
-public class EstatioSettingsService {
+public class EstatioSettingsService extends EstatioService<EstatioSettingsService> {
+
+    public EstatioSettingsService() {
+        super(EstatioSettingsService.class);
+    }
 
     /**
      * @see ApplicationSettingKey#epochDate

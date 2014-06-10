@@ -22,17 +22,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import org.estatio.dom.EstatioDomainService;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "99", repositoryFor = Link.class)
 @Hidden
 public class Links extends EstatioDomainService<Link> {
     

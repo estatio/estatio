@@ -19,22 +19,21 @@
 package org.estatio.dom.asset.registration.contributed;
 
 import java.util.List;
-
-import org.apache.isis.applib.AbstractContainedObject;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-
+import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
 import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 
+@DomainService(menuOrder = "10")
 @Hidden
-public class FixedAssetRegistrationContributions extends AbstractContainedObject {
+public class FixedAssetRegistrationContributions extends EstatioService<FixedAssetRegistrationContributions> {
+
+    public FixedAssetRegistrationContributions() {
+        super(FixedAssetRegistrationContributions.class);
+    }
 
     @NotInServiceMenu
     @MemberOrder(name = "Registrations", sequence = "13")

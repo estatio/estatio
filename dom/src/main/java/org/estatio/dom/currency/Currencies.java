@@ -19,16 +19,11 @@
 package org.estatio.dom.currency;
 
 import java.util.List;
-
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-
+@DomainService(menuOrder = "80", repositoryFor = Currency.class)
 public class Currencies extends EstatioDomainService<Currency> {
 
     public Currencies() {

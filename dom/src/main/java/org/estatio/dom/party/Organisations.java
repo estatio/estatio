@@ -19,15 +19,11 @@
 package org.estatio.dom.party;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "20", repositoryFor = Organisation.class)
 public class Organisations extends EstatioDomainService<Organisation> {
 
     public Organisations() {

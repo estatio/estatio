@@ -19,13 +19,14 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.utils.StringUtils;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.geography.Country;
+import org.estatio.dom.utils.StringUtils;
 
+@DomainService(menuOrder = "10", repositoryFor = Property.class)
 public class Properties extends EstatioDomainService<Property> {
 
     public Properties() {

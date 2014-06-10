@@ -18,18 +18,12 @@
 package org.estatio.dom.invoice.viewmodel;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.invoice.InvoiceStatus;
 
+@DomainService(menuOrder = "10")
 @Immutable
 public class InvoiceSummariesForPropertyDueDateStatus
         extends EstatioDomainService<InvoiceSummaryForPropertyDueDateStatus> {

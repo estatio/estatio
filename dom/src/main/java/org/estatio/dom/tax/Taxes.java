@@ -19,16 +19,11 @@
 package org.estatio.dom.tax;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "80", repositoryFor = Tax.class)
 public class Taxes extends EstatioDomainService<Tax> {
 
     public Taxes() {

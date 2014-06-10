@@ -18,16 +18,22 @@
  */
 package org.estatio.webapp.services.admin;
 
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Named;
-
 import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.EstatioService;
 
 /**
  * This is a dummy service that is, nevertheless, registered, in order that 
  * miscellaneous domain services, typically for {@link EstatioImmutableObject reference data} entities,
  * can associate their various actions together.
  */
+@DomainService(menuOrder = "91")
 @Named("Other")
-public class OtherServices {
+public class OtherServices extends EstatioService<OtherServices> {
+
+    public OtherServices() {
+        super(OtherServices.class);
+    }
 
 }

@@ -19,18 +19,13 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
+@DomainService(menuOrder = "25", repositoryFor = AgreementRole.class)
 @Hidden
 public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 

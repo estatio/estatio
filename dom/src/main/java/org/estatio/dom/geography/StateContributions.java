@@ -19,15 +19,10 @@
 package org.estatio.dom.geography;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.EstatioService;
 
 /**
  * Decouples {@link Country} from {@link State}s.
@@ -35,11 +30,12 @@ import org.estatio.dom.EstatioDomainService;
  * <p>
  * TODO: no good reason to do this; they are in the same cluster.  Map in the usual fashion. 
  */
+@DomainService(menuOrder = "80")
 @Hidden
-public class StateContributions extends EstatioDomainService<State> {
+public class StateContributions extends EstatioService<StateContributions> {
 
     public StateContributions() {
-        super(StateContributions.class, State.class);
+        super(StateContributions.class);
     }
 
     // //////////////////////////////////////

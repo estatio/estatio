@@ -18,11 +18,13 @@
  */
 package org.estatio.dom.lease;
 
+import org.apache.isis.applib.annotation.DomainService;
 import org.estatio.dom.asset.Units;
 
 /**
  * By subclassing, in effect defines the factory for the implementation of <tt>Unit</tt>.
  */
+@DomainService(menuOrder = "10", repositoryFor = UnitForLease.class)
 public class UnitsForLease extends Units<UnitForLease> {
 
     public UnitsForLease() {

@@ -20,26 +20,17 @@ package org.estatio.dom.bankmandate;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementRoleTypes;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.*;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.party.Party;
-import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-
+@DomainService(menuOrder = "30", repositoryFor = BankMandate.class)
 public class BankMandates extends EstatioDomainService<BankMandate> {
 
     public BankMandates() {

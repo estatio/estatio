@@ -19,13 +19,13 @@
 package org.estatio.dom.asset.financial;
 
 import java.util.List;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.financial.FinancialAccount;
 
+@DomainService(menuOrder = "10", repositoryFor = FixedAssetFinancialAccount.class)
 public class FixedAssetFinancialAccounts extends EstatioDomainService<FixedAssetFinancialAccount> {
 
     public FixedAssetFinancialAccounts() {

@@ -18,15 +18,16 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 
 /**
  * Domain service acting as repository for finding existing {@link PostalAddress postal address}es.
  */
+@DomainService(menuOrder = "70", repositoryFor = PostalAddress.class)
 @Hidden
 public class PostalAddresses 
         extends EstatioDomainService<PostalAddress> {

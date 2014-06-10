@@ -19,13 +19,13 @@
 package org.estatio.dom.lease.breaks;
 
 import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.Lease;
 
+@DomainService(menuOrder = "40", repositoryFor = BreakOption.class)
 @Hidden
 public class BreakOptions extends EstatioDomainService<BreakOption> {
 

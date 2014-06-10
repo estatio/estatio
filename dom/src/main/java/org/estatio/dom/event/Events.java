@@ -19,16 +19,15 @@
 package org.estatio.dom.event;
 
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
-
 import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "85", repositoryFor = Event.class)
 @Hidden
 public class Events extends EstatioDomainService<Event> {
 

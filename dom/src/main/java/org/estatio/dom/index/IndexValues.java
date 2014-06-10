@@ -21,23 +21,13 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.EstatioInteractionCache;
 
-/**
- * Domain service acting as a repository of {@link IndexValue}s.
- */
+@DomainService(menuOrder = "60", repositoryFor = IndexValue.class)
 public class IndexValues
         extends EstatioDomainService<IndexValue> {
 

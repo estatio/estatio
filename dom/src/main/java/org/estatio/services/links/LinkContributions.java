@@ -21,16 +21,20 @@ package org.estatio.services.links;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-
 import com.danhaywood.isis.domainservice.stringinterpolator.StringInterpolatorService;
 import com.danhaywood.isis.domainservice.stringinterpolator.StringInterpolatorService.Root;
-
-import org.estatio.services.settings.EstatioSettingsService;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.estatio.dom.EstatioService;
+import org.estatio.services.settings.EstatioSettingsService;
 
-public class LinkContributions {
+@DomainService(menuOrder = "99")
+public class LinkContributions extends EstatioService<LinkContributions> {
+
+    public LinkContributions() {
+        super(LinkContributions.class);
+    }
 
     @NotInServiceMenu
     @Named("Reports")

@@ -20,11 +20,13 @@ package org.estatio.webapp.services.admin;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.core.metamodel.services.devutils.DeveloperUtilitiesServiceDefault;
 
+@DomainService(menuOrder = "96")
 public class DeveloperUtilities extends DeveloperUtilitiesServiceDefault {
 
     /**

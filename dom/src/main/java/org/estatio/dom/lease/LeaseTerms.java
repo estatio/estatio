@@ -20,18 +20,13 @@ package org.estatio.dom.lease;
 
 import java.math.BigInteger;
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Property;
 
+@DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
 
     public LeaseTerms() {

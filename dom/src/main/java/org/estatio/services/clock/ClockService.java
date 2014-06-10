@@ -19,15 +19,21 @@
 package org.estatio.services.clock;
 
 import org.joda.time.LocalDate;
-
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.clock.Clock;
 
 @Hidden
+@DomainService(menuOrder = "99")
 public class ClockService extends org.apache.isis.applib.services.clock.ClockService {
 
     private static final int MONTHS_IN_QUARTER = 3;
 
+    // cannot have the same id as the superclass
+    // (that is also registered as a service by virtue of @DomainService)
+    public String getId() {
+        return "estatioClockService";
+    }
 
     public long timestamp() {
         return Clock.getTime();

@@ -19,14 +19,13 @@
 package org.estatio.dom.asset.registration;
 
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.estatio.dom.EstatioDomainService;
 
-import org.apache.isis.applib.annotation.Programmatic;
-
+@DomainService(menuOrder = "10", repositoryFor = LandRegister.class)
 public class LandRegisters extends EstatioDomainService<LandRegister> {
 
     public LandRegisters() {

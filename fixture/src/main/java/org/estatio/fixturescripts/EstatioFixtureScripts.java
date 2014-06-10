@@ -19,9 +19,12 @@
 package org.estatio.fixturescripts;
 
 import java.util.List;
-
 import javax.inject.Inject;
-
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.fixturescripts.FixtureResult;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.index.Indices;
@@ -32,17 +35,8 @@ import org.estatio.fixture.currency.refdata.CurrenciesRefData;
 import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
 import org.estatio.fixture.link.refdata.LinksRefData;
 import org.estatio.services.settings.EstatioSettingsService;
-import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.CssClass;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.fixturescripts.FixtureResult;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.fixturescripts.FixtureScripts;
-
+@DomainService(menuOrder = "93")
 public class EstatioFixtureScripts extends FixtureScripts {
 
     public EstatioFixtureScripts() {

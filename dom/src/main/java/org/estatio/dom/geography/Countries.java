@@ -19,13 +19,11 @@
 package org.estatio.dom.geography;
 
 import java.util.List;
-import org.estatio.dom.EstatioDomainService;
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
+import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "80", repositoryFor = Country.class)
 public class Countries extends EstatioDomainService<Country> {
 
     public Countries() {

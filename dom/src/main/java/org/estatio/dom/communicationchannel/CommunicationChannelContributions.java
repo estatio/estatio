@@ -20,21 +20,11 @@ package org.estatio.dom.communicationchannel;
 
 import java.util.List;
 import java.util.SortedSet;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-
-import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.EstatioService;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -51,11 +41,12 @@ import org.estatio.dom.geography.States;
  * {@link #communicationChannels(CommunicationChannelOwner) communication
  * channels} of a particular {@link CommunicationChannelOwner}.
  */
+@DomainService(menuOrder = "70")
 @Hidden
-public class CommunicationChannelContributions extends EstatioDomainService<CommunicationChannel> {
+public class CommunicationChannelContributions extends EstatioService<CommunicationChannelContributions> {
 
     public CommunicationChannelContributions() {
-        super(CommunicationChannelContributions.class, CommunicationChannel.class);
+        super(CommunicationChannelContributions.class);
     }
 
     // //////////////////////////////////////

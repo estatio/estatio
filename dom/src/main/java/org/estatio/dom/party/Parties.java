@@ -20,11 +20,12 @@ package org.estatio.dom.party;
 
 import java.util.List;
 import com.google.common.collect.Lists;
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.utils.StringUtils;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.utils.StringUtils;
 
+@DomainService(menuOrder = "20", repositoryFor = Party.class)
 public class Parties extends EstatioDomainService<Party> {
 
     public Parties() {

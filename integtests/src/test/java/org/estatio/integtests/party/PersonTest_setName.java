@@ -19,16 +19,16 @@
 package org.estatio.integtests.party;
 
 import javax.inject.Inject;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Person;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.party.PersonForJohnDoe;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.junit.Before;
-import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
+public class PersonTest_setName extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -52,7 +52,6 @@ public class PersonTest_setNameIGNORED extends EstatioIntegrationTest {
         personJoeDoe = (Person)parties.findParties("Doe, Jo*").get(0);
     }
 
-    //@Ignore // have raised EST-200
     @Test
     public void cannotModifyName() throws Exception {
         expectedExceptions.expectMessage("Cannot be updated directly; derived from first and last names");

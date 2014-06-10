@@ -20,17 +20,10 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
@@ -41,6 +34,7 @@ import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
+@DomainService(menuOrder = "50", repositoryFor = InvoiceItemForLease.class)
 public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLease> {
 
     public InvoiceItemsForLease() {

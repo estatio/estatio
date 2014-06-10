@@ -82,11 +82,11 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.4.2-SNAPSHOT</isis.version>
-        <isis-objectstore-jdo.version>1.4.2-SNAPSHOT</isis-objectstore-jdo.version>
-        <isis-viewer-wicket.version>1.4.2-SNAPSHOT</isis-viewer-wicket.version>
-        <isis-viewer-restfulobjects.version>2.2.0</isis-viewer-restfulobjects.version>
-        <isis-security-shiro.version>1.4.2-SNAPSHOT</isis-security-shiro.version>
+        <isis.version>1.6.0-SNAPSHOT</isis.version>
+        <isis-objectstore-jdo.version>1.6.0-SNAPSHOT</isis-objectstore-jdo.version>
+        <isis-viewer-wicket.version>1.6.0-SNAPSHOT</isis-viewer-wicket.version>
+        <isis-viewer-restfulobjects.version>2.4.0-SNAPSHOT</isis-viewer-restfulobjects.version>
+        <isis-security-shiro.version>1.6.0-SNAPSHOT</isis-security-shiro.version>
 
 		<quartz-scheduler.version>2.2.1</quartz-scheduler.version>
         

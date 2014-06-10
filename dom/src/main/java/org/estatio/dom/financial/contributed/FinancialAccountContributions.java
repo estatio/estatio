@@ -19,22 +19,21 @@
 package org.estatio.dom.financial.contributed;
 
 import java.util.List;
-
-import org.apache.isis.applib.AbstractContainedObject;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-
+import org.estatio.dom.EstatioService;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.party.Party;
 
+@DomainService(menuOrder = "30")
 @Hidden
-public class FinancialAccountContributions extends AbstractContainedObject {
+public class FinancialAccountContributions extends EstatioService<FinancialAccountContributions> {
+
+    public FinancialAccountContributions() {
+        super(FinancialAccountContributions.class);
+    }
 
     @NotInServiceMenu
     @MemberOrder(name = "Financial Accounts", sequence = "13")

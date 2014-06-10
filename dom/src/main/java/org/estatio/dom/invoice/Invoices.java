@@ -20,6 +20,9 @@ package org.estatio.dom.invoice;
 
 import java.math.BigInteger;
 import java.util.List;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
@@ -31,10 +34,8 @@ import org.estatio.dom.numerator.Numerators;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.settings.EstatioSettingsService;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
+@DomainService(menuOrder = "50", repositoryFor = Invoice.class)
 public class Invoices extends EstatioDomainService<Invoice> {
 
     public Invoices() {

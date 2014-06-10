@@ -21,19 +21,13 @@ package org.estatio.dom.financial;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-
-import org.estatio.dom.EstatioDomainService;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
+import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class)
 @Hidden
 public class FinancialAccountTransactions extends EstatioDomainService<FinancialAccountTransaction> {
 

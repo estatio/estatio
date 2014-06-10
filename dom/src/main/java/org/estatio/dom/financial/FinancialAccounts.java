@@ -19,21 +19,14 @@
 package org.estatio.dom.financial;
 
 import java.util.List;
-
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.TypicalLength;
-
+@DomainService(menuOrder = "30", repositoryFor = FinancialAccount.class)
 @Named("Accounts")
 public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
 

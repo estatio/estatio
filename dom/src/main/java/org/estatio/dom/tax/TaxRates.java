@@ -20,16 +20,15 @@ package org.estatio.dom.tax;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 
+@DomainService(menuOrder = "80", repositoryFor = TaxRate.class)
 public class TaxRates extends EstatioDomainService<TaxRate> {
 
     public TaxRates() {

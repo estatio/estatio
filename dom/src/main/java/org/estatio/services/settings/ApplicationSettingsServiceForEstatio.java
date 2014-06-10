@@ -19,27 +19,29 @@ package org.estatio.services.settings;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.AbstractService;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 import org.apache.isis.applib.services.settings.SettingAbstract;
 import org.apache.isis.applib.services.settings.SettingType;
-
 import org.estatio.dom.ApplicationSettingCreator;
+import org.estatio.dom.EstatioDomainService;
 
 /**
  * Estatio-specific implementation of {@link ApplicationSettingsServiceRW} 
  * which also installs defaults on  {@link #init(Map) initialization}, and lets {@link ApplicationSetting setting}s
  * be {@link #find(String) found} and {@link #listAll() retrieved}.
  */
-public class ApplicationSettingsServiceForEstatio extends AbstractService implements ApplicationSettingsServiceRW {
+@DomainService(menuOrder = "99", repositoryFor = ApplicationSettingForEstatio.class)
+public class ApplicationSettingsServiceForEstatio extends EstatioDomainService<ApplicationSettingForEstatio> implements ApplicationSettingsServiceRW {
+
+    public ApplicationSettingsServiceForEstatio() {
+        super(ApplicationSettingsServiceForEstatio.class, ApplicationSettingForEstatio.class);
+    }
 
     @Programmatic
     @Override

@@ -19,21 +19,14 @@
 package org.estatio.dom.financial.contributed;
 
 import java.util.Collection;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-
+import org.estatio.dom.EstatioService;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleHolder;
@@ -55,8 +48,13 @@ import org.estatio.dom.bankmandate.BankMandateConstants;
  * {@link BankMandate} to {@link AgreementRole} to
  * {@link org.estatio.dom.party.Party}.
  */
+@DomainService(menuOrder = "30")
 @Hidden
-public class BankMandateContributions {
+public class BankMandateContributions extends EstatioService<BankMandateContributions> {
+
+    public BankMandateContributions() {
+        super(BankMandateContributions.class);
+    }
 
     /**
      * A contributed collection of the current {@link BankMandate}s of the

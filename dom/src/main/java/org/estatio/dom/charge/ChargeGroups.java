@@ -19,16 +19,12 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.ValueUtils;
 
+@DomainService(menuOrder = "80", repositoryFor = ChargeGroup.class)
 public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
 
     public ChargeGroups() {

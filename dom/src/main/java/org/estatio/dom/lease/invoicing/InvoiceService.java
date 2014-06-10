@@ -1,23 +1,22 @@
 package org.estatio.dom.lease.invoicing;
 
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Prototype;
-
+import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.services.clock.ClockService;
 
-public class InvoiceService {
+@DomainService(menuOrder = "50")
+public class InvoiceService extends EstatioService<InvoiceService> {
+
+    public InvoiceService() {
+        super(InvoiceService.class);
+    }
 
     /**
      * Returns the {@link InvoiceSummary}s that are newly

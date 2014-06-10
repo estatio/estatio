@@ -19,17 +19,15 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
+@DomainService(menuOrder = "25", repositoryFor = Agreement.class)
 @Hidden
 public class Agreements extends EstatioDomainService<Agreement> {
 

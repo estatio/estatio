@@ -19,17 +19,16 @@
 package org.estatio.dom.asset;
 
 import java.util.Collection;
-
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
+@DomainService(menuOrder = "10", repositoryFor = FixedAssetRole.class)
 @Hidden
 public class FixedAssetRoles extends EstatioDomainService<FixedAssetRole> {
 

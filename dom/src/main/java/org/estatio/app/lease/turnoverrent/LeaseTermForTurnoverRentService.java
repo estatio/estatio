@@ -19,28 +19,21 @@ package org.estatio.app.lease.turnoverrent;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
-
 import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
-
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 import org.estatio.dom.lease.LeaseTerms;
 
+@DomainService(menuOrder = "00")
 @Immutable
 public class LeaseTermForTurnoverRentService extends EstatioService<LeaseTermForTurnoverRentService> {
 

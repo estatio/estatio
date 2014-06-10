@@ -19,21 +19,14 @@
 package org.estatio.dom.lease.tags;
 
 import java.util.List;
-
 import javax.jdo.Query;
-
 import com.google.common.collect.Lists;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
+@DomainService(menuOrder = "99", repositoryFor = Brand.class)
 public class Brands extends EstatioDomainService<Brand> {
 
     public Brands() {

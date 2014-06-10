@@ -19,19 +19,14 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.SortedSet;
-
 import com.google.common.collect.Sets;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 
+@DomainService(menuOrder = "70", repositoryFor = CommunicationChannel.class)
 @Hidden
 public class CommunicationChannels extends EstatioDomainService<CommunicationChannel> {
 

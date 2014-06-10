@@ -16,63 +16,13 @@
  */
 package org.estatio.integtests;
 
+import java.util.List;
+import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
 import org.apache.log4j.Level;
-import org.estatio.dom.agreement.*;
-import org.estatio.dom.asset.FixedAssetRoles;
-import org.estatio.dom.asset.FixedAssets;
-import org.estatio.dom.asset.Properties;
-import org.estatio.dom.asset.financial.FixedAssetFinancialAccounts;
-import org.estatio.dom.asset.registration.contributed.FixedAssetRegistrationContributions;
-import org.estatio.dom.bankmandate.BankMandates;
-import org.estatio.dom.charge.ChargeGroups;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.communicationchannel.*;
-import org.estatio.dom.currency.Currencies;
-import org.estatio.dom.event.Events;
-import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.financial.contributed.FinancialAccountContributions;
-import org.estatio.dom.geography.Countries;
-import org.estatio.dom.geography.StateContributions;
-import org.estatio.dom.geography.States;
-import org.estatio.dom.guarantee.Guarantees;
-import org.estatio.dom.index.IndexBases;
-import org.estatio.dom.index.IndexValues;
-import org.estatio.dom.index.IndexationService;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.invoice.InvoiceItems;
-import org.estatio.dom.invoice.InvoiceNumeratorContributions;
-import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForPropertyDueDate;
-import org.estatio.dom.lease.*;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
-import org.estatio.dom.lease.tags.Activities;
-import org.estatio.dom.lease.tags.Brands;
-import org.estatio.dom.lease.tags.Sectors;
-import org.estatio.dom.lease.tags.UnitSizes;
-import org.estatio.dom.numerator.Numerators;
-import org.estatio.dom.party.Organisations;
-import org.estatio.dom.party.Parties;
-import org.estatio.dom.party.Persons;
-import org.estatio.dom.tax.TaxRates;
-import org.estatio.dom.tax.Taxes;
-import org.estatio.fixturescripts.EstatioFixtureScripts;
-import org.estatio.services.clock.ClockService;
-import org.estatio.services.links.LinkContributions;
-import org.estatio.services.links.Links;
-import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
-import org.estatio.services.settings.EstatioSettingsService;
-import org.picocontainer.behaviors.Guarded;
-
-import org.apache.isis.applib.services.classdiscovery.ClassDiscoveryServiceUsingReflections;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+import org.apache.isis.applib.ViewModel;
+import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
-import org.apache.isis.core.metamodel.services.bookmarks.BookmarkServiceDefault;
-import org.apache.isis.core.runtime.services.memento.MementoServiceDefault;
-import org.apache.isis.core.runtime.services.xmlsnapshot.XmlSnapshotServiceDefault;
-import org.apache.isis.core.wrapper.WrapperFactoryDefault;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
 import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
@@ -81,80 +31,23 @@ import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSuppor
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
     public EstatioIntegTestBuilder() {
+
         //no need to add, because each test will set up its own test fixtures anyway.
         //withFixtures(new EstatioBaseLineFixture());
         withLoggingAt(Level.INFO);
         with(testConfiguration());
         with(new DataNucleusPersistenceMechanismInstaller());
+
+        withServicesIn("org.estatio"
+                      ,"org.apache.isis.core.wrapper"
+                      ,"org.apache.isis.applib"
+                      ,"org.apache.isis.core.metamodel.services"
+                      ,"org.apache.isis.core.runtime.services");
+
         withServices(
-                new WrapperFactoryDefault(),
-                new Countries(),
-                new InvoiceSummariesForPropertyDueDate(),
-                new States(),
-                new StateContributions(),
-                new Currencies(),
-                new Indices(),
-                new IndexBases(),
-                new IndexValues(),
-                new FixedAssets(),
-                new FixedAssetFinancialAccounts(),
-                new Properties(),
-                new FixedAssetRoles(),
-                new UnitsForLease(),
-                new Parties(),
-                new Persons(),
-                new Organisations(),
-                new Agreements(),
-                new AgreementTypes(),
-                new AgreementRoles(),
-                new AgreementRoleCommunicationChannels(),
-                new AgreementRoleCommunicationChannelTypes(),
-                new AgreementRoleTypes(),
-                new BankMandates(),
-                new Guarantees(),
-                new Leases(),
-                new LeaseTerms(),
-                new LeaseItems(),
-                new LeaseTypes(),
-                new Occupancies(),
-                new Invoices(),
-                new InvoiceNumeratorContributions(),
-                new InvoiceItems(),
-                new InvoiceItemsForLease(),
-                new IndexationService(),
-                new CommunicationChannels(),
-                new CommunicationChannelContributions(),
-                new PostalAddresses(),
-                new EmailAddresses(),
-                new PhoneOrFaxNumbers(),
-                new Taxes(),
-                new TaxRates(),
-                new Events(),
-                new UnitSizes(),
-                new Sectors(),
-                new Activities(),
-                new Brands(),
-                new BookmarkServiceDefault(),
-                new XmlSnapshotServiceDefault(),
-                new MementoServiceDefault(),
-                new Charges(),
-                new ChargeGroups(),
-                new FinancialAccounts(),
-                new Numerators(),
-                new ClockService(),
                 new IsisJdoSupportImpl(),
-                new InvoiceCalculationService(),
-                new InvoiceSummariesForInvoiceRun(),
-                new ApplicationSettingsServiceForEstatio(),
-                new EstatioSettingsService(),
-                new EstatioFixtureScripts(),
-                new ClassDiscoveryServiceUsingReflections(),
-                new FinancialAccountContributions(),
-                new FixedAssetRegistrationContributions(),
                 new EventBusServiceJdo(),
-                new Links(),
-                new LinkContributions(),
-                new QueryResultsCache());
+                new FakeExcelService());
     }
 
     private static IsisConfiguration testConfiguration() {
@@ -178,5 +71,17 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 //             "estatio");
 
         return testConfiguration;
+    }
+
+    public static class FakeExcelService implements ExcelService {
+        @Override
+        public <T> Blob toExcel(List<T> domainObjects, Class<T> cls, String fileName) throws Exception {
+            return null;
+        }
+
+        @Override
+        public <T extends ViewModel> List<T> fromExcel(Blob excelBlob, Class<T> cls) throws Exception {
+            return null;
+        }
     }
 }

@@ -19,19 +19,13 @@
 package org.estatio.dom.invoice;
 
 import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 
+@DomainService(menuOrder = "50", repositoryFor = InvoiceItem.class)
 public class InvoiceItems extends EstatioDomainService<InvoiceItem> {
 
     public InvoiceItems() {

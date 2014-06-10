@@ -18,26 +18,25 @@
  */
 package org.estatio.services.appsettings;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
+import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.apache.isis.applib.services.settings.SettingAbstract;
 import org.apache.isis.applib.services.settings.SettingType;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
 import org.estatio.services.settings.ApplicationSettingsServiceForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class EstatioSettingsServiceTest {
 
@@ -53,7 +52,9 @@ public class EstatioSettingsServiceTest {
 
     @Mock
     private ApplicationSettingsServiceForEstatio  mockApplicationSettingsService;
-    
+    @Mock
+    private DomainObjectContainer mockDomainObjectContainer;
+
     @ClassUnderTest
     private EstatioSettingsServiceForTesting estatioSettingsService;
 
@@ -80,7 +81,8 @@ public class EstatioSettingsServiceTest {
     
     @Before
     public void setUp() throws Exception {
-        estatioSettingsService.injectApplicationSettings(mockApplicationSettingsService);        
+        estatioSettingsService.injectApplicationSettings(mockApplicationSettingsService);
+        estatioSettingsService.setContainer(mockDomainObjectContainer);
     }
     
     @Test

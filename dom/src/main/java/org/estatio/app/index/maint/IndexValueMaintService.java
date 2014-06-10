@@ -19,23 +19,21 @@ package org.estatio.app.index.maint;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
-
 import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
 import com.google.common.collect.Lists;
-
-import org.estatio.dom.EstatioService;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 import org.apache.isis.applib.value.Blob;
+import org.estatio.dom.EstatioService;
 
 
+@DomainService(menuOrder = "00")
 @Named("Index Value Maintenance")
 public class IndexValueMaintService extends EstatioService<IndexValueMaintService> {
 

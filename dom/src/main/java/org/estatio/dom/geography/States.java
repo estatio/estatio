@@ -20,19 +20,12 @@ package org.estatio.dom.geography;
 
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
-
 import org.estatio.dom.EstatioDomainService;
 
-/**
- * Domain service acting as a repository and factory of geographic {@link State}s.
- */
-public class States 
+@DomainService(menuOrder = "80", repositoryFor = State.class)
+public class States
         extends EstatioDomainService<State> {
 
     public States() {
