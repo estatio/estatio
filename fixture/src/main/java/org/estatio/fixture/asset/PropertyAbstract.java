@@ -20,15 +20,14 @@ package org.estatio.fixture.asset;
 
 import java.math.BigDecimal;
 import javax.inject.Inject;
+import org.joda.time.LocalDate;
 import org.estatio.dom.asset.*;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.joda.time.LocalDate;
 
 import static org.estatio.integtests.VT.ld;
 
@@ -68,8 +67,5 @@ public abstract class PropertyAbstract extends EstatioFixtureScript {
 
     @Inject
     protected Parties parties;
-
-    @Inject
-    protected CommunicationChannelContributions communicationChannelContributedActions;
 
 }

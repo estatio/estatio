@@ -20,9 +20,7 @@ package org.estatio.fixture.asset;
 
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.party.OrganisationForAcme;
 import org.estatio.fixture.party.PersonForJohnDoe;
@@ -51,16 +49,10 @@ public class PropertyForKal extends PropertyAbstract {
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         Country country = countries.findCountry("NLD");
 
-        Property property = createPropertyAndUnits(
+        createPropertyAndUnits(
                 PROPERTY_REFERENCE, "Kalvertoren", "Amsterdam", country, PropertyType.SHOPPING_CENTER, 40,
                 ld(2003, 12, 1), ld(2003, 12, 1), owner, manager, 52.37597, 4.90814,
                 executionContext);
-
-        State state = states.findState("NL-NH");
-        communicationChannelContributedActions.newPostal(property, CommunicationChannelType.POSTAL_ADDRESS, property.getCountry(), state, "Kalverstraat 12", null, null, "1017 AA", "Amsterdam");
-        communicationChannelContributedActions.newPhoneOrFax(property, CommunicationChannelType.PHONE_NUMBER, "+31 123 456789");
-        communicationChannelContributedActions.newPhoneOrFax(property, CommunicationChannelType.FAX_NUMBER, "+31 987 654321");
-        communicationChannelContributedActions.newEmail(property, CommunicationChannelType.EMAIL_ADDRESS, "info@kalvertoren.example.com");
     }
 
 

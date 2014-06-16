@@ -19,6 +19,7 @@
 package org.estatio.fixture.party;
 
 import javax.inject.Inject;
+import org.apache.isis.core.commons.ensure.Ensure;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
@@ -29,7 +30,6 @@ import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.hamcrest.CoreMatchers.*;
 

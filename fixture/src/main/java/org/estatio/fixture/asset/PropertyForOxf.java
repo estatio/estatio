@@ -18,11 +18,8 @@
  */
 package org.estatio.fixture.asset;
 
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.PersonForJohnDoe;
@@ -51,16 +48,10 @@ public class PropertyForOxf extends PropertyAbstract {
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
 
         Country country = countries.findCountry("GBR");
-        Property prop1 = createPropertyAndUnits(
+        createPropertyAndUnits(
                 PROPERTY_REFERENCE, "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25,
                 ld(1999, 1, 1), ld(2008, 6, 1), owner, manager, 51.74579, -1.24334,
                 executionContext);
-
-        State state = states.findState("GB-OXF");
-        communicationChannelContributedActions.newPostal(prop1, CommunicationChannelType.POSTAL_ADDRESS, prop1.getCountry(), state, "1 Market Street", null, null, "OX1 3HL", "Oxford");
-        communicationChannelContributedActions.newPhoneOrFax(prop1, CommunicationChannelType.PHONE_NUMBER, "+44 123 456789");
-        communicationChannelContributedActions.newPhoneOrFax(prop1, CommunicationChannelType.FAX_NUMBER, "+44 987 654321");
-        communicationChannelContributedActions.newEmail(prop1, CommunicationChannelType.EMAIL_ADDRESS, "info@oxford.example.com");
     }
 
 }
