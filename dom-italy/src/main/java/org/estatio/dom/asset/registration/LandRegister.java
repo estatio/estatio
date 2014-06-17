@@ -41,7 +41,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String comuneAmministrativo;
 
     @Optional
-    @MemberOrder(sequence="1")
+    @MemberOrder(sequence="10")
     public String getComuneAmministrativo() {
         return comuneAmministrativo;
     }
@@ -55,7 +55,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String comuneCatastale;
 
     @Optional
-    @MemberOrder(sequence="2")
+    @MemberOrder(sequence="11")
     public String getComuneCatastale() {
         return comuneCatastale;
     }
@@ -69,7 +69,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String codiceComuneCatastale;
 
     @Optional
-    @MemberOrder(sequence="3")
+    @MemberOrder(sequence="12")
     public String getCodiceComuneCatastale() {
         return codiceComuneCatastale;
     }
@@ -84,7 +84,7 @@ public class LandRegister extends FixedAssetRegistration {
 
     @Optional
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
-    @MemberOrder(sequence="4")
+    @MemberOrder(sequence="13")
     public BigDecimal getRendita() {
         return rendita;
     }
@@ -98,7 +98,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String foglio;
 
     @Optional
-    @MemberOrder(sequence="5")
+    @MemberOrder(sequence="14")
     public String getFoglio() {
         return foglio;
     }
@@ -112,7 +112,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String particella;
 
     @Optional
-    @MemberOrder(sequence="6")
+    @MemberOrder(sequence="15")
     public String getParticella() {
         return particella;
     }
@@ -126,7 +126,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String subalterno;
 
     @Optional
-    @MemberOrder(sequence="7")
+    @MemberOrder(sequence="16")
     public String getSubalterno() {
         return subalterno;
     }
@@ -140,7 +140,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String categoria;
 
     @Optional
-    @MemberOrder(sequence="8")
+    @MemberOrder(sequence="17")
     public String getCategoria() {
         return categoria;
     }
@@ -154,7 +154,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String classe;
 
     @Optional
-    @MemberOrder(sequence="9")
+    @MemberOrder(sequence="18")
     public String getClasse() {
         return classe;
     }
@@ -168,7 +168,7 @@ public class LandRegister extends FixedAssetRegistration {
     private String consistenza;
 
     @Optional
-    @MemberOrder(sequence="10")
+    @MemberOrder(sequence="19")
     public String getConsistenza() {
         return consistenza;
     }

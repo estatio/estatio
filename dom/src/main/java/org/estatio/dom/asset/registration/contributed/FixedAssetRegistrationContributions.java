@@ -38,12 +38,18 @@ public class FixedAssetRegistrationContributions extends EstatioService<FixedAss
     @NotInServiceMenu
     @MemberOrder(name = "Registrations", sequence = "13")
     public FixedAssetRegistration newRegistration(
-            final FixedAsset subject, 
+            final FixedAsset subject,
             final @Named("Type") FixedAssetRegistrationType registrationType) {
         final FixedAssetRegistration registration = registrationType.create(getContainer());
         registration.setSubject(subject);
         persistIfNotAlready(registration);
         return registration;
+    }
+
+    public boolean hideNewRegistration(
+            final FixedAsset subject,
+            final FixedAssetRegistrationType registrationType) {
+        return false; // TODO: return true if action is hidden, false if visible
     }
 
     // //////////////////////////////////////
@@ -56,9 +62,9 @@ public class FixedAssetRegistrationContributions extends EstatioService<FixedAss
     }
 
     // //////////////////////////////////////
-    
+
     private FixedAssetRegistrations fixedAssetRegistrations;
-    
+
     public void injectFixedAssetRegistrations(final FixedAssetRegistrations fixedAssetRegistrations) {
         this.fixedAssetRegistrations = fixedAssetRegistrations;
     }
