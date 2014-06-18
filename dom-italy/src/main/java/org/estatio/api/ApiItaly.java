@@ -17,18 +17,24 @@
 package org.estatio.api;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+
 import javax.inject.Inject;
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.estatio.dom.asset.Properties;
+
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationTypes;
 import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 import org.estatio.dom.asset.registration.LandRegister;
+
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 
 public class ApiItaly extends AbstractFactoryAndRepository {
 
@@ -43,7 +49,7 @@ public class ApiItaly extends AbstractFactoryAndRepository {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name="Migration", sequence = "90")
+    @MemberOrder(name = "Migration", sequence = "90")
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLandRegister(
             final @Named("propertyReference") String propertyReference,
@@ -59,6 +65,12 @@ public class ApiItaly extends AbstractFactoryAndRepository {
             final @Named("classe") @Optional String classe,
             final @Named("consistenza") @Optional String consistenza) {
         Unit unit = units.findUnitByReference(unitReference);
+        if (unit == null) {
+            unit = units.findUnitByReference(unitReference.replace(" ", "+"));
+        }
+        if (unit == null) {
+            throw new IllegalArgumentException("Unknown unit: ".concat(unitReference));
+        }
         LandRegister landRegister = null;
         List<FixedAssetRegistration> farts = fixedAssetRegistrations.findBySubject(unit);
         if (!farts.isEmpty()) {
@@ -70,7 +82,7 @@ public class ApiItaly extends AbstractFactoryAndRepository {
             landRegister.setComuneAmministrativo(comuneAmministrativo);
             landRegister.setComuneCatastale(codiceComuneCatastale);
             landRegister.setCodiceComuneCatastale(codiceComuneCatastale);
-            landRegister.setRendita(rendita);
+            landRegister.setRendita(rendita == null ? null : rendita.setScale(2, RoundingMode.HALF_EVEN));
             landRegister.setFoglio(foglio);
             landRegister.setParticella(particella);
             landRegister.setSubalterno(subalterno);
@@ -82,9 +94,6 @@ public class ApiItaly extends AbstractFactoryAndRepository {
     }
 
     // //////////////////////////////////////
-
-    @Inject
-    private Properties properties;
 
     @Inject
     private Units<Unit> units;
