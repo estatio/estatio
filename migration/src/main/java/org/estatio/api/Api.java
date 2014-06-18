@@ -899,8 +899,10 @@ public class Api extends AbstractFactoryAndRepository {
                     endDate,
                     description,
                     maximumAmount);
-        }
+        } 
         guarantee.setTerminationDate(terminationDate);
+        guarantee.setDescription(description);
+        
         FinancialAccountTransaction transaction = financialAccountTransactions.findTransaction(guarantee.getFinancialAccount(), transactionDate, BigInteger.ONE);
         if (transaction == null) {
             transaction = financialAccountTransactions.newTransaction(guarantee.getFinancialAccount(), transactionDate, transactionDescription, amount);
