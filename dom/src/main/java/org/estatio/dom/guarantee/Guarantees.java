@@ -21,23 +21,42 @@ package org.estatio.dom.guarantee;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
-import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.Render.Type;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.agreement.AgreementTypes;
-import org.estatio.dom.financial.*;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.financial.FinancialAccountTransaction;
+import org.estatio.dom.financial.FinancialAccountTransactions;
+import org.estatio.dom.financial.FinancialAccountType;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 
 @DomainService(menuOrder = "40", repositoryFor = Guarantee.class)
 public class Guarantees extends EstatioDomainService<Guarantee> {
@@ -67,10 +86,10 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
             ) {
 
         AgreementRoleType artGuarantee = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE);
-        Party leaseSecondaryParty = lease.getSecondaryParty();
+        Party leasePrimaryParty = lease.getPrimaryParty();
 
         AgreementRoleType artGuarantor = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTOR);
-        Party leasePrimaryParty = lease.getPrimaryParty();
+        Party leaseSecondaryParty = lease.getSecondaryParty();
 
         Guarantee guarantee = newTransientInstance(Guarantee.class);
         final AgreementType at = agreementTypes.find(GuaranteeConstants.AT_GUARANTEE);
@@ -96,10 +115,10 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
         guarantee.newRole(
                 artGuarantee,
-                leaseSecondaryParty, null, null);
+                leasePrimaryParty, null, null);
         guarantee.newRole(
                 artGuarantor,
-                leasePrimaryParty, null, null);
+                leaseSecondaryParty, null, null);
 
         persistIfNotAlready(guarantee);
 

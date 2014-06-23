@@ -35,6 +35,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -91,12 +92,12 @@ public class Guarantee
 
     @Programmatic
     protected AgreementRole getPrimaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTOR);
+        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTEE);
     }
 
     @Programmatic
     protected AgreementRole getSecondaryAgreementRole() {
-        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTEE);
+        return findCurrentOrMostRecentAgreementRole(GuaranteeConstants.ART_GUARANTOR);
     }
 
     // //////////////////////////////////////
@@ -152,6 +153,16 @@ public class Guarantee
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Guarantee changeDescription(
+            final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
+        setDescription(description);
+        return this;
+    }
+
+    public String default0ChangeDescription() {
+        return getDescription();
     }
 
     // //////////////////////////////////////
