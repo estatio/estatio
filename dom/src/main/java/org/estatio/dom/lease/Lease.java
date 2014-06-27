@@ -97,8 +97,7 @@ import org.apache.isis.core.commons.exceptions.IsisApplicationException;
                 value = "SELECT " +
                         "FROM org.estatio.dom.lease.Lease " +
                         "WHERE " +
-                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) && " +
-                        "tenancyEndDate == null " +
+                        "endDate != null && (endDate >= :rangeStartDate && endDate < :rangeEndDate) " +
                         "ORDER BY endDate")
 })
 @AutoComplete(repository = Leases.class, action = "autoComplete")
@@ -745,27 +744,20 @@ public class Lease
             @Named("Are you sure?") final Boolean confirm
             ) {
 
-        String validateAssign = validateAssign(reference, name, tenant, startDate, endDate, confirm);
-        if (validateAssign != null) {
-            // TODO: don't know if this is the right way but when calling this
-            // method using the Api or integration tests I want to reuse the
-            // validation code
-            // TODO: Dan says: could use WrapperFactory?
-
-            // TODO: Dan says: probably shouldn't be using IsisApplicationException, instead just ApplicationException (from the applib)
-            throw new IsisApplicationException("Validation error: ".concat(validateAssign));
-        }
-
         Lease newLease = leases.newLease(
-                reference, name,
+                reference, 
+                name,
                 this.getLeaseType(),
-                startDate, null, endDate,
-                this.getPrimaryParty(), tenant);
+                startDate, 
+                null, endDate,
+                this.getPrimaryParty(), 
+                tenant);
 
+        LocalDateInterval interval = new LocalDateInterval(startDate, endDate);
         createItemsAndTerms(newLease, startDate);
         createOccupancies(newLease, startDate);
         createBreakOptions(newLease, startDate);
-        this.terminate(endDate, true);
+        this.terminate(interval.endDateFromStartDate(), true);
         this.setNext(newLease);
         return newLease;
     }
@@ -859,7 +851,7 @@ public class Lease
         if (endDate.isBefore(startDate)) {
             return "End date can not be before start date.";
         }
-        return leases.findLeaseByReference(reference) == null ? null : "Lease reference already exists.";
+        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists.";
     }
 
     // //////////////////////////////////////

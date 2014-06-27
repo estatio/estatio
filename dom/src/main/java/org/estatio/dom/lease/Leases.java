@@ -66,7 +66,7 @@ public class Leases extends EstatioDomainService<Lease> {
             ) {
 
         LocalDate calculatedEndDate = calculateEndDate(startDate, endDate, duration);
-        return newLease(reference, name, leaseType, startDate, calculatedEndDate, null, null, landlord, tenant);
+        return newLease(reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
     }
 
     @Programmatic
