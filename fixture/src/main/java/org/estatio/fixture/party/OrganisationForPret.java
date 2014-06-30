@@ -18,8 +18,6 @@
  */
 package org.estatio.fixture.party;
 
-import org.estatio.fixture.EstatioBaseLineFixture;
-
 public class OrganisationForPret extends OrganisationAbstract {
 
     public static final String PARTY_REFERENCE = "PRET";
@@ -28,9 +26,18 @@ public class OrganisationForPret extends OrganisationAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         createOrganisation(
-                PARTY_REFERENCE +
-                ";Pret-a-Manger;;;;;;;;;", executionContext);
+                PARTY_REFERENCE,
+                "Pret-a-Manger",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                executionContext);
     }
-
 
 }

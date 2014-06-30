@@ -4,7 +4,7 @@
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
+ *  "License")"," you may not use this file except in compliance
  *  with the License.  You may obtain a copy of the License at
  *
  *        http://www.apache.org/licenses/LICENSE-2.0
@@ -18,15 +18,38 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.dom.party.Party;
+
 public class OrganisationForTopModel extends OrganisationAbstract {
 
     public static final String PARTY_REFERENCE = "TOPMODEL";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                PARTY_REFERENCE +
-                ";Topmodel Fashion;2 Top Road;;W2AXXX;London;;GBR;+31202211333;+312022211399;info@topmodel.example.com", executionContext);
+        Party party = createOrganisation(
+                PARTY_REFERENCE,
+                "Topmodel Fashion",
+                "2 Top Road",
+                null,
+                "W2AXXX",
+                "London",
+                null,
+                "GBR",
+                "+31202211333",
+                "+312022211399",
+                "info@topmodel.example.com",
+                executionContext);
+        createCommunicationChannels(
+                party,
+                "1 Circle Square",
+                null,
+                "W2AXXX",
+                "London",
+                null,
+                "GBR",
+                null,
+                null,
+                null,
+                executionContext);
     }
-
 }

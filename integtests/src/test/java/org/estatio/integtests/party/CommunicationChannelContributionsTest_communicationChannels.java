@@ -40,7 +40,6 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-
                 execute(new OrganisationForHelloWorld(), executionContext);
             }
         });
@@ -60,6 +59,6 @@ public class CommunicationChannelContributionsTest_communicationChannels extends
     
     @Test
     public void fixtureData() throws Exception {
-        Assert.assertThat(communicationChannelContributions.communicationChannels(partyHelloWorld).size(), is(3));
+        Assert.assertThat(communicationChannelContributions.communicationChannels(partyHelloWorld).size(), is(5));
     }
 }

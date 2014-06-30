@@ -29,8 +29,18 @@ public class OrganisationForMediaX extends OrganisationAbstract {
         execute(new EstatioBaseLineFixture(), executionContext);
 
         createOrganisation(
-                PARTY_REFERENCE +
-                ";Mediax Electronics;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@mediax.example.com", executionContext);
+                PARTY_REFERENCE,
+                "Mediax Electronics",
+                "Herengracht 100",
+                null,
+                "1010 AA",
+                "Amsterdam",
+                null,
+                "GBR",
+                "+31202211333",
+                "+312022211399",
+                "info@mediax.example.com", 
+                executionContext);
     }
 
 

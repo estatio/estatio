@@ -18,7 +18,7 @@
  */
 package org.estatio.fixture.party;
 
-import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.dom.party.Party;
 
 public class OrganisationForHelloWorld extends OrganisationAbstract {
 
@@ -26,10 +26,31 @@ public class OrganisationForHelloWorld extends OrganisationAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createOrganisation(
-                PARTY_REFERENCE +
-                ";Hello World Properties;5 Covent Garden;;W1A1AA;London;;GBR;+44202211333;+442022211399;info@hello.example.com", executionContext);
+        Party party = createOrganisation(
+                PARTY_REFERENCE,
+                "Hello World Properties",
+                "5 Covent Garden",
+                null,
+                "W1A1AA",
+                "London",
+                null,
+                "GBR",
+                "+44202211333",
+                "+442022211399",
+                "info@hello.example.com",
+                executionContext);
+        createCommunicationChannels(
+                party,
+                "1 Circle Square",
+                null,
+                "W2AXXX",
+                "London",
+                null,
+                "GBR",
+                null,
+                null,
+                null,
+                executionContext);
     }
-
 
 }

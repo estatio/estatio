@@ -18,10 +18,19 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.List;
 import java.util.SortedSet;
+
 import com.google.common.collect.Sets;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
@@ -100,6 +109,13 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
 
     // //////////////////////////////////////
 
+    @Prototype
+    public List<CommunicationChannel> allCommunicationChannels() {
+        return allInstances(CommunicationChannel.class);
+    }
+
+    // //////////////////////////////////////
+
     @NotInServiceMenu
     public CommunicationChannel findByReferenceAndType(
             final String reference, final CommunicationChannelType type) {
@@ -110,5 +126,14 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
         return Sets.newTreeSet(allMatches("findByOwner", "owner", owner));
     }
+    
+    @Programmatic
+    public SortedSet<CommunicationChannel> findByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type) {
+        return Sets.newTreeSet(allMatches("findByOwnerAndType", "owner", owner, "type", type));
+    }
 
+    @Programmatic
+    public SortedSet<CommunicationChannel> findOtherByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type, CommunicationChannel exclude) {
+        return Sets.newTreeSet(allMatches("findOtherByOwnerAndType", "owner", owner, "type", type, "exclude", exclude));
+    }
 }

@@ -18,13 +18,24 @@
  */
 package org.estatio.fixture.lease;
 
+import static org.estatio.integtests.VT.ld;
+
+import javax.inject.Inject;
+
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.fixture.party.PersonForJohnDoe;
-
-import static org.estatio.integtests.VT.ld;
 
 public class LeaseForOxfTopModel001 extends LeaseAbstract {
 
@@ -33,11 +44,20 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
     public static final String LANDLORD_REFERENCE = OrganisationForHelloWorld.PARTY_REFERENCE;
     public static final String TENANT_REFERENCE = OrganisationForTopModel.PARTY_REFERENCE;
 
+    @Inject
+    private AgreementRoleTypes agreementRoleTypes;
+
+    @Inject
+    private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
+
+    @Inject
+    private CommunicationChannels communicationChannels;
+
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             execute(new PersonForJohnDoe(), executionContext);
             execute(new OrganisationForHelloWorld(), executionContext);
             execute(new OrganisationForTopModel(), executionContext);
@@ -46,7 +66,7 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
 
         // exec
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
-        createLease(
+        Lease lease = createLease(
                 LEASE_REFERENCE, "Topmodel Lease",
                 UNIT_REFERENCE,
                 "Topmodel", "FASHION", "WOMEN",
@@ -54,6 +74,12 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
                 TENANT_REFERENCE,
                 ld(2010, 7, 15), ld(2022, 7, 14), true, true, manager,
                 executionContext);
+
+        AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
+        AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+        final CommunicationChannel postalAddress = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS).first();
+        agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress);
+
     }
 
 }

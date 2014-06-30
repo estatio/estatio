@@ -25,8 +25,18 @@ public class OrganisationForAcme extends OrganisationAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
         createOrganisation(
-                PARTY_REFERENCE +
-                ";ACME Properties International;Herengracht 100;null;1010 AA;Amsterdam;null;NLD;+31202211333;+312022211399;info@acme.example.com", executionContext);
+                PARTY_REFERENCE,
+                "ACME Properties International",
+                "Herengracht 100",
+                null,
+                "1010 AA", 
+                "Amsterdam",
+                null,
+                "NLD",
+                "+31202211333",
+                "+312022211399",
+                "info@acme.example.com",
+                executionContext);
     }
 
 }

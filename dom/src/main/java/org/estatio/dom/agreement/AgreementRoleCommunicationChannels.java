@@ -18,12 +18,20 @@
  */
 package org.estatio.dom.agreement;
 
+import java.util.List;
+
+import com.google.common.eventbus.Subscribe;
+
 import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRoleCommunicationChannel.class)
 @Hidden
@@ -36,13 +44,55 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
     @Hidden
     @ActionSemantics(Of.SAFE)
     public AgreementRoleCommunicationChannel findByRoleAndTypeAndContainsDate(
-            final AgreementRole role, 
-            final AgreementRoleCommunicationChannelType type, 
+            final AgreementRole role,
+            final AgreementRoleCommunicationChannelType type,
             final LocalDate date) {
-        return firstMatch("findByRoleAndTypeAndContainsDate", 
-                "role", role, 
-                "type", type, 
+        return firstMatch("findByRoleAndTypeAndContainsDate",
+                "role", role,
+                "type", type,
                 "date", date);
     }
 
+    @Hidden
+    @ActionSemantics(Of.SAFE)
+    public List<AgreementRoleCommunicationChannel> findByCommunicationChannel(
+            final CommunicationChannel communicationChannel) {
+        return allMatches("findByCommunicationChannel",
+                "communicationChannel", communicationChannel);
+    }
+
+    @Subscribe
+    public void on(CommunicationChannel.RemoveEvent ev) {
+        CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
+        CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
+
+        final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
+
+        // TODO: This code is obsolete because the replacement has bee carried
+        // out by the validate event.
+        for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
+            arcc.setCommunicationChannel(replacementCommunicationChannel);
+        }
+
+    }
+
+    @Subscribe
+    public void on(CommunicationChannel.ValidateRemoveEvent ev) {
+        CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
+        CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
+
+        final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
+
+        if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
+            throw new RecoverableException("Communication channel is being used: provide a replacement");
+        }
+
+        // TODO: We made the validate event responsible for the replacement
+        // because we need to do this *before* we delete the communication
+        // channel.
+        for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
+            arcc.setCommunicationChannel(replacementCommunicationChannel);
+        }
+
+    }
 }

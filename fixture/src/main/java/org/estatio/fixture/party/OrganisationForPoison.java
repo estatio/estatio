@@ -25,9 +25,18 @@ public class OrganisationForPoison extends OrganisationAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
         createOrganisation(
-                PARTY_REFERENCE +
-                ";Poison Perfumeries;Herengracht 100;;1010 AA;Amsterdam;;GBR;+31202211333;+312022211399;info@poison.example.com", executionContext);
+                PARTY_REFERENCE,
+                "Poison Perfumeries",
+                "Herengracht 100",
+                null,
+                "1010 AA",
+                "Amsterdam",
+                null,
+                "GBR",
+                "+31202211333",
+                "+312022211399",
+                "info@poison.example.com",
+                executionContext);
     }
-
 
 }

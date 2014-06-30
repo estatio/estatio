@@ -19,7 +19,7 @@
 package org.estatio.fixture.party;
 
 import javax.inject.Inject;
-import org.apache.isis.core.commons.ensure.Ensure;
+
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.geography.Countries;
@@ -31,59 +31,83 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Persons;
 import org.estatio.fixture.EstatioFixtureScript;
 
-import static org.hamcrest.CoreMatchers.*;
-
 /**
- * Sets up the {@link org.estatio.dom.party.Organisation} and also a number of {@link org.estatio.dom.communicationchannel.CommunicationChannel}s.
+ * Sets up the {@link org.estatio.dom.party.Organisation} and also a number of
+ * {@link org.estatio.dom.communicationchannel.CommunicationChannel}s.
  */
 public abstract class OrganisationAbstract extends EstatioFixtureScript {
 
     @Override
     protected abstract void execute(ExecutionContext executionContext);
 
-    protected Party createOrganisation(String input, ExecutionContext executionContext) {
+    protected Party createOrganisation(
+            String partyReference,
+            String partyName,
+            String address1,
+            String address2,
+            String postalCode,
+            String city,
+            String stateReference,
+            String countryReference,
+            String phone,
+            String fax,
+            String emailAddress,
+            ExecutionContext executionContext) {
 
-        String[] values = input.split(";");
-        Party party = organisations.newOrganisation(values[0], values[1]);
+        Party party = organisations.newOrganisation(partyReference, partyName);
 
-        Ensure.ensureThatArg(party, is(not(nullValue())), "could not find party '" + values[0] + "', '" + values[1] + "'");
-        getContainer().flush();
+        createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
 
-        if(defined(values, 2)) {
-            final Country country = countries.findCountry(values[7]);
-            final State state = states.findState(values[6]);
-            if(country != null && state != null) {
-                communicationChannelContributedActions.newPostal(
-                        party, 
-                        CommunicationChannelType.POSTAL_ADDRESS, 
-                        country, 
-                        state, 
-                        values[2], 
-                        values[3], 
-                        null, 
-                        values[4], values[5]);
-            }
+        return executionContext.add(this, party.getReference(), party);
+    }
+
+    protected Party createCommunicationChannels(
+            Party party,
+            String address1,
+            String address2,
+            String postalCode,
+            String city,
+            String stateReference,
+            String countryReference,
+            String phone,
+            String fax,
+            String emailAddress,
+            ExecutionContext executionContext) {
+
+        if (address1 != null) {
+            final Country country = countries.findCountry(countryReference);
+            final State state = states.findState(stateReference);
+            communicationChannelContributedActions.newPostal(
+                    party,
+                    CommunicationChannelType.POSTAL_ADDRESS,
+                    country,
+                    state,
+                    address1,
+                    address2,
+                    null,
+                    postalCode,
+                    city);
             getContainer().flush();
         }
-        if(defined(values, 8)) {
+        if (phone != null) {
             communicationChannelContributedActions.newPhoneOrFax(
-                    party, 
-                    CommunicationChannelType.PHONE_NUMBER, 
-                    values[8]);
+                    party,
+                    CommunicationChannelType.PHONE_NUMBER,
+                    phone);
             getContainer().flush();
         }
-        if(defined(values, 9)) {
+        if (fax != null) {
             communicationChannelContributedActions.newPhoneOrFax(
-                    party, 
-                    CommunicationChannelType.FAX_NUMBER, 
-                    values[9]);
+                    party,
+                    CommunicationChannelType.FAX_NUMBER,
+                    fax);
             getContainer().flush();
         }
-        if(defined(values, 10)) {
+        if (emailAddress != null) {
             communicationChannelContributedActions.newEmail(
-                    party, 
-                    CommunicationChannelType.EMAIL_ADDRESS, 
-                    values[10]);
+                    party,
+                    CommunicationChannelType.EMAIL_ADDRESS,
+                    emailAddress);
             getContainer().flush();
         }
 
@@ -91,7 +115,7 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
     }
 
     protected boolean defined(String[] values, int i) {
-        return values.length>i && !values[i].isEmpty();
+        return values.length > i && !values[i].isEmpty();
     }
 
     // //////////////////////////////////////

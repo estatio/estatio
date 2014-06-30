@@ -25,9 +25,18 @@ public class OrganisationForMiracle extends OrganisationAbstract {
     @Override
     protected void execute(ExecutionContext executionContext) {
         createOrganisation(
-                PARTY_REFERENCE +
-                ";Miracle Shoes;;;;;;;;;", executionContext);
+                PARTY_REFERENCE,
+                "Miracle Shoes",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                executionContext);
     }
-
 
 }

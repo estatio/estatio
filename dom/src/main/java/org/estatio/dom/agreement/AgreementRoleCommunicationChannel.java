@@ -81,7 +81,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE role == :role "
                         + "&& type == :type "
                         + "&& (startDate == null || startDate <= :date) "
-                        + "&& (endDate == null || endDate > :date) ")
+                        + "&& (endDate == null || endDate > :date) "),
+        @javax.jdo.annotations.Query(
+                name = "findByCommunicationChannel", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRoleCommunicationChannel "
+                        + "WHERE communicationChannel == :communicationChannel ")
 })
 @Unique(name = "AgreementRoleCommunicationChannel_role_startDate_type_communicationChannel_UNQ",
         members = { "role", "startDate", "type", "communicationChannel" })
