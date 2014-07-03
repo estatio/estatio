@@ -252,6 +252,7 @@ public class LandRegister extends FixedAssetRegistration {
             setCategoria(categoria);
             setClasse(classe);
             setConsistenza(consistenza);
+            setDescription(changeDescription);
             return this;
         }
     }
