@@ -24,13 +24,15 @@ import org.estatio.dom.utils.StringUtils;
 public enum UnitType implements TitledEnum {
 
     BOUTIQUE,
-    STORAGE,
-    MEDIUM,
-    HYPERMARKET,
-    EXTERNAL,
-    DEHOR,
     CINEMA,
+    DEHOR,
+    EXTERNAL,
+    HYPERMARKET,
+    MEDIUM,
+    OFFICE,
     SERVICES,
+    STORAGE,
+    TECHNICAL_ROOM,
     VIRTUAL;
 
     public String title() {
