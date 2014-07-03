@@ -83,10 +83,7 @@ language governing permissions and limitations under the License.
 
     <properties>
         <isis.version>1.6.0-SNAPSHOT</isis.version>
-        <isis-objectstore-jdo.version>1.6.0-SNAPSHOT</isis-objectstore-jdo.version>
         <isis-viewer-wicket.version>1.6.0-SNAPSHOT</isis-viewer-wicket.version>
-        <isis-viewer-restfulobjects.version>2.4.0-SNAPSHOT</isis-viewer-restfulobjects.version>
-        <isis-security-shiro.version>1.6.0-SNAPSHOT</isis-security-shiro.version>
 
 		<quartz-scheduler.version>2.2.1</quartz-scheduler.version>
         
@@ -495,33 +492,9 @@ language governing permissions and limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>org.apache.isis.objectstore</groupId>
-                <artifactId>isis-objectstore-jdo</artifactId>
-                <version>${isis-objectstore-jdo.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.isis.viewer</groupId>
                 <artifactId>isis-viewer-wicket</artifactId>
                 <version>${isis-viewer-wicket.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.isis.viewer</groupId>
-                <artifactId>isis-viewer-restfulobjects</artifactId>
-                <version>${isis-viewer-restfulobjects.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.isis.security</groupId>
-                <artifactId>isis-security-shiro</artifactId>
-                <version>${isis-security-shiro.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
