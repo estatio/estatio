@@ -18,21 +18,56 @@
  */
 package org.estatio.dom.asset;
 
-import org.junit.Test;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
 import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
+import org.estatio.dom.asset.registration.contributed.FixedAssetRegistrationForTesting;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+import org.joda.time.LocalDate;
+import org.junit.Test;
 
 public class FixedAssetRegistrationTest_beanProperties extends AbstractBeanPropertiesTest {
 
     @Test
     public void test() {
-        final FixedAssetRegistration pojo = new FixedAssetRegistration(){};
+        final FixedAssetRegistration pojo = new FixedAssetRegistration() {
+
+            @Override
+            public LocalDate default0ChangeDates() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public LocalDate default1ChangeDates() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public LocalDateInterval getEffectiveInterval() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public boolean isCurrent() {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+            @Override
+            public String getName() {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+        };
         newPojoTester()
-            .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
-            .withFixture(pojos(FixedAssetRegistrationType.class))
-            .exercise(pojo);
+                .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
+                .withFixture(pojos(FixedAssetRegistrationType.class))
+                .withFixture(pojos(FixedAssetRegistration.class, FixedAssetRegistrationForTesting.class))
+                .exercise(pojo);
     }
-    
+
 }

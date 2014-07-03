@@ -18,11 +18,11 @@
  */
 package org.estatio.dom.asset.registration;
 
-import org.junit.Test;
-
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.asset.registration.contributed.FixedAssetRegistrationForTesting;
+import org.junit.Test;
 
 public class LandRegisterTest_beanProperties extends AbstractBeanPropertiesTest {
 
@@ -30,9 +30,10 @@ public class LandRegisterTest_beanProperties extends AbstractBeanPropertiesTest 
     public void test() {
         final LandRegister pojo = new LandRegister();
         newPojoTester()
-            .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
-            .withFixture(pojos(FixedAssetRegistrationType.class))
-            .exercise(pojo);
+                .withFixture(pojos(FixedAsset.class, FixedAssetForTesting.class))
+                .withFixture(pojos(FixedAssetRegistration.class, FixedAssetRegistrationForTesting.class))
+                .withFixture(pojos(FixedAssetRegistrationType.class))
+                .exercise(pojo);
     }
-    
+
 }

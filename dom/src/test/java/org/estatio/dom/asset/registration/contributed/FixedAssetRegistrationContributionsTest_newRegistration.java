@@ -19,8 +19,15 @@ package org.estatio.dom.asset.registration.contributed;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.FixedAssetForTesting;
+import org.estatio.dom.asset.registration.FixedAssetRegistration;
+import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
+import org.estatio.dom.asset.registration.FixedAssetRegistrations;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,12 +35,6 @@ import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.asset.FixedAsset;
-import org.estatio.dom.asset.FixedAssetForTesting;
-import org.estatio.dom.asset.registration.FixedAssetRegistration;
-import org.estatio.dom.asset.registration.FixedAssetRegistrationType;
-import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 
 public class FixedAssetRegistrationContributionsTest_newRegistration {
 
@@ -50,19 +51,51 @@ public class FixedAssetRegistrationContributionsTest_newRegistration {
 
     private FixedAssetRegistrationContributions target;
 
-    public static class FoobarAssetRegistration extends FixedAssetRegistration {}
-    
+    public static class FoobarAssetRegistration extends FixedAssetRegistration {
+
+        @Override
+        public LocalDate default0ChangeDates() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public LocalDate default1ChangeDates() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public LocalDateInterval getEffectiveInterval() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public boolean isCurrent() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public String getName() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+    }
+
     @Before
     public void setUp() throws Exception {
         subject = new FixedAssetForTesting();
         registrationType = new FixedAssetRegistrationType();
         registrationType.setFullyQualifiedClassName(FoobarAssetRegistration.class.getName());
-        
+
         target = new FixedAssetRegistrationContributions();
         target.injectFixedAssetRegistrations(mockFixedAssetRegistrations);
         target.setContainer(mockContainer);
     }
-    
+
     @Test
     public void test() {
         final FoobarAssetRegistration created = new FoobarAssetRegistration();
@@ -70,7 +103,7 @@ public class FixedAssetRegistrationContributionsTest_newRegistration {
             {
                 oneOf(mockContainer).newTransientInstance(FoobarAssetRegistration.class);
                 will(returnValue(created));
-                
+
                 oneOf(mockContainer).persistIfNotAlready(created);
             }
         });

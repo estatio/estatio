@@ -21,7 +21,7 @@ package org.estatio.dom.asset.registration;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.jmock.Expectations;
+import org.estatio.dom.asset.FixedAssetForTesting;
 import org.jmock.auto.Mock;
 import org.junit.Before;
 import org.junit.Rule;
@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
-import org.estatio.dom.asset.FixedAssetForTesting;
 
 public class LandRegisterTest_title {
 
@@ -59,23 +57,12 @@ public class LandRegisterTest_title {
     }
 
     @Test
-    public void whenEmpty() {
-        context.checking(new Expectations() {
-            {
-                oneOf(mockContainer).titleOf(type);
-                will(returnValue("type"));
-
-                oneOf(mockContainer).titleOf(subject);
-                will(returnValue("subject"));
-            }
-        });
-        assertThat(cr.title(), is("type: subject"));
-    }
-
-    @Test
     public void whenAnythingSet() {
         cr.setComuneAmministrativo("Comune Amministrativo");
-        assertThat(cr.title(), is("Comune Amministrativo"));
+        cr.setFoglio("1");
+        cr.setParticella("2");
+        cr.setSubalterno("3");
+        assertThat(cr.title(), is("Comune Amministrativo-1.2.3"));
     }
 
 }

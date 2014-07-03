@@ -18,12 +18,20 @@
  */
 package org.estatio.dom.asset.registration;
 
+import java.math.BigDecimal;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.FixedAsset;
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
 
 @DomainService(menuOrder = "10", repositoryFor = LandRegister.class)
 public class LandRegisters extends EstatioDomainService<LandRegister> {
@@ -34,18 +42,50 @@ public class LandRegisters extends EstatioDomainService<LandRegister> {
 
     // //////////////////////////////////////
 
-    /**
-     * for migration API only
-     */
-    @Programmatic
-    public LandRegister newLandRegister() {
-        return null;
-    }
-
     @PostConstruct
     @Programmatic
     public void init(Map<String, String> properties) {
         fixedAssetRegistrationTypes.findOrCreate(LandRegisterConstants.FART_LAND_REGISTER, LandRegister.class);
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public LandRegister newRegistration(
+            final FixedAsset subject,
+            final LandRegister previous,
+            final @Named("Comune amministrativo") @Optional String comuneAmministrativo,
+            final @Named("Comune catastale") @Optional String comuneCatastale,
+            final @Named("Codice comuneCatastale") @Optional String codiceComuneCatastale,
+            final @Named("Rendita") @Optional BigDecimal rendita,
+            final @Named("Foglio") @Optional String foglio,
+            final @Named("Particella") @Optional String particella,
+            final @Named("Subalterno") @Optional String subalterno,
+            final @Named("Categoria") @Optional String categoria,
+            final @Named("Classe") @Optional String classe,
+            final @Named("Consistenza") @Optional String consistenza,
+            final @Named("Start date") @Optional LocalDate startDate,
+            final @Named("Description") @Optional String description) {
+        LandRegister obj = (LandRegister) fixedAssetRegistrationTypes.findByTitle(LandRegisterConstants.FART_LAND_REGISTER).create(getContainer());
+        obj.setSubject(subject);
+        obj.setComuneAmministrativo(comuneAmministrativo);
+        obj.setComuneCatastale(comuneCatastale);
+        obj.setCodiceComuneCatastale(codiceComuneCatastale);
+        obj.setRendita(rendita);
+        obj.setFoglio(foglio);
+        obj.setParticella(particella);
+        obj.setSubalterno(subalterno);
+        obj.setCategoria(categoria);
+        obj.setClasse(classe);
+        obj.setConsistenza(consistenza);
+        obj.setDescription(description);
+        persist(obj);
+        if (previous != null) {
+            previous.setNext(obj);
+            obj.setPrevious(previous);
+        }
+        obj.changeDates(startDate, null);
+        return obj;
     }
 
     // //////////////////////////////////////
