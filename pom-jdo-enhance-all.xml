@@ -19,13 +19,13 @@
         <relativePath />
     </parent>
 
-    <groupId>org.apache.isis.core</groupId>
-    <artifactId>isis-jdo-enhance-all</artifactId>
-    <version>1.6.0-SNAPSHOT</version>
+    <groupId>org.estatio</groupId>
+    <artifactId>estatio-jdo-enhance-all</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     
     <packaging>pom</packaging>
 
-    <name>Apache Isis JDO Enhance All</name>
+    <name>Estatio JDO Enhance All</name>
 
     <description>
         Utility to enhance all JDO projects with a single command:
