@@ -34,8 +34,14 @@
       }
     },
     {
-      "span": 0,
-      "collections": {}
+      "span": 12,
+      "collections": {
+        "agreements": {
+          "render": {
+            "value": "EAGERLY"
+          }
+        }
+      }
     }
   ],
   "actions": {

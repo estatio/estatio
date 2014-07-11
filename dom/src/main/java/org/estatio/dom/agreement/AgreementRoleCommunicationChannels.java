@@ -19,17 +19,12 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
-
 import com.google.common.eventbus.Subscribe;
-
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.RecoverableException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 
@@ -62,36 +57,25 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
     }
 
     @Subscribe
-    public void on(CommunicationChannel.RemoveEvent ev) {
+    public void on(final CommunicationChannel.RemoveEvent ev) {
         CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
         CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
 
-        final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
+        switch (ev.getPhase()) {
+            case VALIDATE:
+                final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
 
-        // TODO: This code is obsolete because the replacement has bee carried
-        // out by the validate event.
-        for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
-            arcc.setCommunicationChannel(replacementCommunicationChannel);
-        }
+                if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
+                    ev.invalidate("Communication channel is being used: provide a replacement");
+                }
 
-    }
-
-    @Subscribe
-    public void on(CommunicationChannel.ValidateRemoveEvent ev) {
-        CommunicationChannel sourceCommunicationChannel = (CommunicationChannel) ev.getSource();
-        CommunicationChannel replacementCommunicationChannel = ev.getReplacement();
-
-        final List<AgreementRoleCommunicationChannel> communicationChannels = findByCommunicationChannel(sourceCommunicationChannel);
-
-        if (communicationChannels.size() > 0 && replacementCommunicationChannel == null) {
-            throw new RecoverableException("Communication channel is being used: provide a replacement");
-        }
-
-        // TODO: We made the validate event responsible for the replacement
-        // because we need to do this *before* we delete the communication
-        // channel.
-        for (AgreementRoleCommunicationChannel arcc : communicationChannels) {
-            arcc.setCommunicationChannel(replacementCommunicationChannel);
+                ev.setCommunicationChannels(communicationChannels);
+                break;
+            case EXECUTING:
+                for (AgreementRoleCommunicationChannel arcc : ev.getImpactedCommunicationChannels()) {
+                    arcc.setCommunicationChannel(replacementCommunicationChannel);
+                }
+                break;
         }
 
     }

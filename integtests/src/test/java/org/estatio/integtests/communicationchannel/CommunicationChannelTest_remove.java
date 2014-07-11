@@ -18,20 +18,12 @@
  */
 package org.estatio.integtests.communicationchannel;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-
 import java.util.SortedSet;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -41,6 +33,10 @@ import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 
 public class CommunicationChannelTest_remove extends EstatioIntegrationTest {
 
@@ -71,7 +67,7 @@ public class CommunicationChannelTest_remove extends EstatioIntegrationTest {
     public void setUp() throws Exception {
         party = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
         final SortedSet<CommunicationChannel> postalAddresses = communicationChannels.findByOwnerAndType(party, CommunicationChannelType.POSTAL_ADDRESS);
-        assertThat(postalAddresses.size(), is(2));
+            assertThat(postalAddresses.size(), is(2));
         communicationChannel = postalAddresses.first();
         communicationChannelReplacement = postalAddresses.last();
         assertNotEquals(communicationChannel, communicationChannelReplacement);

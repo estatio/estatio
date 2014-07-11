@@ -18,33 +18,18 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.util.List;
 import java.util.SortedSet;
-
 import javax.inject.Inject;
-import javax.jdo.annotations.DiscriminatorStrategy;
-import javax.jdo.annotations.Extension;
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.VersionStrategy;
-
+import javax.jdo.annotations.*;
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.RecoverableException;
-import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.PostsActionInvokedEvent;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.eventbus.ActionInvokedEvent;
-
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 
 /**
  * Represents a mechanism for communicating with its
@@ -206,21 +191,7 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
-    public static class ValidateRemoveEvent extends ActionInvokedEvent<CommunicationChannel> {
-        private static final long serialVersionUID = 1L;
-
-        public ValidateRemoveEvent(
-                final CommunicationChannel source,
-                final Object... arguments) {
-            super(source, null, arguments);
-        }
-
-        public CommunicationChannel getReplacement() {
-            return (CommunicationChannel) (this.getArguments().isEmpty() ? null : getArguments().get(0));
-        }
-    }
-
-    public static class RemoveEvent extends ActionInvokedEvent<CommunicationChannel> {
+    public static class RemoveEvent extends ActionInteractionEvent<CommunicationChannel> {
         private static final long serialVersionUID = 1L;
 
         public RemoveEvent(
@@ -233,20 +204,29 @@ public abstract class CommunicationChannel
         public CommunicationChannel getReplacement() {
             return (CommunicationChannel) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
+
+        //region > communicationChannels
+        private List<AgreementRoleCommunicationChannel> communicationChannels;
+
+        /**
+         * These are the communication channels that are impacted by the remove; read during pre-execute phase.
+         */
+        public List<AgreementRoleCommunicationChannel> getImpactedCommunicationChannels() {
+            return communicationChannels;
+        }
+
+        /**
+         * Called during validate.
+         */
+        public void setCommunicationChannels(List<AgreementRoleCommunicationChannel> communicationChannels) {
+            this.communicationChannels = communicationChannels;
+        }
+        //endregion
     }
 
-    @PostsActionInvokedEvent(CommunicationChannel.RemoveEvent.class)
+    @ActionInteraction(CommunicationChannel.RemoveEvent.class)
     public void remove(@Named("Replace with") @Optional CommunicationChannel replacement) {
         getContainer().remove(this);
-    }
-
-    public String validateRemove(@Optional CommunicationChannel replacement) {
-        try {
-            getEventBusService().post(new ValidateRemoveEvent(this, replacement));
-        } catch (RecoverableException ex) {
-            return ex.getMessage();
-        }
-        return null;
     }
 
     public SortedSet<CommunicationChannel> choices0Remove() {
