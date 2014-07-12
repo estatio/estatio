@@ -25,7 +25,14 @@ public final class GuaranteeConstants {
 
     public final static String AT_GUARANTEE = "Guarantee";
 
+    /**
+     * One to whom a guaranty is made
+     */
+    public final static String ART_GUARANTEE = "Guarantee";
+
+    /**
+     * One who makes a guaranty
+     */
     public final static String ART_GUARANTOR = "Guarantor";
-    public final static String ART_GUARANTEE = "Gurantee";
 
 }
