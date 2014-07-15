@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -35,8 +33,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import org.datanucleus.NucleusContext;
 import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalContiguous;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
@@ -50,6 +48,7 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -97,10 +96,10 @@ import org.apache.isis.applib.annotation.Where;
         name = "AgreementRole_agreement_party_type_startDate_UNQ",
         members = { "agreement", "party", "type", "startDate" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@Immutable
 public class AgreementRole extends EstatioMutableObject<AgreementRole>
         implements WithIntervalContiguous<AgreementRole> {
 
-    
     private final WithIntervalContiguous.Helper<AgreementRole> helper =
             new WithIntervalContiguous.Helper<AgreementRole>(this);
 
@@ -147,13 +146,34 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
     @Title(sequence = "1")
-    @Disabled
     public AgreementRoleType getType() {
         return type;
     }
 
     public void setType(final AgreementRoleType type) {
         this.type = type;
+    }
+
+    // //////////////////////////////////////
+
+    private String externalReference;
+
+    @javax.jdo.annotations.Column(length = JdoColumnLength.NAME, allowsNull = "true")
+    public String getExternalReference() {
+        return externalReference;
+    }
+
+    public void setExternalReference(final String externalReference) {
+        this.externalReference = externalReference;
+    }
+
+    public AgreementRole changeExternalReference(@Named("External reference") String externalReference) {
+        setExternalReference(externalReference);
+        return this;
+    }
+
+    public String default0ChangeExternalReference() {
+        return getExternalReference();
     }
 
     // //////////////////////////////////////
@@ -185,8 +205,6 @@ public class AgreementRole extends EstatioMutableObject<AgreementRole>
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-
-    // //////////////////////////////////////
 
     @ActionSemantics(Of.IDEMPOTENT)
     @Override

@@ -7,7 +7,12 @@
           "members": {
             "type": {},
             "party": {},
-            "agreement": {}
+            "agreement": {},
+            "externalReference": {
+              "actions": {
+                "changeExternalReference": {}
+              }
+            }
           }
         },
         "Dates": {
