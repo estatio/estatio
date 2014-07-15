@@ -19,7 +19,11 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -31,14 +35,16 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.*;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
 import org.estatio.dom.lease.breaks.BreakExerciseType;
@@ -54,10 +60,22 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotPersisted;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.core.commons.exceptions.IsisApplicationException;
+import org.apache.isis.applib.annotation.Where;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -745,18 +763,19 @@ public class Lease
             ) {
 
         Lease newLease = leases.newLease(
-                reference, 
+                reference,
                 name,
                 this.getLeaseType(),
-                startDate, 
+                startDate,
                 null, endDate,
-                this.getPrimaryParty(), 
+                this.getPrimaryParty(),
                 tenant);
 
         LocalDateInterval interval = new LocalDateInterval(startDate, endDate);
         createItemsAndTerms(newLease, startDate);
         createOccupancies(newLease, startDate);
         createBreakOptions(newLease, startDate);
+        createAgreementRoleCommunicationChannels(newLease, startDate);
         this.terminate(interval.endDateFromStartDate(), true);
         this.setNext(newLease);
         return newLease;
@@ -777,7 +796,23 @@ public class Lease
     private void createOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : getOccupancies()) {
             if (occupancy.getInterval().contains(startDate)) {
-                newLease.occupy(occupancy.getUnit(), startDate);
+                Occupancy newOccupancy = newLease.occupy(occupancy.getUnit(), startDate);
+                newOccupancy.setActivity(occupancy.getActivity());
+                newOccupancy.setBrand(occupancy.getBrand());
+                newOccupancy.setSector(occupancy.getSector());
+                newOccupancy.setUnitSize(occupancy.getUnitSize());
+                newOccupancy.setReportOCR(occupancy.getReportOCR());
+                newOccupancy.setReportRent(occupancy.getReportRent());;
+                newOccupancy.setReportTurnover(occupancy.getReportTurnover());
+            }
+        }
+    }
+
+    private void createAgreementRoleCommunicationChannels(final Lease newLease, final LocalDate startDate) {
+        for (AgreementRole role : getRoles()) {
+            AgreementRole newRole = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
+            for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : role.getCommunicationChannels()) {
+                newRole.addCommunicationChannel(agreementRoleCommunicationChannel.getType(), agreementRoleCommunicationChannel.getCommunicationChannel());
             }
         }
     }

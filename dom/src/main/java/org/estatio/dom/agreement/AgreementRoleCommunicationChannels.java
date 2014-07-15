@@ -69,13 +69,15 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
                     ev.invalidate("Communication channel is being used: provide a replacement");
                 }
 
-                ev.setCommunicationChannels(communicationChannels);
+                ev.setImpactedCommunicationChannels(communicationChannels);
                 break;
             case EXECUTING:
                 for (AgreementRoleCommunicationChannel arcc : ev.getImpactedCommunicationChannels()) {
                     arcc.setCommunicationChannel(replacementCommunicationChannel);
                 }
                 break;
+        default:
+            break;
         }
 
     }

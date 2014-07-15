@@ -205,7 +205,6 @@ public abstract class CommunicationChannel
             return (CommunicationChannel) (this.getArguments().isEmpty() ? null : getArguments().get(0));
         }
 
-        //region > communicationChannels
         private List<AgreementRoleCommunicationChannel> communicationChannels;
 
         /**
@@ -218,10 +217,9 @@ public abstract class CommunicationChannel
         /**
          * Called during validate.
          */
-        public void setCommunicationChannels(List<AgreementRoleCommunicationChannel> communicationChannels) {
+        public void setImpactedCommunicationChannels(List<AgreementRoleCommunicationChannel> communicationChannels) {
             this.communicationChannels = communicationChannels;
         }
-        //endregion
     }
 
     @ActionInteraction(CommunicationChannel.RemoveEvent.class)

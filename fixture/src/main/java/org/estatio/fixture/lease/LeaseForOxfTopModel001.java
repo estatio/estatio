@@ -74,12 +74,15 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
                 TENANT_REFERENCE,
                 ld(2010, 7, 15), ld(2022, 7, 14), true, true, manager,
                 executionContext);
+        createAddress(lease, LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+        createAddress(lease, LeaseConstants.ARCCT_INVOICE_ADDRESS);
+    }
 
+    private void createAddress(Lease lease, String addressType) {
         AgreementRole agreementRole = lease.findRoleWithType(agreementRoleTypes.findByTitle(LeaseConstants.ART_TENANT), ld(2010, 7, 15));
-        AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+        AgreementRoleCommunicationChannelType agreementRoleCommunicationChannelType = agreementRoleCommunicationChannelTypes.findByTitle(addressType);
         final CommunicationChannel postalAddress = communicationChannels.findByOwnerAndType(lease.getSecondaryParty(), CommunicationChannelType.POSTAL_ADDRESS).first();
         agreementRole.addCommunicationChannel(agreementRoleCommunicationChannelType, postalAddress);
-
     }
 
 }

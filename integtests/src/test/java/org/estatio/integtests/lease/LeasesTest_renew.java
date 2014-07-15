@@ -23,6 +23,8 @@ import static org.junit.Assert.assertThat;
 
 import javax.inject.Inject;
 
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -50,11 +52,17 @@ public class LeasesTest_renew extends EstatioIntegrationTest {
     @Inject
     private Leases leases;
 
+    @Inject
+    private AgreementRoles agreementRoles;
+
+    @Inject
+    private AgreementRoleTypes agreementRoleTypes;
+
     @Test
-    public void whenWildcard() {
+    public void renew() {
         Lease lease = leases.allLeases().get(0);
-        String newReference = lease.default0Renew()+"-2";
-        String newName = lease.default1Renew()+"-2";
+        String newReference = lease.default0Renew() + "-2";
+        String newName = lease.default1Renew() + "-2";
         LocalDate newStartDate = lease.default2Renew();
         LocalDate newEndDate = new LocalDate(2030, 12, 31);
         Lease newLease = lease.renew(
@@ -67,11 +75,20 @@ public class LeasesTest_renew extends EstatioIntegrationTest {
         // Old lease
         assertThat(lease.getTenancyEndDate(), is(newStartDate.minusDays(1)));
         
+        //
+        assertThat(newLease.getOccupancies().size(),  is(1));
+
         // New lease
         assertThat(newLease.getStartDate(), is(newStartDate));
         assertThat(newLease.getEndDate(), is(newEndDate));
         assertThat(newLease.getTenancyStartDate(), is(newStartDate));
         assertThat(newLease.getTenancyEndDate(), is(newEndDate));
+
+        //
+
+        assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
+//        assertThat(agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(lease, lease.getSecondaryParty(), agreementRoleTypes.findByTitle("Tenant"), lease.getStartDate()).getCommunicationChannels().size(), is(2));
+
     }
 
 }
