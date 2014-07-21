@@ -32,6 +32,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannel;
 @Hidden
 public class AgreementRoleCommunicationChannels extends EstatioDomainService<AgreementRoleCommunicationChannel> {
 
+
     public AgreementRoleCommunicationChannels() {
         super(AgreementRoleCommunicationChannels.class, AgreementRoleCommunicationChannel.class);
     }
@@ -69,10 +70,10 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
                     ev.invalidate("Communication channel is being used: provide a replacement");
                 }
 
-                ev.setImpactedCommunicationChannels(communicationChannels);
+                putAgreementRoleCommunicationChannels(ev, communicationChannels);
                 break;
             case EXECUTING:
-                for (AgreementRoleCommunicationChannel arcc : ev.getImpactedCommunicationChannels()) {
+                for (AgreementRoleCommunicationChannel arcc : getAgreementRoleCommunicationChannels(ev)) {
                     arcc.setCommunicationChannel(replacementCommunicationChannel);
                 }
                 break;
@@ -80,5 +81,15 @@ public class AgreementRoleCommunicationChannels extends EstatioDomainService<Agr
             break;
         }
 
+    }
+
+    // //////////////////////////////////////
+
+    private static final String KEY = AgreementRoleCommunicationChannel.class.getName() + ".communicationChannels";
+    private static void putAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev, List<AgreementRoleCommunicationChannel> communicationChannels) {
+        ev.put(KEY, communicationChannels);
+    }
+    private static List<AgreementRoleCommunicationChannel> getAgreementRoleCommunicationChannels(CommunicationChannel.RemoveEvent ev) {
+        return (List<AgreementRoleCommunicationChannel>) ev.get(KEY);
     }
 }
