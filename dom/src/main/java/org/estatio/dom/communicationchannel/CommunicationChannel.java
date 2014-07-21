@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import java.util.List;
 import java.util.SortedSet;
 import javax.inject.Inject;
 import javax.jdo.annotations.*;
@@ -29,7 +28,6 @@ import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
 
 /**
  * Represents a mechanism for communicating with its
@@ -203,22 +201,6 @@ public abstract class CommunicationChannel
 
         public CommunicationChannel getReplacement() {
             return (CommunicationChannel) (this.getArguments().isEmpty() ? null : getArguments().get(0));
-        }
-
-        private List<AgreementRoleCommunicationChannel> communicationChannels;
-
-        /**
-         * These are the communication channels that are impacted by the remove; read during pre-execute phase.
-         */
-        public List<AgreementRoleCommunicationChannel> getImpactedCommunicationChannels() {
-            return communicationChannels;
-        }
-
-        /**
-         * Called during validate.
-         */
-        public void setImpactedCommunicationChannels(List<AgreementRoleCommunicationChannel> communicationChannels) {
-            this.communicationChannels = communicationChannels;
         }
     }
 
