@@ -34,8 +34,9 @@ import com.google.common.collect.Maps;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -68,6 +69,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 @javax.jdo.annotations.Unique(
         name = "BreakOption_lease_type_notificationDate_UNQ",
         members = { "lease", "type", "notificationDate" })
+@Immutable
 public abstract class BreakOption
         extends EstatioMutableObject<BreakOption>
         implements EventSubject {
@@ -83,7 +85,6 @@ public abstract class BreakOption
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Title(sequence = "1", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
-    @Disabled
     public Lease getLease() {
         return lease;
     }
@@ -97,7 +98,6 @@ public abstract class BreakOption
     private BreakType type;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Disabled
     @Title(sequence = "2")
     public BreakType getType() {
         return type;
@@ -136,7 +136,6 @@ public abstract class BreakOption
      * (using Isis' <tt>@Named</tt> annotation).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Disabled
     @Title(prepend = " ", sequence = "3")
     public LocalDate getExerciseDate() {
         return exerciseDate;
@@ -151,7 +150,6 @@ public abstract class BreakOption
     private BreakExerciseType exerciseType;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.BreakOption.EXERCISE_TYPE_ENUM)
-    @Disabled
     public BreakExerciseType getExerciseType() {
         return exerciseType;
     }
@@ -165,7 +163,6 @@ public abstract class BreakOption
     private String notificationPeriod;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.DURATION)
-    @Disabled
     public String getNotificationPeriod() {
         return notificationPeriod;
     }
@@ -192,7 +189,6 @@ public abstract class BreakOption
      * notification date}).
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
-    @Disabled
     public LocalDate getBreakDate() {
         return breakDate;
     }
@@ -214,6 +210,58 @@ public abstract class BreakOption
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    // //////////////////////////////////////
+
+    public BreakOption changeParameters(
+            final BreakExerciseType breakExerciseType,
+            final @Named("Break date") LocalDate breakDate,
+            final @Named("Excercise date") LocalDate excerciseDate,
+            final @Named("Description") @Optional String description) {
+        setExerciseType(breakExerciseType);
+        setBreakDate(breakDate);
+        setExerciseDate(exerciseDate);
+        setDescription(description);
+        // remove existing events
+        for (Event event : getEvents()) {
+            getContainer().remove(event);
+        }
+        // re-create events
+        persisting();
+        return this;
+    }
+
+    public BreakExerciseType default0ChangeParameters() {
+        return getExerciseType();
+    }
+
+    public LocalDate default1ChangeParameters() {
+        return getBreakDate();
+    }
+
+    public LocalDate default2ChangeParameters() {
+        return getExerciseDate();
+    }
+
+    public String default3ChangeParameters() {
+        return getDescription();
+    }
+
+    // //////////////////////////////////////
+
+    public Lease remove(final @Named("Reason") String reason) {
+        Lease lease = getLease();
+        doRemove();
+        return lease;
+    }
+
+    @Programmatic
+    public void doRemove() {
+        for (Event event : getEvents()) {
+            getContainer().remove(event);
+        }
+        getContainer().remove(this);
     }
 
     // //////////////////////////////////////
@@ -290,6 +338,12 @@ public abstract class BreakOption
                 }
             };
         }
+    }
+
+    // //////////////////////////////////////
+
+    public void persisting() {
+        throw new IllegalAccessError("Should be called on subclass");
     }
 
     // //////////////////////////////////////

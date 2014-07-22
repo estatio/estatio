@@ -155,6 +155,7 @@ public class FixedBreakOption
 
     // //////////////////////////////////////
 
+    @Override
     public void persisting() {
         createEvent(getBreakDate(), this, CALENDAR_NAME_FIXED_BREAK);
         createEvent(getExerciseDate(), this, CALENDAR_NAME_FIXED_BREAK_EXERCISE);
