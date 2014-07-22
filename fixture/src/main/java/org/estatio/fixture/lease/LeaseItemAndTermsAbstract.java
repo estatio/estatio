@@ -196,7 +196,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
         leaseTerm.setTaxPercentage(taxPercentage); //mandatory
         leaseTerm.setRecoverablePercentage(recoverablePercentage); //mandatory
-        leaseTerm.setTaxable(taxable); // mandatory
+        leaseTerm.setInvoicingDisabled(taxable); // mandatory
 
         leaseTerm.setTaxValue(null); // optional
         leaseTerm.setTaxableValue(null); // optional

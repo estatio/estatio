@@ -24,12 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.VersionStrategy;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
@@ -38,14 +41,26 @@ import org.estatio.dom.WithSequence;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Paged;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.Where;
 
 /**
  * An item component of an {@link #getLease() owning} {@link Lease}. Each is of
@@ -103,6 +118,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 })
 @Unique(name = "LeaseItem_lease_type_startDate_sequence_IDX", members = { "lease", "type", "startDate", "sequence" })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@Immutable
 public class LeaseItem
         extends EstatioMutableObject<LeaseItem>
         implements WithIntervalMutable<LeaseItem>, WithSequence {
@@ -126,7 +142,6 @@ public class LeaseItem
     private LeaseItemStatus status;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.STATUS_ENUM)
-    @Disabled
     public LeaseItemStatus getStatus() {
         return status;
     }
@@ -191,7 +206,6 @@ public class LeaseItem
     @javax.jdo.annotations.Column(name = "leaseId", allowsNull = "false")
     @Hidden(where = Where.PARENTED_TABLES)
     @Title(sequence = "1", append = ":")
-    @Disabled
     public Lease getLease() {
         return lease;
     }
@@ -205,7 +219,6 @@ public class LeaseItem
     private Tax tax;
 
     @Hidden(where = Where.ALL_TABLES)
-    @Optional
     @DescribedAs("When left empty the tax of the charge will be used")
     @javax.jdo.annotations.Column(name = "taxId", allowsNull = "true")
     public Tax getTax() {
@@ -249,7 +262,6 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent(defaultFetchGroup = "true")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     @Title(sequence = "2")
-    @Disabled
     public LeaseItemType getType() {
         return type;
     }
@@ -263,8 +275,6 @@ public class LeaseItem
     @javax.jdo.annotations.Persistent
     private LocalDate startDate;
 
-    @Optional
-    @Disabled
     @Override
     public LocalDate getStartDate() {
         return startDate;
@@ -279,7 +289,6 @@ public class LeaseItem
     private LocalDate endDate;
 
     @Optional
-    @Disabled
     public LocalDate getEndDate() {
         return endDate;
     }
@@ -327,7 +336,7 @@ public class LeaseItem
         return getChangeDates().validateChangeDates(startDate, endDate);
     }
 
-    public LeaseItem copyAndTerminate(
+    public LeaseItem copy(
             final @Named("Start date") LocalDate startDate,
             final InvoicingFrequency invoicingFrequency,
             final PaymentMethod paymentMethod,
@@ -339,7 +348,13 @@ public class LeaseItem
         return newItem;
     }
 
-    public LocalDate default0CopyAndTerminate() {
+    public LeaseItem terminate(
+            final @Named("End date") LocalDate endDate) {
+        this.changeDates(getStartDate(), endDate);
+        return this;
+    }
+
+    public LocalDate default0Terminate() {
         return getLease().getInterval().endDateExcluding();
     }
 
@@ -373,7 +388,6 @@ public class LeaseItem
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.INVOICING_FREQUENCY_ENUM)
     @Hidden(where = Where.PARENTED_TABLES)
-    @Disabled
     public InvoicingFrequency getInvoicingFrequency() {
         return invoicingFrequency;
     }
@@ -419,7 +433,6 @@ public class LeaseItem
     private LocalDate nextDueDate;
 
     @Optional
-    @Disabled
     @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getNextDueDate() {
         return nextDueDate;
@@ -446,7 +459,6 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
-    @Disabled
     @Optional
     public BigDecimal getValue() {
         return valueForDate(getClockService().now());
@@ -583,7 +595,8 @@ public class LeaseItem
     // //////////////////////////////////////
 
     public static class Predicates {
-        private Predicates(){}
+        private Predicates() {
+        }
 
         public static Predicate<LeaseItem> ofType(final LeaseItemType t) {
             return new Predicate<LeaseItem>() {
@@ -607,12 +620,6 @@ public class LeaseItem
 
     public final void injectLeaseTerms(final LeaseTerms leaseTerms) {
         this.leaseTerms = leaseTerms;
-    }
-
-    private InvoiceCalculationService invoiceCalculationService;
-
-    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
-        this.invoiceCalculationService = invoiceCalculationService;
     }
 
 }

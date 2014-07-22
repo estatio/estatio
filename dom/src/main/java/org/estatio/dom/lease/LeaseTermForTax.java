@@ -8,27 +8,46 @@ import javax.jdo.annotations.Persistent;
 
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
+@Immutable
 public class LeaseTermForTax extends LeaseTerm {
 
     private static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 
     // //////////////////////////////////////
 
-    private Boolean taxable;
+    private boolean invoicingDisabled;
 
-    public Boolean getTaxable() {
-        return taxable;
+    public boolean isInvoicingDisabled() {
+        return invoicingDisabled;
     }
 
-    public void setTaxable(final Boolean taxable) {
-        this.taxable = taxable;
+    public void setInvoicingDisabled(final boolean disabledForInvoicing) {
+        this.invoicingDisabled = disabledForInvoicing;
+    }
+
+    public LeaseTermForTax disableInvoicing(@Named("Reason") String reason) {
+        setInvoicingDisabled(true);
+        return this;
+    }
+
+    public boolean hideDisableInvoicing() {
+        return isInvoicingDisabled();
+    }
+
+    public LeaseTermForTax enableInvoicing(@Named("Reason") String reason) {
+        setInvoicingDisabled(false);
+        return this;
+    }
+
+    public boolean hideEnableInvoicing() {
+        return !isInvoicingDisabled();
     }
 
     // //////////////////////////////////////
@@ -36,7 +55,6 @@ public class LeaseTermForTax extends LeaseTerm {
     private BigDecimal taxableValue;
 
     @Optional
-    @Disabled
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     public BigDecimal getTaxableValue() {
         return taxableValue;
@@ -51,7 +69,6 @@ public class LeaseTermForTax extends LeaseTerm {
     private BigDecimal taxValue;
 
     @Optional
-    @Disabled
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     public BigDecimal getTaxValue() {
         return taxValue;
@@ -66,7 +83,6 @@ public class LeaseTermForTax extends LeaseTerm {
     private boolean overrideTaxValue;
 
     @Optional
-    @Disabled
     public boolean isOverrideTaxValue() {
         return overrideTaxValue;
     }
@@ -120,6 +136,35 @@ public class LeaseTermForTax extends LeaseTerm {
 
     public void setPaymentDate(final LocalDate paymentDate) {
         this.paymentDate = paymentDate;
+    }
+
+    public LeaseTermForTax changePaymentDate(
+            final @Named("Payment date") LocalDate paymentDate,
+            final @Named("Are you sure?") Boolean confirm) {
+        setPaymentDate(paymentDate);
+        return this;
+    }
+
+    public LocalDate default0ChangePaymentDate() {
+        return getClockService().now();
+    }
+
+    // //////////////////////////////////////
+
+    public LeaseTermForTax changeParameters(
+            final @Named("Tax percentage") @Optional BigDecimal taxPercentage,
+            final @Named("Recoverable percentage") @Optional BigDecimal recoverablePercentage) {
+        setTaxPercentage(taxPercentage);
+        setRecoverablePercentage(recoverablePercentage);
+        return this;
+    }
+
+    public BigDecimal default0ChangeParameters() {
+        return getTaxPercentage();
+    }
+
+    public BigDecimal default1ChangeParameters() {
+        return getRecoverablePercentage();
     }
 
     // //////////////////////////////////////
@@ -191,6 +236,43 @@ public class LeaseTermForTax extends LeaseTerm {
 
     // //////////////////////////////////////
 
+    public LeaseTermForTax changeRegistration(
+            final @Named("Registration date") @Optional LocalDate registrationDate,
+            final @Named("Registration number") @Optional String registrationNumber,
+            final @Named("Office code") @Optional String officeCode,
+            final @Named("Office name") @Optional String officeName,
+            final @Named("Description") @Optional @MultiLine(numberOfLines = 3) String description
+            ) {
+        setRegistrationDate(registrationDate);
+        setRegistrationNumber(registrationNumber);
+        setOfficeCode(officeCode);
+        setOfficeName(officeName);
+        setDescription(description);
+        return this;
+    }
+
+    public LocalDate default0ChangeRegistration() {
+        return getRegistrationDate();
+    }
+
+    public String default1ChangeRegistration() {
+        return getRegistrationNumber();
+    }
+
+    public String default2ChangeRegistration() {
+        return getOfficeCode();
+    }
+
+    public String default3ChangeRegistration() {
+        return getOfficeName();
+    }
+
+    public String default4ChangeRegistration() {
+        return getDescription();
+    }
+
+    // //////////////////////////////////////
+
     @Override
     public BigDecimal getEffectiveValue() {
         return valueForDate(null);
@@ -198,6 +280,9 @@ public class LeaseTermForTax extends LeaseTerm {
 
     @Override
     public BigDecimal valueForDate(LocalDate dueDate) {
+        if (isInvoicingDisabled()) {
+            return new BigDecimal("0.00");
+        }
         return getTaxValue();
     }
 
@@ -210,10 +295,9 @@ public class LeaseTermForTax extends LeaseTerm {
     protected void doInitialize() {
         final LeaseTermForTax previous = (LeaseTermForTax) this.getPrevious();
         if (previous != null) {
-            setTaxable(previous.getTaxable());
             setTaxPercentage(previous.getTaxPercentage());
             setRecoverablePercentage(previous.getRecoverablePercentage());
-            //static data
+            // static data
             setOfficeCode(previous.getOfficeCode());
             setOfficeName(previous.getOfficeName());
             setRegistrationDate(previous.getRegistrationDate());

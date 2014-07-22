@@ -87,7 +87,7 @@ public abstract class FixedAsset
 
     // //////////////////////////////////////
 
-    private String reference;
+    private String reference; 
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @DescribedAs("Unique reference code for this asset")

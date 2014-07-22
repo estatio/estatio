@@ -711,7 +711,7 @@ public class Api extends AbstractFactoryAndRepository {
         LeaseTermForTax term = (LeaseTermForTax) putLeaseTerm(leaseReference, unitReference, itemSequence, itemType, itemStartDate, startDate, endDate, sequence, status);
         term.setTaxPercentage(taxPercentage);
         term.setRecoverablePercentage(recoverablePercentage);
-        term.setTaxable(taxable);
+        term.setInvoicingDisabled(taxable);
         term.setTaxValue(taxValue);
         term.setPaymentDate(paymentDate);
         term.setRegistrationDate(registrationDate);
