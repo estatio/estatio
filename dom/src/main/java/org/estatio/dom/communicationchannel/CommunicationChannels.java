@@ -117,6 +117,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     // //////////////////////////////////////
 
     @NotInServiceMenu
+    @ActionSemantics(Of.SAFE)
     public CommunicationChannel findByReferenceAndType(
             final String reference, final CommunicationChannelType type) {
         return firstMatch("findByReferenceAndType", "reference", reference, "type", type);

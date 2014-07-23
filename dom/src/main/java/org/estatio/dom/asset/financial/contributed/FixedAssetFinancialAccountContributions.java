@@ -19,8 +19,11 @@
 package org.estatio.dom.asset.financial.contributed;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssetRole;
@@ -40,6 +43,7 @@ public class FixedAssetFinancialAccountContributions extends EstatioService<Fixe
     }
 
     @NotInServiceMenu
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Accounts", sequence = "13")
     public FixedAssetFinancialAccount newAccount(
             final FixedAsset fixedAsset,
@@ -61,6 +65,7 @@ public class FixedAssetFinancialAccountContributions extends EstatioService<Fixe
 
     @NotInServiceMenu
     @NotContributed(As.ACTION)
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Accounts", sequence = "13.5")
     public List<FixedAssetFinancialAccount> accounts(final FixedAsset fixedAsset) {
         return fixedAssetFinancialAccounts.findByFixedAsset(fixedAsset);
@@ -70,6 +75,7 @@ public class FixedAssetFinancialAccountContributions extends EstatioService<Fixe
 
     @NotInServiceMenu
     @NotContributed(As.ACTION)
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "FinancialAccounts", sequence = "13.5")
     public List<FixedAssetFinancialAccount> fixedAssets(final FinancialAccount fixedAsset) {
         return fixedAssetFinancialAccounts.findByFinancialAccount(fixedAsset);

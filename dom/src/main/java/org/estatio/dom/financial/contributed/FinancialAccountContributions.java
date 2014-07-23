@@ -19,8 +19,11 @@
 package org.estatio.dom.financial.contributed;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
@@ -35,6 +38,7 @@ public class FinancialAccountContributions extends EstatioService<FinancialAccou
         super(FinancialAccountContributions.class);
     }
 
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @MemberOrder(name = "Financial Accounts", sequence = "13")
     public FinancialAccount addAccount(
@@ -52,6 +56,7 @@ public class FinancialAccountContributions extends EstatioService<FinancialAccou
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
     @MemberOrder(name = "Financial Accounts", sequence = "13.5")

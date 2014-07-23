@@ -20,9 +20,12 @@ package org.estatio.dom.invoice;
 
 import java.math.BigInteger;
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
@@ -46,6 +49,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @NotInServiceMenu
     @Named("Invoices")
+    @ActionSemantics(Of.SAFE)
     public List<Invoice> findInvoices(final Lease lease) {
         return allMatches("findByLease",
                 "lease", lease);
@@ -53,11 +57,13 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     @NotInServiceMenu
     @Named("Invoices")
+    @ActionSemantics(Of.SAFE)
     public List<Invoice> findInvoices(final Party party) {
         return allMatches("findByBuyer",
                 "buyer", party);
     }
 
+    @ActionSemantics(Of.SAFE)
     public List<Invoice> findInvoicesByInvoiceNumber(
             final @Named("Invoice number") String invoiceNumber) {
         return allMatches("findByInvoiceNumber",

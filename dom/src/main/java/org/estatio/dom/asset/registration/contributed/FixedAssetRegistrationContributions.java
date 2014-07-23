@@ -19,8 +19,11 @@
 package org.estatio.dom.asset.registration.contributed;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
@@ -37,6 +40,7 @@ public class FixedAssetRegistrationContributions extends EstatioService<FixedAss
 
     @NotInServiceMenu
     @MemberOrder(name = "Registrations", sequence = "13")
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public FixedAssetRegistration newRegistration(
             final FixedAsset subject,
             final @Named("Type") FixedAssetRegistrationType registrationType) {
@@ -56,6 +60,7 @@ public class FixedAssetRegistrationContributions extends EstatioService<FixedAss
 
     @NotInServiceMenu
     @NotContributed(As.ACTION)
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Registrations", sequence = "13.5")
     public List<FixedAssetRegistration> registrations(final FixedAsset subject) {
         return fixedAssetRegistrations.findBySubject(subject);

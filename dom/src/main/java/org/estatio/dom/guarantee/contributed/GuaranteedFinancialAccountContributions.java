@@ -25,12 +25,16 @@ import javax.inject.Inject;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountTransactions;
 import org.estatio.dom.guarantee.Guarantees;
+
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 public class GuaranteedFinancialAccountContributions {
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public void newAdjustment(
             final FinancialAccount financialAccount, // contributee
             final @Named("Transaction date") LocalDate transactionDate,
@@ -44,6 +48,7 @@ public class GuaranteedFinancialAccountContributions {
                 amount);
     }
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public boolean hideNewAdjustment(
             final FinancialAccount financialAccount // contributee
     ) {

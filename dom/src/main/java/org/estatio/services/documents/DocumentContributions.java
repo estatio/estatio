@@ -10,6 +10,8 @@ import com.google.common.collect.Lists;
 import org.apache.chemistry.opencmis.client.api.QueryResult;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
@@ -18,6 +20,7 @@ import org.estatio.dom.asset.Property;
 
 public class DocumentContributions {
 
+    @ActionSemantics(Of.SAFE)
     @NotContributed(As.ASSOCIATION)
     // ie contributed as action
     @NotInServiceMenu

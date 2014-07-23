@@ -19,13 +19,17 @@
 package org.estatio.dom.financial.contributed;
 
 import java.util.Collection;
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.Render.Type;
+
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.agreement.AgreementRole;
@@ -64,6 +68,7 @@ public class BankMandateContributions extends EstatioService<BankMandateContribu
      * All {@link BankMandate} are {@link #allBankMandate(AgreementRoleHolder)
      * contributed} as an action.
      */
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
     // ie contributed collection
@@ -96,6 +101,7 @@ public class BankMandateContributions extends EstatioService<BankMandateContribu
      * {@link #currentBankMandates(AgreementRoleHolder) contributed} as a
      * collection.
      */
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @Named("List All")
     @NotContributed(As.ASSOCIATION)

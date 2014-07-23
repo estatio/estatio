@@ -19,8 +19,10 @@
 package org.estatio.dom.financial;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.financial.utils.IBANValidator;
@@ -68,6 +70,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     }
 
     @NotContributed
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public BankAccount newBankAccount(
             final @Named("Owner") Party owner,
             final @Named("IBAN") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban) {

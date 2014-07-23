@@ -153,6 +153,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
     @Render(Type.EAGERLY)
@@ -179,6 +180,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
     public List<Guarantee> guarantees(Lease lease) {

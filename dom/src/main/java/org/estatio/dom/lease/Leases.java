@@ -20,15 +20,20 @@ package org.estatio.dom.lease;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import com.google.common.collect.Lists;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.query.QueryDefault;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.agreement.*;
 import org.estatio.dom.asset.FixedAsset;
@@ -170,6 +175,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
+    @Programmatic
     public List<Lease> findExpireInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
         return allMatches(
                 "findExpireInDateRange",
@@ -188,6 +194,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.IDEMPOTENT)
     public String verifyAllLeases() {
         DateTime dt = DateTime.now();
         List<Lease> leases = allLeases();
