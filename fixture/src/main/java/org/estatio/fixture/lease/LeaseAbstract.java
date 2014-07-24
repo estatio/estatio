@@ -19,15 +19,21 @@
 package org.estatio.fixture.lease;
 
 import javax.inject.Inject;
+
+import org.joda.time.LocalDate;
+
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseConstants;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
+import org.estatio.dom.lease.Occupancy;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
-import org.joda.time.LocalDate;
 
 /**
  * Sets up the lease, and the roles, and also the first occupancy.
@@ -48,7 +54,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
             boolean createLeaseUnitAndTags,
             Party manager, ExecutionContext fixtureResults) {
 
-        UnitForLease unit = (UnitForLease) units.findUnitByReference(unitReference);
+        Unit unit = units.findUnitByReference(unitReference);
         Party landlord = findPartyByReferenceOrNameElseNull(landlordReference);
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
@@ -80,7 +86,7 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
     // //////////////////////////////////////
 
     @Inject
-    protected Units<Unit> units;
+    protected Units units;
 
     @Inject
     protected Leases leases;

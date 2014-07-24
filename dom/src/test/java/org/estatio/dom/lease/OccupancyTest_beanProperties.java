@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester.FilterSet;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
 import org.estatio.dom.lease.tags.Sector;
@@ -29,17 +30,17 @@ import org.estatio.dom.lease.tags.UnitSize;
 
 public class OccupancyTest_beanProperties extends AbstractBeanPropertiesTest {
 
-	@Test
-	public void test() {
-	    newPojoTester()
-	        .withFixture(pojos(Lease.class))
-	        .withFixture(pojos(UnitForLease.class))
-	        .withFixture(pojos(UnitSize.class))
-	        .withFixture(pojos(Sector.class))
-	        .withFixture(pojos(Activity.class))
-	        .withFixture(pojos(Brand.class))
-	        .exercise(new Occupancy(),
-	                FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName"));
-	}
+    @Test
+    public void test() {
+        newPojoTester()
+                .withFixture(pojos(Lease.class))
+                .withFixture(pojos(Unit.class))
+                .withFixture(pojos(UnitSize.class))
+                .withFixture(pojos(Sector.class))
+                .withFixture(pojos(Activity.class))
+                .withFixture(pojos(Brand.class))
+                .exercise(new Occupancy(),
+                        FilterSet.excluding("unitSizeName", "sectorName", "activityName", "brandName"));
+    }
 
 }

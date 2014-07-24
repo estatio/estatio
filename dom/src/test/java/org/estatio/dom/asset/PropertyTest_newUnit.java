@@ -37,18 +37,16 @@ public class PropertyTest_newUnit {
 
     @Mock
     private Units units;
-    
+
     private Property property;
 
-    
     @Before
     public void setup() {
-        property = new Property();    
+        property = new Property();
         property.setReference("ABC");
-        property.injectUnits(units);
+        property.unitsRepo = units;
     }
 
-    
     @Test
     public void newUnit() {
         final String unitRef = "ABC-123";

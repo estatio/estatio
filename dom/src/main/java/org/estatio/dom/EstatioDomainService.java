@@ -19,10 +19,12 @@
 package org.estatio.dom;
 
 import java.util.List;
+
 import javax.jdo.Query;
+
 import org.apache.isis.applib.RepositoryException;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.objectstore.jdo.applib.service.support.IsisJdoSupport;
+import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 
 public abstract class EstatioDomainService<T> extends EstatioService<T> {
 

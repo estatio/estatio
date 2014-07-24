@@ -18,8 +18,6 @@
  */
 package org.estatio.dom;
 
-import java.util.UUID;
-
 import javax.jdo.JDOHelper;
 
 import org.apache.isis.applib.annotation.Hidden;

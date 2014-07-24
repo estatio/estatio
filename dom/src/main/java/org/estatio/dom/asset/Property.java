@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
@@ -40,7 +41,6 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.PublishedAction;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -53,7 +53,7 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-//no @DatastoreIdentity nor @Version, since inherited from supertype
+// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
@@ -72,21 +72,21 @@ import org.estatio.dom.party.Party;
 public class Property extends FixedAsset implements Locatable {
 
     private String fullName;
-    
+
     @Optional
     public String getFullName() {
         return fullName;
     }
-    
+
     public void setFullName(final String fullName) {
         this.fullName = fullName;
     }
 
     // //////////////////////////////////////
-    
+
     private PropertyType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     public PropertyType getType() {
         return type;
     }
@@ -154,7 +154,7 @@ public class Property extends FixedAsset implements Locatable {
 
     private String city;
 
-    @javax.jdo.annotations.Column(allowsNull = "true", length=JdoColumnLength.PROPER_NAME)
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
     public String getCity() {
         return city;
     }
@@ -184,7 +184,7 @@ public class Property extends FixedAsset implements Locatable {
     @Override
     @Disabled
     @Optional
-    @Hidden(where=Where.ALL_TABLES)
+    @Hidden(where = Where.ALL_TABLES)
     public Location getLocation() {
         return location;
     }
@@ -197,8 +197,8 @@ public class Property extends FixedAsset implements Locatable {
     @Named("Lookup")
     public FixedAsset lookupLocation(
             final @Named("Address") @DescribedAs("Example: Herengracht 469, Amsterdam, NL") String address) {
-        if (locationLookupService != null) { 
-            // TODO: service does not seem to be loaded in tests 
+        if (locationLookupService != null) {
+            // TODO: service does not seem to be loaded in tests
             setLocation(locationLookupService.lookup(address));
         }
         return this;
@@ -262,21 +262,13 @@ public class Property extends FixedAsset implements Locatable {
 
     // //////////////////////////////////////
 
-    private Units<?> unitsRepo;
+    @Inject
+    Units unitsRepo;
 
-    public final void injectUnits(final Units<?> unitsRepo) {
-        this.unitsRepo = unitsRepo;
-    }
+    @Inject
+    FixedAssetRoles fixedAssetRoles;
 
-    private FixedAssetRoles fixedAssetRoles;
+    @Inject
+    LocationLookupService locationLookupService;
 
-    public final void injectFixedAssetRoles(final FixedAssetRoles fixedAssetRoles) {
-        this.fixedAssetRoles = fixedAssetRoles;
-    }
-
-    private LocationLookupService locationLookupService;
-
-    public final void injectLocationLookupService(final LocationLookupService locationLookupService) {
-        this.locationLookupService = locationLookupService;
-    }
 }

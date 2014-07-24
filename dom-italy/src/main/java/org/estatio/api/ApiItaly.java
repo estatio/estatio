@@ -96,7 +96,7 @@ public class ApiItaly extends AbstractFactoryAndRepository {
     // //////////////////////////////////////
 
     @Inject
-    private Units<Unit> units;
+    private Units units;
 
     @Inject
     private FixedAssetRegistrations fixedAssetRegistrations;

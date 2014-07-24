@@ -18,12 +18,19 @@
  */
 package org.estatio.dom.lease;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
 
@@ -37,12 +44,11 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
 
     // //////////////////////////////////////
 
-    // @Hidden
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
     public Occupancy newOccupancy(
-            final Lease lease, 
-            final UnitForLease unit,
+            final Lease lease,
+            final Unit unit,
             final LocalDate startDate) {
         Occupancy lu = newTransientInstance(Occupancy.class);
         lu.setLease(lease);
@@ -54,13 +60,28 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
 
     // //////////////////////////////////////
 
+    @Named("Occupancies")
+    @NotInServiceMenu
     @ActionSemantics(Of.SAFE)
-    @Hidden
+    public List<Occupancy> findByUnit(Unit unit) {
+        return allMatches("findByUnit", "unit", unit);
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public List<Occupancy> findByLease(Lease lease) {
+        return allMatches("findByLease", "lease", lease);
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
     public Occupancy findByLeaseAndUnitAndStartDate(
-            final Lease lease, 
-            final Unit unit, 
+            final Lease lease,
+            final Unit unit,
             final LocalDate startDate) {
-         return firstMatch("findByLeaseAndUnitAndStartDate", "lease", lease, "unit", unit, "startDate", startDate);
+        return firstMatch("findByLeaseAndUnitAndStartDate", "lease", lease, "unit", unit, "startDate", startDate);
     }
 
 }

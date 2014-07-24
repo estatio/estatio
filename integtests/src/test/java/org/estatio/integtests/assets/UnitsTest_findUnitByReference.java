@@ -19,16 +19,19 @@
 package org.estatio.integtests.assets;
 
 import javax.inject.Inject;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.apache.isis.applib.fixturescripts.FixtureScript;
+
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.integtests.EstatioIntegrationTest;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
 
@@ -46,7 +49,7 @@ public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
     }
 
     @Inject
-    private Units<?> units;
+    private Units units;
 
     @Test
     public void whenMatches() throws Exception {

@@ -32,31 +32,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.agreement.AgreementRoleType;
-import org.estatio.dom.agreement.AgreementType;
-import org.estatio.dom.asset.Property;
-import org.estatio.dom.bankmandate.BankMandate;
-import org.estatio.dom.bankmandate.BankMandateConstants;
-import org.estatio.dom.bankmandate.BankMandates;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.financial.BankAccount;
-import org.estatio.dom.financial.FinancialAccounts;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
-import org.estatio.dom.lease.breaks.BreakExerciseType;
-import org.estatio.dom.lease.breaks.BreakOption;
-import org.estatio.dom.lease.breaks.BreakType;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
-import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.utils.JodaPeriodUtils;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
@@ -76,6 +51,33 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.Unit;
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.bankmandate.BankMandateConstants;
+import org.estatio.dom.bankmandate.BankMandates;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
+import org.estatio.dom.lease.breaks.BreakExerciseType;
+import org.estatio.dom.lease.breaks.BreakOption;
+import org.estatio.dom.lease.breaks.BreakType;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
+import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.utils.JodaPeriodUtils;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(
@@ -334,7 +336,7 @@ public class Lease
      * @return
      */
     public Occupancy occupy(
-            final @Named("Unit") UnitForLease unit,
+            final @Named("Unit") Unit unit,
             final @Named("Start date") @Optional LocalDate startDate) {
         Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
         occupancies.add(occupancy);
@@ -802,7 +804,8 @@ public class Lease
                 newOccupancy.setSector(occupancy.getSector());
                 newOccupancy.setUnitSize(occupancy.getUnitSize());
                 newOccupancy.setReportOCR(occupancy.getReportOCR());
-                newOccupancy.setReportRent(occupancy.getReportRent());;
+                newOccupancy.setReportRent(occupancy.getReportRent());
+                ;
                 newOccupancy.setReportTurnover(occupancy.getReportTurnover());
             }
         }

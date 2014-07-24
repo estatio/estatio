@@ -142,7 +142,7 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
     @Inject
     private CommunicationChannels communicationChannels;
     @Inject
-    private Units<?> units;
+    private Units units;
     @Inject
     private Occupancies leaseUnits;
     @Inject

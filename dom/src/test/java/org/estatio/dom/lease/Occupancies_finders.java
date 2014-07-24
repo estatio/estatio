@@ -48,9 +48,9 @@ public class Occupancies_finders {
     public void setup() {
 
         lease = new Lease();
-        unit = new UnitForLease();
-        startDate = new LocalDate(2013,4,1);
-        
+        unit = new Unit();
+        startDate = new LocalDate(2013, 4, 1);
+
         occupancies = new Occupancies() {
 
             @Override
@@ -58,11 +58,13 @@ public class Occupancies_finders {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
                 return null;
             }
+
             @Override
             protected List<Occupancy> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
+
             @Override
             protected <T> List<T> allMatches(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.ALL_MATCHES);
@@ -73,19 +75,18 @@ public class Occupancies_finders {
 
     @Test
     public void findByLeaseAndUnitAndStartDate() {
-        
+
         occupancies.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
-        
+
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        
+
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
         assertThat(finderInteraction.getQueryName(), is("findByLeaseAndUnitAndStartDate"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object)lease));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object)unit));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object)startDate));
-        
+        assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object) unit));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
+
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
     }
 
-    
 }

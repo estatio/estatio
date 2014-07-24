@@ -31,6 +31,8 @@ import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.asset.Unit;
+
 public class LeaseTest_addUnit {
 
     @Rule
@@ -42,21 +44,21 @@ public class LeaseTest_addUnit {
     private Lease lease;
     private Occupancies leaseUnits;
 
-    private UnitForLease unit;
+    private Unit unit;
 
     @Before
     public void setUp() throws Exception {
-    
-        unit = new UnitForLease();
-        
+
+        unit = new Unit();
+
         // this is actually a mini-integration test...
         leaseUnits = new Occupancies();
         leaseUnits.setContainer(mockContainer);
-        
+
         lease = new Lease();
         lease.injectOccupancies(leaseUnits);
     }
-    
+
     @Test
     public void test() {
         final Occupancy leaseUnit = new Occupancy();
@@ -67,7 +69,7 @@ public class LeaseTest_addUnit {
                 oneOf(mockContainer).persistIfNotAlready(leaseUnit);
             }
         });
-        
+
         final Occupancy addedUnit = lease.occupy(unit, null);
         assertThat(addedUnit, is(leaseUnit));
         assertThat(leaseUnit.getLease(), is(lease));

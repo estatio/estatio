@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
@@ -32,18 +33,18 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.utils.StringUtils;
 
-public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
+@DomainService(repositoryFor = Unit.class)
+public class Units extends EstatioDomainService<Unit> {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public Units(final Class<T> unitClass) {
-        super((Class) Units.class, unitClass);
+    public Units() {
+        super(Units.class, Unit.class);
     }
 
     // //////////////////////////////////////
 
     @Programmatic
     public Unit newUnit(
-            final String reference, 
+            final String reference,
             final String name,
             final UnitType type) {
         final Unit unit = newTransientInstance();
@@ -55,36 +56,34 @@ public abstract class Units<T extends Unit> extends EstatioDomainService<T> {
     }
 
     // //////////////////////////////////////
-    
+
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Fixed Assets", sequence = "2")
-    public List<T> findUnits(
-            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") 
-            String referenceOrName) {
-        // this currently only looks for UnitsForLease, and no other subtypes (none existent at time of writing)
-        return allMatches("findByReferenceOrName", 
+    @MemberOrder(name = "Fixed Assets", sequence = "2")
+    public List<Unit> findUnits(
+            final @Named("Reference or Name") @DescribedAs("May include wildcards '*' and '?'") String referenceOrName) {
+        return allMatches("findByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
 
     @ActionSemantics(Of.SAFE)
     @Hidden
-    public T findUnitByReference(final String reference) {
+    public Unit findUnitByReference(final String reference) {
         return firstMatch("findByReference", "reference", reference);
     }
 
     // //////////////////////////////////////
 
     @Hidden
-    public List<T> autoComplete(final String searchPhrase) {
+    public List<Unit> autoComplete(final String searchPhrase) {
         return findUnits("*".concat(searchPhrase).concat("*"));
     }
-    
+
     // //////////////////////////////////////
 
     @Prototype
     @ActionSemantics(Of.SAFE)
-    @MemberOrder(name="Fixed Assets", sequence = "99")
-    public List<T> allUnits() {
+    @MemberOrder(name = "Fixed Assets", sequence = "99")
+    public List<Unit> allUnits() {
         return allInstances();
     }
 

@@ -20,18 +20,26 @@ package org.estatio.dom.lease.invoicing;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.ApplicationException;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.LeaseItem;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.UnitForLease;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "50", repositoryFor = InvoiceItemForLease.class)
@@ -67,7 +75,7 @@ public class InvoiceItemsForLease extends EstatioDomainService<InvoiceItemForLea
         // redundantly persist, these are immutable
         // assumes only one occupancy per lease...
         invoiceItem.setLease(lease);
-        UnitForLease unit = lease.getOccupancies().first().getUnit();
+        Unit unit = lease.getOccupancies().first().getUnit();
         invoiceItem.setFixedAsset(unit);
 
         persistIfNotAlready(invoiceItem);

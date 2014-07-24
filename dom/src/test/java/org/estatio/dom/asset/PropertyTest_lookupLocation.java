@@ -47,7 +47,7 @@ public class PropertyTest_lookupLocation {
     @Before
     public void setUp() throws Exception {
         property = new Property();
-        property.injectLocationLookupService(mockLocationLookupService);
+        property.locationLookupService = mockLocationLookupService;
     }
 
     @Test

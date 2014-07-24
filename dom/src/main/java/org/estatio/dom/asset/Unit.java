@@ -43,14 +43,25 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-// no @DatastoreIdentity nor @Version, since inherited from supertype
-// discriminator required, since has subtype
 @javax.jdo.annotations.Discriminator(
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
+@javax.jdo.annotations.Queries({
+        @javax.jdo.annotations.Query(
+                name = "findByReferenceOrName", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Unit "
+                        + "WHERE (reference.matches(:referenceOrName) "
+                        + "   || name.matches(:referenceOrName))"),
+        @javax.jdo.annotations.Query(
+                name = "findByReference", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Unit "
+                        + "WHERE reference.matches(:reference)")
+})
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
-public abstract class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
+public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
 
     // TODO: make name abstract in FixedAsset
     // (in order to be able to define subclass-specific constraint, see above)
@@ -72,7 +83,7 @@ public abstract class Unit extends FixedAsset implements WithIntervalMutable<Uni
 
     private UnitType type;
 
-    @javax.jdo.annotations.Column(allowsNull = "false", length=JdoColumnLength.TYPE_ENUM)
+    @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
     public UnitType getType() {
         return type;
     }

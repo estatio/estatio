@@ -40,6 +40,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.lease.tags.Activities;
 import org.estatio.dom.lease.tags.Activity;
 import org.estatio.dom.lease.tags.Brand;
@@ -63,19 +64,24 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         members = { "lease", "unit", "startDate" })
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
+                name = "findByUnit", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Occupancy "
+                        + "WHERE unit == :unit "
+                        + "ORDER BY startDate "),
+        @javax.jdo.annotations.Query(
+                name = "findByLease", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Occupancy "
+                        + "WHERE lease == :lease "
+                        + "ORDER BY startDate "),
+        @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Occupancy "
                         + "WHERE lease == :lease "
                         + "&& unit == :unit "
-                        + "&& startDate == :startDate"),
-        @javax.jdo.annotations.Query(
-                name = "findByLeaseAndUnitAndEndDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.lease.Occupancy "
-                        + "WHERE lease == :lease "
-                        + "&& unit == :unit "
-                        + "&& endDate == :endDate")
+                        + "&& startDate == :startDate")
 })
 public class Occupancy
         extends EstatioMutableObject<Occupancy>
@@ -103,17 +109,17 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    private UnitForLease unit;
+    private Unit unit;
 
     @javax.jdo.annotations.Column(name = "unitId", allowsNull = "false")
     @Title(sequence = "2", append = ":")
     @Hidden(where = Where.REFERENCES_PARENT)
     @Disabled
-    public UnitForLease getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(final UnitForLease unit) {
+    public void setUnit(final Unit unit) {
         this.unit = unit;
     }
 
