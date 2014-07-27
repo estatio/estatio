@@ -22,9 +22,7 @@
  *
  * <p>
  * The {@link org.estatio.dom.lease.Occupancy} entity associates the {@link org.estatio.dom.lease.Lease} with a
- * particular {@link org.estatio.dom.asset.Unit}.  Because the <tt>asset</tt> module is decoupled from the 
- * <tt>lease</tt> module, this module defines {@link org.estatio.dom.lease.UnitForLease} subclass which makes the
- * relationship many-to-many.
+ * particular {@link org.estatio.dom.asset.Unit}.
  * 
  * <p>
  * {@link org.estatio.dom.lease.Lease} also integrates with the <tt>invoicing</tt> module, by implementing the

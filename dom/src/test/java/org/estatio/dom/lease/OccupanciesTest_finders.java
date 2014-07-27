@@ -34,7 +34,7 @@ import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.asset.Unit;
 
-public class Occupancies_finders {
+public class OccupanciesTest_finders {
 
     private FinderInteraction finderInteraction;
 
@@ -75,18 +75,35 @@ public class Occupancies_finders {
 
     @Test
     public void findByLeaseAndUnitAndStartDate() {
-
         occupancies.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
-
         assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-
         assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
         assertThat(finderInteraction.getQueryName(), is("findByLeaseAndUnitAndStartDate"));
         assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
         assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object) unit));
         assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) startDate));
-
         assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
     }
+
+    @Test
+    public void findByLease() {
+        occupancies.findByLease(lease);
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
+        assertThat(finderInteraction.getQueryName(), is("findByLease"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("lease"), is((Object) lease));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+    }
+
+    @Test
+    public void findByUnit() {
+        occupancies.findByUnit(unit);
+        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Occupancy.class));
+        assertThat(finderInteraction.getQueryName(), is("findByUnit"));
+        assertThat(finderInteraction.getArgumentsByParameterName().get("unit"), is((Object) unit));
+        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+    }
+
 
 }

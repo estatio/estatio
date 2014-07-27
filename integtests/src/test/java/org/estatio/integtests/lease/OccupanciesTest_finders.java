@@ -16,27 +16,35 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.integtests.assets;
+package org.estatio.integtests.lease;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import javax.inject.Inject;
 
-import org.junit.Assert;
+import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.Occupancies;
 import org.estatio.fixture.EstatioBaseLineFixture;
-import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.integtests.EstatioIntegrationTest;
 
-public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class OccupanciesTest_finders extends EstatioIntegrationTest {
 
     @Before
     public void setupData() {
@@ -44,26 +52,39 @@ public class UnitsTest_findUnitByReference extends EstatioIntegrationTest {
             @Override
             protected void execute(ExecutionContext executionContext) {
                 execute(new EstatioBaseLineFixture(), executionContext);
-
-                execute(new PropertyForOxf(), executionContext);
-                execute(new PropertyForKal(), executionContext);
+                execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
             }
         });
+        lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        unit = units.findUnitByReference(PropertyForOxf.unitReference("001"));
     }
+
+    @Inject
+    private Leases leases;
 
     @Inject
     private Units units;
 
+    @Inject
+    private Occupancies occupancies;
+
+    private Lease lease;
+
+    private Unit unit;
+
     @Test
-    public void findByReference() throws Exception {
-        final Unit unit = units.findUnitByReference(PropertyForOxf.unitReference("001"));
-        // then
-        Assert.assertEquals("OXF-001", unit.getReference());
+    public void findByLease() throws Exception {
+        assertThat(occupancies.findByLease(lease).size(), is(1));
     }
 
     @Test
-    public void findByReferenceOrName() throws Exception {
-        assertThat(units.findUnits("*XF*").size(), is(25));
+    public void findByUnit() throws Exception {
+        assertThat(occupancies.findByUnit(unit).size(), is(1));
+    }
+
+    @Test
+    public void findByLeaseAndUnitAndStartDate() throws Exception {
+        assertNotNull(occupancies.findByLeaseAndUnitAndStartDate(lease, unit, new LocalDate(2010, 7, 15)));
     }
 
 }

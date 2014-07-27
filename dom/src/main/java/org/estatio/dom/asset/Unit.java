@@ -50,36 +50,18 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.lease.Unit "
+                        + "FROM org.estatio.dom.asset.Unit "
                         + "WHERE (reference.matches(:referenceOrName) "
                         + "   || name.matches(:referenceOrName))"),
         @javax.jdo.annotations.Query(
                 name = "findByReference", language = "JDOQL",
                 value = "SELECT "
-                        + "FROM org.estatio.dom.lease.Unit "
+                        + "FROM org.estatio.dom.asset.Unit "
                         + "WHERE reference.matches(:reference)")
 })
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
-
-    // TODO: make name abstract in FixedAsset
-    // (in order to be able to define subclass-specific constraint, see above)
-
-    // private String name;
-    //
-    // @javax.jdo.annotations.Column(allowsNull="false")
-    // @DescribedAs("Unique name for this property")
-    // @Title(sequence = "2")
-    // public String getName() {
-    // return name;
-    // }
-    //
-    // public void setName(final String name) {
-    // this.name = name;
-    // }
-
-    // //////////////////////////////////////
 
     private UnitType type;
 
