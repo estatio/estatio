@@ -52,6 +52,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
@@ -894,11 +895,14 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Prototype
     public void remove(@Named("Are you sure?") Boolean confirm) {
         if (confirm) {
             doRemove();
         }
+    }
+
+    public boolean hideRemove() {
+        return !getUser().hasRole(EstatioUserRoles.ADMIN_ROLE);
     }
 
     @Programmatic
