@@ -74,6 +74,34 @@ public class Leases extends EstatioDomainService<Lease> {
         return newLease(reference, name, leaseType, startDate, calculatedEndDate, startDate, calculatedEndDate, landlord, tenant);
     }
 
+    public String validateNewLease(
+            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
+            final String reference,
+            final String name,
+            final LeaseType leaseType,
+            final LocalDate startDate,
+            final String duration,
+            final LocalDate endDate,
+            final Party landlord,
+            final Party tenant
+            // CHECKSTYLE:ON
+            ) {
+        if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
+            return "Either end date or duration must be filled in.";
+        }
+        if (duration != null) {
+            final Period p = JodaPeriodUtils.asPeriod(duration);
+            if (p == null) {
+                return "This is not a valid duration.";
+            }
+        } else {
+            if (!new LocalDateInterval(startDate, endDate).isValid()) {
+                return "End date can not be before start date";
+            }
+        }
+        return null;
+    }
+
     @Programmatic
     public Lease newLease(
             final String reference,
@@ -117,34 +145,6 @@ public class Leases extends EstatioDomainService<Lease> {
             }
         }
         return endDate;
-    }
-
-    public String validateNewLease(
-            // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
-            final String reference,
-            final String name,
-            final LeaseType leaseType,
-            final LocalDate startDate,
-            final String duration,
-            final LocalDate endDate,
-            final Party landlord,
-            final Party tenant
-            // CHECKSTYLE:ON
-            ) {
-        if ((endDate == null && duration == null) || (endDate != null && duration != null)) {
-            return "Either end date or duration must be filled in.";
-        }
-        if (duration != null) {
-            final Period p = JodaPeriodUtils.asPeriod(duration);
-            if (p == null) {
-                return "This is not a valid duration.";
-            }
-        } else {
-            if (!new LocalDateInterval(startDate, endDate).isValid()) {
-                return "End date can not be before start date";
-            }
-        }
-        return null;
     }
 
     // //////////////////////////////////////
