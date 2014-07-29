@@ -34,16 +34,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.estatio.dom.EstatioMutableObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.WithSequence;
-import org.estatio.dom.charge.Charge;
-import org.estatio.dom.charge.Charges;
-import org.estatio.dom.invoice.PaymentMethod;
-import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
-import org.estatio.dom.tax.Tax;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -61,6 +51,17 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.Charges;
+import org.estatio.dom.invoice.PaymentMethod;
+import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
  * An item component of an {@link #getLease() owning} {@link Lease}. Each is of
@@ -425,6 +426,22 @@ public class LeaseItem
 
     public List<Charge> choicesCharge() {
         return charges.allCharges();
+    }
+
+    // //////////////////////////////////////
+
+    public LeaseItem changePaymentMethod(
+            final PaymentMethod paymentMethod,
+            final @Named("Reason") String reason) {
+        setPaymentMethod(paymentMethod);
+        return this;
+    }
+    
+    public PaymentMethod default0ChangePaymentMethod(
+            final PaymentMethod paymentMethod,
+            final String reason
+            ) {
+        return getPaymentMethod();
     }
 
     // //////////////////////////////////////
