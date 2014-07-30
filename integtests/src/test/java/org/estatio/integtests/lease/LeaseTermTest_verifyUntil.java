@@ -60,7 +60,7 @@ public class LeaseTermTest_verifyUntil extends EstatioIntegrationTest {
     @Before
     public void setup() {
         lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        assertThat(lease.getItems().size(), is(7));
+        assertThat(lease.getItems().size(), is(6));
     }
 
     @Test

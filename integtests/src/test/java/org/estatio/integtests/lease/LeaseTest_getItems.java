@@ -52,7 +52,7 @@ public class LeaseTest_getItems extends EstatioIntegrationTest {
     @Test
     public void whenNonEmpty() throws Exception {
         Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        assertThat(lease.getItems().size(), is(7));
+        assertThat(lease.getItems().size(), is(6));
     }
 
 

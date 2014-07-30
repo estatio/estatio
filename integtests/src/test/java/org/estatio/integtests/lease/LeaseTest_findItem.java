@@ -60,7 +60,7 @@ public class LeaseTest_findItem extends EstatioIntegrationTest {
 
         // given
         Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        assertThat(lease.getItems().size(), is(7));
+        assertThat(lease.getItems().size(), is(6));
 
         // when
         LeaseItem leaseTopModelRentItem = lease.findItem(LeaseItemType.RENT, VT.ld(2010, 7, 15), VT.bi(1));

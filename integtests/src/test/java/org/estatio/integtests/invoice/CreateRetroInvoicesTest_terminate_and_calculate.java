@@ -101,7 +101,7 @@ public class CreateRetroInvoicesTest_terminate_and_calculate extends EstatioInte
         assertThat(invoicesList.size(), is(9));
         Invoice invoice = invoicesList.get(8);
         assertThat(invoice.getDueDate(), is(VT.ld(2014, 2, 1)));
-        assertThat(invoice.getGrossAmount(), is(VT.bd("-10082.43")));
+        assertThat(invoice.getGrossAmount(), is(VT.bd("-8170.01")));
 
         // and also
         LeaseItem leaseItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);

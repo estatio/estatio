@@ -23,22 +23,22 @@ import org.estatio.dom.lease.Lease;
 import static org.estatio.integtests.VT.bd;
 import static org.estatio.integtests.VT.ld;
 
-public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfTopModel001 extends LeaseItemAndTermsAbstract {
+public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfTopModel001(fixtureResults);
+        createLeaseTermsForOxfMiracl005(fixtureResults);
     }
 
-    private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
+    private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfTopModel001(), executionContext);
+            execute(new LeaseForOxfMiracl005(), executionContext);
         }
 
         // exec
-        Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
         createLeaseTermForIndexableServiceCharge(
                 lease,
                 lease.getStartDate(), null,
