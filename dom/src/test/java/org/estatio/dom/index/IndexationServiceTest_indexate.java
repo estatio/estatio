@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForIndexable;
 
 public class IndexationServiceTest_indexate {
 
@@ -52,8 +52,8 @@ public class IndexationServiceTest_indexate {
     }
 
     private Indexable getIndexableWith(LocalDate baseIndexStartDate, LocalDate nextIndexStartDate, double baseValue, double baseIndexValue, double nextIndexValue, double rebaseFactor, double levellingPercentage) {
-        LeaseTermForIndexableRent indexable;
-        indexable = new LeaseTermForIndexableRent();
+        LeaseTermForIndexable indexable;
+        indexable = new LeaseTermForIndexable();
         indexable.setIndex(mockIndex);
         indexable.setBaseIndexStartDate(baseIndexStartDate);
         indexable.setNextIndexStartDate(nextIndexStartDate);
@@ -67,7 +67,7 @@ public class IndexationServiceTest_indexate {
 
     @Test
     public void happyCase() {
-        final LeaseTermForIndexableRent indexable = (LeaseTermForIndexableRent) getIndexableWith(
+        final LeaseTermForIndexable indexable = (LeaseTermForIndexable) getIndexableWith(
                 new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1), 250000.00, 122.2, 111.1, 1.234, 100);
 
         context.checking(new Expectations() {
@@ -84,7 +84,7 @@ public class IndexationServiceTest_indexate {
 
     @Test
     public void roundingErrors() {
-        final LeaseTermForIndexableRent indexable = (LeaseTermForIndexableRent) getIndexableWith(
+        final LeaseTermForIndexable indexable = (LeaseTermForIndexable) getIndexableWith(
                 new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1), 250000.00, 110.0, 115.0, 1.000, 75);
 
         context.checking(new Expectations() {
@@ -101,7 +101,7 @@ public class IndexationServiceTest_indexate {
 
     @Test
     public void notNegativeIndexation() {
-        final LeaseTermForIndexableRent indexable = (LeaseTermForIndexableRent) getIndexableWith(
+        final LeaseTermForIndexable indexable = (LeaseTermForIndexable) getIndexableWith(
                 new LocalDate(2010, 1, 1), new LocalDate(2011, 1, 1), 250000.00, 115.0, 110.0, 1.000, 75);
 
         context.checking(new Expectations() {

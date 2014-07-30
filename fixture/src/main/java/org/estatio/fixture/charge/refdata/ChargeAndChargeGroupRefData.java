@@ -19,6 +19,7 @@
 package org.estatio.fixture.charge.refdata;
 
 import javax.inject.Inject;
+
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.charge.ChargeGroups;
@@ -34,12 +35,18 @@ public class ChargeAndChargeGroupRefData extends EstatioFixtureScript {
     public static final String CHARGE_GROUP_REFERENCE_SERVICE_CHARGE = "SERVICE_CHARGE";
     public static final String CHARGE_GROUP_REFERENCE_TURNOVER_RENT = "TURNOVER_RENT";
     public static final String CHARGE_GROUP_REFERENCE_DISCOUNT = "DISCOUNT";
+    public static final String CHARGE_GROUP_REFERENCE_ENTRY_FEE = "ENTRY_FEE";
+    public static final String CHARGE_GROUP_REFERENCE_TAX = "TAX";
+    public static final String CHARGE_GROUP_REFERENCE_SERVICE_CHARGE_INDEXABLE = "SERVICE_CHARGE_INDEXABLE";
 
     public static final String CHARGE_REFERENCE_RENT = "RENT";
     public static final String CHARGE_REFERENCE_SERVICE_CHARGE = "SERVICE_CHARGE";
     public static final String CHARGE_REFERENCE_TURNOVER_RENT = "TURNOVER_RENT";
     public static final String CHARGE_REFERENCE_DISCOUNT = "DISCOUNT";
-
+    public static final String CHARGE_REFERENCE_ENTRY_FEE = "ENTRY_FEE";
+    public static final String CHARGE_REFERENCE_TAX = "TAX";
+    public static final String CHARGE_REFERENCE_SERVICE_CHARGE_INDEXABLE = "SERVICE_CHARGE_INDEXABLE";
+    
     @Override
     protected void execute(ExecutionContext executionContext) {
         createCharges(executionContext);
@@ -47,26 +54,54 @@ public class ChargeAndChargeGroupRefData extends EstatioFixtureScript {
 
     private void createCharges(ExecutionContext executionContext) {
         createChargeGroupAndCharge(
-                CHARGE_GROUP_REFERENCE_RENT, "Rent",
-                CHARGE_REFERENCE_RENT, TaxesAndTaxRatesRefData.IT_VATSTD,
+                CHARGE_GROUP_REFERENCE_RENT,
+                "Rent",
+                CHARGE_REFERENCE_RENT,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
                 executionContext);
         createChargeGroupAndCharge(
-                CHARGE_GROUP_REFERENCE_SERVICE_CHARGE, "Service Charge",
-                CHARGE_REFERENCE_SERVICE_CHARGE, TaxesAndTaxRatesRefData.IT_VATSTD,
+                CHARGE_GROUP_REFERENCE_SERVICE_CHARGE,
+                "Service Charge",
+                CHARGE_REFERENCE_SERVICE_CHARGE,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
                 executionContext);
         createChargeGroupAndCharge(
-                CHARGE_GROUP_REFERENCE_TURNOVER_RENT, "Turnover Rent",
-                CHARGE_REFERENCE_TURNOVER_RENT, TaxesAndTaxRatesRefData.IT_VATSTD,
+                CHARGE_GROUP_REFERENCE_TURNOVER_RENT,
+                "Turnover Rent",
+                CHARGE_REFERENCE_TURNOVER_RENT,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
                 executionContext);
         createChargeGroupAndCharge(
-                CHARGE_GROUP_REFERENCE_DISCOUNT, "Discount",
-                CHARGE_REFERENCE_DISCOUNT, TaxesAndTaxRatesRefData.IT_VATSTD,
+                CHARGE_GROUP_REFERENCE_DISCOUNT,
+                "Discount",
+                CHARGE_REFERENCE_DISCOUNT,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
                 executionContext);
+        createChargeGroupAndCharge(
+                CHARGE_GROUP_REFERENCE_ENTRY_FEE,
+                "Entry Fee",
+                CHARGE_REFERENCE_ENTRY_FEE,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
+                executionContext);
+        createChargeGroupAndCharge(
+                CHARGE_GROUP_REFERENCE_TAX,
+                "Tax",
+                CHARGE_REFERENCE_TAX,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
+                executionContext);
+        createChargeGroupAndCharge(
+                CHARGE_GROUP_REFERENCE_SERVICE_CHARGE_INDEXABLE,
+                "Service Charge Indexable",
+                CHARGE_REFERENCE_SERVICE_CHARGE_INDEXABLE,
+                TaxesAndTaxRatesRefData.IT_VATSTD,
+                executionContext);
+
     }
 
     private void createChargeGroupAndCharge(String chargeGroupReference, String description, String chargeReference, String taxReference, ExecutionContext executionContext) {
         ChargeGroup chargeGroup = createChargeGroup(chargeGroupReference, description, executionContext);
-        String code = chargeGroupReference; // TODO: for want of anything better...
+        String code = chargeGroupReference; // TODO: for want of anything
+                                            // better...
         createCharge(chargeGroupReference, code, description, taxReference, chargeGroup, executionContext);
     }
 

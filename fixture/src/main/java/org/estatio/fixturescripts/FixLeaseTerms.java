@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import javax.inject.Inject;
 import org.apache.commons.lang3.ObjectUtils;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTerms;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
@@ -36,14 +36,14 @@ public class FixLeaseTerms extends DiscoverableFixtureScript {
         int countBaseStartDate = 0;
         int countLevelling = 0;
         for (LeaseTerm term : leaseTerms.allLeaseTerms()) {
-            if (term instanceof LeaseTermForIndexableRent) {
-                if (fixEffectiveDate((LeaseTermForIndexableRent) term)) {
+            if (term instanceof LeaseTermForIndexable) {
+                if (fixEffectiveDate((LeaseTermForIndexable) term)) {
                     countEffectiveDate++;
                 }
-                if (fixLevellingPercentage((LeaseTermForIndexableRent) term)) {
+                if (fixLevellingPercentage((LeaseTermForIndexable) term)) {
                     countLevelling++;
                 }
-                if (fixBaseIndexStartDate((LeaseTermForIndexableRent) term)) {
+                if (fixBaseIndexStartDate((LeaseTermForIndexable) term)) {
                     countBaseStartDate++;
                 }
             }
@@ -52,10 +52,10 @@ public class FixLeaseTerms extends DiscoverableFixtureScript {
         // fixtureResults.add(this, "message", String.format("%d effective dates fixed, %d base index dates fixed, %d levelling percentages fixed", countEffectiveDate, countBaseStartDate, countLevelling));
     }
 
-    private boolean fixBaseIndexStartDate(final LeaseTermForIndexableRent term) {
+    private boolean fixBaseIndexStartDate(final LeaseTermForIndexable term) {
         try {
             if (term.getNext() == null) {
-                LeaseTermForIndexableRent previous = (LeaseTermForIndexableRent) term.getPrevious();
+                LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
                 if (previous != null) {
                     LocalDate nextIndexStartDate = previous.getNextIndexStartDate();
                     if (nextIndexStartDate != null && (term.getBaseIndexStartDate() == null || term.getBaseIndexStartDate().compareTo(nextIndexStartDate) != 0)) {
@@ -71,11 +71,11 @@ public class FixLeaseTerms extends DiscoverableFixtureScript {
         return false;
     }
 
-    private boolean fixLevellingPercentage(LeaseTermForIndexableRent term) {
+    private boolean fixLevellingPercentage(LeaseTermForIndexable term) {
         try {
             if (term.getNext() == null) {
                 // last term
-                LeaseTermForIndexableRent previous = (LeaseTermForIndexableRent) term.getPrevious();
+                LeaseTermForIndexable previous = (LeaseTermForIndexable) term.getPrevious();
                 if (previous != null) {
                     final BigDecimal levellingPercentage = previous.getLevellingPercentage();
                     if (levellingPercentage != null) {
@@ -92,7 +92,7 @@ public class FixLeaseTerms extends DiscoverableFixtureScript {
         return false;
     }
 
-    private boolean fixEffectiveDate(LeaseTermForIndexableRent term) {
+    private boolean fixEffectiveDate(LeaseTermForIndexable term) {
         LocalDate indexAvailableDate = term.getNextIndexStartDate() == null ? null : term.getNextIndexStartDate().plusMonths(2).plusDays(16);
         LocalDate effectiveDate = null;
         if (indexAvailableDate != null

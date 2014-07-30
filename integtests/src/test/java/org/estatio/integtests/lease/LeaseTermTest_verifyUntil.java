@@ -60,7 +60,7 @@ public class LeaseTermTest_verifyUntil extends EstatioIntegrationTest {
     @Before
     public void setup() {
         lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        assertThat(lease.getItems().size(), is(3));
+        assertThat(lease.getItems().size(), is(7));
     }
 
     @Test
@@ -71,8 +71,8 @@ public class LeaseTermTest_verifyUntil extends EstatioIntegrationTest {
         Assert.assertNotNull(leaseTopModelRentItem);
 
         assertThat(leaseTopModelRentItem.getTerms().size(), is(1));
-        LeaseTermForIndexableRent leaseTopModelRentTerm1 = (LeaseTermForIndexableRent) leaseTopModelRentItem.getTerms().first();
-        LeaseTermForIndexableRent leaseTopModelRentTerm = (LeaseTermForIndexableRent) leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
+        LeaseTermForIndexable leaseTopModelRentTerm1 = (LeaseTermForIndexable) leaseTopModelRentItem.getTerms().first();
+        LeaseTermForIndexable leaseTopModelRentTerm = (LeaseTermForIndexable) leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
         Assert.assertThat(leaseTopModelRentTerm, is(sameInstance(leaseTopModelRentTerm1)));
 
         // when

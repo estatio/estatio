@@ -87,7 +87,7 @@ import org.estatio.dom.lease.LeaseItemType;
 import org.estatio.dom.lease.LeaseStatus;
 import org.estatio.dom.lease.LeaseTerm;
 import org.estatio.dom.lease.LeaseTermForFixed;
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTermForServiceCharge;
 import org.estatio.dom.lease.LeaseTermForTax;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
@@ -655,7 +655,7 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("nextIndexStartDate") @Optional LocalDate nextIndexStartDate,
             @Named("nextIndexEndDate") @Optional LocalDate nextIndexEndDate,
             @Named("nextIndexValue") @Optional BigDecimal nextIndexValue) {
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) putLeaseTerm(
+        LeaseTermForIndexable term = (LeaseTermForIndexable) putLeaseTerm(
                 leaseReference,
                 unitReference,
                 itemSequence,

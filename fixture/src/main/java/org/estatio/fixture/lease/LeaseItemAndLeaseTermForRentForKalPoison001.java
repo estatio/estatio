@@ -40,7 +40,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
 
         LeaseItem leaseItem = findOrCreateLeaseItem(lease, "RENT", LeaseItemType.RENT, InvoicingFrequency.QUARTERLY_IN_ADVANCE, executionContext);
 
-        createLeaseItemIfRequiredAndLeaseTermForRent(lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI", executionContext);
+        createLeaseTermForIndexableRent(lease, lease.getStartDate(), null, bd(150000), null, null, null, "ISTAT-FOI", executionContext);
     }
 
 }

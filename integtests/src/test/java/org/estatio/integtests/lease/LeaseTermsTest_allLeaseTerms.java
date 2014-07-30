@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.inject.Inject;
 import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexableRent;
+import org.estatio.dom.lease.LeaseTermForIndexable;
 import org.estatio.dom.lease.LeaseTerms;
 import org.estatio.fixture.EstatioBaseLineFixture;
 import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
@@ -69,7 +69,7 @@ public class LeaseTermsTest_allLeaseTerms extends EstatioIntegrationTest {
         Assert.assertNotNull(term.getFrequency());
         Assert.assertNotNull(term.getFrequency().nextDate(VT.ld(2012, 1, 1)));
 
-        final LeaseTermForIndexableRent indexableRent = assertType(term, LeaseTermForIndexableRent.class);
+        final LeaseTermForIndexable indexableRent = assertType(term, LeaseTermForIndexable.class);
         BigDecimal baseValue = indexableRent.getBaseValue();
         Assert.assertEquals(VT.bd("20000.00"), baseValue);
     }

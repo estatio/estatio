@@ -21,36 +21,28 @@ package org.estatio.fixture.lease;
 import org.estatio.dom.lease.Lease;
 
 import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
 
-public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005 extends LeaseItemAndTermsAbstract {
+public class LeaseItemAndLeaseTermForTaxForOxfTopModel001 extends LeaseItemAndTermsAbstract {
 
     @Override
     protected void execute(ExecutionContext fixtureResults) {
-        createLeaseTermsForOxfMiracl005(fixtureResults);
+        createLeaseTermsForOxfTopModel001(fixtureResults);
     }
 
-    private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
+    private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMiracl005(), executionContext);
+            execute(new LeaseForOxfTopModel001(), executionContext);
         }
 
         // exec
-        Lease lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);
-
-        createLeaseTermForServiceCharge(
+        Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
+        createLeaseTermForTax(
                 lease,
                 lease.getStartDate(), null,
-                bd(12400),
+                bd(1),
+                bd(50), true,
                 executionContext);
-        createLeaseTermForServiceCharge(
-                lease,
-                ld(2014, 1, 1), null,
-                bd(13000),
-                executionContext);
-
     }
-
 }

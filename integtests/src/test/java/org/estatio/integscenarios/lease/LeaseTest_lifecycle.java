@@ -126,8 +126,8 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
         assertThat(sItem.getTerms().size(), is(2));
         assertThat(tItem.getTerms().size(), is(2));
 
-        LeaseTermForIndexableRent last = (LeaseTermForIndexableRent) rItem.getTerms().last();
-        LeaseTermForIndexableRent first = (LeaseTermForIndexableRent) rItem.getTerms().first();
+        LeaseTermForIndexable last = (LeaseTermForIndexable) rItem.getTerms().last();
+        LeaseTermForIndexable first = (LeaseTermForIndexable) rItem.getTerms().first();
         assertNotNull(last.getPrevious());
         assertThat(last.getBaseValue(), is(VT.bd(150000).setScale(2)));
         assertThat(first.getStartDate(), is(VT.ld(2013, 11, 7)));
@@ -167,7 +167,7 @@ public class LeaseTest_lifecycle extends EstatioIntegrationTest {
         indexValues.newIndexValue(index, VT.ld(2013, 11, 1), VT.bd(110));
         indexValues.newIndexValue(index, VT.ld(2014, 12, 1), VT.bd(115));
         lease.verifyUntil(VT.ld(2015, 3, 31));
-        LeaseTermForIndexableRent term = (LeaseTermForIndexableRent) rItem.findTerm(VT.ld(2015, 1, 1));
+        LeaseTermForIndexable term = (LeaseTermForIndexable) rItem.findTerm(VT.ld(2015, 1, 1));
         assertThat(term.getIndexationPercentage(), is(VT.bd(4.5)));
         assertThat(term.getIndexedValue(), is(VT.bd("156750.00")));
         assertThat(totalApprovedOrInvoicedForItem(rItem), is(VT.bd("209918.48")));

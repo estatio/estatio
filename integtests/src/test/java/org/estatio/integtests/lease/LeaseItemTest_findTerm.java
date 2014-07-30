@@ -75,7 +75,7 @@ public class LeaseItemTest_findTerm extends EstatioIntegrationTest {
 
         // when
         final LeaseTerm term = leaseTopModelRentItem.findTerm(VT.ld(2010, 7, 15));
-        LeaseTermForIndexableRent leaseTopModelRentTerm = assertType(term, LeaseTermForIndexableRent.class);
+        LeaseTermForIndexable leaseTopModelRentTerm = assertType(term, LeaseTermForIndexable.class);
 
         // then
         Assert.assertNotNull(leaseTopModelRentTerm);

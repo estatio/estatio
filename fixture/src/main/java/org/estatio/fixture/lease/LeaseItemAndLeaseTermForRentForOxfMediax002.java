@@ -36,7 +36,7 @@ public class LeaseItemAndLeaseTermForRentForOxfMediax002 extends LeaseItemAndTer
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
 
-        createLeaseItemIfRequiredAndLeaseTermForRent(
+        createLeaseTermForIndexableRent(
                 lease, lease.getStartDate(), null,
                 bd(20000),
                 ld(2008, 1, 1), ld(2009, 1, 1), ld(2009, 4, 1),

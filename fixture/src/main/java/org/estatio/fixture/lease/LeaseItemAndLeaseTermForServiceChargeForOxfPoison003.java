@@ -39,7 +39,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfPoison003 extends LeaseI
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
 
-        createLeaseItemIfRequiredAndLeaseTermForServiceCharge(
+        createLeaseTermForServiceCharge(
                 lease,
                 lease.getStartDate(), null,
                 bd(12400),

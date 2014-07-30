@@ -33,7 +33,7 @@ public class LeaseTermForIndexableRentTest_beanProperties extends AbstractBeanPr
 	        .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
 	        .withFixture(pojos(Index.class))
             .withFixture(statii())
-	        .exercise(new LeaseTermForIndexableRent());
+	        .exercise(new LeaseTermForIndexable());
 	}
 
 	

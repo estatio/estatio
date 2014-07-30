@@ -39,7 +39,7 @@ public class LeaseItemAndLeaseTermForRentForOxfTopModel001 extends LeaseItemAndT
 
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);
-        createLeaseItemIfRequiredAndLeaseTermForRent(
+        createLeaseTermForIndexableRent(
                 lease,
                 lease.getStartDate(), null,
                 bd(20000),

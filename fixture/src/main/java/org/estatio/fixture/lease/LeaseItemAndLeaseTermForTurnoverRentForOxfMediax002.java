@@ -33,7 +33,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002 extends LeaseIt
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfMediaX002.LEASE_REFERENCE);
 
-        createLeaseItemIfRequiredAndLeaseTermForTurnoverRent(
+        createLeaseTermForTurnoverRent(
                 lease,
                 lease.getStartDate(), null,
                 "7",

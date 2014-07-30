@@ -16,7 +16,7 @@
  * {@link org.estatio.dom.lease.LeaseTerm}s, typically per quarter.  There are subclasses of 
  * {@link org.estatio.dom.lease.LeaseTerm} for each of the {@link org.estatio.dom.lease.LeaseItemType type}s; so the 
  * type is an (indirect sort of) power-type.  The subtypes are, respectively,  
- * {@link org.estatio.dom.lease.LeaseTermForIndexableRent lease term for indexable rent lease term}, 
+ * {@link org.estatio.dom.lease.LeaseTermForIndexable lease term for indexable rent lease term}, 
  * {@link org.estatio.dom.lease.LeaseTermForTurnoverRent lease term for turnover rent} and
  * {@link org.estatio.dom.lease.LeaseTermForServiceCharge lease term for service charge}. 
  *
@@ -33,7 +33,7 @@
  * <p>
  * An important philosophy is that {@link org.estatio.dom.invoice.InvoiceItem}s become immutable once invoiced.  If 
  * there is a retrospective change in reference data (eg {@link org.estatio.dom.index.Index indices} which impact the
- * {@link org.estatio.dom.lease.LeaseTermForIndexableRent}, then the invoice calculations for that term can be re-run. 
+ * {@link org.estatio.dom.lease.LeaseTermForIndexable}, then the invoice calculations for that term can be re-run. 
  * This may produce a delta {@link org.estatio.dom.invoice.InvoiceItem} (debit or credit), which is billed in arrears.
  *  
  * <p>

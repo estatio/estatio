@@ -39,7 +39,7 @@ import org.estatio.dom.utils.MathUtils;
 
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
+public class LeaseTermForIndexable extends LeaseTerm implements Indexable {
 
     private Index index;
 
@@ -150,7 +150,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // //////////////////////////////////////
 
-    public LeaseTermForIndexableRent changeParameters(
+    public LeaseTermForIndexable changeParameters(
             final Index index,
             final @Named("Base index date") LocalDate baseIndexDate,
             final @Named("Next index date") LocalDate nextIndexDate,
@@ -290,7 +290,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     // //////////////////////////////////////
 
-    public LeaseTermForIndexableRent changeValues(
+    public LeaseTermForIndexable changeValues(
             final @Named("Base value") BigDecimal baseValue,
             final @Named("Settled value") @Optional BigDecimal settledValue) {
         setBaseValue(baseValue);
@@ -320,7 +320,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
     @Override
     @Programmatic
     public void doInitialize() {
-        final LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
+        final LeaseTermForIndexable previousTerm = (LeaseTermForIndexable) getPrevious();
         if (previousTerm != null) {
             LeaseTermFrequency frequency = previousTerm.getFrequency();
             if (frequency != null) {
@@ -348,7 +348,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     protected void doAlign() {
-        LeaseTermForIndexableRent previousTerm = (LeaseTermForIndexableRent) getPrevious();
+        LeaseTermForIndexable previousTerm = (LeaseTermForIndexable) getPrevious();
         if (previousTerm != null) {
             BigDecimal newBaseValue = MathUtils.firstNonZero(
                     previousTerm.getSettledValue(),
@@ -367,7 +367,7 @@ public class LeaseTermForIndexableRent extends LeaseTerm implements Indexable {
 
     @Override
     public void copyValuesTo(final LeaseTerm target) {
-        LeaseTermForIndexableRent t = (LeaseTermForIndexableRent) target;
+        LeaseTermForIndexable t = (LeaseTermForIndexable) target;
         super.copyValuesTo(t);
         t.setIndex(getIndex());
         t.setBaseIndexStartDate(getBaseIndexStartDate());

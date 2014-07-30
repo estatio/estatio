@@ -30,5 +30,9 @@ public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstrac
         execute(new LeaseItemAndLeaseTermForRentForOxfTopModel001(), executionContext);
         execute(new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001(), executionContext);
         execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001(), executionContext);
+        execute(new LeaseItemAndLeaseTermForDiscountForOxfTopModel001(), executionContext);
+        execute(new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001(), executionContext);
+        execute(new LeaseItemAndLeaseTermForTaxForOxfTopModel001(), executionContext);
+        execute(new LeaseItemAndLeaseTermForIndexableServiceChargeForOxfTopModel001(), executionContext);
     }
 }

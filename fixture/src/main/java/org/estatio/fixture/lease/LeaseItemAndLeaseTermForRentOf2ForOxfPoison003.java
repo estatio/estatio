@@ -40,14 +40,14 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003 extends LeaseItemAnd
         // exec
         Lease lease = leases.findLeaseByReference(LeaseForOxfPoison003.LEASE_REFERENCE);
 
-        createLeaseItemIfRequiredAndLeaseTermForRent(
+        createLeaseTermForIndexableRent(
                 lease,
                 lease.getStartDate(), null,
                 bd(87300),
                 null, null, null,
                 "ISTAT-FOI",
                 executionContext);
-        createLeaseItemIfRequiredAndLeaseTermForRent(
+        createLeaseTermForIndexableRent(
                 lease,
                 lease.getStartDate().plusYears(1), null,
                 bd(87300),

@@ -72,7 +72,7 @@ public class LeaseItemTest_getTerms extends EstatioIntegrationTest {
         Assert.assertThat(terms.size(), is(1));
         final LeaseTerm term0 = terms.first();
 
-        LeaseTermForIndexableRent indexableRent = assertType(term0, LeaseTermForIndexableRent.class);
+        LeaseTermForIndexable indexableRent = assertType(term0, LeaseTermForIndexable.class);
 
         Assert.assertNotNull(indexableRent.getFrequency());
         Assert.assertNotNull(indexableRent.getFrequency().nextDate(VT.ld(2012, 1, 1)));

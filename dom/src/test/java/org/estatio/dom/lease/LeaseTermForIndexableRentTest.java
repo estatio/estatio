@@ -46,7 +46,7 @@ public class LeaseTermForIndexableRentTest {
 
     private Lease lease; 
     private LeaseItem item;
-    private LeaseTermForIndexableRent term;
+    private LeaseTermForIndexable term;
 
     public Index i;
 
@@ -114,7 +114,7 @@ public class LeaseTermForIndexableRentTest {
         item.setType(LeaseItemType.RENT);
         item.injectLeaseTerms(mockLeaseTerms);
 
-        term = new LeaseTermForIndexableRent();
+        term = new LeaseTermForIndexable();
         term.injectClockService(mockClockService);
         term.injectIndexationService(new IndexationService());
         term.setFrequency(LeaseTermFrequency.YEARLY);
@@ -169,7 +169,7 @@ public class LeaseTermForIndexableRentTest {
 
     @Test
     public void valueForDueDate_ok() throws Exception {
-        LeaseTermForIndexableRent term = new LeaseTermForIndexableRent();
+        LeaseTermForIndexable term = new LeaseTermForIndexable();
         term.setStartDate(new LocalDate(2011,1,1));
         term.setBaseValue(BigDecimal.valueOf(20000));
         term.setIndexedValue(BigDecimal.valueOf(30000));
@@ -205,7 +205,7 @@ public class LeaseTermForIndexableRentTest {
     @Ignore // incomplete, null pointer exception
     @Test
     public void initialize_ok() throws Exception {
-        LeaseTermForIndexableRent nextTerm = new LeaseTermForIndexableRent();
+        LeaseTermForIndexable nextTerm = new LeaseTermForIndexable();
         term.setNext(nextTerm);
         
         nextTerm.doInitialize();
