@@ -30,12 +30,26 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.agreement.*;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.FixedAssets;
 import org.estatio.dom.asset.Property;
@@ -175,16 +189,6 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public List<Lease> findExpireInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
-        return allMatches(
-                "findExpireInDateRange",
-                "rangeStartDate", rangeStartDate,
-                "rangeEndDate", rangeEndDate);
-    }
-
-    // //////////////////////////////////////
-
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence = "99")
@@ -194,6 +198,7 @@ public class Leases extends EstatioDomainService<Lease> {
 
     // //////////////////////////////////////
 
+    @Prototype
     @ActionSemantics(Of.IDEMPOTENT)
     public String verifyAllLeases() {
         DateTime dt = DateTime.now();
@@ -202,6 +207,23 @@ public class Leases extends EstatioDomainService<Lease> {
             lease.verifyUntil(getClockService().now());
         }
         Period p = new Period(dt, DateTime.now());
+        return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public String verifyLeasesUntil(
+            final LeaseItemType leaseItemType,
+            final @Named("Until date") LocalDate untilDate) {
+        DateTime start = DateTime.now();
+        List<Lease> leases = allLeases();
+        for (Lease lease : leases) {
+            for (LeaseItem leaseItem : lease.getItems()) {
+                if (leaseItem.getType().equals(leaseItemType)) {
+                    leaseItem.verifyUntil(untilDate);
+                }
+            }
+        }
+        Period p = new Period(start, DateTime.now());
         return String.format("Verified %d leases in %s", leases.size(), JodaPeriodUtils.asString(p));
     }
 
@@ -220,6 +242,14 @@ public class Leases extends EstatioDomainService<Lease> {
     @Programmatic
     public List<Lease> findLeasesByProperty(final Property property) {
         return allMatches("findByProperty", "property", property);
+    }
+
+    @Programmatic
+    public List<Lease> findExpireInDateRange(final LocalDate rangeStartDate, final LocalDate rangeEndDate) {
+        return allMatches(
+                "findExpireInDateRange",
+                "rangeStartDate", rangeStartDate,
+                "rangeEndDate", rangeEndDate);
     }
 
     // //////////////////////////////////////

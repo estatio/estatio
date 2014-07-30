@@ -10,7 +10,11 @@
             "type": {},
             "status": {},
             "invoicingFrequency": {},
-            "paymentMethod": {},
+            "paymentMethod": {
+              "actions": {
+              	"changePaymentMethod": {}
+              }
+		    },
             "charge": {},
             "tax": {}
           }
