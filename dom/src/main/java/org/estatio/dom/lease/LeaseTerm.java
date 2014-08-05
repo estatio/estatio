@@ -23,9 +23,12 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.jdo.annotations.*;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+
 import org.estatio.dom.*;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
@@ -33,8 +36,12 @@ import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
+import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
+
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Render.Type;
@@ -225,8 +232,8 @@ public abstract class LeaseTerm
     public String disableChangeDates(
             final LocalDate startDate,
             final LocalDate endDate) {
-        if(valueType() == LeaseTermValueType.FIXED) {
-            if(!getInvoiceItems().isEmpty()) {
+        if (valueType() == LeaseTermValueType.FIXED) {
+            if (!getInvoiceItems().isEmpty()) {
                 return "Cannot change dates because this lease term has invoices and is fixed";
             }
         }
@@ -396,7 +403,7 @@ public abstract class LeaseTerm
         }
         success = getInvoiceItems().size() == 0;
         if (success) {
-            if (getPrevious() != null){
+            if (getPrevious() != null) {
                 getPrevious().setNext(null);
             }
             this.setPrevious(null);

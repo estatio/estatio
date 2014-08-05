@@ -35,12 +35,14 @@ import com.google.common.base.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
@@ -61,6 +63,7 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
+import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
@@ -155,7 +158,7 @@ public class LeaseItem
     public void modifyStatus(final LeaseItemStatus newStatus, final String reason) {
         if (!getStatus().equals(newStatus)) {
             setStatus(newStatus);
-            getLease().resovleStatus(reason);
+            getLease().resolveStatus(reason);
         }
     }
 
@@ -297,7 +300,7 @@ public class LeaseItem
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-
+    
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<LeaseItem>(this);

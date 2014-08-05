@@ -27,6 +27,7 @@ import java.util.TreeSet;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Order;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -43,6 +44,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
@@ -164,7 +166,7 @@ public class Lease
     }
 
     @Programmatic
-    public void resovleStatus(final String reason) {
+    public void resolveStatus(final String reason) {
         final LeaseStatus effectiveStatus = getEffectiveStatus();
         if (effectiveStatus != null && !effectiveStatus.equals(getStatus())) {
             setStatus(effectiveStatus);
@@ -280,6 +282,19 @@ public class Lease
         this.tenancyEndDate = tenancyEndDate;
     }
 
+    @javax.jdo.annotations.Persistent
+    public String tenancyDuration;
+    
+    @Disabled
+    @Optional
+    public String getTenancyDuration() {
+        return tenancyDuration;
+    }
+    
+    public void setTenancyDuration(final LocalDate tenancyStartDate, final LocalDate tenancyEndDate) {
+        this.tenancyDuration = JodaPeriodUtils.asSimpleString(Period.fieldDifference(tenancyStartDate, tenancyEndDate));
+    }
+    
     public Lease changeTenancyDates(
             final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate
@@ -288,7 +303,7 @@ public class Lease
         setTenancyEndDate(endDate);
         return this;
     }
-
+    
     public LocalDate default0ChangeTenancyDates() {
         return getTenancyStartDate();
     }
@@ -296,7 +311,7 @@ public class Lease
     public LocalDate default1ChangeTenancyDates() {
         return getTenancyEndDate();
     }
-
+    
     // //////////////////////////////////////
 
     @Programmatic

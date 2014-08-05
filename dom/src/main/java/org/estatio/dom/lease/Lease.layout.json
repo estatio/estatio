@@ -55,6 +55,7 @@
                 "changeTenancyDates": {}
               }
             },
+            "tenancyDuration": {},
             "terminationDate": {
               "actions": {
                 "terminate": {}
