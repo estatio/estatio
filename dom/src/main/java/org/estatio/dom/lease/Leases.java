@@ -136,7 +136,6 @@ public class Leases extends EstatioDomainService<Lease> {
         lease.setEndDate(endDate);
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
-        lease.setTenancyDuration(tenancyStartDate, tenancyEndDate);
         lease.setLeaseType(leaseType);
         persistIfNotAlready(lease);
 

@@ -33,8 +33,11 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.YearMonthDay;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -282,17 +285,25 @@ public class Lease
         this.tenancyEndDate = tenancyEndDate;
     }
 
-    @javax.jdo.annotations.Persistent
-    public String tenancyDuration;
-    
     @Disabled
     @Optional
     public String getTenancyDuration() {
-        return tenancyDuration;
-    }
-    
-    public void setTenancyDuration(final LocalDate tenancyStartDate, final LocalDate tenancyEndDate) {
-        this.tenancyDuration = JodaPeriodUtils.asSimpleString(Period.fieldDifference(tenancyStartDate, tenancyEndDate));
+        LocalDateInterval ldi;
+        if (getTenancyStartDate() != null && getTenancyEndDate() != null) {
+            ldi = getEffectiveInterval();
+        } else if (getTenancyStartDate() == null && getTenancyEndDate() != null && getStartDate() != null) {
+            ldi = new LocalDateInterval(getStartDate(), getTenancyEndDate());
+        } else if (getTenancyStartDate() != null && getTenancyEndDate() == null && getEndDate() != null) {
+            ldi = new LocalDateInterval(getTenancyStartDate(), getEndDate());
+        } else {
+            return null;
+        }
+        
+        if (ldi.isValid()) {
+            return JodaPeriodUtils.asSimpleString(new Period(ldi.asInterval(), PeriodType.yearMonthDay()));
+        }
+        
+        return null;
     }
     
     public Lease changeTenancyDates(
@@ -301,6 +312,7 @@ public class Lease
             ) {
         setTenancyStartDate(startDate);
         setTenancyEndDate(endDate);
+        getTenancyDuration();
         return this;
     }
     
