@@ -19,9 +19,12 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "20", repositoryFor = Person.class)
 public class Persons extends EstatioDomainService<Person> {
@@ -35,8 +38,8 @@ public class Persons extends EstatioDomainService<Person> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Parties", sequence = "1")
     public Person newPerson(
-            final @Named("reference") @Optional @RegEx(validation="[A-Z,0-9,_,-,/]+") String reference,
-            final @Named("initials") @Optional @RegEx(validation="[A-Z]+") String initials,
+            final @Named("reference") @Optional @RegEx(validation=RegexValidation.Persons.REFERENCE) String reference,
+            final @Named("initials") @Optional @RegEx(validation=RegexValidation.Persons.INITIALS) String initials,
             final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName) {
         final Person person = newTransientInstance(Person.class);

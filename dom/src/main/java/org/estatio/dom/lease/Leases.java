@@ -45,6 +45,7 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
@@ -73,7 +74,7 @@ public class Leases extends EstatioDomainService<Lease> {
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            final @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true) String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name,
             final @Named("Type") LeaseType leaseType,
             final @Named("Start Date") LocalDate startDate,

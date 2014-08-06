@@ -38,6 +38,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 
@@ -90,7 +91,7 @@ public class Index
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
+    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
     public String getReference() {
         return reference;
     }

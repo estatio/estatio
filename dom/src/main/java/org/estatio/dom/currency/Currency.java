@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
@@ -82,7 +83,7 @@ public class Currency
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
-    @RegEx(validation = "[A-Z]+", caseSensitive = true)
+    @RegEx(validation = RegexValidation.Currency.REFERENCE, caseSensitive = true)
     @Title(sequence = "1")
     public String getReference() {
         return reference;

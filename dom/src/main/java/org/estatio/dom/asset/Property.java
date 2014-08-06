@@ -47,6 +47,7 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
@@ -221,7 +222,7 @@ public class Property extends FixedAsset implements Locatable {
     // //////////////////////////////////////
 
     public Unit newUnit(
-            @Named("Reference") @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true) final String reference,
+            @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
             @Named("Name") final String name,
             final UnitType unitType) {
         Unit unit = unitsRepo.newUnit(reference, name, unitType);

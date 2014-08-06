@@ -26,6 +26,7 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
@@ -81,7 +82,7 @@ public class FinancialAccount
     private String reference;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.FinancialAccount.REFERENCE)
-    @RegEx(validation = "[-/_A-Z0-9]+", caseSensitive = true)
+    @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true)
     public String getReference() {
         return reference;
     }
