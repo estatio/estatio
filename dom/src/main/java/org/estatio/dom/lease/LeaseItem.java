@@ -35,14 +35,12 @@ import com.google.common.base.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
@@ -63,7 +61,6 @@ import org.estatio.dom.charge.Charges;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.tax.Tax;
-import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 /**
@@ -300,7 +297,7 @@ public class LeaseItem
     public void setEndDate(final LocalDate endDate) {
         this.endDate = endDate;
     }
-    
+
     // //////////////////////////////////////
 
     private WithIntervalMutable.Helper<LeaseItem> changeDates = new WithIntervalMutable.Helper<LeaseItem>(this);
@@ -439,12 +436,43 @@ public class LeaseItem
         setPaymentMethod(paymentMethod);
         return this;
     }
-    
+
     public PaymentMethod default0ChangePaymentMethod(
             final PaymentMethod paymentMethod,
             final String reason
             ) {
         return getPaymentMethod();
+    }
+
+    // //////////////////////////////////////
+
+    public LeaseItem overrideTax(
+            final Tax tax,
+            final @Named("Reason") String reason) {
+        setTax(tax);
+        return this;
+    }
+
+    public Tax default0OverrideTax(
+            final Tax tax,
+            final @Named("Reason") String reason) {
+        return getTax();
+    }
+
+    public boolean hideOverrideTax() {
+        return getTax() != null;
+    }
+
+    // //////////////////////////////////////
+
+    public LeaseItem cancelOverrideTax(
+            final @Named("Reason") String reason) {
+        setTax(null);
+        return this;
+    }
+
+    public boolean hideCancelOverrideTax() {
+        return getTax() == null;
     }
 
     // //////////////////////////////////////

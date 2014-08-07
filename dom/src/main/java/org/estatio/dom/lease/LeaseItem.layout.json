@@ -16,7 +16,12 @@
               }
 		    },
             "charge": {},
-            "tax": {}
+            "tax": {
+              "actions": {
+              	"overrideTax": {},
+              	"cancelOverrideTax": {}
+              }
+            }
           }
         }
       }
