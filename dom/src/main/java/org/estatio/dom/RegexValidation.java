@@ -29,8 +29,8 @@ public final class RegexValidation {
         public static final String REFERENCE = "[A-Z]+";
     }
     
-    public static final class Persons {
-        private Persons() {
+    public static final class Person {
+        private Person() {
         }
         
         public static final String REFERENCE = "[A-Z,0-9,_,-,/]+";
