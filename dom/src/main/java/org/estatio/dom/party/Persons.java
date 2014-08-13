@@ -38,8 +38,8 @@ public class Persons extends EstatioDomainService<Person> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Parties", sequence = "1")
     public Person newPerson(
-            final @Named("reference") @Optional @RegEx(validation=RegexValidation.Persons.REFERENCE) String reference,
-            final @Named("initials") @Optional @RegEx(validation=RegexValidation.Persons.INITIALS) String initials,
+            final @Named("reference") @Optional @RegEx(validation=RegexValidation.Person.REFERENCE) String reference,
+            final @Named("initials") @Optional @RegEx(validation=RegexValidation.Person.INITIALS) String initials,
             final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName) {
         final Person person = newTransientInstance(Person.class);

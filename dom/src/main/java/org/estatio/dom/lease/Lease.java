@@ -53,12 +53,14 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
@@ -886,7 +888,7 @@ public class Lease
     // //////////////////////////////////////
 
     public Lease renew(
-            @Named("Reference") final String reference,
+            @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
             @Named("Name") final String name,
             @Named("Start date") final LocalDate startDate,
             @Named("End date") final LocalDate endDate,
