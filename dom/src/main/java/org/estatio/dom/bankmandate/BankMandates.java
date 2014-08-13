@@ -20,12 +20,17 @@ package org.estatio.dom.bankmandate;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.*;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.party.Party;
@@ -46,7 +51,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     public BankMandate newBankMandate(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            final String reference,
+            @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
             final String name,
             final LocalDate startDate,
             final LocalDate endDate,
