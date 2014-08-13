@@ -20,9 +20,12 @@ package org.estatio.dom.geography;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "80", repositoryFor = State.class)
 public class States
@@ -45,7 +48,7 @@ public class States
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name="Other", sequence = "geography.states.2")
     public State newState(
-            final @Named("Reference") String reference, 
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
             final @Named("Name") String name, 
             final Country country) {
         final State state = newTransientInstance();

@@ -19,9 +19,12 @@
 package org.estatio.dom.geography;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "80", repositoryFor = Country.class)
 public class Countries extends EstatioDomainService<Country> {
@@ -41,7 +44,7 @@ public class Countries extends EstatioDomainService<Country> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Other", sequence = "geography.countries.2")
     public List<Country> newCountry(
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Alpha-2 Code") String alpha2Code,
             final @Named("Name") String name) {
         createCountry(reference, alpha2Code, name);

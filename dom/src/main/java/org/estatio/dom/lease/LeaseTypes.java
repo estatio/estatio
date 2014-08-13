@@ -19,9 +19,12 @@
 package org.estatio.dom.lease;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseType.class)
 public class LeaseTypes extends EstatioDomainService<LeaseType> {
@@ -41,7 +44,7 @@ public class LeaseTypes extends EstatioDomainService<LeaseType> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Other", sequence = "lease.leaseTypes.2")
     public LeaseType newLeaseType(
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") @Optional String name) {
         final LeaseType leaseType = newTransientInstance();
         leaseType.setReference(reference);

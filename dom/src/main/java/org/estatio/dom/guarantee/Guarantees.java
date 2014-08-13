@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import com.google.common.collect.Lists;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.agreement.AgreementType;
@@ -40,6 +41,7 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -50,6 +52,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Optional;
@@ -76,7 +79,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
     @MemberOrder(sequence = "1")
     public Guarantee newGuarantee(
             final Lease lease,
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name,
             final GuaranteeType guaranteeType,
             final @Named("Start date") LocalDate startDate,

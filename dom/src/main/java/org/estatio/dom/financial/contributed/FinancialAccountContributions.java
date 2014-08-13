@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.NotContributed.As;
 
 import org.estatio.dom.EstatioService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccountType;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -44,7 +45,7 @@ public class FinancialAccountContributions extends EstatioService<FinancialAccou
     public FinancialAccount addAccount(
             final Party owner,
             final FinancialAccountType financialAccountType,
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name) {
         FinancialAccount account = financialAccountType.create(getContainer());
         account.setOwner(owner);

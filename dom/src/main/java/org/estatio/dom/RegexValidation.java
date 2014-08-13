@@ -36,4 +36,20 @@ public final class RegexValidation {
         public static final String REFERENCE = "[A-Z,0-9,_,-,/]+";
         public static final String INITIALS = "[A-Z]+";
     }
+    
+    public static final class Property {
+        private Property() {
+        }
+        
+        /* Only 3 letters */
+        public static final String REFERENCE = "[A-Z]{3}";
+    }
+    
+    public static final class Lease {
+        private Lease() {
+        }
+        
+        /* needs work */
+        public static final String REFERENCE = "^[A-Z]{3}-[A-Z,0-9]*-[A-Z,0-9]*";
+    }
 }

@@ -19,9 +19,12 @@
 package org.estatio.dom.currency;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "80", repositoryFor = Currency.class)
 public class Currencies extends EstatioDomainService<Currency> {
@@ -41,7 +44,7 @@ public class Currencies extends EstatioDomainService<Currency> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Other", sequence = "currencies.2")
     public List<Currency> newCurrency(
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") @Optional String name) {
         findOrCreateCurrency(reference, name);
         return allCurrencies();

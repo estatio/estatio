@@ -19,9 +19,12 @@
 package org.estatio.dom.party;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "20", repositoryFor = Organisation.class)
 public class Organisations extends EstatioDomainService<Organisation> {
@@ -35,7 +38,7 @@ public class Organisations extends EstatioDomainService<Organisation> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Parties", sequence = "2")
     public Organisation newOrganisation(
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name) {
         final Organisation organisation = newTransientInstance(Organisation.class);
         organisation.setReference(reference);

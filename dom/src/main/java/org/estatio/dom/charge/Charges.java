@@ -19,9 +19,14 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
+
+import javax.print.DocFlavor.READER;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.tax.Tax;
 
 @DomainService(menuOrder = "80", repositoryFor = Charge.class)
@@ -45,7 +50,7 @@ public class Charges extends EstatioDomainService<Charge> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.2.2")
     public Charge newCharge(
-            final @Named("Reference") String reference, 
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
             final @Named("Name") String name, 
             final @Named("Description") String description, 
             final Tax tax, 

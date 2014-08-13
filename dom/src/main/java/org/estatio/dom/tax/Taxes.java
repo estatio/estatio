@@ -19,9 +19,12 @@
 package org.estatio.dom.tax;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "80", repositoryFor = Tax.class)
 public class Taxes extends EstatioDomainService<Tax> {
@@ -43,7 +46,7 @@ public class Taxes extends EstatioDomainService<Tax> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "taxStuff.taxes.2")
     public Tax newTax(
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") @Optional String name) {
         final Tax tax = newTransientInstance();
         tax.setReference(reference);

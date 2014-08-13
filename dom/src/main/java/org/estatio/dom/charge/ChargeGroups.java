@@ -19,9 +19,12 @@
 package org.estatio.dom.charge;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.ValueUtils;
 
 @DomainService(menuOrder = "80", repositoryFor = ChargeGroup.class)
@@ -42,7 +45,7 @@ public class ChargeGroups extends EstatioDomainService<ChargeGroup> {
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "chargeAndChargeGroups.1.2")
     public List<ChargeGroup> newChargeGroup(
-            final @Named("Reference") String reference, 
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
             final @Named("Description") String description) {
         createChargeGroup(reference, description);
         return allChargeGroups();

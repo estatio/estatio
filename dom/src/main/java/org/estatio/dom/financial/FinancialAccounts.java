@@ -25,6 +25,7 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.party.Party;
 
@@ -59,7 +60,7 @@ public class FinancialAccounts extends EstatioDomainService<FinancialAccount> {
     @Programmatic
     public BankAccount newBankAccount(
             final @Named("Owner") Party owner,
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name) {
         final BankAccount bankAccount = newTransientInstance(BankAccount.class);
         bankAccount.setReference(reference);

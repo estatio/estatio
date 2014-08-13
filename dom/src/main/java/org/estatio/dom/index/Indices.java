@@ -19,9 +19,12 @@
 package org.estatio.dom.index;
 
 import java.util.List;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 
 @DomainService(menuOrder = "60", repositoryFor = Index.class)
 public class Indices extends EstatioDomainService<Index> {
@@ -34,7 +37,9 @@ public class Indices extends EstatioDomainService<Index> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(sequence = "1")
-    public Index newIndex(final @Named("Reference") String reference, final @Named("Name") String name) {
+    public Index newIndex(
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 
+            final @Named("Name") String name) {
         final Index index = newTransientInstance();
         index.setReference(reference);
         index.setName(name);

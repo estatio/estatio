@@ -575,7 +575,7 @@ public class Lease
 
     public Lease newMandate(
             final BankAccount bankAccount,
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
             final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate) {
 
@@ -631,7 +631,7 @@ public class Lease
             return "Bank account is not owned by this lease's tenant";
         }
         if (agreements.findAgreementByReference(reference) != null) {
-            return "Reference allready exists";
+            return "Reference already exists";
         }
         return null;
     }
@@ -786,7 +786,7 @@ public class Lease
     // //////////////////////////////////////
 
     public Lease assign(
-            @Named("Reference") final String reference,
+            @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
             @Named("Name") final String name,
             @Named("Tenant") final Party tenant,
             @Named("Start date") final LocalDate startDate,

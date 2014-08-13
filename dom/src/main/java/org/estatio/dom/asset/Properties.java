@@ -19,10 +19,14 @@
 package org.estatio.dom.asset;
 
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.utils.StringUtils;
 
@@ -38,7 +42,7 @@ public class Properties extends EstatioDomainService<Property> {
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Fixed Assets", sequence = "11")
     public Property newProperty(
-            final @Named("Reference") String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name,
             final PropertyType propertyType,
             final @Named("City") @Optional String city,
