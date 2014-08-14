@@ -381,25 +381,6 @@ public class LeaseTest extends EstatioIntegrationTest {
             tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
         }
 
-        // Horrid!  Unfortunately there is no API to do this currently.
-        // actually, turns out not needed; simply call nextTransaction() to start new request-scope.
-        private static void clear(QueryResultsCache queryResultsCache) throws NoSuchFieldException, IllegalAccessException {
-            final Class<? extends QueryResultsCache> queryResultsCacheClass = queryResultsCache.getClass();
-            final Field handlerField = queryResultsCacheClass.getDeclaredField("handler");
-            handlerField.setAccessible(true);
-            final Object handler = handlerField.get(queryResultsCache);
-            final Class<?> handlerClass = handler.getClass();
-            final Field serviceByThreadField = handlerClass.getDeclaredField("serviceByThread");
-            serviceByThreadField.setAccessible(true);
-            final ThreadLocal o = (ThreadLocal) serviceByThreadField.get(handler);
-            QueryResultsCache qrcForThread = (QueryResultsCache) o.get();
-            final Class<? extends QueryResultsCache> qrcForThreadClass = qrcForThread.getClass();
-            final Field cache = qrcForThreadClass.getDeclaredField("cache");
-            cache.setAccessible(true);
-            final Map map = (Map) cache.get(qrcForThread);
-            map.clear();
-        }
-
         @Test
         public void step1_verify() throws Exception {
             // when

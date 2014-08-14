@@ -33,7 +33,6 @@ import org.joda.time.LocalDateTime;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.estatio.dom.EstatioInteractionCache;
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.charge.Charge;
 import org.estatio.dom.invoice.Invoices;
@@ -137,12 +136,10 @@ public class InvoiceCalculationService extends EstatioService<InvoiceCalculation
     private void startInteraction(final String parameters) {
         if (interactionId == null) {
             interactionId = LocalDateTime.now().toString().concat(" - ").concat(parameters);
-            EstatioInteractionCache.startInteraction();
         }
     }
 
     private void endInteraction() {
-        EstatioInteractionCache.endInteraction(interactionId != null);
         interactionId = null;
     }
 

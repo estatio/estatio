@@ -73,16 +73,12 @@ public class IndexValues
         return last == null ? null : last.getStartDate().plusMonths(1);
     }
 
-    @Inject
-    private QueryResultsCache queryResultsCache;
-
     @ActionSemantics(Of.SAFE)
     @Programmatic
     public IndexValue findIndexValueByIndexAndStartDate(
             final Index index,
             final @Named("Start Date") LocalDate startDate) {
         return queryResultsCache.execute(
-//        return EstatioInteractionCache.execute(
                 new Callable<IndexValue>() {
                     @Override
                     public IndexValue call() throws Exception {
@@ -113,16 +109,13 @@ public class IndexValues
 
     // //////////////////////////////////////
 
-    private IndexBases indexBases;
+    @Inject
+    IndexBases indexBases;
 
-    public void injectIndexBases(final IndexBases indexBases) {
-        this.indexBases = indexBases;
-    }
+    @Inject
+    Indices indices;
 
-    private Indices indices;
-
-    public void injectIndices(final Indices indices) {
-        this.indices = indices;
-    }
+    @Inject
+    QueryResultsCache queryResultsCache;
 
 }
