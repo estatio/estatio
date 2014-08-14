@@ -16,24 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.communicationchannel;
+package org.estatio.dom.currency;
 
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
-import org.estatio.dom.geography.Country;
-import org.estatio.dom.geography.State;
 
-public class PostalAddressTest_beanProperties extends AbstractBeanPropertiesTest {
+public class CurrencyTest {
 
-	@Test
-	public void test() {
-	    newPojoTester()
-			.withFixture(pojos(Country.class))
-			.withFixture(pojos(State.class))
-            .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
-			.exercise(new PostalAddress());
-	}
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
 
-
+        @Test
+        public void test() {
+            newPojoTester()
+                    .exercise(new Currency());
+        }
+    }
 }

@@ -16,31 +16,33 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.index;
+package org.estatio.dom.communicationchannel;
+
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
+public class CommunicationChannelsTest {
 
-import org.junit.Before;
-import org.junit.Test;
+    FinderInteraction finderInteraction;
 
-import org.apache.isis.applib.query.Query;
+    CommunicationChannels communicationChannels;
 
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
-
-public class IndexBasesTest_finders {
-
-    private FinderInteraction finderInteraction;
-
-    private IndexBases indexBases;
+    CommunicationChannelType type;
 
     @Before
     public void setup() {
         
-        indexBases = new IndexBases() {
+        type = CommunicationChannelType.EMAIL_ADDRESS;
+        
+        communicationChannels = new CommunicationChannels() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
@@ -48,7 +50,7 @@ public class IndexBasesTest_finders {
                 return null;
             }
             @Override
-            protected List<IndexBase> allInstances() {
+            protected List<CommunicationChannel> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -60,12 +62,19 @@ public class IndexBasesTest_finders {
         };
     }
 
-    @Test
-    public void allIndexBases() {
-        
-        indexBases.allIndexBases();
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+    public static class FindByReferenceAndType extends CommunicationChannelsTest {
+
+        @Test
+        public void happyCase() {
+
+            communicationChannels.findByReferenceAndType("REF-1", type);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(CommunicationChannel.class));
+            assertThat(finderInteraction.getQueryName(), is("findByReferenceAndType"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "REF-1"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(2));
+        }
     }
-    
 }

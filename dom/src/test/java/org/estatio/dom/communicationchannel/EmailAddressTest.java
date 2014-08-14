@@ -16,14 +16,23 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.invoice;
+package org.estatio.dom.communicationchannel;
 
-import org.estatio.dom.ApplicationSettingCreatorTestAbstract_create;
+import org.junit.Test;
 
-public class ApplicationSettingKeyCreatorTest_create extends ApplicationSettingCreatorTestAbstract_create {
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-    public ApplicationSettingKeyCreatorTest_create() {
-        super(ApplicationSettingKey.values());
+public class EmailAddressTest {
+
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            newPojoTester()
+                    .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+                    .exercise(new EmailAddress());
+        }
+
+
     }
-
 }

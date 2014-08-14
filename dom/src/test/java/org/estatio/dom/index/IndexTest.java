@@ -18,36 +18,33 @@
  */
 package org.estatio.dom.index;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 
+import org.estatio.dom.AbstractBeanPropertiesTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 public class IndexTest {
 
-    private LocalDate baseDate;
-    private LocalDate nextDate;
-    
-    @SuppressWarnings("unused")
-    private BigDecimal result;
+    LocalDate baseDate;
+    LocalDate nextDate;
 
-    private Index index;
-    private IndexBase ib1990;
-    private IndexBase ib2000;
-    private IndexBase ib2010;
-    private IndexValue iv1;
-    private IndexValue iv2;
+    Index index;
+    IndexBase ib1990;
+    IndexBase ib2000;
+    IndexBase ib2010;
+    IndexValue iv1;
+    IndexValue iv2;
 
     @Mock
     IndexValues mockIndexValues;
@@ -85,53 +82,74 @@ public class IndexTest {
         iv2.setStartDate(nextDate);
         iv2.setValue(BigDecimal.valueOf(111.1));
 
-        result = BigDecimal.valueOf(111.1).divide(BigDecimal.valueOf(122.2), 5, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(1.234));
+        BigDecimal result = BigDecimal.valueOf(111.1).divide(BigDecimal.valueOf(122.2), 5, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(1.234));
     }
 
-    @Test
-    public void testGetFactorForDate() {
-        assertEquals(ib2010.factorForDate(baseDate), new BigDecimal("1.234"));
-        assertEquals(new BigDecimal("1.659730"), ib2010.factorForDate(new LocalDate(1999, 1, 1)));
+    public static class FactorForDate extends IndexTest {
+
+        @Test
+        public void happyCase() {
+            assertEquals(ib2010.factorForDate(baseDate), new BigDecimal("1.234"));
+            assertEquals(new BigDecimal("1.659730"), ib2010.factorForDate(new LocalDate(1999, 1, 1)));
+        }
+
     }
 
-    @Test
-    public void testGetIndexValueForDate() {
-        context.checking(new Expectations() {
-            {
-                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
-                will(returnValue(iv1));
-                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
-                will(returnValue(iv2));
-            }
-        });
-        assertEquals(BigDecimal.valueOf(122.2), index.getIndexValueForDate(baseDate));
-        assertEquals(BigDecimal.valueOf(111.1), index.getIndexValueForDate(nextDate));
+    public static class GetIndexValueFactorForDate extends IndexTest {
+
+        @Test
+        public void happyCase() {
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2001, 1, 1))));
+                    will(returnValue(iv1));
+                    oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                    will(returnValue(iv2));
+                }
+            });
+            assertEquals(BigDecimal.valueOf(122.2), index.getIndexValueForDate(baseDate));
+            assertEquals(BigDecimal.valueOf(111.1), index.getIndexValueForDate(nextDate));
+        }
+
+        @Test
+        public void withNulls() {
+            assertNull(index.getIndexValueForDate(null));
+        }
+
     }
 
-    @Test
-    public void testGetIndexValueForDateWithNulls() {
-        assertNull(index.getIndexValueForDate(null));
+    public static class GetRebaseFactorForDates extends IndexTest {
+
+        @Test
+        public void happyCase() {
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                    will(returnValue(iv2));
+                }
+            });
+            assertEquals(BigDecimal.valueOf(1.234), index.getRebaseFactorForDates(baseDate, nextDate));
+        }
+
+        @Test
+        public void withNull() {
+            context.checking(new Expectations() {
+                {
+                    oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
+                    will(returnValue(null));
+                }
+            });
+            assertEquals(null, index.getRebaseFactorForDates(baseDate, nextDate));
+        }
     }
 
-    @Test
-    public void testGetRebaseFactor() {
-        context.checking(new Expectations() {
-            {
-                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
-                will(returnValue(iv2));
-            }
-        });
-        assertEquals(BigDecimal.valueOf(1.234), index.getRebaseFactorForDates(baseDate, nextDate));
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            newPojoTester()
+                    .exercise(new Index());
+        }
     }
 
-    @Test
-    public void testGetRebaseFactorWithNull() {
-        context.checking(new Expectations() {
-            {
-                oneOf(mockIndexValues).findIndexValueByIndexAndStartDate(with(equal(index)), with(equal(new LocalDate(2011, 1, 1))));
-                will(returnValue(null));
-            }
-        });
-        assertEquals(null, index.getRebaseFactorForDates(baseDate, nextDate));
-    }
 }

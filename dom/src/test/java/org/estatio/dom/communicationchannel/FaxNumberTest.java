@@ -16,18 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.geography;
+package org.estatio.dom.communicationchannel;
 
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class CountryTest_beanProperties extends AbstractBeanPropertiesTest {
+public class FaxNumberTest {
 
-	@Test
-	public void test() {
-		newPojoTester()
-		    .exercise(new Country());
-	}
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
 
+        @Test
+        public void test() {
+            newPojoTester()
+                    .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+                    .exercise(new PhoneOrFaxNumber());
+        }
+
+    }
 }

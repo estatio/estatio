@@ -22,14 +22,16 @@ import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class CommunicationChannelTest_beanProperties extends AbstractBeanPropertiesTest {
+public class PhoneNumberTest {
 
-    @Test
-    public void test() {
-        newPojoTester()
-            .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
-            .exercise(new CommunicationChannelForTesting());
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            newPojoTester()
+                    .withFixture(pojos(CommunicationChannelOwner.class, CommunicationChannelOwnerForTesting.class))
+                    .exercise(new PhoneOrFaxNumber());
+        }
+
     }
-
-
 }

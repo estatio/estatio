@@ -16,19 +16,23 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.index;
+package org.estatio.dom.geography;
 
 import org.junit.Test;
 
 import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class IndexTest_beanProperties extends AbstractBeanPropertiesTest {
+public class StateTest {
 
-	@Test
-	public void test() {
-	    newPojoTester()
-	        .exercise(new Index());
-	}
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            newPojoTester()
+                    .withFixture(pojos(Country.class))
+                    .exercise(new State());
+        }
 
 
+    }
 }

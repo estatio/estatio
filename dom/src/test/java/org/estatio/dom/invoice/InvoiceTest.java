@@ -1,0 +1,339 @@
+/*
+ *
+ *  Copyright 2012-2014 Eurocommercial Properties NV
+ *
+ *
+ *  Licensed under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
+package org.estatio.dom.invoice;
+
+import java.math.BigInteger;
+import java.util.List;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.apache.isis.applib.DomainObjectContainer;
+import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
+import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+import org.estatio.dom.asset.FixedAsset;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.bankmandate.BankMandate;
+import org.estatio.dom.financial.BankAccount;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.numerator.Numerator;
+import org.estatio.services.clock.ClockService;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+public class InvoiceTest {
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
+
+    Invoice invoice;
+
+    public static class AssignInvoiceNumber extends InvoiceTest {
+
+
+        @Mock
+        Invoices mockInvoices;
+
+        @Ignoring
+        @Mock
+        DomainObjectContainer mockContainer;
+
+        @Ignoring
+        @Mock
+        Property invoiceProperty;
+
+
+        private Numerator numerator;
+
+        @Mock
+        private ClockService mockClockService;
+
+        @Before
+        public void setUp() throws Exception {
+            numerator = new Numerator();
+            numerator.setFormat("XXX-%05d");
+            numerator.setLastIncrement(BigInteger.TEN);
+
+            context.checking(new Expectations() {
+                {
+                    allowing(mockClockService).now();
+                    will(returnValue(LocalDate.now()));
+                }
+            });
+
+        }
+
+        private Invoice createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
+            final Invoice invoice = new Invoice() {
+                @Override
+                public FixedAsset getFixedAsset() {
+                    return fixedAsset;
+                }
+            };
+            invoice.setStatus(invoiceStatus);
+            invoice.setContainer(mockContainer);
+            invoice.injectInvoices(mockInvoices);
+            invoice.injectClockService(mockClockService);
+            return invoice;
+        }
+
+        @Test
+        public void happyCase_whenNoInvoiceNumberPreviouslyAssigned() {
+            allowingMockInvoicesRepoToReturn(numerator);
+            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+
+            assertThat(invoice.disableInvoice(null, true), is(nullValue()));
+            invoice.doInvoice(mockClockService.now());
+
+            assertThat(invoice.getInvoiceNumber(), is("XXX-00011"));
+            assertThat(invoice.getStatus(), is(InvoiceStatus.INVOICED));
+        }
+
+        @Test
+        public void whenInvoiceNumberAlreadyAssigned() {
+            allowingMockInvoicesRepoToReturn(numerator);
+            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+            invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
+
+            assertThat(invoice.disableInvoice(null, true), is("Invoice number already assigned"));
+            invoice.doInvoice(mockClockService.now());
+
+            assertThat(invoice.getInvoiceNumber(), is("SOME-INVOICE-NUMBER"));
+        }
+
+        @Test
+        public void whenNoProperty() {
+
+            allowingMockInvoicesRepoToReturn(null);
+            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+
+            assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
+
+            invoice.doInvoice(mockClockService.now());
+            assertThat(invoice.getInvoiceNumber(), is(nullValue()));
+        }
+
+        @Test
+        public void whenNotInCollectedState() {
+
+            allowingMockInvoicesRepoToReturn(null);
+            invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
+
+            assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
+
+            invoice.doInvoice(mockClockService.now());
+            assertThat(invoice.getInvoiceNumber(), is(nullValue()));
+        }
+
+        private void allowingMockInvoicesRepoToReturn(final Numerator numerator) {
+            context.checking(new Expectations() {
+                {
+                    allowing(mockInvoices).findInvoiceNumberNumerator(with(any(Property.class)));
+                    will(returnValue(numerator));
+                }
+            });
+        }
+
+    }
+
+    public static class Collect extends InvoiceTest {
+
+        @Mock
+        Invoices mockInvoices;
+
+        @Ignoring
+        @Mock
+        DomainObjectContainer mockContainer;
+
+        @Ignoring
+        @Mock
+        Property invoiceProperty;
+
+        @Mock
+        Lease lease;
+
+        private Numerator numerator;
+
+        @Before
+        public void setUp() throws Exception {
+
+            numerator = new Numerator();
+            numerator.setFormat("XXX-%05d");
+            numerator.setLastIncrement(BigInteger.TEN);
+
+        }
+
+        private Invoice createInvoice(final Property property, final PaymentMethod paymentMethod, final InvoiceStatus status) {
+            final Invoice invoice = new Invoice() {
+
+                @Override
+                public PaymentMethod getPaymentMethod() {
+                    return paymentMethod;
+                }
+
+                @Override
+                public InvoiceStatus getStatus() {
+                    return status;
+                }
+            };
+            invoice.setContainer(mockContainer);
+            invoice.injectInvoices(mockInvoices);
+            return invoice;
+        }
+
+        @Test
+        public void happyCase_directDebit_and_collected_andWhenNoInvoiceNumberPreviouslyAssigned() {
+            allowingMockInvoicesRepoToReturn(numerator);
+            context.checking(new Expectations() {
+                {
+                    allowing(lease).getPaidBy();
+                    will(returnValue(new BankMandate() {
+                        public org.estatio.dom.financial.FinancialAccount getBankAccount() {
+                            return new BankAccount() {
+                                public boolean isValidIban() {
+                                    return true;
+                                };
+                            };
+                        };
+                    }));
+                }
+            });
+
+            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+            invoice.setLease(lease);
+
+            assertThat(invoice.hideCollect(), is(false));
+            assertNull(invoice.disableCollect(true));
+            invoice.doCollect();
+
+            assertThat(invoice.getCollectionNumber(), is("XXX-00011"));
+        }
+
+        @Test
+        public void whenNoMandateAssigned() {
+            allowingMockInvoicesRepoToReturn(numerator);
+
+            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+            invoice.setLease(new Lease());
+
+            assertThat(invoice.hideCollect(), is(false));
+            assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
+            invoice.doCollect();
+            assertNull(invoice.getCollectionNumber());
+        }
+
+        @Test
+        public void whenInvoiceNumberAlreadyAssigned() {
+            allowingMockInvoicesRepoToReturn(numerator);
+
+            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+
+            invoice.setCollectionNumber("SOME-COLLECTION-NUMBER");
+
+            assertThat(invoice.hideCollect(), is(false));
+            assertThat(invoice.disableCollect(true), is("Collection number already assigned"));
+            invoice.doCollect();
+
+            assertThat(invoice.getCollectionNumber(), is("SOME-COLLECTION-NUMBER"));
+        }
+
+        @Test
+        public void whenNoProperty() {
+
+            allowingMockInvoicesRepoToReturn(null);
+
+            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
+
+            assertThat(invoice.hideCollect(), is(false));
+            assertThat(invoice.disableCollect(true), is("No 'collection number' numerator found for invoice's property"));
+
+            invoice.doCollect();
+            assertThat(invoice.getCollectionNumber(), is(nullValue()));
+        }
+
+        @Test
+        public void whenNotDirectDebit() {
+            allowingMockInvoicesRepoToReturn(numerator);
+
+            invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
+            invoice.setLease(new Lease());
+
+            assertThat(invoice.hideCollect(), is(true));
+            assertThat(invoice.disableCollect(true), is("No mandate assigned to invoice's lease"));
+
+            invoice.doCollect();
+
+            assertThat(invoice.getCollectionNumber(), is(nullValue()));
+        }
+
+        @Test
+        public void whenNotCollected() {
+            allowingMockInvoicesRepoToReturn(numerator);
+
+            invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
+
+            assertThat(invoice.hideCollect(), is(false));
+            assertThat(invoice.disableCollect(true), is("Must be in status of 'approved'"));
+
+            invoice.doCollect();
+
+            assertThat(invoice.getCollectionNumber(), is(nullValue()));
+        }
+
+        private void allowingMockInvoicesRepoToReturn(final Numerator numerator) {
+            context.checking(new Expectations() {
+                {
+                    allowing(mockInvoices).findCollectionNumberNumerator();
+                    will(returnValue(numerator));
+                }
+            });
+        }
+    }
+
+    public static class CompareTo extends ComparableContractTest_compareTo<Invoice> {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected List<List<Invoice>> orderedTuples() {
+            return listOf(
+                    listOf(
+                            newInvoice(null),
+                            newInvoice("0000123"),
+                            newInvoice("0000123"),
+                            newInvoice("0000124")
+                    )
+            );
+        }
+
+        private Invoice newInvoice(String number) {
+            final Invoice inv = new Invoice();
+            inv.setInvoiceNumber(number);
+            return inv;
+        }
+
+    }
+
+}

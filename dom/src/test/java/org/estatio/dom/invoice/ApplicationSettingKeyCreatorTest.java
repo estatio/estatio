@@ -16,18 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.currency;
+package org.estatio.dom.invoice;
 
-import org.junit.Test;
+import org.estatio.dom.ApplicationSettingCreatorTestAbstract_create;
 
-import org.estatio.dom.AbstractBeanPropertiesTest;
+public class ApplicationSettingKeyCreatorTest {
 
-public class CurrencyTest_beanProperties extends AbstractBeanPropertiesTest {
+    public static class Instantiate extends ApplicationSettingCreatorTestAbstract_create {
 
-	@Test
-	public void test() {
-	    newPojoTester()
-	        .exercise(new Currency());
-	}
+        public Instantiate() {
+            super(ApplicationSettingKey.values());
+        }
 
+    }
 }

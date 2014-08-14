@@ -18,27 +18,24 @@
  */
 package org.estatio.dom.geography;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
-
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 
-public class StatesTest_finders {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    private FinderInteraction finderInteraction;
+public class StatesTest {
 
-    private States states;
+    FinderInteraction finderInteraction;
 
-    private Country country;
+    States states;
+
+    Country country;
 
     @Before
     public void setup() {
@@ -65,36 +62,45 @@ public class StatesTest_finders {
         };
     }
 
-    @Test
-    public void findStateByReference() {
+    public static class FindStateByReference extends StatesTest {
 
-        states.findState("*REF?1*");
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"*REF?1*"));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        @Test
+        public void happyCase() {
+
+            states.findState("*REF?1*");
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
+            assertThat(finderInteraction.getQueryName(), is("findByReference"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "*REF?1*"));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
     }
 
-    @Test
-    public void findStatesByCountry() {
-        
-        states.findStatesByCountry(country);
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
-        assertThat(finderInteraction.getQueryName(), is("findByCountry"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("country"), is((Object)country));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+    public static class FindStatesByCountry extends StatesTest {
+
+        @Test
+        public void happyCase() {
+
+            states.findStatesByCountry(country);
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(State.class));
+            assertThat(finderInteraction.getQueryName(), is("findByCountry"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("country"), is((Object) country));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
+
     }
-    
-    @Test
-    public void allStates() {
-        
-        states.allStates();
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+
+    public static class AllStates extends StatesTest {
+
+        @Test
+        public void happyCase() {
+
+            states.allStates();
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+        }
     }
-    
 }

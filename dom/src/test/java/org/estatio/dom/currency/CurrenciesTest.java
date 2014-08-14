@@ -16,40 +16,42 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.index;
+package org.estatio.dom.currency;
+
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.apache.isis.applib.query.Query;
+import org.apache.isis.core.commons.matchers.IsisMatchers;
+import org.estatio.dom.FinderInteraction;
+import org.estatio.dom.FinderInteraction.FinderMethod;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
+public class CurrenciesTest {
 
-import org.junit.Before;
-import org.junit.Test;
+    FinderInteraction finderInteraction;
 
-import org.apache.isis.applib.query.Query;
-import org.apache.isis.core.commons.matchers.IsisMatchers;
-
-import org.estatio.dom.FinderInteraction;
-import org.estatio.dom.FinderInteraction.FinderMethod;
-
-public class IndicesTest_finders {
-
-    private FinderInteraction finderInteraction;
-
-    private Indices indices;
+    Currencies currencies;
 
     @Before
     public void setup() {
         
-        indices = new Indices() {
+        currencies = new Currencies() {
 
             @Override
             protected <T> T firstMatch(Query<T> query) {
                 finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
-                return null;
+                return (T) new Currency();
             }
             @Override
-            protected List<Index> allInstances() {
+            protected <T> T uniqueMatch(Query<T> query) {
+                finderInteraction = new FinderInteraction(query, FinderMethod.FIRST_MATCH);
+                return (T) new Currency();
+            }
+            @Override
+            protected List<Currency> allInstances() {
                 finderInteraction = new FinderInteraction(null, FinderMethod.ALL_INSTANCES);
                 return null;
             }
@@ -61,25 +63,18 @@ public class IndicesTest_finders {
         };
     }
 
-    @Test
-    public void findIndexByReference() {
+    public static class FindCurrencyByReference extends CurrenciesTest {
 
-        indices.findIndex("REF-1");
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
-        assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Index.class));
-        assertThat(finderInteraction.getQueryName(), is("findByReference"));
-        assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object)"REF-1"));
-        assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
-    }
+        @Test
+        public void happyCase() {
 
-    
-    @Test
-    public void allIndices() {
-        
-        indices.allIndices();
-        
-        assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_INSTANCES));
+            currencies.findCurrency("*REF?1*");
+
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(Currency.class));
+            assertThat(finderInteraction.getQueryName(), is("findByReference"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("reference"), is((Object) "*REF?1*"));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
     }
-    
 }
