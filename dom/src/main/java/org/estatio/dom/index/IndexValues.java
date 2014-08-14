@@ -21,11 +21,12 @@ package org.estatio.dom.index;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
+import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.EstatioInteractionCache;
 
 @DomainService(menuOrder = "60", repositoryFor = IndexValue.class)
 public class IndexValues
@@ -72,12 +73,16 @@ public class IndexValues
         return last == null ? null : last.getStartDate().plusMonths(1);
     }
 
+    @Inject
+    private QueryResultsCache queryResultsCache;
+
     @ActionSemantics(Of.SAFE)
     @Programmatic
     public IndexValue findIndexValueByIndexAndStartDate(
             final Index index,
             final @Named("Start Date") LocalDate startDate) {
-        return EstatioInteractionCache.execute(
+        return queryResultsCache.execute(
+//        return EstatioInteractionCache.execute(
                 new Callable<IndexValue>() {
                     @Override
                     public IndexValue call() throws Exception {

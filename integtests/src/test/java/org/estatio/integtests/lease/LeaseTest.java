@@ -18,15 +18,18 @@
  */
 package org.estatio.integtests.lease;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import javax.inject.Inject;
 import org.joda.time.LocalDate;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
@@ -50,9 +53,7 @@ import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class LeaseTest extends EstatioIntegrationTest {
 
@@ -368,13 +369,35 @@ public class LeaseTest extends EstatioIntegrationTest {
         private LeaseItem sItem;
         private LeaseItem tItem;
 
+        @Inject
+        private QueryResultsCache queryResultsCache;
+
         @Before
-        public void setup() {
+        public void setup() throws NoSuchFieldException, IllegalAccessException {
             lease = leases.findLeaseByReference("OXF-MIRACL-005");
             lease.injectInvoiceSummaries(invoiceSummariesForInvoiceRun);
             rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
             sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
             tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
+        }
+
+        // Horrid!  Unfortunately there is no API to do this currently.
+        // actually, turns out not needed; simply call nextTransaction() to start new request-scope.
+        private static void clear(QueryResultsCache queryResultsCache) throws NoSuchFieldException, IllegalAccessException {
+            final Class<? extends QueryResultsCache> queryResultsCacheClass = queryResultsCache.getClass();
+            final Field handlerField = queryResultsCacheClass.getDeclaredField("handler");
+            handlerField.setAccessible(true);
+            final Object handler = handlerField.get(queryResultsCache);
+            final Class<?> handlerClass = handler.getClass();
+            final Field serviceByThreadField = handlerClass.getDeclaredField("serviceByThread");
+            serviceByThreadField.setAccessible(true);
+            final ThreadLocal o = (ThreadLocal) serviceByThreadField.get(handler);
+            QueryResultsCache qrcForThread = (QueryResultsCache) o.get();
+            final Class<? extends QueryResultsCache> qrcForThreadClass = qrcForThread.getClass();
+            final Field cache = qrcForThreadClass.getDeclaredField("cache");
+            cache.setAccessible(true);
+            final Map map = (Map) cache.get(qrcForThread);
+            map.clear();
         }
 
         @Test
@@ -426,6 +449,9 @@ public class LeaseTest extends EstatioIntegrationTest {
             Index index = indices.findIndex("ISTAT-FOI");
             indexValues.newIndexValue(index, VT.ld(2013, 11, 1), VT.bd(110));
             indexValues.newIndexValue(index, VT.ld(2014, 12, 1), VT.bd(115));
+
+            nextTransaction();
+
             lease.verifyUntil(VT.ld(2015, 3, 31));
             LeaseTermForIndexable term = (LeaseTermForIndexable) rItem.findTerm(VT.ld(2015, 1, 1));
             assertThat(term.getIndexationPercentage(), is(VT.bd(4.5)));
