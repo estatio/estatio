@@ -18,30 +18,29 @@
  */
 package org.estatio.dom.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
-
 import org.hamcrest.core.Is;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
-
+import org.estatio.dom.AbstractBeanPropertiesTest;
+import org.estatio.dom.PojoTester;
 import org.estatio.dom.index.Index;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class LeaseTermForServiceChargeTest {
 
-    private Lease lease;
-    private LeaseItem item;
-    private LeaseTermForServiceCharge term;
+    Lease lease;
+    LeaseItem item;
+    LeaseTermForServiceCharge term;
 
-    public Index i;
+    Index index;
 
     @Mock
     LeaseTerms mockLeaseTerms;
@@ -53,62 +52,92 @@ public class LeaseTermForServiceChargeTest {
     public void setup() {
         lease = new Lease();
         lease.setStartDate(new LocalDate(2000,1,1));
-        
+
         item = new LeaseItem();
         item.injectLeaseTerms(mockLeaseTerms);
-        
+
         lease.getItems().add(item);
         item.setLease(lease);
-        
+
         item.setType(LeaseItemType.SERVICE_CHARGE);
-        
+
         term = new LeaseTermForServiceCharge();
-        
+
         item.getTerms().add(term);
         term.setLeaseItem(item);
-        
+
         // when
         term.doInitialize();
-        
+
         // then
         term.setStartDate(new LocalDate(2011, 1, 1));
         term.setBudgetedValue(BigDecimal.valueOf(6000).setScale(4));
     }
 
-    @Test
-    public void testUpdate() {
-        term.align();
-        assertThat(term.getEffectiveValue(), Is.is(term.getBudgetedValue()));
-        LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
-        
-        item.getTerms().add(nextTerm);
-        nextTerm.setLeaseItem(item);
-        
-        nextTerm.setPrevious(term);
-        nextTerm.doInitialize();
-        nextTerm.align();
-        assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
+    public static class Align extends LeaseTermForServiceChargeTest {
+
+        @Test
+        public void testUpdate() {
+            term.align();
+            assertThat(term.getEffectiveValue(), Is.is(term.getBudgetedValue()));
+            LeaseTermForServiceCharge nextTerm = new LeaseTermForServiceCharge();
+
+            item.getTerms().add(nextTerm);
+            nextTerm.setLeaseItem(item);
+
+            nextTerm.setPrevious(term);
+            nextTerm.doInitialize();
+
+            nextTerm.align();
+            assertThat(nextTerm.getBudgetedValue(), Is.is(term.getBudgetedValue()));
+        }
     }
 
-    @Test
-    public void testValueForDueDate() throws Exception {
-        LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
-        item.getTerms().add(term);
-        term.setLeaseItem(item);
-        term.setBudgetedValue(BigDecimal.valueOf(6000));
-        term.setAuditedValue(BigDecimal.valueOf(6600));
-        assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
-        assertThat(term.valueForDate(new LocalDate(2011, 4, 1)), is(BigDecimal.valueOf(6000)));
-        assertThat(term.valueForDate(new LocalDate(2011, 7, 1)), is(BigDecimal.valueOf(6000)));
-        assertThat(term.valueForDate(new LocalDate(2011, 10, 1)), is(BigDecimal.valueOf(6000)));
-        assertThat(term.valueForDate(new LocalDate(2012, 1, 1)), is(BigDecimal.valueOf(6000)));
-        assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6000)));
-        term.setEndDate(new LocalDate(2011, 12, 31));
-        assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6600)));
+    public static class ValueForDate extends LeaseTermForServiceChargeTest {
 
-    
-    
-    
+        @Test
+        public void testValueForDueDate() throws Exception {
+
+            // given
+            LeaseTermForServiceCharge term = new LeaseTermForServiceCharge();
+            item.getTerms().add(term);
+            term.setLeaseItem(item);
+            term.setBudgetedValue(BigDecimal.valueOf(6000));
+            term.setAuditedValue(BigDecimal.valueOf(6600));
+
+            // when, then
+            assertThat(term.valueForDate(new LocalDate(2011, 1, 1)), is(BigDecimal.valueOf(6000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 4, 1)), is(BigDecimal.valueOf(6000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 7, 1)), is(BigDecimal.valueOf(6000)));
+            assertThat(term.valueForDate(new LocalDate(2011, 10, 1)), is(BigDecimal.valueOf(6000)));
+            assertThat(term.valueForDate(new LocalDate(2012, 1, 1)), is(BigDecimal.valueOf(6000)));
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6000)));
+
+            // and given
+            term.setEndDate(new LocalDate(2011, 12, 31));
+
+            // when, then
+            assertThat(term.valueForDate(new LocalDate(2012, 4, 1)), is(BigDecimal.valueOf(6600)));
+
+        }
+    }
+
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            newPojoTester()
+                    .withFixture(pojos(LeaseItem.class))
+                    .withFixture(pojos(LeaseTerm.class, LeaseTermForTesting.class))
+                    .withFixture(statii())
+                    .exercise(new LeaseTermForServiceCharge());
+        }
+
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        private static PojoTester.FixtureDatumFactory<LeaseTermStatus> statii() {
+            return new PojoTester.FixtureDatumFactory(LeaseTermStatus.class, (Object[])LeaseTermStatus.values());
+        }
+
     }
 
 }

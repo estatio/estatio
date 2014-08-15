@@ -16,44 +16,50 @@
  */
 package org.estatio.dom.lease.breaks;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class BreakNotifionPeriodTest {
+    public static class AddTo extends BreakNotifionPeriodTest {
 
-    @Test
-    public void addTo() {
-        assertAddTo(BreakNotificationPeriod.ONE_WEEK, new LocalDate(2013,4,3), new LocalDate(2013,4,10));
-        assertAddTo(BreakNotificationPeriod.TWO_WEEKS, new LocalDate(2013,4,3), new LocalDate(2013,4,17));
-        assertAddTo(BreakNotificationPeriod.ONE_MONTH, new LocalDate(2013,4,3), new LocalDate(2013,5,3));
-        assertAddTo(BreakNotificationPeriod.TWO_MONTHS, new LocalDate(2013,4,3), new LocalDate(2013,6,3));
-        assertAddTo(BreakNotificationPeriod.THREE_MONTHS, new LocalDate(2013,4,3), new LocalDate(2013,7,3));
-        assertAddTo(BreakNotificationPeriod.SIX_MONTHS, new LocalDate(2013,4,3), new LocalDate(2013,10,3));
-        assertAddTo(BreakNotificationPeriod.ONE_YEAR, new LocalDate(2013,4,3), new LocalDate(2014,4,3));
-    }
+        @Test
+        public void addTo() {
+            assertAddTo(BreakNotificationPeriod.ONE_WEEK, new LocalDate(2013, 4, 3), new LocalDate(2013, 4, 10));
+            assertAddTo(BreakNotificationPeriod.TWO_WEEKS, new LocalDate(2013, 4, 3), new LocalDate(2013, 4, 17));
+            assertAddTo(BreakNotificationPeriod.ONE_MONTH, new LocalDate(2013, 4, 3), new LocalDate(2013, 5, 3));
+            assertAddTo(BreakNotificationPeriod.TWO_MONTHS, new LocalDate(2013, 4, 3), new LocalDate(2013, 6, 3));
+            assertAddTo(BreakNotificationPeriod.THREE_MONTHS, new LocalDate(2013, 4, 3), new LocalDate(2013, 7, 3));
+            assertAddTo(BreakNotificationPeriod.SIX_MONTHS, new LocalDate(2013, 4, 3), new LocalDate(2013, 10, 3));
+            assertAddTo(BreakNotificationPeriod.ONE_YEAR, new LocalDate(2013, 4, 3), new LocalDate(2014, 4, 3));
+        }
 
-    @Test
-    public void subtractFrom() {
-        assertSubtractFrom(BreakNotificationPeriod.ONE_WEEK, new LocalDate(2013,4,10), new LocalDate(2013,4,3));
-        assertSubtractFrom(BreakNotificationPeriod.TWO_WEEKS, new LocalDate(2013,4,17), new LocalDate(2013,4,3));
-        assertSubtractFrom(BreakNotificationPeriod.ONE_MONTH, new LocalDate(2013,5,3), new LocalDate(2013,4,3));
-        assertSubtractFrom(BreakNotificationPeriod.TWO_MONTHS, new LocalDate(2013,6,3), new LocalDate(2013,4,3));
-        assertSubtractFrom(BreakNotificationPeriod.THREE_MONTHS, new LocalDate(2013,7,3), new LocalDate(2013,4,3));
-        assertSubtractFrom(BreakNotificationPeriod.SIX_MONTHS, new LocalDate(2013,10,3), new LocalDate(2013,4,3));
-        assertSubtractFrom(BreakNotificationPeriod.ONE_YEAR, new LocalDate(2014,4,3), new LocalDate(2013,4,3));
-    }
-    
-    private static void assertAddTo(
-            final BreakNotificationPeriod bnp, final LocalDate input, final LocalDate expected) {
-        assertThat(bnp.addTo(input), is(expected));
-    }
-    
-    private static void assertSubtractFrom(
-            final BreakNotificationPeriod bnp, final LocalDate input, final LocalDate expected) {
-        assertThat(bnp.subtractFrom(input), is(expected));
+        private static void assertAddTo(
+                final BreakNotificationPeriod bnp, final LocalDate input, final LocalDate expected) {
+            assertThat(bnp.addTo(input), is(expected));
+        }
+
     }
 
+    public static class SubtractFrom extends BreakNotifionPeriodTest {
+
+        @Test
+        public void subtractFrom() {
+            assertSubtractFrom(BreakNotificationPeriod.ONE_WEEK, new LocalDate(2013, 4, 10), new LocalDate(2013, 4, 3));
+            assertSubtractFrom(BreakNotificationPeriod.TWO_WEEKS, new LocalDate(2013, 4, 17), new LocalDate(2013, 4, 3));
+            assertSubtractFrom(BreakNotificationPeriod.ONE_MONTH, new LocalDate(2013, 5, 3), new LocalDate(2013, 4, 3));
+            assertSubtractFrom(BreakNotificationPeriod.TWO_MONTHS, new LocalDate(2013, 6, 3), new LocalDate(2013, 4, 3));
+            assertSubtractFrom(BreakNotificationPeriod.THREE_MONTHS, new LocalDate(2013, 7, 3), new LocalDate(2013, 4, 3));
+            assertSubtractFrom(BreakNotificationPeriod.SIX_MONTHS, new LocalDate(2013, 10, 3), new LocalDate(2013, 4, 3));
+            assertSubtractFrom(BreakNotificationPeriod.ONE_YEAR, new LocalDate(2014, 4, 3), new LocalDate(2013, 4, 3));
+        }
+
+        private static void assertSubtractFrom(
+                final BreakNotificationPeriod bnp, final LocalDate input, final LocalDate expected) {
+            assertThat(bnp.subtractFrom(input), is(expected));
+        }
+
+    }
 }

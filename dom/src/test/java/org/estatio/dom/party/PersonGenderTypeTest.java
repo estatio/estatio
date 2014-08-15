@@ -16,14 +16,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom;
+package org.estatio.dom.party;
 
+import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-public class ApplicationSettingKeyCreatorTest_create extends ApplicationSettingCreatorTestAbstract.Instantiate {
+public class PersonGenderTypeTest {
 
-    public ApplicationSettingKeyCreatorTest_create() {
-        super(ApplicationSettingKey.values());
+    public static class Title extends PersonGenderTypeTest {
+
+        @Test
+        public void test() {
+            assertThat(PersonGenderType.MALE.title(), is("Male"));
+        }
+
     }
-
 }

@@ -16,14 +16,17 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom;
+package org.estatio.dom.invoice;
 
+import org.estatio.dom.ApplicationSettingCreatorTestAbstract;
 
+public class ApplicationSettingKeyTest {
 
-public class ApplicationSettingKeyCreatorTest_create extends ApplicationSettingCreatorTestAbstract.Instantiate {
+    public static class Instantiate extends ApplicationSettingCreatorTestAbstract.Instantiate {
 
-    public ApplicationSettingKeyCreatorTest_create() {
-        super(ApplicationSettingKey.values());
+        public Instantiate() {
+            super(ApplicationSettingKey.values());
+        }
+
     }
-
 }

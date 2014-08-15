@@ -1,21 +1,28 @@
 package org.estatio.dom.lease.invoicing;
 
+import org.junit.Test;
+import org.estatio.dom.lease.LeaseItemType;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
-
-import org.estatio.dom.lease.LeaseItemType;
-
 public class InvoiceCalculationSelectionTest {
 
-    @Test
-    public void selectedItemTypes() {
-        assertThat(InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.selectedTypes().contains(LeaseItemType.RENT), is(true));
+    final InvoiceCalculationSelection invoiceCalculationSelection = InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE;
+
+    public static class SelectedTypes extends InvoiceCalculationSelectionTest {
+
+        @Test
+        public void selectedItemTypes() {
+            assertThat(invoiceCalculationSelection.selectedTypes().contains(LeaseItemType.RENT), is(true));
+        }
     }
 
-    @Test
-    public void testTitle() {
-        assertThat(InvoiceCalculationSelection.RENT_AND_SERVICE_CHARGE.title(), is("Rent And Service Charge"));
+    public static class Title extends InvoiceCalculationSelectionTest {
+        @Test
+        public void testTitle() {
+            assertThat(invoiceCalculationSelection.title(), is("Rent And Service Charge"));
+        }
+
     }
 }

@@ -16,14 +16,20 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom;
+package org.estatio.dom.party;
 
+import org.junit.Test;
 
+import org.estatio.dom.AbstractBeanPropertiesTest;
 
-public class ApplicationSettingKeyCreatorTest_create extends ApplicationSettingCreatorTestAbstract.Instantiate {
+public class OrganisationTest {
 
-    public ApplicationSettingKeyCreatorTest_create() {
-        super(ApplicationSettingKey.values());
+    public static class BeanProperties extends AbstractBeanPropertiesTest {
+
+        @Test
+        public void test() {
+            newPojoTester()
+                    .exercise(new Organisation());
+        }
     }
-
 }

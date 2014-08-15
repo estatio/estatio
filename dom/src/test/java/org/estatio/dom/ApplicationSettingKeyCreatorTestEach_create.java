@@ -25,7 +25,7 @@ import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 
 
 
-public class ApplicationSettingKeyCreatorTestEach_create extends ApplicationSettingCreatorTestAbstract_create {
+public class ApplicationSettingKeyCreatorTestEach_create extends ApplicationSettingCreatorTestAbstract.Instantiate {
 
     static enum DummyApplicationSettingKey implements ApplicationSettingCreator {
         someDate(LocalDate.class, "Some date", new LocalDate(2013,4,1)),

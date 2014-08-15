@@ -26,7 +26,6 @@ import org.estatio.dom.WithDescriptionGetter;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
 import org.estatio.dom.WithTitleGetter;
-import org.estatio.dom.utils.PrivateConstructorTester;
 
 public class StaticHelperClassesContractTestAll_privateConstructor {
 
