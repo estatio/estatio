@@ -49,7 +49,14 @@ public final class RegexValidation {
         private Lease() {
         }
         
-        /* needs work */
-        public static final String REFERENCE = "^[A-Z]{3}-[A-Z,0-9]*-[A-Z,0-9]*";
+        /* Maximum 15 characters, 3 letter property, tenant name, unit name */
+        public static final String REFERENCE = "^(?!.{16,})([A-Z]{3}-[A-Z,0-9]+-[A-Z,0-9]+)$";
+    }
+    
+    public static final class Unit {
+        private Unit() {
+        }
+        
+        public static final String REFERENCE = "([A-Z]{3}-[A-Z,0-9,/,+,-]{3,})";
     }
 }

@@ -888,7 +888,7 @@ public class Lease
     // //////////////////////////////////////
 
     public Lease renew(
-            @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
+            @Named("Reference") @RegEx(validation = RegexValidation.Lease.REFERENCE, caseSensitive = true) final String reference,
             @Named("Name") final String name,
             @Named("Start date") final LocalDate startDate,
             @Named("End date") final LocalDate endDate,

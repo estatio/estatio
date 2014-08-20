@@ -222,7 +222,7 @@ public class Property extends FixedAsset implements Locatable {
     // //////////////////////////////////////
 
     public Unit newUnit(
-            @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
+            @Named("Reference") @RegEx(validation = RegexValidation.Unit.REFERENCE, caseSensitive = true) final String reference,
             @Named("Name") final String name,
             final UnitType unitType) {
         Unit unit = unitsRepo.newUnit(reference, name, unitType);

@@ -74,7 +74,7 @@ public class Leases extends EstatioDomainService<Lease> {
     public Lease newLease(
             // CHECKSTYLE:OFF ParameterNumber - Wicket viewer does not support
             // aggregate value types
-            final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference,
+            final @Named("Reference") @RegEx(validation = RegexValidation.Lease.REFERENCE, caseSensitive = true) String reference,
             final @Named("Name") String name,
             final @Named("Type") LeaseType leaseType,
             final @Named("Start Date") LocalDate startDate,
