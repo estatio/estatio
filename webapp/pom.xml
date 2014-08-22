@@ -171,10 +171,6 @@ language governing permissions and limitations under the License.
         </dependency>
         <dependency>
             <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-command-jdo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.module</groupId>
             <artifactId>isis-module-publishing-jdo</artifactId>
         </dependency>
         <dependency>
@@ -192,7 +188,13 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-settings-impl-jdo</artifactId>
         </dependency>
         -->
-
+        
+        <!-- Isisaddons modules -->
+        <dependency>
+            <groupId>org.isisaddons.module.command</groupId>
+            <artifactId>isis-module-command-dom</artifactId>
+            <version>${isis-module-command.version}</version>
+        </dependency>
 
         <!-- to run using WebServer (optional) -->
         <dependency>

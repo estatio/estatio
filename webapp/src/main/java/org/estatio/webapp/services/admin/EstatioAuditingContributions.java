@@ -18,11 +18,19 @@ package org.estatio.webapp.services.admin;
 
 import java.util.Collections;
 import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.ViewModel;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.services.HasTransactionId;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
@@ -30,10 +38,12 @@ import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract;
 import org.apache.isis.objectstore.jdo.applib.service.audit.AuditEntryJdo;
 import org.apache.isis.objectstore.jdo.applib.service.audit.AuditingServiceJdoRepository;
-import org.apache.isis.objectstore.jdo.applib.service.command.CommandJdo;
-import org.apache.isis.objectstore.jdo.applib.service.command.CommandServiceJdoRepository;
 import org.apache.isis.objectstore.jdo.applib.service.publish.PublishedEventJdo;
 import org.apache.isis.objectstore.jdo.applib.service.publish.PublishingServiceJdoRepository;
+
+import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
+
 import org.estatio.dom.EstatioService;
 
 @DomainService(menuOrder = "95")

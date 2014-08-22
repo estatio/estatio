@@ -93,6 +93,7 @@ language governing permissions and limitations under the License.
         <danhaywood-isis-wicket-wickedcharts.version>1.4.0</danhaywood-isis-wicket-wickedcharts.version>
         <danhaywood-isis-domainservice-excel.version>1.4.0</danhaywood-isis-domainservice-excel.version>
         <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0</danhaywood-isis-domainservice-stringinterpolator.version>
+        <isis-module-command.version>1.6.1-SNAPSHOT</isis-module-command.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
