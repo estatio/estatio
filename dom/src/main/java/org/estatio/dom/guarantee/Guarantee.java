@@ -23,11 +23,6 @@ import java.math.BigDecimal;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.estatio.dom.agreement.Agreement;
-import org.estatio.dom.agreement.AgreementRole;
-import org.estatio.dom.financial.FinancialAccount;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.party.Party;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -40,6 +35,12 @@ import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Where;
+
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.financial.FinancialAccount;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.party.Party;
 
 @javax.jdo.annotations.PersistenceCapable(
         identityType = IdentityType.DATASTORE)
@@ -176,6 +177,19 @@ public class Guarantee
 
     public void setTerminationDate(LocalDate terminationDate) {
         this.terminationDate = terminationDate;
+    }
+
+    // //////////////////////////////////////
+
+    public Guarantee terminate(
+            final @Named("Termination date") LocalDate terminationDate,
+            final @Named("Description") String description) {
+        setTerminationDate(terminationDate);
+        BigDecimal balance = financialAccount.getBalance();
+        if (balance.compareTo(BigDecimal.ZERO) != 0) {
+            financialAccount.newTransaction(terminationDate, description, balance.negate());
+        }
+        return this;
     }
 
     // //////////////////////////////////////

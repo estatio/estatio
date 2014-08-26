@@ -18,11 +18,22 @@
  */
 package org.estatio.dom.financial;
 
+import java.math.BigDecimal;
+
+import javax.inject.Inject;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
+
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
@@ -30,11 +41,6 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceUnique;
 import org.estatio.dom.party.Party;
-
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Title;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -145,4 +151,26 @@ public class FinancialAccount
     public void setExternalReference(final String externalReference) {
         this.externalReference = externalReference;
     }
+    
+    // //////////////////////////////////////
+    
+    @Programmatic
+    public BigDecimal getBalance(){
+        return financialAccountTransactions.balance(this);
+    }
+    
+    // //////////////////////////////////////
+
+    @Programmatic
+    public void newTransaction(
+            final LocalDate transactionDate, 
+            final String description, 
+            final BigDecimal amount){
+        financialAccountTransactions.newTransaction(this, transactionDate, description, amount);
+    }
+    
+    // //////////////////////////////////////
+    
+    @Inject
+    private FinancialAccountTransactions financialAccountTransactions;
 }

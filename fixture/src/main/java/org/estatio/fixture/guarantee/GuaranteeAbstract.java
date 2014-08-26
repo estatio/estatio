@@ -41,7 +41,7 @@ public abstract class GuaranteeAbstract extends EstatioFixtureScript {
             final BigDecimal maximumAmount,
             final ExecutionContext executionContext) {
 
-        final Guarantee guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+        final Guarantee guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
         return executionContext.add(this, guarantee);
 

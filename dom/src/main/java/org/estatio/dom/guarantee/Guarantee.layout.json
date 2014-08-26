@@ -150,8 +150,23 @@
           "render": {
             "value": "EAGERLY"
           },
+          "actions": {
+          	"newrole":{}
+          },
           "disabled": {}
-        }
+        },
+        "transactions": {
+          "paged": {
+            "value": 10
+          },
+          "render": {
+            "value": "EAGERLY"
+          },
+          "actions": {
+          	"newTransaction":{}
+          },
+          "disabled": {}
+		}        
       }
     }
   ],

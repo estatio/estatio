@@ -27,6 +27,25 @@ import javax.inject.Inject;
 
 import com.google.common.collect.Lists;
 
+import org.joda.time.LocalDate;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.NotInServiceMenu;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.AgreementRoleType;
@@ -41,25 +60,6 @@ import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DescribedAs;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.annotation.Render;
-import org.apache.isis.applib.annotation.Render.Type;
 
 @DomainService(menuOrder = "40", repositoryFor = Guarantee.class)
 public class Guarantees extends EstatioDomainService<Guarantee> {
@@ -85,7 +85,8 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
             final @Named("Start date") LocalDate startDate,
             final @Named("End date") @Optional LocalDate endDate,
             final @Named("Description") String description,
-            final @Named("Maximum amount") BigDecimal maximumAmount
+            final @Named("Maximum amount") BigDecimal maximumAmount,
+            final @Named("Start amount") BigDecimal startAmount
             ) {
 
         AgreementRoleType artGuarantee = agreementRoleTypes.findByTitle(GuaranteeConstants.ART_GUARANTEE);
@@ -124,7 +125,9 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
                 leaseSecondaryParty, null, null);
 
         persistIfNotAlready(guarantee);
-
+        if (startAmount != null) {
+            newTransaction(guarantee, startDate, description, maximumAmount);
+        }
         return guarantee;
     }
 
@@ -214,6 +217,7 @@ public class Guarantees extends EstatioDomainService<Guarantee> {
         AgreementType agreementType = agreementTypes.findOrCreate(GuaranteeConstants.AT_GUARANTEE);
         agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTEE, agreementType);
         agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_GUARANTOR, agreementType);
+        agreementRoleTypes.findOrCreate(GuaranteeConstants.ART_BANK, agreementType);
     }
 
     // //////////////////////////////////////

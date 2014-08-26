@@ -10,13 +10,14 @@ import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 
-import org.estatio.dom.EstatioImmutableObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.JdoColumnScale;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+
+import org.estatio.dom.EstatioImmutableObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.JdoColumnScale;
 
 @Queries({
         @Query(
@@ -30,13 +31,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
                 value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
                         + "WHERE financialAccount == :financialAccount && "
                         + "transactionDate == :transactionDate"),
-                        @Query(
-                                name = "findByFinancialAccountAndTransactionDateAndSequence",
-                                language = "JDOQL",
-                                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
-                                        + "WHERE financialAccount == :financialAccount && "
-                                        + "transactionDate == :transactionDate && "
-                                        + "sequence == :sequence")
+        @Query(
+                name = "findByFinancialAccountAndTransactionDateAndSequence",
+                language = "JDOQL",
+                value = "SELECT FROM org.estatio.dom.financial.FinancialAccountTransaction "
+                        + "WHERE financialAccount == :financialAccount && "
+                        + "transactionDate == :transactionDate && "
+                        + "sequence == :sequence")
 })
 @Index(
         name = "FinancialAccountTransaction_financialAccount_transactionDate_IDX",
@@ -98,7 +99,7 @@ public class FinancialAccountTransaction extends EstatioImmutableObject<Financia
 
     String description;
 
-    @Column(allowsNull = "false", length=JdoColumnLength.DESCRIPTION)
+    @Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
     @MemberOrder(sequence = "4")
     public String getDescription() {
         return description;
@@ -112,7 +113,7 @@ public class FinancialAccountTransaction extends EstatioImmutableObject<Financia
 
     BigDecimal amount;
 
-    @Column(allowsNull = "false", scale=JdoColumnScale.MONEY)
+    @Column(allowsNull = "false", scale = JdoColumnScale.MONEY)
     @MemberOrder(sequence = "5")
     public BigDecimal getAmount() {
         return amount;

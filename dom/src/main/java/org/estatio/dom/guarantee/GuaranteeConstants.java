@@ -35,4 +35,8 @@ public final class GuaranteeConstants {
      */
     public final static String ART_GUARANTOR = "Guarantor";
 
+    /**
+     * Bank
+     */
+    public final static String ART_BANK = "Bank";
 }

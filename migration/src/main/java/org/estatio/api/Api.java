@@ -943,7 +943,7 @@ public class Api extends AbstractFactoryAndRepository {
                     startDate,
                     endDate,
                     description,
-                    maximumAmount);
+                    maximumAmount, null);
         }
         guarantee.setTerminationDate(terminationDate);
         guarantee.setDescription(description);

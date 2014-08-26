@@ -91,6 +91,11 @@
             "actions": {
                 "newBreakOption": {}
             }
+        },
+        "guarantees": {
+            "actions": {
+                "newGuarantee": {}
+            }
         }
       }
     }

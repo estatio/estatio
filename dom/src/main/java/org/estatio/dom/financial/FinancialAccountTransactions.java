@@ -21,10 +21,19 @@ package org.estatio.dom.financial;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+
 import org.estatio.dom.EstatioDomainService;
 
 @DomainService(menuOrder = "30", repositoryFor = FinancialAccountTransaction.class)
@@ -50,7 +59,7 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
             final BigDecimal amount
             ) {
         final BigInteger sequence = nextSequenceFor(financialAccount, transactionDate);
-        
+
         final FinancialAccountTransaction transaction = newTransientInstance(FinancialAccountTransaction.class);
         transaction.setFinancialAccount(financialAccount);
         transaction.setTransactionDate(transactionDate);
@@ -105,7 +114,7 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
     public List<FinancialAccountTransaction> findTransactions(
             final FinancialAccount financialAccount,
             final LocalDate transactionDate) {
-        return allMatches("findByFinancialAccoOFuntAndTransactionDate",
+        return allMatches("findByFinancialAccountAndTransactionDate",
                 "financialAccount", financialAccount,
                 "transactionDate", transactionDate);
     }
@@ -118,6 +127,17 @@ public class FinancialAccountTransactions extends EstatioDomainService<Financial
     public List<FinancialAccountTransaction> transactions(
             final FinancialAccount financialAccount) {
         return allMatches("findByFinancialAccount", "financialAccount", financialAccount);
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    public BigDecimal balance(FinancialAccount financialAccount) {
+        BigDecimal balance = BigDecimal.ZERO;
+        for (FinancialAccountTransaction transaction : transactions(financialAccount)) {
+            balance = balance.add(transaction.getAmount());
+        }
+        return balance;
     }
 
 }

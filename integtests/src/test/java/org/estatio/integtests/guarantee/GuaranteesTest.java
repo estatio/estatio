@@ -90,7 +90,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             guaranteeType = GuaranteeType.BANK_GUARANTEE;
 
             // when
-            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
             // then
             assertThat(guarantee.getLease(), is(lease));
@@ -123,7 +123,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             guaranteeType = GuaranteeType.DEPOSIT;
 
             // when
-            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
             // then
             FinancialAccount financialAccount = guarantee.getFinancialAccount();
@@ -140,7 +140,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             guaranteeType = GuaranteeType.COMPANY_GUARANTEE;
 
             // when
-            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
             // then
             FinancialAccount financialAccount = guarantee.getFinancialAccount();
@@ -154,7 +154,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             guaranteeType = GuaranteeType.NONE;
 
             // when
-            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount);
+            guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
             // then
             FinancialAccount financialAccount = guarantee.getFinancialAccount();
