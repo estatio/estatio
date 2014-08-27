@@ -43,7 +43,7 @@ public class FixedAssetFinancialAccountContributions extends EstatioService<Fixe
     }
 
     @NotInServiceMenu
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Accounts", sequence = "13")
     public FixedAssetFinancialAccount newAccount(
             final FixedAsset fixedAsset,

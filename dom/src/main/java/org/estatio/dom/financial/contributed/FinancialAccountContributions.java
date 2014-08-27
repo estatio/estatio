@@ -39,7 +39,7 @@ public class FinancialAccountContributions extends EstatioService<FinancialAccou
         super(FinancialAccountContributions.class);
     }
 
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotInServiceMenu
     @MemberOrder(name = "Financial Accounts", sequence = "13")
     public FinancialAccount addAccount(

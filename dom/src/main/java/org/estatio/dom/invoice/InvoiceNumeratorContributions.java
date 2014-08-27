@@ -35,7 +35,7 @@ public class InvoiceNumeratorContributions extends EstatioService<InvoiceNumerat
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @ActionSemantics(Of.SAFE)
     @NotInServiceMenu
     @NotContributed(As.ACTION)
     public Numerator lastInvoiceNumber(

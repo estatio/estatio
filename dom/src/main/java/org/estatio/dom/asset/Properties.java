@@ -39,7 +39,7 @@ public class Properties extends EstatioDomainService<Property> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name = "Fixed Assets", sequence = "11")
     public Property newProperty(
             final @Named("Reference") @RegEx(validation = RegexValidation.Property.REFERENCE, caseSensitive = true) String reference,

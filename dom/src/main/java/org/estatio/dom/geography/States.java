@@ -43,9 +43,9 @@ public class States
         return allInstances();
     }
 
-    // //////////////////////////////////////
+    // //////////////////////////////////
 
-    @ActionSemantics(Of.SAFE)
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     @MemberOrder(name="Other", sequence = "geography.states.2")
     public State newState(
             final @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) String reference, 

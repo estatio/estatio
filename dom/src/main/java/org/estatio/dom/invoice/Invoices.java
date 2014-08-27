@@ -249,7 +249,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Administration", sequence = "numerators.invoices.1")
     public Numerator findCollectionNumberNumerator() {
         return numerators.findGlobalNumerator(Constants.COLLECTION_NUMBER_NUMERATOR_NAME);
@@ -277,7 +277,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
 
     // //////////////////////////////////////
 
-    @ActionSemantics(Of.IDEMPOTENT)
+    @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Administration", sequence = "numerators.invoices.3")
     @NotContributed
     public Numerator findInvoiceNumberNumerator(
