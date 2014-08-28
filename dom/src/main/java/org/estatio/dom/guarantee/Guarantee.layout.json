@@ -45,6 +45,12 @@
                 "numberOfLines": 3
               }
             },
+            "comments": {
+              "disabled": {},
+              "multiLine": {
+                "numberOfLines": 3
+              }
+            },
             "maximumAmount": {
               "disabled": {},
               "typicalLength": {
@@ -71,32 +77,6 @@
               "hidden": {
                 "where": "PARENTED_TABLES"
               },
-              "disabled": {}
-            }
-          }
-        },
-        "Dates": {
-          "members": {
-            "startDate": {
-              "disabled": {},
-              "typicalLength": {
-                "value": 12
-              }
-            },
-            "endDate": {
-              "disabled": {},
-              "typicalLength": {
-                "value": 12
-              }
-            },
-            "terminationDate": {
-              "disabled": {},
-              "typicalLength": {
-                "value": 12
-              }
-            },
-            "financialAccount": {
-              "hidden": {},
               "disabled": {}
             }
           }
@@ -133,15 +113,56 @@
       }
     },
     {
-      "span": 0,
-      "memberGroups": {}
+      "span": 2,
+      "memberGroups": {
+        "Dates": {
+          "members": {
+            "startDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "endDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "terminationDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "financialAccount": {
+              "hidden": {},
+              "disabled": {}
+            }
+          }
+        },
+        "Amounts": {
+          "members": {
+            "contractualAmount": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              },
+              "actions":{
+                "changeContractualAmount":{}
+              }
+            }
+          }
+        }
+        
+      }
     },
     {
       "span": 0,
       "memberGroups": {}
     },
     {
-      "span": 8,
+      "span": 6,
       "collections": {
         "roles": {
           "paged": {

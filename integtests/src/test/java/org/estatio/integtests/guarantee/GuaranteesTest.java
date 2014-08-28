@@ -104,7 +104,7 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             assertThat(guarantee.getPrimaryParty(), is(lease.getPrimaryParty()));
             assertThat(guarantee.getSecondaryParty(), is(lease.getSecondaryParty()));
 
-            assertThat(guarantee.getMaximumAmount(), is(maximumAmount));
+            assertThat(guarantee.getContractualAmount(), is(maximumAmount));
 
             FinancialAccount financialAccount = guarantee.getFinancialAccount();
             assertThat(financialAccount, is(not(nullValue())));

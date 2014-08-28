@@ -20,6 +20,7 @@ package org.estatio.dom.guarantee;
 
 import java.math.BigDecimal;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
@@ -181,6 +182,30 @@ public class Guarantee
 
     // //////////////////////////////////////
 
+    private String comments;
+
+    @Column(allowsNull = "true")
+    @MultiLine(numberOfLines = 5)
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public Guarantee changeComments(
+            final @Named("Comments") @MultiLine(numberOfLines = 3) String comments) {
+        setComments(comments);
+        return this;
+    }
+
+    public String default0ChangeComments() {
+        return getComments();
+    }
+
+    // //////////////////////////////////////
+
     public Guarantee terminate(
             final @Named("Termination date") LocalDate terminationDate,
             final @Named("Description") String description) {
@@ -194,15 +219,25 @@ public class Guarantee
 
     // //////////////////////////////////////
 
-    private BigDecimal maximumAmount;
+    private BigDecimal contractualAmount;
 
     @javax.jdo.annotations.Column(allowsNull = "true")
-    public BigDecimal getMaximumAmount() {
-        return maximumAmount;
+    public BigDecimal getContractualAmount() {
+        return contractualAmount;
     }
 
-    public void setMaximumAmount(BigDecimal maximumAmount) {
-        this.maximumAmount = maximumAmount;
+    public void setContractualAmount(BigDecimal contractualAmount) {
+        this.contractualAmount = contractualAmount;
+    }
+
+    public Guarantee changeContractualAmount(
+            final @Named("New contractual amount") BigDecimal newContractualAmount) {
+        setContractualAmount(newContractualAmount);
+        return this;
+    }
+
+    public BigDecimal default0ChangeContractualAmount() {
+        return getContractualAmount();
     }
 
 }

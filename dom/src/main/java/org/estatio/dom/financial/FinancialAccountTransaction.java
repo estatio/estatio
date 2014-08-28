@@ -4,21 +4,30 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Version;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.EstatioImmutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.JdoColumnScale;
 
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
+@Version(strategy = VersionStrategy.VERSION_NUMBER, column = "version")
 @Queries({
         @Query(
                 name = "findByFinancialAccount",
@@ -45,7 +54,6 @@ import org.estatio.dom.JdoColumnScale;
 @Unique(
         name = "FinancialAccountTransaction_financialAccount_transactionDate_sequence_UNQ",
         members = { "financialAccount", "transactionDate" })
-@PersistenceCapable
 public class FinancialAccountTransaction extends EstatioImmutableObject<FinancialAccountTransaction> {
 
     public FinancialAccountTransaction() {
@@ -99,8 +107,9 @@ public class FinancialAccountTransaction extends EstatioImmutableObject<Financia
 
     String description;
 
-    @Column(allowsNull = "false", length = JdoColumnLength.DESCRIPTION)
+    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
     @MemberOrder(sequence = "4")
+    @Hidden(where = Where.ALL_TABLES)
     public String getDescription() {
         return description;
     }
