@@ -17,7 +17,11 @@
             "source": {},
             "property": {},
             "lease": {},
-            "paymentMethod": {}
+            "paymentMethod": {
+              "actions": {
+                "changePaymentMethod":{}
+              }
+            }
           }
         }
       }
@@ -60,9 +64,9 @@
       "span": 12,
       "collections": {
         "items": {
-        	"actions": {
-        		"newItem":{}
-        	}
+            "actions": {
+                "newItem":{}
+            }
         }
       }
     }

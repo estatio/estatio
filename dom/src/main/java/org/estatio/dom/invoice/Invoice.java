@@ -356,13 +356,29 @@ public class Invoice extends EstatioMutableObject<Invoice> {
     private PaymentMethod paymentMethod;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.PAYMENT_METHOD_ENUM)
-    @Disabled
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 
     public void setPaymentMethod(final PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public Invoice changePaymentMethod(
+            final PaymentMethod paymentMethod,
+            final @Named("Reason") String reason) {
+        setPaymentMethod(paymentMethod);
+        return this;
+    }
+
+    public PaymentMethod default0ChangePaymentMethod() {
+        return getPaymentMethod();
+    }
+
+    public String disableChangePaymentMethod(
+            final PaymentMethod paymentMethod,
+            final String reason) {
+        return getStatus().invoiceIsChangable() ? null : "Invoice cannot be changed";
     }
 
     // //////////////////////////////////////
