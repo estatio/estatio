@@ -28,7 +28,6 @@ import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;
 
 @DomainService(menuOrder = "92")
-@Named("Administration")
 public class EstatioAdministrationService extends EstatioService<EstatioAdministrationService> {
 
     public EstatioAdministrationService() {
@@ -48,7 +47,7 @@ public class EstatioAdministrationService extends EstatioService<EstatioAdminist
     // //////////////////////////////////////
 
     @TypeOf(ApplicationSettingForEstatio.class)
-    @MemberOrder(sequence = "aaa.2")
+    @MemberOrder(name = "Administration", sequence = "aaa.2")
     public List<ApplicationSetting> listAllSettings() {
         return settingsService.listAll();
     }

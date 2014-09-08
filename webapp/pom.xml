@@ -215,7 +215,6 @@ language governing permissions and limitations under the License.
             <artifactId>hsqldb</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -268,6 +267,18 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>com.danhaywood.isis.domainservice</groupId>
             <artifactId>danhaywood-isis-domainservice-excel-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.51</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>1.2</version>
         </dependency>
 
     </dependencies>
