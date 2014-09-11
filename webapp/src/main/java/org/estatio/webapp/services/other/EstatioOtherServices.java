@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.webapp.services.admin;
+package org.estatio.webapp.services.other;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -47,10 +47,10 @@ import org.estatio.dom.EstatioService;
  */
 @DomainService(menuOrder = "91")
 @Named("Other")
-public class OtherServices extends EstatioService<OtherServices> {
+public class EstatioOtherServices extends EstatioService<EstatioOtherServices> {
 
-    public OtherServices() {
-        super(OtherServices.class);
+    public EstatioOtherServices() {
+        super(EstatioOtherServices.class);
     }
 
     private Map<String, String> properties;
@@ -62,7 +62,7 @@ public class OtherServices extends EstatioService<OtherServices> {
     }
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
-    @MemberOrder(name = "Other", sequence = "99")
+    @MemberOrder(name = "Other", sequence = "999")
     public String execute() {
         String command = properties.get("executeCommand");
         if (command == null) {
