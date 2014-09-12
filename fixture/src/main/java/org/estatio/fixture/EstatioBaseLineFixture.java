@@ -19,10 +19,11 @@
 package org.estatio.fixture;
 
 import java.util.List;
-import javax.inject.Inject;
+
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
 import org.estatio.dom.currency.Currencies;
 import org.estatio.dom.currency.Currency;
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 /**
  * Will reset to a fixed baseline of the {@link org.estatio.fixture.EstatioRefDataSetupFixture reference data}
@@ -58,7 +59,7 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
         return !currencyList.isEmpty();
     }
 
-    @Inject
+    @javax.inject.Inject
     private Currencies currencies;
 
 }

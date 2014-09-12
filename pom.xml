@@ -82,8 +82,16 @@ language governing permissions and limitations under the License.
     </developers>
 
     <properties>
-        <isis.version>1.6.0</isis.version>
-        <isis-viewer-wicket.version>1.6.0</isis-viewer-wicket.version>
+        <isis.version>1.7.0-SNAPSHOT</isis.version>
+        <isis-viewer-wicket.version>1.7.0-SNAPSHOT</isis-viewer-wicket.version>
+
+        <isis-module-audit.version>1.6.0</isis-module-audit.version>
+        <isis-module-command.version>1.6.1</isis-module-command.version>
+        <isis-module-publishing.version>1.6.0</isis-module-publishing.version>
+        <isis-module-publishingeventserializer.version>1.6.0</isis-module-publishingeventserializer.version>
+        <isis-module-devutils.version>1.6.0</isis-module-devutils.version>
+        <isis-module-settings.version>1.6.0</isis-module-settings.version>
+
 
 		<quartz-scheduler.version>2.2.1</quartz-scheduler.version>
         
@@ -93,7 +101,6 @@ language governing permissions and limitations under the License.
         <danhaywood-isis-wicket-wickedcharts.version>1.4.0</danhaywood-isis-wicket-wickedcharts.version>
         <danhaywood-isis-domainservice-excel.version>1.4.0</danhaywood-isis-domainservice-excel.version>
         <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0</danhaywood-isis-domainservice-stringinterpolator.version>
-        <isis-module-command.version>1.6.1</isis-module-command.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
@@ -500,6 +507,47 @@ language governing permissions and limitations under the License.
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- modules -->
+
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-audit-jdo</artifactId>
+                <version>${isis-module-audit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-publishing-jdo</artifactId>
+                <version>${isis-module-publishing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-publishingeventserializer-ro</artifactId>
+                <version>${isis-module-publishingeventserializer.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-devutils-applib</artifactId>
+                <version>${isis-module-devutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-devutils-impl</artifactId>
+                <version>${isis-module-devutils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-settings-applib</artifactId>
+                <version>${isis-module-settings.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.isis.module</groupId>
+                <artifactId>isis-module-settings-impl-jdo</artifactId>
+                <version>${isis-module-settings.version}</version>
+            </dependency>
+
 
             <!-- this project's own modules -->
             <dependency>

@@ -129,6 +129,7 @@ language governing permissions and limitations under the License.
             <artifactId>isis-module-devutils-applib</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-objectstore-jdo-datanucleus</artifactId>
