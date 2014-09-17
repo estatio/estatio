@@ -25,19 +25,17 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Order;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
-import org.joda.time.YearMonthDay;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -47,8 +45,6 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
@@ -65,6 +61,8 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
+import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
 import org.estatio.dom.asset.Property;
@@ -73,6 +71,9 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.charge.Charge;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelType;
+import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccounts;
 import org.estatio.dom.invoice.PaymentMethod;
@@ -155,23 +156,6 @@ public class Lease
     }
 
     @Programmatic
-    public Lease changeStatus(
-            final LeaseStatus newStatus,
-            final @Named("Reason") String reason
-            ) {
-        if (!newStatus.equals(getStatus())) {
-            LeaseStatusReason leaseStatusReason = newTransientInstance(LeaseStatusReason.class);
-            leaseStatusReason.setLease(this);
-            leaseStatusReason.setReason(reason);
-            leaseStatusReason.setUser(getUser().getName());
-            leaseStatusReason.setTimestamp(getClockService().timestamp());
-            persistIfNotAlready(leaseStatusReason);
-            setStatus(newStatus);
-        }
-        return this;
-    }
-
-    @Programmatic
     public void resolveStatus(final String reason) {
         final LeaseStatus effectiveStatus = getEffectiveStatus();
         if (effectiveStatus != null && !effectiveStatus.equals(getStatus())) {
@@ -193,10 +177,6 @@ public class Lease
             }
         }
         return null;
-    }
-
-    public List<LeaseStatusReason> statusHistory() {
-        return leases.findLeaseStatusReasonByLease(this);
     }
 
     // //////////////////////////////////////
@@ -301,14 +281,14 @@ public class Lease
         } else {
             return null;
         }
-        
+
         if (ldi.isValid()) {
             return JodaPeriodUtils.asSimpleString(new Period(ldi.asInterval(), PeriodType.yearMonthDay()));
         }
-        
+
         return null;
     }
-    
+
     public Lease changeTenancyDates(
             final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate
@@ -318,7 +298,7 @@ public class Lease
         getTenancyDuration();
         return this;
     }
-    
+
     public LocalDate default0ChangeTenancyDates() {
         return getTenancyStartDate();
     }
@@ -326,7 +306,7 @@ public class Lease
     public LocalDate default1ChangeTenancyDates() {
         return getTenancyEndDate();
     }
-    
+
     // //////////////////////////////////////
 
     @Programmatic
@@ -669,18 +649,19 @@ public class Lease
 
     // //////////////////////////////////////
 
-    @Bulk
+    @ActionSemantics(Of.IDEMPOTENT)
     public Lease verify() {
         verifyUntil(ObjectUtils.min(getEffectiveInterval().endDateExcluding(), getClockService().now()));
         return this;
     }
 
-    @Prototype
-    public void verifyUntil(final LocalDate date) {
+    @ActionSemantics(Of.IDEMPOTENT)
+    public Lease verifyUntil(final LocalDate date) {
         for (LeaseItem item : getItems()) {
             LocalDateInterval effectiveInterval = item.getEffectiveInterval();
             item.verifyUntil(ObjectUtils.min(effectiveInterval == null ? null : effectiveInterval.endDateExcluding(), date));
         }
+        return this;
     }
 
     // //////////////////////////////////////
@@ -724,14 +705,7 @@ public class Lease
     public Lease terminate(
             final @Named("Termination Date") LocalDate terminationDate,
             final @Named("Are you sure?") Boolean confirm) {
-        for (Occupancy occupancy : getOccupancies()) {
-            if (occupancy.getInterval().contains(terminationDate)) {
-                occupancy.terminate(terminationDate);
-            }
-            // TODO: remove occupancies after the termination date
-        }
-        // TODO: break options
-        setTenancyEndDate(terminationDate);
+        doTerminate(terminationDate);
         return this;
     }
 
@@ -754,6 +728,18 @@ public class Lease
 
     public boolean hideTerminate() {
         return !getStatus().equals(LeaseStatus.ACTIVE);
+    }
+
+    @Programmatic
+    public void doTerminate(final LocalDate terminationDate) {
+        for (Occupancy occupancy : getOccupancies()) {
+            if (occupancy.getInterval().contains(terminationDate)) {
+                occupancy.terminate(terminationDate);
+            }
+            // TODO: remove occupancies after the termination date
+        }
+        // TODO: break options
+        setTenancyEndDate(terminationDate);
     }
 
     // //////////////////////////////////////
@@ -790,31 +776,59 @@ public class Lease
             @Named("Reference") @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = true) final String reference,
             @Named("Name") final String name,
             @Named("Tenant") final Party tenant,
-            @Named("Start date") final LocalDate startDate,
-            @Named("End date") final LocalDate endDate,
+            @Named("Tenancy start date") final LocalDate tenancyStartDate,
             @Named("Are you sure?") final Boolean confirm
             ) {
+        Lease newLease = copyToNewLease(reference, name, tenant, getStartDate(), getEndDate(), tenancyStartDate, getEndDate());
+        this.doTerminate(new LocalDateInterval(tenancyStartDate, null).endDateFromStartDate());
+        return newLease;
+    }
 
+    public LocalDate default3Assign() {
+        return getClockService().now();
+    }
+
+    public String validateAssign(
+            final String reference,
+            final String name,
+            final Party tenant,
+            final LocalDate startDate,
+            final Boolean confirm
+            ) {
+        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    Lease copyToNewLease(
+            final String reference,
+            final String name,
+            final Party tenant,
+            final LocalDate startDate,
+            final LocalDate endDate,
+            final LocalDate tenancyStartDate,
+            final LocalDate tenancyEndDate) {
         Lease newLease = leases.newLease(
                 reference,
                 name,
                 this.getLeaseType(),
                 startDate,
-                null, endDate,
+                endDate,
+                tenancyStartDate,
+                tenancyEndDate,
                 this.getPrimaryParty(),
                 tenant);
 
-        LocalDateInterval interval = new LocalDateInterval(startDate, endDate);
-        createItemsAndTerms(newLease, startDate);
-        createOccupancies(newLease, startDate);
-        createBreakOptions(newLease, startDate);
-        createAgreementRoleCommunicationChannels(newLease, startDate);
-        this.terminate(interval.endDateFromStartDate(), true);
+        copyItemsAndTerms(newLease, tenancyStartDate);
+        copyOccupancies(newLease, tenancyStartDate);
+        copyBreakOptions(newLease, tenancyStartDate);
+        copyAgreementRoleCommunicationChannels(newLease, tenancyStartDate);
         this.setNext(newLease);
         return newLease;
     }
 
-    private void createItemsAndTerms(final Lease newLease, final LocalDate startDate) {
+    private void copyItemsAndTerms(final Lease newLease, final LocalDate startDate) {
         for (LeaseItem item : getItems()) {
             LeaseItem newItem = newLease.newItem(
                     item.getType(),
@@ -826,7 +840,7 @@ public class Lease
         }
     }
 
-    private void createOccupancies(final Lease newLease, final LocalDate startDate) {
+    private void copyOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : getOccupancies()) {
             if (occupancy.getInterval().contains(startDate)) {
                 Occupancy newOccupancy = newLease.occupy(occupancy.getUnit(), startDate);
@@ -836,22 +850,35 @@ public class Lease
                 newOccupancy.setUnitSize(occupancy.getUnitSize());
                 newOccupancy.setReportOCR(occupancy.getReportOCR());
                 newOccupancy.setReportRent(occupancy.getReportRent());
-                ;
                 newOccupancy.setReportTurnover(occupancy.getReportTurnover());
             }
         }
     }
 
-    private void createAgreementRoleCommunicationChannels(final Lease newLease, final LocalDate startDate) {
-        for (AgreementRole role : getRoles()) {
-            AgreementRole newRole = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
-            for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : role.getCommunicationChannels()) {
-                newRole.addCommunicationChannel(agreementRoleCommunicationChannel.getType(), agreementRoleCommunicationChannel.getCommunicationChannel());
+    private void copyAgreementRoleCommunicationChannels(final Lease newLease, final LocalDate startDate) {
+        if (getSecondaryParty() == newLease.getSecondaryParty()) {
+            // renew
+            for (AgreementRole role : getRoles()) {
+                AgreementRole newRole = agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(newLease, role.getParty(), role.getType(), startDate);
+                if (newRole != null) {
+                    for (AgreementRoleCommunicationChannel agreementRoleCommunicationChannel : role.getCommunicationChannels()) {
+                        newRole.addCommunicationChannel(agreementRoleCommunicationChannel.getType(), agreementRoleCommunicationChannel.getCommunicationChannel());
+                    }
+                }
             }
         }
     }
 
-    private void createBreakOptions(final Lease newLease, final LocalDate startDate) {
+    private void setDefaultCommunicationChannel() {
+        AgreementRole agreementRole = getSecondaryAgreementRole();
+        final AgreementRoleCommunicationChannelType arcct = agreementRoleCommunicationChannelTypes.findByAgreementTypeAndTitle(this.getType(), LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
+        final SortedSet<CommunicationChannel> cc = communicationChannels.findByOwnerAndType(getSecondaryParty(), CommunicationChannelType.ACCOUNTING_POSTAL_ADDRESS);
+        if (cc.size() > 0) {
+            agreementRole.addCommunicationChannel(arcct, cc.first(), null, null);
+        }
+    }
+
+    private void copyBreakOptions(final Lease newLease, final LocalDate startDate) {
         for (BreakOption option : getBreakOptions()) {
             if (option.getBreakDate().isAfter(startDate)) {
                 newLease.newBreakOption(
@@ -864,28 +891,6 @@ public class Lease
         }
     }
 
-    public LocalDate default3Assign() {
-        return getClockService().now();
-    }
-
-    public LocalDate default4Assign() {
-        return getEndDate();
-    }
-
-    public String validateAssign(
-            final String reference,
-            final String name,
-            final Party tenant,
-            final LocalDate startDate,
-            final LocalDate endDate,
-            final Boolean confirm
-            ) {
-        if (endDate.isBefore(startDate)) {
-            return "End date can not be start date";
-        }
-        return leases.findLeaseByReferenceElseNull(reference) == null ? null : "Lease reference already exists,";
-    }
-
     // //////////////////////////////////////
 
     public Lease renew(
@@ -895,7 +900,8 @@ public class Lease
             @Named("End date") final LocalDate endDate,
             @Named("Are you sure?") final Boolean confirm
             ) {
-        return assign(reference, name, getSecondaryParty(), startDate, endDate, confirm);
+        return copyToNewLease(reference, name, getSecondaryParty(), startDate, endDate, startDate, endDate);
+
     }
 
     public String default0Renew() {
@@ -950,47 +956,32 @@ public class Lease
 
     // //////////////////////////////////////
 
-    private LeaseItems leaseItems;
+    @Inject
+    LeaseItems leaseItems;
 
-    public final void injectLeaseItems(final LeaseItems leaseItems) {
-        this.leaseItems = leaseItems;
-    }
+    @Inject
+    Occupancies occupanciesRepo;
 
-    private Occupancies occupanciesRepo;
+    @Inject
+    FinancialAccounts financialAccounts;
 
-    public final void injectOccupancies(final Occupancies occupancies) {
-        this.occupanciesRepo = occupancies;
-    }
+    @Inject
+    BankMandates bankMandates;
 
-    private FinancialAccounts financialAccounts;
+    @Inject
+    Leases leases;
 
-    public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
-        this.financialAccounts = financialAccounts;
-    }
+    @Inject
+    InvoiceCalculationService invoiceCalculationService;
 
-    private BankMandates bankMandates;
+    @Inject
+    InvoiceSummariesForInvoiceRun invoiceSummaries;
 
-    public final void injectBankMandates(final BankMandates bankMandates) {
-        this.bankMandates = bankMandates;
-    }
+    @Inject
+    AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
 
-    private Leases leases;
-
-    public final void injectLeases(final Leases leases) {
-        this.leases = leases;
-    }
-
-    private InvoiceCalculationService invoiceCalculationService;
-
-    public final void injectInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
-        this.invoiceCalculationService = invoiceCalculationService;
-    }
-
-    private InvoiceSummariesForInvoiceRun invoiceSummaries;
-
-    public final void injectInvoiceSummaries(final InvoiceSummariesForInvoiceRun invoiceSummaries) {
-        this.invoiceSummaries = invoiceSummaries;
-    }
+    @Inject
+    CommunicationChannels communicationChannels;
 
     public Lease change(
             final @Named("Name") String name,

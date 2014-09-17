@@ -42,7 +42,6 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.query.QueryDefault;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.RegexValidation;
@@ -260,14 +259,6 @@ public class Leases extends EstatioDomainService<Lease> {
         return searchPhrase.length() > 2
                 ? findLeases("*" + searchPhrase + "*")
                 : Lists.<Lease> newArrayList();
-    }
-
-    // //////////////////////////////////////
-
-    @Programmatic
-    public List<LeaseStatusReason> findLeaseStatusReasonByLease(final Lease lease) {
-        return getContainer().allMatches(
-                new QueryDefault<LeaseStatusReason>(LeaseStatusReason.class, "findByLease", "lease", lease));
     }
 
     // //////////////////////////////////////

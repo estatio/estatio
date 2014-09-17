@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Persistent;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Immutable;
@@ -322,8 +323,24 @@ public class LeaseTermForTax extends LeaseTerm {
                     getRecoverablePercentage().divide(HUNDRED);
             BigDecimal taxValue =
                     getTaxableValue().multiply(taxFactor).multiply(recoverableFactor).setScale(0, RoundingMode.HALF_UP);
-            setTaxValue(taxValue);
+            if (ObjectUtils.compare(taxValue, getTaxValue()) != 0) {
+                setTaxValue(taxValue);
+            }
         }
+    }
+
+    @Override
+    public void copyValuesTo(LeaseTerm target) {
+        LeaseTermForTax t = (LeaseTermForTax) target;
+        super.copyValuesTo(target);
+        t.setOfficeCode(getOfficeCode());
+        t.setOfficeName(getOfficeName());
+        t.setRegistrationDate(getRegistrationDate());
+        t.setRegistrationNumber(getRegistrationNumber());
+        t.setDescription(getDescription());
+        t.setPaymentDate(getPaymentDate());
+        t.setRecoverablePercentage(getRecoverablePercentage());
+        t.setTaxPercentage(getTaxPercentage());
     }
 
 }

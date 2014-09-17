@@ -594,16 +594,18 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.IDEMPOTENT)
     public LeaseItem verify() {
         verifyUntil(ObjectUtils.min(getEffectiveInterval().endDateExcluding(), getClockService().now()));
         return this;
     }
 
-    @Programmatic
-    public void verifyUntil(final LocalDate date) {
+    @ActionSemantics(Of.IDEMPOTENT)
+    public LeaseItem verifyUntil(final LocalDate date) {
         if (!getTerms().isEmpty()) {
             getTerms().first().verifyUntil(date);
         }
+        return this;
     }
 
     // //////////////////////////////////////

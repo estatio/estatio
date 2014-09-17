@@ -18,26 +18,40 @@
  */
 package org.estatio.integtests.lease;
 
-import java.lang.reflect.Field;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
+
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.invoice.viewmodel.InvoiceSummariesForInvoiceRun;
-import org.estatio.dom.lease.*;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseItem;
+import org.estatio.dom.lease.LeaseItemType;
+import org.estatio.dom.lease.LeaseTerm;
+import org.estatio.dom.lease.LeaseTermForIndexable;
+import org.estatio.dom.lease.Leases;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
@@ -47,13 +61,20 @@ import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.*;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfMediaX002;
+import org.estatio.fixture.lease.LeaseForOxfPoison003;
+import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.lease.LeaseForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
 import org.estatio.fixture.party.PersonForJohnDoe;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 
 public class LeaseTest extends EstatioIntegrationTest {
 
@@ -75,7 +96,6 @@ public class LeaseTest extends EstatioIntegrationTest {
             });
         }
 
-
         private Lease leasePoison;
         private Lease leaseMediax;
 
@@ -89,10 +109,11 @@ public class LeaseTest extends EstatioIntegrationTest {
         public void happyCase() throws Exception {
             final String newReference = "OXF-MEDIA-003";
             Lease newLease = leasePoison.assign(
-                    newReference, "Reassigned",
+                    newReference, 
+                    "Reassigned",
                     leaseMediax.getSecondaryParty(),
-                    VT.ld(2014, 1, 1), VT.ld(2014, 1, 1), true);
-
+                    VT.ld(2014, 1, 1), 
+                    true);
         }
     }
 
@@ -179,7 +200,8 @@ public class LeaseTest extends EstatioIntegrationTest {
         }
 
         /**
-         * Compare to tests that verify at the {@link org.estatio.dom.lease.LeaseTerm} level.
+         * Compare to tests that verify at the
+         * {@link org.estatio.dom.lease.LeaseTerm} level.
          *
          * @see LeaseTermTest_verifyUntil#givenLeaseTermForIndexableRent()
          * @see LeaseTermTest_verifyUntil#givenLeaseTermForServiceCharge()
@@ -230,7 +252,8 @@ public class LeaseTest extends EstatioIntegrationTest {
             // when
             leaseMediax.verifyUntil(VT.ld(2014, 1, 1));
 
-            // commit to get the BigDecimals to be stored to the correct precision by DN.
+            // commit to get the BigDecimals to be stored to the correct
+            // precision by DN.
             nextTransaction();
 
             // and reload
@@ -259,7 +282,8 @@ public class LeaseTest extends EstatioIntegrationTest {
             // when
             leasePoison.verifyUntil(VT.ld(2014, 1, 1));
 
-            // commit to get the BigDecimals to be stored to the correct precision by DN; reload
+            // commit to get the BigDecimals to be stored to the correct
+            // precision by DN; reload
             nextTransaction();
             leasePoison = leases.findLeaseByReference("OXF-POISON-003");
             leasePoisonRentItem = leasePoison.findItem(LeaseItemType.RENT, VT.ld(2011, 1, 1), VT.bi(1));
@@ -310,7 +334,8 @@ public class LeaseTest extends EstatioIntegrationTest {
 
         @Test
         public void whenNonEmpty() throws Exception {
-            // TODO: this seems to be merely asserting on the contents of the fixture
+            // TODO: this seems to be merely asserting on the contents of the
+            // fixture
             assertThat(leaseTopModel.getRoles().size(), is(3));
         }
 
@@ -321,32 +346,30 @@ public class LeaseTest extends EstatioIntegrationTest {
 
         @BeforeClass
         public static void setupTransactionalData() {
-            runScript(
-                    new FixtureScript() {
-                        @Override
-                        protected void execute(ExecutionContext executionContext) {
-                            execute(new EstatioBaseLineFixture(), executionContext);
+            runScript(new FixtureScript() {
+                @Override
+                protected void execute(ExecutionContext executionContext) {
+                    execute(new EstatioBaseLineFixture(), executionContext);
 
-                            execute(new PersonForJohnDoe(), executionContext);
+                    execute(new PersonForJohnDoe(), executionContext);
 
-                            execute(new PropertyForOxf(), executionContext);
+                    execute(new PropertyForOxf(), executionContext);
 
-                            execute(new PropertyForKal(), executionContext);
+                    execute(new PropertyForKal(), executionContext);
 
-                            execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+                    execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
 
-                            execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+                    execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
-                            execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                            execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                            execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
-                            execute(new LeaseForOxfPret004(), executionContext);
+                    execute(new LeaseForOxfPret004(), executionContext);
 
-                            execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-                        }
-                    }
-            );
+                    execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                }
+            });
         }
 
         private static final LocalDate START_DATE = VT.ld(2013, 11, 7);
@@ -361,21 +384,15 @@ public class LeaseTest extends EstatioIntegrationTest {
         private IndexValues indexValues;
         @Inject
         private InvoiceItemsForLease invoiceItemsForLease;
-        @Inject
-        private InvoiceSummariesForInvoiceRun invoiceSummariesForInvoiceRun;
 
         private Lease lease;
         private LeaseItem rItem;
         private LeaseItem sItem;
         private LeaseItem tItem;
 
-        @Inject
-        private QueryResultsCache queryResultsCache;
-
         @Before
         public void setup() throws NoSuchFieldException, IllegalAccessException {
             lease = leases.findLeaseByReference("OXF-MIRACL-005");
-            lease.injectInvoiceSummaries(invoiceSummariesForInvoiceRun);
             rItem = lease.findFirstItemOfType(LeaseItemType.RENT);
             sItem = lease.findFirstItemOfType(LeaseItemType.SERVICE_CHARGE);
             tItem = lease.findFirstItemOfType(LeaseItemType.TURNOVER_RENT);
@@ -465,7 +482,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
         private BigDecimal totalApprovedOrInvoicedForItem(LeaseItem leaseItem) {
             BigDecimal total = BigDecimal.ZERO;
-            InvoiceStatus[] allowed = {InvoiceStatus.APPROVED, InvoiceStatus.INVOICED};
+            InvoiceStatus[] allowed = { InvoiceStatus.APPROVED, InvoiceStatus.INVOICED };
             for (InvoiceStatus invoiceStatus : allowed) {
                 List<InvoiceItemForLease> items = invoiceItemsForLease.findByLeaseItemAndInvoiceStatus(leaseItem, invoiceStatus);
                 for (InvoiceItemForLease item : items) {

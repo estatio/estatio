@@ -24,28 +24,46 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
 
-import org.estatio.dom.*;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Bulk;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.util.TitleBuffer;
+
+import org.estatio.dom.Chained;
+import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.WithSequence;
 import org.estatio.dom.invoice.InvoiceSource;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationParameters;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationService.CalculationResult;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceRunType;
-import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.valuetypes.LocalDateInterval;
-
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
-
-import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Render.Type;
-import org.apache.isis.applib.util.TitleBuffer;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
@@ -388,6 +406,7 @@ public abstract class LeaseTerm
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public Object remove(@Named("Are you sure?") Boolean confirm) {
         LeaseItem item = getLeaseItem();
         if (confirm && doRemove()) {
@@ -417,14 +436,15 @@ public abstract class LeaseTerm
     // //////////////////////////////////////
 
     @Bulk
+    @ActionSemantics(Of.IDEMPOTENT)
     public LeaseTerm verify() {
         LocalDateInterval effectiveInterval = getLeaseItem().getEffectiveInterval();
         verifyUntil(ObjectUtils.min(effectiveInterval == null ? null : effectiveInterval.endDateExcluding(), getClockService().now()));
         return this;
     }
 
-    @Programmatic
-    public void verifyUntil(final LocalDate date) {
+    @ActionSemantics(Of.IDEMPOTENT)
+    public LeaseTerm verifyUntil(final LocalDate date) {
         LeaseTerm nextTerm = getNext();
         boolean autoCreateTerms = getLeaseItem().getType().autoCreateTerms();
         if (autoCreateTerms) {
@@ -451,6 +471,7 @@ public abstract class LeaseTerm
         if (nextTerm != null) {
             nextTerm.verifyUntil(date);
         }
+        return this;
     }
 
     protected LocalDate nextStartDate() {

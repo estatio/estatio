@@ -18,11 +18,21 @@
  */
 package org.estatio.dom.lease;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import org.hamcrest.Matchers;
 import org.hamcrest.core.Is;
 import org.jmock.Expectations;
@@ -32,15 +42,25 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
 import org.apache.isis.core.unittestsupport.jmocking.IsisActions;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.PojoTester;
-import org.estatio.dom.agreement.*;
+import org.estatio.dom.agreement.Agreement;
+import org.estatio.dom.agreement.AgreementForTesting;
+import org.estatio.dom.agreement.AgreementRole;
+import org.estatio.dom.agreement.AgreementRoleType;
+import org.estatio.dom.agreement.AgreementRoleTypes;
+import org.estatio.dom.agreement.AgreementRoles;
+import org.estatio.dom.agreement.AgreementType;
+import org.estatio.dom.agreement.AgreementTypes;
+import org.estatio.dom.agreement.Agreements;
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
@@ -54,12 +74,6 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
 import org.estatio.services.clock.ClockService;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
-
 public class LeaseTest {
 
     @Rule
@@ -69,25 +83,21 @@ public class LeaseTest {
 
     public static class AddUnit extends LeaseTest {
 
-
         @Mock
         private DomainObjectContainer mockContainer;
 
-        private Occupancies leaseUnits;
+        private Occupancies occupancies;
 
         private Unit unit;
 
         @Before
         public void setUp() throws Exception {
-
             unit = new Unit();
-
             // this is actually a mini-integration test...
-            leaseUnits = new Occupancies();
-            leaseUnits.setContainer(mockContainer);
-
+            occupancies = new Occupancies();
+            occupancies.setContainer(mockContainer);
             lease = new Lease();
-            lease.injectOccupancies(leaseUnits);
+            lease.occupanciesRepo = occupancies;
         }
 
         @Test
@@ -123,10 +133,9 @@ public class LeaseTest {
                     .exercise(new Lease());
         }
 
-
         @SuppressWarnings({ "rawtypes", "unchecked" })
         private static PojoTester.FixtureDatumFactory<LeaseStatus> statii() {
-            return new PojoTester.FixtureDatumFactory(LeaseStatus.class, (Object[])LeaseStatus.values());
+            return new PojoTester.FixtureDatumFactory(LeaseStatus.class, (Object[]) LeaseStatus.values());
         }
 
     }
@@ -228,7 +237,7 @@ public class LeaseTest {
             leaseItems.setContainer(mockContainer);
 
             lease = new Lease();
-            lease.injectLeaseItems(leaseItems);
+            lease.leaseItems = leaseItems;
         }
 
         @SuppressWarnings("unchecked")
@@ -242,7 +251,7 @@ public class LeaseTest {
                     oneOf(mockContainer).newTransientInstance(LeaseItem.class);
                     will(returnValue(leaseItem));
                     oneOf(mockContainer).persistIfNotAlready(leaseItem);
-                    oneOf(mockContainer).allMatches(with(any(QueryDefault.class)) );
+                    oneOf(mockContainer).allMatches(with(any(QueryDefault.class)));
                     will(returnValue(new ArrayList<LeaseItem>()));
 
                 }
@@ -255,11 +264,10 @@ public class LeaseTest {
 
             // this assertion not true for unit tests, because we rely on JDO
             // to manage the bidir relationship for us.
-            //assertThat(lease.getItems(), Matchers.contains(newItem));
+            // assertThat(lease.getItems(), Matchers.contains(newItem));
         }
 
     }
-
 
     public static class NewMandate extends LeaseTest {
 
@@ -397,8 +405,8 @@ public class LeaseTest {
             lease.injectAgreementRoleTypes(mockAgreementRoleTypes);
             lease.injectAgreementRoles(mockAgreementRoles);
             lease.injectAgreementTypes(mockAgreementTypes);
-            lease.injectFinancialAccounts(mockFinancialAccounts);
-            lease.injectBankMandates(bankMandates);
+            lease.financialAccounts = mockFinancialAccounts;
+            lease.bankMandates = bankMandates;
             lease.setContainer(mockContainer);
             lease.injectClockService(mockClockService);
             lease.injectAgreements(agreements);
@@ -609,7 +617,7 @@ public class LeaseTest {
             context.checking(new Expectations() {
                 {
                     allowing(mockClockService).now();
-                    will(returnValue(new LocalDate(2013,4,2)));
+                    will(returnValue(new LocalDate(2013, 4, 2)));
                 }
             });
 
@@ -628,8 +636,6 @@ public class LeaseTest {
             lease.injectAgreementTypes(mockAgreementTypes);
             lease.injectClockService(mockClockService);
         }
-
-
 
         @Test
         public void whenSecondaryPartyIsUnknown_isDisabled() {
@@ -663,7 +669,6 @@ public class LeaseTest {
             assertThat(disabledReason, is(not(nullValue())));
         }
 
-
         @Test
         public void whenSecondaryPartyIsKnownButNotCurrent_isDisabled() {
 
@@ -671,7 +676,7 @@ public class LeaseTest {
             arTenant.setAgreement(lease);
             lease.getRoles().add(arTenant);
 
-            arTenant.setEndDate(new LocalDate(2013,4,1));
+            arTenant.setEndDate(new LocalDate(2013, 4, 1));
 
             context.checking(new Expectations() {
                 {
@@ -743,7 +748,6 @@ public class LeaseTest {
                     will(returnValue(Lists.newArrayList(bankMandate)));
                 }
             });
-
 
             // when/then
             final String validateReason = lease.validatePaidBy(someOtherBankMandate);

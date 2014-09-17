@@ -496,7 +496,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         lease.setTenancyStartDate(tenancyStartDate);
         lease.setTenancyEndDate(tenancyEndDate);
-        lease.changeStatus(status, "Set by import");
+        lease.setStatus(status);
     }
 
     private Lease fetchLease(String leaseReference) {

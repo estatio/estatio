@@ -11,7 +11,7 @@
             "status": {},
             "startDate": {},
             "endDate": {}
-            }
+          }
         },
         "Values": {
           "members": {
@@ -39,6 +39,13 @@
     }
   ],
   "actions": {
-    "verify": {}
+    "verify": {},
+    "verifyUntil": {},
+    "calculate": {},
+    "activate": {},
+    "suspend": {},
+    "copy": {},
+    "remove": {},
+    "terminate": {}
   }
 }

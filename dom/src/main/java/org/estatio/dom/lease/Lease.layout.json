@@ -29,8 +29,8 @@
             "previous": {},
             "next": {
               "actions": {
-                "changePrevious":{} 
-              } 
+                "changePrevious": {}
+              }
             }
           }
         }
@@ -86,23 +86,32 @@
           }
         },
         "breakOptions": {
-            "actions": {
-                "newBreakOption": {}
-            }
+          "actions": {
+            "newBreakOption": {}
+          }
         },
         "guarantees": {
-            "actions": {
-                "newGuarantee": {}
-            }
+          "actions": {
+            "newGuarantee": {}
+          }
+        },
+        "findInvoices": {
+          "actions": {
+            "findInvoices": {}
+          }
         }
       }
     }
   ],
   "actions": {
     "downloadLayout": {},
-    "approveAllTermsOfThisLease": {},
     "refreshLayout": {},
     "verify": {},
-    "calculate": {}
+    "verifyUntil": {},
+    "calculate": {},
+    "assign": {},
+    "renew": {},
+    "activateAll": {},
+    "suspendAll": {}
   }
 }

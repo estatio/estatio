@@ -12,14 +12,14 @@
             "invoicingFrequency": {},
             "paymentMethod": {
               "actions": {
-              	"changePaymentMethod": {}
+                "changePaymentMethod": {}
               }
-		    },
+            },
             "charge": {},
             "tax": {
               "actions": {
-              	"overrideTax": {},
-              	"cancelOverrideTax": {}
+                "overrideTax": {},
+                "cancelOverrideTax": {}
               }
             }
           }
@@ -63,9 +63,13 @@
     }
   ],
   "actions": {
+    "verify": {},
+    "verifyUntil": {},
     "calculate": {},
-    "lock": {},
-    "unlock": {},
-    "verify": {}
+    "activate": {},
+    "suspend": {},
+    "copy": {},
+    "remove": {},
+    "terminate": {}
   }
 }
