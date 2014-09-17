@@ -23,12 +23,17 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.guarantee.Guarantee;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -53,6 +58,7 @@ import org.estatio.dom.WithNameUnique;
                         + "FROM org.estatio.dom.lease.tags.UnitSize")
 })
 @Bounded
+@Immutable
 public class UnitSize
         extends EstatioMutableObject<UnitSize>
         implements WithNameUnique, WithNameComparable<UnitSize> {
@@ -74,5 +80,14 @@ public class UnitSize
     public void setName(final String name) {
         this.name = name;
     }
+    
+    public UnitSize change(
+            final @Named("Name") String name) {
+        setName(name);
+        return this;
+    }
 
+    public String default0Change() {
+        return getName();
+    }
 }

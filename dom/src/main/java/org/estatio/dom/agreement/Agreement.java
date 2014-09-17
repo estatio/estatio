@@ -41,6 +41,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -59,6 +60,7 @@ import org.estatio.dom.WithIntervalMutable;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceComparable;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.dom.utils.ValueUtils;
@@ -108,6 +110,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + " VARIABLES org.estatio.dom.agreement.AgreementRole role")
 })
 @Bookmarkable
+@Immutable
 public abstract class Agreement
         extends EstatioMutableObject<Agreement>
         implements WithReferenceComparable<Agreement>,
@@ -299,7 +302,7 @@ public abstract class Agreement
     private AgreementType type;
 
     @javax.jdo.annotations.Column(name = "typeId", allowsNull = "false")
-    @Hidden(where = Where.ALL_TABLES)
+    @Hidden
     @Disabled
     public AgreementType getType() {
         return type;

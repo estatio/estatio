@@ -23,13 +23,19 @@ import java.util.List;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccount;
 import org.estatio.dom.financial.FinancialAccounts;
+import org.estatio.dom.party.Organisation;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.Person;
 
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
 
 @javax.jdo.annotations.PersistenceCapable
 // identityType=IdentityType.DATASTORE inherited from superclass
@@ -43,6 +49,7 @@ import org.apache.isis.applib.annotation.Optional;
                         + "FROM org.estatio.dom.bankmandate.BankMandate "
                         + "WHERE bankAccount == :bankAccount")
 })
+@Immutable
 public class BankMandate extends Agreement {
 
     // //////////////////////////////////////
@@ -99,6 +106,22 @@ public class BankMandate extends Agreement {
 
     public final void injectFinancialAccounts(final FinancialAccounts financialAccounts) {
         this.financialAccounts = financialAccounts;
+    }
+
+    public BankMandate change(
+            final @Named("Name") @Optional String name,
+            final @Named("Sepa Mandate Identifier") @Optional String SepaMendateIdentifier) {
+        setName(name);
+        setSepaMandateIdentifier(SepaMendateIdentifier);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public String default1Change() {
+        return getSepaMandateIdentifier();
     }
 
 }

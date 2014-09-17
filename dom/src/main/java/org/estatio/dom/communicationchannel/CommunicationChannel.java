@@ -19,15 +19,20 @@
 package org.estatio.dom.communicationchannel;
 
 import java.util.SortedSet;
+
 import javax.inject.Inject;
 import javax.jdo.annotations.*;
+
 import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
+
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
+import org.estatio.dom.lease.tags.Activity;
+import org.estatio.dom.lease.tags.Sector;
 
 /**
  * Represents a mechanism for communicating with its
@@ -73,6 +78,7 @@ import org.estatio.dom.WithReferenceGetter;
 
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@Immutable
 public abstract class CommunicationChannel
         extends EstatioMutableObject<CommunicationChannel>
         implements WithNameGetter, WithReferenceGetter {
@@ -165,6 +171,7 @@ public abstract class CommunicationChannel
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.DESCRIPTION)
     @Hidden(where = Where.ALL_TABLES)
+    @MultiLine(numberOfLines = 3)
     @Optional
     public String getDescription() {
         return description;
@@ -215,4 +222,14 @@ public abstract class CommunicationChannel
 
     @Inject
     CommunicationChannels communicationChannels;
+
+    public CommunicationChannel change(
+            final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
+        setDescription(description);
+        return this;
+    }
+
+    public String default0Change() {
+        return getDescription();
+    }
 }

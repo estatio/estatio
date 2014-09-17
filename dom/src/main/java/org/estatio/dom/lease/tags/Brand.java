@@ -18,17 +18,24 @@
  */
 package org.estatio.dom.lease.tags;
 
+import java.math.BigDecimal;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.AutoComplete;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameComparable;
 import org.estatio.dom.WithNameUnique;
+import org.estatio.dom.tax.Tax;
+import org.estatio.dom.tax.TaxRate;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -55,6 +62,7 @@ import org.estatio.dom.WithNameUnique;
                         + "FROM org.estatio.dom.lease.tags.Brand")
 })
 @AutoComplete(repository = Brands.class, action = "autoComplete")
+@Immutable
 public class Brand
         extends EstatioMutableObject<Brand>
         implements WithNameUnique, WithNameComparable<Brand> {
@@ -75,6 +83,17 @@ public class Brand
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public Brand change(
+            final @Named("Name") String name) {
+
+        setName(name);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
     }
 
 }

@@ -114,6 +114,7 @@ import org.apache.isis.applib.util.TitleBuffer;
                         + "&& (endDate == null || endDate > :date )")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@Immutable
 public abstract class LeaseTerm
         extends EstatioMutableObject<LeaseTerm>
         implements WithIntervalMutable<LeaseTerm>, Chained<LeaseTerm>, WithSequence, InvoiceSource {

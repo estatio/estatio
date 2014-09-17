@@ -61,7 +61,10 @@
               "hidden": {
                 "where": "REFERENCES_PARENT"
               },
-              "disabled": {}
+              "disabled": {},
+              "actions": {
+                "change": {}
+              }
             }
           }
         },
@@ -83,15 +86,6 @@
         },
         "Related": {
           "members": {
-            "previous": {
-              "hidden": {
-                "where": "ALL_TABLES"
-              },
-              "disabled": {},
-              "named": {
-                "value": "Previous Agreement"
-              }
-            },
             "next": {
               "hidden": {
                 "where": "ALL_TABLES"
@@ -99,6 +93,18 @@
               "disabled": {},
               "named": {
                 "value": "Next Agreement"
+              }
+            },
+            "previous": {
+              "hidden": {
+                "where": "ALL_TABLES"
+              },
+              "disabled": {},
+              "named": {
+                "value": "Previous Agreement"
+              },
+              "actions": {
+                "changePrevious": {}
               }
             },
             "versionSequence": {
@@ -133,6 +139,9 @@
               "disabled": {},
               "typicalLength": {
                 "value": 12
+              },
+              "actions": {
+                "changeDates": {}
               }
             },
             "financialAccount": {

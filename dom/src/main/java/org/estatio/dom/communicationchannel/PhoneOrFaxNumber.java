@@ -20,10 +20,15 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
@@ -40,6 +45,7 @@ import org.estatio.dom.JdoColumnLength;
                     + "WHERE owner == :owner "
                     + "&& phoneNumber == :phoneNumber")
 })
+@Immutable
 public class PhoneOrFaxNumber extends CommunicationChannel {
 
 
@@ -54,6 +60,18 @@ public class PhoneOrFaxNumber extends CommunicationChannel {
 
     public void setPhoneNumber(final String number) {
         this.phoneNumber = number;
+    }
+    
+    @Named("Change Number")
+    public PhoneOrFaxNumber changePhoneOrFaxNumber(
+            final @Named("Phone Number") @RegEx(validation = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber) {
+        setPhoneNumber(phoneNumber);
+        
+        return this;
+    }
+
+    public String default0ChangePhoneOrFaxNumber() {
+        return getPhoneNumber();
     }
 
 }

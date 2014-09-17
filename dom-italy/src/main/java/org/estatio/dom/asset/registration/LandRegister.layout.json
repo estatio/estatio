@@ -1,0 +1,170 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "name": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "type": {
+              "disabled": {}
+            },
+            "subject": {
+              "disabled": {}
+            },
+            "startDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              }
+            },
+            "endDate": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 12
+              },
+              "actions": {
+                "changeDates": {}
+              }
+            },
+            "comuneAmministrativo": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "comuneCatastale": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "codiceComuneCatastale": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "rendita": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 10
+              }
+            },
+            "foglio": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "particella": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "subalterno": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "categoria": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "classe": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "consistenza": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "description": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              },
+              "actions": {
+                "changeRegistration": {}
+              }
+            },
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "next": {
+              "hidden": {},
+              "disabled": {}
+            },
+            "previous": {
+              "hidden": {},
+              "disabled": {}
+            },
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "changeDates": {
+      "named": {
+        "value": "Change Dates"
+      }
+    },
+    "changeRegistration": {
+      "named": {
+        "value": "Change Registration"
+      }
+    },
+    "recentChanges": {
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "named": {
+        "value": "Reports"
+      }
+    }
+  }
+}

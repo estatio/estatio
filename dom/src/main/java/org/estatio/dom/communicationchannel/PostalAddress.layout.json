@@ -6,7 +6,11 @@
         "Owner": {
           "members": {
             "owner": {},
-            "description": {}
+            "description": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         }
       }
@@ -21,7 +25,11 @@
             "address2": {},
             "address3": {},
             "city": {},
-            "postalCode": {}
+            "postalCode": {
+              "actions": {
+                "changePostalAddress": {}
+              }
+            }
           }
         },
         "Country": {

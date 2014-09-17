@@ -9,15 +9,23 @@
             "name": {},
             "type": {},
             "exerciseType": {},
-            "description": {}
+            "description": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         },
         "Dates": {
           "members": {
-            "breakDate": {},
             "currentBreakDate": {},
+            "notificationPeriod": {},
             "exerciseDate": {},
-            "notificationPeriod": {}
+            "breakDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
           }
         }
       }

@@ -19,24 +19,45 @@
 package org.estatio.dom.lease.tags;
 
 import java.util.List;
+
 import javax.jdo.Query;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Programmatic;
+
 import org.estatio.dom.EstatioDomainService;
 
 @DomainService(menuOrder = "99", repositoryFor = UnitSize.class)
-@Hidden
 public class UnitSizes extends EstatioDomainService<UnitSize> {
 
     public UnitSizes() {
         super(UnitSizes.class, UnitSize.class);
     }
 
+    @ActionSemantics(Of.NON_IDEMPOTENT)
+    @MemberOrder(name = "Other", sequence = "unitSizes.1.2")
+    public UnitSize newUnitSize(final @Named("Unit size name") String name) {
+        UnitSize unitSize = newTransientInstance(UnitSize.class);
+        unitSize.setName(name);
+        persist(unitSize);
+        return unitSize;
+    }
+
     // //////////////////////////////////////
-    
+
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Other", sequence = "unitSizes.1.1")
+    public List<UnitSize> allUnitSizes() {
+        return allInstances();
+    }
+
+    // //////////////////////////////////////
+
     @SuppressWarnings({ "unchecked" })
     @ActionSemantics(Of.SAFE)
     @Hidden

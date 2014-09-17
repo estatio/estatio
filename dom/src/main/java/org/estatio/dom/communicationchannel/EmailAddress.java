@@ -20,10 +20,14 @@ package org.estatio.dom.communicationchannel;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Mandatory;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 
 @javax.jdo.annotations.PersistenceCapable // identityType=IdentityType.DATASTORE inherited from superclass
 @javax.jdo.annotations.Inheritance(strategy=InheritanceStrategy.SUPERCLASS_TABLE)
@@ -40,6 +44,7 @@ import org.estatio.dom.JdoColumnLength;
                         + "WHERE owner == :owner "
                         + "&& emailAddress == :emailAddress")
 })
+@Immutable
 public class EmailAddress extends CommunicationChannel {
 
 
@@ -58,4 +63,14 @@ public class EmailAddress extends CommunicationChannel {
         this.emailAddress = address;
     }
 
+    public EmailAddress changeEmailAddress(
+            final @Named("Email Address") @RegEx(validation = RegexValidation.CommunicationChannel.EMAIL) String address) {
+        setEmailAddress(address);
+
+        return this;
+    }
+
+    public String default0ChangeEmailAddress() {
+        return getEmailAddress();
+    }
 }

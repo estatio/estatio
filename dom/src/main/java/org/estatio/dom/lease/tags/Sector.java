@@ -26,6 +26,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
@@ -54,6 +55,7 @@ import org.estatio.dom.WithNameUnique;
                         + "FROM org.estatio.dom.lease.tags.Sector")
 })
 @Bounded
+@Immutable
 public class Sector
         extends EstatioMutableObject<Sector>
         implements WithNameUnique, WithNameComparable<Sector> {

@@ -11,7 +11,11 @@
             "description": {},
             "group": {},
             "externalReference": {},
-            "sortOrder": {}
+            "sortOrder": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         }
       }

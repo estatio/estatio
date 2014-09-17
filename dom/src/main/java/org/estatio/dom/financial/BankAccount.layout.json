@@ -9,7 +9,11 @@
             "type": {},
             "name": {},
             "owner": {},
-            "externalReference": {}
+            "externalReference": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         }
       }
@@ -28,7 +32,7 @@
             "country": {},
             "IBAN": {
               "actions": {
-                "verifyIBAN": {}
+                "verifyIban": {}
               }
             },
             "nationalCheckCode": {},

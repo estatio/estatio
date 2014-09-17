@@ -13,7 +13,11 @@
               }  
            	},
             "sepaMandateIdentifier": {}, 
-            "type": {}
+            "type": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         },
         "Parties": {
@@ -41,8 +45,12 @@
         },
         "Related": {
           "members": {
-            "previous": {},
-            "next": {}
+            "next": {},
+            "previous": {
+              "actions": {
+                "changePrevious": {}
+              }
+            }
           }
         }
       }

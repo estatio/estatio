@@ -30,6 +30,7 @@ import javax.jdo.annotations.VersionStrategy;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.RegEx;
@@ -75,6 +76,7 @@ import org.estatio.dom.party.Party;
                         + "FROM org.estatio.dom.financial.FinancialAccount "
                         + "WHERE owner == :owner")
 })
+@Immutable
 public class FinancialAccount
         extends EstatioMutableObject<FinancialAccount>
         implements WithNameGetter, WithReferenceUnique {

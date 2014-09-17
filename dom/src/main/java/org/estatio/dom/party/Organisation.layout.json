@@ -8,7 +8,11 @@
             "reference": {},
             "name": {},
             "vatCode": {},
-            "fiscalCode": {}
+            "fiscalCode": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         }
       }

@@ -23,11 +23,14 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
+import org.estatio.dom.financial.utils.IBANValidator;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -49,6 +52,7 @@ import org.estatio.dom.WithNameGetter;
                         + "   && name == :name")
 })
 @Bounded
+@Immutable
 public class Activity
         extends EstatioMutableObject<Activity>
         implements WithNameGetter {
@@ -85,4 +89,19 @@ public class Activity
         this.name = name;
     }
 
+    public Activity change(
+            final @Named("Name") String name,
+            final @Named("Sector") Sector sector) {
+        setName(name);
+        setSector(sector);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public Sector default1Change() {
+        return getSector();
+    }
 }

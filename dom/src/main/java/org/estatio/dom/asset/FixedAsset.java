@@ -33,6 +33,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.DescribedAs;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -77,6 +78,7 @@ import org.estatio.dom.party.Party;
                         + "|| name.matches(:regex) ")
 })
 @Bookmarkable
+@Immutable
 @AutoComplete(repository = FixedAssets.class, action = "autoComplete")
 public abstract class FixedAsset
         extends EstatioMutableObject<FixedAsset>

@@ -7,15 +7,13 @@
           "members": {
             "reference": {},
             "name": {},
-            "type": {},
             "leaseType": {},
             "property": {},
-            "status": {},
-            "itemStatus": {},
-            "paidBy": {
+            "status": {
               "actions": {
-                "paidBy": {},
-                "newMandate": {}
+                "change": {},
+                "newMandate": {},
+                "paidBy": {}
               }
             }
           }
@@ -50,12 +48,12 @@
               }
             },
             "tenancyStartDate": {},
-            "tenancyEndDate": {
+            "tenancyEndDate": {},
+            "tenancyDuration": {
               "actions": {
                 "changeTenancyDates": {}
               }
             },
-            "tenancyDuration": {},
             "terminationDate": {
               "actions": {
                 "terminate": {}

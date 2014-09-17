@@ -17,8 +17,10 @@
 						"startDate":{
 							
 						},
-						"endDate":{
-							
+					    "endDate":{
+						    "actions":{
+                                "changeDates": {}
+                            }	
 						}
 						
 					}
@@ -43,7 +45,9 @@
 							
 						},
 						"unitSize":{
-							
+							"actions": {
+							    "changeClassification": {}
+							}
 						}
 						
 					}
@@ -58,7 +62,9 @@
 							
 						},
 						"reportOCR":{
-							
+							"actions": {
+							    "changeReportingOptions": {}
+							}
 						}
 						
 					}

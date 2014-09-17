@@ -5,16 +5,16 @@
       "memberGroups": {
         "General": {
           "members": {
-            "reference": {},
-            "gender": {}
-          }
-        },
-        "Name": {
-          "members": {
-            "name": {},
-            "firstName": {},
+            "gender": {},
             "initials": {},
-            "lastName": {}
+            "firstName": {},
+            "lastName": {},
+            "name": {},
+            "reference": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         }
       }

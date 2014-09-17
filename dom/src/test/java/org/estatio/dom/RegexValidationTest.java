@@ -55,6 +55,22 @@ public class RegexValidationTest {
         tester(RegexValidation.Unit.REFERENCE, "ABC- 123", false);
     }
 
+    @Test
+    public void testPhoneNumer() {
+        tester(RegexValidation.CommunicationChannel.PHONENUMBER, "+31 20 12344-12", true);
+        tester(RegexValidation.CommunicationChannel.PHONENUMBER, "00316-57201234", true);
+        tester(RegexValidation.CommunicationChannel.PHONENUMBER, "asd", false);
+    }
+    
+    @Test
+    public void testEmailAddress() {
+        tester(RegexValidation.CommunicationChannel.EMAIL, "asd@@asd.com", false);
+        tester(RegexValidation.CommunicationChannel.EMAIL, "asd@asd.com", true);
+        tester(RegexValidation.CommunicationChannel.EMAIL, "a sd@asd.com", false);
+        tester(RegexValidation.CommunicationChannel.EMAIL, "asd@asd", false);
+        tester(RegexValidation.CommunicationChannel.EMAIL, "asd", false);
+    }
+
     private void tester(String regex, String pattern, boolean expected) {
         regExFacetOnTypeAnnotation = new RegExFacetOnTypeAnnotation(regex, "", expected, facetHolder);
         assertThat(regExFacetOnTypeAnnotation.doesNotMatch(pattern), equalTo(!expected));

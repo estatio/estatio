@@ -30,14 +30,17 @@ import com.google.common.base.Function;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.guarantee.Guarantee;
 
 /**
  * An event that has or is scheduled to occur at some point in time, pertaining to
@@ -68,7 +71,8 @@ import org.estatio.dom.JdoColumnLength;
                     "FROM org.estatio.dom.event.Event " +
                     "WHERE date >= :rangeStartDate &&" +
                     "date <= :rangeEndDate")
-})    
+})
+@Immutable
 public class Event
         extends EstatioMutableObject<Event> 
         implements CalendarEventable {
@@ -178,7 +182,7 @@ public class Event
 
     public final static class Functions {
         private Functions(){}
-        
+
         public final static Function<Event, CalendarEvent> TO_CALENDAR_EVENT = new Function<Event, CalendarEvent>() {
             @Override
             public CalendarEvent apply(final Event input) {
@@ -189,5 +193,15 @@ public class Event
             public String apply(final Event input) {
                 return input.getCalendarName();
             }};
+    }
+    
+    public Event changeNotes(final @Named("Notes") @MultiLine(numberOfLines=NUMBER_OF_LINES) String notes) {
+            setNotes(notes);
+
+        return this;
+    }
+
+    public String default0ChangeNotes() {
+        return getNotes();
     }
 }

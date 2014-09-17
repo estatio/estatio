@@ -8,7 +8,12 @@
             "lease": {},
             "name": {},
             "type": {},
-            "exerciseType": {}
+            "exerciseType": {},
+            "description": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         },
         "Dates": {
@@ -18,9 +23,13 @@
                 "updateReminderDate": {}
               }
             },
-            "exerciseDate": {},
             "notificationPeriod": {},
-            "breakDate": {}
+            "exerciseDate": {},
+            "breakDate": {
+              "actions": {
+                "changeDates": {}
+              }
+            }
           }
         }
       }

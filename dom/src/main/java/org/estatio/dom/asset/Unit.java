@@ -32,13 +32,18 @@ import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable
@@ -61,6 +66,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
 })
 @AutoComplete(repository = Units.class)
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
+@Immutable
 public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
 
     private UnitType type;
@@ -250,5 +256,62 @@ public class Unit extends FixedAsset implements WithIntervalMutable<Unit> {
     }
 
     // //////////////////////////////////////
+
+    public Unit changeAsset(
+            final @Named("Name") String name,
+            final @Named("Type") UnitType type,
+            final @Named("External Reference") @Optional String externalReference) {
+        setName(name);
+        setExternalReference(externalReference);
+        return this;
+    }
+
+    public String default0ChangeAsset() {
+        return getName();
+    }
+
+    public UnitType default1ChangeAsset() {
+        return getType();
+    }
+
+    public String default2ChangeAsset() {
+        return getExternalReference();
+    }
+
+    // ///////////////////////////////////////
+
+    public Unit changeAreas(
+            final @Named("Area") @Optional BigDecimal area,
+            final @Named("Storage Area") @Optional BigDecimal storageArea,
+            final @Named("Sales Area") @Optional BigDecimal salesArea,
+            final @Named("Mezzanine Area") @Optional BigDecimal mezzanineArea,
+            final @Named("Dehors Area") @Optional BigDecimal dehorsArea) {
+        setArea(area);
+        setStorageArea(storageArea);
+        setSalesArea(salesArea);
+        setMezzanineArea(mezzanineArea);
+        setDehorsArea(dehorsArea);
+        return this;
+    }
+
+    public BigDecimal default0ChangeAreas() {
+        return getArea();
+    }
+
+    public BigDecimal default1ChangeAreas() {
+        return getStorageArea();
+    }
+
+    public BigDecimal default2ChangeAreas() {
+        return getSalesArea();
+    }
+
+    public BigDecimal default3ChangeAreas() {
+        return getMezzanineArea();
+    }
+
+    public BigDecimal default4ChangeAreas() {
+        return getDehorsArea();
+    }
 
 }

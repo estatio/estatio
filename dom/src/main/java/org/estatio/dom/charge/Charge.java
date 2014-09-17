@@ -24,7 +24,9 @@ import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.Bounded;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
@@ -35,6 +37,8 @@ import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithNameUnique;
 import org.estatio.dom.WithReferenceUnique;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.tax.Tax;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -58,6 +62,7 @@ import org.estatio.dom.tax.Tax;
                         + "WHERE reference == :reference")
 })
 @Bounded
+@Immutable
 public class Charge
         extends EstatioMutableObject<Charge>
         implements WithReferenceUnique, WithNameUnique {
@@ -162,6 +167,47 @@ public class Charge
 
     public void setSortOrder(final String sortOrder) {
         this.sortOrder = sortOrder;
+    }
+    
+    public Charge change(
+            final @Named("Name") String name,
+            final @Named("Tax") @Optional Tax tax,
+            final @Named("Description") String description,
+            final @Named("Group") ChargeGroup group,
+            final @Named("External Reference") @Optional String externalReference,
+            final @Named("Sort Order") @Optional String sortOrder) {
+
+        setName(name);
+        setTax(tax);
+        setDescription(description);
+        setGroup(group);
+        setExternalReference(externalReference);
+        setSortOrder(sortOrder);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public Tax default1Change() {
+        return getTax();
+    }
+    
+    public String default2Change() {
+        return getDescription();
+    }
+    
+    public ChargeGroup default3Change() {
+        return getGroup();
+    }
+    
+    public String default4Change() {
+        return getExternalReference();
+    }
+
+    public String default5Change() {
+        return getSortOrder();
     }
 
 }

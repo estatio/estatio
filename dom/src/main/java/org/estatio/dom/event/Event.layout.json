@@ -12,7 +12,11 @@
         },
         "Detail": {
           "members": {
-            "notes": {}
+            "notes": {
+              "actions": {
+                "changeNotes": {}
+              }
+            }
           }
         }
       }

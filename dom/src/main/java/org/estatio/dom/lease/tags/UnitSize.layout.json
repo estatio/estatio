@@ -1,0 +1,70 @@
+{
+  "columns": [
+    {
+      "span": 4,
+      "memberGroups": {
+        "General": {
+          "members": {
+            "id": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              }
+            },
+            "name": {
+              "disabled": {},
+              "typicalLength": {
+                "value": 25
+              },
+              "actions": {
+                "change": {}
+              }
+            },
+            "versionSequence": {
+              "hidden": {},
+              "disabled": {},
+              "typicalLength": {
+                "value": 18
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 0,
+      "memberGroups": {}
+    },
+    {
+      "span": 8,
+      "collections": {}
+    }
+  ],
+  "actions": {
+    "downloadLayout": {
+      "named": {
+        "value": "Download Layout"
+      }
+    },
+    "change": {
+      "named": {
+        "value": "Change"
+      }
+    },
+    "recentChanges": {
+      "named": {
+        "value": "Recent Changes"
+      }
+    },
+    "openLink": {
+      "named": {
+        "value": "Reports"
+      }
+    }
+  }
+}

@@ -214,14 +214,10 @@ public abstract class BreakOption
 
     // //////////////////////////////////////
 
-    public BreakOption changeParameters(
-            final BreakExerciseType breakExerciseType,
-            final @Named("Break date") LocalDate breakDate,
-            final @Named("Excercise date") LocalDate excerciseDate,
+    public BreakOption change(
+            final @Named("Exercise Type") BreakExerciseType breakExerciseType,
             final @Named("Description") @Optional String description) {
         setExerciseType(breakExerciseType);
-        setBreakDate(breakDate);
-        setExerciseDate(exerciseDate);
         setDescription(description);
         // remove existing events
         for (Event event : getEvents()) {
@@ -232,22 +228,35 @@ public abstract class BreakOption
         return this;
     }
 
-    public BreakExerciseType default0ChangeParameters() {
+    public BreakExerciseType default0Change() {
         return getExerciseType();
     }
-
-    public LocalDate default1ChangeParameters() {
+    
+    public String default1Change() {
+        return getDescription();
+    }
+    
+    public BreakOption changeDates(
+        final @Named("Break date") LocalDate breakDate,
+        final @Named("Excercise date") LocalDate excerciseDate) {
+        setBreakDate(breakDate);
+        setExerciseDate(exerciseDate);
+        // remove existing events
+        for (Event event : getEvents()) {
+            getContainer().remove(event);
+        }
+        // re-create events
+        persisting();
+        return this;
+    }
+    
+    public LocalDate default0ChangeDates() {
         return getBreakDate();
     }
 
-    public LocalDate default2ChangeParameters() {
+    public LocalDate default1ChangeDates() {
         return getExerciseDate();
     }
-
-    public String default3ChangeParameters() {
-        return getDescription();
-    }
-
     // //////////////////////////////////////
 
     public Lease remove(final @Named("Reason") String reason) {

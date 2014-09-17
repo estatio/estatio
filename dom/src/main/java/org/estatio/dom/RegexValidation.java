@@ -19,32 +19,47 @@
 package org.estatio.dom;
 
 public final class RegexValidation {
-    
+
     public static final String REFERENCE = "[-/_A-Z0-9]+";
 
     public static final class Currency {
         private Currency() {
         }
-        
+
         public static final String REFERENCE = "[A-Z]+";
     }
-    
+
     public static final class Person {
         private Person() {
         }
-        
+
         public static final String REFERENCE = "[A-Z,0-9,_,-,/]+";
         public static final String INITIALS = "[A-Z]+";
     }
-    
+
     public static final class Property {
         private Property() {
         }
-        
+
         /* Only 3 letters */
         public static final String REFERENCE = "[A-Z]{3}";
     }
-    
+
+    public static final class BankAccount {
+        private BankAccount() {
+        }
+
+        public static final String IBAN = "[A-Z,0-9]+";
+    }
+
+    public static final class CommunicationChannel {
+        private CommunicationChannel() {
+        }
+
+        public static final String PHONENUMBER = "[+]?[0-9 -]*";
+        public static final String EMAIL = "[^@ ]*@{1}[^@ ]*[.]+[^@ ]*";
+    }
+
     public static final class Lease {
         private Lease() {
         }

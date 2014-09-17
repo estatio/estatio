@@ -39,6 +39,7 @@ import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
 import org.apache.isis.applib.annotation.Optional;
@@ -143,6 +144,7 @@ import org.estatio.dom.party.Party;
                 members = { "lease", "seller", "buyer", "paymentMethod", "dueDate", "status" }),
 })
 @Bookmarkable
+@Immutable
 public class Invoice extends EstatioMutableObject<Invoice> {
 
     public Invoice() {

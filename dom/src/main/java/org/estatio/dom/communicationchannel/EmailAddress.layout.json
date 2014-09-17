@@ -6,7 +6,11 @@
         "Owner": {
           "members": {
             "owner": {},
-            "description": {}
+            "description": {
+              "actions": {
+                "change": {}
+              }
+            }
           }
         }
       }
@@ -16,7 +20,11 @@
       "memberGroups": {
         "Email": {
           "members": {
-            "emailAddress": {}
+            "emailAddress": {
+              "actions": {
+                "changeEmailAddress": {}
+              }
+            }
           }
         }
       }

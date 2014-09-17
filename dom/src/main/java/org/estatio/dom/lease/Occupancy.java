@@ -288,8 +288,8 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    @DescribedAs("Update unit size, sector, activity and/or brand")
-    public Occupancy updateClassification(
+    @DescribedAs("Change unit size, sector, activity and/or brand")
+    public Occupancy changeClassification(
             final @Named("Unit size") @Optional UnitSize unitSize,
             final @Named("Sector") @Optional Sector sector,
             final @Named("Activity") @Optional Activity activity,
@@ -301,23 +301,23 @@ public class Occupancy
         return this;
     }
 
-    public UnitSize default0UpdateClassification() {
+    public UnitSize default0ChangeClassification() {
         return getUnitSize();
     }
 
-    public Sector default1UpdateClassification() {
+    public Sector default1ChangeClassification() {
         return getSector();
     }
 
-    public Activity default2UpdateClassification() {
+    public Activity default2ChangeClassification() {
         return getActivity();
     }
 
-    public Brand default3UpdateClassification() {
+    public Brand default3ChangeClassification() {
         return getBrand();
     }
 
-    public List<Activity> choices2UpdateClassification(
+    public List<Activity> choices2ChangeClassification(
             final UnitSize unitSize,
             final Sector sector) {
         return activities.findBySector(sector);
@@ -396,7 +396,7 @@ public class Occupancy
 
     // //////////////////////////////////////
 
-    public Occupancy updateReportingOptions(
+    public Occupancy changeReportingOptions(
             final @Named("Report Turnover") OccupancyReportingType reportTurnover,
             final @Named("Report Rent") OccupancyReportingType reportRent,
             final @Named("Report OCR") OccupancyReportingType reportOCR) {

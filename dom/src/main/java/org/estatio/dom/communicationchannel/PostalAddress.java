@@ -18,18 +18,23 @@
  */
 package org.estatio.dom.communicationchannel;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
+import org.estatio.dom.asset.Unit;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
@@ -52,6 +57,7 @@ import org.estatio.dom.geography.States;
                         + "&& city == :city "
                         + "&& country == :country ")
 })
+@Immutable
 public class PostalAddress extends CommunicationChannel {
 
     private String address1;
@@ -204,4 +210,38 @@ public class PostalAddress extends CommunicationChannel {
         this.states = states;
     }
 
+    public PostalAddress changePostalAddress(
+            final @Named("Address Line 1") String address1,
+            final @Named("Address Line 2") @Optional String address2,
+            final @Named("Address Line 3") @Optional String address3,
+            final @Named("City") String city,
+            final @Named("Postal Code") String postalCode) {
+        setAddress1(address1);
+        setAddress2(address2);
+        setAddress3(address3);
+        setCity(city);
+        setPostalCode(postalCode);
+
+        return this;
+    }
+
+    public String default0ChangePostalAddress() {
+        return getAddress1();
+    }
+
+    public String default1ChangePostalAddress() {
+        return getAddress2();
+    }
+
+    public String default2ChangePostalAddress() {
+        return getAddress3();
+    }
+
+    public String default3ChangePostalAddress() {
+        return getCity();
+    }
+
+    public String default4ChangePostalAddress() {
+        return getPostalCode();
+    }
 }

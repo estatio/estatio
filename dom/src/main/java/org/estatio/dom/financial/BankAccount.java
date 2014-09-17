@@ -22,18 +22,29 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.financial.utils.IBANHelper;
 import org.estatio.dom.financial.utils.IBANValidator;
 import org.estatio.dom.geography.Country;
+import org.estatio.dom.lease.Lease;
+import org.estatio.dom.lease.LeaseType;
 import org.estatio.dom.party.Party;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
+import org.apache.isis.applib.annotation.TypicalLength;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 // no @DatastoreIdentity nor @Version, since inherited from supertype
 @Bookmarkable
+@Immutable
+
 public class BankAccount extends FinancialAccount {
 
     private Party bank;
@@ -94,7 +105,7 @@ public class BankAccount extends FinancialAccount {
     }
 
     // //////////////////////////////////////
-
+    @Hidden
     public BankAccount verifyIban() {
         IBANHelper.verifyAndUpdate(this);
         return this;
@@ -154,6 +165,40 @@ public class BankAccount extends FinancialAccount {
 
     public void setAccountNumber(final String accountNumber) {
         this.accountNumber = accountNumber;
+    }
+
+    @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.BankAccount.IBAN)
+    public BankAccount change(
+            final @Named("Iban") @TypicalLength(JdoColumnLength.BankAccount.IBAN) String iban,
+            final @Named("Name") String name,
+            final @Named("External Reference") @Optional String externalReference) {
+        setIban(iban);
+        setName(name);
+        setExternalReference(externalReference);
+
+        return this;
+    }
+
+    public String validateChange(
+            final String iban,
+            final String name,
+            final String externalReference) {
+        if (!IBANValidator.valid(iban)) {
+            return "Not a valid IBAN number";
+        }
+        return null;
+    }
+
+    public String default0Change() {
+        return getIban();
+    }
+
+    public String default1Change() {
+        return getName();
+    }
+
+    public String default2Change() {
+        return getExternalReference();
     }
 
 }

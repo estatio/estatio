@@ -20,11 +20,16 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 
+@Immutable
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
@@ -56,6 +61,32 @@ public class Organisation extends Party {
 
     public void setVatCode(final String vatCode) {
         this.vatCode = vatCode;
+    }
+
+    // //////////////////////////////////////
+
+    @Optional
+    public Organisation change(
+            final @Named("Name") String name,
+            final @Named("Vat Code") @Optional @RegEx(validation = RegexValidation.REFERENCE) String vatCode,
+            final @Named("Fiscal Code") @Optional @RegEx(validation = RegexValidation.REFERENCE) String fiscalCode) {
+        setName(name);
+        setVatCode(vatCode);
+        setFiscalCode(fiscalCode);
+
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public String default1Change() {
+        return getVatCode();
+    }
+
+    public String default2Change() {
+        return getFiscalCode();
     }
 
 }

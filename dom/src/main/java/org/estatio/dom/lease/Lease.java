@@ -47,6 +47,7 @@ import org.apache.isis.applib.annotation.Bulk;
 import org.apache.isis.applib.annotation.DescribedAs;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotPersisted;
@@ -989,6 +990,22 @@ public class Lease
 
     public final void injectInvoiceSummaries(final InvoiceSummariesForInvoiceRun invoiceSummaries) {
         this.invoiceSummaries = invoiceSummaries;
+    }
+
+    public Lease change(
+            final @Named("Name") String name,
+            final @Named("Lease Type") @Optional LeaseType leaseType) {
+        setName(name);
+        setLeaseType(leaseType);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public LeaseType default1Change() {
+        return getLeaseType();
     }
 
 }

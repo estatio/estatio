@@ -157,16 +157,6 @@ public class Guarantee
         this.description = description;
     }
 
-    public Guarantee changeDescription(
-            final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
-        setDescription(description);
-        return this;
-    }
-
-    public String default0ChangeDescription() {
-        return getDescription();
-    }
-
     // //////////////////////////////////////
 
     private LocalDate terminationDate;
@@ -192,16 +182,6 @@ public class Guarantee
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public Guarantee changeComments(
-            final @Named("Comments") @MultiLine(numberOfLines = 3) String comments) {
-        setComments(comments);
-        return this;
-    }
-
-    public String default0ChangeComments() {
-        return getComments();
     }
 
     // //////////////////////////////////////
@@ -240,4 +220,26 @@ public class Guarantee
         return getContractualAmount();
     }
 
+    public Guarantee change(
+            final @Named("Name") String name,
+            final @Named("Description") @Optional @MultiLine(numberOfLines = 3) String description,
+            final @Named("Comments") @MultiLine(numberOfLines = 3) String comments) {
+        setName(name);
+        setDescription(description);
+        setComments(comments);
+
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public String default1Change() {
+        return getDescription();
+    }
+
+    public String default2Change() {
+        return getComments();
+    }
 }

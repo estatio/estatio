@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
 
@@ -76,6 +77,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelOwner;
                         + "WHERE reference == :reference") })
 @AutoComplete(repository = Parties.class, action = "autoComplete")
 @Bookmarkable
+@Immutable
 public abstract class Party
         extends EstatioMutableObject<Party>
         implements WithNameComparable<Party>, WithReferenceUnique, CommunicationChannelOwner, AgreementRoleHolder {
@@ -109,7 +111,7 @@ public abstract class Party
     public String getName() {
         return name;
     }
-
+    
     public void setName(final String name) {
         this.name = name;
     }

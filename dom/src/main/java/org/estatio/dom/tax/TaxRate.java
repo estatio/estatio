@@ -30,6 +30,7 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.MultiLine;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
@@ -41,6 +42,8 @@ import org.estatio.dom.Chained;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithIntervalMutable;
+import org.estatio.dom.charge.Charge;
+import org.estatio.dom.charge.ChargeGroup;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -71,6 +74,7 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE tax == :tax "
                         + "&& endDate == :endDate")
 })
+@Immutable
 public class TaxRate
         extends EstatioMutableObject<TaxRate>
         implements Chained<TaxRate>, WithIntervalMutable<TaxRate> {
@@ -275,6 +279,29 @@ public class TaxRate
         setNext(rate);
         rate.setPrevious(this);
         return rate;
+    }
+
+    public TaxRate change(
+            final @Named("Tax") Tax tax,
+            final @Named("Percentage") @Optional BigDecimal percentage,
+            final @Named("External Reference") @Optional String externalReference) {
+
+        setTax(tax);
+        setPercentage(percentage);
+        setExternalReference(externalReference);
+        return this;
+    }
+
+    public Tax default0Change() {
+        return getTax();
+    }
+
+    public BigDecimal default1Change() {
+        return getPercentage();
+    }
+
+    public String default2Change() {
+        return getExternalReference();
     }
 
 }

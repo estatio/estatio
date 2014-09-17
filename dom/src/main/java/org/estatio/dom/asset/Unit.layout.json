@@ -9,13 +9,21 @@
             "name": {},
             "type": {},
             "property": {},
-            "externalReference": {}
+            "externalReference": {
+              "actions": {
+                "changeAsset": {}
+              }
+            }
           }
         },
         "Dates": {
           "members": {
             "startDate": {},
-            "endDate":{}
+            "endDate":{
+              "actions": {
+                "changeDates": {}
+              }
+            }
           }
         },
         "Areas": {
@@ -24,7 +32,11 @@
             "storageArea": {},
             "salesArea": {},
             "mezzanineArea": {},
-            "dehorsArea": {}
+            "dehorsArea": {
+              "actions": {
+                "changeAreas": {}
+              }
+            }
           }
         }
       }

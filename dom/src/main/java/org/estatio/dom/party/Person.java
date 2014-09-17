@@ -20,10 +20,17 @@ package org.estatio.dom.party;
 
 import javax.jdo.annotations.InheritanceStrategy;
 
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.RegexValidation;
 
+@Immutable
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 public class Person extends Party {
@@ -31,6 +38,7 @@ public class Person extends Party {
     private String initials;
 
     @javax.jdo.annotations.Column(length = JdoColumnLength.Person.INITIALS)
+    @MemberOrder(sequence = "2")
     public String getInitials() {
         return initials;
     }
@@ -77,6 +85,7 @@ public class Person extends Party {
     private PersonGenderType gender;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
+    @MemberOrder(sequence = "1")
     public PersonGenderType getGender() {
         return gender;
     }
@@ -99,6 +108,35 @@ public class Person extends Party {
     public void updating() {
         TitleBuffer tb = new TitleBuffer();
         setName(tb.append(getLastName()).append(",", getFirstName()).toString());
+    }
+
+    public Person change(
+            final @Named("Gender") PersonGenderType gender,
+            final @Named("initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
+            final @Named("First name") String firstName,
+            final @Named("Last name") String lastName) {
+        setGender(gender);
+        setInitials(initials);
+        setFirstName(firstName);
+        setLastName(lastName);
+        updating();
+        return this;
+    }
+
+    public PersonGenderType default0Change() {
+        return getGender();
+    }
+
+    public String default1Change() {
+        return getInitials();
+    }
+
+    public String default2Change() {
+        return getFirstName();
+    }
+
+    public String default3Change() {
+        return getLastName();
     }
 
 }
