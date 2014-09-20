@@ -6,7 +6,9 @@
         "General": {
           "members": {
             "reference": {},
-            "name": {}
+            "name": {},
+            "phoneNumber": {},
+            "emailAddress": {}
           }
         }
       }
@@ -21,7 +23,17 @@
     },
     {
       "span": 9,
-      "collections": {}
+      "collections": {
+        "relationships": {
+          "actions": {
+            "newRelationShip": {},
+            "newRelatedPerson": {}
+          },
+          "render": {
+            "value": "EAGERLY"
+          }
+        }	
+      }
     }
   ],
   "actions": {}

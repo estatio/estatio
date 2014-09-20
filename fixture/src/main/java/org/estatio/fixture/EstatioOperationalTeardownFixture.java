@@ -68,6 +68,7 @@ public class EstatioOperationalTeardownFixture extends FixtureScript {
         deleteFrom("FixedAsset");
         
         deleteFrom("PartyRegistration");
+        deleteFrom("PartyRelationship");
         deleteFrom("Organisation");
         deleteFrom("Person");
         deleteFrom("Party");

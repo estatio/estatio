@@ -6,13 +6,23 @@
         "General": {
           "members": {
             "reference": {},
-            "name": {},
+            "name": {}
+          }
+        },
+        "Registrations": {
+          "members": {
             "vatCode": {},
             "fiscalCode": {
               "actions": {
                 "change": {}
               }
             }
+          }
+        },
+        "Communication": {
+          "members": {
+            "phoneNumber": {},
+            "emailAddress": {}
           }
         }
       }
@@ -30,6 +40,15 @@
       "collections": {
         "communicationChannels": {
           "actions": {}
+        },
+        "relationships": {
+          "actions": {
+            "newRelationship": {},
+            "newRelatedPerson": {}
+          },
+          "render": {
+            "value": "EAGERLY"
+          }
         },
         "currentLeases": {
             "actions": {

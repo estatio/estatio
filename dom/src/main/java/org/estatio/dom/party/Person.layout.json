@@ -3,16 +3,30 @@
     {
       "span": 4,
       "memberGroups": {
-        "General": {
+        "Name": {
           "members": {
-            "gender": {},
-            "initials": {},
-            "firstName": {},
-            "lastName": {},
             "name": {},
+            "firstName": {},
+            "initials": {},
+            "lastName": {},
+            "gender": {},
             "reference": {
               "actions": {
                 "change": {}
+              }
+            }
+          }
+        },
+        "Contributed": {
+          "members": {
+            "phoneNumber": {
+              "hidden": {
+                "value": "OBJECT_FORMS"
+              }
+            },
+            "emailAddress": {
+              "hidden": {
+                "value": "OBJECT_FORMS"
               }
             }
           }
@@ -31,17 +45,26 @@
       "span": 8,
       "collections": {
         "currentLeases": {
-            "actions": {
-                "allLeases": {}
-            }
+          "actions": {
+            "allLeases": {}
+          }
         },
         "communicationChannels": {
           "actions": {}
         },
+        "relationships": {
+          "actions": {
+            "newRelationship": {},
+            "newRelatedPerson": {}
+          },
+          "render": {
+            "value": "EAGERLY"
+          }
+        },
         "currentBankMandates": {
-            "actions": {
-                "allMandates": {}
-            }
+          "actions": {
+            "allMandates": {}
+          }
         },
         "financialAccounts": {
           "actions": {}
@@ -54,6 +77,5 @@
       }
     }
   ],
-  "actions": {
-  }
+  "actions": {}
 }

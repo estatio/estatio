@@ -21,18 +21,31 @@ package org.estatio.dom.communicationchannel;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
-import javax.jdo.annotations.*;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.Identifier;
-import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionInteraction;
+import org.apache.isis.applib.annotation.BookmarkPolicy;
+import org.apache.isis.applib.annotation.Bookmarkable;
+import org.apache.isis.applib.annotation.Disabled;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.MultiLine;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithNameGetter;
 import org.estatio.dom.WithReferenceGetter;
-import org.estatio.dom.lease.tags.Activity;
-import org.estatio.dom.lease.tags.Sector;
 
 /**
  * Represents a mechanism for communicating with its
@@ -139,7 +152,7 @@ public abstract class CommunicationChannel
 
     @MemberOrder(sequence = "1")
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.TYPE_ENUM)
-    @Hidden(where = Where.OBJECT_FORMS)
+    @Hidden()
     public CommunicationChannelType getType() {
         return type;
     }

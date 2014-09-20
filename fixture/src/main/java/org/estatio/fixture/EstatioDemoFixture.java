@@ -65,5 +65,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         execute(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(), executionContext);
 
         execute(new GuaranteeForOxfTopModel001(), executionContext);
+        
+        execute(new PersonForGinoVannelli(), executionContext);
+        
     }
 }
