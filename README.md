@@ -1,9 +1,6 @@
 Estatio: an open source estate management system.
 =================================================
 
-
-tests [![Tests](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-01-tests/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-01-tests/) -*- analysis [![Code Analysis](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-02-analysis/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-02-analysis/) -*- packaging [![Packaging](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-03-packaging/badge/icon)](https://estatio.ci.cloudbees.com/job/github=estatio=estatio-03-package/)
-
 Estatio is modern and flexible property management software. It offers real estate professionals and service providers the power and flexibility to manage their business in a superior, flexible and cost-effective manner.
 
 ## Screenshots ##
@@ -78,7 +75,7 @@ Download using git:
  
     cd ..
     git clone https://github.com/estatio/estatio.git
-   cd estatio
+    cd estatio
 
 and build using maven:
 
@@ -130,7 +127,7 @@ Then browse to:
 
 ## Use Estatio ##
 
-* Login using root/root.  (Other user/passwords can be found in `webapp/sc/main/webapp/WEB-INF/shiro.ini`).
+* Login using estatio-admin/pass or estatio-user/pass.
 
 * Install some demo fixtures:
 
@@ -142,7 +139,7 @@ Then browse to:
 
 * Take a look around :-)
 
-This is still alpha software, but if you encounter any bugs, do [let us know](https://github.com/estatio/estatio/blob/master/pom.xml#L52).
+If you encounter any bugs, do [let us know](https://github.com/estatio/estatio/blob/master/pom.xml#L52).
 
 ## Implementation
 

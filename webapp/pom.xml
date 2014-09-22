@@ -193,8 +193,12 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.isisaddons.module.command</groupId>
             <artifactId>isis-module-command-dom</artifactId>
-            <version>${isis-module-command.version}</version>
         </dependency>
+        <dependency>
+                <groupId>org.isisaddons.module.security</groupId>
+            <artifactId>isis-module-security-dom</artifactId>
+        </dependency>
+
 
         <!-- to run using WebServer (optional) -->
         <dependency>
@@ -230,7 +234,6 @@ language governing permissions and limitations under the License.
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-
 
         <!-- 3rd party dependency -->
         <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
@@ -274,13 +277,18 @@ language governing permissions and limitations under the License.
             <artifactId>jsch</artifactId>
             <version>0.1.51</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
             <version>1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
     </dependencies>
 
     <profiles>

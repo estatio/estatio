@@ -91,9 +91,9 @@ language governing permissions and limitations under the License.
         <isis-module-publishingeventserializer.version>1.6.0</isis-module-publishingeventserializer.version>
         <isis-module-devutils.version>1.6.0</isis-module-devutils.version>
         <isis-module-settings.version>1.6.0</isis-module-settings.version>
+        <isis-module-security.version>1.6.1</isis-module-security.version>
 
-
-		<quartz-scheduler.version>2.2.1</quartz-scheduler.version>
+        <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
         
         <danhaywood-isis-wicket-excel.version>1.4.0</danhaywood-isis-wicket-excel.version>
         <danhaywood-isis-wicket-fullcalendar2.version>1.4.0</danhaywood-isis-wicket-fullcalendar2.version>
@@ -675,6 +675,19 @@ language governing permissions and limitations under the License.
                     </exclusion>
                 </exclusions>
             </dependency>
+
+
+            <dependency>
+                <groupId>org.isisaddons.module.command</groupId>
+                <artifactId>isis-module-command-dom</artifactId>
+                <version>${isis-module-command.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.isisaddons.module.security</groupId>
+                <artifactId>isis-module-security-dom</artifactId>
+                <version>${isis-module-security.version}</version>
+            </dependency>
+
 
             <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
             <dependency>

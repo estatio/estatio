@@ -28,6 +28,8 @@ import org.estatio.fixture.party.*;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.isisaddons.module.security.fixture.scripts.EstatioSecurityModuleAppSetUp;
+
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     public EstatioDemoFixture() {
@@ -67,6 +69,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         execute(new GuaranteeForOxfTopModel001(), executionContext);
         
         execute(new PersonForGinoVannelli(), executionContext);
+
+        execute(new EstatioSecurityModuleAppSetUp(), executionContext);
+
         
     }
 }
