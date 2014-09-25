@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import com.google.common.eventbus.Subscribe;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -24,7 +26,7 @@ import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
 import org.estatio.dom.party.Persons;
 
-@DomainService
+@DomainService(repositoryFor = PartyRelationship.class)
 public class PartyRelationships extends EstatioDomainService<PartyRelationship> {
 
     public PartyRelationships() {
@@ -68,8 +70,8 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
     @NotInServiceMenu
     public PartyRelationship newRelatedPerson(
             final Party party,
-            final @Named("reference") @Optional @RegEx(validation = RegexValidation.Person.REFERENCE) String reference,
-            final @Named("initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
+            final @Named("Reference") @Optional @RegEx(validation = RegexValidation.Person.REFERENCE) String reference,
+            final @Named("Initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
             final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName,
             final @Named("Relationship type") String relationshipType,
@@ -100,6 +102,52 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
             final String emailAddress) {
         return PartyRelationshipType.toTitlesFor(from.getClass(), Person.class);
     }
+
+    // //////////////////////////////////////
+    
+    @Subscribe
+    public void on(final Party.RemoveEvent ev) {
+        Party sourceParty = (Party) ev.getSource();
+        Party replacementParty = ev.getReplacement();
+
+        switch (ev.getPhase()) {
+        case VALIDATE:
+            final List<PartyRelationship> partyRelationships = findByParty(sourceParty);
+            if (partyRelationships.size() > 0 && replacementParty == null) {
+                ev.invalidate("Party is being used in a relationship: remove those or provide a replacement");
+            }
+            putPartyRelationships(ev, partyRelationships);
+            break;
+        case EXECUTING:
+            for (PartyRelationship partyRelationship : getPartyRelationships(ev)) {
+                if (partyRelationship.getFrom().equals(sourceParty)) {
+                    partyRelationship.setFrom(replacementParty);
+                }
+                if (partyRelationship.getTo().equals(sourceParty)) {
+                    partyRelationship.setTo(replacementParty);
+                }
+            }
+            break;
+        default:
+            break;
+        }
+
+    }
+
+    // //////////////////////////////////////
+
+    private static final String KEY = PartyRelationship.class.getName() + ".partyRelationships";
+
+    private static void putPartyRelationships(Party.RemoveEvent ev, List<PartyRelationship> partyRelationships) {
+        ev.put(KEY, partyRelationships);
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private static List<PartyRelationship> getPartyRelationships(Party.RemoveEvent ev) {
+        return (List<PartyRelationship>) ev.get(KEY);
+    }
+
+    // //////////////////////////////////////
 
     @Inject
     private Persons persons;

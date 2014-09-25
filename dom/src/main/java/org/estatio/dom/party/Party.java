@@ -26,14 +26,20 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
+import org.apache.isis.applib.Identifier;
+import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.AutoComplete;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Disabled;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
+import org.estatio.app.security.EstatioRole;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.RegexValidation;
@@ -111,7 +117,7 @@ public abstract class Party
     public String getName() {
         return name;
     }
-    
+
     public void setName(final String name) {
         this.name = name;
     }
@@ -149,6 +155,38 @@ public abstract class Party
 
     public void setRegistrations(final SortedSet<PartyRegistration> registrations) {
         this.registrations = registrations;
+    }
+
+    // //////////////////////////////////////
+
+    public static class RemoveEvent extends ActionInteractionEvent<Party> {
+        private static final long serialVersionUID = 1L;
+
+        public RemoveEvent(
+                final Party source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+
+        public Party getReplacement() {
+            return (Party) (this.getArguments().isEmpty() ? null : getArguments().get(0));
+        }
+    }
+
+    @ActionInteraction(Party.RemoveEvent.class)
+    public void remove() {
+        removeAndReplace(null);
+    }
+
+    @ActionInteraction(Party.RemoveEvent.class)
+    public void removeAndReplace(@Named("Replace with") @Optional Party replacement) {
+        getContainer().remove(this);
+        getContainer().flush();
+    }
+
+    public boolean hideRemoveAndReplace(Party party) {
+        return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
 
 }

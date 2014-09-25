@@ -17,38 +17,42 @@
 package org.estatio.integtests;
 
 import java.util.List;
+
 import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
+
 import org.apache.log4j.Level;
+
 import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
+import org.apache.isis.objectstore.jdo.applib.service.exceprecog.ExceptionRecognizerCompositeForJdoObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
-import org.apache.isis.objectstore.jdo.datanucleus.service.eventbus.EventBusServiceJdo;
-import org.apache.isis.objectstore.jdo.datanucleus.service.support.IsisJdoSupportImpl;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
     public EstatioIntegTestBuilder() {
 
-        //no need to add, because each test will set up its own test fixtures anyway.
-        //withFixtures(new EstatioBaseLineFixture());
+        // no need to add, because each test will set up its own test fixtures
+        // anyway.
+        // withFixtures(new EstatioBaseLineFixture());
         withLoggingAt(Level.INFO);
         with(testConfiguration());
         with(new DataNucleusPersistenceMechanismInstaller());
 
         withServicesIn("org.estatio"
-                      ,"org.apache.isis.core.wrapper"
-                      ,"org.apache.isis.applib"
-                      ,"org.apache.isis.core.metamodel.services"
-                      ,"org.apache.isis.core.runtime.services"
-                      ,"org.apache.isis.objectstore.jdo.datanucleus.service.support" // IsisJdoSupportImpl
-                      ,"org.apache.isis.objectstore.jdo.datanucleus.service.eventbus" // EventBusServiceJdo
-                );
+                , "org.apache.isis.core.wrapper"
+                , "org.apache.isis.applib"
+                , "org.apache.isis.core.metamodel.services"
+                , "org.apache.isis.core.runtime.services"
+                , "org.apache.isis.objectstore.jdo.datanucleus.service.support" // IsisJdoSupportImpl
+                , "org.apache.isis.objectstore.jdo.datanucleus.service.eventbus" // EventBusServiceJdo
+        );
 
         withServices(
-                new FakeExcelService());
+                new FakeExcelService(),
+                new ExceptionRecognizerCompositeForJdoObjectStore());
     }
 
     private static IsisConfiguration testConfiguration() {
@@ -56,20 +60,21 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         testConfiguration.addRegisterEntitiesPackagePrefix("org.estatio");
 
         // uncomment to use log4jdbc instead
-        //testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-        //"net.sf.log4jdbc.DriverSpy");
+        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+        // "net.sf.log4jdbc.DriverSpy");
 
-//            testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL", "jdbc:hsqldb:mem:test;sqllog=3");
+        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
+        // "jdbc:hsqldb:mem:test;sqllog=3");
 
-//
-//          testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
-//             "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
-//             testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
-//             "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//             testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
-//             "estatio");
-//             testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
-//             "estatio");
+        //
+        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionURL",
+        // "jdbc:sqlserver://localhost:1433;instance=.;databaseName=estatio");
+        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionDriverName",
+        // "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionUserName",
+        // "estatio");
+        // testConfiguration.put("isis.persistor.datanucleus.impl.javax.jdo.option.ConnectionPassword",
+        // "estatio");
 
         return testConfiguration;
     }

@@ -22,14 +22,13 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.memento.MementoService.Memento;
 
-import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.party.Party;
 
-public class PartyRelationshipView extends EstatioViewModel {
+@ViewModel
+public class PartyRelationshipView {
 
     public PartyRelationshipView() {
     }
@@ -45,35 +44,6 @@ public class PartyRelationshipView extends EstatioViewModel {
         setRelationshipType(partyRelationship.getRelationshipType());
         setStartDate(partyRelationship.getStartDate());
         setEndDate(partyRelationship.getEndDate());
-    }
-
-    // //////////////////////////////////////
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public String viewModelMemento() {
-        final Memento memento = getMementoService().create();
-        memento.set("from", getBookmarkService().bookmarkFor(this.getFrom()));
-        memento.set("to", getBookmarkService().bookmarkFor(this.getTo()));
-        memento.set("relationshipType", this.getRelationshipType() == null ? null : this.getRelationshipType().name());
-        memento.set("startDate", this.getStartDate());
-        memento.set("endDate", this.getEndDate());
-        return memento.asString();
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public void viewModelInit(final String mementoStr) {
-        final Memento memento = getMementoService().parse(mementoStr);
-        this.setFrom(getBookmarkService().lookup(memento.get("from", Bookmark.class), Party.class));
-        this.setTo(getBookmarkService().lookup(memento.get("to", Bookmark.class), Party.class));
-        this.setRelationshipType(PartyRelationshipType.valueOf(memento.get("relationshipType", String.class)));
-        this.setStartDate(memento.get("startDate", LocalDate.class));
-        this.setEndDate(memento.get("endDate", LocalDate.class));
     }
 
     // //////////////////////////////////////

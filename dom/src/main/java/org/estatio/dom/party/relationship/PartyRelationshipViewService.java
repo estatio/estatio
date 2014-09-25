@@ -54,10 +54,9 @@ public class PartyRelationshipViewService extends EstatioService<PartyRelationsh
     public List<PartyRelationshipView> relationships(Party party) {
         List<PartyRelationshipView> partyRelationshipViews = new ArrayList<PartyRelationshipView>();
         final List<PartyRelationship> relationships = partyRelationships.findByParty(party);
-        for (PartyRelationship pr : relationships) {
-            PartyRelationshipView template = getContainer().injectServicesInto(new PartyRelationshipView(pr, party));
-            final String viewModelMemento = template.viewModelMemento();
-            partyRelationshipViews.add(getContainer().newViewModelInstance(PartyRelationshipView.class, viewModelMemento));
+        for (PartyRelationship partyRelationship : relationships) {
+            PartyRelationshipView viewModel = new PartyRelationshipView(partyRelationship, party);
+            partyRelationshipViews.add(viewModel);
         }
         return partyRelationshipViews;
     }

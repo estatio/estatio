@@ -19,7 +19,9 @@
 package org.estatio.integtests.party.relationship;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -29,12 +31,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
+import org.apache.isis.applib.services.eventbus.AbstractInteractionEvent.Phase;
 
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.Party.RemoveEvent;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.Persons;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
 import org.estatio.dom.party.relationship.PartyRelationships;
@@ -65,6 +70,9 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
     @Inject
     Parties parties;
 
+    @Inject
+    Persons persons;
+    
     @Inject
     CommunicationChannels communicationChannels;
 
@@ -124,9 +132,43 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             assertThat(wife.getInitials(), is(J));
             assertThat(wife.getLastName(), is(LOPEZ));
             assertThat(communicationChannels.findByOwner(wife).size(), is(2));
-            assertThat(communicationChannels.findByOwnerAndType(wife,CommunicationChannelType.EMAIL_ADDRESS).first().getName(), is(JLOPEZ_EXAMPLE_COM));
-            assertThat(communicationChannels.findByOwnerAndType(wife,CommunicationChannelType.PHONE_NUMBER).first().getName(), is(_555_12345));
+            assertThat(communicationChannels.findByOwnerAndType(wife, CommunicationChannelType.EMAIL_ADDRESS).first().getName(), is(JLOPEZ_EXAMPLE_COM));
+            assertThat(communicationChannels.findByOwnerAndType(wife, CommunicationChannelType.PHONE_NUMBER).first().getName(), is(_555_12345));
         }
+    }
+
+    public static class OnPartyRemove extends PartyRelationshipsTest {
+
+        @Test
+        public void invalidBecauseNoReplacement() throws Exception {
+            //when
+            Party.RemoveEvent event = new RemoveEvent(parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE), null, (Object[]) null);
+            event.setPhase(Phase.VALIDATE);
+            relationships.on(event);
+            
+            //then
+            assertTrue(event.isInvalid());
+        }
+
+        
+        @Test
+        public void executingReplacesParty() throws Exception {
+            //when
+            final Party parent = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
+            final Party currentChild = parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE);
+            final Party replacementChild = persons.newPerson("TEST", "JR", "JR", "Ewing");
+            Party.RemoveEvent event = new RemoveEvent(currentChild, null, replacementChild);
+            event.setPhase(Phase.VALIDATE);
+            relationships.on(event);
+            event.setPhase(Phase.EXECUTING);
+            relationships.on(event);
+            
+            //then
+            assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
+            assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
+
+        }
+        
     }
 
 }
