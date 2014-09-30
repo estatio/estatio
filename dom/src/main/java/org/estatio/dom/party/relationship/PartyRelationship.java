@@ -17,6 +17,7 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithInterval;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.valuetypes.LocalDateInterval;
@@ -136,6 +137,17 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
     }
 
     // //////////////////////////////////////
+
+    private String description;
+
+    @Column(allowsNull = "true", length = JdoColumnLength.DESCRIPTION)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
     @Inject
     private ClockService clockService;

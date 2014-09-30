@@ -18,12 +18,14 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.dom.party.PersonGenderType;
+
 public class PersonForJohnDoe extends PersonAbstract {
 
     public static final String PARTY_REFERENCE = "JDOE";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        createPerson(PARTY_REFERENCE, "J", "John", "Doe", executionContext);
+        createPerson(PARTY_REFERENCE, "J", "John", "Doe", PersonGenderType.MALE, executionContext);
     }
 }

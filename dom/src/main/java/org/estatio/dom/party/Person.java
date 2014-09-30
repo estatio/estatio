@@ -105,7 +105,7 @@ public class Person extends Party {
                 "At least the first name or initials have to be filled in" : null;
     }
 
-    public void updating() {
+    private void updateName() {
         TitleBuffer tb = new TitleBuffer();
         setName(tb.append(getLastName()).append(",", getFirstName()).toString());
     }
@@ -119,7 +119,7 @@ public class Person extends Party {
         setInitials(initials);
         setFirstName(firstName);
         setLastName(lastName);
-        updating();
+        updateName();
         return this;
     }
 

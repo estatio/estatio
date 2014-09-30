@@ -18,6 +18,7 @@
  */
 package org.estatio.fixture.party;
 
+import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
 
 public class PersonForGinoVannelli extends PersonAbstract {
@@ -31,6 +32,7 @@ public class PersonForGinoVannelli extends PersonAbstract {
                 "G",
                 "Gino",
                 "Vannelli",
+                PersonGenderType.MALE,
                 "+31201234567",
                 "gino@topmodel.example.com",
                 OrganisationForTopModel.PARTY_REFERENCE,

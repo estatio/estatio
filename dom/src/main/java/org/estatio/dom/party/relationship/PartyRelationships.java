@@ -24,6 +24,7 @@ import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.Persons;
 
 @DomainService(repositoryFor = PartyRelationship.class)
@@ -49,10 +50,12 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
     public PartyRelationship newRelationship(
             final @Named("From party") Party from,
             final @Named("To party") Party to,
-            final @Named("Relationship type") String relationshipType) {
+            final @Named("Relationship type") String relationshipType, 
+            final @Named("Description") @Optional String description) {
         PartyRelationship relationship = getContainer().injectServicesInto(PartyRelationshipType.createWithToTitle(from, to, relationshipType));
         relationship.setFrom(from);
         relationship.setTo(to);
+        relationship.setDescription(description);
         persistIfNotAlready(relationship);
         return relationship;
     }
@@ -74,21 +77,22 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
             final @Named("Initials") @Optional @RegEx(validation = RegexValidation.Person.INITIALS) String initials,
             final @Named("First name") @Optional String firstName,
             final @Named("Last name") String lastName,
+            final @Named("Gender") PersonGenderType gender,
             final @Named("Relationship type") String relationshipType,
-            final @Named("Phone number") @Optional @RegEx(validation = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber,
-            final @Named("Email address") @Optional @RegEx(validation = RegexValidation.CommunicationChannel.EMAIL) String emailAddress
+            final @Named("Description") @Optional String description,
+            final @Named("Phone number") @Optional @RegEx(validation = RegexValidation.CommunicationChannel.PHONENUMBER) String phoneNumber, final @Named("Email address") @Optional @RegEx(validation = RegexValidation.CommunicationChannel.EMAIL) String emailAddress
             ) {
 
         RandomCodeGenerator10Chars generator = new RandomCodeGenerator10Chars();
         String newReference = reference == null ? generator.generateRandomCode().toUpperCase() : reference;
-        Person person = persons.newPerson(newReference, initials, firstName, lastName);
+        Person person = persons.newPerson(newReference, initials, firstName, lastName, gender);
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             communicationChannels.newPhoneOrFax(person, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         }
         if (emailAddress != null && !emailAddress.isEmpty()) {
             communicationChannels.newEmail(person, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
         }
-        return newRelationship(party, person, relationshipType);
+        return newRelationship(party, person, relationshipType, description);
     }
 
     public Set<String> choices5NewRelatedPerson(
@@ -97,7 +101,9 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
             final String initials,
             final String firstName,
             final String lastName,
+            final PersonGenderType gender,
             final String type,
+            final String description,
             final String phoneNumber,
             final String emailAddress) {
         return PartyRelationshipType.toTitlesFor(from.getClass(), Person.class);
@@ -106,6 +112,7 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
     // //////////////////////////////////////
     
     @Subscribe
+    @Programmatic
     public void on(final Party.RemoveEvent ev) {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();

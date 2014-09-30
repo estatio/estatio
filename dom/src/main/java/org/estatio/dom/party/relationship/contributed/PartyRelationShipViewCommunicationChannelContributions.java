@@ -11,7 +11,9 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.annotation.TypicalLength;
 
+import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
 import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
@@ -23,12 +25,14 @@ public class PartyRelationShipViewCommunicationChannelContributions {
 
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
+    @TypicalLength(JdoColumnLength.PHONE_NUMBER)
     public String phoneNumber(PartyRelationshipView prv) {
         return channelTitle(prv, CommunicationChannelType.PHONE_NUMBER);
     }
 
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
+    @TypicalLength(JdoColumnLength.DESCRIPTION)
     public String emailAddress(PartyRelationshipView prv) {
         return channelTitle(prv, CommunicationChannelType.EMAIL_ADDRESS);
     }

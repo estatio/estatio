@@ -44,6 +44,7 @@ public class PartyRelationshipView {
         setRelationshipType(partyRelationship.getRelationshipType());
         setStartDate(partyRelationship.getStartDate());
         setEndDate(partyRelationship.getEndDate());
+        setDescription(partyRelationship.getDescription());
     }
 
     // //////////////////////////////////////
@@ -112,6 +113,7 @@ public class PartyRelationshipView {
     private LocalDate startDate;
 
     @MemberOrder(sequence = "4")
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -125,12 +127,26 @@ public class PartyRelationshipView {
     private LocalDate endDate;
 
     @MemberOrder(sequence = "5")
+    @Hidden(where = Where.PARENTED_TABLES)
     public LocalDate getEndDate() {
         return endDate;
     }
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    // //////////////////////////////////////
+
+    private String description;
+
+    @MemberOrder(sequence = "6")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
     }
 
 }

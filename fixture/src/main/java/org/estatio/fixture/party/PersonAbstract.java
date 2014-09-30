@@ -29,8 +29,8 @@ import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.States;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.Persons;
-import org.estatio.dom.party.relationship.PartyRelationshipType;
 import org.estatio.dom.party.relationship.PartyRelationships;
 import org.estatio.fixture.EstatioFixtureScript;
 
@@ -44,8 +44,9 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
             final String initials,
             final String firstName,
             final String lastName,
+            final PersonGenderType gender,
             final ExecutionContext executionContext) {
-        Party party = persons.newPerson(reference, initials, firstName, lastName);
+        Party party = persons.newPerson(reference, initials, firstName, lastName, gender);
         return executionContext.add(this, party.getReference(), party);
     }
 
@@ -54,23 +55,25 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
             final String initials,
             final String firstName,
             final String lastName,
+            final PersonGenderType gender,
             final String phoneNumber,
             final String emailAddress,
             final String fromPartyStr,
             final String relationshipType,
             final ExecutionContext executionContext) {
         // new person
-        Party party = persons.newPerson(reference, initials, firstName, lastName);
+        Party party = persons.newPerson(reference, initials, firstName, lastName, gender);
         communicationChannelContributedActions.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
         communicationChannelContributedActions.newPhoneOrFax(party, CommunicationChannelType.PHONE_NUMBER, phoneNumber);
         // associate person
         Party from = parties.findPartyByReference(fromPartyStr);
-        partyRelationships.newRelationship(from, party, relationshipType);
+        partyRelationships.newRelationship(from, party, relationshipType, null);
         return executionContext.add(this, party.getReference(), party);
     }
-    
+
     public List<String> choices7CreatePerson() {
-        return Collections.emptyList(); // TODO: return list of choices for argument N
+        return Collections.emptyList(); // TODO: return list of choices for
+                                        // argument N
     }
 
     // //////////////////////////////////////

@@ -9,23 +9,10 @@
             "relationshipFromTitle": {},
             "to": {},
             "relationshipToTitle": {},
-            "relationshipType":  {
-              "typicalLength": {
-                "value": 10
-              }
-            },
-            "startDate": {
-              "disabled": {},
-              "typicalLength": {
-                "value": 12
-              }
-            },
-            "endDate": {
-              "disabled": {},
-              "typicalLength": {
-                "value": 12
-              }
-            }
+            "relationshipType":  {},
+            "startDate": {},
+            "endDate": {},
+            "description": {}
           }
         },
         "Communication": {

@@ -41,13 +41,11 @@ public class Persons extends EstatioDomainService<Person> {
             final @Named("reference") @Optional @RegEx(validation=RegexValidation.Person.REFERENCE) String reference,
             final @Named("initials") @Optional @RegEx(validation=RegexValidation.Person.INITIALS) String initials,
             final @Named("First name") @Optional String firstName,
-            final @Named("Last name") String lastName) {
+            final @Named("Last name") String lastName,
+            final @Named("Gender") PersonGenderType gender) {
         final Person person = newTransientInstance(Person.class);
         person.setReference(reference);
-        person.setInitials(initials);
-        person.setLastName(lastName);
-        person.setFirstName(firstName);
-        person.updating();
+        person.change(gender, initials, firstName, lastName);
         persist(person);
         return person;
     }

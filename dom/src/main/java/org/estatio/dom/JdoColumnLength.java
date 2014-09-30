@@ -40,7 +40,8 @@ public final class JdoColumnLength {
     public final static int PROPER_NAME = 50;
 
     public final static int PHONE_NUMBER = 20;
-    public final static int EMAIL_ADDRESS = 50;
+
+    public final static int EMAIL_ADDRESS = 254; //http://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address 
 
     public final static int FQCN = 254;
     public static final int OBJECT_IDENTIFIER = 20;

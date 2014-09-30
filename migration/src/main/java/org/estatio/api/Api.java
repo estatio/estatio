@@ -105,7 +105,11 @@ import org.estatio.dom.party.Organisations;
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.Persons;
+import org.estatio.dom.party.relationship.PartyRelationship;
+import org.estatio.dom.party.relationship.PartyRelationshipType;
+import org.estatio.dom.party.relationship.PartyRelationships;
 import org.estatio.dom.tax.Tax;
 import org.estatio.dom.tax.TaxRate;
 import org.estatio.dom.tax.Taxes;
@@ -249,10 +253,16 @@ public class Api extends AbstractFactoryAndRepository {
             @Named("reference") String reference,
             @Named("initials") @Optional String initials,
             @Named("firstName") String firstName,
-            @Named("lastName") String lastName) {
+            @Named("lastName") String lastName,
+            @Named("Gender") @Optional String gender) {
         Person person = (Person) parties.findPartyByReference(reference);
         if (person == null) {
-            person = persons.newPerson(reference, initials, firstName, lastName);
+            person = persons.newPerson(
+                    reference,
+                    initials,
+                    firstName,
+                    lastName,
+                    gender == null ? PersonGenderType.UNKNOWN : PersonGenderType.valueOf(gender));
         }
         person.setFirstName(firstName);
         person.setLastName(lastName);
@@ -454,6 +464,99 @@ public class Api extends AbstractFactoryAndRepository {
                 comm = communicationChannels.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
                 comm.setReference(reference);
             }
+        }
+
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putPartyEmailAddress(
+            @Named("partyReference") String partyReference,
+            @Named("emailAddress") String emailAddress,
+            @Named("legal") @Optional Boolean legal
+            ) {
+        Party party = fetchParty(partyReference);
+
+        CommunicationChannel comm = emailAddresses.findByEmailAddress(party, emailAddress);
+        if (comm == null) {
+            comm = communicationChannels.newEmail(party, CommunicationChannelType.EMAIL_ADDRESS, emailAddress);
+            if (legal != null) {
+                comm.setLegal(legal);
+            }
+        }
+
+    }
+
+    @ActionSemantics(Of.IDEMPOTENT)
+    public void putPartyContact(
+            @Named("partyReference") String partyReference,
+            @Named("sequence") Integer sequence,
+            @Named("name") String name,
+            @Named("type") String type,
+            @Named("value") String value
+            ) {
+        String toPartyReference = partyReference.concat("-").concat(sequence.toString());
+        Person toPerson = (Person) parties.findPartyByReferenceOrNull(toPartyReference);
+        String UNKOWN_LASTNAME = "*Unknown";
+        if (toPerson == null) {
+            Party fromParty = fetchParty(partyReference);
+            PartyRelationship relationShip = partyRelationships.newRelatedPerson(
+                    fromParty,
+                    toPartyReference,
+                    "",
+                    "",
+                    UNKOWN_LASTNAME,
+                    PersonGenderType.UNKNOWN,
+                    PartyRelationshipType.CONTACT.toTitle(),
+                    null,
+                    null, null);
+            toPerson = (Person) relationShip.getTo();
+        }
+        Person person = (Person) toPerson;
+        switch (type) {
+        case "name":
+            if (person.getLastName().equals(UNKOWN_LASTNAME)) {
+                String nameParts[] = value.split(" ");
+                setNames(person, nameParts);
+            }
+            break;
+
+        case "phone":
+            if (phoneOrFaxNumbers.findByPhoneOrFaxNumber(toPerson, value) == null) {
+                communicationChannels.newPhoneOrFax(toPerson, CommunicationChannelType.PHONE_NUMBER, value);
+            }
+            break;
+
+        case "email":
+            if (person.getLastName().equals(UNKOWN_LASTNAME)) {
+                String namePart = value.split("@")[0];
+                String nameParts[] = namePart.split("\\.");
+                setNames(person, nameParts);
+            }
+            if (emailAddresses.findByEmailAddress(toPerson, value) == null) {
+                communicationChannels.newEmail(toPerson, CommunicationChannelType.EMAIL_ADDRESS, value.toLowerCase());
+            }
+            break;
+
+        default:
+            break;
+        }
+
+    }
+
+    private void setNames(Person person, String[] nameParts) {
+        if (nameParts.length > 1) {
+            person.change(
+                    PersonGenderType.UNKNOWN,
+                    "",
+                    StringUtils.capitalize(nameParts[0].toLowerCase()),
+                    StringUtils.capitalize(nameParts[1].toLowerCase()));
+        }
+        if (nameParts.length == 1) {
+            person.change(
+                    PersonGenderType.UNKNOWN,
+                    "",
+                    "",
+                    StringUtils.capitalize(nameParts[0].toLowerCase()));
         }
     }
 
@@ -980,175 +1083,94 @@ public class Api extends AbstractFactoryAndRepository {
 
     // //////////////////////////////////////
 
+    @Inject
     private Agreements agreements;
 
-    public void injectAgreements(Agreements agreements) {
-        this.agreements = agreements;
-    }
-
+    @Inject
     private BankMandates bankMandates;
 
-    public void injectBankMandates(BankMandates bankMandates) {
-        this.bankMandates = bankMandates;
-    }
-
+    @Inject
     private ClockService clockService;
 
-    public void setClockService(ClockService clockService) {
-        this.clockService = clockService;
-    }
-
+    @Inject
     private Countries countries;
 
-    public void injectCountries(final Countries countries) {
-        this.countries = countries;
-    }
-
+    @Inject
     private States states;
 
-    public void injectStates(final States states) {
-        this.states = states;
-    }
-
+    @Inject
     private Units units;
 
-    public void injectUnits(final Units units) {
-        this.units = units;
-    }
-
+    @Inject
     private Properties properties;
 
-    public void injectProperties(final Properties properties) {
-        this.properties = properties;
-    }
-
+    @Inject
     private Parties parties;
 
-    public void injectParties(final Parties parties) {
-        this.parties = parties;
-    }
-
+    @Inject
     private Organisations organisations;
 
-    public void injectOrganisations(final Organisations organisations) {
-        this.organisations = organisations;
-    }
-
+    @Inject
     private Persons persons;
 
-    public void injectOrganisations(final Persons persons) {
-        this.persons = persons;
-    }
-
+    @Inject
     private CommunicationChannelContributions communicationChannelContributions;
 
-    public void injectCommunicationChannelContributedActions(final CommunicationChannelContributions communicationChannelContributedActions) {
-        this.communicationChannelContributions = communicationChannelContributedActions;
-    }
-
+    @Inject
     private CommunicationChannels communicationChannels;
 
-    public void injectCommunicationChannels(final CommunicationChannels communicationChannels) {
-        this.communicationChannels = communicationChannels;
-    }
-
+    @Inject
     private PostalAddresses postalAddresses;
 
-    public void injectPostalAddresses(PostalAddresses postalAddresses) {
-        this.postalAddresses = postalAddresses;
-    }
-
+    @Inject
     private EmailAddresses emailAddresses;
 
-    public void injectEmailAddresses(EmailAddresses emailAddresses) {
-        this.emailAddresses = emailAddresses;
-    }
-
+    @Inject
     private PhoneOrFaxNumbers phoneOrFaxNumbers;
 
-    public void setPhoneOrFaxNumbers(PhoneOrFaxNumbers phoneOrFaxNumbers) {
-        this.phoneOrFaxNumbers = phoneOrFaxNumbers;
-    }
-
+    @Inject
     private Leases leases;
 
-    public void injectLeaseRepository(final Leases leases) {
-        this.leases = leases;
-    }
-
+    @Inject
     private AgreementRoleTypes agreementRoleTypes;
 
-    public void injectAgreementRoleTypes(AgreementRoleTypes agreementRoleTypes) {
-        this.agreementRoleTypes = agreementRoleTypes;
-    }
-
+    @Inject
     private Occupancies occupancies;
 
-    public void injectLeaseUnits(final Occupancies leaseUnits) {
-        this.occupancies = leaseUnits;
-    }
-
+    @Inject
     private Taxes taxes;
 
-    public void injectTaxes(final Taxes taxes) {
-        this.taxes = taxes;
-    }
-
+    @Inject
     private Charges charges;
 
-    public void injectCharges(final Charges charges) {
-        this.charges = charges;
-    }
-
+    @Inject
     private ChargeGroups chargeGroups;
 
-    public void injectChargeGroups(final ChargeGroups chargeGroups) {
-        this.chargeGroups = chargeGroups;
-    }
-
+    @Inject
     private Indices indices;
 
-    public void injectIndices(final Indices indices) {
-        this.indices = indices;
-    }
-
+    @Inject
     private FinancialAccounts financialAccounts;
 
-    public void injectFinancialAccounts(FinancialAccounts financialAccounts) {
-        this.financialAccounts = financialAccounts;
-    }
-
+    @Inject
     private Invoices invoices;
 
-    public void injectInvoices(Invoices invoices) {
-        this.invoices = invoices;
-    }
-
+    @Inject
     private AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes;
 
-    public void injectAgreementRoleCommunicationChannelTypes(AgreementRoleCommunicationChannelTypes agreementRoleCommunicationChannelTypes) {
-        this.agreementRoleCommunicationChannelTypes = agreementRoleCommunicationChannelTypes;
-    }
-
+    @Inject
     private LeaseTypes leaseTypes;
 
-    public void injectLeaseTypes(LeaseTypes leaseTypes) {
-        this.leaseTypes = leaseTypes;
-    }
-
+    @Inject
     private FixedAssetFinancialAccounts fixedAssetFinancialAccounts;
 
-    public void injectFixedAssetFinancialAccounts(final FixedAssetFinancialAccounts fixedAssetFinancialAccounts) {
-        this.fixedAssetFinancialAccounts = fixedAssetFinancialAccounts;
-    }
-
+    @Inject
     private Guarantees guarantees;
-
-    public void injectBankGuarantees(final Guarantees bankGuarantees) {
-        this.guarantees = bankGuarantees;
-    }
 
     @Inject
     private FinancialAccountTransactions financialAccountTransactions;
+
+    @Inject
+    private PartyRelationships partyRelationships;
 
 }

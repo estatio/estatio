@@ -19,7 +19,6 @@
 package org.estatio.integtests.party.relationship;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -39,6 +38,7 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.Party.RemoveEvent;
 import org.estatio.dom.party.Person;
+import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.Persons;
 import org.estatio.dom.party.relationship.PartyRelationship;
 import org.estatio.dom.party.relationship.PartyRelationshipType;
@@ -72,7 +72,7 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
 
     @Inject
     Persons persons;
-    
+
     @Inject
     CommunicationChannels communicationChannels;
 
@@ -107,7 +107,7 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             PartyRelationship relationship = relationships.newRelationship(
                     fromParty,
                     toParty,
-                    PartyRelationshipType.EMPLOYMENT.toTitle());
+                    PartyRelationshipType.EMPLOYMENT.toTitle(), null);
             assertThat(relationship.getFrom(), is(fromParty));
             assertThat(relationship.getTo(), is(toParty));
             assertThat(relationship.getRelationshipType().toTitle(), is(PartyRelationshipType.EMPLOYMENT.toTitle()));
@@ -125,7 +125,7 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
         @Test
         public void happyCase() throws Exception {
             final Party husband = parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE);
-            PartyRelationship relationship = relationships.newRelatedPerson(husband, LOPEZ, J, JENNIFER, LOPEZ, PartyRelationshipType.MARRIAGE.toTitle(), _555_12345, JLOPEZ_EXAMPLE_COM);
+            PartyRelationship relationship = relationships.newRelatedPerson(husband, LOPEZ, J, JENNIFER, LOPEZ, PersonGenderType.FEMALE, PartyRelationshipType.MARRIAGE.toTitle(), null, _555_12345, JLOPEZ_EXAMPLE_COM);
             Person wife = (Person) relationship.getTo();
             assertThat(wife.getReference(), is(LOPEZ));
             assertThat(wife.getFirstName(), is(JENNIFER));
@@ -141,34 +141,33 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
 
         @Test
         public void invalidBecauseNoReplacement() throws Exception {
-            //when
+            // when
             Party.RemoveEvent event = new RemoveEvent(parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE), null, (Object[]) null);
             event.setPhase(Phase.VALIDATE);
             relationships.on(event);
-            
-            //then
+
+            // then
             assertTrue(event.isInvalid());
         }
 
-        
         @Test
         public void executingReplacesParty() throws Exception {
-            //when
+            // when
             final Party parent = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
             final Party currentChild = parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE);
-            final Party replacementChild = persons.newPerson("TEST", "JR", "JR", "Ewing");
+            final Party replacementChild = persons.newPerson("TEST", "JR", "JR", "Ewing", PersonGenderType.MALE);
             Party.RemoveEvent event = new RemoveEvent(currentChild, null, replacementChild);
             event.setPhase(Phase.VALIDATE);
             relationships.on(event);
             event.setPhase(Phase.EXECUTING);
             relationships.on(event);
-            
-            //then
+
+            // then
             assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
             assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
 
         }
-        
+
     }
 
 }
