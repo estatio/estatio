@@ -25,10 +25,9 @@ import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKal
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.*;
+import org.estatio.fixture.security.EstatioSecurityModuleAppSetUp;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-
-import org.isisaddons.module.security.fixture.scripts.EstatioSecurityModuleAppSetUp;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 

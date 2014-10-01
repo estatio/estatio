@@ -14,20 +14,21 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts.users;
+package org.estatio.fixture.security.users;
 
 import java.util.Arrays;
 
 import org.isisaddons.module.security.dom.user.AccountType;
-import org.isisaddons.module.security.fixture.scripts.perms.EstatioAdminRoleAndPermissions;
 import org.isisaddons.module.security.seed.scripts.AbstractUserAndRolesFixtureScript;
 
-public class AdminUser extends AbstractUserAndRolesFixtureScript {
+import org.estatio.fixture.security.perms.EstatioAdminRoleAndPermissions;
+
+public class EstatioAdmin extends AbstractUserAndRolesFixtureScript {
 
     public static final String USER_NAME = "estatio-admin";
     public static final String PASSWORD = "pass";
 
-    public AdminUser() {
+    public EstatioAdmin() {
         super(
                 USER_NAME,
                 PASSWORD,

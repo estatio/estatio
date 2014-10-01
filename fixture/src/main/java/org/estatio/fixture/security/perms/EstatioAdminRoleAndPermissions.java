@@ -14,32 +14,26 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts.perms;
+package org.estatio.fixture.security.perms;
 
 import org.isisaddons.module.security.dom.permission.ApplicationPermissionMode;
 import org.isisaddons.module.security.dom.permission.ApplicationPermissionRule;
 import org.isisaddons.module.security.seed.scripts.AbstractRoleAndPermissionsFixtureScript;
 
-public class EstatioUserRoleAndPermissions extends AbstractRoleAndPermissionsFixtureScript {
+public class EstatioAdminRoleAndPermissions extends AbstractRoleAndPermissionsFixtureScript {
 
-    public static final String ROLE_NAME = "estatio-user";
+    public static final String ROLE_NAME = "estatio-admin";
 
-    public EstatioUserRoleAndPermissions() {
-        super(ROLE_NAME, "Estatio user");
+    public EstatioAdminRoleAndPermissions() {
+        super(ROLE_NAME, "Estatio admin");
     }
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        newPermission("org.estatio.app");
-        newPermission("org.estatio.dom");
-        newPermission("org.estatio.services");
-        newPermission("org.estatio.webapp.services.other");
-    }
-
-    private void newPermission(String packageSuffix) {
         newPackagePermissions(
                 ApplicationPermissionRule.ALLOW,
                 ApplicationPermissionMode.CHANGING,
-                packageSuffix);
+                "org");
     }
+
 }

@@ -14,17 +14,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts.tenancy;
+package org.estatio.fixture.security.tenancy;
 
-import org.apache.isis.applib.fixturescripts.FixtureScript.ExecutionContext;
-
-public class FranceTenancy extends AbstractTenancyFixtureScript {
-
-    public static final String TENANCY_NAME = "france";
+public class AllTenancies extends AbstractTenancyFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        create(TENANCY_NAME, executionContext);
+        execute(new ItalyTenancy(), executionContext);
+        execute(new FranceTenancy(), executionContext);
+        execute(new SwedenTenancy(), executionContext);
     }
 
 }

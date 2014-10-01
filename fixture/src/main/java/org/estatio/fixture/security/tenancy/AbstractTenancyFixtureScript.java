@@ -14,16 +14,23 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts.perms;
+package org.estatio.fixture.security.tenancy;
 
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancies;
+import org.isisaddons.module.security.dom.tenancy.ApplicationTenancy;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-public class EstatioRolesAndPermissions extends FixtureScript {
+public abstract class AbstractTenancyFixtureScript extends FixtureScript {
 
-    @Override
-    protected void execute(ExecutionContext executionContext) {
-        execute(new EstatioAdminRoleAndPermissions(), executionContext);
-        execute(new EstatioUserRoleAndPermissions(), executionContext);
+    protected ApplicationTenancy create(
+            final String name,
+            final ExecutionContext executionContext) {
+        final ApplicationTenancy tenancy = applicationTenancies.newTenancy(name);
+        executionContext.add(this, name, tenancy);
+        return tenancy;
     }
+
+    @javax.inject.Inject
+    private ApplicationTenancies applicationTenancies;
 
 }

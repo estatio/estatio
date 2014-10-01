@@ -14,13 +14,15 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts.userrole;
+package org.estatio.fixture.security.tenancy;
 
-import org.isisaddons.module.security.fixture.scripts.users.UserUser;
-import org.isisaddons.module.security.seed.scripts.IsisModuleSecurityRegularUserRoleAndPermissions;
+public class ItalyTenancy extends AbstractTenancyFixtureScript {
 
-public class UserUser_Has_EstatioPoweruserRole extends AbstractUserRoleFixtureScript {
-    public UserUser_Has_EstatioPoweruserRole() {
-        super(UserUser.USER_NAME, IsisModuleSecurityRegularUserRoleAndPermissions.ROLE_NAME);
+    public static final String TENANCY_NAME = "italy";
+
+    @Override
+    protected void execute(ExecutionContext executionContext) {
+        create(TENANCY_NAME, executionContext);
     }
+
 }

@@ -14,13 +14,14 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts.userrole;
+package org.estatio.fixture.security.userrole;
 
-import org.isisaddons.module.security.fixture.scripts.users.UserUser;
 import org.isisaddons.module.security.seed.scripts.IsisModuleSecurityRegularUserRoleAndPermissions;
 
-public class UserUser_Has_IsisSecurityModuleRegularRole extends AbstractUserRoleFixtureScript {
-    public UserUser_Has_IsisSecurityModuleRegularRole() {
-        super(UserUser.USER_NAME, IsisModuleSecurityRegularUserRoleAndPermissions.ROLE_NAME);
+import org.estatio.fixture.security.users.EstatioUser;
+
+public class EstatioUser_Has_IsisSecurityModuleRegularRole extends AbstractUserRoleFixtureScript {
+    public EstatioUser_Has_IsisSecurityModuleRegularRole() {
+        super(EstatioUser.USER_NAME, IsisModuleSecurityRegularUserRoleAndPermissions.ROLE_NAME);
     }
 }

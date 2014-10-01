@@ -14,7 +14,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.isisaddons.module.security.fixture.scripts;
+package org.estatio.fixture.security;
 
 import java.util.List;
 
@@ -70,5 +70,10 @@ public class EstatioSecurityModuleAppFixturesService extends FixtureScripts {
         getContainer().warnUser("No rules found in fixture; returning all results");
         return fixtureResultList;
     }
+    
+    // //////////////////////////////////////
+    
+
+    
 
 }
