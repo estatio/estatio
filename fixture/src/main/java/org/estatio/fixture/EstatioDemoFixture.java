@@ -18,16 +18,27 @@
  */
 package org.estatio.fixture;
 
-import org.estatio.fixture.financial.*;
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+
+import org.estatio.fixture.financial.BankAccountAndMandateForPoison;
+import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
+import org.estatio.fixture.financial.BankAccountForAcme;
+import org.estatio.fixture.financial.BankAccountForHelloWorld;
+import org.estatio.fixture.financial.BankAccountForMediaX;
+import org.estatio.fixture.financial.BankAccountForMiracle;
+import org.estatio.fixture.financial.BankAccountForPret;
 import org.estatio.fixture.guarantee.GuaranteeForOxfTopModel001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.*;
-import org.estatio.fixture.party.*;
-import org.estatio.fixture.security.EstatioSecurityModuleAppSetUp;
-
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003;
+import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
+import org.estatio.fixture.lease.LeaseForOxfPret004;
+import org.estatio.fixture.lease.LeaseItemAndLeaseTermForRentForKalPoison001;
+import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
+import org.estatio.fixture.party.PersonForGinoVannelli;
+import org.estatio.fixture.party.PersonForLinusTorvalds;
 
 public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
@@ -66,11 +77,8 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         execute(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(), executionContext);
 
         execute(new GuaranteeForOxfTopModel001(), executionContext);
-        
+
         execute(new PersonForGinoVannelli(), executionContext);
 
-        execute(new EstatioSecurityModuleAppSetUp(), executionContext);
-
-        
     }
 }

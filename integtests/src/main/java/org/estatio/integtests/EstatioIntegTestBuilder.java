@@ -42,6 +42,7 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         with(new DataNucleusPersistenceMechanismInstaller());
 
         withServicesIn("org.estatio"
+                , "org.isisaddons.module.security.dom"
                 , "org.apache.isis.core.wrapper"
                 , "org.apache.isis.applib"
                 , "org.apache.isis.core.metamodel.services"
