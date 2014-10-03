@@ -14,7 +14,7 @@ echo "from: $from" >&2
 echo "to  : $to" >&2
 echo "" >&2
 
-rm /tmp/$$ 2>/dev/null >/dev/null
+echo "repo,who,yyyy-mm-dd,day,date,descr" > /tmp/$$
 
 for a in `cat gitlog.repos`
 do  
@@ -23,25 +23,22 @@ do
 
 	pushd $repodir >/dev/null
 
-	git log --since="$from" --until="$to" --pretty=format:'%cn,%ai,%aD,%s' >/tmp/$$.$repo.1
-	cat /tmp/$$.$repo.1 | sed "s/^/${repo},/" > /tmp/$$.$repo.2
-
-	cat /tmp/$$.$repo.2 >> /tmp/$$
+	git log --since="$from" --until="$to" --pretty=format:'%cn,%ai,%aD,"%s"' | sed "s/^/${repo},/" >>/tmp/$$
 
 	popd >/dev/null
+	echo "" >>/tmp/$$
 done
 
 
 
-cat /tmp/$$ | sort -k3
+cat /tmp/$$ | sort -k3 | grep -v "^$"
 
-for a in `cat gitlog.repos`
-do  
-	repo=`echo $a | cut -d: -f1`
-	rm /tmp/$$.$repo.1
-	rm /tmp/$$.$repo.2
-done
-
+#for a in `cat gitlog.repos`
+#do  
+	#repo=`echo $a | cut -d: -f1`
+	#rm /tmp/$$.$repo
+#done
+#
 rm /tmp/$$
 
 
