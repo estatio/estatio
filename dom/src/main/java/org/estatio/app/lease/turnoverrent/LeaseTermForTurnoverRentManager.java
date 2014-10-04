@@ -19,7 +19,6 @@ package org.estatio.app.lease.turnoverrent;
 
 import java.util.List;
 
-import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
@@ -33,7 +32,10 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.module.excel.dom.ExcelService;
 
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.asset.Property;
@@ -44,21 +46,8 @@ import org.estatio.dom.lease.LeaseTerms;
 
 @Immutable
 @Bookmarkable
+@ViewModel
 public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
-
-    @Override
-    public String viewModelMemento() {
-        return budgetAuditService.mementoFor(this);
-    }
-
-    @Override
-    public void viewModelInit(String mementoStr) {
-        budgetAuditService.initOf(mementoStr, this);
-    }
-
-    // //////////////////////////////////////
-    // property (property)
-    // //////////////////////////////////////
 
     private Property property;
 
@@ -79,15 +68,13 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
             @Named("Start date") final LocalDate startDate) {
         setProperty(property);
         setStartDate(startDate);
-        return budgetAuditService.newManager(this);
+        return this;
     }
 
     public List<LocalDate> choices1SelectProperty(Property property) {
         return leaseTerms.findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
     }
 
-    // //////////////////////////////////////
-    // startDate (property)
     // //////////////////////////////////////
 
     private LocalDate startDate;
@@ -110,7 +97,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
     public LeaseTermForTurnoverRentManager selectStartDate(
             @Named("Start date") final LocalDate startDate) {
         setStartDate(startDate);
-        return budgetAuditService.newManager(this);
+        return this;
     }
 
     public List<LocalDate> choices0SelectStartDate() {
@@ -137,7 +124,7 @@ public class LeaseTermForTurnoverRentManager extends EstatioViewModel {
             public LeaseTermForTurnoverRentLineItem apply(final LeaseTerm leaseTerm) {
                 LeaseTermForTurnoverRentLineItem template = newTransientInstance(LeaseTermForTurnoverRentLineItem.class);
                 template.modifyLeaseTerm((LeaseTermForTurnoverRent) leaseTerm);
-                return budgetAuditService.newLineItem(template);
+                return template;
             }
         };
     }

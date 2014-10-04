@@ -19,6 +19,8 @@ package org.estatio.dom.invoice.viewmodel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Named;
@@ -82,10 +84,7 @@ public abstract class InvoiceSummaryAbstract extends EstatioViewModel {
 
     // //////////////////////////////////////
 
+    @Inject
     protected Invoices invoicesService;
-
-    final public void injectInvoicesService(final Invoices invoicesService) {
-        this.invoicesService = invoicesService;
-    }
 
 }

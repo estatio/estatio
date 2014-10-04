@@ -34,7 +34,7 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.memento.MementoService.Memento;
+import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
@@ -83,53 +83,21 @@ import org.estatio.dom.invoice.Invoice;
                                 " \"Invoice\".\"dueDate\"")
         })
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByDueDate", language = "JDOQL",
-            value = "SELECT " +
-                    "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate " +
-                    "WHERE " +
-                    "dueDate == :dueDate")
+        @javax.jdo.annotations.Query(
+                name = "findByDueDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDate " +
+                        "WHERE " +
+                        "dueDate == :dueDate")
 })
-
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
+@ViewModel
 public class InvoiceSummaryForPropertyDueDate extends InvoiceSummaryAbstract {
 
-    public String iconName(){
+    public String iconName() {
         return "InvoiceSummary";
-    }
-    
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public String viewModelMemento() {
-        final Memento memento = getMementoService().create();
-
-        memento.set("reference", getReference())
-                .set("dueDate", getDueDate())
-                .set("netAmount", getNetAmount())
-                .set("vatAmount", getVatAmount())
-                .set("grossAmount", getGrossAmount())
-                .set("total", getTotal());
-
-        return memento.asString();
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public void viewModelInit(final String mementoStr) {
-        final Memento memento = getMementoService().parse(mementoStr);
-
-        setReference(memento.get("reference", String.class));
-        setDueDate(memento.get("dueDate", LocalDate.class));
-        setNetAmount(memento.get("netAmount", BigDecimal.class));
-        setVatAmount(memento.get("vatAmount", BigDecimal.class));
-        setGrossAmount(memento.get("grossAmount", BigDecimal.class));
-        setTotal(memento.get("total", Integer.class));
     }
 
     // //////////////////////////////////////

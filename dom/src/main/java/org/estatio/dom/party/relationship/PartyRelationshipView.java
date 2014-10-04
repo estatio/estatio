@@ -25,10 +25,11 @@ import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.party.Party;
 
 @ViewModel
-public class PartyRelationshipView {
+public class PartyRelationshipView extends EstatioViewModel {
 
     public PartyRelationshipView() {
     }

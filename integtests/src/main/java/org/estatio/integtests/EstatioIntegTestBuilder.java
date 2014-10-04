@@ -18,17 +18,16 @@ package org.estatio.integtests;
 
 import java.util.List;
 
-import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
-
 import org.apache.log4j.Level;
 
-import org.apache.isis.applib.ViewModel;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.applib.service.exceprecog.ExceptionRecognizerCompositeForJdoObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
+
+import org.isisaddons.module.excel.dom.ExcelService;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
@@ -41,14 +40,15 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         with(testConfiguration());
         with(new DataNucleusPersistenceMechanismInstaller());
 
-        withServicesIn("org.estatio"
-                , "org.isisaddons.module.security.dom"
-                , "org.apache.isis.core.wrapper"
-                , "org.apache.isis.applib"
-                , "org.apache.isis.core.metamodel.services"
-                , "org.apache.isis.core.runtime.services"
-                , "org.apache.isis.objectstore.jdo.datanucleus.service.support" // IsisJdoSupportImpl
-                , "org.apache.isis.objectstore.jdo.datanucleus.service.eventbus" // EventBusServiceJdo
+        withServicesIn(
+                "org.estatio",
+                "org.isisaddons",
+                "org.apache.isis.core.wrapper",
+                "org.apache.isis.applib",
+                "org.apache.isis.core.metamodel.services",
+                "org.apache.isis.core.runtime.services",
+                "org.apache.isis.objectstore.jdo.datanucleus.service.support", // IsisJdoSupportImpl
+                "org.apache.isis.objectstore.jdo.datanucleus.service.eventbus" // EventBusServiceJdo
         );
 
         withServices(
@@ -80,14 +80,14 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         return testConfiguration;
     }
 
-    public static class FakeExcelService implements ExcelService {
+    public static class FakeExcelService extends ExcelService {
         @Override
         public <T> Blob toExcel(List<T> domainObjects, Class<T> cls, String fileName) throws Exception {
             return null;
         }
 
         @Override
-        public <T extends ViewModel> List<T> fromExcel(Blob excelBlob, Class<T> cls) throws Exception {
+        public <T> List<T> fromExcel(Blob excelBlob, Class<T> cls) throws Exception {
             return null;
         }
     }

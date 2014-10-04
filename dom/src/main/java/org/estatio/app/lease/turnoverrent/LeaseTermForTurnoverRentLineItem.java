@@ -24,33 +24,15 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.app.EstatioViewModel;
 import org.estatio.dom.lease.LeaseTermForTurnoverRent;
 
 @Paged(Integer.MAX_VALUE)
 @MemberGroupLayout(columnSpans = { 4, 4, 4, 0 }, left = { "Selected" }, right = { "Next" })
+@ViewModel
 public class LeaseTermForTurnoverRentLineItem extends EstatioViewModel {
-
-    // //////////////////////////////////////
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public String viewModelMemento() {
-        return auditService.mementoFor(this);
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public void viewModelInit(String memento) {
-        auditService.initOf(memento, this);
-    }
-
-    // //////////////////////////////////////
 
     private LeaseTermForTurnoverRent leaseTerm;
 

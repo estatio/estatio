@@ -18,34 +18,35 @@
  */
 package org.estatio.app;
 
-import org.apache.isis.applib.AbstractViewModel;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
+import org.apache.isis.applib.AbstractContainedObject;
 import org.apache.isis.applib.services.eventbus.EventBusService;
-import org.apache.isis.applib.services.memento.MementoService;
 
 import org.estatio.services.clock.ClockService;
 
-public abstract class EstatioViewModel extends AbstractViewModel {
+public abstract class EstatioViewModel extends AbstractContainedObject {
 
     private ClockService clockService;
+
     protected ClockService getClockService() {
         return clockService;
     }
+
     public final void injectClockService(final ClockService clockService) {
         this.clockService = clockService;
     }
-    
+
     // //////////////////////////////////////
 
-    
     /**
-     * a default value is used to prevent null pointers for objects 
+     * a default value is used to prevent null pointers for objects
      * being initialized where the service has not yet been injected into.
      */
     private EventBusService eventBusService = EventBusService.NOOP;
+
     protected EventBusService getEventBusService() {
         return eventBusService;
     }
+
     /**
      * Unlike domain services, domain objects are NOT automatically registered
      * with the {@link EventBusService}; Isis makes no guarantees as to whether
@@ -53,25 +54,5 @@ public abstract class EstatioViewModel extends AbstractViewModel {
      */
     public final void injectEventBusService(final EventBusService eventBusService) {
         this.eventBusService = eventBusService;
-    }    
-
-    // //////////////////////////////////////
-
-    
-    private MementoService mementoService;
-    protected MementoService getMementoService() {
-        return mementoService;
-    }
-
-    final public void injectMementoService(final MementoService mementoService) {
-        this.mementoService = mementoService;
-    }
-
-    private BookmarkService bookmarkService;
-    protected BookmarkService getBookmarkService() {
-        return bookmarkService;
-    }
-    public final void injectBookmarkService(BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
     }
 }

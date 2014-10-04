@@ -14,7 +14,8 @@ software distributed under the License is distributed on an
 either express or implied. See the License for the specific
 language governing permissions and limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -22,7 +23,7 @@ language governing permissions and limitations under the License.
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
-    
+
     <!--
     to run unit tests with clover code coverage:
     mvn clean clover2:setup test clover2:aggregate clover2:clover -o
@@ -92,14 +93,14 @@ language governing permissions and limitations under the License.
         <isis-module-devutils.version>1.6.0</isis-module-devutils.version>
         <isis-module-settings.version>1.6.0</isis-module-settings.version>
         <isis-module-security.version>1.6.2</isis-module-security.version>
+        <isis-module-excel.version>1.7.0-SNAPSHOT</isis-module-excel.version>
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
-        
+
         <danhaywood-isis-wicket-excel.version>1.4.0</danhaywood-isis-wicket-excel.version>
         <danhaywood-isis-wicket-fullcalendar2.version>1.4.0</danhaywood-isis-wicket-fullcalendar2.version>
         <danhaywood-isis-wicket-gmap3.version>1.4.0</danhaywood-isis-wicket-gmap3.version>
         <danhaywood-isis-wicket-wickedcharts.version>1.4.0</danhaywood-isis-wicket-wickedcharts.version>
-        <danhaywood-isis-domainservice-excel.version>1.4.0</danhaywood-isis-domainservice-excel.version>
         <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0</danhaywood-isis-domainservice-stringinterpolator.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
@@ -112,7 +113,7 @@ language governing permissions and limitations under the License.
 
         <checkstyle.configLocation>${siteBaseDir}/codequality/checkstyle.xml</checkstyle.configLocation>
         <pmd.ruleset>${siteBaseDir}/codequality/pmd.xml</pmd.ruleset>
-        
+
         <clover.version>3.1.12</clover.version>
         <maven.clover.licenseLocation>${siteBaseDir}/codequality/clover.license</maven.clover.licenseLocation>
     </properties>
@@ -216,7 +217,7 @@ language governing permissions and limitations under the License.
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>2.5</version>
                 </plugin>
-                
+
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.4</version>
@@ -260,7 +261,7 @@ language governing permissions and limitations under the License.
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.3</version>
                 </plugin>
-               
+
                 <plugin>
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>maven-jetty-plugin</artifactId>
@@ -346,7 +347,8 @@ language governing permissions and limitations under the License.
                         <quiet>true</quiet>
                         <doctitle>${project.name} ${project.version}</doctitle>
                         <windowtitle>${project.name} ${project.version}</windowtitle>
-                        <testDoctitle>${project.name} ${project.version} (TEST API)</testDoctitle>
+                        <testDoctitle>${project.name} ${project.version}
+                            (TEST API)</testDoctitle>
                         <testWindowtitle>${project.name}
                             ${project.version} (TEST API)
                         </testWindowtitle>
@@ -687,7 +689,11 @@ language governing permissions and limitations under the License.
                 <artifactId>isis-module-security-dom</artifactId>
                 <version>${isis-module-security.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.isisaddons.module.excel</groupId>
+                <artifactId>isis-module-excel-dom</artifactId>
+                <version>${isis-module-excel.version}</version>
+            </dependency>
 
             <!-- transitively includes cglib:cglib-nodep:2.1_3 and org.objenesis:objenesis:1.0 -->
             <dependency>
@@ -698,18 +704,18 @@ language governing permissions and limitations under the License.
 
 
             <!-- scheduler -->
-			<dependency>
-				<groupId>org.quartz-scheduler</groupId>
-				<artifactId>quartz</artifactId>
-				<version>${quartz-scheduler.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.quartz-scheduler</groupId>
-				<artifactId>quartz-jobs</artifactId>
-				<version>${quartz-scheduler.version}</version>
-			</dependency>
-			
-			
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz-scheduler.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
+                <version>${quartz-scheduler.version}</version>
+            </dependency>
+
+
 
 
             <!-- viewer extensions -->
@@ -756,15 +762,6 @@ language governing permissions and limitations under the License.
 
             <!-- domain services -->
 
-            <!-- EXCEL DOMAIN SERVICE: https://github.com/danhaywood/isis-domainservice-excel -->
-            <dependency>
-                <groupId>com.danhaywood.isis.domainservice</groupId>
-                <artifactId>danhaywood-isis-domainservice-excel</artifactId>
-                <version>${danhaywood-isis-domainservice-excel.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- STRINGINTERPOLATOR DOMAIN SERVICE: https://github.com/danhaywood/isis-domainservice-stringinterpolator -->
             <dependency>
                 <groupId>com.danhaywood.isis.domainservice</groupId>
@@ -777,11 +774,11 @@ language governing permissions and limitations under the License.
                 <artifactId>chemistry-opencmis-client-impl</artifactId>
                 <version>0.10.0</version>
             </dependency>
-            
+
 
         </dependencies>
     </dependencyManagement>
-    
+
     <reporting>
         <plugins>
             <plugin>

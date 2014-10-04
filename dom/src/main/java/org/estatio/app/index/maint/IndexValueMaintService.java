@@ -19,10 +19,13 @@ package org.estatio.app.index.maint;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
-import com.danhaywood.isis.domainservice.excel.applib.ExcelService;
+
 import com.google.common.collect.Lists;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
@@ -30,6 +33,9 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.services.memento.MementoService.Memento;
 import org.apache.isis.applib.value.Blob;
+
+import org.isisaddons.module.excel.dom.ExcelService;
+
 import org.estatio.dom.EstatioService;
 
 
@@ -72,42 +78,6 @@ public class IndexValueMaintService extends EstatioService<IndexValueMaintServic
         List<IndexValueMaintLineItem> lineItems = 
                 excelService.fromExcel(spreadsheet, IndexValueMaintLineItem.class);
         return lineItems;
-    }
-
-    
-    // //////////////////////////////////////
-    // memento for lease term "line item"
-    // //////////////////////////////////////
-    
-    String mementoFor(final IndexValueMaintLineItem lineItem) {
-        final Memento memento = getMementoService().create();
-
-        memento.set("reference", lineItem.getReference());
-        
-        memento.set("baseFactor", lineItem.getBaseFactor());
-        memento.set("baseStartDate", lineItem.getBaseStartDate());
-        
-        memento.set("valueStartDate", lineItem.getValueStartDate());
-        memento.set("value", lineItem.getValue());
-
-        return memento.asString();
-    }
-    
-    void initOf(final String mementoStr, final IndexValueMaintLineItem lineItem) {
-        final Memento memento = getMementoService().parse(mementoStr);
-
-        lineItem.setReference(memento.get("reference", String.class));
-
-        lineItem.setBaseFactor(memento.get("baseFactor", BigDecimal.class));
-        lineItem.setBaseStartDate(memento.get("baseStartDate", LocalDate.class));
-        
-        lineItem.setValueStartDate(memento.get("valueStartDate", LocalDate.class));
-        lineItem.setValue(memento.get("value", BigDecimal.class));
-    }
-
-    IndexValueMaintLineItem newLineItem(IndexValueMaintLineItem lineItem) {
-        final String memento = mementoFor(lineItem);
-        return getContainer().newViewModelInstance(IndexValueMaintLineItem.class, memento);
     }
 
     // //////////////////////////////////////

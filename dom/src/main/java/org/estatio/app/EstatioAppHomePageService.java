@@ -23,12 +23,13 @@ import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.HomePage;
+
 import org.estatio.dom.EstatioService;
 
 @DomainService(menuOrder = "90")
 @Hidden
 public class EstatioAppHomePageService extends EstatioService<EstatioAppHomePageService> {
-    
+
     public EstatioAppHomePageService() {
         super(EstatioAppHomePageService.class);
     }
@@ -36,7 +37,7 @@ public class EstatioAppHomePageService extends EstatioService<EstatioAppHomePage
     @ActionSemantics(Of.SAFE)
     @HomePage
     public EstatioAppDashboard lookup() {
-        return newViewModelInstance(EstatioAppDashboard.class, "dashboard");
+        return new EstatioAppDashboard();
     }
 
 }

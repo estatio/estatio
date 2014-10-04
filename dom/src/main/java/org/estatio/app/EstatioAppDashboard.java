@@ -20,9 +20,12 @@ package org.estatio.app;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
+import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.dom.event.Event;
 import org.estatio.dom.event.Events;
@@ -30,27 +33,17 @@ import org.estatio.dom.lease.Lease;
 import org.estatio.dom.lease.Leases;
 
 @Named("Dashboard")
+@ViewModel
 public class EstatioAppDashboard extends EstatioViewModel {
-    
+
     private static final int MONTHS = 3;
 
     public String title() {
         return "Dashboard";
     }
-    
+
     public String iconName() {
         return "Dashboard";
-    }
-
-    // //////////////////////////////////////
-
-    @Override
-    public void viewModelInit(final String memento) {
-    }
-
-    @Override
-    public String viewModelMemento() {
-        return "dashboard";
     }
 
     // //////////////////////////////////////
@@ -69,18 +62,10 @@ public class EstatioAppDashboard extends EstatioViewModel {
 
     // //////////////////////////////////////
 
+    @Inject
     private Leases leases;
 
-    public final void injectLeases(final Leases leases) {
-        this.leases = leases;
-    }
-    
-
+    @Inject
     private Events events;
-    
-    public final void injectEvents(final Events events) {
-        this.events = events;
-    }
-    
-    
+
 }

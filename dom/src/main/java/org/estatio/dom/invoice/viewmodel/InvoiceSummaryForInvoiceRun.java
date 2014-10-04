@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.TypicalLength;
-import org.apache.isis.applib.services.memento.MementoService.Memento;
+import org.apache.isis.applib.annotation.ViewModel;
 
 import org.estatio.dom.invoice.Invoice;
 
@@ -86,6 +86,7 @@ import org.estatio.dom.invoice.Invoice;
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
+@ViewModel
 public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     public String iconName() {
@@ -94,36 +95,6 @@ public class InvoiceSummaryForInvoiceRun extends InvoiceSummaryAbstract {
 
     public String title() {
         return "Invoice run ".concat(getRunId().substring(0, 21));
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public String viewModelMemento() {
-        final Memento memento = getMementoService().create();
-
-        memento.set("runId", getRunId())
-                .set("netAmount", getNetAmount())
-                .set("vatAmount", getVatAmount())
-                .set("grossAmount", getGrossAmount())
-                .set("total", getTotal());
-
-        return memento.asString();
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public void viewModelInit(final String mementoStr) {
-        final Memento memento = getMementoService().parse(mementoStr);
-
-        setRunId(memento.get("runId", String.class));
-        setNetAmount(memento.get("netAmount", BigDecimal.class));
-        setVatAmount(memento.get("vatAmount", BigDecimal.class));
-        setGrossAmount(memento.get("grossAmount", BigDecimal.class));
-        setTotal(memento.get("total", Integer.class));
     }
 
     // //////////////////////////////////////

@@ -24,7 +24,6 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.jdom2.Element;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.Bookmarkable;
@@ -35,8 +34,8 @@ import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.ViewModel;
 import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.services.memento.MementoService.Memento;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
@@ -85,64 +84,21 @@ import org.estatio.dom.invoice.InvoiceStatus;
                                 "  \"Invoice\".\"status\"")
         })
 @javax.jdo.annotations.Queries({
-    @javax.jdo.annotations.Query(
-            name = "findByStatus", language = "JDOQL",
-            value = "SELECT " +
-                    "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
-                    "WHERE " +
-                    "status == :status ")
+        @javax.jdo.annotations.Query(
+                name = "findByStatus", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.invoice.viewmodel.InvoiceSummaryForPropertyDueDateStatus " +
+                        "WHERE " +
+                        "status == :status ")
 })
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @Bookmarkable
 @Immutable
+@ViewModel
 public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstract {
 
-    public String iconName(){
+    public String iconName() {
         return "InvoiceSummary";
-    }
-    
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public String viewModelMemento() {
-        final Memento memento = getMementoService().create();
-
-        memento.set("reference", getReference())
-                .set("dueDate", getDueDate())
-                .set("status", getStatus())
-                .set("netAmount", getNetAmount())
-                .set("vatAmount", getVatAmount())
-                .set("grossAmount", getGrossAmount())
-                .set("total", "" + getTotal());
-
-        return memento.asString();
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public void viewModelInit(final String mementoStr) {
-        final Memento memento = getMementoService().parse(mementoStr);
-
-        setReference(memento.get("reference", String.class));
-        setDueDate(memento.get("dueDate", LocalDate.class));
-        setStatus(memento.get("status", String.class));
-        setNetAmount(memento.get("netAmount", BigDecimal.class));
-        setVatAmount(memento.get("vatAmount", BigDecimal.class));
-        setGrossAmount(memento.get("grossAmount", BigDecimal.class));
-        setTotal(memento.get("total", Integer.class));
-    }
-
-    static void set(final Element memento, final String name, final Object value) {
-        if (value != null) {
-            memento.addContent(new Element(name).setText(value.toString()));
-        }
-    }
-
-    static String get(final Element el, final String name) {
-        return el.getChild(name).getText();
     }
 
     // //////////////////////////////////////

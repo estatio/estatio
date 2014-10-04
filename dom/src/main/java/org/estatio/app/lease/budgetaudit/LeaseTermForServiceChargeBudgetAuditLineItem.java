@@ -19,59 +19,42 @@ package org.estatio.app.lease.budgetaudit;
 
 import java.math.BigDecimal;
 
-import org.estatio.app.EstatioViewModel;
-import org.estatio.dom.lease.LeaseTermForServiceCharge;
-
 import org.apache.isis.applib.annotation.MemberGroupLayout;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Paged;
 import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.annotation.ViewModel;
+
+import org.estatio.app.EstatioViewModel;
+import org.estatio.dom.lease.LeaseTermForServiceCharge;
 
 @Paged(Integer.MAX_VALUE)
-@MemberGroupLayout(columnSpans={4,4,4,0}, left={"Selected"}, right={"Next"})
+@MemberGroupLayout(columnSpans = { 4, 4, 4, 0 }, left = { "Selected" }, right = { "Next" })
+@ViewModel
 public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewModel {
-    
-    // //////////////////////////////////////
-    
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public String viewModelMemento() {
-        return budgetAuditService.mementoFor(this);
-    }
-
-    /**
-     * {@link org.apache.isis.applib.ViewModel} implementation.
-     */
-    @Override
-    public void viewModelInit(String memento) {
-        budgetAuditService.initOf(memento, this);
-    }
-
-    // //////////////////////////////////////
 
     private LeaseTermForServiceCharge leaseTerm;
-    
-    @Title(sequence="1")
-    @MemberOrder(name="Selected", sequence="1")
+
+    @Title(sequence = "1")
+    @MemberOrder(name = "Selected", sequence = "1")
     public LeaseTermForServiceCharge getLeaseTerm() {
         return leaseTerm;
     }
+
     public void setLeaseTerm(LeaseTermForServiceCharge leaseTerm) {
         this.leaseTerm = leaseTerm;
     }
+
     public void modifyLeaseTerm(LeaseTermForServiceCharge leaseTerm) {
         setLeaseTerm(leaseTerm);
         setAuditedValue(leaseTerm.getAuditedValue());
         setBudgetedValue(leaseTerm.getBudgetedValue());
         nextLeaseTerm = (LeaseTermForServiceCharge) leaseTerm.getNext();
-        if(nextLeaseTerm != null) {
+        if (nextLeaseTerm != null) {
             this.setNextBudgetedValue(nextLeaseTerm.getBudgetedValue());
         }
     }
-
 
     // //////////////////////////////////////
 
@@ -79,7 +62,7 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewMod
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
-    @MemberOrder(name="Selected", sequence="2")
+    @MemberOrder(name = "Selected", sequence = "2")
     public BigDecimal getBudgetedValue() {
         return budgetedValue;
     }
@@ -94,7 +77,7 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewMod
 
     @javax.jdo.annotations.Column(scale = 2, allowsNull = "true")
     @Optional
-    @MemberOrder(name="Selected", sequence="3")
+    @MemberOrder(name = "Selected", sequence = "3")
     public BigDecimal getAuditedValue() {
         return auditedValue;
     }
@@ -103,25 +86,25 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewMod
         this.auditedValue = auditedValue;
     }
 
-
     // //////////////////////////////////////
 
     private LeaseTermForServiceCharge nextLeaseTerm;
-    @MemberOrder(name="Next", sequence="1")
+
+    @MemberOrder(name = "Next", sequence = "1")
     public LeaseTermForServiceCharge getNextLeaseTerm() {
         return nextLeaseTerm;
     }
+
     public void setNextLeaseTerm(LeaseTermForServiceCharge nextLeaseTerm) {
         this.nextLeaseTerm = nextLeaseTerm;
     }
 
     // //////////////////////////////////////
 
-    
     private BigDecimal nextBudgetedValue;
 
     @Optional
-    @MemberOrder(name="Next", sequence="2")
+    @MemberOrder(name = "Next", sequence = "2")
     public BigDecimal getNextBudgetedValue() {
         return nextBudgetedValue;
     }
@@ -129,13 +112,5 @@ public class LeaseTermForServiceChargeBudgetAuditLineItem extends EstatioViewMod
     public void setNextBudgetedValue(final BigDecimal budgetedValue) {
         this.nextBudgetedValue = budgetedValue;
     }
-
-
-    // //////////////////////////////////////
-    
-
-    @javax.inject.Inject
-    private LeaseTermForServiceChargeBudgetAuditService budgetAuditService;
-
 
 }
