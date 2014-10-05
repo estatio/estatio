@@ -20,6 +20,7 @@ package org.estatio.dom.invoice;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -129,7 +130,8 @@ import org.estatio.dom.party.Party;
                 name = "findByInvoiceNumber", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.invoice.Invoice " +
-                        "WHERE invoiceNumber.matches(:invoiceNumber) ")
+                        "WHERE invoiceNumber.matches(:invoiceNumber) "
+                        + "ORDER BY invoiceDate DESC")
 })
 @Indices({
         @Index(name = "Invoice_runId_IDX",
@@ -142,6 +144,8 @@ import org.estatio.dom.party.Party;
                 members = { "fixedAsset", "dueDate", "status" }),
         @Index(name = "Invoice_Lease_Seller_Buyer_PaymentMethod_DueDate_Status_IDX",
                 members = { "lease", "seller", "buyer", "paymentMethod", "dueDate", "status" }),
+        @Index(name = "Invoice_invoiceNumber_IDX",
+                members = { "invoiceNumber" })
 })
 @Bookmarkable
 @Immutable
@@ -528,7 +532,7 @@ public class Invoice extends EstatioMutableObject<Invoice> {
             return this;
         }
         final Numerator numerator = invoices.findCollectionNumberNumerator();
-        setCollectionNumber(numerator.increment());
+        setCollectionNumber(numerator.nextIncrementStr());
         return this;
     }
 
@@ -552,8 +556,15 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (disableInvoice(invoiceDate, true) != null) {
             return this;
         }
+        if (!validInvoiceDate(invoiceDate)) {
+            warnUser(String.format(
+                    "Invoice date %d is invalid for %s becuase it's before the invoice date of the last invoice",
+                    invoiceDate.toString(),
+                    getContainer().titleOf(this)));
+            return this;
+        }
         final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
-        setInvoiceNumber(numerator.increment());
+        setInvoiceNumber(numerator.nextIncrementStr());
         setInvoiceDate(invoiceDate);
         this.setStatus(InvoiceStatus.INVOICED);
         informUser("Assigned " + this.getInvoiceNumber() + " to invoice " + getContainer().titleOf(this));
@@ -568,13 +579,30 @@ public class Invoice extends EstatioMutableObject<Invoice> {
         if (numerator == null) {
             return "No 'invoice number' numerator found for invoice's property";
         }
-        // TODO: offload valid next states to the InvoiceStatus enum? Eg
-        // getStatus.isPossible(InvoiceStatus.APPROVED)
-        //
         if (getStatus() != InvoiceStatus.APPROVED) {
             return "Must be in status of 'Invoiced'";
         }
         return null;
+    }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    boolean validInvoiceDate(LocalDate invoiceDate) {
+        if (getDueDate() != null  && getDueDate().compareTo(invoiceDate) < 0){
+            return false;
+        }
+        final Numerator numerator = invoices.findInvoiceNumberNumerator(getFixedAsset());
+        if (numerator != null) {
+            final String invoiceNumber = numerator.lastIncrementStr();
+            if (invoiceNumber != null) {
+                List<Invoice> result = invoices.findInvoicesByInvoiceNumber(invoiceNumber);
+                if (result.size() > 0) {
+                    return result.get(0).getInvoiceDate().compareTo(invoiceDate) <= 0;
+                }
+            }
+        }
+        return true;
     }
 
     // //////////////////////////////////////

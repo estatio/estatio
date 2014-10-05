@@ -157,10 +157,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             Assert.assertNotNull(numerator2);
             assertThat(numerator1, is(not(numerator2)));
 
-            assertThat(numerator1.increment(), is("OXF-00011"));
-            assertThat(numerator2.increment(), is("KAL-00001"));
-            assertThat(numerator2.increment(), is("KAL-00002"));
-            assertThat(numerator1.increment(), is("OXF-00012"));
+            assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
+            assertThat(numerator2.nextIncrementStr(), is("KAL-00001"));
+            assertThat(numerator2.nextIncrementStr(), is("KAL-00002"));
+            assertThat(numerator1.nextIncrementStr(), is("OXF-00012"));
         }
 
         @Test
@@ -170,7 +170,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             Numerator numerator1 = invoices.createInvoiceNumberNumerator(propertyOxf, "OXF-%05d", BigInteger.TEN);
             Assert.assertNotNull(numerator1);
 
-            assertThat(numerator1.increment(), is("OXF-00011"));
+            assertThat(numerator1.nextIncrementStr(), is("OXF-00011"));
 
             // when
             Numerator numerator2 = invoices.createInvoiceNumberNumerator(propertyOxf, "KAL-%05d", BigInteger.ZERO);
@@ -179,7 +179,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             Assert.assertNotNull(numerator2);
             assertThat(numerator1, is(sameInstance(numerator2)));
 
-            assertThat(numerator1.increment(), is("OXF-00012"));
+            assertThat(numerator1.nextIncrementStr(), is("OXF-00012"));
         }
 
     }

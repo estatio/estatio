@@ -230,7 +230,7 @@ public class Numerator
     private BigInteger lastIncrement;
 
     /**
-     * The value used by the {@link Numerator} when {@link #increment() return a
+     * The value used by the {@link Numerator} when {@link #nextIncrementStr() return a
      * value}.
      */
     @javax.jdo.annotations.Column(allowsNull = "false")
@@ -245,9 +245,18 @@ public class Numerator
     // //////////////////////////////////////
 
     @Programmatic
-    public String increment() {
+    public String nextIncrementStr() {
         return format(incrementCounter());
     }
+    
+    // //////////////////////////////////////
+    
+    @Programmatic
+    public String lastIncrementStr(){
+        return format(getLastIncrement());
+    }
+    
+    // //////////////////////////////////////
 
     private BigInteger incrementCounter() {
         BigInteger last = getLastIncrement();

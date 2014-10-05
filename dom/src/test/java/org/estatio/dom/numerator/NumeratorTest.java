@@ -44,7 +44,7 @@ public class NumeratorTest {
 
         @Test
         public void happyCase() {
-            assertEquals("XXX-00001", numerator.increment());
+            assertEquals("XXX-00001", numerator.nextIncrementStr());
             assertEquals(BigInteger.ONE, numerator.getLastIncrement());
         }
 

@@ -18,19 +18,28 @@
  */
 package org.estatio.dom.invoice;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import java.math.BigInteger;
 import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.core.unittestsupport.comparable.ComparableContractTest_compareTo;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Ignoring;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
+
 import org.estatio.dom.asset.FixedAsset;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.bankmandate.BankMandate;
@@ -38,11 +47,6 @@ import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.lease.Lease;
 import org.estatio.dom.numerator.Numerator;
 import org.estatio.services.clock.ClockService;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 public class InvoiceTest {
 
@@ -52,7 +56,6 @@ public class InvoiceTest {
     Invoice invoice;
 
     public static class AssignInvoiceNumber extends InvoiceTest {
-
 
         @Mock
         Invoices mockInvoices;
@@ -64,7 +67,6 @@ public class InvoiceTest {
         @Ignoring
         @Mock
         Property invoiceProperty;
-
 
         private Numerator numerator;
 
@@ -318,14 +320,11 @@ public class InvoiceTest {
         @SuppressWarnings("unchecked")
         @Override
         protected List<List<Invoice>> orderedTuples() {
-            return listOf(
-                    listOf(
-                            newInvoice(null),
-                            newInvoice("0000123"),
-                            newInvoice("0000123"),
-                            newInvoice("0000124")
-                    )
-            );
+            return listOf(listOf(
+                    newInvoice(null),
+                    newInvoice("0000123"),
+                    newInvoice("0000123"),
+                    newInvoice("0000124")));
         }
 
         private Invoice newInvoice(String number) {
@@ -336,4 +335,18 @@ public class InvoiceTest {
 
     }
 
+    public static class ValidInvoiceDate extends InvoiceTest {
+
+        @Before
+        public void setUp() throws Exception {
+            invoice = new Invoice();
+            invoice.setDueDate(new LocalDate(2012, 1, 2));
+        }
+
+        @Test
+        public void mustBeAfterDueDate() {
+            assertFalse(invoice.validInvoiceDate(new LocalDate(2012, 2, 1)));
+        }
+
+    }
 }

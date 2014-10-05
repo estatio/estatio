@@ -141,7 +141,7 @@ public class NumeratorTest extends EstatioIntegrationTest {
             assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("10")));
 
             // when
-            assertThat(scopedNumerator.increment(), is("ABC-00011"));
+            assertThat(scopedNumerator.nextIncrementStr(), is("ABC-00011"));
 
             // then
             assertThat(scopedNumerator.getLastIncrement(), is(new BigInteger("11")));
@@ -155,7 +155,7 @@ public class NumeratorTest extends EstatioIntegrationTest {
             assertThat(globalNumerator.getLastIncrement(), is(new BigInteger("1000")));
 
             // when
-            assertThat(globalNumerator.increment(), is("ABC-01001"));
+            assertThat(globalNumerator.nextIncrementStr(), is("ABC-01001"));
 
             // then
             assertThat(globalNumerator.getLastIncrement(), is(new BigInteger("1001")));
