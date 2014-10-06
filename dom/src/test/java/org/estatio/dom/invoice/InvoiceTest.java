@@ -23,8 +23,10 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -55,56 +57,96 @@ public class InvoiceTest {
 
     Invoice invoice;
 
+    Numerator numerator;
+
+    @Mock
+    Invoices mockInvoices;
+
+    @Mock
+    ClockService mockClockService;
+
+    @Mock
+    Lease lease;
+
+    @Mock
+    Property invoiceProperty;
+
+    @Mock
+    @Ignoring
+    DomainObjectContainer mockContainer;
+
+    @Before
+    public void setUp() throws Exception {
+        numerator = new Numerator();
+        numerator.setFormat("XXX-%05d");
+        numerator.setLastIncrement(BigInteger.TEN);
+
+        context.checking(new Expectations() {
+            {
+                allowing(mockClockService).now();
+                will(returnValue(LocalDate.now()));
+            }
+        });
+
+    }
+
+    void allowingMockInvoicesToReturnNumerator(final Numerator numerator) {
+        context.checking(new Expectations() {
+            {
+                allowing(mockInvoices).findInvoiceNumberNumerator(with(any(Property.class)));
+                will(returnValue(numerator));
+            }
+        });
+    }
+
+    void allowingMockInvoicesToReturnCollectionNumerator(final Numerator numerator) {
+        context.checking(new Expectations() {
+            {
+                allowing(mockInvoices).findCollectionNumberNumerator();
+                will(returnValue(numerator));
+            }
+        });
+    }
+
+    void allowingMockInvoicesToReturnInvoice(final String invoiceNumber, final LocalDate invoiceDate) {
+        context.checking(new Expectations() {
+            {
+                allowing(mockInvoices).findInvoicesByInvoiceNumber(with(any(String.class)));
+                will(returnValue(Arrays.asList(new Invoice() {
+                    @Override
+                    public String getInvoiceNumber() {
+                        return invoiceNumber;
+                    };
+
+                    @Override
+                    public LocalDate getInvoiceDate() {
+                        return invoiceDate;
+                    };
+                })));
+            }
+        });
+    }
+
+    Invoice createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
+        final Invoice invoice = new Invoice() {
+            @Override
+            public FixedAsset getFixedAsset() {
+                return fixedAsset;
+            }
+        };
+        invoice.setStatus(invoiceStatus);
+        invoice.setContainer(mockContainer);
+        invoice.injectInvoices(mockInvoices);
+        invoice.injectClockService(mockClockService);
+        return invoice;
+    }
+
     public static class AssignInvoiceNumber extends InvoiceTest {
-
-        @Mock
-        Invoices mockInvoices;
-
-        @Ignoring
-        @Mock
-        DomainObjectContainer mockContainer;
-
-        @Ignoring
-        @Mock
-        Property invoiceProperty;
-
-        private Numerator numerator;
-
-        @Mock
-        private ClockService mockClockService;
-
-        @Before
-        public void setUp() throws Exception {
-            numerator = new Numerator();
-            numerator.setFormat("XXX-%05d");
-            numerator.setLastIncrement(BigInteger.TEN);
-
-            context.checking(new Expectations() {
-                {
-                    allowing(mockClockService).now();
-                    will(returnValue(LocalDate.now()));
-                }
-            });
-
-        }
-
-        private Invoice createInvoice(final FixedAsset fixedAsset, final InvoiceStatus invoiceStatus) {
-            final Invoice invoice = new Invoice() {
-                @Override
-                public FixedAsset getFixedAsset() {
-                    return fixedAsset;
-                }
-            };
-            invoice.setStatus(invoiceStatus);
-            invoice.setContainer(mockContainer);
-            invoice.injectInvoices(mockInvoices);
-            invoice.injectClockService(mockClockService);
-            return invoice;
-        }
 
         @Test
         public void happyCase_whenNoInvoiceNumberPreviouslyAssigned() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            allowingMockInvoicesToReturnNumerator(numerator);
+            allowingMockInvoicesToReturnInvoice("XXX-00010", new LocalDate(2012, 1, 1));
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             assertThat(invoice.disableInvoice(null, true), is(nullValue()));
@@ -116,7 +158,7 @@ public class InvoiceTest {
 
         @Test
         public void whenInvoiceNumberAlreadyAssigned() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            allowingMockInvoicesToReturnNumerator(numerator);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
             invoice.setInvoiceNumber("SOME-INVOICE-NUMBER");
 
@@ -129,7 +171,7 @@ public class InvoiceTest {
         @Test
         public void whenNoProperty() {
 
-            allowingMockInvoicesRepoToReturn(null);
+            allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
@@ -141,7 +183,7 @@ public class InvoiceTest {
         @Test
         public void whenNotInCollectedState() {
 
-            allowingMockInvoicesRepoToReturn(null);
+            allowingMockInvoicesToReturnNumerator(null);
             invoice = createInvoice(invoiceProperty, InvoiceStatus.APPROVED);
 
             assertThat(invoice.disableInvoice(null, true), is("No 'invoice number' numerator found for invoice's property"));
@@ -150,43 +192,9 @@ public class InvoiceTest {
             assertThat(invoice.getInvoiceNumber(), is(nullValue()));
         }
 
-        private void allowingMockInvoicesRepoToReturn(final Numerator numerator) {
-            context.checking(new Expectations() {
-                {
-                    allowing(mockInvoices).findInvoiceNumberNumerator(with(any(Property.class)));
-                    will(returnValue(numerator));
-                }
-            });
-        }
-
     }
 
     public static class Collect extends InvoiceTest {
-
-        @Mock
-        Invoices mockInvoices;
-
-        @Ignoring
-        @Mock
-        DomainObjectContainer mockContainer;
-
-        @Ignoring
-        @Mock
-        Property invoiceProperty;
-
-        @Mock
-        Lease lease;
-
-        private Numerator numerator;
-
-        @Before
-        public void setUp() throws Exception {
-
-            numerator = new Numerator();
-            numerator.setFormat("XXX-%05d");
-            numerator.setLastIncrement(BigInteger.TEN);
-
-        }
 
         private Invoice createInvoice(final Property property, final PaymentMethod paymentMethod, final InvoiceStatus status) {
             final Invoice invoice = new Invoice() {
@@ -208,7 +216,7 @@ public class InvoiceTest {
 
         @Test
         public void happyCase_directDebit_and_collected_andWhenNoInvoiceNumberPreviouslyAssigned() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            allowingMockInvoicesToReturnCollectionNumerator(numerator);
             context.checking(new Expectations() {
                 {
                     allowing(lease).getPaidBy();
@@ -236,7 +244,7 @@ public class InvoiceTest {
 
         @Test
         public void whenNoMandateAssigned() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            allowingMockInvoicesToReturnCollectionNumerator(numerator);
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
@@ -249,7 +257,7 @@ public class InvoiceTest {
 
         @Test
         public void whenInvoiceNumberAlreadyAssigned() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            allowingMockInvoicesToReturnNumerator(numerator);
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
@@ -264,8 +272,7 @@ public class InvoiceTest {
 
         @Test
         public void whenNoProperty() {
-
-            allowingMockInvoicesRepoToReturn(null);
+            allowingMockInvoicesToReturnCollectionNumerator(null);
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.APPROVED);
 
@@ -278,7 +285,7 @@ public class InvoiceTest {
 
         @Test
         public void whenNotDirectDebit() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            allowingMockInvoicesToReturnCollectionNumerator(numerator);
 
             invoice = createInvoice(invoiceProperty, PaymentMethod.BANK_TRANSFER, InvoiceStatus.APPROVED);
             invoice.setLease(new Lease());
@@ -293,26 +300,23 @@ public class InvoiceTest {
 
         @Test
         public void whenNotCollected() {
-            allowingMockInvoicesRepoToReturn(numerator);
+            // given
+            allowingMockInvoicesToReturnCollectionNumerator(numerator);
 
+            // when
             invoice = createInvoice(invoiceProperty, PaymentMethod.DIRECT_DEBIT, InvoiceStatus.NEW);
 
+            // then
             assertThat(invoice.hideCollect(), is(false));
             assertThat(invoice.disableCollect(true), is("Must be in status of 'approved'"));
 
+            // and
             invoice.doCollect();
 
+            // then
             assertThat(invoice.getCollectionNumber(), is(nullValue()));
         }
 
-        private void allowingMockInvoicesRepoToReturn(final Numerator numerator) {
-            context.checking(new Expectations() {
-                {
-                    allowing(mockInvoices).findCollectionNumberNumerator();
-                    will(returnValue(numerator));
-                }
-            });
-        }
     }
 
     public static class CompareTo extends ComparableContractTest_compareTo<Invoice> {
@@ -340,12 +344,24 @@ public class InvoiceTest {
         @Before
         public void setUp() throws Exception {
             invoice = new Invoice();
-            invoice.setDueDate(new LocalDate(2012, 1, 2));
+            invoice.setDueDate(new LocalDate(2012, 2, 2));
+            invoice.injectInvoices(mockInvoices);
+            invoice.setFixedAsset(invoiceProperty);
         }
 
         @Test
-        public void mustBeAfterDueDate() {
-            assertFalse(invoice.validInvoiceDate(new LocalDate(2012, 2, 1)));
+        public void invoiceDateIsAfterDueDate() {
+            assertFalse(invoice.validInvoiceDate(new LocalDate(2012, 2, 3)));
+        }
+
+        @Test
+        public void invoiceDateIsBeforeDueDate() {
+            // given
+            allowingMockInvoicesToReturnNumerator(numerator);
+            allowingMockInvoicesToReturnInvoice("XXX-0010", new LocalDate(2012, 1, 1));
+
+            // when,then
+            assertTrue(invoice.validInvoiceDate(new LocalDate(2012, 2, 1)));
         }
 
     }

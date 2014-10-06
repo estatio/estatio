@@ -325,10 +325,6 @@ public class InvoicesTest extends EstatioIntegrationTest {
 
         @Test
         public void byRunId() {
-            // given
-            final Invoice invoice1 = invoices.findInvoices(InvoiceStatus.NEW).get(0);
-            invoice1.setRunId(runId);
-
             // when
             List<Invoice> result = invoices.findInvoicesByRunId(runId);
 
