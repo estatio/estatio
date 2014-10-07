@@ -45,7 +45,7 @@ language governing permissions and limitations under the License.
 
     <groupId>org.estatio</groupId>
     <artifactId>estatio</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <name>Estatio Management System</name>
@@ -555,12 +555,12 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -568,12 +568,12 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-italy</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-dom-italy</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <scope>test</scope>
                 <type>test-jar</type>
             </dependency>
@@ -581,7 +581,7 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-fixture</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
@@ -593,25 +593,25 @@ language governing permissions and limitations under the License.
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-integtests</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-migration</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-migration-integtests</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>estatio-webapp</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
 
