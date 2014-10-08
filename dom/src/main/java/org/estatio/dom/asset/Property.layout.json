@@ -32,7 +32,11 @@
           "members": {
             "acquireDate": {},
             "openingDate": {},
-            "disposalDate": {}
+            "disposalDate": {
+              "actions": {
+                "dispose": {}
+              }
+            }
           }
         },
         "Invoicing": {

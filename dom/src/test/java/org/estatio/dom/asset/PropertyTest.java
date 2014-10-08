@@ -18,28 +18,31 @@
  */
 package org.estatio.dom.asset;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import com.danhaywood.isis.wicket.gmap3.applib.Location;
 import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
+
 import org.estatio.dom.AbstractBeanPropertiesTest;
 import org.estatio.dom.geography.Country;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 public class PropertyTest {
 
     @Rule
     public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
-
 
     public static class BeanProperties extends AbstractBeanPropertiesTest {
 
@@ -121,6 +124,22 @@ public class PropertyTest {
             assertThat(property.default2NewUnit(), is(UnitType.BOUTIQUE));
         }
 
+    }
+
+    public static class Dispose extends PropertyTest {
+        private Property property;
+
+        @Test
+        public void xxx() {
+            // given
+            property = new Property();
+            // then
+            assertNull(property.disableDispose(null, false));
+            // when
+            property.dispose(new LocalDate(2000, 1, 1), true);
+            // then
+            assertNotNull(property.disableDispose(null, false));
+        }
     }
 
 }

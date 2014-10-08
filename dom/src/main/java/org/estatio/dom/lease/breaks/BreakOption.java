@@ -67,8 +67,8 @@ import org.estatio.dom.utils.JodaPeriodUtils;
         strategy = DiscriminatorStrategy.CLASS_NAME,
         column = "discriminator")
 @javax.jdo.annotations.Unique(
-        name = "BreakOption_lease_type_notificationDate_UNQ",
-        members = { "lease", "type", "notificationDate" })
+        name = "BreakOption_lease_type_exerciseDate_UNQ",
+        members = { "lease", "type", "exerciseDate" })
 @Immutable
 public abstract class BreakOption
         extends EstatioMutableObject<BreakOption>
@@ -231,14 +231,14 @@ public abstract class BreakOption
     public BreakExerciseType default0Change() {
         return getExerciseType();
     }
-    
+
     public String default1Change() {
         return getDescription();
     }
-    
+
     public BreakOption changeDates(
-        final @Named("Break date") LocalDate breakDate,
-        final @Named("Excercise date") LocalDate excerciseDate) {
+            final @Named("Break date") LocalDate breakDate,
+            final @Named("Excercise date") LocalDate excerciseDate) {
         setBreakDate(breakDate);
         setExerciseDate(exerciseDate);
         // remove existing events
@@ -249,7 +249,7 @@ public abstract class BreakOption
         persisting();
         return this;
     }
-    
+
     public LocalDate default0ChangeDates() {
         return getBreakDate();
     }
@@ -257,6 +257,7 @@ public abstract class BreakOption
     public LocalDate default1ChangeDates() {
         return getExerciseDate();
     }
+
     // //////////////////////////////////////
 
     public Lease remove(final @Named("Reason") String reason) {

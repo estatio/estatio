@@ -54,7 +54,6 @@ import org.estatio.dom.party.Party;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.NEW_TABLE)
-// no @DatastoreIdentity nor @Version, since inherited from supertype
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
                 name = "findByReferenceOrName", language = "JDOQL",
@@ -259,6 +258,21 @@ public class Property extends FixedAsset implements Locatable {
             role = this.createRole(type, party, startDate, endDate);
         }
         return role;
+    }
+
+    // //////////////////////////////////////
+
+    public Property dispose(
+            final @Named("Disposal date") LocalDate disposalDate,
+            final @Named("Are you sure?") boolean confirm) {
+        if (confirm) {
+            setDisposalDate(disposalDate);
+        }
+        return this;
+    }
+
+    public String disableDispose(LocalDate disposalDate, boolean confirm) {
+        return getDisposalDate() == null ? null : "Property already disposed";
     }
 
     // //////////////////////////////////////
