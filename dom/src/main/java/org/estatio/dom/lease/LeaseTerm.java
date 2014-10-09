@@ -129,7 +129,12 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "FROM org.estatio.dom.lease.LeaseTerm "
                         + "WHERE status == :status "
                         + "&& startDate <= :date "
-                        + "&& (endDate == null || endDate > :date )")
+                        + "&& (endDate == null || endDate > :date )"),
+        @javax.jdo.annotations.Query(
+                name = "findByInvalidInterval", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.LeaseTerm "
+                        + "WHERE startDate > endDate")
 })
 @Bookmarkable(BookmarkPolicy.AS_CHILD)
 @Immutable

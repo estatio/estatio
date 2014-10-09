@@ -19,12 +19,18 @@
 package org.estatio.dom.lease;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.asset.Property;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = LeaseTerm.class)
 public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
@@ -125,5 +131,39 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @Hidden
     public List<LocalDate> findServiceChargeDatesByProperty(final Property property) {
         return findStartDatesByPropertyAndType(property, LeaseItemType.SERVICE_CHARGE);
+    }
+    
+    @ActionSemantics(Of.SAFE)
+    @MemberOrder(name = "Leases", sequence = "30")
+    public List<LeaseTerm> findTermsWithInvalidInterval() {
+        List<LeaseTerm> lts = allLeaseTerms();
+        List<LeaseTerm> returnList = new ArrayList<LeaseTerm>();
+        LocalDateInterval ldi;
+        for (LeaseTerm lt : lts) {
+            try {
+                if ((ldi = lt.getEffectiveInterval()) == null) {
+                    returnList.add(lt);
+                    continue;
+                }
+                
+                if (!ldi.isValid()) {
+                    returnList.add(lt);
+                    continue;
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                returnList.add(lt);
+            }
+        }
+        
+        if (returnList.isEmpty()) {
+            return null;
+        } else {
+            return returnList;
+        }
+    }
+    
+    public boolean hideFindTermsWithInvalidInterval() {
+        return !getContainer().getUser().hasRole(EstatioUserRoles.ADMIN_ROLE);
     }
 }
