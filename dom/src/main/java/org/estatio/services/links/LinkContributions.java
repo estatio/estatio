@@ -22,8 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import com.danhaywood.isis.domainservice.stringinterpolator.StringInterpolatorService;
-import com.danhaywood.isis.domainservice.stringinterpolator.StringInterpolatorService.Root;
+import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
+import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService.Root;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.DomainService;

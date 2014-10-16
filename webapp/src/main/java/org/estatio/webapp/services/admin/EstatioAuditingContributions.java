@@ -18,32 +18,20 @@ package org.estatio.webapp.services.admin;
 
 import java.util.Collections;
 import java.util.List;
-
 import com.google.common.collect.Lists;
-
+import org.isisaddons.module.audit.dom.AuditingServiceRepository;
+import org.isisaddons.module.command.dom.CommandJdo;
+import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
+import org.isisaddons.module.publishing.dom.PublishingServiceRepository;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.ViewModel;
-import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.services.HasTransactionId;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.objectstore.jdo.applib.service.DomainChangeJdoAbstract;
-import org.apache.isis.objectstore.jdo.applib.service.audit.AuditEntryJdo;
-import org.apache.isis.objectstore.jdo.applib.service.audit.AuditingServiceJdoRepository;
-import org.apache.isis.objectstore.jdo.applib.service.publish.PublishedEventJdo;
-import org.apache.isis.objectstore.jdo.applib.service.publish.PublishingServiceJdoRepository;
-
-import org.isisaddons.module.command.dom.CommandJdo;
-import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
-
 import org.estatio.dom.EstatioService;
 
 @DomainService(menuOrder = "95")
@@ -83,7 +71,7 @@ public class EstatioAuditingContributions extends EstatioService<EstatioAuditing
     }
     /**
      * Hide for implementations of {@link HasTransactionId} (in other words for {@link CommandJdo command}s, {@link AuditEntryJdo audit entries}
-     * and {@link PublishedEventJdo published event}s) and for {@link ViewModel}s.
+     * and {@link org.isisaddons.module.publishing.dom.PublishedEvent published event}s) and for {@link ViewModel}s.
      */
     public boolean hideRecentChanges(final Object targetDomainObject, final LocalDate from, final LocalDate to) {
         return targetDomainObject instanceof HasTransactionId || targetDomainObject instanceof ViewModel || auditingServiceRepository == null || bookmarkService == null;
@@ -103,10 +91,10 @@ public class EstatioAuditingContributions extends EstatioService<EstatioAuditing
     private CommandServiceJdoRepository commandServiceRepository;
     
     @javax.inject.Inject
-    private AuditingServiceJdoRepository auditingServiceRepository;
+    private AuditingServiceRepository auditingServiceRepository;
     
     @javax.inject.Inject
-    private PublishingServiceJdoRepository publishingServiceRepository;
+    private PublishingServiceRepository publishingServiceRepository;
     
     @javax.inject.Inject
     private BookmarkService bookmarkService;

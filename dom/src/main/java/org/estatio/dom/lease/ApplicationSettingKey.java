@@ -18,11 +18,9 @@
  */
 package org.estatio.dom.lease;
 
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
-
 import org.estatio.dom.ApplicationSettingCreator;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {

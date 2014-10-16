@@ -19,19 +19,17 @@
 package org.estatio.services.settings;
 
 import java.util.List;
-
+import org.isisaddons.module.settings.dom.SettingAbstract;
+import org.isisaddons.module.settings.dom.SettingType;
+import org.isisaddons.module.settings.dom.UserSetting;
+import org.isisaddons.module.settings.dom.UserSettingsServiceRW;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.AbstractService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.settings.SettingAbstract;
-import org.apache.isis.applib.services.settings.SettingType;
-import org.apache.isis.applib.services.settings.UserSetting;
-import org.apache.isis.applib.services.settings.UserSettingsServiceRW;
 
 /**
- * An implementation of {@link org.apache.isis.applib.services.settings.UserSettingsService} that 
+ * An implementation of {@link org.isisaddons.module.settings.dom.UserSettingsService} that
  * persists settings as entities into a JDO-backed database.
  */
 public class UserSettingsServiceForEstatio extends AbstractService implements UserSettingsServiceRW {

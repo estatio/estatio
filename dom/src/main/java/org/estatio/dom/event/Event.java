@@ -23,8 +23,8 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import com.danhaywood.isis.wicket.fullcalendar2.applib.CalendarEvent;
-import com.danhaywood.isis.wicket.fullcalendar2.applib.CalendarEventable;
+import org.isisaddons.wicket.fullcalendar2.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.applib.CalendarEventable;
 import com.google.common.base.Function;
 
 import org.joda.time.LocalDate;

@@ -18,7 +18,7 @@
  */
 package org.estatio.dom.asset;
 
-import com.danhaywood.isis.wicket.gmap3.applib.Location;
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
 
 import org.junit.Test;
 

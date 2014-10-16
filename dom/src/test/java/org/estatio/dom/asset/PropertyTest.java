@@ -24,8 +24,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import com.danhaywood.isis.wicket.gmap3.applib.Location;
-import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
+import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;

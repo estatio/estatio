@@ -18,13 +18,12 @@
  */
 package org.estatio.dom;
 
+import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
 import org.junit.Rule;
 import org.junit.Test;
-
-import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;
 

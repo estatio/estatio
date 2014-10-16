@@ -19,21 +19,20 @@
 
 package org.estatio.services.settings;
 
+import org.isisaddons.module.settings.dom.SettingType;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.services.settings.SettingType;
 
 /**
  * Factors out common implementation; however this is NOT annotated with 
  * {@link javax.jdo.annotations.PersistenceCapable}, so that each subclass is its own root entity.
  */
 public abstract class SettingAbstractForEstatio 
-    extends org.apache.isis.applib.services.settings.SettingAbstract 
-    implements org.apache.isis.applib.services.settings.ApplicationSetting {
+    extends org.isisaddons.module.settings.dom.SettingAbstract
+    implements org.isisaddons.module.settings.dom.ApplicationSetting {
 
     // //////////////////////////////////////
 

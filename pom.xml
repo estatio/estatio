@@ -88,20 +88,19 @@ language governing permissions and limitations under the License.
 
         <isis-module-audit.version>1.6.0</isis-module-audit.version>
         <isis-module-command.version>1.6.1</isis-module-command.version>
-        <isis-module-publishing.version>1.6.0</isis-module-publishing.version>
-        <isis-module-publishingeventserializer.version>1.6.0</isis-module-publishingeventserializer.version>
         <isis-module-devutils.version>1.6.0</isis-module-devutils.version>
-        <isis-module-settings.version>1.6.0</isis-module-settings.version>
-        <isis-module-security.version>1.6.2</isis-module-security.version>
         <isis-module-excel.version>1.7.0-SNAPSHOT</isis-module-excel.version>
+        <isis-module-publishing.version>1.6.0</isis-module-publishing.version>
+        <isis-module-security.version>1.6.2</isis-module-security.version>
+        <isis-module-settings.version>1.6.0</isis-module-settings.version>
+        <isis-module-stringinterpolator.version>1.6.0</isis-module-stringinterpolator.version>
+
+        <isis-wicket-excel.version>1.6.0</isis-wicket-excel.version>
+        <isis-wicket-fullcalendar2.version>1.6.0</isis-wicket-fullcalendar2.version>
+        <isis-wicket-gmap3.version>1.6.0</isis-wicket-gmap3.version>
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
 
-        <danhaywood-isis-wicket-excel.version>1.4.0</danhaywood-isis-wicket-excel.version>
-        <danhaywood-isis-wicket-fullcalendar2.version>1.4.0</danhaywood-isis-wicket-fullcalendar2.version>
-        <danhaywood-isis-wicket-gmap3.version>1.4.0</danhaywood-isis-wicket-gmap3.version>
-        <danhaywood-isis-wicket-wickedcharts.version>1.4.0</danhaywood-isis-wicket-wickedcharts.version>
-        <danhaywood-isis-domainservice-stringinterpolator.version>1.4.0</danhaywood-isis-domainservice-stringinterpolator.version>
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
@@ -513,43 +512,26 @@ language governing permissions and limitations under the License.
             <!-- modules -->
 
             <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-audit-jdo</artifactId>
+                <groupId>org.isisaddons.module.audit</groupId>
+                <artifactId>isis-module-audit-dom</artifactId>
                 <version>${isis-module-audit.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-publishing-jdo</artifactId>
+                <groupId>org.isisaddons.module.publishing</groupId>
+                <artifactId>isis-module-publishing-dom</artifactId>
                 <version>${isis-module-publishing.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-publishingeventserializer-ro</artifactId>
-                <version>${isis-module-publishingeventserializer.version}</version>
-            </dependency>
 
             <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-devutils-applib</artifactId>
-                <version>${isis-module-devutils.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-devutils-impl</artifactId>
-                <version>${isis-module-devutils.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-settings-applib</artifactId>
+                <groupId>org.isisaddons.module.settings</groupId>
+                <artifactId>isis-module-settings-dom</artifactId>
                 <version>${isis-module-settings.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.isis.module</groupId>
-                <artifactId>isis-module-settings-impl-jdo</artifactId>
-                <version>${isis-module-settings.version}</version>
+                <groupId>org.isisaddons.module.devutils</groupId>
+                <artifactId>isis-module-devutils-dom</artifactId>
+                <version>${isis-module-devutils.version}</version>
             </dependency>
-
 
             <!-- this project's own modules -->
             <dependency>
@@ -722,51 +704,33 @@ language governing permissions and limitations under the License.
 
             <!-- GMAP3: https://github.com/danhaywood/isis-wicket-gmap3 -->
             <dependency>
-                <groupId>com.danhaywood.isis.wicket</groupId>
-                <artifactId>danhaywood-isis-wicket-gmap3</artifactId>
-                <version>${danhaywood-isis-wicket-gmap3.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.isisaddons.wicket.gmap3</groupId>
+                <artifactId>isis-wicket-gmap3-cpt</artifactId>
+                <version>${isis-wicket-gmap3.version}</version>
             </dependency>
 
             <!-- FULLCALENDAR2: use https://github.com/danhaywood/isis-wicket-fullcalendar2 -->
             <dependency>
-                <groupId>com.danhaywood.isis.wicket</groupId>
-                <artifactId>danhaywood-isis-wicket-fullcalendar2</artifactId>
-                <version>${danhaywood-isis-wicket-fullcalendar2.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+                <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+                <version>${isis-wicket-fullcalendar2.version}</version>
             </dependency>
 
-
-            <!-- WICKEDCHARTS: https://github.com/danhaywood/isis-wicket-wickedcharts -->
-            <!--
-            Requires Highchart license to use in commercial products.
-             
-            <dependency>
-                <groupId>com.danhaywood.isis.wicket</groupId>
-                <artifactId>danhaywood-isis-wicket-wickedcharts</artifactId>
-                <version>${danhaywood-isis-wicket-wickedcharts.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            -->
 
             <!-- EXCEL: https://github.com/danhaywood/isis-wicket-excel -->
             <dependency>
-                <groupId>com.danhaywood.isis.wicket</groupId>
-                <artifactId>danhaywood-isis-wicket-excel</artifactId>
-                <version>${danhaywood-isis-wicket-excel.version}</version>
+                <groupId>org.isisaddons.wicket.excel</groupId>
+                <artifactId>isis-wicket-excel-cpt</artifactId>
+                <version>${isis-wicket-excel.version}</version>
             </dependency>
 
 
             <!-- domain services -->
 
-            <!-- STRINGINTERPOLATOR DOMAIN SERVICE: https://github.com/danhaywood/isis-domainservice-stringinterpolator -->
             <dependency>
-                <groupId>com.danhaywood.isis.domainservice</groupId>
-                <artifactId>danhaywood-isis-domainservice-stringinterpolator</artifactId>
-                <version>${danhaywood-isis-domainservice-stringinterpolator.version}</version>
+                <groupId>org.isisaddons.module.stringinterpolator</groupId>
+                <artifactId>isis-module-stringinterpolator-dom</artifactId>
+                <version>${isis-module-stringinterpolator.version}</version>
             </dependency>
 
             <dependency>

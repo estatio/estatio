@@ -20,9 +20,9 @@ package org.estatio.webapp.services.admin;
 
 import java.util.List;
 import javax.inject.Inject;
+import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.*;
-import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.estatio.dom.EstatioService;
 import org.estatio.services.settings.ApplicationSettingForEstatio;
 import org.estatio.services.settings.EstatioSettingsService;

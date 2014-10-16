@@ -17,10 +17,10 @@
  */
 package org.estatio.dom;
 
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
 import org.joda.time.LocalDate;
 
-import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
 
 public enum ApplicationSettingKey implements ApplicationSettingCreator {
     

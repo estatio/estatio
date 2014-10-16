@@ -18,6 +18,9 @@
  */
 package org.estatio.services.appsettings;
 
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.isisaddons.module.settings.dom.SettingAbstract;
+import org.isisaddons.module.settings.dom.SettingType;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.joda.time.LocalDate;
@@ -25,9 +28,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.apache.isis.applib.DomainObjectContainer;
-import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.SettingAbstract;
-import org.apache.isis.applib.services.settings.SettingType;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.ClassUnderTest;
 import org.apache.isis.core.unittestsupport.jmocking.JUnitRuleMockery2.Mode;

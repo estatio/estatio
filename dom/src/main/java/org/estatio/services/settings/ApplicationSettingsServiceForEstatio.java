@@ -20,14 +20,14 @@ package org.estatio.services.settings;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import org.isisaddons.module.settings.dom.ApplicationSetting;
+import org.isisaddons.module.settings.dom.ApplicationSettingsServiceRW;
+import org.isisaddons.module.settings.dom.SettingAbstract;
+import org.isisaddons.module.settings.dom.SettingType;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.query.QueryDefault;
-import org.apache.isis.applib.services.settings.ApplicationSetting;
-import org.apache.isis.applib.services.settings.ApplicationSettingsServiceRW;
-import org.apache.isis.applib.services.settings.SettingAbstract;
-import org.apache.isis.applib.services.settings.SettingType;
 import org.estatio.dom.ApplicationSettingCreator;
 import org.estatio.dom.EstatioDomainService;
 

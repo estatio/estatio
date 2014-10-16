@@ -121,12 +121,16 @@ language governing permissions and limitations under the License.
             <artifactId>isis-core-applib</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-settings-applib</artifactId>
+            <groupId>org.isisaddons.module.settings</groupId>
+            <artifactId>isis-module-settings-dom</artifactId>
+            <!-- avoid polluting the classpath -->
+            <version>${isis-module-settings.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-devutils-applib</artifactId>
+            <groupId>org.isisaddons.module.devutils</groupId>
+            <artifactId>isis-module-devutils-dom</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
         </dependency>
 
 
@@ -177,18 +181,18 @@ language governing permissions and limitations under the License.
 
         <!-- GMAP3 -->
         <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-gmap3-applib</artifactId>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-gmap3-service</artifactId>
-        </dependency>
-        
+
         <!-- FULLCALENDAR2 -->
         <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-fullcalendar2-applib</artifactId>
+            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
         </dependency>
 
         <!-- EXCEL -->
@@ -255,8 +259,8 @@ language governing permissions and limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>com.danhaywood.isis.domainservice</groupId>
-            <artifactId>danhaywood-isis-domainservice-stringinterpolator</artifactId>
+            <groupId>org.isisaddons.module.stringinterpolator</groupId>
+            <artifactId>isis-module-stringinterpolator-dom</artifactId>
         </dependency>
         
         <dependency>

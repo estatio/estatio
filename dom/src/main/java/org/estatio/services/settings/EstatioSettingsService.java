@@ -19,10 +19,10 @@
 package org.estatio.services.settings;
 
 import java.util.List;
+import org.isisaddons.module.settings.dom.ApplicationSetting;
 import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.services.settings.ApplicationSetting;
 import org.estatio.dom.ApplicationSettingKey;
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.currency.Currencies;

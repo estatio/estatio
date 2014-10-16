@@ -3,7 +3,7 @@ package org.estatio.services.documents;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.danhaywood.isis.domainservice.stringinterpolator.StringInterpolatorService;
+import org.isisaddons.module.stringinterpolator.dom.StringInterpolatorService;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.commons.PropertyIds;

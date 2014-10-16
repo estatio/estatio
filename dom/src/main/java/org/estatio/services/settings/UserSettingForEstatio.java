@@ -21,13 +21,11 @@ package org.estatio.services.settings;
 
 
 import javax.jdo.annotations.IdentityType;
-
+import org.isisaddons.module.settings.dom.SettingType;
+import org.isisaddons.module.settings.dom.UserSetting;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.services.settings.SettingType;
-import org.apache.isis.applib.services.settings.UserSetting;
-
 import org.estatio.dom.JdoColumnLength;
 
 @javax.jdo.annotations.PersistenceCapable(

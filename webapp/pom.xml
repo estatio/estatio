@@ -162,29 +162,23 @@ language governing permissions and limitations under the License.
 
         <!-- isis modules -->
         <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-audit-jdo</artifactId>
+            <groupId>org.isisaddons.module.audit</groupId>
+            <artifactId>isis-module-audit-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-publishing-jdo</artifactId>
+            <groupId>org.isisaddons.module.publishing</groupId>
+            <artifactId>isis-module-publishing-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-publishingeventserializer-ro</artifactId>
+            <groupId>org.isisaddons.module.devutils</groupId>
+            <artifactId>isis-module-devutils-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-devutils-impl</artifactId>
+            <groupId>org.isisaddons.module.settings</groupId>
+            <artifactId>isis-module-settings-dom</artifactId>
+            <version>${isis-module-settings.version}</version>
         </dependency>
-        <!--
-        not used; have our own implementation.
-        <dependency>
-            <groupId>org.apache.isis.module</groupId>
-            <artifactId>isis-module-settings-impl-jdo</artifactId>
-        </dependency>
-        -->
-        
+
         <!-- Isisaddons modules -->
         <dependency>
             <groupId>org.isisaddons.module.command</groupId>
@@ -231,38 +225,21 @@ language governing permissions and limitations under the License.
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- 3rd party dependency -->
-        <!-- GMAP3: uncomment to use https://github.com/danhaywood/isis-wicket-gmap3 -->
+        <!-- isis addons (wicket cpts) -->
         <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-gmap3-ui</artifactId>
-        </dependency>
-        <!-- FULLCALENDAR2 -->
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-fullcalendar2-ui</artifactId>
-        </dependency>
-                
-        <!-- WICKEDCHARTS: uncomment to use https://github.com/danhaywood/isis-wicket-wickedcharts -->
-        <!--
-        Requires Highchart license to use in commercial products.
-        <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-wickedcharts-scalarchart</artifactId>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-wickedcharts-summarycharts</artifactId>
+            <groupId>org.isisaddons.wicket.fullcalendar2</groupId>
+            <artifactId>isis-wicket-fullcalendar2-cpt</artifactId>
         </dependency>
-        -->
-        
-        <!-- EXCEL: uncomment to use https://github.com/danhaywood/isis-wicket-excel -->
         <dependency>
-            <groupId>com.danhaywood.isis.wicket</groupId>
-            <artifactId>danhaywood-isis-wicket-excel</artifactId>
+            <groupId>org.isisaddons.wicket.excel</groupId>
+            <artifactId>isis-wicket-excel-cpt</artifactId>
         </dependency>
 
-        <!-- EXCEL: uncomment to use https://github.com/danhaywood/isis-domainservice-excel -->
+        <!-- isis addons (modules) -->
         <dependency>
             <groupId>org.isisaddons.module.excel</groupId>
             <artifactId>isis-module-excel-dom</artifactId>

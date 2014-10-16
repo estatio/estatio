@@ -25,9 +25,9 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import com.danhaywood.isis.wicket.gmap3.applib.Locatable;
-import com.danhaywood.isis.wicket.gmap3.applib.Location;
-import com.danhaywood.isis.wicket.gmap3.service.LocationLookupService;
+import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
+import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
 
 import org.joda.time.LocalDate;
 

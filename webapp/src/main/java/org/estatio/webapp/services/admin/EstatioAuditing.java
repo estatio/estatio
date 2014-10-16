@@ -18,26 +18,16 @@ package org.estatio.webapp.services.admin;
 
 import java.util.List;
 import java.util.UUID;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.Bookmarkable;
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Prototype;
-import org.apache.isis.applib.services.clock.ClockService;
-import org.apache.isis.objectstore.jdo.applib.service.audit.AuditEntryJdo;
-import org.apache.isis.objectstore.jdo.applib.service.audit.AuditingServiceJdoRepository;
-import org.apache.isis.objectstore.jdo.applib.service.publish.PublishedEventJdo;
-import org.apache.isis.objectstore.jdo.applib.service.publish.PublishingServiceJdoRepository;
-
+import org.isisaddons.module.audit.dom.AuditEntry;
+import org.isisaddons.module.audit.dom.AuditingServiceRepository;
 import org.isisaddons.module.command.dom.CommandJdo;
 import org.isisaddons.module.command.dom.CommandServiceJdoRepository;
-
+import org.isisaddons.module.publishing.dom.PublishedEvent;
+import org.isisaddons.module.publishing.dom.PublishingServiceRepository;
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.services.clock.ClockService;
 import org.estatio.dom.EstatioService;
 
 @DomainService(menuOrder = "95")
@@ -105,7 +95,7 @@ public class EstatioAuditing extends EstatioService<EstatioAuditing> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence="20.1")
-    public List<AuditEntryJdo> findAuditEntries(            
+    public List<AuditEntry> findAuditEntries(
             final @Optional @Named("From") LocalDate from,
             final @Optional @Named("To") LocalDate to) {
         return auditingServiceRepository.findByFromAndTo(from, to);
@@ -125,7 +115,7 @@ public class EstatioAuditing extends EstatioService<EstatioAuditing> {
     
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence="30.1")
-    public List<PublishedEventJdo> allQueuedEvents() {
+    public List<PublishedEvent> allQueuedEvents() {
         return publishingServiceRepository.findQueued();
     }
     public boolean hideAllQueuedEvents() {
@@ -135,7 +125,7 @@ public class EstatioAuditing extends EstatioService<EstatioAuditing> {
     @ActionSemantics(Of.SAFE)
     @Prototype
     @MemberOrder(sequence="30.2")
-    public List<PublishedEventJdo> allProcessedEvents() {
+    public List<PublishedEvent> allProcessedEvents() {
         return publishingServiceRepository.findProcessed();
     }
     public boolean hideAllProcessedEvents() {
@@ -153,7 +143,7 @@ public class EstatioAuditing extends EstatioService<EstatioAuditing> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(sequence="30.4")
-    public List<PublishedEventJdo> findPublishedEvents(            
+    public List<PublishedEvent> findPublishedEvents(
             final @Optional @Named("From") LocalDate from,
             final @Optional @Named("To") LocalDate to) {
         return publishingServiceRepository.findByFromAndTo(from, to);
@@ -175,10 +165,10 @@ public class EstatioAuditing extends EstatioService<EstatioAuditing> {
     private CommandServiceJdoRepository commandServiceRepository;
     
     @javax.inject.Inject
-    private AuditingServiceJdoRepository auditingServiceRepository;
+    private AuditingServiceRepository auditingServiceRepository;
     
     @javax.inject.Inject
-    private PublishingServiceJdoRepository publishingServiceRepository;
+    private PublishingServiceRepository publishingServiceRepository;
     
     @javax.inject.Inject
     private ClockService clockService;
