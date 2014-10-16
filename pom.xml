@@ -91,7 +91,7 @@ language governing permissions and limitations under the License.
         <isis-module-devutils.version>1.6.1</isis-module-devutils.version>
         <isis-module-excel.version>1.7.0-SNAPSHOT</isis-module-excel.version>
         <isis-module-publishing.version>1.6.0</isis-module-publishing.version>
-        <isis-module-security.version>1.6.2</isis-module-security.version>
+        <isis-module-security.version>1.7.0-SNAPSHOT</isis-module-security.version>
         <isis-module-settings.version>1.6.0</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.6.0</isis-module-stringinterpolator.version>
 
