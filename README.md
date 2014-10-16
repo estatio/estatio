@@ -161,7 +161,7 @@ Thanks to
 
 ## Legal Stuff ##
 
-Copyright 2012-2013 [Eurocommercial Properties NV](http://www.eurocommercialproperties.com) 
+Copyright 2012-2014 [Eurocommercial Properties NV](http://www.eurocommercialproperties.com) 
 
 Licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
