@@ -22,25 +22,13 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
-
-import org.isisaddons.wicket.fullcalendar2.applib.CalendarEvent;
-import org.isisaddons.wicket.fullcalendar2.applib.CalendarEventable;
 import com.google.common.base.Function;
-
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEvent;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.Disabled;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Mandatory;
-import org.apache.isis.applib.annotation.MultiLine;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Title;
-
+import org.apache.isis.applib.annotation.*;
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.guarantee.Guarantee;
 
 /**
  * An event that has or is scheduled to occur at some point in time, pertaining to

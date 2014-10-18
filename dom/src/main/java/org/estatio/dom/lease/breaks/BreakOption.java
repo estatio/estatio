@@ -25,7 +25,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.VersionStrategy;
 
-import org.isisaddons.wicket.fullcalendar2.applib.CalendarEventable;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.CalendarEventable;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;

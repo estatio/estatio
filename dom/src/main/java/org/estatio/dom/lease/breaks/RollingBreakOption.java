@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.Programmatic;
 @javax.jdo.annotations.PersistenceCapable
 @javax.jdo.annotations.Inheritance(
         strategy = InheritanceStrategy.SUPERCLASS_TABLE)
-// no @DatastoreIdentity nor @Version, since inherited from supertype
 public class RollingBreakOption
         extends BreakOption {
 
@@ -39,12 +38,7 @@ public class RollingBreakOption
 
     /**
      * Dynamically rename {@link #getExerciseDate()} to be
-     * {@link #SUBJECT_EVENT_TYPE_LAST_NOTIFICATION_DATE} in the UI.
-     * 
-     * <p>
-     * For a {@link RollingBreakOption}, the {@link #getExerciseDate()} is the
-     * earliest date when notice can be given for the {@link #getLease() lease}
-     * to be terminated.
+     * &quot;Earliest exercise date&quot; in the UI.
      * 
      * <p>
      * NB: implemented this way because the alternative (override and using

@@ -20,7 +20,7 @@ package org.estatio.dom.event;
 
 import java.util.List;
 
-import org.isisaddons.wicket.fullcalendar2.applib.Calendarable;
+import org.isisaddons.wicket.fullcalendar2.cpt.applib.Calendarable;
 
 
 public interface EventSubject extends Calendarable {

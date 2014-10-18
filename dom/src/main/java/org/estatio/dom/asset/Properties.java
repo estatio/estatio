@@ -74,7 +74,8 @@ public class Properties extends EstatioDomainService<Property> {
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Fixed Assets", sequence = "12")
-    public List<Property> findProperties(final String referenceOrName) {
+    public List<Property> findProperties(
+            @Named("Reference or Name") final String referenceOrName) {
         return allMatches("findByReferenceOrName",
                 "referenceOrName", StringUtils.wildcardToCaseInsensitiveRegex(referenceOrName));
     }
