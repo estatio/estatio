@@ -41,7 +41,12 @@ import static org.junit.Assert.assertThat;
 public class EstatioSettingsServiceTest {
 
     public static class EstatioSettingsServiceForTesting extends EstatioSettingsService {
-        
+
+        @Override
+        public String getId() {
+            return getClass().getName();
+        }
+
         @Override
         public void updateEpochDate(LocalDate epochDate) {
         }

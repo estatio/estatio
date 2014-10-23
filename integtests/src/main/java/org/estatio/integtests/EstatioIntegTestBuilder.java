@@ -17,17 +17,15 @@
 package org.estatio.integtests;
 
 import java.util.List;
-
 import org.apache.log4j.Level;
-
+import org.isisaddons.module.excel.dom.ExcelService;
+import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.value.Blob;
 import org.apache.isis.core.commons.config.IsisConfiguration;
 import org.apache.isis.core.integtestsupport.IsisSystemForTest;
 import org.apache.isis.objectstore.jdo.applib.service.exceprecog.ExceptionRecognizerCompositeForJdoObjectStore;
 import org.apache.isis.objectstore.jdo.datanucleus.DataNucleusPersistenceMechanismInstaller;
 import org.apache.isis.objectstore.jdo.datanucleus.IsisConfigurationForJdoIntegTests;
-
-import org.isisaddons.module.excel.dom.ExcelService;
 
 public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
 
@@ -52,7 +50,8 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         );
 
         withServices(
-                new FakeExcelService(),
+// now picked up automatically...
+//                new FakeExcelService(),
                 new ExceptionRecognizerCompositeForJdoObjectStore());
     }
 
@@ -80,7 +79,13 @@ public class EstatioIntegTestBuilder extends IsisSystemForTest.Builder {
         return testConfiguration;
     }
 
+    @DomainService
     public static class FakeExcelService extends ExcelService {
+
+        public String getId() {
+            return getClass().getName();
+        }
+
         @Override
         public <T> Blob toExcel(List<T> domainObjects, Class<T> cls, String fileName) throws Exception {
             return null;
