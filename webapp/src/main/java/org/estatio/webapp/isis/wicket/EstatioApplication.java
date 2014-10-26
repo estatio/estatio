@@ -18,6 +18,11 @@
  */
 package org.estatio.webapp.isis.wicket;
 
+import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.settings.IBootstrapSettings;
+import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
+import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
+
 import java.io.InputStream;
 
 import com.google.inject.AbstractModule;
@@ -33,6 +38,14 @@ import org.apache.isis.viewer.wicket.viewer.IsisWicketApplication;
 public class EstatioApplication extends IsisWicketApplication {
 
     private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void init() {
+        super.init();
+
+        IBootstrapSettings settings = Bootstrap.getSettings();
+        settings.setThemeProvider(new BootswatchThemeProvider(BootswatchTheme.Sandstone));
+    }
 
     @Override
     protected Module newIsisWicketModule() {
