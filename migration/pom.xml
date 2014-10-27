@@ -66,6 +66,7 @@ language governing permissions and limitations under the License.
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-dom</artifactId>
         </dependency>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>estatio-dom-italy</artifactId>
@@ -74,6 +75,14 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-applib</artifactId>
+        </dependency>
+
+        <!-- Because optional in estatio-dom -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
         </dependency>
 
         <!-- testing -->
