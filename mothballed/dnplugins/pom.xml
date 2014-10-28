@@ -34,7 +34,7 @@ language governing permissions and limitations under the License.
 
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-objectstore-jdo-datanucleus</artifactId>
+            <artifactId>isis-core-runtime</artifactId>
         </dependency>
 
         <dependency>

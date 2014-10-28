@@ -97,10 +97,6 @@ language governing permissions and limitations under the License.
         </dependency>
         <dependency>
             <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-objectstore</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-security</artifactId>
         </dependency>
 
@@ -122,11 +118,6 @@ language governing permissions and limitations under the License.
         <dependency>
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-integtestsupport</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-objectstore-jdo-datanucleus</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
