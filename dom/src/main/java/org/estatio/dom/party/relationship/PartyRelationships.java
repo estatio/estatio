@@ -95,7 +95,7 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
         return newRelationship(party, person, relationshipType, description);
     }
 
-    public Set<String> choices5NewRelatedPerson(
+    public Set<String> choices6NewRelatedPerson(
             final Party from,
             final String reference,
             final String initials,
