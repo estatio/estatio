@@ -59,6 +59,6 @@ public class InvoiceSummariesForPropertyDueDateStatus
     public List<InvoiceSummaryForPropertyDueDateStatus> findByStatus(
             final @Optional InvoiceStatus status) {
         return allMatches("findByStatus",
-                "status", status.name());
+                "status", status);
     }
 }

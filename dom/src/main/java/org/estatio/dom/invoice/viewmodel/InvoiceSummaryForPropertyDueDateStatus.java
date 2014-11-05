@@ -29,13 +29,11 @@ import org.joda.time.LocalDate;
 import org.apache.isis.applib.annotation.Bookmarkable;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.ViewModel;
-import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.asset.Properties;
 import org.estatio.dom.asset.Property;
@@ -116,6 +114,18 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     // //////////////////////////////////////
 
+    private InvoiceStatus status;
+
+    public InvoiceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InvoiceStatus status) {
+        this.status = status;
+    }
+
+    // //////////////////////////////////////
+
     private LocalDate dueDate;
 
     @Title(sequence = "2", prepend = " - ")
@@ -125,20 +135,6 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     public void setDueDate(final LocalDate dueDate) {
         this.dueDate = dueDate;
-    }
-
-    // //////////////////////////////////////
-
-    private String status;
-
-    @Title(sequence = "2", prepend = " - ")
-    @Hidden(where = Where.OBJECT_FORMS)
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(final String status) {
-        this.status = status;
     }
 
     // //////////////////////////////////////
@@ -218,32 +214,9 @@ public class InvoiceSummaryForPropertyDueDateStatus extends InvoiceSummaryAbstra
 
     // //////////////////////////////////////
 
-    /**
-     * Annotated as {@link javax.jdo.annotations.NotPersistent not persistent}
-     * because not mapped in the <tt>view-definition</tt>.
-     */
-    @javax.jdo.annotations.NotPersistent
-    private InvoiceStatus statusType;
-
-    @Optional
-    @Named("Status")
-    @Hidden(where = Where.ALL_TABLES)
-    public InvoiceStatus getStatusType() {
-        if (statusType == null) {
-            setStatusType(InvoiceStatus.valueOf(getStatus()));
-        }
-        return statusType;
-    }
-
-    public void setStatusType(final InvoiceStatus statusType) {
-        this.statusType = statusType;
-    }
-
-    // //////////////////////////////////////
-
     @Render(Type.EAGERLY)
     public List<Invoice> getInvoices() {
-        return invoicesService.findInvoices(getProperty(), getDueDate(), getStatusType());
+        return invoicesService.findInvoices(getProperty(), getDueDate(), getStatus());
     }
 
     // //////////////////////////////////////
