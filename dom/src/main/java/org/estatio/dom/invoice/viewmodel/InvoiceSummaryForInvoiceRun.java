@@ -60,14 +60,8 @@ import org.estatio.dom.invoice.Invoice;
                                 "FROM \"Invoice\" " +
                                 "  INNER JOIN \"Lease\"   " +
                                 "    ON \"Invoice\".\"leaseId\" = \"Lease\".\"id\" " +
-                                "  INNER JOIN \"Occupancy\" " +
-                                "    ON \"Lease\".\"id\" = \"Occupancy\".\"leaseId\" " +
-                                "  INNER JOIN \"Unit\"   " +
-                                "    ON \"Unit\".\"id\" = \"Occupancy\".\"unitId\" " +
-                                "  INNER JOIN \"Property\" " +
-                                "    ON \"Property\".\"id\" = \"Unit\".\"propertyId\" " +
-                                "  INNER JOIN \"FixedAsset\" " +
-                                "    ON \"FixedAsset\".\"id\" = \"Property\".\"id\" " +
+                                "  INNER JOIN \"FixedAsset\"  " +
+                                "    ON \"FixedAsset\".\"id\"  = \"Invoice\".\"fixedAssetId\" " +
                                 "  INNER JOIN \"InvoiceItem\" " +
                                 "    ON \"InvoiceItem\".\"invoiceId\" = \"Invoice\".\"id\" " +
                                 "WHERE " +
