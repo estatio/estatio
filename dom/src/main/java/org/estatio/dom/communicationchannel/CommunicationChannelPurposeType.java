@@ -16,21 +16,22 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.estatio.dom.party;
+package org.estatio.dom.communicationchannel;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.estatio.dom.TitledEnum;
 
-import org.junit.Test;
+public enum CommunicationChannelPurposeType implements TitledEnum {
 
-public class PersonGenderTypeTest {
+    ACCOUNTING("Accounting");
 
-    public static class Title extends PersonGenderTypeTest {
+    private String title;
 
-        @Test
-        public void test() {
-            assertThat(PersonGenderType.MALE.title(), is("Male"));
-        }
-
+    private CommunicationChannelPurposeType(String title) {
+        this.title = title;
     }
+
+    public String title() {
+        return title;
+    }
+
 }

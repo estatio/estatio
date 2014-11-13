@@ -18,7 +18,6 @@
  */
 package org.estatio.dom.communicationchannel;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.jdo.annotations.InheritanceStrategy;
@@ -29,12 +28,9 @@ import org.apache.isis.applib.annotation.Mandatory;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
-import org.apache.isis.applib.annotation.RegEx;
-import org.apache.isis.applib.annotation.Title;
+import org.apache.isis.applib.util.TitleBuffer;
 
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
-import org.estatio.dom.asset.Unit;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
 import org.estatio.dom.geography.States;
@@ -60,11 +56,22 @@ import org.estatio.dom.geography.States;
 @Immutable
 public class PostalAddress extends CommunicationChannel {
 
+    public String title() {
+        return new TitleBuffer()
+                .append(getAddress1())
+                .append(", ", getCity())
+                .append(" ", getPostalCode())
+                .append(" ", isLegal() ? "[Legal]" : "")
+                .append(getPurpose() == null ? "" : "[" + getPurpose().title() + "]")
+                .toString();
+    }
+
     private String address1;
 
+    // //////////////////////////////////////
+    
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
     @Mandatory
-    @Title(sequence = "1", append = ", ")
     @Named("Address line 1")
     public String getAddress1() {
         return address1;
@@ -79,8 +86,6 @@ public class PostalAddress extends CommunicationChannel {
     private String address2;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
-    @Title(sequence = "2", append = ", ")
-    @Optional
     @Named("Address line 2")
     public String getAddress2() {
         return address2;
@@ -95,7 +100,6 @@ public class PostalAddress extends CommunicationChannel {
     private String address3;
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.ADDRESS_LINE)
-    @Title(sequence = "3", append = ", ")
     @Optional
     @Named("Address line 3")
     public String getAddress3() {
@@ -112,7 +116,6 @@ public class PostalAddress extends CommunicationChannel {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PostalAddress.POSTAL_CODE)
     @Mandatory
-    @Title(sequence = "3", append = ", ")
     public String getPostalCode() {
         return postalCode;
     }
@@ -127,7 +130,6 @@ public class PostalAddress extends CommunicationChannel {
 
     @javax.jdo.annotations.Column(allowsNull = "true", length = JdoColumnLength.PROPER_NAME)
     @Mandatory
-    @Title(sequence = "4")
     public String getCity() {
         return city;
     }

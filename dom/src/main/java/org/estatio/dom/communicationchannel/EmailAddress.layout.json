@@ -3,10 +3,12 @@
     {
       "span": 4,
       "memberGroups": {
-        "Owner": {
+        "General": {
           "members": {
             "owner": {},
-            "description": {
+            "description": {},
+            "legal": {},
+            "purpose": {
               "actions": {
                 "change": {}
               }
@@ -30,16 +32,8 @@
       }
     },
     {
-      "span": 4,
-      "memberGroups": {
-        "Status": {
-          "members": {
-            "legal": {},
-            "type": {},
-            "reference": {}
-          }
-        }
-      }
+      "span": 0,
+      "memberGroups": {}
     },
     {
       "span": 12,

@@ -99,7 +99,6 @@ public abstract class Party
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.REFERENCE)
     @RegEx(validation = RegexValidation.REFERENCE, caseSensitive = false)
     @Disabled
-    @Title(sequence = "1")
     public String getReference() {
         return reference;
     }
@@ -113,7 +112,7 @@ public abstract class Party
     private String name;
 
     @javax.jdo.annotations.Column(allowsNull = "false", length = JdoColumnLength.Party.NAME)
-    @Title(sequence = "2", prepend = "-")
+    @Title
     public String getName() {
         return name;
     }

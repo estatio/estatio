@@ -17,8 +17,8 @@
         },
         "Communication": {
           "members": {
-            "emailAddress": {},
-            "phoneNumber": {}
+            "emailAddresses": {},
+            "phoneNumbers": {}
           }
         }
       }

@@ -869,15 +869,6 @@ public class Lease
         }
     }
 
-    private void setDefaultCommunicationChannel() {
-        AgreementRole agreementRole = getSecondaryAgreementRole();
-        final AgreementRoleCommunicationChannelType arcct = agreementRoleCommunicationChannelTypes.findByAgreementTypeAndTitle(this.getType(), LeaseConstants.ARCCT_ADMINISTRATION_ADDRESS);
-        final SortedSet<CommunicationChannel> cc = communicationChannels.findByOwnerAndType(getSecondaryParty(), CommunicationChannelType.ACCOUNTING_POSTAL_ADDRESS);
-        if (cc.size() > 0) {
-            agreementRole.addCommunicationChannel(arcct, cc.first(), null, null);
-        }
-    }
-
     private void copyBreakOptions(final Lease newLease, final LocalDate startDate) {
         for (BreakOption option : getBreakOptions()) {
             if (option.getBreakDate().isAfter(startDate)) {

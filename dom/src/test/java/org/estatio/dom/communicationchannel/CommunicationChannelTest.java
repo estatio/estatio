@@ -46,15 +46,15 @@ public class CommunicationChannelTest {
             return listOf(
                     listOf(
                             newCommunicationChannel(null),
-                            newCommunicationChannel(CommunicationChannelType.ACCOUNTING_POSTAL_ADDRESS),
-                            newCommunicationChannel(CommunicationChannelType.ACCOUNTING_POSTAL_ADDRESS),
+                            newCommunicationChannel(CommunicationChannelType.POSTAL_ADDRESS),
+                            newCommunicationChannel(CommunicationChannelType.POSTAL_ADDRESS),
                             newCommunicationChannel(CommunicationChannelType.FAX_NUMBER)
                     ),
                     listOf(
-                            newCommunicationChannel(CommunicationChannelType.ACCOUNTING_POSTAL_ADDRESS),
+                            newCommunicationChannel(null),
                             newCommunicationChannel(CommunicationChannelType.POSTAL_ADDRESS),
                             newCommunicationChannel(CommunicationChannelType.POSTAL_ADDRESS),
-                            newCommunicationChannel(CommunicationChannelType.ACCOUNTING_EMAIL_ADDRESS)
+                            newCommunicationChannel(CommunicationChannelType.EMAIL_ADDRESS)
                     )
             );
         }

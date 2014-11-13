@@ -1,8 +1,12 @@
 package org.estatio.dom.party.relationship.contributed;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -12,6 +16,7 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotContributed.As;
 import org.apache.isis.applib.annotation.TypicalLength;
+import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.communicationchannel.CommunicationChannel;
@@ -25,24 +30,27 @@ public class PartyRelationShipViewCommunicationChannelContributions {
 
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
+    @Hidden(where = Where.OBJECT_FORMS)
     @TypicalLength(JdoColumnLength.PHONE_NUMBER)
-    public String phoneNumber(PartyRelationshipView prv) {
-        return channelTitle(prv, CommunicationChannelType.PHONE_NUMBER);
+    public String phoneNumbers(PartyRelationshipView prv) {
+        return StringUtils.join(channelTitles(prv, CommunicationChannelType.PHONE_NUMBER), ", ");
     }
 
     @ActionSemantics(Of.SAFE)
     @NotContributed(As.ACTION)
-    @TypicalLength(JdoColumnLength.DESCRIPTION)
-    public String emailAddress(PartyRelationshipView prv) {
-        return channelTitle(prv, CommunicationChannelType.EMAIL_ADDRESS);
+    @Hidden(where = Where.OBJECT_FORMS)
+    @TypicalLength(JdoColumnLength.EMAIL_ADDRESS)
+    public String emailAddresses(PartyRelationshipView prv) {
+        return StringUtils.join(channelTitles(prv, CommunicationChannelType.EMAIL_ADDRESS), ", ");
     }
 
-    private String channelTitle(PartyRelationshipView prv, final CommunicationChannelType type) {
+    private List<String> channelTitles(PartyRelationshipView prv, final CommunicationChannelType type) {
         final SortedSet<CommunicationChannel> results = communicationChannels.findByOwnerAndType(prv.getTo(), type);
-        if (!results.isEmpty()) {
-            return container.titleOf(results.first());
+        ArrayList<String> titles = new ArrayList<String>();
+        for (CommunicationChannel communicationChannel : results) {
+            titles.add(container.titleOf(communicationChannel));
         }
-        return null;
+        return titles;
     }
 
     @Inject

@@ -21,6 +21,7 @@ package org.estatio.dom.communicationchannel;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DiscriminatorStrategy;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -97,7 +98,7 @@ public abstract class CommunicationChannel
         implements WithNameGetter, WithReferenceGetter {
 
     public CommunicationChannel() {
-        super("id, type");
+        super("type, legal, id");
     }
 
     public String iconName() {
@@ -209,6 +210,43 @@ public abstract class CommunicationChannel
 
     // //////////////////////////////////////
 
+    private CommunicationChannelPurposeType purpose;
+
+    @Column(allowsNull="true", length=JdoColumnLength.TYPE_ENUM)
+    public CommunicationChannelPurposeType getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(CommunicationChannelPurposeType purpose) {
+        this.purpose = purpose;
+    }
+
+    // //////////////////////////////////////
+
+    public CommunicationChannel change(
+            final @Named("Description") @Optional @MultiLine(numberOfLines = 3) String description,
+            final @Named("Legal") @Optional boolean legal,
+            final @Named("Purpose") @Optional CommunicationChannelPurposeType purpose) {
+        setLegal(legal);
+        setPurpose(purpose);
+        setDescription(description);
+        return this;
+    }
+
+    public String default0Change() {
+        return getDescription();
+    }
+
+    public boolean default1Change() {
+        return isLegal();
+    }
+
+    public CommunicationChannelPurposeType default2Change() {
+        return getPurpose();
+    }
+
+    // //////////////////////////////////////
+
     public static class RemoveEvent extends ActionInteractionEvent<CommunicationChannel> {
         private static final long serialVersionUID = 1L;
 
@@ -236,13 +274,4 @@ public abstract class CommunicationChannel
     @Inject
     CommunicationChannels communicationChannels;
 
-    public CommunicationChannel change(
-            final @Named("Description") @MultiLine(numberOfLines = 3) String description) {
-        setDescription(description);
-        return this;
-    }
-
-    public String default0Change() {
-        return getDescription();
-    }
 }
