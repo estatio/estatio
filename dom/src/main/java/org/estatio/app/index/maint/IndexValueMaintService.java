@@ -17,25 +17,17 @@
  */
 package org.estatio.app.index.maint;
 
-import java.math.BigDecimal;
 import java.util.List;
-
+import java.util.Map;
 import javax.annotation.PostConstruct;
-
 import com.google.common.collect.Lists;
-
-import org.joda.time.LocalDate;
-
+import org.isisaddons.module.excel.dom.ExcelService;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.services.memento.MementoService.Memento;
 import org.apache.isis.applib.value.Blob;
-
-import org.isisaddons.module.excel.dom.ExcelService;
-
 import org.estatio.dom.EstatioService;
 
 
@@ -50,7 +42,8 @@ public class IndexValueMaintService extends EstatioService<IndexValueMaintServic
     // //////////////////////////////////////
 
     @PostConstruct
-    public void init() {
+    public void init(final Map<String, String> properties) {
+        super.init(properties);
         if(excelService == null) {
             throw new IllegalStateException("Require ExcelService to be configured");
         }

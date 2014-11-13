@@ -45,15 +45,15 @@ public class InvoiceService extends EstatioService<InvoiceService> {
     }
 
     public LocalDate default3CalculateInvoicesForProperty() {
-        return clockService.beginningOfNextQuarter();
+        return getClockService().beginningOfNextQuarter();
     }
 
     public LocalDate default4CalculateInvoicesForProperty() {
-        return clockService.beginningOfNextQuarter();
+        return getClockService().beginningOfNextQuarter();
     }
 
     public LocalDate default5CalculateInvoicesForProperty() {
-        return clockService.beginningOfNextQuarter().plusDays(1);
+        return getClockService().beginningOfNextQuarter().plusDays(1);
     }
 
     public String validateCalculateInvoicesForProperty(
@@ -110,41 +110,27 @@ public class InvoiceService extends EstatioService<InvoiceService> {
     }
 
     public LocalDate default3CalculateInvoicesForLeases() {
-        return clockService.beginningOfNextQuarter();
+        return getClockService().beginningOfNextQuarter();
     }
 
     public LocalDate default4CalculateInvoicesForLeases() {
-        return clockService.beginningOfNextQuarter();
+        return getClockService().beginningOfNextQuarter();
     }
 
     public LocalDate default5CalculateInvoicesForLeases() {
-        return clockService.beginningOfNextQuarter();
+        return getClockService().beginningOfNextQuarter();
     }
 
     // //////////////////////////////////////
 
+    @javax.inject.Inject
     private Leases leases;
 
-    public void setLeases(final Leases leases) {
-        this.leases = leases;
-    }
-
+    @javax.inject.Inject
     private InvoiceCalculationService invoiceCalculationService;
 
-    public final void setInvoiceCalculationService(final InvoiceCalculationService invoiceCalculationService) {
-        this.invoiceCalculationService = invoiceCalculationService;
-    }
 
-    private ClockService clockService;
-
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
-
+    @javax.inject.Inject
     private InvoiceSummariesForInvoiceRun invoiceSummaries;
-
-    public void injectInvoiceSummaries(final InvoiceSummariesForInvoiceRun invoiceSummaries) {
-        this.invoiceSummaries = invoiceSummaries;
-    }
 
 }

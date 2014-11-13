@@ -18,7 +18,11 @@
  */
 package org.estatio.dom;
 
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import org.apache.isis.applib.AbstractService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 import org.apache.isis.applib.services.memento.MementoService;
@@ -50,43 +54,45 @@ public abstract class EstatioService<T> extends AbstractService {
     protected Class<? extends EstatioService<T>> getServiceType() {
         return serviceType;
     }
-    
+
 
     // //////////////////////////////////////
 
+    /**
+     * Domain services ARE automatically registered with the {@link EventBusService};
+     * Isis guarantees that there will be an instance of each domain service in memory when events are {@link EventBusService#post(Object) post}ed.
+     */
+    @Programmatic
+    @PostConstruct
+    public void init(final Map<String, String> properties) {
+        getEventBusService().register(this);
+    }
+
+    @Programmatic
+    @PreDestroy
+    public void shutdown() {
+        getEventBusService().unregister(this);
+    }
+
+
+    // //////////////////////////////////////
+
+    @javax.inject.Inject
     private ClockService clockService;
     protected ClockService getClockService() {
         return clockService;
     }
-    public void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
 
-    /**
-     * a default value is used to prevent null pointers for objects 
-     * being initialized where the service has not yet been injected into.
-     */
-    private EventBusService eventBusService = EventBusService.NOOP;
+    @javax.inject.Inject
+    private EventBusService eventBusService;
     protected EventBusService getEventBusService() {
         return eventBusService;
     }
-    /**
-     * Unlike domain objects, domain services ARE automatically registered
-     * with the {@link EventBusService}; Isis guarantees that there will be
-     * an instance of each domain service in memory when events are {@link EventBusService#post(Object) post}ed.
-     */
-    public void injectEventBusService(final EventBusService eventBusService) {
-        this.eventBusService = eventBusService;
-        eventBusService.register(this);
-    }
 
+    @javax.inject.Inject
     private MementoService mementoService;
     protected MementoService getMementoService() {
         return mementoService;
-    }
-
-    final public void injectMementoService(final MementoService mementoService) {
-        this.mementoService = mementoService;
     }
 
     

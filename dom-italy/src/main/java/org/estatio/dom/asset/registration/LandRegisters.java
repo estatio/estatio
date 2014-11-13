@@ -20,18 +20,15 @@ package org.estatio.dom.asset.registration;
 
 import java.math.BigDecimal;
 import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
-import org.estatio.dom.EstatioDomainService;
-import org.estatio.dom.asset.FixedAsset;
 import org.joda.time.LocalDate;
-
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.asset.FixedAsset;
 
 @DomainService(menuOrder = "10", repositoryFor = LandRegister.class)
 public class LandRegisters extends EstatioDomainService<LandRegister> {
@@ -45,6 +42,7 @@ public class LandRegisters extends EstatioDomainService<LandRegister> {
     @PostConstruct
     @Programmatic
     public void init(Map<String, String> properties) {
+        super.init(properties);
         fixedAssetRegistrationTypes.findOrCreate(LandRegisterConstants.FART_LAND_REGISTER, LandRegister.class);
     }
 

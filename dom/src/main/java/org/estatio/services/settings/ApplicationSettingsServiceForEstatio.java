@@ -122,6 +122,7 @@ public class ApplicationSettingsServiceForEstatio extends EstatioDomainService<A
     @Programmatic
     @PostConstruct
     public void init(final Map<String,String> props) {
+        super.init(props);
         installDefaultsIfRequired();
     }
 

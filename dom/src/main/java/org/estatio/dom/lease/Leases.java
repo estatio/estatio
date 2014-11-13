@@ -266,6 +266,7 @@ public class Leases extends EstatioDomainService<Lease> {
     @PostConstruct
     @Programmatic
     public void init(Map<String, String> properties) {
+        super.init(properties);
         AgreementType agreementType = agreementTypes.findOrCreate(LeaseConstants.AT_LEASE);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_TENANT, agreementType);
         agreementRoleTypes.findOrCreate(LeaseConstants.ART_LANDLORD, agreementType);

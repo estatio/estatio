@@ -19,6 +19,7 @@ package org.estatio.dom.party.relationship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -44,7 +45,8 @@ public class PartyRelationshipViewService extends EstatioService<PartyRelationsh
     // //////////////////////////////////////
 
     @PostConstruct
-    public void init() {
+    public void init(final Map<String, String> properties) {
+        super.init(properties);
     }
 
     // //////////////////////////////////////

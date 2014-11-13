@@ -96,6 +96,7 @@ public class BankMandates extends EstatioDomainService<BankMandate> {
     @PostConstruct
     @Programmatic
     public void init(Map<String, String> properties) {
+        super.init(properties);
         AgreementType agreementType = agreementTypes.findOrCreate(BankMandateConstants.AT_MANDATE);
         agreementRoleTypes.findOrCreate(BankMandateConstants.ART_DEBTOR, agreementType);
         agreementRoleTypes.findOrCreate(BankMandateConstants.ART_CREDITOR, agreementType);

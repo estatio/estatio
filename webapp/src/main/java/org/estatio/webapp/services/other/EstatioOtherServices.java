@@ -58,6 +58,7 @@ public class EstatioOtherServices extends EstatioService<EstatioOtherServices> {
     @Programmatic
     @PostConstruct
     public void init(final Map<String, String> properties) {
+        super.init(properties);
         this.properties = properties;
     }
 

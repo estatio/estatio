@@ -18,6 +18,7 @@
  */
 package org.estatio.app;
 
+import javax.inject.Inject;
 import org.apache.isis.applib.AbstractContainedObject;
 import org.apache.isis.applib.services.eventbus.EventBusService;
 
@@ -25,34 +26,20 @@ import org.estatio.services.clock.ClockService;
 
 public abstract class EstatioViewModel extends AbstractContainedObject {
 
+    @Inject
     private ClockService clockService;
 
     protected ClockService getClockService() {
         return clockService;
     }
 
-    public final void injectClockService(final ClockService clockService) {
-        this.clockService = clockService;
-    }
-
     // //////////////////////////////////////
 
-    /**
-     * a default value is used to prevent null pointers for objects
-     * being initialized where the service has not yet been injected into.
-     */
-    private EventBusService eventBusService = EventBusService.NOOP;
+    @Inject
+    private EventBusService eventBusService;
 
     protected EventBusService getEventBusService() {
         return eventBusService;
     }
 
-    /**
-     * Unlike domain services, domain objects are NOT automatically registered
-     * with the {@link EventBusService}; Isis makes no guarantees as to whether
-     * a subscribing domain object is in memory or not to receive the event.
-     */
-    public final void injectEventBusService(final EventBusService eventBusService) {
-        this.eventBusService = eventBusService;
-    }
 }

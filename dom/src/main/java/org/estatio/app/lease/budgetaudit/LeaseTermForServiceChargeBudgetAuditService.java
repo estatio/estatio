@@ -18,23 +18,13 @@
 package org.estatio.app.lease.budgetaudit;
 
 import java.util.List;
-
+import java.util.Map;
 import javax.annotation.PostConstruct;
-
-import org.joda.time.LocalDate;
-
-import org.apache.isis.applib.annotation.DomainService;
-import org.apache.isis.applib.annotation.Immutable;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.NotContributed;
-import org.apache.isis.applib.annotation.NotContributed.As;
-import org.apache.isis.applib.annotation.NotInServiceMenu;
-import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.apache.isis.applib.services.memento.MementoService.Memento;
-
 import org.isisaddons.module.excel.dom.ExcelService;
-
+import org.joda.time.LocalDate;
+import org.apache.isis.applib.annotation.*;
+import org.apache.isis.applib.annotation.NotContributed.As;
+import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.estatio.dom.EstatioService;
 import org.estatio.dom.asset.Property;
 import org.estatio.dom.lease.LeaseTerms;
@@ -50,7 +40,8 @@ public class LeaseTermForServiceChargeBudgetAuditService extends EstatioService<
     // //////////////////////////////////////
 
     @PostConstruct
-    public void init() {
+    public void init(final Map<String, String> properties) {
+        super.init(properties);
         if (bookmarkService == null) {
             throw new IllegalStateException("Require BookmarkService to be configured");
         }
