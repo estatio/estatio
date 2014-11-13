@@ -34,7 +34,7 @@ public class LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005 extends Lea
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMiracl005(), executionContext);
+            executeChild(new LeaseForOxfMiracl005(), executionContext);
         }
 
         // exec

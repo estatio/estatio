@@ -16,10 +16,8 @@
  */
 package org.estatio.fixture.security;
 
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-
 import org.isisaddons.module.security.seed.SeedUsersAndRolesFixtureScript;
-
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.estatio.fixture.security.perms.EstatioAdminRoleAndPermissions;
 import org.estatio.fixture.security.perms.EstatioRolesAndPermissions;
 import org.estatio.fixture.security.perms.EstatioUserRoleAndPermissions;
@@ -36,23 +34,23 @@ public class EstatioSecurityModuleAppSetUp extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        execute(new SeedUsersAndRolesFixtureScript(), executionContext);
+        executeChild(new SeedUsersAndRolesFixtureScript(), executionContext);
 
-        execute(new EstatioRolesAndPermissions(), executionContext);
-        execute(new EstatioAdmin(), executionContext);
-        execute(new EstatioUser(), executionContext);
-        execute(new AllTenancies(), executionContext);
+        executeChild(new EstatioRolesAndPermissions(), executionContext);
+        executeChild(new EstatioAdmin(), executionContext);
+        executeChild(new EstatioUser(), executionContext);
+        executeChild(new AllTenancies(), executionContext);
 
         // perms (role/features)
-        execute(new EstatioUserRoleAndPermissions(), executionContext);
-        execute(new EstatioAdminRoleAndPermissions(), executionContext);
+        executeChild(new EstatioUserRoleAndPermissions(), executionContext);
+        executeChild(new EstatioAdminRoleAndPermissions(), executionContext);
 
         // user/role
-        execute(new EstatioAdmin_Has_EstatioAdminRole(), executionContext);
-        execute(new EstatioAdmin_Has_IsisSecurityModuleAdminRole(), executionContext);
+        executeChild(new EstatioAdmin_Has_EstatioAdminRole(), executionContext);
+        executeChild(new EstatioAdmin_Has_IsisSecurityModuleAdminRole(), executionContext);
 
-        execute(new EstatioUser_Has_EstatioPoweruserRole(), executionContext);
-        execute(new EstatioUser_Has_IsisSecurityModuleRegularRole(), executionContext);
+        executeChild(new EstatioUser_Has_EstatioPoweruserRole(), executionContext);
+        executeChild(new EstatioUser_Has_IsisSecurityModuleRegularRole(), executionContext);
 
     }
 

@@ -34,7 +34,7 @@ public class LeaseItemAndLeaseTermForRentForOxfTopModel001 extends LeaseItemAndT
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfTopModel001(), executionContext);
+            executeChild(new LeaseForOxfTopModel001(), executionContext);
         }
 
         // exec

@@ -31,7 +31,7 @@ public class LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005 extends LeaseIt
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMiracl005(), executionContext);
+            executeChild(new LeaseForOxfMiracl005(), executionContext);
         }
 
         // exec

@@ -27,10 +27,10 @@ public class LeaseItemAndTermsForOxfMiracl005 extends LeaseItemAndTermsAbstract 
 
     private void createLeaseTermsForOxfMiracl005(ExecutionContext executionContext) {
 
-        execute(new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005(), executionContext);
-        execute(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForRentOf2ForOxfMiracl005(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForServiceChargeOf2ForOxfMiracl005(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForTurnoverRentForOxfMiracl005(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
     }
 
 }

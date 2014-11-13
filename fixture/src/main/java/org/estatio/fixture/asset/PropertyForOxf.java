@@ -39,8 +39,8 @@ public class PropertyForOxf extends PropertyAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new OrganisationForHelloWorld(), executionContext);
-            execute(new PersonForJohnDoe(), executionContext);
+            executeChild(new OrganisationForHelloWorld(), executionContext);
+            executeChild(new PersonForJohnDoe(), executionContext);
         }
 
         // exec

@@ -57,13 +57,13 @@ public abstract class EstatioFixtureScript extends FixtureScript {
 
     // //////////////////////////////////////
 
-    protected void execute(final String localNameOverride, final FixtureScript fixtureScript, ExecutionContext executionContext) {
+    protected void executeChild(final String localNameOverride, final FixtureScript fixtureScript, ExecutionContext executionContext) {
         // cascade the prereqs setting
         if(fixtureScript instanceof EstatioFixtureScript) {
             final EstatioFixtureScript estatioFixtureScript = (EstatioFixtureScript) fixtureScript;
             estatioFixtureScript.with(prereqs);
         }
-        super.execute(localNameOverride, fixtureScript, executionContext);
+        super.executeChild(localNameOverride, fixtureScript, executionContext);
     }
 
 }

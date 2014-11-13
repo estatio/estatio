@@ -48,37 +48,37 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new EstatioBaseLineFixture(), executionContext);
+        executeChild(new EstatioBaseLineFixture(), executionContext);
 
-        execute(new PersonForLinusTorvalds(), executionContext);
+        executeChild(new PersonForLinusTorvalds(), executionContext);
 
-        execute(new BankAccountForAcme(), executionContext);
+        executeChild(new BankAccountForAcme(), executionContext);
 
-        execute(new BankAccountForHelloWorld(), executionContext);
+        executeChild(new BankAccountForHelloWorld(), executionContext);
 
-        execute(new BankAccountAndMandateForTopModel(), executionContext);
-        execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+        executeChild(new BankAccountAndMandateForTopModel(), executionContext);
+        executeChild(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
 
-        execute(new BankAccountForMediaX(), executionContext);
-        execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+        executeChild(new BankAccountForMediaX(), executionContext);
+        executeChild(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
-        execute(new BankAccountForPret(), executionContext);
-        execute(new LeaseForOxfPret004(), executionContext);
+        executeChild(new BankAccountForPret(), executionContext);
+        executeChild(new LeaseForOxfPret004(), executionContext);
 
-        execute(new BankAccountForMiracle(), executionContext);
-        execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+        executeChild(new BankAccountForMiracle(), executionContext);
+        executeChild(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
 
-        execute(new BankAccountAndMandateForPoison(), executionContext);
-        execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+        executeChild(new BankAccountAndMandateForPoison(), executionContext);
+        executeChild(new LeaseBreakOptionsForOxfPoison003(), executionContext);
 
-        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-        execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
-        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
-        execute(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(), executionContext);
+        executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+        executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+        executeChild(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(), executionContext);
 
-        execute(new GuaranteeForOxfTopModel001(), executionContext);
+        executeChild(new GuaranteeForOxfTopModel001(), executionContext);
 
-        execute(new PersonForGinoVannelli(), executionContext);
+        executeChild(new PersonForGinoVannelli(), executionContext);
 
     }
 }

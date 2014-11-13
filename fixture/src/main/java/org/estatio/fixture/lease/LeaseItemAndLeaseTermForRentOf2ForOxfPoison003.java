@@ -34,7 +34,7 @@ public class LeaseItemAndLeaseTermForRentOf2ForOxfPoison003 extends LeaseItemAnd
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfPoison003(), executionContext);
+            executeChild(new LeaseForOxfPoison003(), executionContext);
         }
 
         // exec

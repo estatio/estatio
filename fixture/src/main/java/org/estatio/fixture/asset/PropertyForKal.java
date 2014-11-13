@@ -40,8 +40,8 @@ public class PropertyForKal extends PropertyAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new OrganisationForAcme(), executionContext);
-            execute(new PersonForJohnDoe(), executionContext);
+            executeChild(new OrganisationForAcme(), executionContext);
+            executeChild(new PersonForJohnDoe(), executionContext);
         }
 
         // exec

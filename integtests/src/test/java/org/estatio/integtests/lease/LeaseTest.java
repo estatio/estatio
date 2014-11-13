@@ -18,40 +18,22 @@
  */
 package org.estatio.integtests.lease;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.SortedSet;
-
 import javax.inject.Inject;
-
 import org.joda.time.LocalDate;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.index.Index;
 import org.estatio.dom.index.IndexValues;
 import org.estatio.dom.index.Indices;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.InvoiceStatus;
 import org.estatio.dom.invoice.Invoices;
-import org.estatio.dom.lease.Lease;
-import org.estatio.dom.lease.LeaseItem;
-import org.estatio.dom.lease.LeaseItemType;
-import org.estatio.dom.lease.LeaseTerm;
-import org.estatio.dom.lease.LeaseTermForIndexable;
-import org.estatio.dom.lease.Leases;
+import org.estatio.dom.lease.*;
 import org.estatio.dom.lease.invoicing.InvoiceCalculationSelection;
 import org.estatio.dom.lease.invoicing.InvoiceItemForLease;
 import org.estatio.dom.lease.invoicing.InvoiceItemsForLease;
@@ -61,20 +43,13 @@ import org.estatio.fixture.asset.PropertyForKal;
 import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfMediax002;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfPoison003;
-import org.estatio.fixture.lease.LeaseBreakOptionsForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseForOxfMediaX002;
-import org.estatio.fixture.lease.LeaseForOxfPoison003;
-import org.estatio.fixture.lease.LeaseForOxfPret004;
-import org.estatio.fixture.lease.LeaseForOxfTopModel001;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMediax002;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfMiracl005;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfPoison003;
-import org.estatio.fixture.lease.LeaseItemAndTermsForOxfTopModel001;
+import org.estatio.fixture.lease.*;
 import org.estatio.fixture.party.PersonForJohnDoe;
 import org.estatio.integtests.EstatioIntegrationTest;
 import org.estatio.integtests.VT;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class LeaseTest extends EstatioIntegrationTest {
 
@@ -88,10 +63,10 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseForOxfPoison003(), executionContext);
-                    execute(new LeaseForOxfMediaX002(), executionContext);
+                    executeChild(new LeaseForOxfPoison003(), executionContext);
+                    executeChild(new LeaseForOxfMediaX002(), executionContext);
                 }
             });
         }
@@ -124,9 +99,9 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
                 }
             });
         }
@@ -156,9 +131,9 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
                 }
             });
         }
@@ -177,9 +152,9 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
                 }
             });
         }
@@ -230,10 +205,10 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfMediax002(), executionContext);
-                    execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfMediax002(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfPoison003(), executionContext);
                 }
             });
         }
@@ -315,9 +290,9 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseForOxfTopModel001(), executionContext);
                 }
             });
         }
@@ -349,25 +324,25 @@ public class LeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new PersonForJohnDoe(), executionContext);
+                    executeChild(new PersonForJohnDoe(), executionContext);
 
-                    execute(new PropertyForOxf(), executionContext);
+                    executeChild(new PropertyForOxf(), executionContext);
 
-                    execute(new PropertyForKal(), executionContext);
+                    executeChild(new PropertyForKal(), executionContext);
 
-                    execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
 
-                    execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+                    executeChild(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
-                    execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    executeChild(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
-                    execute(new LeaseForOxfPret004(), executionContext);
+                    executeChild(new LeaseForOxfPret004(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
                 }
             });
         }

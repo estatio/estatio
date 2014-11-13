@@ -38,9 +38,9 @@ public class BankAccountAndMandateForPoison extends BankAccountAndMandateAbstrac
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForKalPoison001(), executionContext);
-            execute(new LeaseForOxfPoison003(), executionContext);
-            execute(new BankAccountForPoison(), executionContext);
+            executeChild(new LeaseForKalPoison001(), executionContext);
+            executeChild(new LeaseForOxfPoison003(), executionContext);
+            executeChild(new BankAccountForPoison(), executionContext);
         }
 
         // exec

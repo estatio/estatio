@@ -27,11 +27,11 @@ public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstrac
 
     private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
 
-        execute(new LeaseItemAndLeaseTermForRentForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForDiscountForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTaxForOxfTopModel001(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForRentForOxfTopModel001(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForDiscountForOxfTopModel001(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForTaxForOxfTopModel001(), executionContext);
     }
 }

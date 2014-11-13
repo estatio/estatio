@@ -29,7 +29,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfMediax002 extends LeaseI
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMediaX002(), executionContext);
+            executeChild(new LeaseForOxfMediaX002(), executionContext);
         }
 
         // exec

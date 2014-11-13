@@ -59,8 +59,8 @@ public class GuaranteesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
-                    execute(new LeaseForOxfTopModel001(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new LeaseForOxfTopModel001(), executionContext);
                 }
             }.withTracing());
 

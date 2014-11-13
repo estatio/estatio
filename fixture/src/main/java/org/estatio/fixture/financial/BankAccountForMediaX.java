@@ -38,7 +38,7 @@ public class BankAccountForMediaX extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMediaX002(), executionContext);
+            executeChild(new LeaseForOxfMediaX002(), executionContext);
         }
 
         // exec

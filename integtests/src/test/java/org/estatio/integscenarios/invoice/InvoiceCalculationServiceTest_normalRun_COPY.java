@@ -52,24 +52,24 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
+                executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                execute(new PersonForJohnDoe(), executionContext);
+                executeChild(new PersonForJohnDoe(), executionContext);
 
-                execute(new PropertyForOxf(), executionContext);
+                executeChild(new PropertyForOxf(), executionContext);
 
-                execute(new PropertyForKal(), executionContext);
+                executeChild(new PropertyForKal(), executionContext);
 
-                execute(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+                executeChild(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
 
-                execute(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+                executeChild(new LeaseBreakOptionsForOxfMediax002(), executionContext);
 
-                execute(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                execute(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+                executeChild(new LeaseBreakOptionsForOxfPoison003(), executionContext);
+                executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
 
-                execute(new LeaseForOxfPret004(), executionContext);
+                executeChild(new LeaseForOxfPret004(), executionContext);
 
-                execute(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                executeChild(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
             }
         });
     }

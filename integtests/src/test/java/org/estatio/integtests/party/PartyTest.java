@@ -18,12 +18,8 @@
  */
 package org.estatio.integtests.party;
 
-import static org.junit.Assert.assertNull;
-
 import javax.inject.Inject;
-
 import com.google.common.base.Throwables;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -31,11 +27,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import org.apache.isis.applib.DomainObjectContainer;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.wrapper.InvalidException;
-
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioBaseLineFixture;
@@ -44,6 +38,8 @@ import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.fixture.party.PersonForGinoVannelli;
 import org.estatio.fixture.party.PersonForJohnDoe;
 import org.estatio.integtests.EstatioIntegrationTest;
+
+import static org.junit.Assert.assertNull;
 
 public class PartyTest extends EstatioIntegrationTest {
 
@@ -63,14 +59,14 @@ public class PartyTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
                     // linked together:
-                    execute(new OrganisationForTopModel(), executionContext);
-                    execute(new PersonForGinoVannelli(), executionContext);
+                    executeChild(new OrganisationForTopModel(), executionContext);
+                    executeChild(new PersonForGinoVannelli(), executionContext);
                     // only relationship
-                    execute(new PersonForJohnDoe(), executionContext);
+                    executeChild(new PersonForJohnDoe(), executionContext);
                     // only comm channels
-                    execute(new OrganisationForAcme(), executionContext);
+                    executeChild(new OrganisationForAcme(), executionContext);
                 }
             });
         }

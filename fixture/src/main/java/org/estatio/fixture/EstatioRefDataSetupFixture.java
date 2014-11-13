@@ -18,13 +18,13 @@
  */
 package org.estatio.fixture;
 
+import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 import org.estatio.fixture.charge.refdata.ChargeAndChargeGroupRefData;
 import org.estatio.fixture.currency.refdata.CurrenciesRefData;
 import org.estatio.fixture.geography.refdata.CountriesAndStatesRefData;
 import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
 import org.estatio.fixture.link.refdata.LinksRefData;
 import org.estatio.fixture.tax.refdata.TaxesAndTaxRatesRefData;
-import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
 public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
@@ -34,11 +34,11 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute("currencies", new CurrenciesRefData(), executionContext);
-        execute("countries", new CountriesAndStatesRefData(), executionContext);
-        execute("tax-refdata", new TaxesAndTaxRatesRefData(), executionContext);
-        execute("charge-refdata", new ChargeAndChargeGroupRefData(), executionContext);
-        execute("index-refdata", new IndexAndIndexBaseAndIndexValueRefData(), executionContext);
-        execute("links", new LinksRefData(), executionContext);
+        executeChild("currencies", new CurrenciesRefData(), executionContext);
+        executeChild("countries", new CountriesAndStatesRefData(), executionContext);
+        executeChild("tax-refdata", new TaxesAndTaxRatesRefData(), executionContext);
+        executeChild("charge-refdata", new ChargeAndChargeGroupRefData(), executionContext);
+        executeChild("index-refdata", new IndexAndIndexBaseAndIndexValueRefData(), executionContext);
+        executeChild("links", new LinksRefData(), executionContext);
     }
 }

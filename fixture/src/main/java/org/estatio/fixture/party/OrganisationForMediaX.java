@@ -26,7 +26,7 @@ public class OrganisationForMediaX extends OrganisationAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new EstatioBaseLineFixture(), executionContext);
+        executeChild(new EstatioBaseLineFixture(), executionContext);
 
         createOrganisation(
                 PARTY_REFERENCE,

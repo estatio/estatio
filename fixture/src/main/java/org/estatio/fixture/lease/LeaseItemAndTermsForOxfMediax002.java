@@ -22,9 +22,9 @@ public class LeaseItemAndTermsForOxfMediax002 extends LeaseItemAndTermsAbstract 
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new LeaseItemAndLeaseTermForRentForOxfMediax002(), executionContext);
-        execute(new LeaseItemAndLeaseTermForServiceChargeForOxfMediax002(), executionContext);
-        execute(new LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForRentForOxfMediax002(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForServiceChargeForOxfMediax002(), executionContext);
+        executeChild(new LeaseItemAndLeaseTermForTurnoverRentForOxfMediax002(), executionContext);
     }
 
 }

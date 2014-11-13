@@ -39,8 +39,8 @@ public class BankAccountForPoison extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForKalPoison001(), executionContext);
-            execute(new LeaseForOxfPoison003(), executionContext);
+            executeChild(new LeaseForKalPoison001(), executionContext);
+            executeChild(new LeaseForOxfPoison003(), executionContext);
         }
 
         // exec

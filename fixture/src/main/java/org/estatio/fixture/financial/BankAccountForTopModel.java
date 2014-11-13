@@ -38,7 +38,7 @@ public class BankAccountForTopModel extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfTopModel001(), executionContext);
+            executeChild(new LeaseForOxfTopModel001(), executionContext);
         }
 
         // exec

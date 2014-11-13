@@ -33,7 +33,7 @@ public class LeaseItemAndLeaseTermForDiscountForOxfMiracl005 extends LeaseItemAn
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMiracl005(), executionContext);
+            executeChild(new LeaseForOxfMiracl005(), executionContext);
         }
 
         // exec

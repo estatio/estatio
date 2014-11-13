@@ -44,9 +44,9 @@ public class AgreementRoleCommunicationChannelsTest extends EstatioIntegrationTe
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseForOxfTopModel001(), executionContext);
                 }
             });
         }

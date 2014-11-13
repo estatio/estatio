@@ -38,7 +38,7 @@ public class BankAccountForMiracle extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfMiracl005(), executionContext);
+            executeChild(new LeaseForOxfMiracl005(), executionContext);
         }
 
         // exec

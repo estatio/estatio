@@ -29,7 +29,7 @@ public class LeaseBreakOptionsForOxfTopModel001 extends LeaseBreakOptionsAbstrac
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+            executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
         }
 
         // exec

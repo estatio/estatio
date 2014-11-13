@@ -18,18 +18,11 @@
  */
 package org.estatio.integtests.party.relationship;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.util.List;
-
 import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.apache.isis.applib.fixturescripts.FixtureScript;
-
 import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.relationship.PartyRelationshipView;
@@ -39,6 +32,9 @@ import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.fixture.party.PersonForGinoVannelli;
 import org.estatio.integtests.EstatioIntegrationTest;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class PartyrelationshipViewServiceTest extends EstatioIntegrationTest {
 
     @Before
@@ -46,9 +42,9 @@ public class PartyrelationshipViewServiceTest extends EstatioIntegrationTest {
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new PersonForGinoVannelli(), executionContext);
+                executeChild(new EstatioBaseLineFixture(), executionContext);
+                executeChild(new OrganisationForTopModel(), executionContext);
+                executeChild(new PersonForGinoVannelli(), executionContext);
             }
         });
         org = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);

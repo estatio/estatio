@@ -78,9 +78,9 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 runScript(new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
-                        execute(new EstatioBaseLineFixture(), executionContext);
-                        execute(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
-                        execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                        executeChild(new EstatioBaseLineFixture(), executionContext);
+                        executeChild(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
+                        executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
                     }
                 });
             }
@@ -242,9 +242,9 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
                 }
             });
         }
@@ -289,9 +289,9 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
                 }
             });
         }

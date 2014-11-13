@@ -38,8 +38,8 @@ public class BankAccountForHelloWorld extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new OrganisationForHelloWorld(), executionContext);
-            execute(new PropertyForOxf(), executionContext);
+            executeChild(new OrganisationForHelloWorld(), executionContext);
+            executeChild(new PropertyForOxf(), executionContext);
         }
 
         // exec

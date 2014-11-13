@@ -18,10 +18,7 @@
  */
 package org.estatio.fixture.lease;
 
-import static org.estatio.integtests.VT.ld;
-
 import javax.inject.Inject;
-
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
@@ -36,6 +33,8 @@ import org.estatio.fixture.asset.PropertyForOxf;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForTopModel;
 import org.estatio.fixture.party.PersonForJohnDoe;
+
+import static org.estatio.integtests.VT.ld;
 
 public class LeaseForOxfTopModel001 extends LeaseAbstract {
 
@@ -58,10 +57,10 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
 
         // prereqs
         if (isExecutePrereqs()) {
-            execute(new PersonForJohnDoe(), executionContext);
-            execute(new OrganisationForHelloWorld(), executionContext);
-            execute(new OrganisationForTopModel(), executionContext);
-            execute(new PropertyForOxf(), executionContext);
+            executeChild(new PersonForJohnDoe(), executionContext);
+            executeChild(new OrganisationForHelloWorld(), executionContext);
+            executeChild(new OrganisationForTopModel(), executionContext);
+            executeChild(new PropertyForOxf(), executionContext);
         }
 
         // exec

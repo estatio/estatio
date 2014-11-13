@@ -56,10 +56,10 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-                execute(new OrganisationForTopModel(), executionContext);
-                execute(new PersonForGinoVannelli(), executionContext);
-                execute(new PersonForLinusTorvalds(), executionContext);
+                executeChild(new EstatioBaseLineFixture(), executionContext);
+                executeChild(new OrganisationForTopModel(), executionContext);
+                executeChild(new PersonForGinoVannelli(), executionContext);
+                executeChild(new PersonForLinusTorvalds(), executionContext);
             }
         });
     }

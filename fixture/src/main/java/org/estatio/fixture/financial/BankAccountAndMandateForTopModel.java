@@ -37,8 +37,8 @@ public class BankAccountAndMandateForTopModel extends BankAccountAndMandateAbstr
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForOxfTopModel001(), executionContext);
-            execute(new BankAccountForTopModel(), executionContext);
+            executeChild(new LeaseForOxfTopModel001(), executionContext);
+            executeChild(new BankAccountForTopModel(), executionContext);
         }
 
         // exec

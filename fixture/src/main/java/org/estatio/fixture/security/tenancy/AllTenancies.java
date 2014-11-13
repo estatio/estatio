@@ -20,9 +20,9 @@ public class AllTenancies extends AbstractTenancyFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        execute(new ItalyTenancy(), executionContext);
-        execute(new FranceTenancy(), executionContext);
-        execute(new SwedenTenancy(), executionContext);
+        executeChild(new ItalyTenancy(), executionContext);
+        executeChild(new FranceTenancy(), executionContext);
+        executeChild(new SwedenTenancy(), executionContext);
     }
 
 }

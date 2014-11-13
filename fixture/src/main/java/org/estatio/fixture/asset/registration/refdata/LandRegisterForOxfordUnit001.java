@@ -35,7 +35,7 @@ public class LandRegisterForOxfordUnit001 extends EstatioFixtureScript {
     protected void execute(ExecutionContext executionContext) {
         // prereqs
         if (isExecutePrereqs()) {
-            execute(new PropertyForOxf(), executionContext);
+            executeChild(new PropertyForOxf(), executionContext);
         }
 
         Unit unit = properties.findPropertyByReference(PropertyForOxf.PROPERTY_REFERENCE).getUnits().first();

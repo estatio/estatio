@@ -29,7 +29,7 @@ public class LeaseBreakOptionsForOxfPoison003 extends LeaseBreakOptionsAbstract 
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
+            executeChild(new LeaseItemAndTermsForOxfPoison003(), executionContext);
         }
 
         // exec

@@ -18,11 +18,7 @@
  */
 package org.estatio.fixture.guarantee;
 
-import static org.estatio.integtests.VT.bd;
-import static org.estatio.integtests.VT.ld;
-
 import javax.inject.Inject;
-
 import org.estatio.dom.agreement.AgreementRoleTypes;
 import org.estatio.dom.guarantee.Guarantee;
 import org.estatio.dom.guarantee.GuaranteeConstants;
@@ -33,15 +29,18 @@ import org.estatio.fixture.EstatioOperationalTeardownFixture;
 import org.estatio.fixture.lease.LeaseForOxfTopModel001;
 import org.estatio.fixture.party.OrganisationForDagoBank;
 
+import static org.estatio.integtests.VT.bd;
+import static org.estatio.integtests.VT.ld;
+
 public class GuaranteeForOxfTopModel001 extends GuaranteeAbstract {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         if (isExecutePrereqs()) {
-            execute(new EstatioOperationalTeardownFixture(), executionContext);
-            execute(new LeaseForOxfTopModel001(), executionContext);
-            execute(new OrganisationForDagoBank(), executionContext);
+            executeChild(new EstatioOperationalTeardownFixture(), executionContext);
+            executeChild(new LeaseForOxfTopModel001(), executionContext);
+            executeChild(new OrganisationForDagoBank(), executionContext);
         }
 
         createGuaranteeForOxfTopModel001(executionContext);

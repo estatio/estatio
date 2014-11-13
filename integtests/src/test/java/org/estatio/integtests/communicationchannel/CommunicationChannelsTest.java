@@ -41,8 +41,8 @@ public class CommunicationChannelsTest extends EstatioIntegrationTest {
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                execute(new EstatioBaseLineFixture(), executionContext);
-                execute(new OrganisationForTopModel(), executionContext);
+                executeChild(new EstatioBaseLineFixture(), executionContext);
+                executeChild(new OrganisationForTopModel(), executionContext);
             }
         });
     }

@@ -66,7 +66,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
                 }
             });
         }
@@ -99,10 +99,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new PropertyForOxf(), executionContext);
-                    execute(new PropertyForKal(), executionContext);
+                    executeChild(new PropertyForOxf(), executionContext);
+                    executeChild(new PropertyForKal(), executionContext);
                 }
             });
         }
@@ -192,9 +192,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new PropertyForOxf(), executionContext);
+                    executeChild(new PropertyForOxf(), executionContext);
                 }
             });
         }
@@ -230,10 +230,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
                 }
             });
         }
@@ -293,10 +293,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                    execute(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
                 }
             });
         }
@@ -343,9 +343,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new LeaseItemAndTermsForOxfPoison003(), executionContext);
+                    executeChild(new LeaseItemAndTermsForOxfPoison003(), executionContext);
                 }
             });
         }

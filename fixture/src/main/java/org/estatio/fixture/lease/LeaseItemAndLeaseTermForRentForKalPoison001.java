@@ -32,7 +32,7 @@ public class LeaseItemAndLeaseTermForRentForKalPoison001 extends LeaseItemAndTer
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseForKalPoison001(), executionContext);
+            executeChild(new LeaseForKalPoison001(), executionContext);
         }
 
         // exec

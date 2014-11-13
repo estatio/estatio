@@ -29,7 +29,7 @@ public class LeaseBreakOptionsForOxfMediax002 extends LeaseBreakOptionsAbstract 
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new LeaseItemAndTermsForOxfMediax002(), executionContext);
+            executeChild(new LeaseItemAndTermsForOxfMediax002(), executionContext);
         }
 
         // exec

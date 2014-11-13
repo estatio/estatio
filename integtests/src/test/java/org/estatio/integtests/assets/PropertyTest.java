@@ -42,9 +42,9 @@ public class PropertyTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    execute(new EstatioBaseLineFixture(), executionContext);
+                    executeChild(new EstatioBaseLineFixture(), executionContext);
 
-                    execute(new PropertyForOxf(), executionContext);
+                    executeChild(new PropertyForOxf(), executionContext);
                 }
             });
         }

@@ -38,10 +38,10 @@ public class LeaseForOxfMediaX002 extends LeaseAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            execute(new PersonForJohnDoe(), executionContext);
-            execute(new OrganisationForHelloWorld(), executionContext);
-            execute(new OrganisationForMediaX(), executionContext);
-            execute(new PropertyForOxf(), executionContext);
+            executeChild(new PersonForJohnDoe(), executionContext);
+            executeChild(new OrganisationForHelloWorld(), executionContext);
+            executeChild(new OrganisationForMediaX(), executionContext);
+            executeChild(new PropertyForOxf(), executionContext);
         }
 
         // exec
