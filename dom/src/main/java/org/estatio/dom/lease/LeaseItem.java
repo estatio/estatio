@@ -427,6 +427,16 @@ public class LeaseItem
     public List<Charge> choicesCharge() {
         return charges.allCharges();
     }
+    
+    public LeaseItem changeCharge(final Charge charge){
+        setCharge(charge);
+        return this;
+    }
+    
+    public Charge default0ChangeCharge() {
+        return getCharge();
+    }
+    
 
     // //////////////////////////////////////
 

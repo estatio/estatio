@@ -15,7 +15,11 @@
                 "changePaymentMethod": {}
               }
             },
-            "charge": {},
+            "charge": {
+              "actions": {
+                "changeCharge": {}
+              }
+            },
             "tax": {
               "actions": {
                 "overrideTax": {},
