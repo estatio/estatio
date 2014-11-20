@@ -86,13 +86,13 @@ language governing permissions and limitations under the License.
         <isis.version>1.8.0-SNAPSHOT</isis.version>
         <isis-viewer-wicket.version>1.8.0-SNAPSHOT</isis-viewer-wicket.version>
 
-        <isis-module-audit.version>1.7.0</isis-module-audit.version>
-        <isis-module-command.version>1.7.0</isis-module-command.version>
-        <isis-module-devutils.version>1.7.0</isis-module-devutils.version>
-        <isis-module-excel.version>1.7.0</isis-module-excel.version>
-        <isis-module-publishing.version>1.7.0</isis-module-publishing.version>
-        <isis-module-security.version>1.7.0</isis-module-security.version>
-        <isis-module-settings.version>1.7.0</isis-module-settings.version>
+        <isis-module-audit.version>1.8.0-SNAPSHOT</isis-module-audit.version>
+        <isis-module-command.version>1.8.0-SNAPSHOT</isis-module-command.version>
+        <isis-module-devutils.version>1.8.0-SNAPSHOT</isis-module-devutils.version>
+        <isis-module-excel.version>1.8.0-SNAPSHOT</isis-module-excel.version>
+        <isis-module-publishing.version>1.8.0-SNAPSHOT</isis-module-publishing.version>
+        <isis-module-security.version>1.8.0-SNAPSHOT</isis-module-security.version>
+        <isis-module-settings.version>1.8.0-SNAPSHOT</isis-module-settings.version>
         <isis-module-stringinterpolator.version>1.7.0</isis-module-stringinterpolator.version>
 
         <isis-wicket-excel.version>1.8.0-SNAPSHOT</isis-wicket-excel.version>
@@ -100,7 +100,6 @@ language governing permissions and limitations under the License.
         <isis-wicket-gmap3.version>1.8.0-SNAPSHOT</isis-wicket-gmap3.version>
 
         <quartz-scheduler.version>2.2.1</quartz-scheduler.version>
-
 
         <!-- must be consistent with the versions defined by the JDO Objectstore -->
         <datanucleus-maven-plugin.version>3.3.2</datanucleus-maven-plugin.version>
@@ -130,8 +129,20 @@ language governing permissions and limitations under the License.
         </repository>
 
         <repository>
-            <id>gettext-commons-site</id>
-            <url>https://gettext-commons.googlecode.com/svn/maven-repository/</url>
+          <id>estatio.snapshots</id>
+          <name>Estatio Snapshots</name>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <url>http://repository-estatio.forge.cloudbees.com/snapshot/</url>
+          <layout>default</layout>
         </repository>
 
         <repository>
@@ -608,12 +619,6 @@ language governing permissions and limitations under the License.
                 <groupId>org.jdom</groupId>
                 <artifactId>jdom</artifactId>
                 <version>2.0.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.xnap.commons</groupId>
-                <artifactId>gettext-commons</artifactId>
-                <version>0.9.6</version>
             </dependency>
 
             <dependency>

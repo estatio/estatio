@@ -133,12 +133,6 @@ language governing permissions and limitations under the License.
             <optional>true</optional>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.xnap.commons</groupId>
-            <artifactId>gettext-commons</artifactId>
-        </dependency>
-
         <!-- download:  
              $ curl https://google-rfc-2445.googlecode.com/files/rfc2445-4Mar2011.jar > rfc2445-4Mar2011.jar 
              install to ~/.m2/repo using: 
