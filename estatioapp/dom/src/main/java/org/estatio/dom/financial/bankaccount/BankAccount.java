@@ -171,6 +171,8 @@ public class BankAccount extends FinancialAccount {
         setIban(iban);
         setName(name);
         setExternalReference(externalReference);
+        //TODO: Changing references is not really a good thing. in this case there's no harm but we should come up with a pattern where we archvice 
+        setReference(iban);
 
         return this;
     }
