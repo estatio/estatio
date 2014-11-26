@@ -132,5 +132,17 @@ public class LocalDateInterval extends AbstractInterval<LocalDateInterval>{
         }
         return LocalDate.parse(input);
     }
+
+
+    /**
+     * Returns an end date given the start date of the next adjoining interverval 
+     * 
+     * @param date
+     * @return
+     */
+    public static LocalDate endDateFromStartDate(LocalDate date) {
+        return new LocalDateInterval(date, null).endDateFromStartDate();
+        
+    }
     
 }

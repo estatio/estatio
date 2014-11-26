@@ -27,6 +27,7 @@ import org.estatio.dom.party.Person;
 import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.party.Persons;
 
+@Named("Parties")
 @DomainService(repositoryFor = PartyRelationship.class)
 public class PartyRelationships extends EstatioDomainService<PartyRelationship> {
 

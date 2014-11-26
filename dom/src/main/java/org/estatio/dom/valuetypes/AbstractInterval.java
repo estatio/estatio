@@ -62,6 +62,12 @@ public abstract class AbstractInterval<T extends AbstractInterval<T>> {
 
     }
 
+    /**
+     * Determines how end dates are shown in the ui and stored in the database:
+     * 
+     * {@link IntervalEnding#EXCLUDING_END_DATE} uses the start date of the next interval as end date.
+     * {@link IntervalEnding#INCLUDING_END_DATE} used the last day of the interval as the end date.
+     */
     private static final IntervalEnding PERSISTENT_ENDING = IntervalEnding.INCLUDING_END_DATE;
 
     protected LocalDate endDate;

@@ -25,10 +25,6 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.jdo.annotations.InheritanceStrategy;
 
-import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
-import org.isisaddons.wicket.gmap3.cpt.applib.Location;
-import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
-
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -41,13 +37,15 @@ import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
 
+import org.isisaddons.wicket.gmap3.cpt.applib.Locatable;
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
+import org.isisaddons.wicket.gmap3.cpt.service.LocationLookupService;
+
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
 
@@ -210,35 +208,14 @@ public class Property extends FixedAsset implements Locatable {
     private SortedSet<Unit> units = new TreeSet<Unit>();
 
     @Render(Type.EAGERLY)
+    @Deprecated
     public SortedSet<Unit> getUnits() {
         return units;
     }
-
+    
+    @Deprecated
     public void setUnits(final SortedSet<Unit> units) {
         this.units = units;
-    }
-
-    // //////////////////////////////////////
-
-    public Unit newUnit(
-            @Named("Reference") @RegEx(validation = RegexValidation.Unit.REFERENCE, caseSensitive = true) final String reference,
-            @Named("Name") final String name,
-            final UnitType unitType) {
-        Unit unit = unitsRepo.newUnit(reference, name, unitType);
-        unit.setProperty(this);
-        return unit;
-    }
-
-    public String default0NewUnit() {
-        return this.getReference() + "-000";
-    }
-
-    public String default1NewUnit() {
-        return "000";
-    }
-
-    public UnitType default2NewUnit() {
-        return UnitType.BOUTIQUE;
     }
 
     // //////////////////////////////////////
@@ -260,6 +237,11 @@ public class Property extends FixedAsset implements Locatable {
         return role;
     }
 
+    @Programmatic
+    public Unit newUnit(final String reference, final String name, final UnitType type){
+        return unitsRepo.newUnit(this, reference, name, type);
+    }
+    
     // //////////////////////////////////////
 
     public Property dispose(

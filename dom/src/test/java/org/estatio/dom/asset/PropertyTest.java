@@ -111,17 +111,10 @@ public class PropertyTest {
             final UnitType unitType = UnitType.CINEMA;
             context.checking(new Expectations() {
                 {
-                    oneOf(units).newUnit(unitRef, unitName, unitType);
+                    oneOf(units).newUnit(property, unitRef, unitName, unitType);
                 }
             });
             property.newUnit(unitRef, unitName, unitType);
-        }
-
-        @Test
-        public void defaults() {
-            assertThat(property.default0NewUnit(), is("ABC-000"));
-            assertThat(property.default1NewUnit(), is("000"));
-            assertThat(property.default2NewUnit(), is(UnitType.BOUTIQUE));
         }
 
     }

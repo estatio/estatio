@@ -61,7 +61,7 @@ public class UnitsTest {
             }
         });
 
-        final Unit newUnit = units.newUnit("REF-1", "Name-1", UnitType.EXTERNAL);
+        final Unit newUnit = units.newUnit(null, "REF-1", "Name-1", UnitType.EXTERNAL);
         assertThat(newUnit.getReference(), is("REF-1"));
         assertThat(newUnit.getName(), is("Name-1"));
         assertThat(newUnit.getType(), is(UnitType.EXTERNAL));

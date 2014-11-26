@@ -34,7 +34,7 @@ public class InvoiceSummariesForInvoiceRun extends EstatioDomainService<InvoiceS
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "10")
-    public List<InvoiceSummaryForInvoiceRun> invoicesForInvoiceRun() {
+    public List<InvoiceSummaryForInvoiceRun> allInvoiceRuns() {
         return allInstances();
     }
 

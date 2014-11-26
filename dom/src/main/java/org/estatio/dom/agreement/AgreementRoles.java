@@ -19,9 +19,18 @@
 package org.estatio.dom.agreement;
 
 import java.util.List;
+
+import com.google.common.eventbus.Subscribe;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.NotContributed;
+
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
 
@@ -64,10 +73,10 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
             final Party party,
             final AgreementRoleType type,
             final LocalDate date) {
-        return firstMatch("findByAgreementAndPartyAndTypeAndContainsDate", 
-                "agreement", agreement, 
-                "party", party, 
-                "type", type, 
+        return firstMatch("findByAgreementAndPartyAndTypeAndContainsDate",
+                "agreement", agreement,
+                "party", party,
+                "type", type,
                 "date", date);
     }
 
@@ -78,10 +87,10 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
             final Party party,
             final AgreementRoleType type,
             final LocalDate endDate) {
-        return firstMatch("findByAgreementAndPartyAndTypeAndEndDate", 
-                "agreement", agreement, 
-                "party", party, 
-                "type", type, 
+        return firstMatch("findByAgreementAndPartyAndTypeAndEndDate",
+                "agreement", agreement,
+                "party", party,
+                "type", type,
                 "endDate", endDate);
     }
 
@@ -105,7 +114,57 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
             final AgreementRoleType type,
             final LocalDate date) {
         return allMatches("findByPartyAndTypeAndContainsDate", "party", party, "type", type, "date", date);
-    }    
-   
-    
+    }
+
+    // //////////////////////////////////////
+
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public List<AgreementRole> findByParty(
+            final Party party) {
+        return allMatches(
+                "findByParty",
+                "party", party);
+    }
+
+    // //////////////////////////////////////
+
+    @Subscribe
+    public void on(final Party.RemoveEvent ev) {
+        Party sourceParty = (Party) ev.getSource();
+        Party replacementParty = ev.getReplacement();
+
+        switch (ev.getPhase()) {
+        case VALIDATE:
+            final List<AgreementRole> agreementRoles = findByParty(sourceParty);
+
+            if (agreementRoles.size() > 0 && replacementParty == null) {
+                ev.invalidate("Party is being used in an agreement role: remove roles or provide a replacement");
+            }
+
+            putAgreementRole(ev, agreementRoles);
+            break;
+        case EXECUTING:
+            for (AgreementRole agreementRole : getAgreementRoles(ev)) {
+                agreementRole.setParty(replacementParty);
+            }
+            break;
+        default:
+            break;
+        }
+
+    }
+
+    // //////////////////////////////////////
+
+    private static final String KEY = AgreementRole.class.getName() + ".agreementRoles";
+
+    private static void putAgreementRole(Party.RemoveEvent ev, List<AgreementRole> communicationChannels) {
+        ev.put(KEY, communicationChannels);
+    }
+
+    private static List<AgreementRole> getAgreementRoles(Party.RemoveEvent ev) {
+        return (List<AgreementRole>) ev.get(KEY);
+    }
+
 }

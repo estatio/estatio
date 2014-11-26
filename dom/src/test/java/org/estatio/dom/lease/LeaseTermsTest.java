@@ -91,7 +91,7 @@ public class LeaseTermsTest {
         @Test
         public void happyCase() {
 
-            leaseTerms.leaseTermsToBeApproved(date);
+            leaseTerms.allLeaseTermsToBeApproved(date);
 
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
 

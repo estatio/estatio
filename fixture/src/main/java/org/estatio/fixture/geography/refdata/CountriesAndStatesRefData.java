@@ -29,12 +29,18 @@ public class CountriesAndStatesRefData extends EstatioFixtureScript {
 
     public static final String GBR = "GBR";
     public static final String NLD = "NLD";
+    public static final String ITA = "ITA";
+    public static final String FRA = "FRA";
+    public static final String SWE = "SWE";
 
     @Override
     protected void execute(ExecutionContext executionContext) {
 
         Country countryGBR = createCountry(GBR, "GB", "United Kingdom", executionContext);
         Country countryNED = createCountry(NLD, "NL", "Netherlands", executionContext);
+        Country countryITA = createCountry(ITA, "IT", "Italy", executionContext);
+        Country countryFRA = createCountry(FRA, "FR", "France", executionContext);
+        Country countrySWE = createCountry(SWE, "SE", "Sweden", executionContext);
         
         createState(countryNED, "-DRN", "Drenthe", executionContext);
         createState(countryNED, "-FLE", "Flevoland", executionContext);

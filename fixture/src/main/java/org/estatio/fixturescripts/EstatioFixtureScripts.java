@@ -19,22 +19,21 @@
 package org.estatio.fixturescripts;
 
 import java.util.List;
-import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
-import org.apache.isis.applib.annotation.*;
+
+import org.apache.isis.applib.annotation.CssClass;
+import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+import org.apache.isis.applib.annotation.Prototype;
 import org.apache.isis.applib.fixturescripts.FixtureResult;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
-import org.estatio.dom.asset.Properties;
+
 import org.estatio.dom.asset.Property;
-import org.estatio.dom.index.Indices;
-import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.Lease;
-import org.estatio.fixture.EstatioDemoFixture;
-import org.estatio.fixture.currency.refdata.CurrenciesRefData;
-import org.estatio.fixture.index.refdata.IndexAndIndexBaseAndIndexValueRefData;
-import org.estatio.fixture.link.refdata.LinksRefData;
-import org.estatio.services.settings.EstatioSettingsService;
 
 @DomainService(menuOrder = "93")
 public class EstatioFixtureScripts extends FixtureScripts {
@@ -54,19 +53,6 @@ public class EstatioFixtureScripts extends FixtureScripts {
     @Override
     public List<FixtureScript> choices0RunFixtureScript() {
         return super.choices0RunFixtureScript();
-    }
-
-    // //////////////////////////////////////
-
-    @MemberOrder(name = "Administration", sequence = "9.1")
-    @Prototype
-    public List<FixtureResult> createRetroInvoicesForAllProperties(
-            final @Named("Start due date") LocalDate startDueDate,
-            final @Named("Next due date") @Optional LocalDate nextDueDate) {
-        CreateRetroInvoices creator = getContainer().newTransientInstance(CreateRetroInvoices.class);
-        final FixtureScript.ExecutionContext executionContext = newExecutionContext(null);
-        creator.createAllProperties(startDueDate, nextDueDate, executionContext);
-        return executionContext.getResults();
     }
 
     @MemberOrder(name = "Administration", sequence = "9.2")
@@ -97,63 +83,5 @@ public class EstatioFixtureScripts extends FixtureScripts {
     public boolean hideCreateRetroInvoicesForLease() {
         return !getContainer().getUser().hasRole("superuser_role");
     }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @MemberOrder(name = "Administration", sequence = "3")
-    public List<FixtureResult> installDemoFixtures() {
-        return runFixtureScript(new EstatioDemoFixture(), null);
-        // return "Demo fixtures successfully installed";
-    }
-
-    public String disableInstallDemoFixtures() {
-        return !propertiesService.allProperties().isEmpty() ? "Demo fixtures already installed" : null;
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @MemberOrder(name = "Administration", sequence = "4")
-    public List<FixtureResult> installIndexFixture() {
-        return runFixtureScript(new IndexAndIndexBaseAndIndexValueRefData(), null);
-        // return "Index fixture successfully installed";
-    }
-
-    public String disableInstallIndexFixture() {
-        return !indices.allIndices().isEmpty() ? "Index fixture already installed" : null;
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @MemberOrder(name = "Administration", sequence = "4")
-    public List<FixtureResult> installLinksFixture() {
-        return runFixtureScript(new LinksRefData(), null);
-        // return "Links fixture successfully installed";
-    }
-
-    // //////////////////////////////////////
-
-    @Prototype
-    @MemberOrder(name = "Administration", sequence = "9")
-    public List<FixtureResult> installCurrencies() {
-        return runFixtureScript(new CurrenciesRefData(), null);
-        // return "Constants successfully installed";
-    }
-
-    // //////////////////////////////////////
-
-    @Inject
-    private Indices indices;
-
-    @Inject
-    private Properties propertiesService;
-
-    @Inject
-    private EstatioSettingsService settingsService;
-
-    @Inject
-    private Invoices invoices;
 
 }

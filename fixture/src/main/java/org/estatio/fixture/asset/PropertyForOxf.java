@@ -50,7 +50,7 @@ public class PropertyForOxf extends PropertyAbstract {
         Country country = countries.findCountry("GBR");
         createPropertyAndUnits(
                 PROPERTY_REFERENCE, "Oxford Super Mall", "Oxford", country, PropertyType.SHOPPING_CENTER, 25,
-                ld(1999, 1, 1), ld(2008, 6, 1), owner, manager, 51.74579, -1.24334,
+                ld(1999, 1, 1), ld(2008, 6, 1), owner, manager, "51.74579;-1.24334",
                 executionContext);
     }
 

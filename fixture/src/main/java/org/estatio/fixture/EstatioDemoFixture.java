@@ -20,6 +20,9 @@ package org.estatio.fixture;
 
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
 
+import org.estatio.fixture.asset.PropertyForGra;
+import org.estatio.fixture.asset.PropertyForHan;
+import org.estatio.fixture.asset.PropertyForViv;
 import org.estatio.fixture.financial.BankAccountAndMandateForPoison;
 import org.estatio.fixture.financial.BankAccountAndMandateForTopModel;
 import org.estatio.fixture.financial.BankAccountForAcme;
@@ -75,10 +78,15 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
         executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
         executeChild(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(), executionContext);
+        executeChild(new PropertyForGra(), executionContext);
 
         executeChild(new GuaranteeForOxfTopModel001(), executionContext);
 
         executeChild(new PersonForGinoVannelli(), executionContext);
+
+        executeChild(new PropertyForGra(), executionContext);
+        executeChild(new PropertyForViv(), executionContext);
+        executeChild(new PropertyForHan(), executionContext);
 
     }
 }

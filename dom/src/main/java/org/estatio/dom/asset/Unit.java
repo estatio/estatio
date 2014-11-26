@@ -36,14 +36,10 @@ import org.apache.isis.applib.annotation.Immutable;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Where;
 
 import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.RegexValidation;
 import org.estatio.dom.WithIntervalMutable;
-import org.estatio.dom.party.Person;
-import org.estatio.dom.party.PersonGenderType;
 import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @javax.jdo.annotations.PersistenceCapable

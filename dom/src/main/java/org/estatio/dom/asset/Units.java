@@ -27,10 +27,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Prototype;
+import org.apache.isis.applib.annotation.RegEx;
 
 import org.estatio.dom.EstatioDomainService;
+import org.estatio.dom.RegexValidation;
 import org.estatio.dom.utils.StringUtils;
 
 @DomainService(repositoryFor = Unit.class)
@@ -42,17 +43,23 @@ public class Units extends EstatioDomainService<Unit> {
 
     // //////////////////////////////////////
 
-    @Programmatic
+    @ActionSemantics(Of.NON_IDEMPOTENT)
     public Unit newUnit(
-            final String reference,
+            final Property property,
+            final @RegEx(validation = RegexValidation.Unit.REFERENCE, caseSensitive = true) String reference,
             final String name,
             final UnitType type) {
         final Unit unit = newTransientInstance();
         unit.setReference(reference);
         unit.setName(name);
         unit.setType(type);
+        unit.setProperty(property);
         persist(unit);
         return unit;
+    }
+
+    public UnitType default3NewUnit() {
+        return UnitType.BOUTIQUE;
     }
 
     // //////////////////////////////////////

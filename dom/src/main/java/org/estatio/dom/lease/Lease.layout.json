@@ -7,13 +7,28 @@
           "members": {
             "reference": {},
             "name": {},
-            "leaseType": {},
-            "property": {},
-            "status": {
+            "leaseType": {
               "actions": {
-                "change": {},
+                "change": {}
+              }
+            },
+            "property": {},
+            "paidBy": {
+              "actions": {
                 "newMandate": {},
                 "paidBy": {}
+              }
+            }
+          }
+        },
+        "Status2": {
+          "members": {
+            "status": {
+              "actions": {
+                "renew": {},
+                "terminate": {},
+                "suspendAll": {},
+                "assign": {}
               }
             }
           }
@@ -41,22 +56,18 @@
       "memberGroups": {
         "Dates": {
           "members": {
-            "startDate": {},
-            "endDate": {
+            "startDate": {
+            "labelAt":{"value":"TOP" }},
+            "endDate": {"labelAt":{"value":"TOP" },
               "actions": {
                 "changeDates": {}
               }
             },
-            "tenancyStartDate": {},
-            "tenancyEndDate": {},
-            "tenancyDuration": {
+            "tenancyStartDate": {"labelAt":{"value":"TOP" }},
+            "tenancyEndDate": {"labelAt":{"value":"TOP" }},
+            "tenancyDuration": {"labelAt":{"value":"TOP" },
               "actions": {
                 "changeTenancyDates": {}
-              }
-            },
-            "terminationDate": {
-              "actions": {
-                "terminate": {}
               }
             }
           }
@@ -82,7 +93,7 @@
         },
         "occupancies": {
           "actions": {
-            "occupy": {}
+            "newOccupancy": {}
           }
         },
         "breakOptions": {
@@ -108,10 +119,6 @@
     "refreshLayout": {},
     "verify": {},
     "verifyUntil": {},
-    "calculate": {},
-    "assign": {},
-    "renew": {},
-    "activateAll": {},
-    "suspendAll": {}
+    "calculate": {}
   }
 }

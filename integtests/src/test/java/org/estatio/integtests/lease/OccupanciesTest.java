@@ -70,7 +70,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(occupancies.findByLease(lease).size(), is(1));
+            assertThat(occupancies.occupancies(lease).size(), is(1));
         }
 
     }
@@ -79,7 +79,7 @@ public class OccupanciesTest extends EstatioIntegrationTest {
 
         @Test
         public void happyCase() throws Exception {
-            assertThat(occupancies.findByUnit(unit).size(), is(1));
+            assertThat(occupancies.occupancies(unit).size(), is(1));
         }
 
     }

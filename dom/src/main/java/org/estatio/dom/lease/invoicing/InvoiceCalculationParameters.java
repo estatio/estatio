@@ -67,9 +67,9 @@ public class InvoiceCalculationParameters {
         if(leases.isEmpty()) {
             throw new IllegalArgumentException("Must specify at least one lease.");
         }
-        Property property = leases.get(0).getFixedAsset();
+        Property property = leases.get(0).getProperty();
         for(Lease lease: leases) {
-            Property p = lease.getFixedAsset();
+            Property p = lease.getProperty();
             if(property != p) {
                 throw new IllegalArgumentException("All leases must reside in the same property");
             }
@@ -105,7 +105,7 @@ public class InvoiceCalculationParameters {
             final LocalDate startDueDate,
             final LocalDate nextDueDate) {
         this(
-                lease.getFixedAsset(),
+                lease.getProperty(),
                 leaseItemTypes,
                 invoiceRunType,
                 invoiceDueDate,

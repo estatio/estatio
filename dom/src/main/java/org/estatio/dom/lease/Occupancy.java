@@ -76,6 +76,14 @@ import org.estatio.dom.valuetypes.LocalDateInterval;
                         + "WHERE lease == :lease "
                         + "ORDER BY startDate "),
         @javax.jdo.annotations.Query(
+                name = "findByLeaseAndDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.lease.Occupancy "
+                        + "WHERE lease == :lease "
+                        + " && (startDate == null || startDate >= :date) "
+                        + " && (endDate == null || endDate <= :dateAsEndDate"
+                        + "ORDER BY startDate "),
+        @javax.jdo.annotations.Query(
                 name = "findByLeaseAndUnitAndStartDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.lease.Occupancy "

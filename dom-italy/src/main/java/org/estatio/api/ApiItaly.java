@@ -22,6 +22,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.isis.applib.AbstractFactoryAndRepository;
+import org.apache.isis.applib.annotation.ActionSemantics;
+import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
+import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.Optional;
+
 import org.estatio.dom.asset.Unit;
 import org.estatio.dom.asset.Units;
 import org.estatio.dom.asset.registration.FixedAssetRegistration;
@@ -29,13 +36,7 @@ import org.estatio.dom.asset.registration.FixedAssetRegistrationTypes;
 import org.estatio.dom.asset.registration.FixedAssetRegistrations;
 import org.estatio.dom.asset.registration.LandRegister;
 
-import org.apache.isis.applib.AbstractFactoryAndRepository;
-import org.apache.isis.applib.annotation.ActionSemantics;
-import org.apache.isis.applib.annotation.ActionSemantics.Of;
-import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Named;
-import org.apache.isis.applib.annotation.Optional;
-
+@Hidden
 public class ApiItaly extends AbstractFactoryAndRepository {
 
     @Override
@@ -49,7 +50,6 @@ public class ApiItaly extends AbstractFactoryAndRepository {
 
     // //////////////////////////////////////
 
-    @MemberOrder(name = "Migration", sequence = "90")
     @ActionSemantics(Of.IDEMPOTENT)
     public void putLandRegister(
             final @Named("propertyReference") String propertyReference,

@@ -65,11 +65,11 @@ public class LeaseTerms extends EstatioDomainService<LeaseTerm> {
     @Deprecated
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Leases", sequence = "20")
-    public List<LeaseTerm> leaseTermsToBeApproved(final LocalDate date) {
+    public List<LeaseTerm> allLeaseTermsToBeApproved(final LocalDate date) {
         return allMatches("findByStatusAndActiveDate", "status", LeaseTermStatus.NEW, "date", date);
     }
 
-    public LocalDate default0LeaseTermsToBeApproved() {
+    public LocalDate default0AllLeaseTermsToBeApproved() {
         return getClockService().now();
     }
 

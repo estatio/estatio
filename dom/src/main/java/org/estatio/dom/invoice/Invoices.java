@@ -168,7 +168,7 @@ public class Invoices extends EstatioDomainService<Invoice> {
         // copy down form the agreement, we require all invoice items to relate
         // back to this (root) fixed asset
         invoice.setPaidBy(lease.getPaidBy());
-        invoice.setFixedAsset(lease.getFixedAsset());
+        invoice.setFixedAsset(lease.getProperty());
 
         persistIfNotAlready(invoice);
         getContainer().flush();

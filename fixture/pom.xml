@@ -53,6 +53,15 @@ language governing permissions and limitations under the License.
             <groupId>org.apache.isis.core</groupId>
             <artifactId>isis-core-metamodel</artifactId>
         </dependency>
+
+        <!-- GMAP3 -->
+        <dependency>
+            <groupId>org.isisaddons.wicket.gmap3</groupId>
+            <artifactId>isis-wicket-gmap3-cpt</artifactId>
+            <!-- avoid polluting the classpath -->
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
      

@@ -31,6 +31,7 @@ import org.apache.isis.applib.AbstractFactoryAndRepository;
 import org.apache.isis.applib.ApplicationException;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
+import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.Optional;
 
@@ -117,7 +118,7 @@ import org.estatio.dom.utils.JodaPeriodUtils;
 import org.estatio.dom.utils.StringUtils;
 import org.estatio.services.clock.ClockService;
 
-@Named("Migration")
+@Hidden
 public class Api extends AbstractFactoryAndRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(Api.class);
@@ -640,7 +641,7 @@ public class Api extends AbstractFactoryAndRepository {
         }
         Occupancy occupancy = occupancies.findByLeaseAndUnitAndStartDate(lease, unit, startDate);
         if (occupancy == null) {
-            occupancy = lease.occupy(unit, startDate);
+            occupancy = occupancies.newOccupancy(lease, unit, startDate);
         }
 
         occupancy.setEndDate(endDate);

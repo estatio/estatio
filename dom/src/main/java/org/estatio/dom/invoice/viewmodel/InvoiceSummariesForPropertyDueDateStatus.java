@@ -36,27 +36,27 @@ public class InvoiceSummariesForPropertyDueDateStatus
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "11")
-    public List<InvoiceSummaryForPropertyDueDateStatus> invoicesForStatusNew() {
-        return findByStatus(InvoiceStatus.NEW);
+    public List<InvoiceSummaryForPropertyDueDateStatus> allNewInvoices() {
+        return findInvoicesByStatus(InvoiceStatus.NEW);
     }
 
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "12")
-    public List<InvoiceSummaryForPropertyDueDateStatus> invoicesForStatusApproved() {
-        return findByStatus(InvoiceStatus.APPROVED);
+    public List<InvoiceSummaryForPropertyDueDateStatus> allApprovedInvoices() {
+        return findInvoicesByStatus(InvoiceStatus.APPROVED);
     }
 
     @Prototype
     @ActionSemantics(Of.SAFE)
     @MemberOrder(name = "Invoices", sequence = "90")
-    public List<InvoiceSummaryForPropertyDueDateStatus> invoicesForPropertyDueDateStatus() {
+    public List<InvoiceSummaryForPropertyDueDateStatus> allInvoicesByPropertyDueDateStatus() {
         return allInstances();
     }
     
     // //////////////////////////////////////
 
     @Programmatic
-    public List<InvoiceSummaryForPropertyDueDateStatus> findByStatus(
+    public List<InvoiceSummaryForPropertyDueDateStatus> findInvoicesByStatus(
             final @Optional InvoiceStatus status) {
         return allMatches("findByStatus",
                 "status", status);

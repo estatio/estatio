@@ -61,7 +61,6 @@ import org.estatio.dom.RegexValidation;
 import org.estatio.dom.agreement.Agreement;
 import org.estatio.dom.agreement.AgreementRole;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannel;
-import org.estatio.dom.agreement.AgreementRoleCommunicationChannelType;
 import org.estatio.dom.agreement.AgreementRoleCommunicationChannelTypes;
 import org.estatio.dom.agreement.AgreementRoleType;
 import org.estatio.dom.agreement.AgreementType;
@@ -71,8 +70,6 @@ import org.estatio.dom.bankmandate.BankMandate;
 import org.estatio.dom.bankmandate.BankMandateConstants;
 import org.estatio.dom.bankmandate.BankMandates;
 import org.estatio.dom.charge.Charge;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelType;
 import org.estatio.dom.communicationchannel.CommunicationChannels;
 import org.estatio.dom.financial.BankAccount;
 import org.estatio.dom.financial.FinancialAccounts;
@@ -218,7 +215,7 @@ public class Lease
      * {@link Property} of the first such {@link Occupancy occupancy}.
      */
     @Hidden(where = Where.PARENTED_TABLES)
-    public Property getFixedAsset() {
+    public Property getProperty() {
         if (getOccupancies().isEmpty()) {
             return null;
         }
@@ -346,7 +343,7 @@ public class Lease
      * @param startDate
      * @return
      */
-    public Occupancy occupy(
+    public Occupancy newOccupancy(
             final @Named("Unit") Unit unit,
             final @Named("Start date") @Optional LocalDate startDate) {
         Occupancy occupancy = occupanciesRepo.newOccupancy(this, unit, startDate);
@@ -843,7 +840,7 @@ public class Lease
     private void copyOccupancies(final Lease newLease, final LocalDate startDate) {
         for (Occupancy occupancy : getOccupancies()) {
             if (occupancy.getInterval().contains(startDate)) {
-                Occupancy newOccupancy = newLease.occupy(occupancy.getUnit(), startDate);
+                Occupancy newOccupancy = newLease.newOccupancy(occupancy.getUnit(), startDate);
                 newOccupancy.setActivity(occupancy.getActivity());
                 newOccupancy.setBrand(occupancy.getBrand());
                 newOccupancy.setSector(occupancy.getSector());

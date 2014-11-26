@@ -111,7 +111,7 @@ public class LeaseTest {
                 }
             });
 
-            final Occupancy addedUnit = lease.occupy(unit, null);
+            final Occupancy addedUnit = occupancies.newOccupancy(lease, unit, null);
             assertThat(addedUnit, is(leaseUnit));
             assertThat(leaseUnit.getLease(), is(lease));
             assertThat(leaseUnit.getUnit(), is(unit));

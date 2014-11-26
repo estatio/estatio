@@ -18,10 +18,21 @@
  */
 package org.estatio.fixture.asset;
 
+import static org.estatio.integtests.VT.ld;
+
 import java.math.BigDecimal;
+
 import javax.inject.Inject;
+
 import org.joda.time.LocalDate;
-import org.estatio.dom.asset.*;
+
+import org.isisaddons.wicket.gmap3.cpt.applib.Location;
+
+import org.estatio.dom.asset.FixedAssetRoleType;
+import org.estatio.dom.asset.Properties;
+import org.estatio.dom.asset.Property;
+import org.estatio.dom.asset.PropertyType;
+import org.estatio.dom.asset.UnitType;
 import org.estatio.dom.geography.Countries;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.States;
@@ -29,17 +40,28 @@ import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.EstatioFixtureScript;
 
-import static org.estatio.integtests.VT.ld;
-
 /**
  * Sets up the {@link org.estatio.dom.asset.Property} and also a number of
  * {@link org.estatio.dom.asset.Unit}s.
  */
 public abstract class PropertyAbstract extends EstatioFixtureScript {
 
-    protected Property createPropertyAndUnits(final String reference, String name, String city, Country country, PropertyType type, int numberOfUnits, LocalDate openingDate, LocalDate acquireDate, Party owner, Party manager, double lat, double lng, ExecutionContext fixtureResults) {
+    protected Property createPropertyAndUnits(
+            final String reference, 
+            final String name, 
+            final String city, 
+            final Country country, 
+            final PropertyType type, 
+            final int numberOfUnits, 
+            final LocalDate openingDate, 
+            final LocalDate acquireDate, 
+            final Party owner, 
+            final Party manager, 
+            final String locationStr,
+            final ExecutionContext fixtureResults) {
         Property property = properties.newProperty(reference, name, type, city, country, acquireDate);
         property.setOpeningDate(openingDate);
+        property.setLocation(Location.fromString(locationStr));
         property.addRoleIfDoesNotExist(owner, FixedAssetRoleType.PROPERTY_OWNER, ld(1999, 1, 1), ld(2000, 1, 1));
         property.addRoleIfDoesNotExist(manager, FixedAssetRoleType.ASSET_MANAGER, null, null);
         for (int i = 0; i < numberOfUnits; i++) {

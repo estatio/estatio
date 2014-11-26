@@ -18,18 +18,17 @@
  */
 package org.estatio.fixture.asset;
 
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
-import org.estatio.fixture.party.OrganisationForAcme;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.PersonForJohnDoe;
 
 import static org.estatio.integtests.VT.ld;
 
-public class PropertyForKal extends PropertyAbstract {
+public class PropertyForHan extends PropertyAbstract {
 
-    public static final String PROPERTY_REFERENCE = "KAL";
+    public static final String PROPERTY_REFERENCE = "HAN";
 
     public static String unitReference(String suffix) {
         return PROPERTY_REFERENCE + "-" + suffix;
@@ -40,20 +39,19 @@ public class PropertyForKal extends PropertyAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new OrganisationForAcme(), executionContext);
+            executeChild(new OrganisationForHelloWorld(), executionContext);
             executeChild(new PersonForJohnDoe(), executionContext);
         }
 
         // exec
-        Party owner = parties.findPartyByReference(OrganisationForAcme.PARTY_REFERENCE);
+        Party owner = parties.findPartyByReference(OrganisationForHelloWorld.PARTY_REFERENCE);
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
-        Country country = countries.findCountry("NLD");
 
+        Country country = countries.findCountry("SWE");
         createPropertyAndUnits(
-                PROPERTY_REFERENCE, "Kalvertoren", "Amsterdam", country, PropertyType.SHOPPING_CENTER, 40,
-                ld(2003, 12, 1), ld(2003, 12, 1), owner, manager, "52.37597;4.90814",
+                PROPERTY_REFERENCE, "Handla Center", "Malmo", country, PropertyType.SHOPPING_CENTER, 5,
+                ld(2004, 5, 6), ld(2008, 6, 1), owner, manager, "56.4916209;13.0074661",
                 executionContext);
     }
-
 
 }

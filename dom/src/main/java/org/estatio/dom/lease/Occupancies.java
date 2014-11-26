@@ -26,13 +26,16 @@ import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
-import org.apache.isis.applib.annotation.Named;
+import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.NotContributed;
 import org.apache.isis.applib.annotation.NotInServiceMenu;
 import org.apache.isis.applib.annotation.Programmatic;
+import org.apache.isis.applib.annotation.Render;
+import org.apache.isis.applib.annotation.Render.Type;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.asset.Unit;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "40", repositoryFor = Occupancy.class)
 @Hidden
@@ -46,31 +49,37 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
 
     @ActionSemantics(Of.NON_IDEMPOTENT)
     @NotContributed
+    @MemberOrder(name = "Occupancies", sequence = "10")
     public Occupancy newOccupancy(
             final Lease lease,
             final Unit unit,
             final LocalDate startDate) {
-        Occupancy lu = newTransientInstance(Occupancy.class);
-        lu.setLease(lease);
-        lu.setUnit(unit);
-        lu.setStartDate(startDate);
-        persistIfNotAlready(lu);
-        return lu;
+        Occupancy occupancy = newTransientInstance(Occupancy.class);
+        occupancy.setLease(lease);
+        occupancy.setUnit(unit);
+        occupancy.setStartDate(startDate);
+        persistIfNotAlready(occupancy);
+        return occupancy;
     }
 
     // //////////////////////////////////////
 
-    @Named("Occupancies")
     @NotInServiceMenu
     @ActionSemantics(Of.SAFE)
-    public List<Occupancy> findByUnit(Unit unit) {
+    @Render(Type.EAGERLY)
+    @MemberOrder(name = "Occupancies", sequence = "10")
+    public List<Occupancy> occupancies(Unit unit) {
         return allMatches("findByUnit", "unit", unit);
     }
 
     // //////////////////////////////////////
 
-    @Programmatic
-    public List<Occupancy> findByLease(Lease lease) {
+    @NotInServiceMenu
+    @ActionSemantics(Of.SAFE)
+    @Render(Type.EAGERLY)
+    @NotContributed
+    @MemberOrder(name = "Occupancies", sequence = "10")
+    public List<Occupancy> occupancies(Lease lease) {
         return allMatches("findByLease", "lease", lease);
     }
 
@@ -81,7 +90,21 @@ public class Occupancies extends EstatioDomainService<Occupancy> {
             final Lease lease,
             final Unit unit,
             final LocalDate startDate) {
-        return firstMatch("findByLeaseAndUnitAndStartDate", "lease", lease, "unit", unit, "startDate", startDate);
+        return firstMatch(
+                "findByLeaseAndUnitAndStartDate",
+                "lease", lease,
+                "unit", unit,
+                "startDate", startDate);
     }
 
+    @Programmatic
+    public List<Occupancy> findByLeaseAndDate(
+            final Lease lease,
+            final LocalDate date) {
+        return allMatches(
+                "findByLeaseAndDate",
+                "lease", lease,
+                "startDate", date,
+                "dateAsEndDate", LocalDateInterval.endDateFromStartDate(date));
+    }
 }

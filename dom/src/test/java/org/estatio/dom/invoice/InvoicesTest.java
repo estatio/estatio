@@ -67,7 +67,7 @@ public class InvoicesTest {
         paymentMethod = PaymentMethod.BANK_TRANSFER;
         lease = new Lease(){
             @Override
-            public Property getFixedAsset() {
+            public Property getProperty() {
                 return null;
             }
         };

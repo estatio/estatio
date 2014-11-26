@@ -408,7 +408,7 @@ public class LeaseTest extends EstatioIntegrationTest {
 
         @Test
         public void step3_approveInvoice() throws Exception {
-            invoices.createInvoiceNumberNumerator(lease.getFixedAsset(), "OXF-%06d", BigInteger.ZERO);
+            invoices.createInvoiceNumberNumerator(lease.getProperty(), "OXF-%06d", BigInteger.ZERO);
             List<Invoice> allInvoices = invoices.allInvoices();
             Invoice invoice = allInvoices.get(allInvoices.size() - 1);
             invoice.approve();
