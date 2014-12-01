@@ -20,7 +20,6 @@ package org.estatio.integtests.party.relationship;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -140,17 +139,6 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
     public static class OnPartyRemove extends PartyRelationshipsTest {
 
         @Test
-        public void invalidBecauseNoReplacement() throws Exception {
-            // when
-            Party.RemoveEvent event = new RemoveEvent(parties.findPartyByReference(PersonForGinoVannelli.PARTY_REFERENCE), null, (Object[]) null);
-            event.setPhase(Phase.VALIDATE);
-            relationships.on(event);
-
-            // then
-            assertTrue(event.isInvalid());
-        }
-
-        @Test
         public void executingReplacesParty() throws Exception {
             // when
             final Party parent = parties.findPartyByReference(OrganisationForTopModel.PARTY_REFERENCE);
@@ -165,7 +153,6 @@ public class PartyRelationshipsTest extends EstatioIntegrationTest {
             // then
             assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
             assertThat(relationships.findByParty(parent).get(0).getTo(), is(replacementChild));
-
         }
 
     }

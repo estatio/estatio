@@ -33,13 +33,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import org.estatio.dom.EstatioMutableObject;
-import org.estatio.dom.JdoColumnLength;
-import org.estatio.dom.WithIntervalContiguous;
-import org.estatio.dom.communicationchannel.CommunicationChannel;
-import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
-import org.estatio.dom.party.Party;
-import org.estatio.dom.valuetypes.LocalDateInterval;
 import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
@@ -57,6 +50,14 @@ import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 
+import org.estatio.dom.EstatioMutableObject;
+import org.estatio.dom.JdoColumnLength;
+import org.estatio.dom.WithIntervalContiguous;
+import org.estatio.dom.communicationchannel.CommunicationChannel;
+import org.estatio.dom.communicationchannel.CommunicationChannelContributions;
+import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
+
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE)
 @javax.jdo.annotations.Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
 @javax.jdo.annotations.DatastoreIdentity(
@@ -67,30 +68,35 @@ import org.apache.isis.applib.annotation.Where;
         column = "version")
 @javax.jdo.annotations.Queries({
         @javax.jdo.annotations.Query(
-                name = "findByAgreementAndPartyAndTypeAndContainsDate", language = "JDOQL",
+                name = "findByParty", language = "JDOQL",
                 value = "SELECT " +
                         "FROM org.estatio.dom.agreement.AgreementRole "
-                        + "WHERE agreement == :agreement "
-                        + "&& party == :party "
-                        + "&& type == :type "
-                        + "&& (startDate == null || startDate <= :date) "
-                        + "&& (endDate == null || endDate > :date) "),
-        @javax.jdo.annotations.Query(
-                name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL",
-                value = "SELECT "
-                        + "FROM org.estatio.dom.agreement.AgreementRole "
-                        + "WHERE agreement == :agreement "
-                        + "&& type == :type "
-                        + "&& (startDate == null || startDate < :date) "
-                        + "&& (endDate == null || endDate > :date) "),
+                        + "WHERE party == :party "),
         @javax.jdo.annotations.Query(
                 name = "findByPartyAndTypeAndContainsDate", language = "JDOQL",
                 value = "SELECT "
                         + "FROM org.estatio.dom.agreement.AgreementRole "
                         + "WHERE party == :party "
                         + "&& type == :type "
-                        + "&& (startDate == null || startDate < :date) "
-                        + "&& (endDate == null || endDate > :date) ")
+                        + "&& (startDate == null || :startDate >= startDate) "
+                        + "&& (endDate == null || :endDate <= endDate) "),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementAndPartyAndTypeAndContainsDate", language = "JDOQL",
+                value = "SELECT " +
+                        "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE agreement == :agreement "
+                        + "&& party == :party "
+                        + "&& type == :type "
+                        + "&& (startDate == null || startDate <= :startDate) "
+                        + "&& (endDate == null || endDate >= :endDate) "),
+        @javax.jdo.annotations.Query(
+                name = "findByAgreementAndTypeAndContainsDate", language = "JDOQL",
+                value = "SELECT "
+                        + "FROM org.estatio.dom.agreement.AgreementRole "
+                        + "WHERE agreement == :agreement "
+                        + "&& type == :type "
+                        + "&& (startDate == null || startDate <= :startDate) "
+                        + "&& (endDate == null || endDate >= :endDate) ")
 })
 @Unique(
         name = "AgreementRole_agreement_party_type_startDate_UNQ",

@@ -18,19 +18,23 @@
  */
 package org.estatio.dom.agreement;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.core.commons.matchers.IsisMatchers;
+
 import org.estatio.dom.FinderInteraction;
 import org.estatio.dom.FinderInteraction.FinderMethod;
 import org.estatio.dom.party.Party;
 import org.estatio.dom.party.PartyForTesting;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 public class AgreementRolesTest {
 
@@ -77,27 +81,23 @@ public class AgreementRolesTest {
             };
         }
 
-
         @Test
         public void findByAgreementAndTypeAndContainsDate() {
-
             agreementRoles.findByAgreementAndTypeAndContainsDate(agreement, type, date);
-
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
             assertThat(finderInteraction.getQueryName(), is("findByAgreementAndTypeAndContainsDate"));
             assertThat(finderInteraction.getArgumentsByParameterName().get("agreement"), is((Object) agreement));
             assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object) date));
-            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(3));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) date));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) LocalDateInterval.endDateFromStartDate(date)));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
         }
 
         @Test
         public void findByAgreementAndPartyAndTypeAndStartDate() {
-
             agreementRoles.findByAgreementAndPartyAndTypeAndContainsDate(agreement, party, type, date);
-
             // then
             assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.FIRST_MATCH));
             assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
@@ -105,7 +105,33 @@ public class AgreementRolesTest {
             assertThat(finderInteraction.getArgumentsByParameterName().get("agreement"), is((Object) agreement));
             assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
             assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
-            assertThat(finderInteraction.getArgumentsByParameterName().get("date"), is((Object) date));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) date));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) LocalDateInterval.endDateFromStartDate(date)));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(5));
+        }
+
+        @Test
+        public void findByParty() {
+            agreementRoles.findByParty(party);
+            // then
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
+            assertThat(finderInteraction.getQueryName(), is("findByParty"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
+            assertThat(finderInteraction.getArgumentsByParameterName().size(), is(1));
+        }
+
+        @Test
+        public void findByPartyAndTypeAndContainsDate() {
+            agreementRoles.findByPartyAndTypeAndContainsDate(party, type, date);
+            // then
+            assertThat(finderInteraction.getFinderMethod(), is(FinderMethod.ALL_MATCHES));
+            assertThat(finderInteraction.getResultType(), IsisMatchers.classEqualTo(AgreementRole.class));
+            assertThat(finderInteraction.getQueryName(), is("findByPartyAndTypeAndContainsDate"));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("party"), is((Object) party));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("type"), is((Object) type));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("startDate"), is((Object) date));
+            assertThat(finderInteraction.getArgumentsByParameterName().get("endDate"), is((Object) LocalDateInterval.endDateFromStartDate(date)));
             assertThat(finderInteraction.getArgumentsByParameterName().size(), is(4));
         }
 

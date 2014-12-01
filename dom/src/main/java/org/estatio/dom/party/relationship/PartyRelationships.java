@@ -51,7 +51,7 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
     public PartyRelationship newRelationship(
             final @Named("From party") Party from,
             final @Named("To party") Party to,
-            final @Named("Relationship type") String relationshipType, 
+            final @Named("Relationship type") String relationshipType,
             final @Named("Description") @Optional String description) {
         PartyRelationship relationship = getContainer().injectServicesInto(PartyRelationshipType.createWithToTitle(from, to, relationshipType));
         relationship.setFrom(from);
@@ -111,7 +111,7 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
     }
 
     // //////////////////////////////////////
-    
+
     @Subscribe
     @Programmatic
     public void on(final Party.RemoveEvent ev) {
@@ -120,26 +120,25 @@ public class PartyRelationships extends EstatioDomainService<PartyRelationship> 
 
         switch (ev.getPhase()) {
         case VALIDATE:
-            final List<PartyRelationship> partyRelationships = findByParty(sourceParty);
-            if (partyRelationships.size() > 0 && replacementParty == null) {
-                ev.invalidate("Party is being used in a relationship: remove those or provide a replacement");
-            }
-            putPartyRelationships(ev, partyRelationships);
             break;
         case EXECUTING:
-            for (PartyRelationship partyRelationship : getPartyRelationships(ev)) {
-                if (partyRelationship.getFrom().equals(sourceParty)) {
-                    partyRelationship.setFrom(replacementParty);
-                }
-                if (partyRelationship.getTo().equals(sourceParty)) {
-                    partyRelationship.setTo(replacementParty);
+            for (PartyRelationship partyRelationship : findByParty(sourceParty)) {
+                if (replacementParty == null) {
+                    // Remove relationships when no replacement is provided
+                    partyRelationship.doRemove();
+                } else {
+                    if (partyRelationship.getFrom().equals(sourceParty)) {
+                        partyRelationship.setFrom(replacementParty);
+                    }
+                    if (partyRelationship.getTo().equals(sourceParty)) {
+                        partyRelationship.setTo(replacementParty);
+                    }
                 }
             }
             break;
         default:
             break;
         }
-
     }
 
     // //////////////////////////////////////

@@ -187,5 +187,9 @@ public abstract class Party
     public boolean hideRemoveAndReplace(Party party) {
         return !EstatioRole.ADMINISTRATOR.isApplicableFor(getUser());
     }
+    
+    public String validateRemoveAndReplace(final Party party) {
+        return party != this ? null : "Cannot replace a party with itself";
+   }
 
 }

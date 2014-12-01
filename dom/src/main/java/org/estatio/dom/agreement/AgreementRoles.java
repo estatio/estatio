@@ -30,9 +30,11 @@ import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.Hidden;
 import org.apache.isis.applib.annotation.Named;
 import org.apache.isis.applib.annotation.NotContributed;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.party.Party;
+import org.estatio.dom.valuetypes.LocalDateInterval;
 
 @DomainService(menuOrder = "25", repositoryFor = AgreementRole.class)
 @Hidden
@@ -73,25 +75,13 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
             final Party party,
             final AgreementRoleType type,
             final LocalDate date) {
-        return firstMatch("findByAgreementAndPartyAndTypeAndContainsDate",
+        return firstMatch(
+                "findByAgreementAndPartyAndTypeAndContainsDate",
                 "agreement", agreement,
                 "party", party,
                 "type", type,
-                "date", date);
-    }
-
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public AgreementRole findByAgreementAndPartyAndTypeAndEndDate(
-            final Agreement agreement,
-            final Party party,
-            final AgreementRoleType type,
-            final LocalDate endDate) {
-        return firstMatch("findByAgreementAndPartyAndTypeAndEndDate",
-                "agreement", agreement,
-                "party", party,
-                "type", type,
-                "endDate", endDate);
+                "startDate", date,
+                "endDate", LocalDateInterval.endDateFromStartDate(date));
     }
 
     // //////////////////////////////////////
@@ -102,18 +92,12 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
             final Agreement agreement,
             final AgreementRoleType type,
             final LocalDate date) {
-        return firstMatch("findByAgreementAndTypeAndContainsDate", "agreement", agreement, "type", type, "date", date);
-    }
-
-    // //////////////////////////////////////
-
-    @ActionSemantics(Of.SAFE)
-    @NotContributed
-    public List<AgreementRole> findByPartyAndTypeAndContainsDate(
-            final Party party,
-            final AgreementRoleType type,
-            final LocalDate date) {
-        return allMatches("findByPartyAndTypeAndContainsDate", "party", party, "type", type, "date", date);
+        return firstMatch(
+                "findByAgreementAndTypeAndContainsDate",
+                "agreement", agreement,
+                "type", type,
+                "startDate", date,
+                "endDate", LocalDateInterval.endDateFromStartDate(date));
     }
 
     // //////////////////////////////////////
@@ -129,7 +113,24 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
 
     // //////////////////////////////////////
 
+    @ActionSemantics(Of.SAFE)
+    @NotContributed
+    public List<AgreementRole> findByPartyAndTypeAndContainsDate(
+            final Party party,
+            final AgreementRoleType type,
+            final LocalDate date) {
+        return allMatches(
+                "findByPartyAndTypeAndContainsDate",
+                "party", party,
+                "type", type,
+                "startDate", date,
+                "endDate", LocalDateInterval.endDateFromStartDate(date));
+    }
+
+    // //////////////////////////////////////
+
     @Subscribe
+    @Programmatic
     public void on(final Party.RemoveEvent ev) {
         Party sourceParty = (Party) ev.getSource();
         Party replacementParty = ev.getReplacement();
@@ -152,7 +153,6 @@ public class AgreementRoles extends EstatioDomainService<AgreementRole> {
         default:
             break;
         }
-
     }
 
     // //////////////////////////////////////

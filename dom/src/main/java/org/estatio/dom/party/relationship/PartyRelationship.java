@@ -16,6 +16,7 @@ import org.joda.time.LocalDate;
 
 import org.apache.isis.applib.AbstractDomainObject;
 import org.apache.isis.applib.annotation.MemberOrder;
+import org.apache.isis.applib.annotation.Programmatic;
 
 import org.estatio.dom.JdoColumnLength;
 import org.estatio.dom.WithInterval;
@@ -148,6 +149,15 @@ public class PartyRelationship extends AbstractDomainObject implements WithInter
     public void setDescription(final String description) {
         this.description = description;
     }
+
+    // //////////////////////////////////////
+
+    @Programmatic
+    public void doRemove() {
+        getContainer().remove(this);
+    }
+
+    // //////////////////////////////////////
 
     @Inject
     private ClockService clockService;

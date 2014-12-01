@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.Subscribe;
 
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
@@ -34,6 +35,7 @@ import org.apache.isis.applib.annotation.Prototype;
 import org.estatio.dom.EstatioDomainService;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.geography.State;
+import org.estatio.dom.party.Party;
 
 @DomainService(menuOrder = "70", repositoryFor = CommunicationChannel.class)
 @Hidden
@@ -127,7 +129,7 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     public SortedSet<CommunicationChannel> findByOwner(final CommunicationChannelOwner owner) {
         return Sets.newTreeSet(allMatches("findByOwner", "owner", owner));
     }
-    
+
     @Programmatic
     public SortedSet<CommunicationChannel> findByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type) {
         return Sets.newTreeSet(allMatches("findByOwnerAndType", "owner", owner, "type", type));
@@ -137,4 +139,46 @@ public class CommunicationChannels extends EstatioDomainService<CommunicationCha
     public SortedSet<CommunicationChannel> findOtherByOwnerAndType(final CommunicationChannelOwner owner, CommunicationChannelType type, CommunicationChannel exclude) {
         return Sets.newTreeSet(allMatches("findOtherByOwnerAndType", "owner", owner, "type", type, "exclude", exclude));
     }
+
+    // //////////////////////////////////////
+
+    @Subscribe
+    @Programmatic
+    public void on(final Party.RemoveEvent ev) {
+        Party sourceParty = (Party) ev.getSource();
+        Party replacementParty = ev.getReplacement();
+
+        switch (ev.getPhase()) {
+        case VALIDATE:
+            // We don't care if being deleted
+            break;
+        case EXECUTING:
+            for (CommunicationChannel communicationChannel : findByOwner(sourceParty)) {
+                if (replacementParty == null) {
+                    communicationChannel.remove(null);
+                } else {
+                    communicationChannel.setOwner(replacementParty);
+                }
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+    // //////////////////////////////////////
+
+    private static final String KEY = CommunicationChannel.class.getName() + ".communicationChannels";
+
+    private static void put(Party.RemoveEvent ev, List<CommunicationChannel> communicationChannels) {
+        ev.put(KEY, communicationChannels);
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private static List<CommunicationChannel> getCommunicationChannels(Party.RemoveEvent ev) {
+        return (List<CommunicationChannel>) ev.get(KEY);
+    }
+
+    // //////////////////////////////////////
+
 }

@@ -18,10 +18,16 @@
  */
 package org.estatio.integtests;
 
+import com.google.common.base.Throwables;
+
 import org.apache.log4j.PropertyConfigurator;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.core.integtestsupport.IntegrationTestAbstract;
 import org.apache.isis.core.integtestsupport.scenarios.ScenarioExecutionForIntegration;
@@ -62,6 +68,29 @@ public abstract class EstatioIntegrationTest extends IntegrationTestAbstract {
 
     protected static void runScript(FixtureScript... fixtureScripts) {
         scenarioExecution().install(fixtureScripts);
+    }
+
+    // //////////////////////////////////////
+    
+    public Matcher<Throwable> causalChainHasMessageWith(final String messageFragment) {
+        return new TypeSafeMatcher<Throwable>() {
+
+            @Override
+            public void describeTo(Description arg0) {
+                arg0.appendText("causal chain has message with " + messageFragment);
+
+            }
+
+            @Override
+            protected boolean matchesSafely(Throwable arg0) {
+                for (Throwable ex : Throwables.getCausalChain(arg0)) {
+                    if (ex.getMessage().contains(messageFragment)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 
 }
