@@ -19,12 +19,12 @@
         },
         "Contributed": {
           "members": {
-            "phoneNumber": {
+            "phoneNumbers": {
               "hidden": {
                 "value": "OBJECT_FORMS"
               }
             },
-            "emailAddress": {
+            "emailAddresses": {
               "hidden": {
                 "value": "OBJECT_FORMS"
               }
