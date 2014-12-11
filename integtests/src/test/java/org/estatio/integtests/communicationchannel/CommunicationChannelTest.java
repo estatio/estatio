@@ -47,8 +47,8 @@ public class CommunicationChannelTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
-                    executeChild(new LeaseForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
                 }
             });
         }

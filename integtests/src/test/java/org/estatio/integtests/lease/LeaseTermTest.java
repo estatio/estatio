@@ -33,6 +33,7 @@ import org.apache.isis.applib.services.wrapper.DisabledException;
 import org.estatio.dom.invoice.Invoices;
 import org.estatio.dom.lease.*;
 import org.estatio.fixture.EstatioBaseLineFixture;
+import org.estatio.fixture.EstatioFixtureScript;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005;
 import org.estatio.fixture.invoice.InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003;
 import org.estatio.fixture.lease.*;
@@ -120,7 +121,15 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             public void disabledIfLeaseHasInvoiceForFixedInvoicingFrequencyTerm() throws Exception {
 
                 // given
-                runScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005().withNoPrereqs());
+                EstatioFixtureScript.withSkipPrereqs(
+                        new Runnable() {
+
+                            @Override
+                            public void run() {
+                                runScript(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005());
+                            }
+                        }
+                );
 
                 // have to obtain again because runScript commits and so JDO clears out all enlisted objects.
                 lease = leases.findLeaseByReference(LeaseForOxfMiracl005.LEASE_REFERENCE);

@@ -18,6 +18,8 @@
  */
 package org.estatio.fixture.invoice;
 
+import org.joda.time.LocalDate;
+import org.apache.isis.core.commons.ensure.Ensure;
 import org.estatio.dom.invoice.Invoice;
 import org.estatio.dom.invoice.PaymentMethod;
 import org.estatio.dom.lease.Lease;
@@ -28,8 +30,6 @@ import org.estatio.fixture.lease.LeaseItemAndLeaseTermForDiscountForOxfMiracl005
 import org.estatio.fixture.party.OrganisationForAcme;
 import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForMiracle;
-import org.joda.time.LocalDate;
-import org.apache.isis.core.commons.ensure.Ensure;
 
 import static org.estatio.integtests.VT.ldix;
 import static org.hamcrest.CoreMatchers.is;
@@ -76,5 +76,6 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
                 invoice, LeaseItemType.DISCOUNT,
                 invoiceStartDate, ldix(invoiceStartDate, invoiceStartDate.plusMonths(3)),
                 executionContext);
+
     }
 }

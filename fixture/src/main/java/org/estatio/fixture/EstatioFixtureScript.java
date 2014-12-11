@@ -35,35 +35,30 @@ public abstract class EstatioFixtureScript extends FixtureScript {
 
     // //////////////////////////////////////
 
-    public static enum Prereqs {
+    private static enum Prereqs {
         EXEC,
         SKIP
     }
 
-    private Prereqs prereqs = Prereqs.EXEC;
+    private static ThreadLocal<Prereqs> prereqs = new ThreadLocal<Prereqs>() {
+        @Override
+        protected Prereqs initialValue() {
+            return Prereqs.EXEC;
+        }
+    };
 
-    public EstatioFixtureScript withNoPrereqs() {
-        return with(Prereqs.SKIP);
-    }
+    public static void withSkipPrereqs(final Runnable runnable) {
+        try {
+            prereqs.set(EstatioFixtureScript.Prereqs.SKIP);
+            runnable.run();
+        } finally {
+            prereqs.set(EstatioFixtureScript.Prereqs.EXEC);
+        }
 
-    private EstatioFixtureScript with(final Prereqs prereqs) {
-        this.prereqs = prereqs;
-        return this;
     }
 
     protected boolean isExecutePrereqs() {
-        return prereqs == Prereqs.EXEC;
-    }
-
-    // //////////////////////////////////////
-
-    protected void executeChild(final String localNameOverride, final FixtureScript fixtureScript, ExecutionContext executionContext) {
-        // cascade the prereqs setting
-        if(fixtureScript instanceof EstatioFixtureScript) {
-            final EstatioFixtureScript estatioFixtureScript = (EstatioFixtureScript) fixtureScript;
-            estatioFixtureScript.with(prereqs);
-        }
-        super.executeChild(localNameOverride, fixtureScript, executionContext);
+        return prereqs.get() == Prereqs.EXEC;
     }
 
 }

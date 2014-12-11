@@ -40,9 +40,9 @@ public class LeaseForOxfPret004 extends LeaseAbstract {
 
         // prereqs
         if (isExecutePrereqs()) {
-            executeChild(new PersonForJohnDoe(), executionContext);
-            executeChild(new OrganisationForPret(), executionContext);
-            executeChild(new PropertyForOxf(), executionContext);
+            executionContext.executeChild(this, new PersonForJohnDoe());
+            executionContext.executeChild(this, new OrganisationForPret());
+            executionContext.executeChild(this, new PropertyForOxf());
         }
 
         // exec
