@@ -66,7 +66,7 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                 }
             });
         }
@@ -99,10 +99,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new PropertyForOxf(), executionContext);
-                    executeChild(new PropertyForKal(), executionContext);
+                    executionContext.executeChild(this, new PropertyForOxf());
+                    executionContext.executeChild(this, new PropertyForKal());
                 }
             });
         }
@@ -192,9 +192,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new PropertyForOxf(), executionContext);
+                    executionContext.executeChild(this, new PropertyForOxf());
                 }
             });
         }
@@ -230,10 +230,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
                 }
             });
         }
@@ -293,10 +293,10 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
                 }
             });
         }
@@ -343,9 +343,9 @@ public class InvoicesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseItemAndTermsForOxfPoison003(), executionContext);
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003());
                 }
             });
         }

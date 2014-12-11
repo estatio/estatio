@@ -30,7 +30,7 @@ public class LeaseItemAndLeaseTermForRentForOxfMediax002 extends LeaseItemAndTer
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new LeaseForOxfMediaX002(), executionContext);
+            executionContext.executeChild(this, new LeaseForOxfMediaX002());
         }
 
         // exec

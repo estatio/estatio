@@ -53,14 +53,14 @@ public class PartyTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                     // linked together:
-                    executeChild(new OrganisationForTopModel(), executionContext);
-                    executeChild(new PersonForGinoVannelli(), executionContext);
+                    executionContext.executeChild(this, new OrganisationForTopModel());
+                    executionContext.executeChild(this, new PersonForGinoVannelli());
                     // only relationship
-                    executeChild(new PersonForJohnDoe(), executionContext);
+                    executionContext.executeChild(this, new PersonForJohnDoe());
                     // only comm channels
-                    executeChild(new OrganisationForAcme(), executionContext);
+                    executionContext.executeChild(this, new OrganisationForAcme());
                 }
             });
         }

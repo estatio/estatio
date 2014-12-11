@@ -41,8 +41,8 @@ public class CommunicationChannelContributionsTest extends EstatioIntegrationTes
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
-                    executeChild(new OrganisationForHelloWorld(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new OrganisationForHelloWorld());
                 }
             });
         }

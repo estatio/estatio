@@ -38,9 +38,9 @@ public class GuaranteeForOxfTopModel001 extends GuaranteeAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         if (isExecutePrereqs()) {
-            executeChild(new EstatioOperationalTeardownFixture(), executionContext);
-            executeChild(new LeaseForOxfTopModel001(), executionContext);
-            executeChild(new OrganisationForDagoBank(), executionContext);
+            executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
+            executionContext.executeChild(this, new LeaseForOxfTopModel001());
+            executionContext.executeChild(this, new OrganisationForDagoBank());
         }
 
         createGuaranteeForOxfTopModel001(executionContext);

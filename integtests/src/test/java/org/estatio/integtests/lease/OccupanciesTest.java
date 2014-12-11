@@ -45,8 +45,8 @@ public class OccupanciesTest extends EstatioIntegrationTest {
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executeChild(new EstatioBaseLineFixture(), executionContext);
-                executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
+                executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }
         });
         lease = leases.findLeaseByReference(LeaseForOxfTopModel001.LEASE_REFERENCE);

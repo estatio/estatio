@@ -43,9 +43,9 @@ public class InvoiceItemsForLeaseTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                 }
             });
         }

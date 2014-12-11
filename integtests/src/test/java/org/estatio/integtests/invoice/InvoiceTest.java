@@ -76,9 +76,9 @@ public class InvoiceTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseItemAndTermsForOxfPoison003(), executionContext);
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003());
                 }
             });
         }
@@ -133,24 +133,24 @@ public class InvoiceTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new PersonForLinusTorvalds(), executionContext);
+                    executionContext.executeChild(this, new PersonForLinusTorvalds());
 
-                    executeChild(new PropertyForOxf(), executionContext);
-                    executeChild(new PropertyForKal(), executionContext);
+                    executionContext.executeChild(this, new PropertyForOxf());
+                    executionContext.executeChild(this, new PropertyForKal());
 
-                    executeChild(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 
-                    executeChild(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
 
-                    executeChild(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                    executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
+                    executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                    executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
 
-                    executeChild(new LeaseForOxfPret004(), executionContext);
+                    executionContext.executeChild(this, new LeaseForOxfPret004());
 
-                    executeChild(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
                 }
             });
         }

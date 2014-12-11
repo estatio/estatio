@@ -58,8 +58,8 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executeChild(new OrganisationForAcme(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+        executionContext.executeChild(this, new OrganisationForAcme());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
 
         // exec
 

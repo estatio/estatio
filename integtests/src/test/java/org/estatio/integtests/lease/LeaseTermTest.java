@@ -79,9 +79,9 @@ public class LeaseTermTest extends EstatioIntegrationTest {
                 runScript(new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
-                        executeChild(new EstatioBaseLineFixture(), executionContext);
-                        executeChild(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
-                        executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
+                        executionContext.executeChild(this, new EstatioBaseLineFixture());
+                        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005());
+                        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
                     }
                 });
             }
@@ -251,9 +251,9 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
             });
         }
@@ -298,9 +298,9 @@ public class LeaseTermTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
                 }
             });
         }

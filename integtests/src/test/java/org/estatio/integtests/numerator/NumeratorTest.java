@@ -43,10 +43,10 @@ public class NumeratorTest extends EstatioIntegrationTest {
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executeChild(new EstatioBaseLineFixture(), executionContext);
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executeChild(new PropertyForOxf(), executionContext);
-                executeChild(new PropertyForKal(), executionContext);
+                executionContext.executeChild(this, new PropertyForOxf());
+                executionContext.executeChild(this, new PropertyForKal());
             }
         });
     }

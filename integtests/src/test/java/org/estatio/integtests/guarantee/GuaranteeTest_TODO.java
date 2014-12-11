@@ -44,8 +44,8 @@ public class GuaranteeTest_TODO extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
-                    executeChild(new GuaranteeForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new GuaranteeForOxfTopModel001());
                 }
             }.withTracing());
 

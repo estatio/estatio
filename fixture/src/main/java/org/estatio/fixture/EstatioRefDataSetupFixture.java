@@ -34,11 +34,11 @@ public class EstatioRefDataSetupFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executeChild("currencies", new CurrenciesRefData(), executionContext);
-        executeChild("countries", new CountriesAndStatesRefData(), executionContext);
-        executeChild("tax-refdata", new TaxesAndTaxRatesRefData(), executionContext);
-        executeChild("charge-refdata", new ChargeAndChargeGroupRefData(), executionContext);
-        executeChild("index-refdata", new IndexAndIndexBaseAndIndexValueRefData(), executionContext);
-        executeChild("links", new LinksRefData(), executionContext);
+        executionContext.executeChild(this, "currencies", new CurrenciesRefData());
+        executionContext.executeChild(this, "countries", new CountriesAndStatesRefData());
+        executionContext.executeChild(this, "tax-refdata", new TaxesAndTaxRatesRefData());
+        executionContext.executeChild(this, "charge-refdata", new ChargeAndChargeGroupRefData());
+        executionContext.executeChild(this, "index-refdata", new IndexAndIndexBaseAndIndexValueRefData());
+        executionContext.executeChild(this, "links", new LinksRefData());
     }
 }

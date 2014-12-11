@@ -73,43 +73,43 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
-                        executeChild(new EstatioBaseLineFixture(), executionContext);
+                        executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                        executeChild(new PersonForJohnDoe(), executionContext);
-                        executeChild(new PersonForLinusTorvalds(), executionContext);
-
-
-                        executeChild(new OrganisationForHelloWorld(), executionContext);
-                        executeChild(new PropertyForOxf(), executionContext);
-                        executeChild(new BankAccountForHelloWorld(), executionContext);
-
-                        executeChild(new OrganisationForAcme(), executionContext);
-                        executeChild(new PropertyForKal(), executionContext);
-                        executeChild(new BankAccountForAcme(), executionContext);
+                        executionContext.executeChild(this, new PersonForJohnDoe());
+                        executionContext.executeChild(this, new PersonForLinusTorvalds());
 
 
-                        executeChild(new OrganisationForTopModel(), executionContext);
-                        executeChild(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
-                        executeChild(new BankAccountAndMandateForTopModel(), executionContext);
+                        executionContext.executeChild(this, new OrganisationForHelloWorld());
+                        executionContext.executeChild(this, new PropertyForOxf());
+                        executionContext.executeChild(this, new BankAccountForHelloWorld());
 
-                        executeChild(new OrganisationForMediaX(), executionContext);
-                        executeChild(new LeaseBreakOptionsForOxfMediax002(), executionContext);
-                        executeChild(new BankAccountForMediaX(), executionContext);
+                        executionContext.executeChild(this, new OrganisationForAcme());
+                        executionContext.executeChild(this, new PropertyForKal());
+                        executionContext.executeChild(this, new BankAccountForAcme());
 
-                        executeChild(new OrganisationForPoison(), executionContext);
-                        executeChild(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                        executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
-                        executeChild(new BankAccountAndMandateForPoison(), executionContext);
-                        executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003(), executionContext);
-                        executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
 
-                        executeChild(new OrganisationForPret(), executionContext);
-                        executeChild(new LeaseForOxfPret004(), executionContext);
-                        executeChild(new BankAccountForPret(), executionContext);
+                        executionContext.executeChild(this, new OrganisationForTopModel());
+                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
+                        executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
 
-                        executeChild(new OrganisationForMiracle(), executionContext);
-                        executeChild(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
-                        executeChild(new BankAccountForMiracle(), executionContext);
+                        executionContext.executeChild(this, new OrganisationForMediaX());
+                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
+                        executionContext.executeChild(this, new BankAccountForMediaX());
+
+                        executionContext.executeChild(this, new OrganisationForPoison());
+                        executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+                        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
+                        executionContext.executeChild(this, new BankAccountAndMandateForPoison());
+                        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003());
+                        executionContext.executeChild(this, new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001());
+
+                        executionContext.executeChild(this, new OrganisationForPret());
+                        executionContext.executeChild(this, new LeaseForOxfPret004());
+                        executionContext.executeChild(this, new BankAccountForPret());
+
+                        executionContext.executeChild(this, new OrganisationForMiracle());
+                        executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
+                        executionContext.executeChild(this, new BankAccountForMiracle());
                     }
                 }
         );
@@ -122,8 +122,8 @@ public class ApiIntegrationTest extends EstatioIntegrationTestForMigration {
                 new FixtureScript() {
                     @Override
                     protected void execute(ExecutionContext executionContext) {
-                        executeChild(new EstatioOperationalTeardownFixture(), executionContext);
-                        executeChild(new EstatioRefDataTeardownFixture(), executionContext);
+                        executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
+                        executionContext.executeChild(this, new EstatioRefDataTeardownFixture());
                     }
                 }
         );

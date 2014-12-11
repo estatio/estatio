@@ -37,9 +37,9 @@ public class PersonTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new PersonForJohnDoe(), executionContext);
+                    executionContext.executeChild(this, new PersonForJohnDoe());
                 }
             });
         }

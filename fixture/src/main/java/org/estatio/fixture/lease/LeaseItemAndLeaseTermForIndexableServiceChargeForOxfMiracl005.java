@@ -34,7 +34,7 @@ public class LeaseItemAndLeaseTermForIndexableServiceChargeForOxfMiracl005 exten
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new LeaseForOxfMiracl005(), executionContext);
+            executionContext.executeChild(this, new LeaseForOxfMiracl005());
         }
 
         // exec

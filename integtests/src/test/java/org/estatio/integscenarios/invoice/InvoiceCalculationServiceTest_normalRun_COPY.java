@@ -52,24 +52,24 @@ public class InvoiceCalculationServiceTest_normalRun_COPY extends EstatioIntegra
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executeChild(new EstatioBaseLineFixture(), executionContext);
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executeChild(new PersonForJohnDoe(), executionContext);
+                executionContext.executeChild(this, new PersonForJohnDoe());
 
-                executeChild(new PropertyForOxf(), executionContext);
+                executionContext.executeChild(this, new PropertyForOxf());
 
-                executeChild(new PropertyForKal(), executionContext);
+                executionContext.executeChild(this, new PropertyForKal());
 
-                executeChild(new LeaseBreakOptionsForOxfTopModel001(), executionContext);
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfTopModel001());
 
-                executeChild(new LeaseBreakOptionsForOxfMediax002(), executionContext);
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfMediax002());
 
-                executeChild(new LeaseBreakOptionsForOxfPoison003(), executionContext);
-                executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
+                executionContext.executeChild(this, new LeaseBreakOptionsForOxfPoison003());
+                executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForKalPoison001());
 
-                executeChild(new LeaseForOxfPret004(), executionContext);
+                executionContext.executeChild(this, new LeaseForOxfPret004());
 
-                executeChild(new LeaseItemAndTermsForOxfMiracl005(), executionContext);
+                executionContext.executeChild(this, new LeaseItemAndTermsForOxfMiracl005());
             }
         });
     }

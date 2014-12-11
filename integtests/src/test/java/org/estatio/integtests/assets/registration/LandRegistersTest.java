@@ -45,9 +45,9 @@ public class LandRegistersTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LandRegisterForOxfordUnit001(), executionContext);
+                    executionContext.executeChild(this, new LandRegisterForOxfordUnit001());
                 }
             });
         }

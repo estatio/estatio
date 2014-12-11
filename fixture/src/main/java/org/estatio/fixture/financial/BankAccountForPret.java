@@ -38,7 +38,7 @@ public class BankAccountForPret extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new LeaseForOxfPret004(), executionContext);
+            executionContext.executeChild(this, new LeaseForOxfPret004());
         }
 
         // exec

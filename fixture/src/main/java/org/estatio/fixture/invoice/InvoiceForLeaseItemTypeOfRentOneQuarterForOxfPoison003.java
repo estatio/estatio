@@ -57,8 +57,8 @@ public class InvoiceForLeaseItemTypeOfRentOneQuarterForOxfPoison003 extends Invo
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        executeChild(new OrganisationForHelloWorld(), executionContext);
-        executeChild(new LeaseItemAndTermsForOxfPoison003(), executionContext);
+        executionContext.executeChild(this, new OrganisationForHelloWorld());
+        executionContext.executeChild(this, new LeaseItemAndTermsForOxfPoison003());
 
         // exec
         final Lease lease = leases.findLeaseByReference(LEASE);

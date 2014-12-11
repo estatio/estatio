@@ -42,12 +42,12 @@ public class EstatioBaseLineFixture extends DiscoverableFixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executeChild(ClockFixture.setTo("2014-05-18"), executionContext);
-        executeChild(new EstatioOperationalTeardownFixture(), executionContext);
+        executionContext.executeChild(this, ClockFixture.setTo("2014-05-18"));
+        executionContext.executeChild(this, new EstatioOperationalTeardownFixture());
         if(isRefDataPresent()) {
             return;
         }
-        executeChild(new EstatioRefDataSetupFixture(), executionContext);
+        executionContext.executeChild(this, new EstatioRefDataSetupFixture());
     }
 
     /**

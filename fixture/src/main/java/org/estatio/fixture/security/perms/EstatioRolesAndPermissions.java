@@ -22,8 +22,8 @@ public class EstatioRolesAndPermissions extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executeChild(new EstatioAdminRoleAndPermissions(), executionContext);
-        executeChild(new EstatioUserRoleAndPermissions(), executionContext);
+        executionContext.executeChild(this, new EstatioAdminRoleAndPermissions());
+        executionContext.executeChild(this, new EstatioUserRoleAndPermissions());
     }
 
 }

@@ -52,14 +52,14 @@ public class LeasesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseForOxfTopModel001(), executionContext);
-                    executeChild(new LeaseForOxfMediaX002(), executionContext);
-                    executeChild(new LeaseForOxfPoison003(), executionContext);
-                    executeChild(new LeaseForKalPoison001(), executionContext);
-                    executeChild(new LeaseForOxfPret004(), executionContext);
-                    executeChild(new LeaseForOxfMiracl005(), executionContext);
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
+                    executionContext.executeChild(this, new LeaseForOxfPoison003());
+                    executionContext.executeChild(this, new LeaseForKalPoison001());
+                    executionContext.executeChild(this, new LeaseForOxfPret004());
+                    executionContext.executeChild(this, new LeaseForOxfMiracl005());
                 }
             });
         }
@@ -84,9 +84,9 @@ public class LeasesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
                 }
             });
         }
@@ -107,14 +107,14 @@ public class LeasesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseForOxfTopModel001(), executionContext);
-                    executeChild(new LeaseForOxfMediaX002(), executionContext);
-                    executeChild(new LeaseForOxfPoison003(), executionContext);
-                    executeChild(new LeaseForKalPoison001(), executionContext);
-                    executeChild(new LeaseForOxfPret004(), executionContext);
-                    executeChild(new LeaseForOxfMiracl005(), executionContext);
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
+                    executionContext.executeChild(this, new LeaseForOxfPoison003());
+                    executionContext.executeChild(this, new LeaseForKalPoison001());
+                    executionContext.executeChild(this, new LeaseForOxfPret004());
+                    executionContext.executeChild(this, new LeaseForOxfMiracl005());
                 }
             });
         }
@@ -135,14 +135,14 @@ public class LeasesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new LeaseForOxfTopModel001(), executionContext);
-                    executeChild(new LeaseForOxfMediaX002(), executionContext);
-                    executeChild(new LeaseForOxfPoison003(), executionContext);
-                    executeChild(new LeaseForKalPoison001(), executionContext);
-                    executeChild(new LeaseForOxfPret004(), executionContext);
-                    executeChild(new LeaseForOxfMiracl005(), executionContext);
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
+                    executionContext.executeChild(this, new LeaseForOxfMediaX002());
+                    executionContext.executeChild(this, new LeaseForOxfPoison003());
+                    executionContext.executeChild(this, new LeaseForKalPoison001());
+                    executionContext.executeChild(this, new LeaseForOxfPret004());
+                    executionContext.executeChild(this, new LeaseForOxfMiracl005());
                 }
             });
         }
@@ -169,8 +169,8 @@ public class LeasesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
-                    executeChild(new LeaseForOxfTopModel001(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
+                    executionContext.executeChild(this, new LeaseForOxfTopModel001());
                 }
             });
         }

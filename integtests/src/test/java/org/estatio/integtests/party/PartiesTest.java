@@ -49,10 +49,10 @@ public class PartiesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new PersonForJohnDoe(), executionContext);
-                    executeChild(new OrganisationForHelloWorld(), executionContext);
+                    executionContext.executeChild(this, new PersonForJohnDoe());
+                    executionContext.executeChild(this, new OrganisationForHelloWorld());
                 }
             });
         }
@@ -91,11 +91,11 @@ public class PartiesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new PersonForJohnDoe(), executionContext);
-                    executeChild(new OrganisationForHelloWorld(), executionContext);
-                    executeChild(new OrganisationForTopModel(), executionContext);
+                    executionContext.executeChild(this, new PersonForJohnDoe());
+                    executionContext.executeChild(this, new OrganisationForHelloWorld());
+                    executionContext.executeChild(this, new OrganisationForTopModel());
                 }
             });
         }
@@ -121,9 +121,9 @@ public class PartiesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new OrganisationForHelloWorld(), executionContext);
+                    executionContext.executeChild(this, new OrganisationForHelloWorld());
                 }
             });
         }

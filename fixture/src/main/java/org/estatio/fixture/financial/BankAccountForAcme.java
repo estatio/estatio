@@ -38,8 +38,8 @@ public class BankAccountForAcme extends BankAccountAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new OrganisationForAcme(), executionContext);
-            executeChild(new PropertyForKal(), executionContext);
+            executionContext.executeChild(this, new OrganisationForAcme());
+            executionContext.executeChild(this, new PropertyForKal());
         }
 
         // exec

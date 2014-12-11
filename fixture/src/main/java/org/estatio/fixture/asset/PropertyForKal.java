@@ -18,7 +18,6 @@
  */
 package org.estatio.fixture.asset;
 
-import org.estatio.dom.asset.Property;
 import org.estatio.dom.asset.PropertyType;
 import org.estatio.dom.geography.Country;
 import org.estatio.dom.party.Party;
@@ -40,8 +39,8 @@ public class PropertyForKal extends PropertyAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new OrganisationForAcme(), executionContext);
-            executeChild(new PersonForJohnDoe(), executionContext);
+            executionContext.executeChild(this, new OrganisationForAcme());
+            executionContext.executeChild(this, new PersonForJohnDoe());
         }
 
         // exec

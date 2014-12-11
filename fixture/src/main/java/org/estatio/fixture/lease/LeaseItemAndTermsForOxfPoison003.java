@@ -26,9 +26,9 @@ public class LeaseItemAndTermsForOxfPoison003 extends LeaseItemAndTermsAbstract 
     }
 
     private void createLeaseTermsForOxfPoison003(ExecutionContext executionContext) {
-        executeChild(new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003(), executionContext);
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentOf2ForOxfPoison003());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfPoison003());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfPoison003());
     }
 
 }

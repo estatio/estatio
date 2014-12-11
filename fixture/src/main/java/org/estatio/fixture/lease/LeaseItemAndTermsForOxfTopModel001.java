@@ -27,11 +27,11 @@ public class LeaseItemAndTermsForOxfTopModel001 extends LeaseItemAndTermsAbstrac
 
     private void createLeaseTermsForOxfTopModel001(ExecutionContext executionContext) {
 
-        executeChild(new LeaseItemAndLeaseTermForRentForOxfTopModel001(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForDiscountForOxfTopModel001(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001(), executionContext);
-        executeChild(new LeaseItemAndLeaseTermForTaxForOxfTopModel001(), executionContext);
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForRentForOxfTopModel001());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTurnoverRentForOxfTopModel001());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfTopModel001());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForEntryFeeForOxfTopModel001());
+        executionContext.executeChild(this, new LeaseItemAndLeaseTermForTaxForOxfTopModel001());
     }
 }

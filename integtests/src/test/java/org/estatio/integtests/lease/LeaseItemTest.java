@@ -45,9 +45,9 @@ public class LeaseItemTest extends EstatioIntegrationTest {
         runScript(new FixtureScript() {
             @Override
             protected void execute(ExecutionContext executionContext) {
-                executeChild(new EstatioBaseLineFixture(), executionContext);
+                executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                executeChild(new LeaseItemAndTermsForOxfTopModel001(), executionContext);
+                executionContext.executeChild(this, new LeaseItemAndTermsForOxfTopModel001());
             }
         });
     }

@@ -35,7 +35,7 @@ public class FinancialAccountTransactionsTest_TODO extends EstatioIntegrationTes
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
                 }
             });
         }

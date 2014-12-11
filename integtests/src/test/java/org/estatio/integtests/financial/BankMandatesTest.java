@@ -47,10 +47,10 @@ public class BankMandatesTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new BankAccountAndMandateForTopModel(), executionContext);
-                    executeChild(new BankAccountAndMandateForPoison(), executionContext);
+                    executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
+                    executionContext.executeChild(this, new BankAccountAndMandateForPoison());
                 }
             });
         }

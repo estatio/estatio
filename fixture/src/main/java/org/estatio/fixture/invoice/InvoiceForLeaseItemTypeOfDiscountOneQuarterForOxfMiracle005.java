@@ -59,8 +59,8 @@ public class InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005 extends
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new OrganisationForAcme(), executionContext);
-            executeChild(new LeaseItemAndLeaseTermForDiscountForOxfMiracl005(), executionContext);
+            executionContext.executeChild(this, new OrganisationForAcme());
+            executionContext.executeChild(this, new LeaseItemAndLeaseTermForDiscountForOxfMiracl005());
         }
 
         // exec

@@ -34,23 +34,23 @@ public class EstatioSecurityModuleAppSetUp extends DiscoverableFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
 
-        executeChild(new SeedUsersAndRolesFixtureScript(), executionContext);
+        executionContext.executeChild(this, new SeedUsersAndRolesFixtureScript());
 
-        executeChild(new EstatioRolesAndPermissions(), executionContext);
-        executeChild(new EstatioAdmin(), executionContext);
-        executeChild(new EstatioUser(), executionContext);
-        executeChild(new AllTenancies(), executionContext);
+        executionContext.executeChild(this, new EstatioRolesAndPermissions());
+        executionContext.executeChild(this, new EstatioAdmin());
+        executionContext.executeChild(this, new EstatioUser());
+        executionContext.executeChild(this, new AllTenancies());
 
         // perms (role/features)
-        executeChild(new EstatioUserRoleAndPermissions(), executionContext);
-        executeChild(new EstatioAdminRoleAndPermissions(), executionContext);
+        executionContext.executeChild(this, new EstatioUserRoleAndPermissions());
+        executionContext.executeChild(this, new EstatioAdminRoleAndPermissions());
 
         // user/role
-        executeChild(new EstatioAdmin_Has_EstatioAdminRole(), executionContext);
-        executeChild(new EstatioAdmin_Has_IsisSecurityModuleAdminRole(), executionContext);
+        executionContext.executeChild(this, new EstatioAdmin_Has_EstatioAdminRole());
+        executionContext.executeChild(this, new EstatioAdmin_Has_IsisSecurityModuleAdminRole());
 
-        executeChild(new EstatioUser_Has_EstatioPoweruserRole(), executionContext);
-        executeChild(new EstatioUser_Has_IsisSecurityModuleRegularRole(), executionContext);
+        executionContext.executeChild(this, new EstatioUser_Has_EstatioPoweruserRole());
+        executionContext.executeChild(this, new EstatioUser_Has_IsisSecurityModuleRegularRole());
 
     }
 

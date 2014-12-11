@@ -33,7 +33,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfPoison003 extends LeaseI
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new LeaseForOxfPoison003(), executionContext);
+            executionContext.executeChild(this, new LeaseForOxfPoison003());
         }
 
         // exec

@@ -33,7 +33,7 @@ public class LeaseItemAndLeaseTermForServiceChargeForOxfTopModel001 extends Leas
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new LeaseForOxfTopModel001(), executionContext);
+            executionContext.executeChild(this, new LeaseForOxfTopModel001());
         }
 
         // exec

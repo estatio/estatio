@@ -57,10 +57,10 @@ public class LeaseForOxfTopModel001 extends LeaseAbstract {
 
         // prereqs
         if (isExecutePrereqs()) {
-            executeChild(new PersonForJohnDoe(), executionContext);
-            executeChild(new OrganisationForHelloWorld(), executionContext);
-            executeChild(new OrganisationForTopModel(), executionContext);
-            executeChild(new PropertyForOxf(), executionContext);
+            executionContext.executeChild(this, new PersonForJohnDoe());
+            executionContext.executeChild(this, new OrganisationForHelloWorld());
+            executionContext.executeChild(this, new OrganisationForTopModel());
+            executionContext.executeChild(this, new PropertyForOxf());
         }
 
         // exec

@@ -44,9 +44,9 @@ public class FinancialAccountsTest extends EstatioIntegrationTest {
             runScript(new FixtureScript() {
                 @Override
                 protected void execute(ExecutionContext executionContext) {
-                    executeChild(new EstatioBaseLineFixture(), executionContext);
+                    executionContext.executeChild(this, new EstatioBaseLineFixture());
 
-                    executeChild(new BankAccountAndMandateForTopModel(), executionContext);
+                    executionContext.executeChild(this, new BankAccountAndMandateForTopModel());
                 }
             });
         }

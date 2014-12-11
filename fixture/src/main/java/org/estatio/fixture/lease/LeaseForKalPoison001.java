@@ -39,10 +39,10 @@ public class LeaseForKalPoison001 extends LeaseAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new PersonForJohnDoe(), executionContext);
-            executeChild(new OrganisationForAcme(), executionContext);
-            executeChild(new OrganisationForPoison(), executionContext);
-            executeChild(new PropertyForKal(), executionContext);
+            executionContext.executeChild(this, new PersonForJohnDoe());
+            executionContext.executeChild(this, new OrganisationForAcme());
+            executionContext.executeChild(this, new OrganisationForPoison());
+            executionContext.executeChild(this, new PropertyForKal());
         }
 
         // exec

@@ -39,8 +39,8 @@ public class PropertyForHan extends PropertyAbstract {
 
         // prereqs
         if(isExecutePrereqs()) {
-            executeChild(new OrganisationForHelloWorld(), executionContext);
-            executeChild(new PersonForJohnDoe(), executionContext);
+            executionContext.executeChild(this, new OrganisationForHelloWorld());
+            executionContext.executeChild(this, new PersonForJohnDoe());
         }
 
         // exec
