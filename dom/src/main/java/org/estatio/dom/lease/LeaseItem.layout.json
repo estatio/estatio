@@ -8,7 +8,17 @@
             "lease": {},
             "sequence": {},
             "type": {},
-            "status": {},
+            "status": {
+              "actions" : {
+                "suspend": {},
+                "terminate": {},
+                "refreshStatus": {}
+              }
+            }
+          }
+        },
+        "Invoicing": {
+          "members": {
             "invoicingFrequency": {},
             "paymentMethod": {
               "actions": {

@@ -102,7 +102,7 @@ public class LeaseTermForIndexableRentTest {
         item.setLease(lease);
 
         item.setType(LeaseItemType.RENT);
-        item.injectLeaseTerms(mockLeaseTerms);
+        item.leaseTerms = mockLeaseTerms;
 
         term = new LeaseTermForIndexable();
         term.injectClockService(mockClockService);

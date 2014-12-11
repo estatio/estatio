@@ -89,7 +89,7 @@ public class LeaseTermTest {
         lease.getItems().add(item);
         item.setLease(lease);
 
-        item.injectLeaseTerms(mockLeaseTerms);
+        item.leaseTerms = mockLeaseTerms;
         item.injectClockService(mockClockService);
 
         term = new LeaseTermForTesting();
@@ -231,7 +231,7 @@ public class LeaseTermTest {
             lease.getItems().add(item);
             item.setLease(lease);
 
-            item.injectLeaseTerms(mockLeaseTerms);
+            item.leaseTerms = mockLeaseTerms;
             item.injectClockService(mockClockService);
 
             LeaseTerm term = new LeaseTermForTesting();

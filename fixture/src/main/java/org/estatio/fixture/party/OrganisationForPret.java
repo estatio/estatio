@@ -27,7 +27,7 @@ public class OrganisationForPret extends OrganisationAbstract {
 
         createOrganisation(
                 PARTY_REFERENCE,
-                "Pret-a-Manger",
+                "Pret-a-Partir",
                 null,
                 null,
                 null,

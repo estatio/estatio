@@ -54,7 +54,7 @@ public class LeaseTermForServiceChargeTest {
         lease.setStartDate(new LocalDate(2000,1,1));
 
         item = new LeaseItem();
-        item.injectLeaseTerms(mockLeaseTerms);
+        item.leaseTerms = mockLeaseTerms;
 
         lease.getItems().add(item);
         item.setLease(lease);

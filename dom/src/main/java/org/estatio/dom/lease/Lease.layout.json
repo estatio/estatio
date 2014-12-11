@@ -21,14 +21,16 @@
             }
           }
         },
-        "Status2": {
+        "StatusInfo": {
           "members": {
             "status": {
               "actions": {
                 "renew": {},
                 "terminate": {},
+                "assign": {},
                 "suspendAll": {},
-                "assign": {}
+                "resumeAll": {},
+                "refreshStatus": {}
               }
             }
           }

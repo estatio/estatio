@@ -168,7 +168,7 @@ public class LeaseTest {
         @Test
         public void testWhenActived() {
             lease.setStatus(LeaseStatus.ACTIVE);
-            assertTrue(lease.hideActivateAll());
+            assertTrue(lease.hideResumeAll());
             assertFalse(lease.hideSuspendAll());
             assertFalse(lease.hideTerminate());
         }
@@ -176,7 +176,7 @@ public class LeaseTest {
         @Test
         public void testWhenSuspended() {
             lease.setStatus(LeaseStatus.SUSPENDED);
-            assertFalse(lease.hideActivateAll());
+            assertFalse(lease.hideResumeAll());
             assertTrue(lease.hideSuspendAll());
             assertTrue(lease.hideTerminate());
         }
@@ -184,7 +184,7 @@ public class LeaseTest {
         @Test
         public void testWhenTerminated() {
             lease.setStatus(LeaseStatus.TERMINATED);
-            assertTrue(lease.hideActivateAll());
+            assertTrue(lease.hideResumeAll());
             assertTrue(lease.hideSuspendAll());
             assertTrue(lease.hideTerminate());
         }

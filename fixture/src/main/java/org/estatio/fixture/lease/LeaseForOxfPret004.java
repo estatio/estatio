@@ -18,12 +18,17 @@
  */
 package org.estatio.fixture.lease;
 
+import static org.estatio.integtests.VT.ld;
+
+import javax.inject.Inject;
+
+import org.estatio.dom.party.Parties;
 import org.estatio.dom.party.Party;
 import org.estatio.fixture.asset.PropertyForOxf;
+import org.estatio.fixture.party.OrganisationForAcme;
+import org.estatio.fixture.party.OrganisationForHelloWorld;
 import org.estatio.fixture.party.OrganisationForPret;
 import org.estatio.fixture.party.PersonForJohnDoe;
-
-import static org.estatio.integtests.VT.ld;
 
 public class LeaseForOxfPret004 extends LeaseAbstract {
 
@@ -34,7 +39,7 @@ public class LeaseForOxfPret004 extends LeaseAbstract {
     protected void execute(ExecutionContext executionContext) {
 
         // prereqs
-        if(isExecutePrereqs()) {
+        if (isExecutePrereqs()) {
             executeChild(new PersonForJohnDoe(), executionContext);
             executeChild(new OrganisationForPret(), executionContext);
             executeChild(new PropertyForOxf(), executionContext);
@@ -43,13 +48,22 @@ public class LeaseForOxfPret004 extends LeaseAbstract {
         // exec
         Party manager = parties.findPartyByReference(PersonForJohnDoe.PARTY_REFERENCE);
         createLease(
-                LEASE_REFERENCE, "Pret lease",
+                LEASE_REFERENCE,
+                "Pret-a-Partir lease",
                 UNIT_REFERENCE,
-                "Pret", "FASHION", "ALL",
-                null,
-                null,
-                ld(2011, 7, 1), ld(2015, 6, 30), false, false, manager,
+                "Pret-a-Partir",
+                "FASHION",
+                "ALL",
+                OrganisationForHelloWorld.PARTY_REFERENCE,
+                OrganisationForPret.PARTY_REFERENCE,
+                ld(2011, 7, 1), ld(2014, 6, 30),
+                false,
+                false,
+                manager,
                 executionContext);
     }
+
+    @Inject
+    Parties parties;
 
 }

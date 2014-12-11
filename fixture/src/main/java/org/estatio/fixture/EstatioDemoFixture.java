@@ -78,7 +78,6 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executeChild(new LeaseItemAndLeaseTermForRentForKalPoison001(), executionContext);
         executeChild(new InvoiceForLeaseItemTypeOfRentOneQuarterForKalPoison001(), executionContext);
         executeChild(new InvoiceForLeaseItemTypeOfDiscountOneQuarterForOxfMiracle005(), executionContext);
-        executeChild(new PropertyForGra(), executionContext);
 
         executeChild(new GuaranteeForOxfTopModel001(), executionContext);
 

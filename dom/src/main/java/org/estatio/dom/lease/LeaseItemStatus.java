@@ -24,7 +24,8 @@ public enum LeaseItemStatus {
 
     SUSPENDED,
     ACTIVE,
-    TERMINATED;
+    TERMINATED,
+    UNKOWN;
 
     /*
      * The order is used in Lease#getItemStatus. Since 'SUSPENDED' is the only

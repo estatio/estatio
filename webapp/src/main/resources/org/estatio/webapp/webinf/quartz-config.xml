@@ -1,50 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<job-scheduling-data
-	xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData 
-http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd"
-	version="1.8">
+<job-scheduling-data xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData 
+http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd" version="1.8">
 
-	<schedule>
-		<job>
-			<name>CountPropertiesJob</name>
-			<group>Demo</group>
-			<description>Check the contracts idle period</description>
-			<job-class>org.estatio.webapp.services.scheduler.CountPropertiesJob</job-class>
-			<job-data-map>
-				<entry>
-					<key>org.estatio.services.scheduler.user</key>
-					<value>scheduler_user</value>
-				</entry>
-				<entry>
-					<key>org.estatio.services.scheduler.roles</key>
-					<value>admin_role</value>
-				</entry>
-			</job-data-map>
-		</job>
+    <schedule>
+        <job>
+            <name>LeaseStatusJob</name>
+            <group>Estatio</group>
+            <description>Updates the status of Leases</description>
+            <job-class>org.estatio.webapp.services.scheduler.LeaseStatusJob</job-class>
+            <job-data-map>
+                <entry>
+                    <key>org.estatio.services.scheduler.user</key>
+                    <value>scheduler_user</value>
+                </entry>
+                <entry>
+                    <key>org.estatio.services.scheduler.roles</key>
+                    <value>admin_role</value>
+                </entry>
+            </job-data-map>
+        </job>
 
-		<!--
-		cron format: 
-		http://quartz-scheduler.org/documentation/quartz-2.x/tutorials/tutorial-lesson-06
-	 	-->
-<!-- 
-		<trigger>
-			<cron>
-				<name>CountPropertiesJobEveryTenSeconds</name>
-				<job-name>CountPropertiesJob</job-name>
-				<job-group>Demo</job-group>
-				<cron-expression>0/10 * * * * ?</cron-expression>
-			</cron>
-		</trigger>
- -->
-		<trigger>
-			<cron>
-				<name>CountPropertiesJobAtOneAm</name>
-				<job-name>CountPropertiesJob</job-name>
-				<job-group>Demo</job-group>
-				<cron-expression>0 0 1 * * ?</cron-expression>
-			</cron>
-		</trigger>
-	</schedule>
+        <!-- 
+        cron format: http://quartz-scheduler.org/documentation/quartz-2.x/tutorials/tutorial-lesson-06
+        -->
+
+        <trigger>
+            <cron>
+                <name>LeaseStatusJobEvery30Minutes</name>
+                <job-name>LeaseStatusJob</job-name>
+                <job-group>Estatio</job-group>
+                <cron-expression>0 0/30 * * * ?</cron-expression>
+            </cron>
+        </trigger>
+
+    </schedule>
 </job-scheduling-data>

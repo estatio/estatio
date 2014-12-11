@@ -37,6 +37,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
+import org.apache.isis.applib.Identifier;
+import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.AutoComplete;
@@ -54,6 +56,7 @@ import org.apache.isis.applib.annotation.RegEx;
 import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
 import org.estatio.dom.EstatioUserRoles;
 import org.estatio.dom.JdoColumnLength;
@@ -235,6 +238,22 @@ public class Lease
         this.leaseType = leaseType;
     }
 
+    public Lease change(
+            final @Named("Name") String name,
+            final @Named("Lease Type") @Optional LeaseType leaseType) {
+        setName(name);
+        setLeaseType(leaseType);
+        return this;
+    }
+
+    public String default0Change() {
+        return getName();
+    }
+
+    public LeaseType default1Change() {
+        return getLeaseType();
+    }
+
     // //////////////////////////////////////
 
     @javax.jdo.annotations.Persistent
@@ -286,13 +305,15 @@ public class Lease
         return null;
     }
 
+    // //////////////////////////////////////
+
+    @ActionInteraction(ChangeDatesEvent.class)
     public Lease changeTenancyDates(
             final @Named("Start Date") LocalDate startDate,
             final @Named("End Date") @Optional LocalDate endDate
             ) {
         setTenancyStartDate(startDate);
         setTenancyEndDate(endDate);
-        getTenancyDuration();
         return this;
     }
 
@@ -699,6 +720,7 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @ActionInteraction(Lease.TerminateEvent.class)
     public Lease terminate(
             final @Named("Termination Date") LocalDate terminationDate,
             final @Named("Are you sure?") Boolean confirm) {
@@ -741,6 +763,7 @@ public class Lease
 
     // //////////////////////////////////////
 
+    @ActionInteraction(Lease.SuspendAllEvent.class)
     public Lease suspendAll(final @Named("Reason") String reason) {
         for (LeaseItem item : getItems()) {
             item.suspend(reason);
@@ -755,15 +778,15 @@ public class Lease
 
     // //////////////////////////////////////
 
-    public Lease activateAll() {
+    @ActionInteraction(ResumeAllEvent.class)
+    public Lease resumeAll() {
         for (LeaseItem item : getItems()) {
-            item.activate();
+            item.doResume();
         }
-        setStatus(LeaseStatus.ACTIVE);
         return this;
     }
 
-    public boolean hideActivateAll() {
+    public boolean hideResumeAll() {
         return !getStatus().equals(LeaseStatus.SUSPENDED) && !getStatus().equals(LeaseStatus.SUSPENDED_PARTIALLY);
     }
 
@@ -944,6 +967,52 @@ public class Lease
 
     // //////////////////////////////////////
 
+    public static class TerminateEvent extends ActionInteractionEvent<Lease> {
+        private static final long serialVersionUID = 1L;
+
+        public TerminateEvent(
+                final Lease source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    public static class SuspendAllEvent extends ActionInteractionEvent<Lease> {
+        private static final long serialVersionUID = 1L;
+
+        public SuspendAllEvent(
+                final Lease source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    public static class ResumeAllEvent extends ActionInteractionEvent<Lease> {
+        private static final long serialVersionUID = 1L;
+
+        public ResumeAllEvent(
+                final Lease source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    public static class ChangeDatesEvent extends ActionInteractionEvent<Lease> {
+        private static final long serialVersionUID = 1L;
+
+        public ChangeDatesEvent(
+                final Lease source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    // //////////////////////////////////////
+
     @Inject
     LeaseItems leaseItems;
 
@@ -970,21 +1039,5 @@ public class Lease
 
     @Inject
     CommunicationChannels communicationChannels;
-
-    public Lease change(
-            final @Named("Name") String name,
-            final @Named("Lease Type") @Optional LeaseType leaseType) {
-        setName(name);
-        setLeaseType(leaseType);
-        return this;
-    }
-
-    public String default0Change() {
-        return getName();
-    }
-
-    public LeaseType default1Change() {
-        return getLeaseType();
-    }
 
 }

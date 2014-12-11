@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Unique;
@@ -36,6 +37,8 @@ import com.google.common.base.Predicate;
 import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.LocalDate;
 
+import org.apache.isis.applib.Identifier;
+import org.apache.isis.applib.annotation.ActionInteraction;
 import org.apache.isis.applib.annotation.ActionSemantics;
 import org.apache.isis.applib.annotation.ActionSemantics.Of;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
@@ -51,6 +54,7 @@ import org.apache.isis.applib.annotation.Render;
 import org.apache.isis.applib.annotation.Render.Type;
 import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.services.eventbus.ActionInteractionEvent;
 
 import org.estatio.dom.EstatioMutableObject;
 import org.estatio.dom.JdoColumnLength;
@@ -151,16 +155,11 @@ public class LeaseItem
         this.status = status;
     }
 
-    @Programmatic
-    public void modifyStatus(final LeaseItemStatus newStatus, final String reason) {
-        if (!getStatus().equals(newStatus)) {
-            setStatus(newStatus);
-            getLease().resolveStatus(reason);
-        }
-    }
+    // //////////////////////////////////////
 
+    @ActionInteraction(LeaseItem.SuspendEvent.class)
     public LeaseItem suspend(final @Named("Reason") String reason) {
-        modifyStatus(LeaseItemStatus.SUSPENDED, reason);
+        setStatus(LeaseItemStatus.SUSPENDED);
         return this;
     }
 
@@ -168,13 +167,18 @@ public class LeaseItem
         return getStatus().equals(LeaseItemStatus.SUSPENDED);
     }
 
-    public LeaseItem activate() {
-        modifyStatus(LeaseItemStatus.ACTIVE, "");
+    @ActionInteraction(LeaseItem.ResumeEvent.class)
+    public LeaseItem resume(final @Named("Reason") String reason) {
         return this;
     }
 
-    public boolean hideActivate() {
-        return getStatus().equals(LeaseItemStatus.ACTIVE);
+    public boolean hideResume() {
+        return !getStatus().equals(LeaseItemStatus.SUSPENDED);
+    }
+
+    @Programmatic
+    public void doResume() {
+        this.setStatus(LeaseItemStatus.UNKOWN);
     }
 
     // //////////////////////////////////////
@@ -427,16 +431,15 @@ public class LeaseItem
     public List<Charge> choicesCharge() {
         return charges.allCharges();
     }
-    
-    public LeaseItem changeCharge(final Charge charge){
+
+    public LeaseItem changeCharge(final Charge charge) {
         setCharge(charge);
         return this;
     }
-    
+
     public Charge default0ChangeCharge() {
         return getCharge();
     }
-    
 
     // //////////////////////////////////////
 
@@ -670,16 +673,36 @@ public class LeaseItem
 
     // //////////////////////////////////////
 
+    public static class SuspendEvent extends ActionInteractionEvent<LeaseItem> {
+        private static final long serialVersionUID = 1L;
+
+        public SuspendEvent(
+                final LeaseItem source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    // //////////////////////////////////////
+
+    public static class ResumeEvent extends ActionInteractionEvent<LeaseItem> {
+        private static final long serialVersionUID = 1L;
+
+        public ResumeEvent(
+                final LeaseItem source,
+                final Identifier identifier,
+                final Object... arguments) {
+            super(source, identifier, arguments);
+        }
+    }
+
+    // //////////////////////////////////////
+
+    @Inject
     private Charges charges;
 
-    public final void injectCharges(final Charges charges) {
-        this.charges = charges;
-    }
-
-    private LeaseTerms leaseTerms;
-
-    public final void injectLeaseTerms(final LeaseTerms leaseTerms) {
-        this.leaseTerms = leaseTerms;
-    }
+    @Inject
+    LeaseTerms leaseTerms;
 
 }

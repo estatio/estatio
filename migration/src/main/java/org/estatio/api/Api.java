@@ -683,7 +683,6 @@ public class Api extends AbstractFactoryAndRepository {
         }
         item.setNextDueDate(nextDueDate);
         final LeaseItemStatus leaseItemStatus = LeaseItemStatus.valueOfElse(status, LeaseItemStatus.ACTIVE);
-        item.modifyStatus(leaseItemStatus, "Updated through API");
     }
 
     private LeaseItemType fetchLeaseItemType(String type) {
