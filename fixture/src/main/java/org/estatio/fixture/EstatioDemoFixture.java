@@ -18,8 +18,8 @@
  */
 package org.estatio.fixture;
 
+import org.apache.isis.applib.fixtures.FixtureClock;
 import org.apache.isis.applib.fixturescripts.DiscoverableFixtureScript;
-
 import org.estatio.fixture.asset.PropertyForGra;
 import org.estatio.fixture.asset.PropertyForHan;
 import org.estatio.fixture.asset.PropertyForViv;
@@ -86,6 +86,9 @@ public class EstatioDemoFixture extends DiscoverableFixtureScript {
         executionContext.executeChild(this, new PropertyForGra());
         executionContext.executeChild(this, new PropertyForViv());
         executionContext.executeChild(this, new PropertyForHan());
+
+        final FixtureClock fixtureClock = (FixtureClock) FixtureClock.getInstance();
+        fixtureClock.reset();
 
     }
 }
