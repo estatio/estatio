@@ -72,7 +72,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
             li.setStatus(LeaseItemStatus.ACTIVE);
             li.setEndDate(lease.getEndDate());
             li.setSequence(BigInteger.valueOf(1));
-            executionContext.add(this, li);
+            executionContext.addResult(this, li);
         }
         return li;
     }
@@ -155,7 +155,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
 
-        return executionContext.add(this, leaseTerm);
+        return executionContext.addResult(this, leaseTerm);
     }
 
     // //////////////////////////////////////
@@ -178,7 +178,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setBudgetedValue(budgetedValue);
 
-        return executionContext.add(this, leaseTerm);
+        return executionContext.addResult(this, leaseTerm);
     }
 
     // //////////////////////////////////////
@@ -200,7 +200,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setTurnoverRentRule(turnoverRentRule);
 
-        return executionContext.add(this, leaseTerm);
+        return executionContext.addResult(this, leaseTerm);
     }
 
     // //////////////////////////////////////
@@ -222,7 +222,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
         leaseTerm.setFrequency(LeaseTermFrequency.YEARLY);
         leaseTerm.setValue(value);
 
-        return executionContext.add(this, leaseTerm);
+        return executionContext.addResult(this, leaseTerm);
     }
 
     // //////////////////////////////////////
@@ -246,7 +246,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
         leaseTerm.setValue(value);
 
-        return executionContext.add(this, leaseTerm);
+        return executionContext.addResult(this, leaseTerm);
     }
 
     // //////////////////////////////////////
@@ -288,7 +288,7 @@ public abstract class LeaseItemAndTermsAbstract extends EstatioFixtureScript {
 
         leaseTerm.setDescription(null); // optional
 
-        return executionContext.add(this, leaseTerm);
+        return executionContext.addResult(this, leaseTerm);
     }
 
     // //////////////////////////////////////

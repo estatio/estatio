@@ -107,10 +107,10 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
             final ExecutionContext executionContext) {
 
         for (Property property : properties) {
-            executionContext.add(this, property.getReference(), property);
+            executionContext.addResult(this, property.getReference(), property);
 
             for (Lease lease : leases.findLeasesByProperty(property)) {
-                executionContext.add(this, lease.getReference(), lease);
+                executionContext.addResult(this, lease.getReference(), lease);
                 createLease(lease, startDueDate, nextDueDate, executionContext);
             }
         }
@@ -147,7 +147,7 @@ public class CreateRetroInvoices extends DiscoverableFixtureScript {
         for (Invoice invoice : invoices.findInvoices(InvoiceStatus.NEW)) {
             invoice.setStatus(InvoiceStatus.HISTORIC);
             invoice.setRunId(null);
-            executionContext.add(this, invoice.getInvoiceNumber(), invoice);
+            executionContext.addResult(this, invoice.getInvoiceNumber(), invoice);
         }
         return executionContext;
     }

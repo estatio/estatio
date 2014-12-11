@@ -88,13 +88,13 @@ public class CountriesAndStatesRefData extends EstatioFixtureScript {
 
     private Country createCountry(final String reference, String alpha2Code, String name, ExecutionContext executionContext) {
         final Country country = countries.createCountry(reference, alpha2Code, name);
-        return executionContext.add(this, country.getAlpha2Code(), country);
+        return executionContext.addResult(this, country.getAlpha2Code(), country);
     }
 
     private State createState(Country country, final String referenceSuffix, String name, ExecutionContext executionContext) {
         final String reference = country.getAlpha2Code() + referenceSuffix;
         final State state = states.newState(reference, name, country);
-        return executionContext.add(this, state.getReference(), state);
+        return executionContext.addResult(this, state.getReference(), state);
     }
 
     // //////////////////////////////////////

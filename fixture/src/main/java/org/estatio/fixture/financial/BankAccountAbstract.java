@@ -38,7 +38,7 @@ public abstract class BankAccountAbstract extends EstatioFixtureScript {
         Party party = parties.findPartyByReference(partyStr);
 
         BankAccount bankAccount = financialAccounts.newBankAccount(party, bankAccountRef, bankAccountRef);
-        executionContext.add(this, bankAccount.getReference(), bankAccount);
+        executionContext.addResult(this, bankAccount.getReference(), bankAccount);
         if (propertyRef != null) {
             final Property property = properties.findPropertyByReference(propertyRef);
             fixedAssetFinancialAccounts.newFixedAssetFinancialAccount(property, bankAccount);

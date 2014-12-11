@@ -47,7 +47,7 @@ public class CreateBreakOptions extends DiscoverableFixtureScript {
         lease.newBreakOption(now.plusMonths(12), "3m", BreakExerciseType.MUTUAL, BreakType.FIXED, null);
         lease.newBreakOption(now.plusMonths(24), "3m", BreakExerciseType.TENANT, BreakType.FIXED, null);
         lease.newBreakOption(now.plusMonths(24), "3m", BreakExerciseType.TENANT, BreakType.ROLLING, null);
-        fixtureResults.add(this, "lease", lease);
+        fixtureResults.addResult(this, "lease", lease);
     }
 
     // //////////////////////////////////////

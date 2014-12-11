@@ -43,7 +43,7 @@ public abstract class LeaseBreakOptionsAbstract extends EstatioFixtureScript {
 
     protected Lease newBreakOption(Lease lease, String notificationPeriodStr, BreakExerciseType exerciseType, BreakType breakType, String description, LocalDate breakDate, ExecutionContext executionContext) {
         final Lease breakOption = lease.newBreakOption(breakDate, notificationPeriodStr, exerciseType, breakType, description);
-        return executionContext.add(this, breakOption);
+        return executionContext.addResult(this, breakOption);
     }
 
     // //////////////////////////////////////

@@ -68,7 +68,7 @@ public abstract class PropertyAbstract extends EstatioFixtureScript {
             int unitNumber = i + 1;
             property.newUnit(String.format("%s-%03d", reference, unitNumber), "Unit " + unitNumber, unitType(i)).setArea(new BigDecimal((i + 1) * 100));
         }
-        return fixtureResults.add(this, property.getReference(), property);
+        return fixtureResults.addResult(this, property.getReference(), property);
     }
 
     private UnitType unitType(int n) {

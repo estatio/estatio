@@ -62,7 +62,7 @@ public class LeaseTypeForItalyRefData extends EstatioFixtureScript {
 
     private void createLeaseType(ExecutionContext fixtureResults, LeaseTypeData ltd) {
         final LeaseType leaseType = leaseTypes.findOrCreate(ltd.name(), ltd.title());
-        fixtureResults.add(this, leaseType.getReference(), leaseType);
+        fixtureResults.addResult(this, leaseType.getReference(), leaseType);
     }
 
     // //////////////////////////////////////

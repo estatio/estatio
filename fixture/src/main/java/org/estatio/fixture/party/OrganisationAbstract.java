@@ -58,7 +58,7 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
 
         createCommunicationChannels(party, address1, address2, postalCode, city, stateReference, countryReference, phone, fax, emailAddress, executionContext);
 
-        return executionContext.add(this, party.getReference(), party);
+        return executionContext.addResult(this, party.getReference(), party);
     }
 
     protected Party createCommunicationChannels(
@@ -111,7 +111,7 @@ public abstract class OrganisationAbstract extends EstatioFixtureScript {
             getContainer().flush();
         }
 
-        return executionContext.add(this, party.getReference(), party);
+        return executionContext.addResult(this, party.getReference(), party);
     }
 
     protected boolean defined(String[] values, int i) {

@@ -53,7 +53,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
         final Invoice invoice = invoices.newInvoice(seller, buyer, paymentMethod, currency, startDate, lease, interactionId);
         invoice.setInvoiceDate(startDate);
 
-        return executionContext.add(this, invoice);
+        return executionContext.addResult(this, invoice);
     }
 
     protected void createInvoiceItemsForTermsOfFirstLeaseItemOfType(
@@ -69,7 +69,7 @@ public abstract class InvoiceAbstract extends EstatioFixtureScript {
             item.setInvoice(invoice);
             item.setSequence(invoice.nextItemSequence());
 
-            executionContext.add(this, item);
+            executionContext.addResult(this, item);
         }
     }
 

@@ -73,19 +73,19 @@ public class IndexAndIndexBaseAndIndexValueRefData extends EstatioFixtureScript 
 
     private Index createIndex(String reference, String name, ExecutionContext executionContext) {
         final Index index = indices.newIndex(reference, name);
-        return executionContext.add(this, index.getReference(), index);
+        return executionContext.addResult(this, index.getReference(), index);
     }
 
     private IndexBase createIndexBase(Index index, IndexBase previousBase, int year, double factor, ExecutionContext executionContext) {
         final IndexBase indexBase = indexBases.newIndexBase(index, previousBase, ld(year, 1, 1), BigDecimal.valueOf(factor));
-        return executionContext.add(this, indexBase);
+        return executionContext.addResult(this, indexBase);
     }
 
     private void createIndexValues(IndexBase indexBase, int year, double[] values, double average, ExecutionContext executionContext) {
         int i = 0;
         for (double value : values) {
             final IndexValue indexValue = indexValues.newIndexValue(indexBase, ld(year, i + 1, 1), BigDecimal.valueOf(value));
-            executionContext.add(this, indexValue);
+            executionContext.addResult(this, indexValue);
             i++;
         }
     }

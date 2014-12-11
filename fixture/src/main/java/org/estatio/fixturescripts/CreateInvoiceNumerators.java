@@ -32,7 +32,7 @@ public class CreateInvoiceNumerators extends DiscoverableFixtureScript {
     protected void execute(ExecutionContext fixtureResults) {
         for (Property property : properties.allProperties()) {
             final Numerator numerator = invoices.createInvoiceNumberNumerator(property, property.getReference().concat("-%04d"), bi(0));
-            fixtureResults.add(this, property.getReference(), numerator);
+            fixtureResults.addResult(this, property.getReference(), numerator);
         }
     }
 

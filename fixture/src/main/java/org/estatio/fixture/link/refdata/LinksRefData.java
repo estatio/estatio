@@ -53,7 +53,7 @@ public class LinksRefData extends EstatioFixtureScript {
 
     private Link newLink(Class<?> clsClass, String name, String urlTemplate, ExecutionContext executionContext) {
         final Link link = links.newLink(clsClass, name, urlTemplate);
-        return executionContext.add(this, link.getName(), link);
+        return executionContext.addResult(this, link.getName(), link);
     }
 
     @javax.inject.Inject

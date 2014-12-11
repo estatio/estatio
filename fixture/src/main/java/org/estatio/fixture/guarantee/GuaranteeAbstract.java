@@ -43,7 +43,7 @@ public abstract class GuaranteeAbstract extends EstatioFixtureScript {
 
         final Guarantee guarantee = guarantees.newGuarantee(lease, reference, name, guaranteeType, startDate, endDate, description, maximumAmount, null);
 
-        return executionContext.add(this, guarantee);
+        return executionContext.addResult(this, guarantee);
 
     }
 

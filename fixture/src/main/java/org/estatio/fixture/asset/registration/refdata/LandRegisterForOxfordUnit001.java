@@ -56,7 +56,7 @@ public class LandRegisterForOxfordUnit001 extends EstatioFixtureScript {
                 null,
                 "description");
 
-        executionContext.add(this, landRegister.title(), landRegister);
+        executionContext.addResult(this, landRegister.title(), landRegister);
     }
 
     @Inject

@@ -59,18 +59,18 @@ public abstract class LeaseAbstract extends EstatioFixtureScript {
         Party tenant = findPartyByReferenceOrNameElseNull(tenantReference);
 
         Lease lease = leases.newLease(reference, name, null, startDate, null, endDate, landlord, tenant);
-        fixtureResults.add(this, lease.getReference(), lease);
+        fixtureResults.addResult(this, lease.getReference(), lease);
 
         if (createManagerRole) {
             final AgreementRole role = lease.createRole(agreementRoleTypes.findByTitle(LeaseConstants.ART_MANAGER), manager, null, null);
-            fixtureResults.add(this, role);
+            fixtureResults.addResult(this, role);
         }
         if (createLeaseUnitAndTags) {
             Occupancy occupancy = occupancies.newOccupancy(lease, unit, startDate);
             occupancy.setBrandName(brand);
             occupancy.setSectorName(sector);
             occupancy.setActivityName(activity);
-            fixtureResults.add(this, occupancy);
+            fixtureResults.addResult(this, occupancy);
         }
 
         if (leases.findLeaseByReference(reference) == null) {

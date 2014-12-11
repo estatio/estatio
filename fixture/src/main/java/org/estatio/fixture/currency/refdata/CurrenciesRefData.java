@@ -41,7 +41,7 @@ public class CurrenciesRefData extends EstatioFixtureScript {
 
     private void createCurrency(String reference, String name, ExecutionContext executionContext) {
         final Currency currency = currencies.findOrCreateCurrency(reference, name);
-        executionContext.add(this, currency.getReference(), currency);
+        executionContext.addResult(this, currency.getReference(), currency);
     }
 
     @Inject

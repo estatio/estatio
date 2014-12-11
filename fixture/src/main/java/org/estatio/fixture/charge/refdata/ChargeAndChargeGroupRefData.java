@@ -107,14 +107,14 @@ public class ChargeAndChargeGroupRefData extends EstatioFixtureScript {
 
     private ChargeGroup createChargeGroup(String chargeGroupReference, String description, ExecutionContext executionContext) {
         final ChargeGroup chargeGroup = chargeGroups.createChargeGroup(chargeGroupReference, description);
-        return executionContext.add(this, chargeGroup.getReference(), chargeGroup);
+        return executionContext.addResult(this, chargeGroup.getReference(), chargeGroup);
     }
 
     private Charge createCharge(String chargeReference, String code, String description, String taxReference, ChargeGroup chargeGroup, ExecutionContext executionContext) {
         final Tax tax = taxRepository.findTaxByReference(taxReference);
         Charge charge = charges.newCharge(chargeReference, description, code, tax, chargeGroup);
         charge.setGroup(chargeGroup);
-        return executionContext.add(this, charge.getReference(), charge);
+        return executionContext.addResult(this, charge.getReference(), charge);
     }
 
     // //////////////////////////////////////

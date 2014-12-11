@@ -64,7 +64,7 @@ public abstract class BankAccountAndMandateAbstract extends EstatioFixtureScript
                 lease.getSecondaryParty(),
                 lease.getPrimaryParty(),
                 bankAccount);
-        executionContext.add(this, bankMandate.getReference(), bankMandate);
+        executionContext.addResult(this, bankMandate.getReference(), bankMandate);
     }
 
 

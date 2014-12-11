@@ -47,7 +47,7 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
             final PersonGenderType gender,
             final ExecutionContext executionContext) {
         Party party = persons.newPerson(reference, initials, firstName, lastName, gender);
-        return executionContext.add(this, party.getReference(), party);
+        return executionContext.addResult(this, party.getReference(), party);
     }
 
     protected Party createPerson(
@@ -68,7 +68,7 @@ public abstract class PersonAbstract extends EstatioFixtureScript {
         // associate person
         Party from = parties.findPartyByReference(fromPartyStr);
         partyRelationships.newRelationship(from, party, relationshipType, null);
-        return executionContext.add(this, party.getReference(), party);
+        return executionContext.addResult(this, party.getReference(), party);
     }
 
     public List<String> choices7CreatePerson() {

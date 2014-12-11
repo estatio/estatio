@@ -26,7 +26,7 @@ public abstract class AbstractTenancyFixtureScript extends FixtureScript {
             final String name,
             final ExecutionContext executionContext) {
         final ApplicationTenancy tenancy = applicationTenancies.newTenancy(name);
-        executionContext.add(this, name, tenancy);
+        executionContext.addResult(this, name, tenancy);
         return tenancy;
     }
 

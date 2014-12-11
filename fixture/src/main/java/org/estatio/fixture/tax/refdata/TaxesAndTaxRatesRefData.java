@@ -35,12 +35,12 @@ public class TaxesAndTaxRatesRefData extends EstatioFixtureScript {
     @Override
     protected void execute(ExecutionContext executionContext) {
         Tax tax = taxes.newTax(IT_VATSTD, "Value Added Tax (Standard)");
-        executionContext.add(this, tax.getReference(), tax);
+        executionContext.addResult(this, tax.getReference(), tax);
 
         final TaxRate taxRate1 = tax.newRate(ld(1980, 1, 1), bd(19));
         final TaxRate taxRate2 = taxRate1.newRate(ld(2011, 9, 17), bd(21));
-        executionContext.add(this, taxRate1);
-        executionContext.add(this, taxRate2);
+        executionContext.addResult(this, taxRate1);
+        executionContext.addResult(this, taxRate2);
     }
 
     // //////////////////////////////////////
